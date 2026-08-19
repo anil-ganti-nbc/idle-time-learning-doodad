@@ -20,6 +20,20 @@
       "url": "https://web.stanford.edu/class/cs144/",
       "kind": "syllabus",
       "notes": "Internet architecture after a working transport. BGP is policy, not a shortest-path toy."
+    },
+    {
+      "id": "rfc4271",
+      "title": "A Border Gateway Protocol 4 (BGP-4)",
+      "url": "https://www.rfc-editor.org/rfc/rfc4271",
+      "kind": "notes",
+      "notes": "Path-vector reachability plus attributes. Policy, not shortest path."
+    },
+    {
+      "id": "rfc1034",
+      "title": "Domain Names — Concepts and Facilities",
+      "url": "https://www.rfc-editor.org/rfc/rfc1034",
+      "kind": "notes",
+      "notes": "Hierarchy, resolvers, and caches as a system."
     }
   ],
   "modules": [
@@ -31,6 +45,10 @@
       "prerequisites": [],
       "spineIds": [
         "net-forwarding-vs-routing"
+      ],
+      "learningObjectives": [
+        "Separate the datapath lookup from the process that filled the table",
+        "Let the more specific prefix win"
       ]
     },
     {
@@ -43,6 +61,10 @@
       ],
       "spineIds": [
         "net-igp"
+      ],
+      "learningObjectives": [
+        "Treat an AS as one routing policy",
+        "Flood a map inside the AS, then run shortest path"
       ]
     },
     {
@@ -55,6 +77,10 @@
       ],
       "spineIds": [
         "net-bgp"
+      ],
+      "learningObjectives": [
+        "Route between ASes by policy, not shortest path",
+        "Name hijacks and leaks as failures of that policy"
       ]
     },
     {
@@ -68,6 +94,10 @@
       "spineIds": [
         "net-dns-system",
         "net-anycast"
+      ],
+      "learningObjectives": [
+        "Treat DNS, anycast, and CDNs as systems that ride the routing plane",
+        "Measure and fail in ways that are political as well as technical"
       ]
     }
   ],
@@ -81,7 +111,14 @@
         "net-cidr"
       ],
       "summary": "The lookup in the datapath versus the process that filled the table.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish forwarding (the datapath lookup) from routing (the process that filled the table)",
+        "Predict what still works if the routing process dies but the forwarding table remains"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-longest-prefix",
@@ -92,7 +129,14 @@
         "net-forwarding-vs-routing"
       ],
       "summary": "More specific wins.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain longest-prefix match as the more specific prefix winning",
+        "Apply two overlapping prefixes to decide which next hop a destination takes"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-as",
@@ -103,7 +147,14 @@
         "net-ip"
       ],
       "summary": "A network with one routing policy.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an autonomous system as a network with one routing policy",
+        "Predict why two networks that share a cable still need a protocol if they have different policies"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-igp",
@@ -114,7 +165,14 @@
         "net-as"
       ],
       "summary": "How an AS talks to itself.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain an IGP as how an AS computes paths inside itself",
+        "Distinguish an interior protocol from the protocol used between ASes"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-ospf",
@@ -125,7 +183,14 @@
         "net-igp"
       ],
       "summary": "Everyone floods the map, then runs shortest path.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe link-state routing as flooding a map and then running shortest path",
+        "Predict what each router recomputes after a link-state advertisement arrives"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-bgp",
@@ -133,10 +198,18 @@
       "moduleId": "net-i-bgp",
       "tier": 3,
       "prerequisites": [
-        "net-stack"
+        "net-as"
       ],
       "summary": "Policy routing between autonomous systems.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain BGP as policy routing between autonomous systems, not shortest path",
+        "Predict why a longer AS path can still be chosen when policy prefers it"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc4271"
+      ]
     },
     {
       "id": "net-peering",
@@ -147,7 +220,15 @@
         "net-bgp"
       ],
       "summary": "Settlement-free exchange, until it is not.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe peering as settlement-free exchange of customer routes",
+        "Predict why a peer will not typically offer transit to the rest of the Internet"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc4271"
+      ]
     },
     {
       "id": "net-transit",
@@ -158,7 +239,15 @@
         "net-bgp"
       ],
       "summary": "Paying someone to reach the rest of the Internet.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe transit as paying another AS to reach the rest of the Internet",
+        "Contrast a transit link with a settlement-free peer"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc4271"
+      ]
     },
     {
       "id": "net-ixp",
@@ -169,7 +258,14 @@
         "net-peering"
       ],
       "summary": "A room where many ASes meet.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an IXP as a fabric where many ASes meet to peer",
+        "Predict why an exchange reduces the need to buy transit for some paths"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-policy-route",
@@ -180,7 +276,15 @@
         "net-bgp"
       ],
       "summary": "Local preference and AS-path as politics encoded in attributes.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain local preference and AS-path as policy encoded in attributes",
+        "Predict which attribute typically decides a route before AS-path length does"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc4271"
+      ]
     },
     {
       "id": "net-hijack",
@@ -191,7 +295,15 @@
         "net-bgp"
       ],
       "summary": "Announcing a prefix you do not own.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a route hijack as announcing a prefix you do not own",
+        "Predict why a more-specific unauthorized prefix can steal traffic"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc4271"
+      ]
     },
     {
       "id": "net-rpki",
@@ -202,7 +314,14 @@
         "net-hijack"
       ],
       "summary": "Cryptographic permission to announce a prefix.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain RPKI as cryptographic permission for an AS to originate a prefix",
+        "Predict what origin validation does and does not stop"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-dns-system",
@@ -213,7 +332,15 @@
         "net-dns-intro"
       ],
       "summary": "Hierarchy, caches, and the resolvers in the middle.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the DNS as a hierarchy of zones, caches, and resolvers",
+        "Trace a name from a stub resolver through caches to an authoritative server"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc1034"
+      ]
     },
     {
       "id": "net-anycast",
@@ -224,7 +351,14 @@
         "net-bgp"
       ],
       "summary": "One address, many locations, routing decides which.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain anycast as one address announced from many places, with routing choosing",
+        "Predict why two clients can reach different locations for the same address"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-anycast-dns",
@@ -236,7 +370,14 @@
         "net-dns-system"
       ],
       "summary": "Why 8.8.8.8 is near everyone.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain anycast DNS as putting the same resolver address near many clients",
+        "Predict why 8.8.8.8 can be a short hop from almost anywhere"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-cdn",
@@ -248,7 +389,14 @@
         "net-dns-system"
       ],
       "summary": "Putting the bytes next to the viewer.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a CDN as putting bytes next to the viewer using DNS and/or anycast",
+        "Predict why a cache miss at the edge still has to fetch from an origin"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-ipv6",
@@ -259,7 +407,14 @@
         "net-ip"
       ],
       "summary": "Larger addresses and a different neighbor-discovery story.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe IPv6 as larger addresses and a neighbor-discovery story instead of ARP",
+        "Predict what a host uses to find a neighbor's link address on IPv6"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-mpls",
@@ -270,7 +425,14 @@
         "net-forwarding-vs-routing"
       ],
       "summary": "Labels instead of IP lookups in the core.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain MPLS as forwarding on labels instead of repeating an IP lookup in the core",
+        "Predict what a core router looks at when a labeled packet arrives"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-sdn",
@@ -281,7 +443,14 @@
         "net-forwarding-vs-routing"
       ],
       "summary": "A logically centralized controller filling the tables.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe SDN as a logically centralized controller filling forwarding tables",
+        "Contrast a distributed control plane with a controller that computes paths"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-measurement",
@@ -293,7 +462,14 @@
         "net-bgp"
       ],
       "summary": "Traceroute lies, and we use it anyway.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain why traceroute can lie and why we still use it",
+        "Predict a case where ICMP replies do not reveal the true forwarding path"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-anycast-http",
@@ -304,7 +480,14 @@
         "net-cdn"
       ],
       "summary": "When the TCP connection and the HTTP cache disagree about where you are.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain the clash when a TCP connection and an HTTP cache disagree about where the client is",
+        "Predict what breaks if routing moves an anycast TCP flow to a different site mid-connection"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-anycast-bgp",
@@ -316,7 +499,15 @@
         "net-policy-route"
       ],
       "summary": "A more-specific prefix pulling traffic across an ocean.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain how a more-specific prefix can pull anycast traffic across an ocean",
+        "Predict why policy and prefix length can override nearest for an anycast address"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc4271"
+      ]
     }
   ]
 }

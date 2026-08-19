@@ -20,6 +20,27 @@
       "url": "https://web.stanford.edu/class/cs144/",
       "kind": "syllabus",
       "notes": "Labs build a reliable transport. Congestion is a mechanism, not a slogan."
+    },
+    {
+      "id": "rfc9293",
+      "title": "Transmission Control Protocol",
+      "url": "https://www.rfc-editor.org/rfc/rfc9293",
+      "kind": "notes",
+      "notes": "Connection state, handshake, windows, retransmission."
+    },
+    {
+      "id": "rfc5681",
+      "title": "TCP Congestion Control",
+      "url": "https://www.rfc-editor.org/rfc/rfc5681",
+      "kind": "notes",
+      "notes": "Slow start, AIMD, fast retransmit as sender mechanisms."
+    },
+    {
+      "id": "rfc9000",
+      "title": "QUIC",
+      "url": "https://www.rfc-editor.org/rfc/rfc9000",
+      "kind": "notes",
+      "notes": "Transport over UDP so the protocol can change without the kernel."
     }
   ],
   "modules": [
@@ -32,6 +53,10 @@
       "spineIds": [
         "net-reliable",
         "net-tcp-state"
+      ],
+      "learningObjectives": [
+        "Retransmit what was lost so a byte stream can be rebuilt",
+        "Treat TCP states and windows as mechanism, not a flag list"
       ]
     },
     {
@@ -44,6 +69,10 @@
       ],
       "spineIds": [
         "net-congestion"
+      ],
+      "learningObjectives": [
+        "Share a pipe the sender cannot see",
+        "Separate congestion of the path from a receiver that is full"
       ]
     },
     {
@@ -57,6 +86,10 @@
       "spineIds": [
         "net-bbr",
         "net-quic"
+      ],
+      "learningObjectives": [
+        "Treat delay, marks, and user-space transports as later answers to the same problem",
+        "Name the middlebox as part of the path"
       ]
     }
   ],
@@ -70,7 +103,15 @@
         "net-udp"
       ],
       "summary": "Retransmit what was lost, in order, exactly once — approximately.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain reliable delivery as retransmitting what was lost so the receiver sees each byte once, in order — approximately",
+        "Predict what sequence numbers and acknowledgements let a sender decide to retransmit"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-tcp-state",
@@ -81,7 +122,15 @@
         "net-reliable"
       ],
       "summary": "LISTEN to TIME_WAIT as a protocol, not a diagram to memorize.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe TCP connection states as protocol rules, not a diagram to memorize",
+        "Predict why TIME_WAIT exists after a close"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-handshake",
@@ -92,7 +141,15 @@
         "net-tcp-state"
       ],
       "summary": "Three packets to agree a starting sequence.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain the three-way handshake as agreeing a starting sequence in each direction",
+        "Predict what is known after SYN, SYN-ACK, and ACK that was not known before"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-sliding-window",
@@ -104,7 +161,15 @@
         "net-bandwidth-delay"
       ],
       "summary": "Many packets in flight, one window to bound them.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a sliding window as many packets in flight bounded by one window",
+        "Predict how much data can be in flight given a window and a bandwidth-delay product"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-flow-control",
@@ -115,7 +180,15 @@
         "net-sliding-window"
       ],
       "summary": "The receiver advertising how much it can still take.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain flow control as the receiver advertising how much it can still take",
+        "Distinguish a receiver that is full from a path that is congested"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-timeout",
@@ -126,7 +199,15 @@
         "net-reliable"
       ],
       "summary": "When silence means loss.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain a retransmit timer as treating silence as loss",
+        "Predict the cost of a timer that is much shorter or much longer than the real RTT"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-fast-retransmit",
@@ -137,7 +218,15 @@
         "net-timeout"
       ],
       "summary": "Triple-duplicate ACK as an earlier hint than a timeout.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe fast retransmit as using triple-duplicate ACKs as an earlier loss hint than a timeout",
+        "Predict why duplicate ACKs appear when a packet is lost but later packets arrive"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc5681"
+      ]
     },
     {
       "id": "net-nagle",
@@ -148,7 +237,15 @@
         "net-tcp-state"
       ],
       "summary": "Two optimizations that deadlock each other.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain Nagle and delayed ACK as two optimizations that can stall each other",
+        "Predict a deadlock-like pause when both a small send and a delayed ACK wait for the other"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-keepalive",
@@ -159,7 +256,15 @@
         "net-tcp-state"
       ],
       "summary": "Probing a quiet connection so middleboxes do not forget it.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a keepalive as probing a quiet connection so the path does not forget it",
+        "Predict why a long-idle connection can vanish without keepalives"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-congestion",
@@ -170,7 +275,15 @@
         "net-stack"
       ],
       "summary": "How senders share a pipe they cannot see.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain congestion control as how senders share a pipe they cannot see",
+        "Predict why a sender must infer path capacity from feedback rather than being told"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc5681"
+      ]
     },
     {
       "id": "net-aimd",
@@ -181,7 +294,15 @@
         "net-congestion"
       ],
       "summary": "Additive increase, multiplicative decrease — fairness from a rule.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe AIMD as additive increase and multiplicative decrease",
+        "Predict how two senders using the same AIMD rule share a bottleneck"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc5681"
+      ]
     },
     {
       "id": "net-slow-start",
@@ -192,7 +313,15 @@
         "net-aimd"
       ],
       "summary": "Exponential probing until you hit something.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain slow start as exponential probing until a signal is hit",
+        "Predict why slow start grows the window faster than AIMD's additive increase"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc5681"
+      ]
     },
     {
       "id": "net-rtt",
@@ -203,7 +332,15 @@
         "net-timeout"
       ],
       "summary": "Jacobson/Karels: the mean is not enough; you need the variance.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain RTT estimation as needing both a mean and a variance",
+        "Predict why a timeout based only on the mean is too aggressive when delay varies"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9293"
+      ]
     },
     {
       "id": "net-fairness-tcp",
@@ -214,7 +351,15 @@
         "net-aimd"
       ],
       "summary": "Equal shares among equal RTTs — and the bias when they are not.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe TCP fairness as equal shares among equal RTTs",
+        "Predict the bias when two flows share a bottleneck but have different RTTs"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc5681"
+      ]
     },
     {
       "id": "net-head-of-line",
@@ -225,7 +370,14 @@
         "net-reliable"
       ],
       "summary": "One lost packet stalling the streams behind it.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain head-of-line blocking as one lost packet stalling the streams behind it",
+        "Predict why a reliable ordered byte stream delays later independent messages"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-bufferbloat",
@@ -236,7 +388,14 @@
         "net-congestion"
       ],
       "summary": "Huge buffers turning loss into delay.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe bufferbloat as huge buffers turning congestion into delay instead of honest loss",
+        "Predict why a latency-sensitive flow suffers in a standing queue even when the link is not dropping"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-ecn",
@@ -247,7 +406,14 @@
         "net-congestion"
       ],
       "summary": "Marking instead of dropping.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain ECN as marking a packet instead of dropping it",
+        "Predict what a sender should do when it sees a congestion mark"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-bbr",
@@ -259,7 +425,14 @@
         "net-bandwidth-delay"
       ],
       "summary": "Model the pipe instead of waiting for a drop.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe delay-based control as modeling the pipe instead of waiting for a drop",
+        "Contrast a loss-based reaction with one that uses delay and delivery rate"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-quic",
@@ -271,7 +444,15 @@
         "net-head-of-line"
       ],
       "summary": "Transport over UDP so we can change it without the kernel.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain QUIC as a transport over UDP so it can change without the kernel",
+        "Predict how QUIC avoids head-of-line blocking across independent streams"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9000"
+      ]
     },
     {
       "id": "net-tls-place",
@@ -282,7 +463,15 @@
         "net-tcp-state"
       ],
       "summary": "Encryption as a layer, and why QUIC ate it.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Locate TLS as encryption sitting on a byte stream, and say why QUIC absorbed it",
+        "Predict what a middlebox that only understands TCP plus TLS cannot see inside QUIC"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc9000"
+      ]
     },
     {
       "id": "net-udp-use",
@@ -294,7 +483,14 @@
         "net-congestion"
       ],
       "summary": "Media, games, and anything that would rather drop than stall.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain when UDP is the right tool: anything that would rather drop than stall",
+        "Predict why a media sender often prefers a late packet dropped to a reliable stall"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     },
     {
       "id": "net-middlebox",
@@ -306,7 +502,14 @@
         "net-tcp-state"
       ],
       "summary": "The path is not just routers. It rewrites you.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a middlebox as a device on the path that rewrites or filters, not just a router",
+        "Predict why an unexpected header or a quiet flow can be dropped or rewritten"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
     }
   ]
 }

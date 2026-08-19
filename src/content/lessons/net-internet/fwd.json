@@ -1,0 +1,135 @@
+{
+  "courseId": "net-internet",
+  "moduleId": "net-i-fwd",
+  "lessons": [
+    {
+      "id": "net-forwarding-vs-routing-10",
+      "conceptId": "net-forwarding-vs-routing",
+      "title": "The datapath does not think",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-cidr"],
+      "goDeeper": "net-longest-prefix",
+      "diagram": "net-planes",
+      "explanation": [
+        "Every packet that arrives is a lookup, not a conversation. The forwarding table already maps a prefix to a next hop and an outgoing interface. The datapath walks or hashes that table, rewrites the link header, and sends. It does not ask why the entry exists, and it does not recompute a network-wide path.",
+        "Routing is the slower process that filled the table: a protocol, a static line, a controller. That process can take seconds, wait on a neighbor, or die. Forwarding happens at line rate on whatever is already installed. The two share a table and almost nothing else.",
+        "Leave the table and kill the routing process. Packets that still match an entry keep moving until someone withdraws the row or it times out. The network can look healthy while the control plane is gone. That split is the whole lesson: lookup versus the job that wrote the lookup."
+      ],
+      "example": "A campus router has 10.0.0.0/8 via 192.0.2.1 on eth0. A packet to 10.1.2.3 matches that prefix, the next hop is 192.0.2.1, and the frame leaves eth0. Nobody ran a campus-wide computation for that packet.",
+      "whyItMatters": "A blackhole with a full table is a control-plane failure. An empty table is a datapath failure. Blame the wrong plane and you reboot the wrong thing.",
+      "quiz": [
+        {
+          "id": "ni-fwd10-1",
+          "stem": "Forwarding, as opposed to routing, is:",
+          "correctAnswer": "A datapath lookup in an already-filled table",
+          "distractors": [
+            { "text": "Recomputing a network-wide path for every packet", "kind": "reversed", "rationale": "That would be routing on each arrival. The datapath does not recompute." },
+            { "text": "Asking every neighbor for a fresh map on each arrival", "kind": "nearby", "rationale": "Neighbor talk is how tables get filled, not how a packet is sent." },
+            { "text": "Rewriting the destination prefix length on the wire", "kind": "misapplied", "rationale": "Lookup uses the address as it arrived. It does not edit the prefix." }
+          ],
+          "correctExplanation": "The table is already there. Forwarding is the lookup, not the process that wrote the row.",
+          "objectiveIds": ["Distinguish forwarding (the datapath lookup) from routing (the process that filled the table)"],
+          "prerequisiteConceptIds": ["net-cidr"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-fwd10-2",
+          "stem": "A packet to 10.1.2.3 arrives. The table already has 10.0.0.0/8 via 192.0.2.1. The datapath:",
+          "correctAnswer": "Looks up 10.1.2.3 and forwards via 192.0.2.1",
+          "distractors": [
+            { "text": "Starts a new routing computation before it will send", "kind": "reversed", "rationale": "Computation filled the table earlier. This packet only looks up." },
+            { "text": "Drops the packet because only an exact host route can match", "kind": "nearby", "rationale": "A prefix match is enough. Exact-host is not required." },
+            { "text": "Waits for the routing process to confirm the prefix length", "kind": "subtle", "rationale": "The datapath does not consult the routing process per packet." }
+          ],
+          "correctExplanation": "Match the installed prefix, take the installed next hop. That is forwarding.",
+          "objectiveIds": ["Distinguish forwarding (the datapath lookup) from routing (the process that filled the table)"],
+          "prerequisiteConceptIds": ["net-cidr", "net-forwarding-vs-routing"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-fwd10-3",
+          "stem": "The routing process dies and the forwarding table is left intact. Matching traffic typically:",
+          "correctAnswer": "Keeps flowing until those entries are withdrawn or time out",
+          "distractors": [
+            { "text": "Stops at once, because lookup needs a live routing process", "kind": "reversed", "rationale": "Lookup reads the table. It does not need the writer to stay running." },
+            { "text": "Is rewritten to a new prefix length by the datapath", "kind": "misapplied", "rationale": "The datapath does not invent prefix lengths." },
+            { "text": "Is flooded out every interface as a discovery probe", "kind": "nearby", "rationale": "Forwarding follows installed next hops. It does not flood to discover." }
+          ],
+          "correctExplanation": "The writer can be dead. The table still forwards until the rows go away.",
+          "objectiveIds": ["Predict what still works if the routing process dies but the forwarding table remains"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-longest-prefix-10",
+      "conceptId": "net-longest-prefix",
+      "title": "The longer match owns the packet",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-forwarding-vs-routing"],
+      "diagram": "net-subnet",
+      "explanation": [
+        "Two prefixes can both cover a destination. The forwarding table still has to pick one next hop. Longest-prefix match is the rule: the more specific row wins. 10.1.0.0/16 beats 10.0.0.0/8 for 10.1.9.4, even if the /8 was installed first, costs less, or came from a more important process.",
+        "Specificity is a length, not a reputation. A /24 is more specific than a /16, which is more specific than a /8. An exact host route is just a /32. The datapath does not average the two next hops and does not prefer the older row. It takes the longest match and leaves.",
+        "That rule is why a hole can be punched in an aggregate. Install 10.0.0.0/8 toward the core and 10.1.1.0/24 toward a lab, and only the lab subnet takes the lab hop. Everything else in 10.0.0.0/8 still follows the aggregate. The control process decides which rows exist. The lookup rule decides which row a packet hits."
+      ],
+      "example": "A router has 10.0.0.0/8 via R1 and 10.1.0.0/16 via R2. A packet to 10.1.9.4 matches both. It is sent to R2. A packet to 10.2.9.4 matches only the /8 and goes to R1.",
+      "whyItMatters": "Overlapping prefixes are not a tie. The more specific row is a deliberate override, and it will steal traffic from the aggregate whether you meant it to or not.",
+      "quiz": [
+        {
+          "id": "ni-lpm10-1",
+          "stem": "When two prefixes both match a destination, forwarding uses:",
+          "correctAnswer": "The more specific prefix — the longer mask wins",
+          "distractors": [
+            { "text": "The less specific prefix, so aggregates always win", "kind": "reversed", "rationale": "Aggregates lose to more specific rows. That is the rule." },
+            { "text": "Whichever row the routing process installed first", "kind": "nearby", "rationale": "Install order does not break a length tie. Length does." },
+            { "text": "A coin-flip between the two next hops per packet", "kind": "misapplied", "rationale": "The datapath does not average or randomly split on length." }
+          ],
+          "correctExplanation": "Longest match, then that row's next hop. Age and origin are not the tie-break.",
+          "objectiveIds": ["Explain longest-prefix match as the more specific prefix winning"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-lpm10-2",
+          "stem": "Table: 10.0.0.0/8 via R1, 10.1.0.0/16 via R2. A packet to 10.1.9.4 is sent:",
+          "correctAnswer": "To R2, because 10.1.0.0/16 is the longer match",
+          "distractors": [
+            { "text": "To R1, because 10.0.0.0/8 covers more addresses", "kind": "reversed", "rationale": "Covering more addresses makes the /8 less specific, not more." },
+            { "text": "To both R1 and R2, as a duplicate delivery", "kind": "nearby", "rationale": "Unicast lookup picks one next hop, not both." },
+            { "text": "Nowhere; overlapping prefixes make the packet unroutable", "kind": "misapplied", "rationale": "Overlap is the normal case the rule exists to settle." }
+          ],
+          "correctExplanation": "Both match. The /16 is longer, so R2 is the next hop.",
+          "objectiveIds": ["Apply two overlapping prefixes to decide which next hop a destination takes"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing", "net-longest-prefix"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-lpm10-3",
+          "stem": "The same table, a packet to 10.2.9.4. The next hop is:",
+          "correctAnswer": "R1, because only 10.0.0.0/8 matches",
+          "distractors": [
+            { "text": "R2, because the /16 is always preferred for any 10.x address", "kind": "nearby", "rationale": "The /16 only wins inside 10.1.0.0/16. 10.2.9.4 is outside it." },
+            { "text": "Dropped, because 10.2.9.4 has no exact /32", "kind": "reversed", "rationale": "A covering prefix is enough. Exact host routes are optional." },
+            { "text": "R1 and R2 in alternation, to share load", "kind": "subtle", "rationale": "One matching row, one next hop. There is nothing to alternate." }
+          ],
+          "correctExplanation": "10.2.9.4 is in the /8 and not in the /16. R1 is the only match.",
+          "objectiveIds": ["Apply two overlapping prefixes to decide which next hop a destination takes"],
+          "prerequisiteConceptIds": ["net-longest-prefix"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

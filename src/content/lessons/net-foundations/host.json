@@ -1,0 +1,261 @@
+{
+  "courseId": "net-foundations",
+  "moduleId": "net-f-host",
+  "lessons": [
+    {
+      "id": "net-udp-10",
+      "conceptId": "net-udp",
+      "title": "A port number and a hope",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-socket-api",
+      "explanation": [
+        "A port number gets the datagram to a program. Nothing else is promised. UDP sits on IP with a source port, a destination port, a length, and a checksum, then the payload. The host uses the destination port to pick a socket. The network still treats the whole thing as one packet that can vanish.",
+        "There is no delivery promise. If a UDP datagram is lost, duplicated, or reordered, UDP will not retry, will not number the cargo, and will not stall the sender. The application that needed those properties must do them itself, or use a later reliability layer. UDP's job is multiplexing plus a hope that this datagram arrives once.",
+        "That thinness is the point. DNS, DHCP, and other short questions fit the model: one request, one reply, the app can retry. A file transfer that assumed UDP would fill gaps will silently miss slices. The port is state the host carries. The promise is not."
+      ],
+      "example": "Ada's resolver at 10.0.0.7 sends a DNS question in a UDP datagram to 10.0.0.1 port 53. The IP packet can be dropped on the way to the router. UDP will not notice. The resolver's timer fires and it sends the question again. Bea at 10.0.0.9 talking on port 53 is a different socket; the port, not the IP alone, demuxed the program.",
+      "whyItMatters": "If UDP already meant reliable delivery, every lost name lookup would look like a kernel bug instead of an application that must retry.",
+      "quiz": [
+        {
+          "id": "nf-udp10-1",
+          "stem": "UDP is best described as:",
+          "correctAnswer": "A port number on top of IP with no delivery promise",
+          "distractors": [
+            { "text": "A hop-by-hop protocol that retries every lost frame for you", "kind": "reversed", "rationale": "UDP does not retry. Loss is the application's problem." },
+            { "text": "A hierarchical address routers use to cross networks", "kind": "nearby", "rationale": "That is IP, which UDP rides on." },
+            { "text": "A mapping of many private addresses onto one public one", "kind": "misapplied", "rationale": "Address sharing is NAT, not UDP." }
+          ],
+          "correctExplanation": "Ports plus a datagram. No promise the datagram arrives.",
+          "objectiveIds": ["Describe UDP as a port number on top of IP with no delivery promise"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-udp10-2",
+          "stem": "If Ada's UDP datagram to port 53 is lost, the application must:",
+          "correctAnswer": "Detect the loss itself and retry, or accept that the question died",
+          "distractors": [
+            { "text": "Do nothing; UDP reconstructs the datagram from neighbors", "kind": "reversed", "rationale": "Packets are independent. UDP does not fill holes." },
+            { "text": "Wait for Ethernet to ARP the payload back into existence", "kind": "misapplied", "rationale": "ARP finds a MAC. It does not resurrect cargo." },
+            { "text": "Assume IP will retransmit because checksums failed", "kind": "nearby", "rationale": "A checksum drop is not a retry. IP is best effort too." }
+          ],
+          "correctExplanation": "No delivery promise. The app retries or the question is gone.",
+          "objectiveIds": ["Predict what an application must do itself if a UDP datagram is lost"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-udp10-3",
+          "stem": "Ada and a name server share a host IP. UDP still demuxes them because:",
+          "correctAnswer": "The destination port names which program owns the datagram",
+          "distractors": [
+            { "text": "IP addresses already include a program number in the last octet", "kind": "nearby", "rationale": "The last octet is still part of the internet name." },
+            { "text": "The MAC table records which process last spoke", "kind": "misapplied", "rationale": "MACs name interfaces, not sockets." },
+            { "text": "UDP forbids two programs from using ports on one host", "kind": "reversed", "rationale": "Many ports, many programs. That is the demux." }
+          ],
+          "correctExplanation": "Same IP, different ports, different sockets. That is multiplexing.",
+          "objectiveIds": ["Describe UDP as a port number on top of IP with no delivery promise"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-socket-api-10",
+      "conceptId": "net-socket-api",
+      "title": "Bind a port, then exchange bytes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-udp"],
+      "goDeeper": "net-reliable",
+      "explanation": [
+        "The process never stuffs an Ethernet header. It binds a port and reads bytes. The socket API is that interface: create a socket, bind it to a local port (and often a local address), then send and receive. The stack below fills IP and the local envelope. The program sees a file-like object that names a conversation.",
+        "Bind claims the port so the host can demux incoming datagrams to this process. Send copies bytes into a datagram toward a destination address and port. Receive blocks or returns whatever has arrived for this socket. Those three verbs are the process-visible surface. ARP, checksums, and next-hop MACs are not.",
+        "The failure is treating the socket as the network. Bind can fail if the port is taken. Send can succeed as a copy into the stack while the datagram still dies on the path — UDP will not tell you. Receive can return a message from someone you did not have in mind unless you check the source. The API is a door, not a delivery receipt."
+      ],
+      "example": "A tiny listener on Bea at 10.0.0.9 calls bind on UDP port 4242, then receive. Ada at 10.0.0.7 creates a socket and send to 10.0.0.9:4242 with the bytes 'ping'. Bea's receive returns those bytes and Ada's address. Neither program named a MAC. If Ada's datagram is dropped, her send still returned success and Bea's receive keeps waiting.",
+      "whyItMatters": "If the socket were the wire, a successful send would mean Bea got the bytes. It means the stack accepted them. The path is still best effort.",
+      "quiz": [
+        {
+          "id": "nf-sock10-1",
+          "stem": "The socket API is:",
+          "correctAnswer": "How a process binds a port and exchanges bytes with the stack",
+          "distractors": [
+            { "text": "How a switch learns which port a MAC last spoke from", "kind": "nearby", "rationale": "That is a learning table, not a process interface." },
+            { "text": "How a router rewrites private addresses onto a public one", "kind": "misapplied", "rationale": "NAT is not the socket API." },
+            { "text": "How a NIC burns a new MAC at bind time", "kind": "subtle", "rationale": "Bind claims a port. It does not reflash hardware names." }
+          ],
+          "correctExplanation": "Bind, send, receive. That is the process-visible door.",
+          "objectiveIds": ["Describe the socket API as how a process binds a port and exchanges bytes"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-sock10-2",
+          "stem": "Trace Bea's listener: bind on UDP 4242, then receive. Incoming bytes reach her because:",
+          "correctAnswer": "The stack demuxes on that bound port and copies the payload up",
+          "distractors": [
+            { "text": "The Ethernet switch delivers frames directly into her variables", "kind": "reversed", "rationale": "The process never sees the frame. The stack does." },
+            { "text": "Bind installed a public Internet route to her source file", "kind": "misapplied", "rationale": "Bind claims a local port, not a route." },
+            { "text": "Receive rewrites 10.0.0.9 into a MAC before the packet exists", "kind": "nearby", "rationale": "Receive waits for arrivals. It does not invent the envelope." }
+          ],
+          "correctExplanation": "Bind owns the port. Receive is the copy up. IP and Ethernet stay below.",
+          "objectiveIds": ["Trace bind, send, and receive as the process-visible interface to the stack"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "nf-sock10-3",
+          "stem": "Ada's UDP send returning success means:",
+          "correctAnswer": "The stack accepted the bytes, not that the far host received them",
+          "distractors": [
+            { "text": "Bea has already processed the payload and sent a reply", "kind": "reversed", "rationale": "UDP send is not a round trip." },
+            { "text": "The path guaranteed delivery because a socket was used", "kind": "misconception", "rationale": "The API does not add a delivery promise." },
+            { "text": "ARP has been disabled for the rest of the conversation", "kind": "misapplied", "rationale": "The stack still needs a next-hop MAC on Ethernet." }
+          ],
+          "correctExplanation": "Send is a handoff to the stack. Arrival is a separate fact.",
+          "objectiveIds": ["Trace bind, send, and receive as the process-visible interface to the stack"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "net-dns-intro-10",
+      "conceptId": "net-dns-intro",
+      "title": "A name is not an address until you ask",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-udp"],
+      "goDeeper": "net-dns-system",
+      "explanation": [
+        "example.com is not a destination a router will forward. DNS is the ask that turns a name into an address. A resolver sends a question, usually in a UDP datagram to port 53, and gets back an IP the program can put in a packet. The name is for people and configuration. The address is for the internet layer.",
+        "A program that only has a name must ask before it can send an IP packet. Until the answer arrives, there is no destination field to fill. If the lookup fails or times out, the send never starts — not because Ethernet is down, but because the stack was never given a 32-bit name. Caching answers avoids asking every time; it does not make the name itself routable.",
+        "This unit is the mapping, not the world's nameserver tree. The failure mode is treating the hostname as an IP and stuffing it into a header, or skipping the ask and wondering why 93.184.216.34 was never contacted. Resolve, then send."
+      ],
+      "example": "Ada's browser is told to fetch example.com. It does not emit a packet destined to the UTF-8 string. It sends a UDP question to its resolver. The answer is 93.184.216.34. Only then does the host build an IP packet to that address, ARP for 10.0.0.1, and put a frame on the LAN.",
+      "whyItMatters": "If a name were already an address, every router would have to parse words. They do not. The program has to ask first.",
+      "quiz": [
+        {
+          "id": "nf-dns10-1",
+          "stem": "DNS is best described as:",
+          "correctAnswer": "A name that resolves to an address a packet can use",
+          "distractors": [
+            { "text": "A protocol that lends a host its IP address for a lease", "kind": "nearby", "rationale": "Borrowing an address is DHCP, not DNS." },
+            { "text": "A table that maps MACs to switch ports", "kind": "misapplied", "rationale": "That is switching, not name resolution." },
+            { "text": "A checksum over the hostname that routers forward directly", "kind": "subtle", "rationale": "Routers forward addresses, not names or checksums of names." }
+          ],
+          "correctExplanation": "Name in, address out. The packet needs the address.",
+          "objectiveIds": ["Explain DNS as a name that resolves to an address"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-dns10-2",
+          "stem": "A program that only has 'example.com' cannot yet send an IP packet because:",
+          "correctAnswer": "Routers forward on addresses; the name is not a destination field",
+          "distractors": [
+            { "text": "UDP forbids any packet until a MAC is burned into the name", "kind": "misapplied", "rationale": "The missing piece is an IP address, not a new MAC." },
+            { "text": "Ethernet already delivered the hostname as a frame payload", "kind": "reversed", "rationale": "Nothing has been sent until there is an IP destination." },
+            { "text": "ICMP echo has already reserved 93.184.216.34 for someone else", "kind": "nearby", "rationale": "Echo is liveness, not a lock on an address." }
+          ],
+          "correctExplanation": "Ask DNS, get an address, then fill the header. Not before.",
+          "objectiveIds": ["Predict why a program that only has a name must ask before it can send an IP packet"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-dns10-3",
+          "stem": "Ada's fetch of example.com first emits a UDP question so that:",
+          "correctAnswer": "The resolver can return 93.184.216.34 for the later IP packet",
+          "distractors": [
+            { "text": "The switch can install example.com as a MAC on port 7", "kind": "misapplied", "rationale": "Switches learn MACs, not hostnames." },
+            { "text": "NAT can share the hostname across every private host", "kind": "nearby", "rationale": "NAT rewrites addresses, not names." },
+            { "text": "The router can forward the UTF-8 string without an IP header", "kind": "reversed", "rationale": "The string is not a forwardable destination." }
+          ],
+          "correctExplanation": "Question, answer, then a real destination. That is the order.",
+          "objectiveIds": ["Predict why a program that only has a name must ask before it can send an IP packet"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-dhcp-10",
+      "conceptId": "net-dhcp",
+      "title": "Borrow an address for a lease",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "explanation": [
+        "A host that just joined has no address until something lends it one. DHCP is that loan: a lease of an IPv4 address plus related config — typically a prefix length, a gateway, and a resolver — for a limited time. The host asks, a server offers, the host requests, the server acknowledges. Until then the host is not a source IP anyone can answer.",
+        "If it never hears a DHCP offer, the host lacks an address, and usually also lacks a gateway and a DNS server. It may talk link-local, but it cannot send a normal packet to 10.0.0.9 as 10.0.0.7, and it cannot reach 93.184.216.34 through 10.0.0.1. Manual configuration is the other path. DHCP is how most hosts avoid that typing.",
+        "Leases expire. Keep using an address after the loan lapses and you may collide with whoever received it next. Renew before that. DHCP is not ARP, not DNS, and not NAT. It is how a host borrows the internet name the rest of this course assumed it already had."
+      ],
+      "example": "Laptop-7 joins Ada's LAN with no IPv4 address. It broadcasts a DHCP discover. The server offers 10.0.0.7/24, gateway 10.0.0.1, resolver 10.0.0.1. After the ack, laptop-7 can ARP for Bea at 10.0.0.9 and later send to 93.184.216.34 via the gateway. If the offer never arrives, those packets have no legal source and no next hop to name.",
+      "whyItMatters": "If DHCP were optional decoration, a silent server would look like a routing failure instead of a host that still has no name on the network.",
+      "quiz": [
+        {
+          "id": "nf-dhcp10-1",
+          "stem": "DHCP is:",
+          "correctAnswer": "Borrowing an address and related config for a lease",
+          "distractors": [
+            { "text": "Asking who has this IP and learning the MAC that answers", "kind": "nearby", "rationale": "That is ARP. DHCP hands out the IP in the first place." },
+            { "text": "Resolving a hostname to an address a packet can use", "kind": "misapplied", "rationale": "That is DNS." },
+            { "text": "Sharing many private addresses through one public mapping", "kind": "subtle", "rationale": "That is NAT, which assumes the host already has a private address." }
+          ],
+          "correctExplanation": "A loan of an address plus config, for a while.",
+          "objectiveIds": ["Describe DHCP as borrowing an address and related config for a lease"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-dhcp10-2",
+          "stem": "A host that never hears a DHCP offer typically lacks:",
+          "correctAnswer": "An IPv4 address, and usually a gateway and resolver too",
+          "distractors": [
+            { "text": "A burned-in MAC, because leases replace hardware names", "kind": "reversed", "rationale": "The NIC already has a MAC. DHCP does not lend that." },
+            { "text": "The ability to put any frame on Ethernet, even broadcasts", "kind": "nearby", "rationale": "Discovers are frames. What it lacks is an internet name." },
+            { "text": "A checksum algorithm, so every header is rejected", "kind": "misapplied", "rationale": "Checksums are not leased." }
+          ],
+          "correctExplanation": "No offer, no loan. The host is not yet 10.0.0.7.",
+          "objectiveIds": ["Predict what a host lacks if it never hears a DHCP offer"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-dhcp10-3",
+          "stem": "After laptop-7's lease is acknowledged, it can send to 10.0.0.9 because:",
+          "correctAnswer": "It now has a source address on that network and can ARP for Bea",
+          "distractors": [
+            { "text": "DHCP installed Bea's MAC in every switch on the Internet", "kind": "misapplied", "rationale": "A lease is local config, not a global MAC map." },
+            { "text": "The offer replaced IP with a hostname routers can forward", "kind": "nearby", "rationale": "The offer gives an address. Names still need DNS." },
+            { "text": "Leases disable ARP, so the packet goes out with no local envelope", "kind": "reversed", "rationale": "On Ethernet it still needs a next-hop MAC." }
+          ],
+          "correctExplanation": "Address in hand, then local delivery. DHCP was the missing name.",
+          "objectiveIds": ["Predict what a host lacks if it never hears a DHCP offer"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

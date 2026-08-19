@@ -1,0 +1,708 @@
+{
+  "courseId": "net-internet",
+  "moduleId": "net-i-sys",
+  "lessons": [
+    {
+      "id": "net-dns-system-10",
+      "conceptId": "net-dns-system",
+      "title": "A name is a walk down a tree",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-dns-intro"],
+      "goDeeper": "net-anycast-dns",
+      "explanation": [
+        "A program that only has a name still cannot put a destination on a packet. The DNS is a hierarchy of zones, not a single phone book: the root points at .com, .com points at example.com, example.com answers for www. Each zone has authoritative servers that own that slice of the tree. A stub resolver on the host does not walk that tree itself.",
+        "The recursive resolver in the middle does the walking. The stub asks one nearby recursive. That recursive asks the root, then the TLD, then the authority, and returns an address. Caches sit on the recursive — and sometimes on the stub — so the next lookup for the same name does not climb the tree again.",
+        "Failure is named by which hop in that chain is wrong. A stub with no recursive configured cannot start. A recursive that cannot reach the root cannot finish. An authority that is down cannot answer its zone. A cache that still holds an old address will keep handing it out until the TTL says otherwise. The system is the chain, not the record type."
+      ],
+      "example": "A laptop asks 192.0.2.53 for www.example.com. That recursive has no cache entry, so it asks a root for the .com nameservers, asks a .com server for example.com's nameservers, asks ns1.example.com for the A record, caches each answer, and returns 203.0.113.10 to the laptop. The laptop never spoke to the root.",
+      "whyItMatters": "A 'DNS outage' that is really a dead recursive looks identical to a dead zone until you say which server in the chain failed.",
+      "quiz": [
+        {
+          "id": "ni-dns10-1",
+          "stem": "The DNS as a system is primarily:",
+          "correctAnswer": "A hierarchy of zones, plus caches and resolvers in the middle",
+          "distractors": [
+            { "text": "A single global table copied onto every host at boot", "kind": "reversed", "rationale": "The tree is delegated. Hosts do not hold the whole namespace." },
+            { "text": "A routing protocol that installs prefixes for each name", "kind": "misapplied", "rationale": "DNS returns addresses. It does not fill forwarding tables." },
+            { "text": "A link-layer broadcast that discovers every name on a LAN", "kind": "nearby", "rationale": "Hierarchy and recursion are not a LAN broadcast." }
+          ],
+          "correctExplanation": "Zones own slices of the tree. Resolvers walk. Caches remember. That is the system.",
+          "objectiveIds": ["Describe the DNS as a hierarchy of zones, caches, and resolvers"],
+          "prerequisiteConceptIds": ["net-dns-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-dns10-2",
+          "stem": "A stub on a laptop looks up www.example.com. The walk is typically:",
+          "correctAnswer": "Stub to recursive; recursive to root, TLD, then the zone's authority",
+          "distractors": [
+            { "text": "Stub straight to the root, which always holds every A record", "kind": "reversed", "rationale": "The root points at TLDs. It does not store every name." },
+            { "text": "Stub to a neighboring AS, which returns a next hop for the name", "kind": "misapplied", "rationale": "Names are not prefixes. The recursive asks DNS servers, not routing neighbors." },
+            { "text": "Authority to stub first, because zones push every name to hosts", "kind": "nearby", "rationale": "Lookups are pulled. Zones do not push the tree onto laptops." }
+          ],
+          "correctExplanation": "The stub asks one recursive. The recursive climbs. The laptop never has to know the root's address beyond its configured resolver.",
+          "objectiveIds": ["Trace a name from a stub resolver through caches to an authoritative server"],
+          "prerequisiteConceptIds": ["net-dns-intro", "net-dns-system"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-dns10-3",
+          "stem": "The recursive already cached www.example.com. The next stub query typically:",
+          "correctAnswer": "Is answered from cache and does not climb the tree again",
+          "distractors": [
+            { "text": "Must still query the root, because caches never store A records", "kind": "reversed", "rationale": "Caching the answer is how the hierarchy survives load." },
+            { "text": "Is forwarded to every authoritative server at once for a vote", "kind": "nearby", "rationale": "One cached answer is enough until the TTL expires." },
+            { "text": "Fails, because a cache means the name has been retired", "kind": "misapplied", "rationale": "A cache is a copy of a live answer, not a tombstone." }
+          ],
+          "correctExplanation": "Cache hit, return the address. The root and the authority are not on this path.",
+          "objectiveIds": ["Trace a name from a stub resolver through caches to an authoritative server"],
+          "prerequisiteConceptIds": ["net-dns-system"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-dns-system-20",
+      "conceptId": "net-dns-system",
+      "title": "The root survives because almost nobody asks it",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-dns-intro"],
+      "goDeeper": "net-anycast-dns",
+      "explanation": [
+        "The hierarchy would not survive if every stub asked the root for every name. Caches are the scale mechanism. A recursive that has already learned the .com nameservers, and the example.com nameservers, and the A record, will not climb again until those TTLs expire. Ten thousand stubs asking the same recursive become one (or a few) queries upstream. The root sees resolvers, not laptops.",
+        "TTL is the consistency knob and the outage knob. A 300-second A record means a wrong address, or a moved one, will be handed out for up to five minutes after it changes. A very long TTL makes a mistake last. A zero TTL makes every lookup a climb and puts the authorities back under the load the cache was invented to avoid. Negative answers are cached too: 'this name does not exist' has its own lifetime, which is why a mistyped name can keep failing after it is registered.",
+        "Roles stay distinct under load. A stub that is pointed at a dead recursive sees a total DNS failure even when every authority is fine. A recursive whose cache is poisoned, or simply stale, will lie efficiently to every stub that trusts it. An authority that is unreachable for its zone cannot be saved by a cache that has already expired. Lame delegation — a parent that points at a nameserver that will not answer the zone — looks like a hole in the tree, not like a missing A record on the host.",
+        "Diagnosis follows the chain and the clocks. Ask which resolver the stub uses, what that recursive has cached, which nameserver the parent delegated, and whether the TTL on the wrong answer has any right to still be live. 'DNS is down' is four or five different machines."
+      ],
+      "example": "example.com's A record has TTL 300 and was just changed from 203.0.113.10 to 203.0.113.20. A recursive that asked 200 seconds ago still returns .10. A recursive whose cache expired asks ns1.example.com and returns .20. A stub whose configured recursive is unreachable returns nothing, even though the authority is up. A negative cache for www.exampel.com, a typo, keeps serving NXDOMAIN after the name is created, until that negative TTL dies.",
+      "whyItMatters": "A cutover that 'does not take' is often a cache still inside its TTL. A campus that 'lost DNS' is often a recursive, not the company's zone.",
+      "quiz": [
+        {
+          "id": "ni-dns20-1",
+          "stem": "Caches let the DNS hierarchy scale because:",
+          "correctAnswer": "Many stubs reuse one recursive's answers, so the root is not asked every time",
+          "distractors": [
+            { "text": "Every host stores the entire namespace, so no one queries anyone", "kind": "reversed", "rationale": "Hosts stay stubs. The recursive's cache is the shared copy." },
+            { "text": "Authorities push every A record to every laptop on a timer", "kind": "nearby", "rationale": "Lookups are pulled and then remembered. Zones do not push the tree." },
+            { "text": "Routing installs a prefix for each name, replacing resolvers", "kind": "misapplied", "rationale": "Caching answers is still DNS. It is not a forwarding-table trick." }
+          ],
+          "correctExplanation": "The root sees resolvers. Resolvers see stubs. TTL is what makes that split hold.",
+          "objectiveIds": ["Describe the DNS as a hierarchy of zones, caches, and resolvers"],
+          "prerequisiteConceptIds": ["net-dns-intro", "net-dns-system"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ni-dns20-2",
+          "stem": "An A record changed 200 seconds ago, TTL 300. A recursive that cached it at the old value typically:",
+          "correctAnswer": "Keeps returning the old address until that TTL expires",
+          "distractors": [
+            { "text": "Instantly sees the change, because caches subscribe to the zone", "kind": "reversed", "rationale": "Caches do not get a push. They wait out the TTL and then ask again." },
+            { "text": "Deletes the zone's authority from the tree as a safety step", "kind": "nearby", "rationale": "A live TTL is a copy of an answer, not a withdrawal of the zone." },
+            { "text": "Asks the stub to climb the tree itself for the new record", "kind": "misapplied", "rationale": "The stub still asks the recursive. The recursive is the one holding the stale copy." }
+          ],
+          "correctExplanation": "Stale until TTL. That is the consistency you bought when you bought scale.",
+          "objectiveIds": ["Trace a name from a stub resolver through caches to an authoritative server"],
+          "prerequisiteConceptIds": ["net-dns-system"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-dns20-3",
+          "stem": "Stubs fail to resolve any name; the company's authoritative servers still answer when queried directly. First diagnosis:",
+          "correctAnswer": "The recursive those stubs use is dead, partitioned, or misconfigured",
+          "distractors": [
+            { "text": "The zone itself is gone, because authorities cannot outlive a stub failure", "kind": "reversed", "rationale": "Direct queries to the authority working is evidence the zone is not the hole." },
+            { "text": "The root has deleted .com, which only shows up on laptops", "kind": "nearby", "rationale": "A root failure would also show when the recursive tries to climb, and would not spare a direct authority query." },
+            { "text": "Every TTL on the campus has been rewritten to zero by the datapath", "kind": "misapplied", "rationale": "Forwarding tables do not edit DNS lifetimes." }
+          ],
+          "correctExplanation": "Stubs never climb. If they see total failure while the authority answers, the resolver in the middle is the break.",
+          "objectiveIds": ["Trace a name from a stub resolver through caches to an authoritative server"],
+          "prerequisiteConceptIds": ["net-dns-intro", "net-dns-system"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-anycast-10",
+      "conceptId": "net-anycast",
+      "title": "One address, routing picks the site",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-bgp"],
+      "goDeeper": "net-anycast-dns",
+      "diagram": "net-as-graph",
+      "explanation": [
+        "The same address can live in many places. Anycast is announcing one prefix from many locations and letting routing choose which location a given client hits. The packet does not carry a site id. The forwarding tables, filled by policy among advertised paths, send it to some next hop that leads to some copy.",
+        "Two clients can therefore reach different machines for 198.51.100.10. A client in Frankfurt follows whatever path its AS preferred toward that prefix and lands in Frankfurt. A client in Dallas lands in Dallas. Catchment is an accident of advertisements and policy, not a directory the client queried.",
+        "Failure and scale ride that accident. A site that withdraws the prefix sheds its catchment onto whatever announcements remain. A site that keeps announcing while dying will still attract the clients whose tables point there. Anycast is not a load balancer with a health check unless you build that on top. It is a routing trick with a shared name."
+      ],
+      "example": "198.51.100.0/24 is announced from FRA and from DFW. A host in Frankfurt sends to 198.51.100.10 and the packet never leaves Europe. A host in Dallas sends to the same address and never leaves Texas. Both think they have one service address.",
+      "whyItMatters": "Latency, outages, and 'it works for me' arguments are often catchment arguments. The address did not move. The path to a copy did.",
+      "quiz": [
+        {
+          "id": "ni-ac10-1",
+          "stem": "Anycast means:",
+          "correctAnswer": "One address announced from many places, with routing choosing the copy",
+          "distractors": [
+            { "text": "One place announcing a different address to every client on purpose", "kind": "reversed", "rationale": "That is unicast with many names. Anycast is one name, many places." },
+            { "text": "A packet that is copied to every site that announced the prefix", "kind": "nearby", "rationale": "That is multicast. Anycast delivers to one chosen copy." },
+            { "text": "A host route for every viewer, installed in every AS", "kind": "misapplied", "rationale": "The shared prefix is the point. Per-viewer routes would not scale." }
+          ],
+          "correctExplanation": "Same prefix, many origins, ordinary path selection. Each client hits one site.",
+          "objectiveIds": ["Explain anycast as one address announced from many places, with routing choosing"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-ac10-2",
+          "stem": "A client in Frankfurt and a client in Dallas both send to 198.51.100.10. They typically:",
+          "correctAnswer": "Land at different sites, each following its own path to that prefix",
+          "distractors": [
+            { "text": "Must land at the same site, because one address means one machine", "kind": "reversed", "rationale": "One address is the trick. Routing picks a copy per client." },
+            { "text": "Each receive a copy of the packet at every site that announced it", "kind": "nearby", "rationale": "Unicast delivery to one next hop, not a fan-out to every copy." },
+            { "text": "Cannot send until they first look up a per-city hostname", "kind": "misapplied", "rationale": "The client uses the shared address. Catchment is not a second name the client asked for." }
+          ],
+          "correctExplanation": "Same destination address, different forwarding tables, different copies.",
+          "objectiveIds": ["Predict why two clients can reach different locations for the same address"],
+          "prerequisiteConceptIds": ["net-bgp", "net-anycast"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-ac10-3",
+          "stem": "The FRA announcement is withdrawn; DFW keeps announcing the same prefix. Frankfurt clients typically:",
+          "correctAnswer": "Shift toward whatever remaining advertisement their AS now prefers",
+          "distractors": [
+            { "text": "Keep going to FRA, because anycast pins a client to a city forever", "kind": "reversed", "rationale": "Catchment follows currently accepted paths. A withdrawal moves it." },
+            { "text": "Lose the address from IP, so 198.51.100.10 ceases to exist on the host", "kind": "misapplied", "rationale": "The host still has the destination. The path to a copy changed." },
+            { "text": "Are converted to a multicast group so every remaining site answers", "kind": "nearby", "rationale": "Withdrawal is ordinary BGP. Delivery is still to one chosen copy." }
+          ],
+          "correctExplanation": "The name stayed. The set of announcements shrank. Policy picks among what is left.",
+          "objectiveIds": ["Predict why two clients can reach different locations for the same address"],
+          "prerequisiteConceptIds": ["net-anycast"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-anycast-dns-10",
+      "conceptId": "net-anycast-dns",
+      "title": "8.8.8.8 is near everyone because routing said so",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-anycast", "net-dns-system"],
+      "explanation": [
+        "A well-known resolver address is useful only if it is not actually far away. Anycast DNS announces that address — 8.8.8.8, 1.1.1.1, a root nameserver — from many sites. A stub or a recursive that sends a query to 8.8.8.8 is sending to 'whatever copy routing currently prefers'. The DNS roles did not change: stub, recursive, cache, authority. The path to the recursive (or to the root) did.",
+        "That is why a public resolver can be a short hop from almost anywhere without the client learning a per-city name. Catchment, not a directory, puts Mumbai's query in Mumbai. A cache at that site answers from nearby memory. A site that is sick but still announcing will still eat queries from its catchment; withdrawing the prefix is how anycast sheds load, not a DNS TTL.",
+        "The coupling is easy to miss. A DNS failure that is really a routing shift has moved which cache you speak to. A routing failure that is really a dead recursive has withdrawn a prefix the rest of the Internet still thinks is 'the resolver'."
+      ],
+      "example": "A phone in Mumbai is configured with 8.8.8.8. Its query is forwarded to a Mumbai copy and answered from that copy's cache. A phone in Frankfurt uses the same 8.8.8.8 and is answered in Frankfurt. Neither phone was told a regional hostname.",
+      "whyItMatters": "Measuring 'the RTT to 8.8.8.8' is measuring catchment. A number that jumps is often a site change, not a new continent of fiber.",
+      "quiz": [
+        {
+          "id": "ni-acdns10-1",
+          "stem": "Anycast DNS puts 8.8.8.8 near many clients by:",
+          "correctAnswer": "Announcing the same resolver address from many sites so routing picks a nearby copy",
+          "distractors": [
+            { "text": "Handing each client a unique resolver address at configuration time", "kind": "reversed", "rationale": "The well-known address is shared. Catchment, not a unique name, is the trick." },
+            { "text": "Installing a host route for every phone in every AS", "kind": "misapplied", "rationale": "Per-client host routes are not how a public resolver scales." },
+            { "text": "Making the stub climb the DNS tree without a recursive", "kind": "nearby", "rationale": "Roles stay the same. Only the path to the resolver address changed." }
+          ],
+          "correctExplanation": "One address, many announcements, ordinary path selection. The stub still asks a recursive.",
+          "objectiveIds": ["Explain anycast DNS as putting the same resolver address near many clients"],
+          "prerequisiteConceptIds": ["net-anycast", "net-dns-system"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-acdns10-2",
+          "stem": "A Mumbai stub and a Frankfurt stub both query 8.8.8.8. They typically:",
+          "correctAnswer": "Hit different copies, each a short hop from the stub that asked",
+          "distractors": [
+            { "text": "Both hit a single California machine, because one address means one site", "kind": "reversed", "rationale": "Anycast exists so they do not." },
+            { "text": "Each query is copied to every resolver site at once", "kind": "nearby", "rationale": "One query, one chosen copy, not a fan-out." },
+            { "text": "Must first resolve a city-specific name before they can use 8.8.8.8", "kind": "misapplied", "rationale": "The well-known address is the name they already have." }
+          ],
+          "correctExplanation": "Same resolver address, different catchments. That is why it can be a short hop from almost anywhere.",
+          "objectiveIds": ["Predict why 8.8.8.8 can be a short hop from almost anywhere"],
+          "prerequisiteConceptIds": ["net-anycast", "net-anycast-dns"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-acdns10-3",
+          "stem": "A resolver site stays announced while its cache is dead. Clients in its catchment typically:",
+          "correctAnswer": "Keep sending queries there; anycast follows the still-advertised prefix",
+          "distractors": [
+            { "text": "Automatically fail over, because a dead cache withdraws BGP by itself", "kind": "reversed", "rationale": "Health is not free. Someone has to withdraw the prefix." },
+            { "text": "Climb from the stub to the root, skipping the recursive", "kind": "nearby", "rationale": "The stub still aims at 8.8.8.8. Catchment did not change the DNS role." },
+            { "text": "Wait for a DNS TTL on 8.8.8.8 before they will use another site", "kind": "subtle", "rationale": "The address did not change. Site choice is routing, not a resolver TTL." }
+          ],
+          "correctExplanation": "Announcement, not cache health, is what routing sees. A sick site that still originates the prefix keeps its catchment.",
+          "objectiveIds": ["Predict why 8.8.8.8 can be a short hop from almost anywhere"],
+          "prerequisiteConceptIds": ["net-dns-system", "net-anycast-dns"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "net-cdn-10",
+      "conceptId": "net-cdn",
+      "title": "The origin is the wrong place for every viewer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-anycast", "net-dns-system"],
+      "goDeeper": "net-anycast-http",
+      "explanation": [
+        "The origin of a video is the wrong place to send every viewer. A CDN puts copies of the bytes next to the audience: edge caches in many cities, chosen by DNS, by anycast, or by both. The viewer still asks for a name. The system answers with an address that is supposed to be a nearby cache, not the origin.",
+        "A hit is served from the edge. A miss still has to fetch from the origin — or from a parent cache — and then the edge can answer the next viewer. Capacity and latency are both the same bet: keep the hot object in the catchment of the people who want it, and only pay the long haul on a miss or a first request.",
+        "The mapping is the fragile part. DNS that returns a far cache, or anycast that pins a viewer to a sick site, puts the bytes back on the wrong continent. The origin did not move. The choice of edge did."
+      ],
+      "example": "video.example.com is resolved to 198.51.100.10, an address of a nearby cache. The object is there: the viewer never touches origin 203.0.113.50. A first viewer after a purge misses; the cache fetches from 203.0.113.50, stores the object, and the next viewer in that catchment is a hit.",
+      "whyItMatters": "A 'slow origin' complaint is often a miss, a bad mapping, or a catchment that no longer has the object. The origin is what you pay when the edge failed at its job.",
+      "quiz": [
+        {
+          "id": "ni-cdn10-1",
+          "stem": "A CDN's job is to:",
+          "correctAnswer": "Put copies of the bytes next to viewers, using DNS and/or anycast to aim them",
+          "distractors": [
+            { "text": "Replace DNS with a forwarding table of every object hash", "kind": "misapplied", "rationale": "Viewers still resolve a name. The CDN uses DNS and routing; it does not delete them." },
+            { "text": "Force every viewer to fetch from one origin so caches stay empty", "kind": "reversed", "rationale": "The origin is what the CDN exists to avoid on the hot path." },
+            { "text": "Announce a unique host route for every viewer in every AS", "kind": "nearby", "rationale": "Edges are shared. Per-viewer host routes are not the product." }
+          ],
+          "correctExplanation": "Edge copies, mapping via DNS and/or anycast, origin as the backstop.",
+          "objectiveIds": ["Describe a CDN as putting bytes next to the viewer using DNS and/or anycast"],
+          "prerequisiteConceptIds": ["net-anycast", "net-dns-system"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-cdn10-2",
+          "stem": "The edge does not have the object. It typically:",
+          "correctAnswer": "Fetches from the origin (or a parent), then can serve the next viewer from cache",
+          "distractors": [
+            { "text": "Answers with a random other object so the viewer is never blocked", "kind": "misapplied", "rationale": "A miss is a fetch, not a substitution." },
+            { "text": "Withdraws the viewer's address from DNS until the origin is copied to every city", "kind": "nearby", "rationale": "One miss does not take the name off the air. It fills this cache." },
+            { "text": "Requires the stub to climb to the root for a new origin A record", "kind": "reversed", "rationale": "The viewer already has an edge address. The edge talks to origin." }
+          ],
+          "correctExplanation": "Miss, haul from origin, store, hit next time. That is the cache's job.",
+          "objectiveIds": ["Predict why a cache miss at the edge still has to fetch from an origin"],
+          "prerequisiteConceptIds": ["net-cdn"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-cdn10-3",
+          "stem": "Serving from a nearby cache instead of the origin trades:",
+          "correctAnswer": "Lower latency and origin load on hits, against misses that still pay the long haul",
+          "distractors": [
+            { "text": "A guarantee that every first request is as fast as a warm hit", "kind": "reversed", "rationale": "The first request in a catchment is often the miss." },
+            { "text": "The deletion of DNS, because caches are addressed only by prefix length", "kind": "nearby", "rationale": "DNS and/or anycast still aim the viewer. They are the mapping." },
+            { "text": "A requirement that the origin sit in every city", "kind": "misapplied", "rationale": "Copies sit in every city. That is the opposite of moving the origin." }
+          ],
+          "correctExplanation": "Hits are the win. Misses still fetch. Mapping is what decides whether you even get a chance at a hit.",
+          "objectiveIds": ["Describe a CDN as putting bytes next to the viewer using DNS and/or anycast"],
+          "prerequisiteConceptIds": ["net-anycast", "net-cdn"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-ipv6-10",
+      "conceptId": "net-ipv6",
+      "title": "More bits, a different neighbor story",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "explanation": [
+        "Running out of 32-bit names was the excuse. The mechanism change on the LAN is neighbor discovery. IPv6 addresses are 128 bits, so the space is large enough to stop treating scarcity as the architecture. A host still needs a link-layer address for the next hop on this segment. IPv6 does not use ARP for that job.",
+        "Neighbor Discovery replaces it: a host solicits the link address of a neighbor (or a router) with a multicast on the local segment, and learns the mapping from the advertisement that comes back. Routers advertise themselves. Hosts can also construct an address on the segment without a borrowed IPv4-style lease as the only story. The packet that leaves the LAN is still forwarded on the destination IP, not on a MAC.",
+        "Nothing in that change is a new inter-network policy. Larger names, a different way to bind them to the link, same job for the address in the header: tell the next network hop where this packet is going."
+      ],
+      "example": "Host 2001:db8::2 wants to send to 2001:db8::1 on the same LAN. It sends a Neighbor Solicitation for ::1, gets a Neighbor Advertisement with the link address, and only then puts the packet on the wire. It does not broadcast an ARP request.",
+      "whyItMatters": "Treating IPv6 as 'IPv4 with longer fields' misses why neighbor discovery exists — and why a quiet LAN with no NA replies is an IPv6 failure, not an ARP one.",
+      "quiz": [
+        {
+          "id": "ni-ipv610-1",
+          "stem": "IPv6, relative to IPv4, is primarily:",
+          "correctAnswer": "Larger addresses and neighbor discovery instead of ARP",
+          "distractors": [
+            { "text": "A new routing policy that replaces autonomous systems", "kind": "misapplied", "rationale": "IPv6 still names destinations. It does not replace policy domains." },
+            { "text": "The same 32-bit addresses with a different Ethernet type only", "kind": "reversed", "rationale": "The names got longer. That is not a cosmetic Ethernet change." },
+            { "text": "A rule that packets are forwarded on MAC addresses, not on IP", "kind": "nearby", "rationale": "The LAN still uses a link address locally. The next network hop is still the IP destination." }
+          ],
+          "correctExplanation": "128-bit names, and a different protocol to bind them to the link. Forwarding between networks is still on the IP destination.",
+          "objectiveIds": ["Describe IPv6 as larger addresses and a neighbor-discovery story instead of ARP"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-ipv610-2",
+          "stem": "On IPv6, a host that needs a neighbor's link address typically:",
+          "correctAnswer": "Sends a Neighbor Solicitation and waits for a Neighbor Advertisement",
+          "distractors": [
+            { "text": "Broadcasts an ARP request for the 128-bit address", "kind": "reversed", "rationale": "ARP is the IPv4 neighbor story. IPv6 does not use it." },
+            { "text": "Asks a recursive resolver for the neighbor's MAC as an A record", "kind": "misapplied", "rationale": "Link-layer discovery is local. DNS does not hand out MACs for LAN neighbors." },
+            { "text": "Waits for the destination to appear in a forwarding table as a /8", "kind": "nearby", "rationale": "A same-LAN neighbor is a link mapping, not an aggregate in a router." }
+          ],
+          "correctExplanation": "Solicit, advertise, then send. That is neighbor discovery on the segment.",
+          "objectiveIds": ["Predict what a host uses to find a neighbor's link address on IPv6"],
+          "prerequisiteConceptIds": ["net-ip", "net-ipv6"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-ipv610-3",
+          "stem": "2001:db8::2 sending to 2001:db8::1 on the same LAN, with no neighbor mapping yet, will:",
+          "correctAnswer": "Solicit ::1's link address before the data packet can be framed",
+          "distractors": [
+            { "text": "ARP for ::1, because neighbor discovery is only for routers", "kind": "reversed", "rationale": "Hosts use neighbor discovery for hosts as well as for routers." },
+            { "text": "Send the data immediately to a broadcast MAC and skip discovery", "kind": "nearby", "rationale": "Without a mapping, there is no unicast link destination to use." },
+            { "text": "Compress the 128-bit address to 32 bits and use IPv4 forwarding", "kind": "misapplied", "rationale": "IPv6 does not fall back to IPv4 just to find a LAN neighbor." }
+          ],
+          "correctExplanation": "No mapping, no frame. Neighbor Solicitation is the missing step.",
+          "objectiveIds": ["Predict what a host uses to find a neighbor's link address on IPv6"],
+          "prerequisiteConceptIds": ["net-ipv6"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-mpls-10",
+      "conceptId": "net-mpls",
+      "title": "The core can look up a label instead",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-forwarding-vs-routing"],
+      "diagram": "net-planes",
+      "explanation": [
+        "The datapath already knows how to look something up. It does not have to look up an IP prefix. MPLS puts a short label on the packet at the edge and lets the core swap labels: incoming 200 becomes outgoing 201, out that interface. The core row is a label, not 10.1.2.3. The IP header can ride along unexamined until the edge pops the label.",
+        "Control still filled the table. Some process — static, a signaling protocol, a controller — decided that this prefix or this traffic class should ride that label-switched path. Forwarding is still a lookup. The key changed. That is the whole move: push at the edge, swap in the core, pop at the far edge.",
+        "Operators want this when the core should be simple, or when many IP prefixes should share one path, or when the path should not be recomputed from the destination address at every hop. The cost is another table and another way to blackhole: a missing label is as dead as a missing prefix, and harder to ping by destination IP alone."
+      ],
+      "example": "An edge router maps 10.1.0.0/16 to label 200 and sends toward the core. Core router R2 has 200 → 201 out toward R3. R2 does not look up 10.1.2.3. R3 pops 201 and only then looks up the IP prefix to the last hop.",
+      "whyItMatters": "A core that 'cannot traceroute by IP' is often a core that is not looking at IP. Blame the label table, not the prefix the edge already classified.",
+      "quiz": [
+        {
+          "id": "ni-mpls10-1",
+          "stem": "In an MPLS core, a labeled packet is forwarded by:",
+          "correctAnswer": "Looking up the label and swapping it, not repeating an IP-prefix lookup",
+          "distractors": [
+            { "text": "Recomputing a network-wide path from the destination IP at every hop", "kind": "reversed", "rationale": "The core does not rerun routing on the IP destination. It swaps a label." },
+            { "text": "Broadcasting the packet so every core router can inspect the prefix", "kind": "nearby", "rationale": "Unicast swap to one next hop. There is no flood of the labeled packet." },
+            { "text": "Stripping IP addresses and replacing them with MAC addresses only", "kind": "misapplied", "rationale": "The IP header can still ride. The lookup key in the core is the label." }
+          ],
+          "correctExplanation": "Label in, new label out, one interface. The prefix was classified at the edge.",
+          "objectiveIds": ["Explain MPLS as forwarding on labels instead of repeating an IP lookup in the core"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-mpls10-2",
+          "stem": "Labeled packet with 200 arrives at core router R2, whose table says 200 → 201 out toward R3. R2:",
+          "correctAnswer": "Swaps 200 for 201 and sends to R3 without looking up 10.1.2.3",
+          "distractors": [
+            { "text": "Looks up 10.1.2.3 in an IP table and ignores the label", "kind": "reversed", "rationale": "The core row is the label. That is the point of having pushed one." },
+            { "text": "Drops the packet because labels are illegal in a forwarding table", "kind": "misapplied", "rationale": "The label table is a forwarding table. A matching row is a send." },
+            { "text": "Floods copies to every interface so R3 can be discovered", "kind": "nearby", "rationale": "The table already names the next hop. Discovery is not required." }
+          ],
+          "correctExplanation": "Match 200, push 201, out the named interface. IP waits for the far edge.",
+          "objectiveIds": ["Predict what a core router looks at when a labeled packet arrives"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing", "net-mpls"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-mpls10-3",
+          "stem": "A packet to 10.1.2.3 enters an MPLS edge that has a label for 10.1.0.0/16. The edge typically:",
+          "correctAnswer": "Looks up the prefix once, pushes the label, and sends toward the core",
+          "distractors": [
+            { "text": "Leaves the packet unlabeled so every core hop must repeat the IP lookup", "kind": "reversed", "rationale": "Pushing at the edge is what lets the core skip IP." },
+            { "text": "Deletes 10.1.2.3 from the header and hopes the label is the address", "kind": "nearby", "rationale": "The IP destination usually still rides. The label is an extra key." },
+            { "text": "Waits for the destination host to advertise a label for itself", "kind": "misapplied", "rationale": "The edge classifies on a prefix. Hosts do not each originate a core label." }
+          ],
+          "correctExplanation": "One IP lookup at the edge, then labels. The core is done with prefixes.",
+          "objectiveIds": ["Predict what a core router looks at when a labeled packet arrives"],
+          "prerequisiteConceptIds": ["net-mpls"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-sdn-10",
+      "conceptId": "net-sdn",
+      "title": "A controller fills the tables the datapath already had",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-forwarding-vs-routing"],
+      "diagram": "net-planes",
+      "explanation": [
+        "Distributed protocols fill tables by rumor. A controller fills them by computation. Software-defined control keeps the datapath — match a key, send to a next hop — and moves the process that writes the row into a logically centralized program. Switches ask, or are told, what to install. They do not have to gossip a map with every peer.",
+        "The win is a view. One program can compute paths, encode policy, and push consistent rows. The cost is a failure domain: if the controller is partitioned from a switch, that switch has only what it was last told. A distributed protocol would have kept talking to neighbors. The datapath does not care which writer filled the table, which is why SDN is a control-plane move, not a new forwarding theory.",
+        "Centralized is a claim about logic, not about a single box. Controllers replicate. The intellectual cut is still there: path computation is not running as a rumor on every switch. Debugging follows that cut. A wrong row is a controller bug or a push that did not land. A blackhole with a correct row is still the datapath."
+      ],
+      "example": "A controller computes path A-B-C for 10.1.0.0/16 and installs match 10.1.0.0/16 → B on A, → C on B. No switch flooded a topology to the others. When the controller cannot reach B, B keeps forwarding on the last installed row until it expires or a human clears it — the same split as a dead routing process on a classical box.",
+      "whyItMatters": "A 'fabric that will not take a path' is often a controller that will not, or cannot, write the row. Rebooting the datapath will not invent the computation.",
+      "quiz": [
+        {
+          "id": "ni-sdn10-1",
+          "stem": "SDN, relative to a distributed control plane, is:",
+          "correctAnswer": "A logically centralized controller computing paths and filling the tables",
+          "distractors": [
+            { "text": "A new datapath that forwards without any table at all", "kind": "reversed", "rationale": "The datapath still looks up. Only the writer of the row moved." },
+            { "text": "A requirement that every switch flood its full topology to every other switch", "kind": "nearby", "rationale": "That flood is the distributed design SDN is an alternative to." },
+            { "text": "A rule that packets carry the entire path so switches need no control", "kind": "misapplied", "rationale": "Source routing is a different idea. SDN still installs rows." }
+          ],
+          "correctExplanation": "Same lookup, different writer. Computation in a controller, not a rumor among peers.",
+          "objectiveIds": ["Describe SDN as a logically centralized controller filling forwarding tables"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ni-sdn10-2",
+          "stem": "A switch partitioned from its controller typically:",
+          "correctAnswer": "Keeps forwarding on last-installed rows until they are replaced or time out",
+          "distractors": [
+            { "text": "Recomputes a network-wide map by gossiping with every other switch", "kind": "nearby", "rationale": "That is what a distributed protocol would do. This switch is waiting on a writer that cannot reach it." },
+            { "text": "Immediately invents new prefixes so the datapath never goes quiet", "kind": "reversed", "rationale": "The datapath does not invent policy. It looks up what was pushed." },
+            { "text": "Stops looking up entirely, because SDN forbids a local table", "kind": "misapplied", "rationale": "The table is local. The controller is the remote writer." }
+          ],
+          "correctExplanation": "Writer gone, table remains. That is the same plane split as a dead routing process.",
+          "objectiveIds": ["Contrast a distributed control plane with a controller that computes paths"],
+          "prerequisiteConceptIds": ["net-forwarding-vs-routing", "net-sdn"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ni-sdn10-3",
+          "stem": "Choosing a controller over distributed rumor trades:",
+          "correctAnswer": "A global view and consistent pushes, against the controller as a failure domain",
+          "distractors": [
+            { "text": "A thicker datapath and no tables, against slower lookups", "kind": "reversed", "rationale": "The datapath is unchanged in kind. The control writer is what moved." },
+            { "text": "A guarantee that partitioned switches recompute as well as neighbors would", "kind": "nearby", "rationale": "Partition is the cost: they do not recompute; they hold last rows." },
+            { "text": "The deletion of prefixes, because controllers only match MAC addresses", "kind": "misapplied", "rationale": "Controllers can match prefixes, labels, or other keys. The key is not the cut." }
+          ],
+          "correctExplanation": "You bought a view. You bought a writer you can lose. The lookup did not get smarter on its own.",
+          "objectiveIds": ["Contrast a distributed control plane with a controller that computes paths"],
+          "prerequisiteConceptIds": ["net-sdn"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-measurement-10",
+      "conceptId": "net-measurement",
+      "title": "Traceroute is a rumor about ICMP",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-icmp", "net-bgp"],
+      "explanation": [
+        "TTL expiry plus an ICMP reply is not a contract to reveal the forwarding path. Traceroute sends a probe with a small TTL, hopes a hop will answer Time Exceeded, and prints the source address of that reply. The hop may answer from a different interface than the one that forwarded. It may not answer at all. The next probe may take a different next hop because the path is load-balanced. The picture is a collage.",
+        "BGP's view is a different collage: prefixes and AS paths this AS was willing to install, not the interfaces a probe happened to tickle. A looking glass that shows 64500 3356 15169 does not promise that traceroute will print a router in 3356, or that the ICMP sources will sit in 3356, or that the reverse path of the Time Exceeded will follow the forward path.",
+        "We use both anyway because the alternatives are worse. A lie with structure — this hop answered, this hop did not, this AS path is what we announce — is still a starting point. Treating traceroute as a map, or BGP as a latency oracle, is how measurement becomes fiction."
+      ],
+      "example": "Traceroute to 8.8.8.8 prints a hop that replies from an address in AS 701, then a hop that never replies, then a hop in AS 15169. The BGP table at the source AS shows path 3356 15169. The silent hop is a rate-limited ICMP. The 701 address is an outbound interface on a router whose forwarding path is still 3356. None of the three lines is a confession of the true reverse path.",
+      "whyItMatters": "A 'new backbone' story that is one ICMP source, or a 'BGP hijack' story that is one starred hop, is measurement taken as topology. The lie is in the tool, not always in the network.",
+      "quiz": [
+        {
+          "id": "ni-meas10-1",
+          "stem": "Traceroute can lie because:",
+          "correctAnswer": "ICMP replies need not come from the forwarding interface, and probes need not share a path",
+          "distractors": [
+            { "text": "TTL expiry is illegal, so every printed hop is invented by the host", "kind": "reversed", "rationale": "Hops do expire TTL. The lie is which address answers, and whether the next probe took the same path." },
+            { "text": "BGP forbids ICMP, so traceroute can only print AS numbers", "kind": "nearby", "rationale": "Traceroute is an ICMP (or equivalent) tool. BGP is a different view." },
+            { "text": "Every hop must rewrite the destination prefix before it will answer", "kind": "misapplied", "rationale": "The destination stays. The reply's source is what misleads." }
+          ],
+          "correctExplanation": "Time Exceeded is a side channel, not a dump of the forwarding table. Load-balancing and silent hops finish the collage.",
+          "objectiveIds": ["Explain why traceroute can lie and why we still use it"],
+          "prerequisiteConceptIds": ["net-icmp", "net-bgp"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-meas10-2",
+          "stem": "A hop forwards your probe toward 8.8.8.8 but replies Time Exceeded from an address in a different AS than the BGP path. This typically means:",
+          "correctAnswer": "The ICMP source is another interface; it is not proof the forward path changed AS",
+          "distractors": [
+            { "text": "BGP has been rewritten to that ICMP source AS for this packet", "kind": "reversed", "rationale": "A reply source is not an installed path. The forwarding next hop can disagree with it." },
+            { "text": "The probe was dropped, because mixed AS numbers make TTL expiry illegal", "kind": "misapplied", "rationale": "The hop did forward and did answer. The address it answered from is the lie." },
+            { "text": "Traceroute has started to look up labels instead of IP", "kind": "nearby", "rationale": "The tool is still TTL plus ICMP. A label core is a different way to go silent, not a new AS in the reply." }
+          ],
+          "correctExplanation": "Forward path and ICMP source are different facts. Print the address, do not promote it to an AS-path rewrite.",
+          "objectiveIds": ["Predict a case where ICMP replies do not reveal the true forwarding path"],
+          "prerequisiteConceptIds": ["net-icmp", "net-measurement"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ni-meas10-3",
+          "stem": "Two consecutive traceroute probes to the same destination print different mid-path addresses. A likely cause is:",
+          "correctAnswer": "Load-balanced forwarding, so each probe took a different next hop",
+          "distractors": [
+            { "text": "BGP installing both probes as more-specific host routes", "kind": "nearby", "rationale": "A measurement does not install host routes. ECMP already splits flows or packets." },
+            { "text": "ICMP being unable to expire TTL on any hop", "kind": "reversed", "rationale": "Both hops answered. The path split; it did not go silent." },
+            { "text": "The destination rewriting its own address between the two probes", "kind": "misapplied", "rationale": "Mid-path addresses are the hops. The destination did not have to move." }
+          ],
+          "correctExplanation": "Each probe is a new packet. Per-packet or per-flow balancing makes the collage change line by line.",
+          "objectiveIds": ["Predict a case where ICMP replies do not reveal the true forwarding path"],
+          "prerequisiteConceptIds": ["net-measurement"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-anycast-http-10",
+      "conceptId": "net-anycast-http",
+      "title": "The connection and the cache can disagree",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-cdn"],
+      "explanation": [
+        "A connection is pinned to a site. A cache is a pile of bytes at a site. Routing can move one without the other. Anycast at the layer where a viewer holds a connection means the packets of that conversation must keep landing on the machine that has the conversation. A CDN cache, chosen by DNS or by a different catchment, may sit somewhere else and hold the object the viewer wanted.",
+        "Mid-flow, a routing change is the sharp failure. The viewer still sends to 198.51.100.10. Tables now prefer New York. New York has no record of the London conversation, so the transfer dies even if New York has the object in cache. The cache hit cannot resume a conversation it never saw.",
+        "The quieter disagreement is mapping. DNS aimed the name at a cache in London. Anycast on the connection's address aimed the packets at Frankfurt. Frankfurt may miss, fetch, and serve, or it may not be the cache the operator meant. Bytes and conversation are two systems sharing an address by accident until someone designs them to share on purpose."
+      ],
+      "example": "A viewer opens a connection to 198.51.100.10 and lands in London, where the object is cached. A policy change prefers a New York announcement of the same prefix. Further packets arrive in New York, which has the object and no conversation. The transfer fails. A retry may succeed in New York as a new conversation against that cache.",
+      "whyItMatters": "A 'broken download' after a routing change is often a conversation that moved to a cache that does not know it. Retrying is a new conversation. The old one will not migrate.",
+      "quiz": [
+        {
+          "id": "ni-achttp10-1",
+          "stem": "Anycast at the connection layer clashes with an HTTP cache when:",
+          "correctAnswer": "Packets of an existing conversation land on a site that does not have that conversation",
+          "distractors": [
+            { "text": "Every cache is required to share one conversation table worldwide", "kind": "reversed", "rationale": "Caches share objects, not live conversations, unless you build that extra." },
+            { "text": "DNS refuses to return an address until the origin is empty", "kind": "misapplied", "rationale": "The clash is routing versus connection state, not an empty origin." },
+            { "text": "A miss is impossible, because anycast copies every object to every site first", "kind": "nearby", "rationale": "Sites can still miss. The sharper failure is a live conversation arriving at the wrong site." }
+          ],
+          "correctExplanation": "The conversation is pinned. The address is not. A new site can have the bytes and still drop the conversation.",
+          "objectiveIds": ["Explain the clash when a TCP connection and an HTTP cache disagree about where the client is"],
+          "prerequisiteConceptIds": ["net-cdn"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-achttp10-2",
+          "stem": "Routing moves an in-flight anycast conversation from London to New York. New York has the object cached. The transfer typically:",
+          "correctAnswer": "Breaks, because New York does not have the London conversation",
+          "distractors": [
+            { "text": "Continues, because a cached object is enough to resume any conversation", "kind": "reversed", "rationale": "A cache hit is bytes. It is not the handshake and sequence state of the old conversation." },
+            { "text": "Is converted into a DNS lookup for a city-specific name mid-stream", "kind": "nearby", "rationale": "The client still has the anycast address. Routing moved; the name did not." },
+            { "text": "Waits in London until New York copies the conversation table", "kind": "misapplied", "rationale": "Packets already went to New York. London cannot hold them back." }
+          ],
+          "correctExplanation": "Object present, conversation absent. The next try is a new conversation, not a migration.",
+          "objectiveIds": ["Predict what breaks if routing moves an anycast TCP flow to a different site mid-connection"],
+          "prerequisiteConceptIds": ["net-cdn", "net-anycast-http"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-achttp10-3",
+          "stem": "DNS aimed a viewer at a London cache; anycast on the connection address aims packets at Frankfurt. The diagnosis is:",
+          "correctAnswer": "The mapping for the name and the catchment for the address picked different sites",
+          "distractors": [
+            { "text": "The origin has withdrawn every object, so both cities must miss", "kind": "nearby", "rationale": "The disagreement is about where the viewer is, not whether the origin still has the file." },
+            { "text": "A connection cannot use an address that DNS also used", "kind": "reversed", "rationale": "CDNs use both. The bug is when they do not point at the same site." },
+            { "text": "Frankfurt must be using IPv6 neighbor discovery on the viewer's home LAN", "kind": "misapplied", "rationale": "This is an anycast-versus-cache mapping problem, not a LAN neighbor timeout." }
+          ],
+          "correctExplanation": "Two systems, two choices of site. The conversation and the intended cache no longer agree on where the viewer is.",
+          "objectiveIds": ["Explain the clash when a TCP connection and an HTTP cache disagree about where the client is"],
+          "prerequisiteConceptIds": ["net-anycast-http"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-anycast-bgp-10",
+      "conceptId": "net-anycast-bgp",
+      "title": "A more-specific can pull traffic across an ocean",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-anycast", "net-policy-route"],
+      "diagram": "net-bgp-path",
+      "explanation": [
+        "Nearest is a hope. Prefix length and local preference are the actual selectors. Anycast assumes that each client will follow a path toward some nearby copy. BGP will violate that assumption on purpose. A site that announces a more-specific slice of the anycast prefix will win longest-prefix match in every table that hears the slice, even if that site is the far one. A site that wins local preference on the same prefix will win even if the AS path is longer and the ocean is in the way.",
+        "The two knobs stack. A Tokyo /24 inside a Virginia /23 means California clients who heard both send to Tokyo. A far transit with local pref 200 means those same clients send to whoever that transit leads to, nearby copy or not. Catchment is then a policy accident: engineering, a leak of a more-specific, or a preference that was set for traffic-engineering and never revisited.",
+        "Operators who anycast without watching those knobs discover that 'global anycast' is 'whoever shouted the longest mask'. Withdrawing the more-specific, or dropping the inflated preference, is how you give the nearby copy its catchment back. The datapath will not do it for you: it is obeying the rows it was given."
+      ],
+      "example": "Virginia announces 198.51.100.0/23 from IAD. Tokyo announces 198.51.100.0/24 from NRT. A client in California matches the /24 and is pulled to Tokyo, even though IAD is closer, because the longer mask won. Separately, AS 64500 sets local pref 200 toward a far transit that leads to NRT for the same /23; even without the /24, preference sends California across the Pacific.",
+      "whyItMatters": "An anycast site that is 'mysteriously global' is often a more-specific or a preference, not a better fiber. Traffic engineering of one prefix is catchment engineering of every client who heard it.",
+      "quiz": [
+        {
+          "id": "ni-acbgp10-1",
+          "stem": "A nearby site announces 198.51.100.0/23; a far site announces 198.51.100.0/24. Clients who heard both typically:",
+          "correctAnswer": "Follow the /24 to the far site, because the more-specific row wins",
+          "distractors": [
+            { "text": "Follow the /23, because nearby always beats more-specific", "kind": "reversed", "rationale": "Longest match does not care about geography. The /24 wins." },
+            { "text": "Load-share every packet to both sites in the datapath", "kind": "nearby", "rationale": "One longest match, one next hop. There is no geographic average." },
+            { "text": "Drop the address, because overlapping anycast prefixes are illegal", "kind": "misapplied", "rationale": "Overlap is how the steal works. It is legal and common." }
+          ],
+          "correctExplanation": "More specific beats nearer. Catchment follows the slice, across an ocean if that is where the /24 lives.",
+          "objectiveIds": ["Explain how a more-specific prefix can pull anycast traffic across an ocean"],
+          "prerequisiteConceptIds": ["net-anycast", "net-policy-route"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ni-acbgp10-2",
+          "stem": "The same /23 from a nearby copy loses to a far copy because local pref 200 is set toward the far transit. That is:",
+          "correctAnswer": "Policy overriding nearest: preference is compared before path length or geography",
+          "distractors": [
+            { "text": "A datapath bug, because anycast forbids local preference", "kind": "reversed", "rationale": "Anycast is ordinary BGP. Preference still ranks the advertisements." },
+            { "text": "Longest-prefix match, which always prefers the shorter mask", "kind": "nearby", "rationale": "This question is the same prefix length. Preference, not mask, is the knob." },
+            { "text": "Neighbor discovery picking the far site's MAC on the client's LAN", "kind": "misapplied", "rationale": "The ocean is an inter-AS choice, not a LAN mapping." }
+          ],
+          "correctExplanation": "Local preference outranks 'which copy is closer'. Geography is not an attribute in the decision process.",
+          "objectiveIds": ["Predict why policy and prefix length can override nearest for an anycast address"],
+          "prerequisiteConceptIds": ["net-policy-route", "net-anycast-bgp"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ni-acbgp10-3",
+          "stem": "To give California back to the nearby IAD copy after Tokyo's /24 leaked, operators typically:",
+          "correctAnswer": "Withdraw or filter the more-specific so the /23 can win again",
+          "distractors": [
+            { "text": "Set local pref 0 on IAD so Tokyo remains the only legal copy", "kind": "reversed", "rationale": "That would keep California on Tokyo. The /24 is the override to remove." },
+            { "text": "Delete 198.51.100.10 from DNS until every site announces a /32", "kind": "nearby", "rationale": "The steal is a routing row. DNS is a different mapping, and /32s would make it worse." },
+            { "text": "Ask the datapath to prefer shorter prefixes for anycast only", "kind": "misapplied", "rationale": "Lookup will not grow a special anycast exception. Change the rows." }
+          ],
+          "correctExplanation": "Remove the longer mask, or stop accepting it. Nearest never had a vote while the /24 was installed.",
+          "objectiveIds": ["Predict why policy and prefix length can override nearest for an anycast address"],
+          "prerequisiteConceptIds": ["net-anycast", "net-anycast-bgp"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

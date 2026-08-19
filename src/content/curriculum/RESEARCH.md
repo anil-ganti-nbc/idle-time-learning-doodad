@@ -23,6 +23,10 @@ Where they disagree, prerequisite logic wins.
   isolation, and the first look at interrupts and IPC. Memory, concurrency,
   and scheduling come next; storage and kernel internals last.
 - Networking: packets and a reliable byte stream before BGP (Stanford CS144).
+  BGP requires an autonomous system (policy island) before it is thinkable;
+  congestion remains reachable from the stack alone so a sender can share a
+  pipe without first learning TCP state. RFCs (791, 9293, 5681, 9000, 4271,
+  1034) and Saltzer/Reed/Clark inform mechanism names, not prose.
 - Compilers: lex/parse/types before IR/opt, backend last (Stanford CS143,
   CMU 15-411).
 - ML: supervised linear models before nets; nets and sequences before

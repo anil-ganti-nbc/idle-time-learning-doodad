@@ -1376,6 +1376,348 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "net-encap": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Encapsulation stack">
+      <rect x="40" y="20" width="480" height="32" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="41" textAnchor="middle" fill="currentColor" fontSize="12">
+        data
+      </text>
+      <rect x="40" y="56" width="110" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="95" y="77" textAnchor="middle" fill="currentColor" fontSize="12">
+        ports
+      </text>
+      <rect x="150" y="56" width="370" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="335" y="77" textAnchor="middle" fill="currentColor" fontSize="12">
+        segment
+      </text>
+      <rect x="40" y="92" width="110" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="95" y="113" textAnchor="middle" fill="currentColor" fontSize="12">
+        IP addrs
+      </text>
+      <rect x="150" y="92" width="370" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="335" y="113" textAnchor="middle" fill="currentColor" fontSize="12">
+        packet
+      </text>
+      <rect x="40" y="128" width="110" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="95" y="149" textAnchor="middle" fill="currentColor" fontSize="12">
+        MACs
+      </text>
+      <rect x="150" y="128" width="370" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="335" y="149" textAnchor="middle" fill="currentColor" fontSize="12">
+        frame
+      </text>
+    </svg>
+  ),
+  "net-switch-lan": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A switch learns which port a MAC spoke from">
+      <rect x="220" y="56" width="120" height="48" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="85" textAnchor="middle" fill="currentColor" fontSize="13">
+        switch
+      </text>
+      <rect x="28" y="20" width="88" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="72" y="43" textAnchor="middle" fill="currentColor" fontSize="12">
+        A :1
+      </text>
+      <rect x="28" y="104" width="88" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="72" y="127" textAnchor="middle" fill="currentColor" fontSize="12">
+        C :3
+      </text>
+      <rect x="444" y="56" width="88" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="488" y="79" textAnchor="middle" fill="currentColor" fontSize="12">
+        B :2
+      </text>
+      <path d="M116 38 H220 M116 122 H220 M340 80 H444" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="148" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        A last spoke on 1 · B on 2 · flood only the unknown
+      </text>
+    </svg>
+  ),
+  "net-arp-resolve": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="ARP asks who has this IP">
+      <rect x="24" y="36" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="94" y="60" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.7
+      </text>
+      <text x="94" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        who has .9?
+      </text>
+      <path d="M164 64 H248" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="206" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        broadcast
+      </text>
+      <rect x="248" y="36" width="140" height="56" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="318" y="60" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.9
+      </text>
+      <text x="318" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        aa:bb:… answers
+      </text>
+      <path d="M388 64 H436" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="436" y="40" width="100" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="486" y="69" textAnchor="middle" fill="currentColor" fontSize="12">
+        cache
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        IP known · MAC not yet · then the frame can leave
+      </text>
+    </svg>
+  ),
+  "net-subnet": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A prefix is an address plus a length">
+      <rect x="28" y="28" width="240" height="72" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="148" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        10.1.0.0/16
+      </text>
+      <text x="148" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        sixteen bits in common
+      </text>
+      <rect x="300" y="28" width="232" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="416" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        10.1.4.0/24
+      </text>
+      <text x="416" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        more bits · more specific
+      </text>
+      <text x="280" y="130" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a length, not a class · the longer match wins
+      </text>
+    </svg>
+  ),
+  "net-nat-map": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="NAT maps many private addresses onto one public">
+      <rect x="20" y="28" width="150" height="88" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="95" y="56" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.7:4000
+      </text>
+      <text x="95" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.8:4000
+      </text>
+      <text x="95" y="100" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        private
+      </text>
+      <path d="M170 72 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="230" y="36" width="140" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="300" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        NAT table
+      </text>
+      <text x="300" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        203.0.113.4:…
+      </text>
+      <path d="M370 72 H430" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="430" y="44" width="110" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="485" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        public
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        no mapping · inbound has nowhere to land
+      </text>
+    </svg>
+  ),
+  "net-tcp-ack": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Sequence numbers and acknowledgements">
+      <text x="80" y="28" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        sender
+      </text>
+      <text x="460" y="28" textAnchor="end" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        receiver
+      </text>
+      <path d="M80 48 H480" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M80 88 H480" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M80 128 H480" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M120 48 L420 88" stroke="currentColor" strokeOpacity="0.55" />
+      <text x="270" y="62" textAnchor="middle" fill="currentColor" fontSize="11">
+        seq 100
+      </text>
+      <path d="M420 88 L160 128" stroke="currentColor" strokeOpacity="0.55" />
+      <text x="300" y="118" textAnchor="middle" fill="currentColor" fontSize="11">
+        ack 200
+      </text>
+      <text x="280" y="152" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        what arrived · what to send next
+      </text>
+    </svg>
+  ),
+  "net-slide-win": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A sliding window bounds data in flight">
+      <rect x="24" y="40" width="48" height="36" rx="3" fill="currentColor" fillOpacity="0.2" />
+      <rect x="76" y="40" width="48" height="36" rx="3" fill="currentColor" fillOpacity="0.2" />
+      <rect x="128" y="36" width="260" height="44" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <rect x="140" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="196" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="252" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="308" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="400" y="40" width="48" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.25" />
+      <rect x="452" y="40" width="48" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.25" />
+      <text x="258" y="64" textAnchor="middle" fill="currentColor" fontSize="11">
+        in flight
+      </text>
+      <text x="280" y="116" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        ACKed · window · not yet allowed
+      </text>
+    </svg>
+  ),
+  "net-cwnd": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A congestion window grows then cuts">
+      <path d="M40 120 H520" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M40 20 V120" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M40 110 L120 90 L200 50 L280 20 L280 70 L360 55 L440 40 L440 80 L520 68" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <text x="280" y="36" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        loss
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        probe up · cut on a signal · share the unseen pipe
+      </text>
+    </svg>
+  ),
+  "net-bloat": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A huge buffer turns congestion into delay">
+      <rect x="40" y="36" width="100" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="90" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        sender
+      </text>
+      <path d="M140 64 H200" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="200" y="24" width="180" height="88" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="216" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <rect x="250" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <rect x="284" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <rect x="318" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <text x="290" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        standing queue
+      </text>
+      <path d="M380 64 H440" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="440" y="44" width="88" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="484" y="69" textAnchor="middle" fill="currentColor" fontSize="12">
+        link
+      </text>
+      <text x="280" y="146" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        no drop · just late
+      </text>
+    </svg>
+  ),
+  "net-as-graph": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Autonomous systems as policy islands">
+      <rect x="36" y="28" width="130" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="101" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        AS 1
+      </text>
+      <rect x="214" y="28" width="130" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="279" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        AS 2
+      </text>
+      <rect x="392" y="28" width="130" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="457" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        AS 3
+      </text>
+      <path d="M166 64 H214 M344 64 H392" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one policy per island · a cable is not agreement
+      </text>
+    </svg>
+  ),
+  "net-bgp-path": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="BGP chooses a path by policy">
+      <rect x="24" y="40" width="90" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="69" y="67" textAnchor="middle" fill="currentColor" fontSize="12">
+        you
+      </text>
+      <path d="M114 54 H170" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M114 70 H170" stroke="currentColor" strokeOpacity="0.25" />
+      <rect x="170" y="24" width="110" height="36" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="225" y="47" textAnchor="middle" fill="currentColor" fontSize="11">
+        65000 1 2
+      </text>
+      <rect x="170" y="76" width="110" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="225" y="99" textAnchor="middle" fill="currentColor" fontSize="11">
+        80 90 2
+      </text>
+      <path d="M280 42 H340" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="340" y="28" width="196" height="80" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="438" y="58" textAnchor="middle" fill="currentColor" fontSize="12">
+        local pref first
+      </text>
+      <text x="438" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        then AS-path · not hops
+      </text>
+      <text x="280" y="138" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the longer rumor can still win
+      </text>
+    </svg>
+  ),
+  "net-peer-transit": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Peering exchanges customers; transit sells the rest">
+      <rect x="40" y="28" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="110" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        peer
+      </text>
+      <rect x="210" y="28" width="140" height="56" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        you
+      </text>
+      <rect x="380" y="28" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="450" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        transit
+      </text>
+      <path d="M180 56 H210" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M350 56 H380" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="195" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        customers only
+      </text>
+      <text x="365" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        everyone else · paid
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        settlement-free is not a default route
+      </text>
+    </svg>
+  ),
+  "net-leak": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A more-specific unauthorized prefix steals traffic">
+      <rect x="28" y="36" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="103" y="64" textAnchor="middle" fill="currentColor" fontSize="12">
+        owner
+      </text>
+      <text x="103" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        203.0.113.0/24
+      </text>
+      <rect x="206" y="36" width="148" height="64" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="64" textAnchor="middle" fill="currentColor" fontSize="12">
+        hijack
+      </text>
+      <text x="280" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        203.0.113.0/25
+      </text>
+      <path d="M354 68 H412" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="412" y="44" width="120" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="472" y="73" textAnchor="middle" fill="currentColor" fontSize="12">
+        traffic
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        more specific wins · ownership is not checked
+      </text>
+    </svg>
+  ),
+  "net-planes": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Control plane fills the table the data plane looks up">
+      <rect x="36" y="28" width="220" height="80" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        control plane
+      </text>
+      <text x="146" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        routing fills the table
+      </text>
+      <path d="M256 68 H316" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="316" y="28" width="208" height="80" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="420" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        data plane
+      </text>
+      <text x="420" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        lookup · next hop
+      </text>
+      <text x="280" y="134" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the process can die · the last table still forwards
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

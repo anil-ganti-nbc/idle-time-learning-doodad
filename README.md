@@ -10,6 +10,15 @@ Completed production courses:
 - Computer Architecture Foundations
 - Modern CPU Microarchitecture
 - GPU Architecture and Parallel Execution
+- Semiconductor Process Foundations
+- Photolithography
+- Modern Leading-Edge Manufacturing
+- Operating Systems Foundations
+- Memory, Concurrency, and Scheduling
+- Storage, Filesystems, and Kernel Internals
+- Networking Foundations
+- Transport and Congestion
+- Routing and Internet Architecture
 
 ## Run it
 

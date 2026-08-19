@@ -1,0 +1,393 @@
+{
+  "courseId": "net-foundations",
+  "moduleId": "net-f-link",
+  "lessons": [
+    {
+      "id": "net-ethernet-10",
+      "conceptId": "net-ethernet",
+      "title": "A local envelope, not an Internet ticket",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-packet"],
+      "goDeeper": "net-mac",
+      "explanation": [
+        "On a LAN the envelope is a frame, and the name on it is a MAC. An Ethernet frame wraps a payload — often an IP packet — with a destination MAC, a source MAC, a type field, and a trailer that helps catch bit errors on this link. That envelope is for this medium. It is not a ticket across the public Internet.",
+        "A frame that stays on a local link is delivered to a MAC that shares the medium or the switch fabric. A packet that can leave the network is the inner IP datagram: its destination address still makes sense after the frame is stripped. The router peels the frame, reads the packet, and builds a new frame for the next link.",
+        "The failure is treating the frame as if it routed. Send Ada's frame unchanged toward 93.184.216.34 and the far network has no idea what that MAC means. Local delivery and internet delivery are different envelopes."
+      ],
+      "example": "Ada at 10.0.0.7 sends to Bea at 10.0.0.9. The NIC emits a frame whose destination MAC is Bea's. The IP packet inside names 10.0.0.9. When Ada later sends to 93.184.216.34, the frame's destination MAC is the router's, not the distant server's. Only the inner packet names 93.184.216.34.",
+      "whyItMatters": "If a frame and a packet look like the same envelope, you will expect Ethernet to cross networks and then be confused when a router strips the MAC.",
+      "quiz": [
+        {
+          "id": "nf-eth10-1",
+          "stem": "An Ethernet frame is:",
+          "correctAnswer": "A local delivery envelope that names MAC addresses on this link",
+          "distractors": [
+            { "text": "A ticket whose MAC is valid on every network in the world", "kind": "misconception", "rationale": "A MAC is a local name, not an Internet name." },
+            { "text": "The IP header with the payload removed", "kind": "nearby", "rationale": "The packet sits inside the frame." },
+            { "text": "A port number that names a program on the host", "kind": "misapplied", "rationale": "Ports are transport, not the local envelope." }
+          ],
+          "correctExplanation": "MACs, this link, this medium. That is the frame.",
+          "objectiveIds": ["Describe an Ethernet frame as a local delivery envelope with MAC addresses"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-eth10-2",
+          "stem": "Ada sends to 93.184.216.34. The Ethernet destination on her first hop is:",
+          "correctAnswer": "The router's MAC, because the frame cannot leave this link",
+          "distractors": [
+            { "text": "The distant server's MAC, copied from the IP address", "kind": "reversed", "rationale": "A far MAC is not on this LAN and is not in the IP header." },
+            { "text": "No MAC at all, because IP packets never use frames", "kind": "nearby", "rationale": "On Ethernet, the packet still rides in a frame." },
+            { "text": "A broadcast to every host on the public Internet", "kind": "misapplied", "rationale": "Ethernet broadcast stops at the local link." }
+          ],
+          "correctExplanation": "The frame is local. The packet names the far IP. The first MAC is the next hop.",
+          "objectiveIds": ["Distinguish a frame that stays on a local link from a packet that can leave the network"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nf-eth10-3",
+          "stem": "A router that forwards Ada's packet toward another network typically:",
+          "correctAnswer": "Strips the arriving frame and emits a new frame on the next link",
+          "distractors": [
+            { "text": "Forwards the original Ethernet header unchanged to the far host", "kind": "reversed", "rationale": "The far link has different MACs." },
+            { "text": "Deletes the IP destination so only the MAC remains", "kind": "nearby", "rationale": "The packet is what can leave the network." },
+            { "text": "Converts the frame into a file before the next hop", "kind": "misapplied", "rationale": "Hops forward packets, not files." }
+          ],
+          "correctExplanation": "Local envelope off, new local envelope on. The packet continues.",
+          "objectiveIds": ["Distinguish a frame that stays on a local link from a packet that can leave the network"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-mac-10",
+      "conceptId": "net-mac",
+      "title": "A hardware name that stops at the link",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-ethernet"],
+      "goDeeper": "net-arp",
+      "explanation": [
+        "The number burned into a NIC is a local name, not a passport. A MAC address identifies an interface on a link so frames can be delivered here, not so routers can compute a path across the Internet. It is a hardware name. It is not an Internet name.",
+        "Because a MAC is scoped to a link (or a switched LAN), two hosts on different networks can reuse the same MAC without colliding on the Internet. Routers do not forward on MACs. They strip the frame, read the IP destination, and wrap a new local name. The reused MAC never meets its twin.",
+        "The tradeoff is convenience versus scope. A burned-in name means a host can talk on a LAN without first borrowing an Internet address. It also means that name is useless once the packet leaves. ARP, next, is how a host learns the local MAC that matches the next hop's IP."
+      ],
+      "example": "Ada's NIC is 00:11:22:33:44:55. A printer on a different campus also uses 00:11:22:33:44:55. Ada sends to 93.184.216.34. Routers never see Ada's MAC as a destination; they see 93.184.216.34. The two identical MACs never share a link, so they do not collide.",
+      "whyItMatters": "If a MAC were an Internet name, duplicate factory addresses would break the world, and every hop would have to know every NIC ever burned.",
+      "quiz": [
+        {
+          "id": "nf-mac10-1",
+          "stem": "A MAC address is:",
+          "correctAnswer": "A local hardware name that is not an Internet name",
+          "distractors": [
+            { "text": "A hierarchical address routers use to cross networks", "kind": "nearby", "rationale": "That is an IP address, not a MAC." },
+            { "text": "A port number that names a program on the host", "kind": "misapplied", "rationale": "Ports are transport identifiers." },
+            { "text": "A checksum that proves the payload was not changed", "kind": "subtle", "rationale": "A name is not a detector." }
+          ],
+          "correctExplanation": "Burned-in, local, not routed. That is the MAC.",
+          "objectiveIds": ["Explain a MAC address as a local hardware name that is not an Internet name"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-mac10-2",
+          "stem": "Two hosts on different networks can share a MAC without colliding on the Internet because:",
+          "correctAnswer": "Routers forward on IP and replace the local envelope each hop",
+          "distractors": [
+            { "text": "The Internet requires every MAC on Earth to be unique", "kind": "reversed", "rationale": "Uniqueness is a local-link concern, not a global routing one." },
+            { "text": "IP packets travel without any local envelope at all", "kind": "nearby", "rationale": "Each hop still uses a local envelope. It is a new one." },
+            { "text": "Switches on one LAN install the other LAN's MAC table", "kind": "misapplied", "rationale": "MAC tables are not global." }
+          ],
+          "correctExplanation": "The identical MACs never meet. IP is the name that crosses networks.",
+          "objectiveIds": ["Predict why two hosts on different networks can reuse the same MAC without colliding on the Internet"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-mac10-3",
+          "stem": "Ada's frame to the router uses a MAC instead of only an IP because:",
+          "correctAnswer": "This link delivers frames to hardware names, not to Internet names",
+          "distractors": [
+            { "text": "The IP destination is stripped before the first hop", "kind": "reversed", "rationale": "The packet keeps its IP; the frame adds a local name." },
+            { "text": "MACs are how distant networks name each other in public routing", "kind": "misapplied", "rationale": "Public paths use Internet addresses, not factory MACs." },
+            { "text": "A MAC is a hierarchical prefix the public Internet walks", "kind": "nearby", "rationale": "Hierarchy for forwarding is an IP property." }
+          ],
+          "correctExplanation": "The medium needs a local destination. IP is cargo at this layer.",
+          "objectiveIds": ["Explain a MAC address as a local hardware name that is not an Internet name"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-switching-10",
+      "conceptId": "net-switching",
+      "title": "Learn the port, then send only there",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ethernet"],
+      "goDeeper": "net-wifi-vs-wired",
+      "diagram": "net-switch-lan",
+      "explanation": [
+        "A switch is a learning box, not a mind reader. It watches the source MAC of each arriving frame and records which port that MAC last spoke from. That table is the whole trick: destination known, send only on that port; destination unknown, flood so the intended NIC can still hear.",
+        "Once the switch has seen the destination speak, the next frame for that MAC takes the learned port and stays off the others. Isolation is the payoff: Ada talking to Bea does not occupy every wire in the closet. The cost is a table that can be wrong — a host that moved, an entry that aged out — and then the switch floods again until it relearns.",
+        "Broadcasts and unknown unicasts still touch many ports. Switching did not delete flooding. It made flooding the exception after learning, not the default for every unicast."
+      ],
+      "example": "Ada on port 2 sends a frame to Bea's MAC. The switch has never seen Bea, so it floods the frame to every other port. Bea on port 7 replies. The switch records Bea at port 7. Ada's next frame to Bea goes out port 7 only. Lab-9 on port 4 never sees it.",
+      "whyItMatters": "If you picture a switch as a magic router, you will not expect the first frame to flood, and you will not know why a moved host is briefly everywhere.",
+      "quiz": [
+        {
+          "id": "nf-sw10-1",
+          "stem": "A switch learns by:",
+          "correctAnswer": "Recording which port a MAC last spoke from",
+          "distractors": [
+            { "text": "Reading the IP destination and installing a network route", "kind": "nearby", "rationale": "Learning here is a MAC-to-port table, not IP forwarding." },
+            { "text": "Asking each application which switch port it prefers", "kind": "misapplied", "rationale": "Programs do not program the switch fabric." },
+            { "text": "Burning a new MAC into every NIC that connects", "kind": "reversed", "rationale": "The NIC already has a MAC. The switch records a port." }
+          ],
+          "correctExplanation": "Source MAC, arrival port. That is the table.",
+          "objectiveIds": ["Describe a switch as learning which port a MAC last spoke from"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-sw10-2",
+          "stem": "After the switch has seen Bea speak on port 7, Ada's next frame to Bea:",
+          "correctAnswer": "Goes out port 7 only, not the other ports",
+          "distractors": [
+            { "text": "Still floods every port, because unicasts cannot be learned", "kind": "reversed", "rationale": "Learning exists so the unicast can be isolated." },
+            { "text": "Is rewritten to use 93.184.216.34 as the MAC", "kind": "misapplied", "rationale": "A switch is not renaming the frame into an Internet address." },
+            { "text": "Is dropped until Bea sends a DHCP request", "kind": "nearby", "rationale": "The table needs a MAC-to-port binding, not a lease." }
+          ],
+          "correctExplanation": "Known destination, one port. That is the point of learning.",
+          "objectiveIds": ["Predict which port a frame takes once the switch has seen the destination speak"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-sw10-3",
+          "stem": "A frame to a MAC the switch has never seen is typically:",
+          "correctAnswer": "Flooded to other ports so the intended NIC can still hear it",
+          "distractors": [
+            { "text": "Dropped, because unknown MACs are illegal", "kind": "reversed", "rationale": "Unknown is the reason to flood, not to discard." },
+            { "text": "Converted into an IP packet and sent to the default router only", "kind": "nearby", "rationale": "The switch is still doing local delivery, not IP forwarding." },
+            { "text": "Held until the application names a port number", "kind": "misapplied", "rationale": "Ports in the transport sense are not switch ports." }
+          ],
+          "correctExplanation": "Unknown unicast floods. Learning turns later frames into a single-port send.",
+          "objectiveIds": ["Predict which port a frame takes once the switch has seen the destination speak"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-switching-20",
+      "conceptId": "net-switching",
+      "title": "Flood first, then remember who spoke",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-ethernet"],
+      "goDeeper": "net-wifi-vs-wired",
+      "diagram": "net-switch-lan",
+      "explanation": [
+        "The ten-minute unit named the table. This one watches it fail and recover. Every frame still teaches: the source MAC is bound to the ingress port, replacing whatever was there. Destination lookup is a separate step. Hit: one port. Miss, broadcast, or multicast: flood. The switch does not open the IP header to make that choice.",
+        "Entries age out. If Bea is quiet long enough, her port binding evaporates and the next frame to her floods again. If she unplugs from port 7 and lands on port 4, the first frame she sends rebinds her MAC. Until that happens, frames to Bea still leave the old port — a black hole — or, after timeout, flood. Learning is opportunistic, not a lease with a signed move.",
+        "Two switches make a fabric, not a single mind. Each has its own table. A frame Ada sends toward Bea may flood on switch S1 until S1 sees Bea, even if S2 already knows. Loops are a separate disaster: a flooded frame that can return will multiply. This course stops at 'learning plus flood'. A later spanning-tree story is how fabrics keep one loop-free tree.",
+        "The isolation you bought is only as good as the table. Unknown unicast, broadcast, and a freshly moved host all put copies on ports that did not need them. Switching moved collisions off the wire for known unicasts. It did not make flooding impossible."
+      ],
+      "example": "Bea moves from port 7 to port 4 without sending. Ada's next frame to Bea's MAC still leaves port 7 and dies on an empty jack. After the entry ages out, Ada's retry floods; Bea hears it on port 4 and replies. The switch now records Bea at port 4. Lab-9 on port 3 saw the flood and not the later unicasts.",
+      "whyItMatters": "When 'the LAN is slow' after a move or a printer waking up, the first question is whether the switch is flooding because it has not seen that MAC speak.",
+      "quiz": [
+        {
+          "id": "nf-sw20-1",
+          "stem": "A switch updates its table from:",
+          "correctAnswer": "The source MAC of an arriving frame and the port it arrived on",
+          "distractors": [
+            { "text": "The IP destination, which names a switch port directly", "kind": "nearby", "rationale": "The table is MAC-to-port. IP is not consulted here." },
+            { "text": "A signed lease the host files before it may speak", "kind": "misapplied", "rationale": "Learning is opportunistic from traffic, not a lease protocol." },
+            { "text": "The payload of the application, which lists preferred ports", "kind": "reversed", "rationale": "The switch does not parse the cargo." }
+          ],
+          "correctExplanation": "Source MAC, ingress port. Destination is only a lookup.",
+          "objectiveIds": ["Describe a switch as learning which port a MAC last spoke from"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "nf-sw20-2",
+          "stem": "Bea moves to a new port but has not spoken yet. Ada's frame to Bea:",
+          "correctAnswer": "Follows the stale port, or floods once that entry has aged out",
+          "distractors": [
+            { "text": "Is rewritten by the switch to Bea's new IP automatically", "kind": "misapplied", "rationale": "A move of a jack is not an IP rename." },
+            { "text": "Always hits the new port because MACs include a port number", "kind": "reversed", "rationale": "The MAC does not encode the switch port." },
+            { "text": "Cannot be sent until Bea obtains a second MAC", "kind": "nearby", "rationale": "The NIC keeps its MAC. The table needs a new binding." }
+          ],
+          "correctExplanation": "The table believes the last port it saw. Silence does not announce a move.",
+          "objectiveIds": ["Predict which port a frame takes once the switch has seen the destination speak"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-sw20-3",
+          "stem": "Two switches in a LAN each keep:",
+          "correctAnswer": "Their own MAC-to-port table, learned from frames they actually saw",
+          "distractors": [
+            { "text": "One shared global table of every MAC on the Internet", "kind": "reversed", "rationale": "Learning is local to each box, and MACs are not Internet names." },
+            { "text": "A copy of the IP routing table instead of MAC ports", "kind": "nearby", "rationale": "This is still link-layer switching." },
+            { "text": "An application-level list of which programs may speak", "kind": "misapplied", "rationale": "Programs are not switch-table keys." }
+          ],
+          "correctExplanation": "Each fabric member learns what it sees. There is no shared mind.",
+          "objectiveIds": ["Describe a switch as learning which port a MAC last spoke from"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "net-arp-10",
+      "conceptId": "net-arp",
+      "title": "Who has this IP? Tell this MAC.",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-mac"],
+      "goDeeper": "net-ip",
+      "diagram": "net-arp-resolve",
+      "explanation": [
+        "IP will not put bits on Ethernet until it knows a MAC for the next hop. ARP is that ask: a host broadcasts 'who has this IP?' and the owner replies with its MAC. The asker caches the binding and can then wrap the packet in a frame.",
+        "The IP you resolve is the next hop, not always the packet's destination. On the same LAN, Ada resolves Bea's 10.0.0.9 and uses Bea's MAC. Off the LAN, Ada resolves the router's 10.0.0.1 and uses the router's MAC, while the inner packet still names 93.184.216.34. Resolving the distant IP's MAC would ask a question no local NIC can answer.",
+        "Until the reply arrives, the packet waits or is dropped. A stale cache sends frames to a MAC that no longer owns that IP. ARP is a local protocol. It does not replace IP, and it does not run to the far server."
+      ],
+      "example": "Ada at 10.0.0.7 wants Bea at 10.0.0.9. She broadcasts ARP: who has 10.0.0.9? Tell 00:11:22:33:44:55. Bea answers with 00:aa:bb:cc:dd:ee. Ada's next IP packet is framed to that MAC. When Ada later wants 93.184.216.34, she ARPs for 10.0.0.1 instead, and the frame goes to the router.",
+      "whyItMatters": "If you ARP for the distant IP, the LAN stays quiet and the packet never leaves, even though the route was fine.",
+      "quiz": [
+        {
+          "id": "nf-arp10-1",
+          "stem": "ARP exists to:",
+          "correctAnswer": "Ask who has this IP and learn the MAC that answers",
+          "distractors": [
+            { "text": "Assign a brand-new IP address to a host that just joined", "kind": "nearby", "rationale": "Borrowing an address is a different protocol." },
+            { "text": "Translate a hostname into an Internet address", "kind": "misapplied", "rationale": "Name resolution is not ARP." },
+            { "text": "Replace IP headers with MAC-only packets on the Internet", "kind": "reversed", "rationale": "ARP finds a local envelope. The packet remains IP." }
+          ],
+          "correctExplanation": "Who has this IP? Tell this MAC. That is the whole protocol.",
+          "objectiveIds": ["Explain ARP as asking who has this IP and learning the MAC that answers"],
+          "prerequisiteConceptIds": ["net-mac"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-arp10-2",
+          "stem": "Ada sends an IP packet to 93.184.216.34 from a LAN whose gateway is 10.0.0.1. She must ARP for:",
+          "correctAnswer": "10.0.0.1, the next hop, not the distant destination",
+          "distractors": [
+            { "text": "93.184.216.34, because the frame must name the far server's MAC", "kind": "reversed", "rationale": "The far MAC is not on this link and will not answer." },
+            { "text": "Every IP on the public Internet, cached forever", "kind": "misapplied", "rationale": "ARP is local. It is not a world map." },
+            { "text": "Nothing; IP packets never need a MAC on Ethernet", "kind": "nearby", "rationale": "On Ethernet the packet still rides in a frame." }
+          ],
+          "correctExplanation": "Resolve the next hop's MAC. The inner destination IP stays 93.184.216.34.",
+          "objectiveIds": ["Predict why a host must resolve the next hop's MAC before it can send an IP packet on Ethernet"],
+          "prerequisiteConceptIds": ["net-mac"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-arp10-3",
+          "stem": "Without an ARP reply for the next hop, Ada's Ethernet send typically:",
+          "correctAnswer": "Cannot wrap the IP packet in a frame to a known MAC",
+          "distractors": [
+            { "text": "Succeeds by printing the IP address onto the cable as text", "kind": "misapplied", "rationale": "The medium delivers frames to MACs." },
+            { "text": "Uses Bea's MAC for every off-LAN destination automatically", "kind": "nearby", "rationale": "A neighbor's MAC is not the router." },
+            { "text": "Converts the packet into a broadcast that routers ignore on purpose", "kind": "subtle", "rationale": "You need the next hop's unicast MAC, not a hope." }
+          ],
+          "correctExplanation": "No MAC, no frame. The IP packet waits behind a local question.",
+          "objectiveIds": ["Predict why a host must resolve the next hop's MAC before it can send an IP packet on Ethernet"],
+          "prerequisiteConceptIds": ["net-mac"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-wifi-vs-wired-10",
+      "conceptId": "net-wifi-vs-wired",
+      "title": "Collision domains moved, they did not vanish",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ethernet"],
+      "explanation": [
+        "Switched Ethernet isolated collisions. Radio did not get that memo. On a shared medium, two stations that transmit at once corrupt both frames; they contend, back off, and retry. A switched link gives each host its own wire to the switch, so Ada's bits do not smash Bea's on the cable.",
+        "Hubs were shared Ethernet: one collision domain, every frame on every port. Switches broke that domain into per-port links for known unicasts. Wi-Fi is still a shared medium at the access point. Stations associated to the same radio still contend. The collision domain did not vanish; it moved onto the air.",
+        "The practical difference is where you look when throughput collapses. On a switched LAN, a busy unicast does not occupy every jack. On Wi-Fi, a chatty client still uses the air everyone else needs. Switching was a topology change. It was not a law of physics for every medium."
+      ],
+      "example": "Ada and Bea sit on a switched Ethernet to 10.0.0.9 and never collide; the switch isolates their unicasts. Their laptops also join the office Wi-Fi. Both probe the AP at once, the air garbles, and both retry. The Ethernet jacks stay quiet. The collision domain is the radio, not the closet switch.",
+      "whyItMatters": "If you think switching abolished collisions everywhere, a slow Wi-Fi cell will look like a mystery instead of a shared medium doing what shared media do.",
+      "quiz": [
+        {
+          "id": "nf-wifi10-1",
+          "stem": "A shared medium differs from a switched link because:",
+          "correctAnswer": "Stations contend and can collide; a switched link isolates those collisions",
+          "distractors": [
+            { "text": "Switches forbid unicast frames, so only shared media can talk", "kind": "reversed", "rationale": "Switches exist to isolate unicasts, not ban them." },
+            { "text": "Only shared media use MAC addresses", "kind": "nearby", "rationale": "Switched Ethernet still delivers on MACs." },
+            { "text": "A switched link cannot carry an IP packet", "kind": "misapplied", "rationale": "The packet rides in a frame on either topology." }
+          ],
+          "correctExplanation": "Contend versus isolate. That is the contrast.",
+          "objectiveIds": ["Contrast a shared medium where stations contend with a switched link that isolates collisions"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "nf-wifi10-2",
+          "stem": "A collision domain can still exist on Wi-Fi after Ethernet became switched because:",
+          "correctAnswer": "The radio remains a shared medium stations contend for",
+          "distractors": [
+            { "text": "Wi-Fi replaced MAC addresses with IP addresses on the air", "kind": "nearby", "rationale": "Wi-Fi still uses local hardware names." },
+            { "text": "Switching legally requires every wireless hop to flood the Internet", "kind": "misapplied", "rationale": "Switching is a wired-fabric story, not a radio law." },
+            { "text": "Access points deleted frames so collisions would become impossible", "kind": "reversed", "rationale": "Deleting frames is not how a shared medium works." }
+          ],
+          "correctExplanation": "The domain moved onto the air. Switching the closet did not switch the radio.",
+          "objectiveIds": ["Predict why a collision domain can still exist on Wi-Fi after Ethernet became switched"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-wifi10-3",
+          "stem": "Ada's unicast to Bea on a switch does not occupy Lab-9's cable because:",
+          "correctAnswer": "The switch sends that frame only toward Bea's learned port",
+          "distractors": [
+            { "text": "Lab-9's NIC refuses to hear any Ethernet after Wi-Fi exists", "kind": "misapplied", "rationale": "The two media are separate. Isolation is the switch table." },
+            { "text": "Unicasts on switched Ethernet are converted into radio broadcasts", "kind": "reversed", "rationale": "The wired unicast stays on the learned port." },
+            { "text": "Every switched frame is still flooded, exactly like a hub", "kind": "nearby", "rationale": "Flooding is the unknown/broadcast case, not the learned unicast." }
+          ],
+          "correctExplanation": "Learned unicast, one port. That is the isolation hubs never had.",
+          "objectiveIds": ["Contrast a shared medium where stations contend with a switched link that isolates collisions"],
+          "prerequisiteConceptIds": ["net-ethernet"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

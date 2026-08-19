@@ -17,6 +17,9 @@ import { OS_FOUNDATIONS_LESSONS } from "./os-foundations";
 import { OS_CONCURRENCY_LESSONS } from "./os-concurrency";
 import { OS_STORAGE_LESSONS } from "./os-storage";
 import { LONGFORM_LESSONS } from "./longform";
+import { NET_FOUNDATIONS_LESSONS } from "./net-foundations";
+import { NET_TRANSPORT_LESSONS } from "./net-transport";
+import { NET_INTERNET_LESSONS } from "./net-internet";
 
 const externalFiles = import.meta.glob("../external/*.json", {
   eager: true,
@@ -51,6 +54,9 @@ export const LESSONS: Lesson[] = [
   ...OS_FOUNDATIONS_LESSONS,
   ...OS_CONCURRENCY_LESSONS,
   ...OS_STORAGE_LESSONS,
+  ...NET_FOUNDATIONS_LESSONS,
+  ...NET_TRANSPORT_LESSONS,
+  ...NET_INTERNET_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,

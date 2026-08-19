@@ -15,6 +15,9 @@ import { SEMI_LEADING_LESSONS } from "../lessons/semi-leading/index.ts";
 import { OS_FOUNDATIONS_LESSONS } from "../lessons/os-foundations/index.ts";
 import { OS_CONCURRENCY_LESSONS } from "../lessons/os-concurrency/index.ts";
 import { OS_STORAGE_LESSONS } from "../lessons/os-storage/index.ts";
+import { NET_FOUNDATIONS_LESSONS } from "../lessons/net-foundations/index.ts";
+import { NET_TRANSPORT_LESSONS } from "../lessons/net-transport/index.ts";
+import { NET_INTERNET_LESSONS } from "../lessons/net-internet/index.ts";
 import { SCIENCE_LESSONS } from "../lessons/science.ts";
 import { SYSTEMS_LESSONS } from "../lessons/systems.ts";
 import { LONGFORM_LESSONS } from "../lessons/longform.ts";
@@ -41,6 +44,9 @@ const LESSONS = [
   ...OS_FOUNDATIONS_LESSONS,
   ...OS_CONCURRENCY_LESSONS,
   ...OS_STORAGE_LESSONS,
+  ...NET_FOUNDATIONS_LESSONS,
+  ...NET_TRANSPORT_LESSONS,
+  ...NET_INTERNET_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
@@ -286,12 +292,34 @@ describe("course-specific progression", () => {
 describe("curriculum coverage metrics", () => {
   it("reports lessons versus skeleton and shallow modules", () => {
     const coverage = computeCoverage(catalog);
-    assert.ok(coverage.conceptsLackingLessons > 350);
-    assert.ok(coverage.conceptsWithLessons >= 20);
+    assert.ok(coverage.conceptsLackingLessons > 280);
+    assert.ok(coverage.conceptsWithLessons >= 80);
     assert.ok(coverage.shallowModules.length > 10);
     const gpu = coverage.coursesCovered.find((c) => c.courseId === "arch-gpu");
     assert.ok(gpu);
     assert.ok(gpu.conceptCount >= 20);
     assert.equal(gpu.coveragePct, 100);
+    for (const id of ["net-foundations", "net-transport", "net-internet"]) {
+      const row = coverage.coursesCovered.find((c) => c.courseId === id);
+      assert.ok(row, id);
+      assert.equal(row.coveragePct, 100, id);
+      assert.equal(row.lackingLessons, 0, id);
+    }
+    for (const id of ["ml-foundations", "mus-foundations", "cmp-frontend"]) {
+      const row = coverage.coursesCovered.find((c) => c.courseId === id);
+      assert.ok(row, id);
+      assert.ok(row.coveragePct < 100, `${id} should remain unpopulated`);
+    }
+  });
+
+  it("retired leftover networking seeds instead of colliding with production lessons", () => {
+    const leftover = SYSTEMS_LESSONS.filter((l) =>
+      ["net-stack", "net-congestion", "net-bgp"].includes(l.conceptId) ||
+      ["net-stack-5", "net-cc-10", "net-bgp-20"].includes(l.id),
+    );
+    assert.deepEqual(leftover.map((l) => l.id), []);
+    assert.ok(LESSONS.some((l) => l.id === "net-stack-10"));
+    assert.ok(LESSONS.some((l) => l.id === "net-congestion-10"));
+    assert.ok(LESSONS.some((l) => l.id === "net-bgp-10"));
   });
 });

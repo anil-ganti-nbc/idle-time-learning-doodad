@@ -126,6 +126,76 @@ export const CURRICULUM_SOURCES: CurriculumSourceRecord[] = [
       "Packets and reliable byte-stream labs before routing politics. Transport and congestion as mechanisms a sender can run without seeing the path. Internet architecture (IP, AS, BGP) is a later course, not week one.",
   },
   {
+    id: "saltzer-e2e",
+    title: "End-to-end arguments in system design",
+    url: "https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf",
+    institution: "Saltzer, Reed, Clark",
+    kind: "notes",
+    informed: ["net-foundations"],
+    notes:
+      "Functions that only the endpoints can implement correctly. Used for the argument, not as a slogan against any in-network help.",
+  },
+  {
+    id: "rfc791",
+    title: "Internet Protocol",
+    url: "https://www.rfc-editor.org/rfc/rfc791",
+    institution: "IETF",
+    kind: "notes",
+    informed: ["net-foundations"],
+    notes:
+      "IPv4 addressing, TTL, fragmentation, and ICMP's neighbor relationship. Used for mechanism names and header jobs, not RFC-number trivia.",
+  },
+  {
+    id: "rfc9293",
+    title: "Transmission Control Protocol",
+    url: "https://www.rfc-editor.org/rfc/rfc9293",
+    institution: "IETF",
+    kind: "notes",
+    informed: ["net-transport"],
+    notes:
+      "Connection state, handshake, windows, retransmission. Used for protocol semantics, not a flag catalogue.",
+  },
+  {
+    id: "rfc5681",
+    title: "TCP Congestion Control",
+    url: "https://www.rfc-editor.org/rfc/rfc5681",
+    institution: "IETF",
+    kind: "notes",
+    informed: ["net-transport"],
+    notes:
+      "Slow start, congestion avoidance, fast retransmit/recovery as mechanisms a sender runs without seeing the path.",
+  },
+  {
+    id: "rfc9000",
+    title: "QUIC: A UDP-Based Multiplexed and Secure Transport",
+    url: "https://www.rfc-editor.org/rfc/rfc9000",
+    institution: "IETF",
+    kind: "notes",
+    informed: ["net-transport"],
+    notes:
+      "Transport over UDP so the protocol can change without the kernel. Streams as the answer to head-of-line blocking.",
+  },
+  {
+    id: "rfc4271",
+    title: "A Border Gateway Protocol 4 (BGP-4)",
+    url: "https://www.rfc-editor.org/rfc/rfc4271",
+    institution: "IETF",
+    kind: "notes",
+    informed: ["net-internet"],
+    notes:
+      "Path-vector reachability plus attributes. Policy, not shortest path. Used for decision order and AS-path, not message formats.",
+  },
+  {
+    id: "rfc1034",
+    title: "Domain Names — Concepts and Facilities",
+    url: "https://www.rfc-editor.org/rfc/rfc1034",
+    institution: "IETF",
+    kind: "notes",
+    informed: ["net-foundations", "net-internet"],
+    notes:
+      "Hierarchy, resolvers, and caches. First-look DNS stays on names-to-addresses; the later course treats the system.",
+  },
+  {
     id: "stanford-cs143",
     title: "Compilers",
     url: "https://web.stanford.edu/class/cs143/",

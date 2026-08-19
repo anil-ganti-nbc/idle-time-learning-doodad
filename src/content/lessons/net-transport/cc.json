@@ -1,0 +1,455 @@
+{
+  "courseId": "net-transport",
+  "moduleId": "net-t-cc",
+  "lessons": [
+    {
+      "id": "net-congestion-10",
+      "conceptId": "net-congestion",
+      "title": "Senders share a pipe they cannot see",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-stack"],
+      "goDeeper": "net-aimd",
+      "explanation": [
+        "A hop in the middle has a queue and a rate. Senders do not see that queue. They see whether the data they put in flight came back, and how long that took. Congestion control is how those senders share the hop anyway: each keeps a window of in-flight data and uses loss or growing delay as a signal that the unseen pipe is full.",
+        "Nothing in the stack tells a sender the residual capacity. The internet layer forwards. The link layer delivers to the next box. The sender infers. Too large a window and the hop drops or delays. Too small and the hop idles while other senders, or no one, use the rest. Sharing is a feedback loop on a path you cannot inventory.",
+        "The signal is coarse. A drop might be noise. Delay might be a far RTT rather than a queue. The sender still has to act. Later units name particular rules. This one is the job: infer capacity from feedback, because nobody will tell you the number."
+      ],
+      "example": "Two senders each keep ten packets in flight through a hop that holds eight. Packets sit, then some are dropped. Each sender sees a missing acknowledgement or a longer wait — not a map of the queue, not a message that names the other sender. Each has to shrink what it keeps in flight.",
+      "whyItMatters": "Without that inference, every sender treats an unseen hop as infinite, and the hop becomes a loss generator.",
+      "quiz": [
+        {
+          "id": "nt-cc10-1",
+          "stem": "Congestion control is how senders:",
+          "correctAnswer": "Share a pipe they cannot see, using feedback instead of a map of the hop",
+          "distractors": [
+            { "text": "Read the hop's queue length from a header the network always fills in", "kind": "misconception", "rationale": "The classic internet does not hand senders a queue length." },
+            { "text": "Reserve a dedicated circuit so no other sender may use the path", "kind": "nearby", "rationale": "Sharing is the problem. A reserved circuit would dodge it." },
+            { "text": "Stop using acknowledgements, because in-flight data needs no bound", "kind": "reversed", "rationale": "Feedback is the whole mechanism. Unbounded send is the failure." }
+          ],
+          "correctExplanation": "No map of the hop. Loss and delay are what you get. The window is how you share.",
+          "objectiveIds": ["Explain congestion control as how senders share a pipe they cannot see"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nt-cc10-2",
+          "stem": "A sender has to infer path capacity from feedback rather than being told because:",
+          "correctAnswer": "The unseen hop does not report residual capacity to the endpoints",
+          "distractors": [
+            { "text": "Endpoints are forbidden to keep any window of in-flight data", "kind": "reversed", "rationale": "The window is exactly how they act on the inference." },
+            { "text": "The link layer already names every other sender on the path", "kind": "nearby", "rationale": "The link delivers locally. It does not inventory remote queues." },
+            { "text": "Capacity is a compile-time constant baked into every packet", "kind": "misapplied", "rationale": "Capacity changes with load. It is not a constant in the header." }
+          ],
+          "correctExplanation": "The stack will not tell you the leftover rate. Acknowledgements and delay are the evidence.",
+          "objectiveIds": ["Predict why a sender must infer path capacity from feedback rather than being told"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-cc10-3",
+          "stem": "Two senders overfill a hop that cannot report its queue. Each typically learns this by:",
+          "correctAnswer": "Seeing loss or growing delay on its own in-flight data, then shrinking that window",
+          "distractors": [
+            { "text": "Receiving a list of the other sender's outstanding packets from the hop", "kind": "misconception", "rationale": "The hop does not send such a list. Feedback is local to each sender." },
+            { "text": "Waiting until the application advertises a zero receive buffer", "kind": "nearby", "rationale": "A full receiver is a different bound. This is the path." },
+            { "text": "Doubling the window, because a drop means leftover capacity", "kind": "reversed", "rationale": "A drop is a full-pipe signal. Growing is the wrong move." }
+          ],
+          "correctExplanation": "Each sees its own missing or late data. That is the share signal, not a meeting.",
+          "objectiveIds": ["Predict why a sender must infer path capacity from feedback rather than being told"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-congestion-20",
+      "conceptId": "net-congestion",
+      "title": "Loss and delay are signals, not a map",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-stack"],
+      "goDeeper": "net-aimd",
+      "diagram": "net-cwnd",
+      "explanation": [
+        "The only knob a sender really has is how much it keeps in flight. Rate is that window divided by the round-trip time it observes. Raise the window and, until the hop saturates, delivery rate rises. Past saturation the extra data sits in a queue: delay grows, then loss. The sender never sees a capacity field. It sees those two symptoms.",
+        "Loss as a signal is honest when the hop drops from overflow, and dishonest when a wireless fade or a brief glitch drops a packet from an empty queue. Delay as a signal is honest when the extra wait is queueing, and dishonest when the path simply is far. Acting on the wrong story — cutting a healthy window on noise, or filling until drop on a huge buffer — is how the same job fails in opposite ways.",
+        "Several senders, no meeting. Each infers independently. If every sender grows until loss, they discover the ceiling together and must back off together. If one sender ignores the signal, it eats the hop and the others see more loss. Fairness is not a slogan here; it is what happens if the rule they all run reacts to the same kind of feedback.",
+        "The sender also cannot see the other windows, the hop's buffer size, or whether a missed packet was congestion or corruption. Every later control — additive rules, delay-based models, marks instead of drops — is a different bet about which signal is trustworthy. This unit is the constraint those bets all live under."
+      ],
+      "example": "Sender A keeps a window of 12 packets on a hop that forwards 8 per round trip. After a few RTTs the extra four sit in the queue: A's acknowledgements arrive later, then one is missing. Sender B, sharing the hop, sees its delay climb in the same stretch even though B did not raise its own window. Neither is told 'the hop holds 8'. Both have to treat the late or missing data as the signal.",
+      "whyItMatters": "A rule that needs a map of the hop cannot run on this internet. The rule has to run on loss and delay.",
+      "quiz": [
+        {
+          "id": "nt-cc20-1",
+          "stem": "Past the point where a hop is already forwarding at its rate, raising the in-flight window typically:",
+          "correctAnswer": "Grows a queue, so delay rises and loss becomes likely, without raising delivery rate",
+          "distractors": [
+            { "text": "Raises delivery rate in proportion, because the hop had leftover capacity", "kind": "reversed", "rationale": "Past saturation there is no leftover rate. Extra data queues." },
+            { "text": "Shrinks every other sender's receive buffer to zero automatically", "kind": "misapplied", "rationale": "Receiver credit is not the hop. This is path queueing." },
+            { "text": "Reports the hop's residual capacity in the next acknowledgement", "kind": "misconception", "rationale": "Acknowledgements do not carry a queue census." }
+          ],
+          "correctExplanation": "The rate is maxed. Extra in-flight data is delay, then drops. That is the signal.",
+          "objectiveIds": ["Explain congestion control as how senders share a pipe they cannot see"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-cc20-2",
+          "stem": "A wireless fade drops a packet from an empty queue. Treating that drop as 'the pipe is full' is:",
+          "correctAnswer": "Acting on a dishonest loss signal: the hop was not overflowing",
+          "distractors": [
+            { "text": "Correct, because every drop is overflow by definition", "kind": "misconception", "rationale": "Corruption and fade drop packets too. Overflow is only one cause." },
+            { "text": "Impossible, because empty queues cannot forward any packets at all", "kind": "reversed", "rationale": "An empty queue is healthy. The drop came from the fade." },
+            { "text": "A delay signal, because fades always increase propagation time instead", "kind": "nearby", "rationale": "A fade can drop without adding queue delay. That is the trap." }
+          ],
+          "correctExplanation": "Loss was not overflow. Cutting the window punishes a path that still had room.",
+          "objectiveIds": ["Predict why a sender must infer path capacity from feedback rather than being told"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-cc20-3",
+          "stem": "Two senders share a hop; only one grows its window until loss. The other sender typically:",
+          "correctAnswer": "Sees more loss or delay on its own traffic, even though it did not raise its window",
+          "distractors": [
+            { "text": "Is told the other sender's window size so it can match it exactly", "kind": "misconception", "rationale": "There is no such message. Each sees only its own feedback." },
+            { "text": "Stops receiving any acknowledgements, because sharing is forbidden", "kind": "reversed", "rationale": "Sharing is the default. The cost is coupled signals, not a ban." },
+            { "text": "Gets a larger receive window from the hop as compensation", "kind": "misapplied", "rationale": "Hops do not advertise endpoint receive windows." }
+          ],
+          "correctExplanation": "The hop is shared. One sender's extra in-flight data is the other's worse signal.",
+          "objectiveIds": ["Explain congestion control as how senders share a pipe they cannot see"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 2,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "net-aimd-10",
+      "conceptId": "net-aimd",
+      "title": "Grow by one, cut by half",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-congestion"],
+      "goDeeper": "net-slow-start",
+      "diagram": "net-cwnd",
+      "explanation": [
+        "AIMD is a rule over the in-flight window. Each round trip with no congestion signal, add a little — typically one packet's worth. On a signal, multiply the window by a fraction, typically one half. Additive increase is slow probing. Multiplicative decrease is a sharp retreat from a full pipe. The two directions are not symmetric, and that asymmetry is the mechanism.",
+        "Two senders on the same bottleneck, both running this rule, tend toward equal windows. The sender that is ahead hits the signal first, cuts by half, and falls back. Additive growth then climbs together. Equal shares are not a slogan pasted on; they are what the sawtooth does when RTTs match. Different RTTs break that, which a later unit names.",
+        "A sender that only ever added, never cut, would sit on a full hop. A sender that cut to zero on every signal would underfill forever. The additive step finds leftover capacity without jumping over it. The multiplicative cut makes room fast enough that the queue can drain. Fairness is a consequence of that pair, not a separate vote."
+      ],
+      "example": "Sender A has a window of 16, sender B a window of 8, same RTT, same hop. A loss hits. Both halve: 8 and 4. Each round trip both add 1: 9 and 5, then 10 and 6. After more increases they hit the ceiling again, cut, and the gap keeps shrinking. The hop never named a fair share. The rule produced one.",
+      "whyItMatters": "Without the cut, probing never gives the hop back. Without the slow add, the hop is slammed on every probe.",
+      "quiz": [
+        {
+          "id": "nt-aimd10-1",
+          "stem": "AIMD on the in-flight window means:",
+          "correctAnswer": "Add a little each uncongested round trip; multiply the window down on a congestion signal",
+          "distractors": [
+            { "text": "Double the window every round trip and never reduce it", "kind": "nearby", "rationale": "Doubling is a different probe. AIMD's increase is additive." },
+            { "text": "Cut the window whenever an acknowledgement arrives, and grow on loss", "kind": "reversed", "rationale": "Those directions are swapped. ACKs allow a small add; loss cuts." },
+            { "text": "Set the window to the hop's advertised residual capacity each packet", "kind": "misapplied", "rationale": "The hop does not advertise that number. AIMD infers from signals." }
+          ],
+          "correctExplanation": "Slow add, sharp cut. That pair is the rule, not a fairness slogan.",
+          "objectiveIds": ["Describe AIMD as additive increase and multiplicative decrease"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-aimd10-2",
+          "stem": "Two senders, same RTT, windows 16 and 8, both halve on a signal then add 1 per round trip. Over further cycles the windows:",
+          "correctAnswer": "Move toward each other; the larger one cut more, then both climb together",
+          "distractors": [
+            { "text": "Stay in the 2:1 ratio forever, because AIMD preserves whatever started", "kind": "misconception", "rationale": "Multiplicative cut shrinks the gap; additive climb is shared." },
+            { "text": "Both jump to 32, because a signal means leftover capacity", "kind": "reversed", "rationale": "A signal is a full pipe. They cut, they do not jump up." },
+            { "text": "Freeze until a central allocator names a fair share", "kind": "misapplied", "rationale": "There is no allocator. The sawtooth is the share." }
+          ],
+          "correctExplanation": "Halving pulls the leader down harder. Adding the same amount then equalizes.",
+          "objectiveIds": ["Predict how two senders using the same AIMD rule share a bottleneck"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-aimd10-3",
+          "stem": "A rule that only adds and never multiplies down on a signal will:",
+          "correctAnswer": "Keep sitting on a full hop, because probing never gives the queue back",
+          "distractors": [
+            { "text": "Drain the hop faster than AIMD, because adding is a cut in disguise", "kind": "reversed", "rationale": "Adding fills. The missing cut is the drain." },
+            { "text": "Equalize two senders even faster, because fairness does not need a cut", "kind": "misconception", "rationale": "Without the cut, the larger window stays larger and the hop stays full." },
+            { "text": "Remove the need for any in-flight bound, because add-only is self-limiting", "kind": "nearby", "rationale": "Add-only grows without limit until something else stops it." }
+          ],
+          "correctExplanation": "The multiplicative cut is what frees the pipe. Additive increase alone does not.",
+          "objectiveIds": ["Describe AIMD as additive increase and multiplicative decrease"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-slow-start-10",
+      "conceptId": "net-slow-start",
+      "title": "Double until something answers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-aimd"],
+      "diagram": "net-cwnd",
+      "explanation": [
+        "Additive increase is a poor way to find a large unused pipe from a tiny start. One packet per round trip on a path that could hold a hundred would take a hundred RTTs to fill. Slow start probes exponentially: each acknowledgement grows the window, so the window roughly doubles each round trip, until a congestion signal or a threshold says to stop.",
+        "The name is a joke the first time you watch it. Growth is fast. What is slow is the start — a small initial window — not the slope. Once a signal hits, the sender remembers a threshold near half of what it had and switches to additive increase. Later slow starts, after a timeout, begin small again and stop doubling at that threshold so they do not slam the hop twice.",
+        "Exponential probing overshoots. The last doubling can dump a burst into a queue that was about to be full. That overshoot is the price of finding capacity in log time instead of linear time. Staying in slow start forever would be AIMD without the additive half — a jump that never settles."
+      ],
+      "example": "Window starts at 1, then 2, 4, 8, 16 in successive round trips as acknowledgements return. At 16 a drop occurs. The sender sets a threshold around 8 and grows by one packet per RTT after that. From 1 to 16 took four RTTs. Additive increase from 1 to 16 would have taken fifteen.",
+      "whyItMatters": "A long fat path is unusable for the first many RTTs unless the first probe is exponential.",
+      "quiz": [
+        {
+          "id": "nt-ss10-1",
+          "stem": "Slow start probes capacity by:",
+          "correctAnswer": "Growing the in-flight window exponentially each round trip until a signal or threshold",
+          "distractors": [
+            { "text": "Adding one packet per round trip from the first send until the application exits", "kind": "nearby", "rationale": "That is AIMD's additive increase, which slow start is meant to outrun." },
+            { "text": "Cutting the window in half on every acknowledgement", "kind": "reversed", "rationale": "Acknowledgements grow the window in slow start. Cuts wait for a signal." },
+            { "text": "Asking the hop to name residual capacity before any data is sent", "kind": "misapplied", "rationale": "The hop still does not tell. Doubling is the probe." }
+          ],
+          "correctExplanation": "Small start, doubling until something answers. Then additive increase takes over.",
+          "objectiveIds": ["Explain slow start as exponential probing until a signal is hit"],
+          "prerequisiteConceptIds": ["net-aimd"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-ss10-2",
+          "stem": "Slow start reaches a window of 16 faster than AIMD's additive increase from 1 because:",
+          "correctAnswer": "The window roughly doubles each RTT, so 1→2→4→8→16 is a handful of round trips",
+          "distractors": [
+            { "text": "Additive increase skips even numbers, so it cannot legally reach 16", "kind": "misapplied", "rationale": "Additive increase can reach 16. It just takes many more RTTs." },
+            { "text": "Slow start sends no packets until RTT 16, then dumps the whole window", "kind": "reversed", "rationale": "It sends from the first RTT. The window is what grows." },
+            { "text": "Each acknowledgement cuts the window, which somehow arrives at 16 sooner", "kind": "misconception", "rationale": "Cuts would shrink. Growth is the doubling." }
+          ],
+          "correctExplanation": "Log time versus linear time. That is why the first fill is exponential.",
+          "objectiveIds": ["Predict why slow start grows the window faster than AIMD's additive increase"],
+          "prerequisiteConceptIds": ["net-aimd"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-ss10-3",
+          "stem": "After a drop at window 16, a later slow start that stops doubling near 8 is:",
+          "correctAnswer": "Using a threshold so the next exponential probe does not slam the same hop twice",
+          "distractors": [
+            { "text": "Abandoning congestion control, because a threshold means the pipe is now infinite", "kind": "reversed", "rationale": "The threshold is a brake, not a license to grow forever." },
+            { "text": "Switching to a zero window until the application reopens the socket", "kind": "nearby", "rationale": "Transfer continues. The growth rule changes, not the connection." },
+            { "text": "Proof that additive increase is illegal after any drop", "kind": "misapplied", "rationale": "Additive increase is exactly what follows the threshold." }
+          ],
+          "correctExplanation": "Remember where you hit. Double only back to that neighborhood, then add.",
+          "objectiveIds": ["Explain slow start as exponential probing until a signal is hit"],
+          "prerequisiteConceptIds": ["net-aimd"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "net-rtt-10",
+      "conceptId": "net-rtt",
+      "title": "The mean is not a timeout",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-timeout"],
+      "explanation": [
+        "A retransmit wait has to outlast a normal round trip and not outlast a real drop by much. Measuring one sample is not enough: paths jitter. Jacobson and Karels' estimator keeps a smoothed mean and a smoothed deviation. The timeout is the mean plus several times the deviation, classically four, so a jittery path gets a wider wait without pretending every sample was the new truth.",
+        "Using only the mean on a path whose delay swings will fire while a late acknowledgement is still in flight. The extra copies then inflate the next samples, or they get mistaken for congestion. Using a huge fixed wait avoids false fires and leaves a real hole sitting for a long time. Variance is how the wait tracks the path without those two failures.",
+        "A sample taken on a retransmit is dangerous: you do not know whether the acknowledgement was for the original or the copy, so the measured interval can be a mix of both. Ignoring those ambiguous samples is part of keeping the mean honest. The clock is only as good as which acknowledgements you trust."
+      ],
+      "example": "Smoothed RTT sits at 80 ms. Delay suddenly swings 80±60 ms. A timeout of 80 ms fires constantly on the late side. A timeout of 80 + 4×(smoothed deviation) sits near 200–300 ms and lets the late acknowledgements land. A 2-second fixed wait would also avoid false fires and would stall a genuine drop for two seconds every time.",
+      "whyItMatters": "A wrong wait either floods a healthy path with copies or leaves a hole sitting. The variance term is what keeps the wait matched to the path.",
+      "quiz": [
+        {
+          "id": "nt-rtt10-1",
+          "stem": "RTT estimation for a retransmit timer needs:",
+          "correctAnswer": "A smoothed mean and a variance term, not a single sample treated as the wait",
+          "distractors": [
+            { "text": "Only the smallest sample ever seen, because jitter is never real delay", "kind": "reversed", "rationale": "Jitter is real. Ignoring it makes the wait too tight." },
+            { "text": "A hop-by-hop capacity field so the timer can be computed from rate alone", "kind": "misapplied", "rationale": "The timer is about delay samples, not a capacity field." },
+            { "text": "The application’s read deadline, which replaces acknowledgement timing", "kind": "nearby", "rationale": "The estimator tracks ACK timing. App deadlines are a different clock." }
+          ],
+          "correctExplanation": "Mean plus a multiple of deviation. One sample is not a timeout.",
+          "objectiveIds": ["Explain RTT estimation as needing both a mean and a variance"],
+          "prerequisiteConceptIds": ["net-timeout"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-rtt10-2",
+          "stem": "A timeout set to the mean alone on a path whose delay swings widely will typically:",
+          "correctAnswer": "Fire while late acknowledgements are still in flight, injecting needless copies",
+          "distractors": [
+            { "text": "Never fire, because the mean is always larger than every sample", "kind": "reversed", "rationale": "Half the samples sit above the mean. Those fire the too-tight wait." },
+            { "text": "Freeze the window at zero until the application measures RTT itself", "kind": "misapplied", "rationale": "The timer is the sender's. The application does not replace it." },
+            { "text": "Remove variance from the path, because a tight timer damps delay", "kind": "misconception", "rationale": "The timer does not change propagation. It only mis-labels late ACKs as loss." }
+          ],
+          "correctExplanation": "Late is not lost. The mean has no room for late. Variance is that room.",
+          "objectiveIds": ["Predict why a timeout based only on the mean is too aggressive when delay varies"],
+          "prerequisiteConceptIds": ["net-timeout"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-rtt10-3",
+          "stem": "An acknowledgement that might belong to either an original send or a retransmit is a bad RTT sample because:",
+          "correctAnswer": "You cannot tell which packet it covers, so the interval can mix two different waits",
+          "distractors": [
+            { "text": "Acknowledgements never carry timing information of any kind", "kind": "reversed", "rationale": "Arrival time versus send time is the sample. Ambiguity is the problem." },
+            { "text": "The mean must be reset to zero whenever a copy is in flight", "kind": "nearby", "rationale": "You skip the ambiguous sample. You do not wipe the estimator." },
+            { "text": "Variance is illegal on paths that have ever retransmitted", "kind": "misapplied", "rationale": "Variance remains. Ambiguous samples are what you drop." }
+          ],
+          "correctExplanation": "Karn's point: if you cannot name which send the ACK covers, do not feed the clock.",
+          "objectiveIds": ["Explain RTT estimation as needing both a mean and a variance"],
+          "prerequisiteConceptIds": ["net-timeout"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-fairness-tcp-10",
+      "conceptId": "net-fairness-tcp",
+      "title": "Equal RTTs, equal shares — until they are not",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-aimd"],
+      "explanation": [
+        "Two senders running the same AIMD rule, with the same round-trip time, tend toward equal in-flight windows and therefore equal rates. Additive increase gives both the same increment per RTT. Multiplicative decrease hits the larger window harder. That is the equal-share story, and it is why people say 'TCP fairness' as if it were a law.",
+        "It is not a law once RTTs differ. Increase happens once per round trip, not per millisecond. A sender with a 20 ms RTT adds many times while a sender with a 200 ms RTT adds once. The short-RTT sender ramps faster, hits the signal more often, and still keeps a larger average rate. The hop is shared. The rule is clocked by each sender's own delay.",
+        "More senders, same RTT, still split toward equal windows — until one of them uses a different rule, or opens several conversations to grab several shares. Fairness here is 'same algorithm, same RTT, one conversation each'. Change any of those and the sawtooth no longer equalizes. Later delay-based controls change the rule; they are not this unit's assumption."
+      ],
+      "example": "Two flows share a 100 Mbit/s hop. Both see 40 ms RTT; AIMD settles near 50 Mbit/s each. Replace one path with 200 ms RTT and the short-RTT flow climbs several additive steps per one step of the long one. The split might look like 80/20. The hop did not pick a favorite. The clocks were different.",
+      "whyItMatters": "Calling AIMD 'fair' without naming the equal-RTT condition hides why a far backup flow starves next to a local one.",
+      "quiz": [
+        {
+          "id": "nt-fair10-1",
+          "stem": "TCP fairness, under AIMD, is:",
+          "correctAnswer": "Equal shares among senders with equal RTTs running the same rule",
+          "distractors": [
+            { "text": "Equal shares among all senders regardless of RTT or rule", "kind": "misconception", "rationale": "Different RTTs clock the additive step differently. That is the bias." },
+            { "text": "A reserved half of the hop for whoever started first", "kind": "nearby", "rationale": "Start order is not the share. The sawtooth is." },
+            { "text": "Zero share for any sender that has ever seen a congestion signal", "kind": "reversed", "rationale": "Signals cut the window; they do not evict the sender." }
+          ],
+          "correctExplanation": "Same rule, same RTT, one conversation. That is the equal-share case.",
+          "objectiveIds": ["Describe TCP fairness as equal shares among equal RTTs"],
+          "prerequisiteConceptIds": ["net-aimd"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-fair10-2",
+          "stem": "Two AIMD flows share a hop; one has a much longer RTT. The long-RTT flow typically:",
+          "correctAnswer": "Gets a smaller average share, because it adds less often per unit time",
+          "distractors": [
+            { "text": "Gets a larger share, because a long RTT is rewarded with a bigger additive step", "kind": "reversed", "rationale": "The step is per RTT, not scaled up by delay. Long RTT means fewer steps." },
+            { "text": "Is assigned the entire hop, because delay is treated as leftover capacity", "kind": "misconception", "rationale": "Delay here clocks the increase. It is not a capacity gift." },
+            { "text": "Ignores AIMD and jumps to line rate until the short-RTT flow exits", "kind": "misapplied", "rationale": "Both still run the rule. The clocks differ, not the algorithm." }
+          ],
+          "correctExplanation": "Increase is once per RTT. Fewer RTTs per second means a slower climb and a smaller share.",
+          "objectiveIds": ["Predict the bias when two flows share a bottleneck but have different RTTs"],
+          "prerequisiteConceptIds": ["net-aimd"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-fair10-3",
+          "stem": "Equal windows on a shared hop require, in this unit's sense of TCP fairness:",
+          "correctAnswer": "The same AIMD rule and comparable RTTs, not merely sharing the hop",
+          "distractors": [
+            { "text": "Only that both senders can see the hop's queue length directly", "kind": "misapplied", "rationale": "They still cannot see the queue. Fairness is a property of the rule plus RTT." },
+            { "text": "That one sender use a different increase so the other can catch up", "kind": "reversed", "rationale": "Different rules are how fairness breaks, not how it is restored here." },
+            { "text": "That the long-RTT sender open many conversations to cancel the bias", "kind": "nearby", "rationale": "Multiple conversations grab multiple shares. That is a workaround, not the equal-RTT case." }
+          ],
+          "correctExplanation": "Sharing the hop is not enough. The clocks and the rule have to match.",
+          "objectiveIds": ["Describe TCP fairness as equal shares among equal RTTs"],
+          "prerequisiteConceptIds": ["net-aimd"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-head-of-line-10",
+      "conceptId": "net-head-of-line",
+      "title": "The hole at the front stalls everything behind",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-reliable"],
+      "goDeeper": "net-quic",
+      "explanation": [
+        "A reliable ordered byte stream delivers byte N only after bytes before N have arrived. That is the contract: in order, approximately once. Packet 4 is lost; packets 5 through 8 are already in the receiver's buffer. The application that wanted an independent message sitting in packet 7 cannot see it. The hole at the front blocks the stream behind it.",
+        "Those later packets did useful work on the wire. They cannot do useful work for the application until the missing packet is retransmitted and placed. One conversation multiplexing several logical messages onto one ordered stream pays this tax on every loss: a dropped image stalls the next request's JSON even though the JSON bytes already arrived.",
+        "The stall is not congestion control and it is not a zero receive window. It is the delivery rule. Independent messages that could have been handed up out of order wait because the stream forbids a gap. A later transport can give those messages their own streams. This unit is why a single ordered stream cannot."
+      ],
+      "example": "A client requested two files on one reliable stream. File A's last packet is dropped. File B's packets, sent after, are sitting in the receiver. The application blocked on file A sees nothing. File B is complete in memory and undeliverable until A's hole is filled. One loss, two files stalled.",
+      "whyItMatters": "Multiplexing independent work onto one ordered stream turns a single loss into a stall of everything behind it.",
+      "quiz": [
+        {
+          "id": "nt-hol10-1",
+          "stem": "Head-of-line blocking on a reliable stream is:",
+          "correctAnswer": "One lost packet stalling later bytes that have already arrived behind it",
+          "distractors": [
+            { "text": "A sender refusing to put more than one packet in flight at a time", "kind": "nearby", "rationale": "That is stop-and-wait. HOL is a delivery-order stall at the receiver." },
+            { "text": "A hop dropping every packet once a queue is empty", "kind": "misapplied", "rationale": "The stall is at the stream, after later packets have arrived." },
+            { "text": "The application reading bytes twice because duplicates were delivered", "kind": "reversed", "rationale": "Duplicates are dropped. The problem is a hole, not extras." }
+          ],
+          "correctExplanation": "Later data is present. The ordered stream will not hand it up past the hole.",
+          "objectiveIds": ["Explain head-of-line blocking as one lost packet stalling the streams behind it"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-hol10-2",
+          "stem": "Two independent messages share one ordered byte stream; the first message's packet is lost. The second message:",
+          "correctAnswer": "Waits in the receiver until the hole is filled, even if its bytes already arrived",
+          "distractors": [
+            { "text": "Is delivered immediately, because independent messages skip the order contract", "kind": "reversed", "rationale": "One stream is one order. Independence is not visible to the stream." },
+            { "text": "Is deleted, because a hole anywhere invalidates every later sequence", "kind": "misconception", "rationale": "Later bytes are kept. They are just not handed up yet." },
+            { "text": "Forces the sender to restart both messages from sequence zero", "kind": "misapplied", "rationale": "Only the missing packet is retransmitted. The stall is delivery, not a rewind." }
+          ],
+          "correctExplanation": "The stream cannot show a gap. Message two is complete in the buffer and still blocked.",
+          "objectiveIds": ["Predict why a reliable ordered byte stream delays later independent messages"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-hol10-3",
+          "stem": "Later packets sitting in the receiver during a hole do not unblock the application because:",
+          "correctAnswer": "The ordered stream's contract forbids delivering past the missing prefix",
+          "distractors": [
+            { "text": "The sender's window is always zero while any packet is in flight", "kind": "nearby", "rationale": "Windows bound in-flight data. HOL is a delivery rule, not a send bound." },
+            { "text": "Acknowledgements cannot name a next byte when later data exists", "kind": "reversed", "rationale": "ACKs still name the hole. That is how the sender learns it." },
+            { "text": "The path rewrites sequence numbers so later data is unreadable", "kind": "misapplied", "rationale": "The bytes are readable. The stream will not hand them up yet." }
+          ],
+          "correctExplanation": "In-order is the promise. A gap at the front is a stall by contract, not by accident.",
+          "objectiveIds": ["Predict why a reliable ordered byte stream delays later independent messages"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}
