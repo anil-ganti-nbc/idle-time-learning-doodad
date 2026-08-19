@@ -2,7 +2,7 @@
   "id": "os-foundations",
   "title": "Operating Systems Foundations",
   "categoryId": "os",
-  "description": "Kernel, syscalls, processes, and isolation — the contract between program and machine, taught the xv6 way: small enough to hold.",
+  "description": "Kernel, syscalls, processes, and isolation \u2014 the contract between program and machine, taught the xv6 way: small enough to hold.",
   "curriculumVersion": 1,
   "orderHint": 0,
   "difficultyRange": [
@@ -36,6 +36,10 @@
       "spineIds": [
         "os-kernel",
         "os-syscall"
+      ],
+      "learningObjectives": [
+        "Treat the kernel as the program that owns the machine",
+        "Name privilege, traps, and syscalls as the crossing"
       ]
     },
     {
@@ -48,6 +52,10 @@
       ],
       "spineIds": [
         "os-process"
+      ],
+      "learningObjectives": [
+        "Treat a process as an isolated address space",
+        "Use fork, exec, and wait as the process API"
       ]
     },
     {
@@ -60,6 +68,10 @@
       ],
       "spineIds": [
         "os-context-switch"
+      ],
+      "learningObjectives": [
+        "Explain a context switch as saving one life and restoring another",
+        "Treat interrupts as devices entering the kernel"
       ]
     }
   ],
@@ -71,7 +83,15 @@
       "tier": 0,
       "prerequisites": [],
       "summary": "The program that owns the machine and rents it out.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain the kernel as the program that owns the machine and rents it to user programs",
+        "Name what the kernel mediates that a lone program cannot safely do itself"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-privilege",
@@ -82,7 +102,16 @@
         "os-kernel"
       ],
       "summary": "User code that cannot issue the dangerous instructions.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish privileged instructions from ordinary user-mode execution",
+        "Predict what happens when user code tries a privileged operation"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-kernel"
     },
     {
       "id": "os-syscall",
@@ -93,7 +122,16 @@
         "os-kernel"
       ],
       "summary": "The narrow door a process uses to ask for work.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a system call as the narrow door a program uses to request kernel work",
+        "Trace user request, privilege crossing, kernel action, and return"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-kernel"
     },
     {
       "id": "os-trap",
@@ -104,7 +142,16 @@
         "os-syscall"
       ],
       "summary": "How control transfers into the kernel without a CALL.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain a trap as a controlled transfer into the kernel that is not an ordinary CALL",
+        "Distinguish a requested syscall trap from an unexpected exception"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-syscall"
     },
     {
       "id": "os-user-kernel",
@@ -115,7 +162,16 @@
         "os-privilege"
       ],
       "summary": "Two maps, one CPU, a lot of checking.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast user-accessible memory with memory the kernel keeps for itself",
+        "Predict why the kernel must check pointers a program hands it"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-privilege"
     },
     {
       "id": "os-abi",
@@ -126,7 +182,16 @@
         "os-syscall"
       ],
       "summary": "Registers, numbers, and the compatibility tax.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the syscall ABI as the register and number contract both sides honour",
+        "Predict why changing that contract breaks old binaries"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-syscall"
     },
     {
       "id": "os-xv6-map",
@@ -137,7 +202,16 @@
         "os-kernel"
       ],
       "summary": "xv6 as a complete system you can finish reading.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat xv6 as a complete small Unix you can finish reading",
+        "Locate kernel, syscalls, and processes on that map without needing later chapters"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-kernel"
     },
     {
       "id": "os-boot",
@@ -148,7 +222,16 @@
         "os-kernel"
       ],
       "summary": "From reset vector to the first process.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Trace the machine from reset to a kernel that can run a first process",
+        "Name what must exist before the first user program can start"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-kernel"
     },
     {
       "id": "os-process",
@@ -159,7 +242,16 @@
         "os-kernel"
       ],
       "summary": "Address spaces, threads, and what isolation actually costs.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a process as an address space plus the threads that run in it",
+        "Name the isolation a process is supposed to provide, and that it is not free"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-kernel"
     },
     {
       "id": "os-thread-vs-proc",
@@ -170,7 +262,16 @@
         "os-process"
       ],
       "summary": "Shared address space versus a private one.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast threads that share an address space with processes that do not",
+        "Predict what a wild write in one thread can do to its siblings"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-process"
     },
     {
       "id": "os-isolation",
@@ -182,7 +283,16 @@
         "os-privilege"
       ],
       "summary": "A crash next door should be someone else's problem.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain isolation as a crash next door remaining someone else's problem",
+        "Diagnose a simple isolation failure when two programs share more than they should"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-process"
     },
     {
       "id": "os-fork",
@@ -193,7 +303,16 @@
         "os-process"
       ],
       "summary": "Copy the process, then diverge.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe fork as copying a process so parent and child can then diverge",
+        "Predict which state the child starts with and how the two then differ"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-process"
     },
     {
       "id": "os-exec",
@@ -204,7 +323,16 @@
         "os-fork"
       ],
       "summary": "Replace the address space, keep the process id.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe exec as replacing the address space while keeping the process identity",
+        "Predict what survives exec and what is overwritten"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-fork"
     },
     {
       "id": "os-wait",
@@ -215,7 +343,16 @@
         "os-fork"
       ],
       "summary": "Reaping children so they do not stay zombies.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain wait as reaping a child so it does not remain a zombie",
+        "Predict what happens to a dead child if no parent waits"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-fork"
     },
     {
       "id": "os-shell",
@@ -227,7 +364,16 @@
         "os-wait"
       ],
       "summary": "A loop of fork, exec, wait that invents scripting.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the shell as a user program looping fork, exec, and wait",
+        "Predict how that loop becomes a script of commands"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-exec"
     },
     {
       "id": "os-protection",
@@ -238,7 +384,16 @@
         "os-isolation"
       ],
       "summary": "Who may touch which object.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a protection domain as a rule about who may touch which object",
+        "Predict a denial when a process touches an object outside its domain"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-isolation"
     },
     {
       "id": "os-monolithic-vs-micro",
@@ -249,7 +404,16 @@
         "os-kernel"
       ],
       "summary": "Monoliths, microkernels, and the argument about where the driver lives.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast a kernel that contains drivers with one that keeps them in user space",
+        "Predict what a driver crash costs in each structure"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-kernel"
     },
     {
       "id": "os-context-switch",
@@ -260,7 +424,16 @@
         "os-process"
       ],
       "summary": "Saving one life and restoring another.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a context switch as saving one process's CPU state and restoring another's",
+        "Predict what must be saved for the first process to resume correctly"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-process"
     },
     {
       "id": "os-interrupt",
@@ -271,7 +444,16 @@
         "os-trap"
       ],
       "summary": "The device rings; the kernel answers.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an interrupt as a device forcing a transfer into the kernel",
+        "Contrast an interrupt with a trap the current program requested"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-trap"
     },
     {
       "id": "os-device-intro",
@@ -282,7 +464,16 @@
         "os-interrupt"
       ],
       "summary": "A register file on the other side of a bus.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a device as registers on a bus that the kernel mediates",
+        "Explain why programs usually see devices through file-like handles rather than raw registers"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-interrupt"
     },
     {
       "id": "os-ipc-intro",
@@ -293,7 +484,16 @@
         "os-process"
       ],
       "summary": "Pipes and messages before shared-memory races.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe IPC as how processes exchange data without sharing an address space",
+        "Contrast a pipe or message with two processes writing the same memory"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-process"
     },
     {
       "id": "os-batch-vs-time",
@@ -304,7 +504,16 @@
         "os-process"
       ],
       "summary": "Why we started switching at all.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast batch, multiprogramming, and time-sharing as reasons to switch",
+        "Predict why a machine started switching instead of running one job to completion"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-process"
     }
   ]
 }

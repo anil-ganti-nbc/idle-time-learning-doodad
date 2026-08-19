@@ -962,6 +962,152 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "user-kernel-boundary": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="User programs ask; the kernel owns the machine">
+      <rect x="40" y="28" width="200" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="140" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        user programs
+      </text>
+      <text x="140" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        ordinary instructions
+      </text>
+      <path d="M240 64 H300" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        syscall
+      </text>
+      <rect x="300" y="28" width="220" height="72" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="410" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        kernel
+      </text>
+      <text x="410" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        privileged · owns devices
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the door is narrow · the hardware enforces the split
+      </text>
+    </svg>
+  ),
+  "trap-entry": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A trap or interrupt enters the kernel">
+      <rect x="36" y="36" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="106" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        user code
+      </text>
+      <path d="M176 64 H250" stroke="currentColor" strokeOpacity="0.5" />
+      <text x="213" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        trap
+      </text>
+      <rect x="250" y="28" width="130" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="315" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        handler
+      </text>
+      <path d="M380 64 H454" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <rect x="454" y="40" width="70" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="489" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        device
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        program asks · or the device rings
+      </text>
+    </svg>
+  ),
+  "process-space": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Each process has its own address space">
+      <rect x="40" y="28" width="200" height="88" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="140" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        process A
+      </text>
+      <rect x="64" y="66" width="70" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="146" y="66" width="70" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <text x="140" y="84" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        threads
+      </text>
+      <rect x="320" y="28" width="200" height="88" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="420" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        process B
+      </text>
+      <rect x="370" y="66" width="100" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        two maps · a smash stays on its own map
+      </text>
+    </svg>
+  ),
+  "thread-share": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Threads share a map; processes do not">
+      <rect x="48" y="24" width="220" height="100" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="158" y="46" textAnchor="middle" fill="currentColor" fontSize="12">
+        one address space
+      </text>
+      <rect x="68" y="60" width="80" height="40" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="168" y="60" width="80" height="40" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <text x="108" y="84" textAnchor="middle" fill="currentColor" fontSize="12">
+        T1
+      </text>
+      <text x="208" y="84" textAnchor="middle" fill="currentColor" fontSize="12">
+        T2
+      </text>
+      <rect x="320" y="36" width="90" height="76" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="430" y="36" width="90" height="76" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="365" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        P1
+      </text>
+      <text x="475" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        P2
+      </text>
+      <text x="280" y="146" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        shared map versus private maps
+      </text>
+    </svg>
+  ),
+  "context-switch": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Save one thread, restore another">
+      <rect x="40" y="32" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="115" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread A
+      </text>
+      <text x="115" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        registers saved
+      </text>
+      <path d="M190 64 H250" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="250" y="36" width="60" height="56" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        CPU
+      </text>
+      <path d="M310 64 H370" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="370" y="32" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="445" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread B
+      </text>
+      <text x="445" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        registers restored
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one register file · two lives in memory
+      </text>
+    </svg>
+  ),
+  "ready-queue": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Several jobs ready so the CPU need not idle">
+      <rect x="36" y="40" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="118" y="40" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="200" y="40" width="70" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="153" y="66" textAnchor="middle" fill="currentColor" fontSize="12">
+        ready
+      </text>
+      <path d="M270 62 H330" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="330" y="36" width="90" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="375" y="66" textAnchor="middle" fill="currentColor" fontSize="13">
+        CPU
+      </text>
+      <rect x="440" y="40" width="80" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="480" y="66" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        waiting I/O
+      </text>
+      <text x="280" y="128" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        switch so the CPU is not idle with the job
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

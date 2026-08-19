@@ -1,0 +1,716 @@
+{
+  "courseId": "os-foundations",
+  "moduleId": "os-f-proc",
+  "lessons": [
+    {
+      "id": "os-process-10",
+      "conceptId": "os-process",
+      "title": "An address space with threads inside it",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-thread-vs-proc",
+      "diagram": "process-space",
+      "explanation": [
+        "A process is the kernel's unit of a running program: a private address space, a set of open handles, credentials, and one or more threads that actually sit on a CPU. The address space is the program's memory as it sees it. The threads are the contexts — registers, stack, program counter — that execute inside that memory.",
+        "Isolation is the point of the package. A wild write in this process is supposed to hit this process. Another program's memory is not on this map. That isolation is not a law of physics. It is bookkeeping the kernel maintains, and it costs time and memory to set up and switch.",
+        "This unit names the package. Privilege and the user/kernel split live next door; virtual memory machinery waits for a later course. Here the fact is simpler: the kernel rents out processes, not raw CPUs, because a raw CPU has no idea whose bytes are whose."
+      ],
+      "example": "A compiler and an editor run at once. Each has its own addresses, its own open files, its own threads. The compiler can smash its own buffers. The editor's document is not in that map, so it does not smash with them — unless they share a file or the kernel's bookkeeping is wrong.",
+      "whyItMatters": "Every later story about fork, crash isolation, or 'we split this into another process' assumes this package. Threads versus processes is the next cut inside it.",
+      "quiz": [
+        {
+          "id": "ps10-1",
+          "stem": "A process is primarily:",
+          "correctAnswer": "An address space plus the threads that run in it",
+          "distractors": [
+            { "text": "A compiler flag that names the output file", "kind": "misapplied", "rationale": "A process is a runtime object, not a build switch." },
+            { "text": "A single privileged instruction on the CPU", "kind": "nearby", "rationale": "Privilege is a mode. A process is a package the kernel tracks." },
+            { "text": "The firmware that counts RAM at reset", "kind": "subtle", "rationale": "Firmware is gone by the time processes exist." }
+          ],
+          "correctExplanation": "Memory map plus runners. That is the unit the kernel rents.",
+          "objectiveIds": ["Describe a process as an address space plus the threads that run in it"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ps10-2",
+          "stem": "The editor's document usually survives a compiler crash because:",
+          "correctAnswer": "The two programs do not share an address space",
+          "distractors": [
+            { "text": "Compilers are forbidden from using any memory", "kind": "reversed", "rationale": "The compiler has plenty of memory — its own." },
+            { "text": "The disk controller stores every keystroke twice", "kind": "nearby", "rationale": "Isolation is a memory-map fact, not a disk RAID policy." },
+            { "text": "The kernel deletes the editor whenever the compiler exits", "kind": "misapplied", "rationale": "Unrelated processes do not die as a pair." }
+          ],
+          "correctExplanation": "Different maps. A smash stays on its own map.",
+          "objectiveIds": ["Name the isolation a process is supposed to provide, and that it is not free"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ps10-3",
+          "stem": "Process isolation costs something because:",
+          "correctAnswer": "The kernel must maintain separate maps and switch them",
+          "distractors": [
+            { "text": "The hardware forbids more than one program forever", "kind": "reversed", "rationale": "The whole point is that several programs can run." },
+            { "text": "Every process must be written in a different language", "kind": "misapplied", "rationale": "Language is not the cost of a map." },
+            { "text": "User programs have to draw their own kernels", "kind": "nearby", "rationale": "The kernel already exists. Isolation is its bookkeeping." }
+          ],
+          "correctExplanation": "Separate maps are work. Switching them is work. Isolation is not free.",
+          "objectiveIds": ["Name the isolation a process is supposed to provide, and that it is not free"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-process-20",
+      "conceptId": "os-process",
+      "title": "What the kernel actually keeps per process",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "intro",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-thread-vs-proc",
+      "diagram": "process-space",
+      "explanation": [
+        "The ten-minute unit named the package: address space plus threads. This one opens the kernel's record. For each process the kernel keeps an identity (a process id), a memory map, a list of open handles, credentials, a current directory, and one or more thread contexts. Destroy the record and the program is gone, even if some of its bytes still sit in RAM waiting to be reused.",
+        "The address space is the isolation boundary people mean in casual speech. Handles are a second boundary: two processes can open the same file and still not see each other's memory. Credentials decide which files and which operations the kernel will honour. None of these is the CPU. The CPU is borrowed, briefly, by one thread of one process.",
+        "Creating a process is therefore more than 'run this binary'. The kernel allocates the record, attaches a map, plants a first thread, and only then lets that thread execute. Destroying a process is the reverse: stop the threads, drop the handles, free the map, recycle the id. Isolation costs that setup and teardown, plus the work of switching maps when another process runs.",
+        "A later course will say how the map is implemented (pages, tables, faults). Here the map is a fact the kernel maintains. You can reason about fork, isolation, and context switches with that fact alone."
+      ],
+      "example": "A network service forks a helper. The kernel copies the record: same open sockets, a new id, a new map that starts as a copy of the old one. The helper can close sockets the parent still holds. The parent can crash. The helper's map is its own, so the crash is supposed to stay next door.",
+      "whyItMatters": "When someone says 'just fork it' they are volunteering for a new record, a new map, and a new set of handles. That is a real bill, not a slogan.",
+      "quiz": [
+        {
+          "id": "ps20-1",
+          "stem": "The kernel's per-process record typically includes:",
+          "correctAnswer": "An id, a memory map, handles, credentials, and thread contexts",
+          "distractors": [
+            { "text": "The source code of every library the program might one day link", "kind": "nearby", "rationale": "The record is runtime state, not a source archive." },
+            { "text": "A private copy of the kernel's own privileged instructions", "kind": "reversed", "rationale": "There is one kernel. Processes do not each own a CPU mode." },
+            { "text": "The compiler's choice of inlining threshold", "kind": "misapplied", "rationale": "Optimization knobs are not process state." }
+          ],
+          "correctExplanation": "Identity, map, handles, credentials, threads. That is the package in the table.",
+          "objectiveIds": ["Describe a process as an address space plus the threads that run in it"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ps20-2",
+          "stem": "Two processes can share a file and still be isolated because:",
+          "correctAnswer": "Handles name kernel objects; they are not the same thing as a shared address space",
+          "distractors": [
+            { "text": "Sharing a file secretly merges the two memory maps", "kind": "reversed", "rationale": "A shared file is a shared object, not a shared map." },
+            { "text": "The kernel forbids any two processes from opening files", "kind": "nearby", "rationale": "Opening files is normal. Sharing memory is the extra step." },
+            { "text": "File names live only inside the compiler", "kind": "misapplied", "rationale": "Handles are kernel bookkeeping at run time." }
+          ],
+          "correctExplanation": "Same object, two maps. Isolation is about the maps.",
+          "objectiveIds": ["Name the isolation a process is supposed to provide, and that it is not free"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ps20-3",
+          "stem": "Destroying a process is more than stopping the CPU because:",
+          "correctAnswer": "The kernel still has to drop handles, free the map, and recycle the id",
+          "distractors": [
+            { "text": "The CPU cannot stop once a program has started", "kind": "reversed", "rationale": "The CPU is borrowed and given back all the time." },
+            { "text": "The compiler must recompile the kernel first", "kind": "misapplied", "rationale": "Teardown is runtime work." },
+            { "text": "Firmware has to recount RAM after every exit", "kind": "nearby", "rationale": "Exit does not rerun reset." }
+          ],
+          "correctExplanation": "The record is larger than 'not running'. Teardown is part of the cost.",
+          "objectiveIds": ["Name the isolation a process is supposed to provide, and that it is not free"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-thread-vs-proc-10",
+      "conceptId": "os-thread-vs-proc",
+      "title": "Same map, or a private one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-isolation",
+      "diagram": "thread-share",
+      "explanation": [
+        "Threads in one process share the address space and the handles. Each thread still has its own registers, its own stack, and its own program counter. Processes do not share a map. That is the cut.",
+        "A wild write in thread A can corrupt memory thread B is using, because it is the same memory. A wild write in process A is not even an address in process B. The convenience of threads — cheap sharing, cheap creation — is the same fact as the danger.",
+        "People say 'thread' when they mean 'please share', and 'process' when they mean 'please don't'. Both are legitimate. The next unit, isolation, is what you are buying when you pick the process."
+      ],
+      "example": "A web server with many threads shares the cache in one map; one buggy thread can poison that cache for everyone. A browser that puts each site in its own process spends more memory so a crash in one site leaves the others standing.",
+      "whyItMatters": "Choosing threads versus processes is choosing who dies with whom. It is not a style preference.",
+      "quiz": [
+        {
+          "id": "tv10-1",
+          "stem": "Threads in one process share:",
+          "correctAnswer": "The address space and handles, not their register state",
+          "distractors": [
+            { "text": "Nothing at all, including the program text", "kind": "reversed", "rationale": "Sharing the map is the definition of same-process threads." },
+            { "text": "Only the processor's privileged mode bit", "kind": "nearby", "rationale": "Mode is not what threads share; memory is." },
+            { "text": "A private address space each compiler invents", "kind": "misapplied", "rationale": "A private map would make them processes." }
+          ],
+          "correctExplanation": "Same map, same handles, private registers and stacks.",
+          "objectiveIds": ["Contrast threads that share an address space with processes that do not"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "tv10-2",
+          "stem": "A wild store in one thread usually:",
+          "correctAnswer": "Can corrupt memory its sibling threads are using",
+          "distractors": [
+            { "text": "Is rejected because threads cannot store", "kind": "reversed", "rationale": "Threads store constantly. That is the risk." },
+            { "text": "Rewrites the kernel's privileged instruction list", "kind": "nearby", "rationale": "A user store hits the process map, not the mode bit." },
+            { "text": "Only edits comments in a source file on disk", "kind": "misapplied", "rationale": "This is a runtime smash, not an editor action." }
+          ],
+          "correctExplanation": "Same map. The sibling lives there too.",
+          "objectiveIds": ["Predict what a wild write in one thread can do to its siblings"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "tv10-3",
+          "stem": "Putting two sites in two processes instead of two threads buys:",
+          "correctAnswer": "Separate maps, so a crash in one need not take the other",
+          "distractors": [
+            { "text": "A guarantee that both sites share every byte", "kind": "reversed", "rationale": "That is the thread choice, not the process choice." },
+            { "text": "A faster compiler for both codebases", "kind": "misapplied", "rationale": "Process boundaries are not a compile speedup." },
+            { "text": "The right to issue privileged device instructions", "kind": "nearby", "rationale": "A process is still user mode." }
+          ],
+          "correctExplanation": "You paid for a second map. That is the isolation.",
+          "objectiveIds": ["Contrast threads that share an address space with processes that do not"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-isolation-10",
+      "conceptId": "os-isolation",
+      "title": "A crash next door should stay next door",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-process", "os-privilege"],
+      "goDeeper": "os-protection",
+      "diagram": "process-space",
+      "explanation": [
+        "Isolation is the property people actually wanted when they asked for processes: a failure in one program is not automatically a failure in another. The kernel plus privileged hardware are what make that true. A process is the package. Isolation is the promise.",
+        "The promise has holes you can name without a later course. Shared files, shared devices, and explicit shared memory are holes you cut on purpose. A kernel bug is a hole you did not want. Privilege is required because a user program that can rewrite the maps can walk next door.",
+        "Diagnosing a broken boundary is usually: two programs observed each other's private state, or one program's crash took the other down, and they were not supposed to share that state. The fix is either stop sharing, or admit they are not isolated."
+      ],
+      "example": "A plugin that runs in the host process can take the host down with one bad pointer. The same plugin in its own process can crash and leave the host standing, as long as the kernel's maps still separate them and the host did not share the wrong handles.",
+      "whyItMatters": "Reliability stories and security stories both collapse if isolation is treated as a feeling. It is a boundary with listed holes.",
+      "quiz": [
+        {
+          "id": "is10-1",
+          "stem": "Isolation means:",
+          "correctAnswer": "A crash next door remains someone else's problem",
+          "distractors": [
+            { "text": "Every program must run on a different physical computer", "kind": "nearby", "rationale": "Isolation is a kernel property on one machine." },
+            { "text": "No program is allowed to open any file", "kind": "reversed", "rationale": "Files can be shared on purpose. Maps still differ." },
+            { "text": "The compiler refuses to emit any stores", "kind": "misapplied", "rationale": "Stores are normal. Crossing maps is the issue." }
+          ],
+          "correctExplanation": "Next door fails; you do not. That is the promise.",
+          "objectiveIds": ["Explain isolation as a crash next door remaining someone else's problem"],
+          "prerequisiteConceptIds": ["os-process", "os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "is10-2",
+          "stem": "Privilege matters to isolation because:",
+          "correctAnswer": "User code that could rewrite the maps could walk into another process",
+          "distractors": [
+            { "text": "Privilege is only about which font the desktop uses", "kind": "misapplied", "rationale": "Mode bits are not a theme setting." },
+            { "text": "User programs already execute every privileged instruction", "kind": "reversed", "rationale": "They do not. That is why maps stay put." },
+            { "text": "The kernel never looks at memory maps at all", "kind": "nearby", "rationale": "Maps are exactly what the kernel maintains." }
+          ],
+          "correctExplanation": "The lock on the map is a privileged write. User mode cannot pick it.",
+          "objectiveIds": ["Explain isolation as a crash next door remaining someone else's problem"],
+          "prerequisiteConceptIds": ["os-process", "os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "is10-3",
+          "stem": "Two programs that were supposed to be isolated keep crashing together. A likely cause is:",
+          "correctAnswer": "They share memory or a handle they should not, or the kernel map is wrong",
+          "distractors": [
+            { "text": "The compiler used too many comments in both programs", "kind": "misapplied", "rationale": "Comments are not a shared runtime map." },
+            { "text": "Each program is forbidden from using any CPU", "kind": "reversed", "rationale": "They are running. That is how they can crash." },
+            { "text": "Firmware has disabled all disks in the building", "kind": "nearby", "rationale": "A missing disk is not a crossed map." }
+          ],
+          "correctExplanation": "Co-crashes mean a shared fate. Find the shared state.",
+          "objectiveIds": ["Diagnose a simple isolation failure when two programs share more than they should"],
+          "prerequisiteConceptIds": ["os-process", "os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "os-isolation-20",
+      "conceptId": "os-isolation",
+      "title": "Named holes in the boundary",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "intro",
+      "prerequisites": ["os-process", "os-privilege"],
+      "goDeeper": "os-protection",
+      "diagram": "process-space",
+      "explanation": [
+        "Isolation is the default: separate maps, privilege forbidding a user rewrite of those maps, a kernel that checks pointers. The interesting part is the holes, because almost every real system cuts some on purpose.",
+        "A shared file is a hole with a name. Two processes write the same object through handles; they still cannot see each other's stacks. A pipe or a socket is a hole with a protocol. Explicit shared memory is a hole that makes two processes look like threads for that range. Each hole is a decision, not an accident — unless the kernel has a bug.",
+        "Diagnosing a failure is asking which hole was in play. If two programs share no file, no pipe, and no shared mapping, and one still corrupts the other, the kernel's isolation did not hold. If they share a writable file and both crash after a bad record, that is a shared-object bug, not a missing process.",
+        "Privilege is still the backstop. Without it, a program can invent new holes the kernel never agreed to: rewrite the map, talk to a device, disable the checks. Isolation without privilege is a comment."
+      ],
+      "example": "A renderer process and a browser parent share a narrow IPC pipe and almost no files. A smash in the renderer dies in the renderer. The day someone maps a writable buffer into both, a smash in the renderer can take the parent down. The process boundary is still there. The hole got wider.",
+      "whyItMatters": "People announce isolation and then widen the hole until it is threads again. Naming the hole is the whole skill.",
+      "quiz": [
+        {
+          "id": "is20-1",
+          "stem": "A shared file between two processes is:",
+          "correctAnswer": "A named hole: same object, still two address spaces",
+          "distractors": [
+            { "text": "Proof that the two processes have become one thread", "kind": "reversed", "rationale": "A handle is not a merged map." },
+            { "text": "Impossible, because processes cannot open files", "kind": "nearby", "rationale": "They open files constantly." },
+            { "text": "A compiler setting that disables all stores", "kind": "misapplied", "rationale": "Sharing a file is runtime, not a compile flag." }
+          ],
+          "correctExplanation": "You shared an object. You did not merge the maps.",
+          "objectiveIds": ["Explain isolation as a crash next door remaining someone else's problem"],
+          "prerequisiteConceptIds": ["os-process", "os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "is20-2",
+          "stem": "Two processes with no shared file, pipe, or mapping still corrupt each other. That points to:",
+          "correctAnswer": "A kernel isolation failure, not an application-level shared object",
+          "distractors": [
+            { "text": "A missing comment in both source files", "kind": "misapplied", "rationale": "Comments do not cross maps." },
+            { "text": "Proof that privilege has been working perfectly", "kind": "reversed", "rationale": "A crossed map is privilege or kernel bookkeeping failing." },
+            { "text": "The firmware clock running slightly slow", "kind": "nearby", "rationale": "A clock offset does not write another process's memory." }
+          ],
+          "correctExplanation": "No agreed hole, but a crossed fate. The landlord's lock failed.",
+          "objectiveIds": ["Diagnose a simple isolation failure when two programs share more than they should"],
+          "prerequisiteConceptIds": ["os-process", "os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "is20-3",
+          "stem": "Widening a shared writable mapping between two processes tends to:",
+          "correctAnswer": "Make them fail together, more like threads than like isolated programs",
+          "distractors": [
+            { "text": "Strengthen isolation by giving each more addresses", "kind": "reversed", "rationale": "Shared writable bytes are the opposite of a stronger wall." },
+            { "text": "Remove the need for a kernel entirely", "kind": "nearby", "rationale": "You still need the kernel. You just shared more." },
+            { "text": "Compile both programs into a single object file", "kind": "misapplied", "rationale": "A mapping is not a link step." }
+          ],
+          "correctExplanation": "More shared writable bytes, more shared fate.",
+          "objectiveIds": ["Diagnose a simple isolation failure when two programs share more than they should"],
+          "prerequisiteConceptIds": ["os-process", "os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-fork-10",
+      "conceptId": "os-fork",
+      "title": "Copy the process, then diverge",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-exec",
+      "explanation": [
+        "fork is the Unix way to create a process: copy this one. The child starts with the same memory contents, the same open handles, the same credentials, and a new process id. Then the two diverge. The kernel returns 0 to the child and the child's id to the parent so each side can tell who it is.",
+        "After the copy, closing a handle in the child does not close it in the parent. A later store in the child is the child's memory. The two programs are no longer one, even though they started as a photocopy.",
+        "How cheap the copy is — whether the kernel delays copying pages until a write — belongs to a later course. The interface you need is the photocopy-then-diverge contract. exec, next, is how the child stops being a photocopy and becomes a different program."
+      ],
+      "example": "A shell forks. The child still has the same open terminal and the same variables. The child will soon exec a command. The parent still has its loop and will wait. Both are copies of the shell for a moment; they do not stay that way.",
+      "whyItMatters": "Almost every Unix program start is fork plus exec. If fork is 'spawn a random empty process', the shell will not make sense.",
+      "quiz": [
+        {
+          "id": "fk10-1",
+          "stem": "fork creates a new process by:",
+          "correctAnswer": "Copying the caller so parent and child can then diverge",
+          "distractors": [
+            { "text": "Erasing the caller and hoping a new program appears", "kind": "reversed", "rationale": "The parent continues. The child is the copy." },
+            { "text": "Asking the compiler to emit a second binary", "kind": "misapplied", "rationale": "fork is a runtime copy, not a compile." },
+            { "text": "Switching the CPU permanently into firmware", "kind": "nearby", "rationale": "No firmware step is required." }
+          ],
+          "correctExplanation": "Photocopy, then two lives. That is fork.",
+          "objectiveIds": ["Describe fork as copying a process so parent and child can then diverge"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "fk10-2",
+          "stem": "Right after fork, the child typically has:",
+          "correctAnswer": "The same memory contents and handles, and a new process id",
+          "distractors": [
+            { "text": "An empty address space and no open handles", "kind": "reversed", "rationale": "That would be a spawn-from-nothing API, not fork." },
+            { "text": "The parent's process id as well as its own", "kind": "nearby", "rationale": "Ids are unique. The child gets a new one." },
+            { "text": "A private kernel it compiled during the call", "kind": "misapplied", "rationale": "There is still one kernel." }
+          ],
+          "correctExplanation": "Copy of the state, new identity. Then they diverge.",
+          "objectiveIds": ["Predict which state the child starts with and how the two then differ"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "fk10-3",
+          "stem": "After fork, a close in the child:",
+          "correctAnswer": "Drops the child's handle and leaves the parent's handle in place",
+          "distractors": [
+            { "text": "Closes the file for the parent as well, always", "kind": "reversed", "rationale": "Handles were copied. They are no longer the same slot." },
+            { "text": "Deletes the parent's address space", "kind": "nearby", "rationale": "close is about a handle, not the other map." },
+            { "text": "Reboots the machine so both start clean", "kind": "misapplied", "rationale": "close is not reset." }
+          ],
+          "correctExplanation": "Copied, then independent. That is the diverge.",
+          "objectiveIds": ["Predict which state the child starts with and how the two then differ"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-exec-10",
+      "conceptId": "os-exec",
+      "title": "Replace the memory, keep the id",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-fork"],
+      "goDeeper": "os-shell",
+      "explanation": [
+        "exec replaces the calling process's address space with a new program and starts that program at its entry point. The process id does not change. Many open handles survive, which is how a child of the shell still has the terminal. The old memory image is gone.",
+        "fork-then-exec is the usual dance because fork alone would leave you with two shells, and exec alone would turn the only shell into the command. Together: copy, then the copy becomes the command.",
+        "What survives is part of the contract: the id, most handles (unless marked close-on-exec), credentials. What dies is the old program text, its heap, its stacks, its variables. There is no 'return from exec' on success. Success is becoming someone else."
+      ],
+      "example": "The shell's child execs /bin/ls. The process id is still the child's. The terminal handle is still open, so ls can write to your screen. The shell's variables and the child's copy of the shell's code are gone.",
+      "whyItMatters": "People treat exec as 'start a program' and then wonder why file descriptors leak into commands. The id and the handles were kept on purpose.",
+      "quiz": [
+        {
+          "id": "ex10-1",
+          "stem": "exec is best described as:",
+          "correctAnswer": "Replacing the address space while keeping the process identity",
+          "distractors": [
+            { "text": "Copying the process so two shells exist forever", "kind": "nearby", "rationale": "That is fork, not exec." },
+            { "text": "Deleting the process id and inventing a new kernel", "kind": "reversed", "rationale": "The id is what survives." },
+            { "text": "A compiler pass that inlines the whole standard library", "kind": "misapplied", "rationale": "exec is a runtime replacement." }
+          ],
+          "correctExplanation": "New program, same process record. That is exec.",
+          "objectiveIds": ["Describe exec as replacing the address space while keeping the process identity"],
+          "prerequisiteConceptIds": ["os-fork"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ex10-2",
+          "stem": "On a successful exec, the old program's variables:",
+          "correctAnswer": "Are gone; the new program starts with a fresh address space",
+          "distractors": [
+            { "text": "Are copied into the kernel's privileged registers", "kind": "nearby", "rationale": "The old image is discarded, not promoted." },
+            { "text": "Remain, because exec only changes the process id", "kind": "reversed", "rationale": "The id stays. The image does not." },
+            { "text": "Are written into the compiler's output file", "kind": "misapplied", "rationale": "No compile happens here." }
+          ],
+          "correctExplanation": "Success means you are the new program. The old variables died with the old image.",
+          "objectiveIds": ["Predict what survives exec and what is overwritten"],
+          "prerequisiteConceptIds": ["os-fork"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ex10-3",
+          "stem": "A command started by a shell can still write to the terminal because:",
+          "correctAnswer": "Handles such as the terminal usually survive exec",
+          "distractors": [
+            { "text": "exec copies the shell's source code into the command", "kind": "reversed", "rationale": "The shell image is replaced, not spliced in." },
+            { "text": "The kernel opens a new terminal for every exec", "kind": "nearby", "rationale": "The existing handle is reused on purpose." },
+            { "text": "Firmware reprints the screen from ROM each time", "kind": "misapplied", "rationale": "This is a surviving file descriptor, not a ROM blit." }
+          ],
+          "correctExplanation": "Same process, same open terminal, new program text.",
+          "objectiveIds": ["Predict what survives exec and what is overwritten"],
+          "prerequisiteConceptIds": ["os-fork"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-wait-10",
+      "conceptId": "os-wait",
+      "title": "Reap the child or keep a zombie",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-fork"],
+      "goDeeper": "os-shell",
+      "explanation": [
+        "When a child exits, it is not fully gone. The kernel keeps a small record so the parent can learn the exit status. wait is how the parent collects that record and lets the kernel free it. Until someone waits, the dead child is a zombie: done running, not yet buried.",
+        "A parent that never waits leaks those records. A parent that waits on the wrong child, or that exits without a caretaker, leaves orphans. Unix typically reparents orphans to init, which waits. The mechanism is the same: someone has to reap.",
+        "wait is also the join. The shell's loop is not 'start a command and forget'. It is start, then wait, then prompt again. Background jobs are the case where the wait is deferred, not deleted."
+      ],
+      "example": "A shell starts ls and waits. ls exits 0. wait returns that status, the zombie is reaped, and the prompt comes back. If the shell forgot to wait, repeated commands would leave a growing pile of zombie records.",
+      "whyItMatters": "A machine 'out of processes' after a fork bomb or a sloppy server is often a pile of unreaped records, not a pile of running work.",
+      "quiz": [
+        {
+          "id": "wt10-1",
+          "stem": "wait exists so that:",
+          "correctAnswer": "A parent can collect a child's exit status and let the kernel free the record",
+          "distractors": [
+            { "text": "The child can keep running after it has exited", "kind": "reversed", "rationale": "The child is already dead. wait buries it." },
+            { "text": "The compiler can pause between functions", "kind": "misapplied", "rationale": "wait is a process API, not a parse pause." },
+            { "text": "The kernel can forget the parent instead", "kind": "nearby", "rationale": "The parent is the one who must reap." }
+          ],
+          "correctExplanation": "Collect the status, free the slot. That is the reap.",
+          "objectiveIds": ["Explain wait as reaping a child so it does not remain a zombie"],
+          "prerequisiteConceptIds": ["os-fork"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "wt10-2",
+          "stem": "A child that has exited but has not been waited for is:",
+          "correctAnswer": "A zombie: finished, with a record the parent has not collected",
+          "distractors": [
+            { "text": "Still scheduled on a CPU every tick", "kind": "reversed", "rationale": "It is not runnable. Only the record remains." },
+            { "text": "Automatically turned into a second kernel", "kind": "nearby", "rationale": "There is still one kernel. The record is small and leftover." },
+            { "text": "Recompiled from source on the next prompt", "kind": "misapplied", "rationale": "No compile is involved." }
+          ],
+          "correctExplanation": "Dead, not buried. The status is waiting for a parent.",
+          "objectiveIds": ["Predict what happens to a dead child if no parent waits"],
+          "prerequisiteConceptIds": ["os-fork"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "wt10-3",
+          "stem": "A service that forks helpers and never waits will typically:",
+          "correctAnswer": "Accumulate zombie records until process slots run out",
+          "distractors": [
+            { "text": "Run faster because unreaped children are free CPUs", "kind": "reversed", "rationale": "Zombies do not run. They only occupy slots." },
+            { "text": "Cause the compiler to refuse all future builds", "kind": "misapplied", "rationale": "This is a runtime leak, not a toolchain lockout." },
+            { "text": "Disable privilege mode as a cleanup step", "kind": "nearby", "rationale": "Leaking records does not drop the mode bit." }
+          ],
+          "correctExplanation": "Unreaped records pile up. That is the leak.",
+          "objectiveIds": ["Predict what happens to a dead child if no parent waits"],
+          "prerequisiteConceptIds": ["os-fork"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "os-shell-10",
+      "conceptId": "os-shell",
+      "title": "A loop that invents a command line",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-exec", "os-wait"],
+      "goDeeper": "os-ipc-intro",
+      "explanation": [
+        "The shell is not a privileged third mode of the CPU. It is a user program that reads a line, forks, execs the command in the child, and waits. Then it prints another prompt. Scripting is that loop with the lines coming from a file.",
+        "Because the shell is just a user of the process API, anyone can write one. xv6's shell is short on purpose: parse a line, fork, exec, wait. Pipes and redirection are extra fork/exec patterns on the same API, not a new kernel feature with a special name.",
+        "The kernel does not know you are 'at a prompt'. It knows processes are being created, replaced, and reaped. The feeling of a command line is a program."
+      ],
+      "example": "You type ls. The shell forks. The child execs ls. The parent waits. ls writes to the inherited terminal and exits. wait returns, and the shell prints $ again. A script with three lines is the same loop three times.",
+      "whyItMatters": "If the shell were magic, you could not replace it, script it, or see it hang in wait. It is the process API made visible.",
+      "quiz": [
+        {
+          "id": "sh10-1",
+          "stem": "The ordinary shell loop is:",
+          "correctAnswer": "Read a line, fork, exec the command, wait, repeat",
+          "distractors": [
+            { "text": "Ask the kernel to enter a special shell CPU mode", "kind": "reversed", "rationale": "There is no third mode. The shell is a process." },
+            { "text": "Compile the kernel again before every command", "kind": "misapplied", "rationale": "A command start is fork/exec, not a rebuild." },
+            { "text": "Replace the parent with ls and never come back", "kind": "nearby", "rationale": "That would be exec without fork. The prompt would die." }
+          ],
+          "correctExplanation": "User-level loop over the process API.",
+          "objectiveIds": ["Describe the shell as a user program looping fork, exec, and wait"],
+          "prerequisiteConceptIds": ["os-exec", "os-wait"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "sh10-2",
+          "stem": "A shell script is possible because:",
+          "correctAnswer": "The same loop can read lines from a file instead of a keyboard",
+          "distractors": [
+            { "text": "Scripts run in kernel mode by definition", "kind": "reversed", "rationale": "A script is still a user program driving the API." },
+            { "text": "The compiler turns each line into a new kernel", "kind": "misapplied", "rationale": "No new kernel is built." },
+            { "text": "wait is disabled for any line that came from a file", "kind": "nearby", "rationale": "Scripts wait too, unless they background work." }
+          ],
+          "correctExplanation": "Same API, different source of lines.",
+          "objectiveIds": ["Predict how that loop becomes a script of commands"],
+          "prerequisiteConceptIds": ["os-exec", "os-wait"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "sh10-3",
+          "stem": "A shell that execs the command without forking first usually:",
+          "correctAnswer": "The shell becomes the command and cannot prompt again",
+          "distractors": [
+            { "text": "A second shell appears automatically", "kind": "reversed", "rationale": "Without fork there is no remaining shell." },
+            { "text": "The kernel invents a new terminal from ROM", "kind": "nearby", "rationale": "No new shell is created." },
+            { "text": "The compiler restores the prompt from a backup", "kind": "misapplied", "rationale": "There is no compile in this path." }
+          ],
+          "correctExplanation": "exec replaces. fork is what keeps a parent around to wait and prompt.",
+          "objectiveIds": ["Predict how that loop becomes a script of commands"],
+          "prerequisiteConceptIds": ["os-exec", "os-wait"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-protection-10",
+      "conceptId": "os-protection",
+      "title": "Who may touch which object",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-isolation"],
+      "explanation": [
+        "Isolation says two address spaces do not collide. Protection is the next sentence: even with separate maps, a process may only use the objects the kernel says it may use. A file, a device handle, another process's id — each is an object with a rule.",
+        "The kernel checks the rule on the way through the door. open fails if the credentials do not allow the file. kill fails if you may not signal that process. The maps can be perfect and a process can still be denied, because protection is about objects, not only about addresses.",
+        "This is not yet Linux capabilities or seccomp. Those wait. The foundation is: a domain is a set of allowed objects and operations, and the kernel is the checker."
+      ],
+      "example": "Process A and process B are isolated. A still cannot read B's private file just because they share a machine. open returns an error. The maps never met. The object rule did the work.",
+      "whyItMatters": "A system can isolate memory and still leak every file. Protection is why 'separate process' is not the whole security story.",
+      "quiz": [
+        {
+          "id": "po10-1",
+          "stem": "A protection domain is:",
+          "correctAnswer": "A rule about which objects a process may touch, and how",
+          "distractors": [
+            { "text": "A second physical computer bolted to the first", "kind": "nearby", "rationale": "Domains are kernel rules, not extra chassis." },
+            { "text": "The compiler's choice of warning flags", "kind": "misapplied", "rationale": "Warnings are not object permissions." },
+            { "text": "A promise that every process may open every file", "kind": "reversed", "rationale": "That would be the absence of a domain." }
+          ],
+          "correctExplanation": "Objects plus allowed operations. The kernel checks both.",
+          "objectiveIds": ["Describe a protection domain as a rule about who may touch which object"],
+          "prerequisiteConceptIds": ["os-isolation"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "po10-2",
+          "stem": "open returning an error on another user's file is usually:",
+          "correctAnswer": "A protection check, even though the two processes are already isolated",
+          "distractors": [
+            { "text": "Proof that address spaces have merged", "kind": "reversed", "rationale": "A denied open is not a merged map." },
+            { "text": "A compiler error about a missing header", "kind": "misapplied", "rationale": "This is a runtime permission, not a compile fail." },
+            { "text": "The disk refusing to spin for that user name", "kind": "nearby", "rationale": "The kernel decided, not the platter." }
+          ],
+          "correctExplanation": "Maps can be separate and the object can still be forbidden.",
+          "objectiveIds": ["Predict a denial when a process touches an object outside its domain"],
+          "prerequisiteConceptIds": ["os-isolation"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "po10-3",
+          "stem": "Isolation without protection would still allow:",
+          "correctAnswer": "A process to ask the kernel for objects it should not have",
+          "distractors": [
+            { "text": "No process to run at all", "kind": "reversed", "rationale": "They would run. They would just get every object they named." },
+            { "text": "The CPU to lose its ability to add", "kind": "misapplied", "rationale": "Arithmetic is not a protection domain." },
+            { "text": "The kernel to disappear after the first syscall", "kind": "nearby", "rationale": "The kernel would still be there, just too generous." }
+          ],
+          "correctExplanation": "Separate maps, wide-open objects. That is an incomplete wall.",
+          "objectiveIds": ["Predict a denial when a process touches an object outside its domain"],
+          "prerequisiteConceptIds": ["os-isolation"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-monolithic-vs-micro-10",
+      "conceptId": "os-monolithic-vs-micro",
+      "title": "Where the driver lives",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-device-intro",
+      "explanation": [
+        "A monolithic kernel puts most services — drivers, the file system, the network stack — in the privileged program. A microkernel keeps the privileged core small and runs those services as user-level servers that talk through messages. The argument is about where a bug lives, and what a trip through a door costs.",
+        "In a monolith, a wild pointer in a driver can take the whole machine down, because the driver shares the kernel's privilege and memory. In a microkernel, that driver can crash as a process — if the message interface actually isolates it. The cost is more crossings for ordinary work.",
+        "xv6 is a small monolith, on purpose. This unit does not pick a winner. It names the trade: privilege blast radius versus crossing cost."
+      ],
+      "example": "A buggy disk driver in a monolith can overwrite kernel tables and freeze the system. The same driver as a user-level server can die and be restarted, but every disk request paid a message crossing to get there.",
+      "whyItMatters": "Kernel-structure debates that never mention blast radius or crossing cost are branding. The mechanism is where the privileged code sits.",
+      "quiz": [
+        {
+          "id": "mm10-1",
+          "stem": "A monolithic kernel keeps drivers:",
+          "correctAnswer": "Inside the privileged kernel program, sharing its fate",
+          "distractors": [
+            { "text": "Only in firmware ROM, never in software", "kind": "nearby", "rationale": "Drivers are software. The question is which address space." },
+            { "text": "As user-level servers that the kernel cannot see", "kind": "reversed", "rationale": "That is the microkernel placement." },
+            { "text": "Inside the compiler's register allocator", "kind": "misapplied", "rationale": "Drivers are not a compile pass." }
+          ],
+          "correctExplanation": "Same privileged program. Same blast radius.",
+          "objectiveIds": ["Contrast a kernel that contains drivers with one that keeps them in user space"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "mm10-2",
+          "stem": "A driver crash in a microkernel is supposed to:",
+          "correctAnswer": "Kill that server process rather than the whole privileged core",
+          "distractors": [
+            { "text": "Always halt the CPU permanently", "kind": "reversed", "rationale": "Containing the crash is the claimed benefit." },
+            { "text": "Rewrite the compiler's warning flags", "kind": "misapplied", "rationale": "A driver crash is not a compile setting." },
+            { "text": "Promote the driver into firmware automatically", "kind": "nearby", "rationale": "Failure does not relocate the code into ROM." }
+          ],
+          "correctExplanation": "User-level server dies. The small core is supposed to remain.",
+          "objectiveIds": ["Predict what a driver crash costs in each structure"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mm10-3",
+          "stem": "The usual cost of moving drivers out of the kernel is:",
+          "correctAnswer": "More crossings for ordinary device work",
+          "distractors": [
+            { "text": "That devices stop needing any software at all", "kind": "reversed", "rationale": "The driver still exists. It just lives elsewhere." },
+            { "text": "That user mode is removed from the architecture", "kind": "nearby", "rationale": "User mode is how the servers run." },
+            { "text": "That the compiler can no longer emit loads", "kind": "misapplied", "rationale": "Structure is not an instruction ban." }
+          ],
+          "correctExplanation": "Smaller blast radius, more doors on the hot path.",
+          "objectiveIds": ["Predict what a driver crash costs in each structure"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

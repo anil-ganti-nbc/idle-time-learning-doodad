@@ -3,29 +3,6 @@ import { L, q } from "../lesson";
 
 export const SYSTEMS_LESSONS: Lesson[] = [
   L({
-    id: "os-process-5",
-    conceptId: "os-process",
-    title: "A process is a lie you can kill",
-    durationMin: 5,
-    effort: "light",
-    level: "intro",
-    prerequisites: [],
-    goDeeper: "os-vm",
-    explanation: [
-      "A process is the kernel’s unit of isolation: an address space, a set of open handles, credentials, and one or more threads that actually run. A thread is a schedulable context — registers, stack, a program counter — sharing that address space with its siblings.",
-      "The isolation is not a law of physics. It is a pile of hardware features (page tables, privilege rings, SMEP/SMAP) plus kernel bookkeeping. A kernel bug, a shared file, or an explicit mapping collapses it. Treating ‘process’ as a security boundary is a policy choice, not a guarantee.",
-    ],
-    example:
-      "Chrome’s site isolation puts origins in different processes so a renderer RCE does not automatically read another tab’s cookies. That only works if the kernel’s address-space isolation holds and the IPC surface is narrower than the old in-process DOM.",
-    whyItMatters:
-      "Every sandbox story, container story, and ‘we forked for reliability’ story is a bet on this distinction. Threads share faults; processes share only what you pass.",
-    quiz: [
-      q("op1", "Threads in one process share:", ["Nothing", "The address space and handles, not their register state", "Only the program counter", "Only the kernel stack"], 1, "That is why a wild write in one thread corrupts another."),
-      q("op2", "Process isolation ultimately rests on:", ["POSIX opinion", "Page tables and privileged hardware, plus kernel policy", "The C standard", "DNS"], 1, "Hardware plus software; neither alone."),
-      q("op3", "A container is typically:", ["A new CPU mode", "A process (or tree) with restricted namespaces and cgroups", "A virtual machine always", "A thread with a color"], 1, "Same kernel, dressed-up isolation."),
-    ],
-  }),
-  L({
     id: "os-vm-10",
     conceptId: "os-vm",
     title: "Virtual memory is a translation cache problem",

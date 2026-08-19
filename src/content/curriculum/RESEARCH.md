@@ -19,7 +19,8 @@ Where they disagree, prerequisite logic wins.
 - Semiconductors: unit processes before lithography-as-identity; High-NA after
   EUV is thinkable (MIT 6.152J / 6.774, ASML).
 - OS: hardware/software contract, then VM/concurrency, then persistence
-  (MIT 6.1810 / xv6).
+  (MIT 6.1810 / xv6). Foundations stop at kernel, syscalls, processes,
+  isolation, and the first look at interrupts and IPC.
 - Networking: packets and a reliable byte stream before BGP (Stanford CS144).
 - Compilers: lex/parse/types before IR/opt, backend last (Stanford CS143,
   CMU 15-411).

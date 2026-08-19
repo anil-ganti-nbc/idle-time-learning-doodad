@@ -1,0 +1,393 @@
+{
+  "courseId": "os-foundations",
+  "moduleId": "os-f-switch",
+  "lessons": [
+    {
+      "id": "os-context-switch-10",
+      "conceptId": "os-context-switch",
+      "title": "Save one life, restore another",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-batch-vs-time",
+      "diagram": "context-switch",
+      "explanation": [
+        "A CPU runs one thread at a time. To run another, the kernel must save the first thread's register state — program counter, stack pointer, general registers — and load the second's. That pair of saves and restores is a context switch. After it, the first thread can resume later as if the interruption were a long pause.",
+        "The kernel also switches the memory map if the new thread belongs to a different process. Two threads of the same process can switch with less map work. Either way, the outgoing thread is not running. Its life is in memory, in a record the kernel will reload.",
+        "This is not yet a scheduling policy. Policy decides who runs next. The switch is the mechanism that makes the decision real."
+      ],
+      "example": "A compiler is mid-add when its slice ends. The kernel writes its registers into the compiler's thread record, loads the editor's registers, and the editor's next instruction runs. Later the compiler's add finishes with the same operands it had, because those registers came back.",
+      "whyItMatters": "Latency and fairness arguments later assume this save/restore is possible and not free. If you think programs 'take turns' without anyone saving state, the next course has nothing to attach to.",
+      "quiz": [
+        {
+          "id": "cs10-1",
+          "stem": "A context switch is:",
+          "correctAnswer": "Saving one thread's CPU state and restoring another's",
+          "distractors": [
+            { "text": "Compiling both programs into a single binary", "kind": "misapplied", "rationale": "A switch is runtime, not a link." },
+            { "text": "Deleting the outgoing process so it cannot resume", "kind": "reversed", "rationale": "The point of saving state is that it can resume." },
+            { "text": "Flipping the privilege bit off for the rest of the day", "kind": "nearby", "rationale": "Mode may change around the switch; the switch is the saved life." }
+          ],
+          "correctExplanation": "Save, load, continue later. That is the mechanism.",
+          "objectiveIds": ["Describe a context switch as saving one process's CPU state and restoring another's"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cs10-2",
+          "stem": "For the outgoing thread to resume correctly, the kernel must have saved:",
+          "correctAnswer": "Its registers, including the program counter and stack pointer",
+          "distractors": [
+            { "text": "Only the name of the source file it was compiled from", "kind": "misapplied", "rationale": "Source names do not resume a computation." },
+            { "text": "A new kernel image for that thread alone", "kind": "nearby", "rationale": "There is still one kernel. The thread record is small." },
+            { "text": "Nothing; the CPU remembers every old register forever", "kind": "reversed", "rationale": "The CPU has one register file. The old values must be stored." }
+          ],
+          "correctExplanation": "The life is the register file. Miss one and resume is wrong.",
+          "objectiveIds": ["Predict what must be saved for the first process to resume correctly"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cs10-3",
+          "stem": "Switching to a thread in a different process additionally requires:",
+          "correctAnswer": "Switching the memory map so the new addresses are the new process's",
+          "distractors": [
+            { "text": "Erasing both address spaces as a precaution", "kind": "reversed", "rationale": "You switch maps. You do not wipe them." },
+            { "text": "Recompiling the incoming program from scratch", "kind": "misapplied", "rationale": "The incoming image already exists." },
+            { "text": "Asking firmware to recount RAM", "kind": "nearby", "rationale": "A map switch is not a reset." }
+          ],
+          "correctExplanation": "Different process, different map. Same-process threads can skip that part.",
+          "objectiveIds": ["Predict what must be saved for the first process to resume correctly"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-context-switch-20",
+      "conceptId": "os-context-switch",
+      "title": "What has to come back later",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-batch-vs-time",
+      "diagram": "context-switch",
+      "explanation": [
+        "The short unit said save and restore. This one is the inventory. A thread's resumable life is the user registers, the kernel stack pointer it was using if it was in a syscall, and enough status to put the CPU back in the same mode. Miss the stack pointer and the resumed thread returns into garbage. Miss the program counter and it resumes at the wrong instruction.",
+        "The process map is part of the inventory when the incoming thread is in another process. Keeping the old map would make the incoming program execute against the outgoing program's addresses. Keeping the new map for the outgoing thread, if you forgot to switch back later, would do the same in reverse.",
+        "Time spent switching is time not spent in either program. That is why later schedulers hesitate to bounce a thread across cores, and why two threads in one process are cheaper to alternate than two processes. The mechanism is the same; the inventory is smaller when the map stays.",
+        "A 'mysterious' resume bug is often an incomplete save: a callee-saved register the kernel forgot, or a floating-point state left from the previous tenant. The program did not go mad. Someone else's bits were still in the file."
+      ],
+      "example": "A process in the middle of a system call is switched out. Its kernel stack still holds the half-finished request. The incoming process must not run on that stack. When the first process is restored, it continues the same syscall on the same kernel stack and then returns to user mode as if the pause had been a slow device.",
+      "whyItMatters": "Once you can name the inventory, 'the scheduler is slow' splits into policy versus a fat switch. Those are different knobs.",
+      "quiz": [
+        {
+          "id": "cs20-1",
+          "stem": "Restoring a thread without its saved stack pointer typically:",
+          "correctAnswer": "Returns or continues using the wrong stack, so the computation is garbage",
+          "distractors": [
+            { "text": "Automatically recompiles the program from source", "kind": "misapplied", "rationale": "A bad pointer is not a build step." },
+            { "text": "Is always fine, because stacks are optional", "kind": "reversed", "rationale": "Calls and locals live on the stack." },
+            { "text": "Only affects the firmware splash screen", "kind": "nearby", "rationale": "The splash screen is long gone." }
+          ],
+          "correctExplanation": "The stack pointer is part of the life. Lose it and resume is not that thread.",
+          "objectiveIds": ["Predict what must be saved for the first process to resume correctly"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cs20-2",
+          "stem": "A process switched out during a syscall must come back with:",
+          "correctAnswer": "The same kernel stack and register state so the call can finish",
+          "distractors": [
+            { "text": "A brand-new process id and an empty handle table", "kind": "reversed", "rationale": "That would be a different process, not a resumed one." },
+            { "text": "The incoming process's map still installed", "kind": "nearby", "rationale": "The map has to be this process's again." },
+            { "text": "The compiler's inlining log from last night", "kind": "misapplied", "rationale": "Resume state is registers and stacks." }
+          ],
+          "correctExplanation": "A half-finished call is state. It has to still be there.",
+          "objectiveIds": ["Describe a context switch as saving one process's CPU state and restoring another's"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cs20-3",
+          "stem": "A program that 'goes mad' only after a switch, with another tenant's register values, usually means:",
+          "correctAnswer": "The save/restore missed some state the previous thread left behind",
+          "distractors": [
+            { "text": "The compiler inserted extra comments at runtime", "kind": "misapplied", "rationale": "Comments do not become register values." },
+            { "text": "Context switches have been banned by the hardware", "kind": "reversed", "rationale": "The bug is an incomplete switch, not an absent one." },
+            { "text": "Firmware has taken back the machine permanently", "kind": "nearby", "rationale": "The machine is still running kernels and programs." }
+          ],
+          "correctExplanation": "Someone else's bits were still in the file. That is an incomplete inventory.",
+          "objectiveIds": ["Predict what must be saved for the first process to resume correctly"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "os-interrupt-10",
+      "conceptId": "os-interrupt",
+      "title": "The device rings; the kernel answers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-trap"],
+      "goDeeper": "os-device-intro",
+      "diagram": "trap-entry",
+      "explanation": [
+        "An interrupt is a device forcing a transfer into the kernel. The current program did not ask for it. The disk finished a transfer, the timer ticked, a packet arrived. The CPU finishes or pauses the current instruction, switches to privileged mode, and jumps to the handler the kernel registered for that device.",
+        "The path looks like a trap because it is the same family of hardware entry. The difference is who initiated. A syscall trap is the current program requesting work. An interrupt is the device requesting attention, often while some other program is running.",
+        "After the handler runs, the kernel may resume the interrupted program, or it may context-switch if the interrupt made another process runnable. The timer interrupt is how time-sharing gets a chance to speak."
+      ],
+      "example": "A compiler is adding numbers when the disk signals completion. The CPU interrupts, the kernel's disk handler notes the finished I/O, perhaps wakes the process that was waiting, and then either returns to the compiler or switches to the waiter.",
+      "whyItMatters": "Without interrupts, the kernel would have to poll every device and could not take the CPU back from a runaway program. Time-sharing and I/O both sit on this bell.",
+      "quiz": [
+        {
+          "id": "in10-1",
+          "stem": "An interrupt is:",
+          "correctAnswer": "A device forcing a privileged transfer into the kernel",
+          "distractors": [
+            { "text": "A user program calling a kernel function by name", "kind": "nearby", "rationale": "That would be a syscall, and it is still not a CALL." },
+            { "text": "The compiler pausing to print a warning", "kind": "misapplied", "rationale": "Interrupts are a CPU-and-device path." },
+            { "text": "A process voluntarily deleting itself", "kind": "reversed", "rationale": "The current program did not request this entry." }
+          ],
+          "correctExplanation": "The device rang. The kernel answers. The program did not ask.",
+          "objectiveIds": ["Describe an interrupt as a device forcing a transfer into the kernel"],
+          "prerequisiteConceptIds": ["os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "in10-2",
+          "stem": "A syscall trap and a disk interrupt differ mainly in that:",
+          "correctAnswer": "The program requested the trap; the device requested the interrupt",
+          "distractors": [
+            { "text": "Interrupts never enter privileged mode", "kind": "reversed", "rationale": "They do. That is how the handler can talk to the device." },
+            { "text": "Only syscalls can ever be caused by hardware", "kind": "nearby", "rationale": "Both use hardware entry. The initiator differs." },
+            { "text": "A disk interrupt recompiles the running program", "kind": "misapplied", "rationale": "No compile happens in the handler." }
+          ],
+          "correctExplanation": "Same family of entry. Different caller: program versus device.",
+          "objectiveIds": ["Contrast an interrupt with a trap the current program requested"],
+          "prerequisiteConceptIds": ["os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "in10-3",
+          "stem": "After a timer interrupt the kernel may context-switch because:",
+          "correctAnswer": "The tick is a chance to give the CPU to a different runnable process",
+          "distractors": [
+            { "text": "Timers forbid more than one process from existing", "kind": "reversed", "rationale": "The timer is why several processes can share one CPU." },
+            { "text": "The compiler requires a rebuild on every tick", "kind": "misapplied", "rationale": "A tick is not a build." },
+            { "text": "Firmware takes the machine back at each tick", "kind": "nearby", "rationale": "The kernel handles the tick. Firmware already handed off." }
+          ],
+          "correctExplanation": "The bell is the scheduler's chance. Policy decides whether to switch.",
+          "objectiveIds": ["Describe an interrupt as a device forcing a transfer into the kernel"],
+          "prerequisiteConceptIds": ["os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-device-intro-10",
+      "conceptId": "os-device-intro",
+      "title": "Registers on a bus, a handle in the program",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-interrupt"],
+      "explanation": [
+        "A device is hardware with registers the CPU can read and write over a bus, plus the ability to interrupt when work finishes. Programming those registers is privileged: the wrong write can hang the bus or smash memory. The kernel is the program allowed to do it.",
+        "User programs almost never see the registers. They see a handle — an integer the kernel handed back from open — and they read or write it. The kernel translates that into register traffic and interrupt waits. Unix's 'everything is a file' is this translation, not a claim that a disk is made of paper.",
+        "Later courses will name block devices, DMA, and drivers in detail. Here the fact is the split: raw registers on one side of the kernel, a file-like handle on the other."
+      ],
+      "example": "A program writes bytes to file descriptor 1. That descriptor may be a terminal. The kernel, not the program, pokes the UART or the display registers and handles the 'buffer empty' interrupt. The program only ever saw an integer and a write call.",
+      "whyItMatters": "People treat device I/O as 'the program talks to hardware'. On a protected kernel it does not. It talks to a handle; the kernel talks to the bus.",
+      "quiz": [
+        {
+          "id": "dv10-1",
+          "stem": "From the kernel's point of view a device is primarily:",
+          "correctAnswer": "Registers on a bus, plus interrupts when work finishes",
+          "distractors": [
+            { "text": "A compiler warning about unused variables", "kind": "misapplied", "rationale": "Devices are hardware, not diagnostics." },
+            { "text": "A user-mode instruction that any program may issue", "kind": "reversed", "rationale": "Talking to device registers is privileged." },
+            { "text": "A second kernel that runs only at reset", "kind": "nearby", "rationale": "The device is hardware. The kernel mediates it." }
+          ],
+          "correctExplanation": "Registers and a bell. That is the hardware object.",
+          "objectiveIds": ["Describe a device as registers on a bus that the kernel mediates"],
+          "prerequisiteConceptIds": ["os-interrupt"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dv10-2",
+          "stem": "A user program usually talks to a device through:",
+          "correctAnswer": "A file-like handle the kernel translates into register operations",
+          "distractors": [
+            { "text": "Direct stores to the device's physical registers", "kind": "reversed", "rationale": "Those stores are privileged and mediated." },
+            { "text": "A letter mailed to the firmware vendor", "kind": "nearby", "rationale": "The path is a syscall, not a support ticket." },
+            { "text": "Recompiling the kernel before each byte", "kind": "misapplied", "rationale": "I/O is runtime, not a rebuild." }
+          ],
+          "correctExplanation": "Integer handle in, register traffic out. The kernel is the translator.",
+          "objectiveIds": ["Explain why programs usually see devices through file-like handles rather than raw registers"],
+          "prerequisiteConceptIds": ["os-interrupt"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dv10-3",
+          "stem": "User programs are kept off device registers because:",
+          "correctAnswer": "A wrong write can hang the bus or smash memory for everyone",
+          "distractors": [
+            { "text": "Devices refuse to work unless the compiler is running", "kind": "misapplied", "rationale": "Hardware does not wait on a build." },
+            { "text": "Registers are imaginary and cannot be written", "kind": "reversed", "rationale": "They are real. That is why they are dangerous." },
+            { "text": "Handles are slower, so the kernel prefers they never exist", "kind": "nearby", "rationale": "Handles exist because the raw path is unsafe, not because they are fashionable." }
+          ],
+          "correctExplanation": "Shared, dangerous hardware. The handle is the safe door.",
+          "objectiveIds": ["Explain why programs usually see devices through file-like handles rather than raw registers"],
+          "prerequisiteConceptIds": ["os-interrupt"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-ipc-intro-10",
+      "conceptId": "os-ipc-intro",
+      "title": "Talk without sharing the map",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "explanation": [
+        "Two processes that must cooperate cannot usually just write each other's memory. Isolation forbade that. IPC is the set of kernel-mediated ways they still exchange data: a pipe, a message, later a socket. Bytes go into a kernel buffer and come out the other side.",
+        "A pipe is the first picture. One process writes, another reads, the kernel holds the in-flight bytes. Neither process named the other's addresses. Shared memory — two processes mapping the same pages — is a later, sharper tool, and it reintroduces races the next course will name. This unit stays with the copy-through-the-kernel style.",
+        "The shell's pipeline is IPC plus fork: the left command's output handle is the right command's input handle. The kernel does not know it is a pipeline. It knows two processes and a pipe object."
+      ],
+      "example": "ls | grep foo: the shell forks twice, connects a pipe, and execs. ls writes names into the pipe. grep reads them. Neither program has the other's address space. The kernel copied the bytes.",
+      "whyItMatters": "People jump to shared memory because it feels faster, then inherit every thread bug across a process boundary. Pipes exist so you can talk without merging maps.",
+      "quiz": [
+        {
+          "id": "ip10-1",
+          "stem": "IPC in this course's first look is:",
+          "correctAnswer": "Kernel-mediated exchange so processes need not share an address space",
+          "distractors": [
+            { "text": "Letting both processes rewrite the kernel's maps", "kind": "reversed", "rationale": "That would destroy isolation, not communicate." },
+            { "text": "A compiler feature that merges two source files", "kind": "misapplied", "rationale": "IPC is a runtime path." },
+            { "text": "Firmware broadcasting every register to the network", "kind": "nearby", "rationale": "A pipe is a kernel object, not a ROM broadcast." }
+          ],
+          "correctExplanation": "Copy through the kernel. Maps stay separate.",
+          "objectiveIds": ["Describe IPC as how processes exchange data without sharing an address space"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ip10-2",
+          "stem": "A pipe differs from two processes writing the same memory because:",
+          "correctAnswer": "The kernel holds the bytes; neither process names the other's addresses",
+          "distractors": [
+            { "text": "Pipes secretly map both address spaces onto each other", "kind": "reversed", "rationale": "A pipe is a buffer, not a merged map." },
+            { "text": "Pipes only work if both programs are being compiled", "kind": "misapplied", "rationale": "No compile is required." },
+            { "text": "Shared memory is illegal on every CPU ever built", "kind": "nearby", "rationale": "Shared memory exists. It is a later, sharper tool." }
+          ],
+          "correctExplanation": "Bytes in a kernel buffer versus a shared range of addresses.",
+          "objectiveIds": ["Contrast a pipe or message with two processes writing the same memory"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ip10-3",
+          "stem": "ls | grep works without either program knowing the other's map because:",
+          "correctAnswer": "The shell connected a pipe and the kernel copies the bytes",
+          "distractors": [
+            { "text": "grep is compiled into the ls binary at runtime", "kind": "reversed", "rationale": "They remain two processes." },
+            { "text": "The terminal merges all processes into one thread", "kind": "nearby", "rationale": "The terminal is just another handle." },
+            { "text": "Firmware intercepts every write and mails it", "kind": "misapplied", "rationale": "The pipe object is ordinary kernel state." }
+          ],
+          "correctExplanation": "Two processes, one pipe object, copies in the middle.",
+          "objectiveIds": ["Contrast a pipe or message with two processes writing the same memory"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-batch-vs-time-10",
+      "conceptId": "os-batch-vs-time",
+      "title": "Why we started switching at all",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-context-switch",
+      "diagram": "ready-queue",
+      "explanation": [
+        "Early machines ran one job to completion. That is batch: load a program, let it finish, load the next. The CPU sat idle whenever the job waited for a tape or a card reader. Multiprogramming keeps several jobs in memory so that when one waits for I/O, another can run. Time-sharing goes further: even a running job is interrupted so a waiting person gets a slice.",
+        "The reason to switch is waste or fairness. Multiprogramming attacks idle CPU during I/O. Time-sharing attacks a long job monopolizing the machine while a human sits at a terminal. Both require a process abstraction and a way to save one life and restore another.",
+        "This is the motive, not the policy. Later courses name CFS, real-time classes, and load balancing. Here you only need: we switch because one job at a time wasted the machine, and because people wanted a prompt."
+      ],
+      "example": "A payroll job waits ten seconds for a tape. In batch the CPU waits too. With two jobs in memory, the kernel runs the second job during those ten seconds. With time-sharing, a third user typing at a terminal still gets slices even if payroll is compute-bound.",
+      "whyItMatters": "Context switches look expensive until you price the alternative: an idle CPU or a locked-out human. The mechanism exists because those were worse.",
+      "quiz": [
+        {
+          "id": "btv10-1",
+          "stem": "Batch, multiprogramming, and time-sharing differ in that:",
+          "correctAnswer": "Batch runs one job through; the others switch to use idle time or to share a prompt",
+          "distractors": [
+            { "text": "Only batch machines have a CPU", "kind": "reversed", "rationale": "All three use a CPU. They differ in how they share it." },
+            { "text": "Time-sharing deletes the kernel and runs firmware", "kind": "nearby", "rationale": "Time-sharing needs a kernel more, not less." },
+            { "text": "Multiprogramming is a compiler optimization", "kind": "misapplied", "rationale": "It is an OS arrangement of several jobs in memory." }
+          ],
+          "correctExplanation": "One job through, several jobs to hide I/O, slices for humans.",
+          "objectiveIds": ["Contrast batch, multiprogramming, and time-sharing as reasons to switch"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "btv10-2",
+          "stem": "Multiprogramming puts several jobs in memory so that:",
+          "correctAnswer": "The CPU can run another job while one waits for I/O",
+          "distractors": [
+            { "text": "Every job is forced to wait whenever any disk spins", "kind": "reversed", "rationale": "The point is to not wait together." },
+            { "text": "The compiler can emit one binary for all jobs", "kind": "misapplied", "rationale": "Jobs remain separate programs." },
+            { "text": "Firmware can skip loading a kernel", "kind": "nearby", "rationale": "You need a kernel to switch among the jobs." }
+          ],
+          "correctExplanation": "Hide I/O wait behind someone else's compute.",
+          "objectiveIds": ["Contrast batch, multiprogramming, and time-sharing as reasons to switch"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "btv10-3",
+          "stem": "Machines started switching instead of running one job to completion because:",
+          "correctAnswer": "One job left the CPU idle on I/O, and people wanted a shared prompt",
+          "distractors": [
+            { "text": "Hardware forbade a program from ever finishing", "kind": "reversed", "rationale": "Programs still finish. Others run in the gaps." },
+            { "text": "Compilers stopped working on single-job machines", "kind": "misapplied", "rationale": "Compilers ran fine in batch. The CPU did not." },
+            { "text": "Privilege mode only exists if two jobs run at once", "kind": "nearby", "rationale": "Privilege is independent of how many jobs you keep." }
+          ],
+          "correctExplanation": "Waste and fairness. That is why the switch exists.",
+          "objectiveIds": ["Predict why a machine started switching instead of running one job to completion"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

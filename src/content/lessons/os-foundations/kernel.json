@@ -1,0 +1,651 @@
+{
+  "courseId": "os-foundations",
+  "moduleId": "os-f-kernel",
+  "lessons": [
+    {
+      "id": "os-kernel-5",
+      "conceptId": "os-kernel",
+      "title": "The program that owns the machine",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "os-privilege",
+      "diagram": "user-kernel-boundary",
+      "explanation": [
+        "A user program would like to pretend it has the whole computer: the CPU, the memory, the disk, the network. It does not. Those things are shared, and some operations on them can wreck every other program if they go wrong. The kernel is the program that actually owns the machine and rents pieces of it out.",
+        "Owning the machine means the kernel decides who runs, who may touch which memory, and who may talk to a device. A lone editor cannot safely program the disk controller while a compiler is using it. The kernel sits in the middle and turns those requests into orderly work."
+      ],
+      "example": "Two programs both want to write a file. Neither one programs the disk itself. Each asks the kernel. The kernel serializes the requests, updates its bookkeeping, and only then talks to the device.",
+      "whyItMatters": "Every later idea in this course — privilege, syscalls, processes — is a way the kernel keeps that rental honest. If the kernel is just 'the OS', the rest is vocabulary.",
+      "quiz": [
+        {
+          "id": "k5-1",
+          "stem": "The kernel is best described as:",
+          "correctAnswer": "The program that owns the machine and rents it to user programs",
+          "distractors": [
+            { "text": "The compiler that turns C into machine code", "kind": "nearby", "rationale": "A compiler is a user program that produces binaries." },
+            { "text": "The BIOS screen that counts memory at power-on", "kind": "misapplied", "rationale": "Firmware starts the machine; it is not the running kernel." },
+            { "text": "The window manager that draws title bars", "kind": "subtle", "rationale": "A desktop shell runs in user space on top of the kernel." }
+          ],
+          "correctExplanation": "Ownership and rental. That is the job, not compiling or drawing windows.",
+          "objectiveIds": ["Explain the kernel as the program that owns the machine and rents it to user programs"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "k5-2",
+          "stem": "Two programs that both need the disk go through the kernel because:",
+          "correctAnswer": "A lone program cannot safely operate a shared device on its own",
+          "distractors": [
+            { "text": "Disks refuse to spin unless a compiler is running", "kind": "misapplied", "rationale": "The device does not care which language you used." },
+            { "text": "User programs are not allowed to store any files", "kind": "reversed", "rationale": "They store files by asking the kernel, not by being banned." },
+            { "text": "The kernel is the only program that can add two numbers", "kind": "nearby", "rationale": "Ordinary arithmetic does not need the kernel." }
+          ],
+          "correctExplanation": "Sharing plus danger is why mediation exists. Arithmetic is not the reason.",
+          "objectiveIds": ["Name what the kernel mediates that a lone program cannot safely do itself"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "k5-3",
+          "stem": "Which job belongs to the kernel rather than to a user program?",
+          "correctAnswer": "Deciding which program may talk to a device right now",
+          "distractors": [
+            { "text": "Choosing names for local variables in a function", "kind": "nearby", "rationale": "Names inside a function are the compiler's and the programmer's." },
+            { "text": "Picking a font for a word processor", "kind": "subtle", "rationale": "Presentation is an application choice." },
+            { "text": "Formatting a comment in a source file", "kind": "misapplied", "rationale": "Comments never reach the kernel." }
+          ],
+          "correctExplanation": "Device access is shared and dangerous. Fonts and comments are not.",
+          "objectiveIds": ["Name what the kernel mediates that a lone program cannot safely do itself"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-kernel-10",
+      "conceptId": "os-kernel",
+      "title": "A landlord, not a library",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "os-privilege",
+      "diagram": "user-kernel-boundary",
+      "explanation": [
+        "The kernel is software, but it is not just another library your program links. A library runs with your privileges and dies with your process. The kernel is the program that stays resident, holds the real hardware, and lets other programs run only on its terms. MIT 6.1810 starts here: the hardware/software contract, not a tour of Linux features.",
+        "What it mediates is anything a lone program cannot do safely on a shared machine: starting and stopping other programs, handing out memory, talking to disks and networks, and keeping one program's mistake from becoming every program's crash. Ordinary computation — adding numbers, walking an array — does not need the kernel at all.",
+        "The rental metaphor is exact enough to keep. The tenant does not rewire the building. The tenant asks for heat, water, and a key. The kernel is the landlord plus the locks. Later units name the locks (privilege), the request form (system calls), and the apartment (a process)."
+      ],
+      "example": "A text editor saves a file. The editor does not pulse the disk's command register. It asks the kernel to write bytes. The kernel checks the request, finds the device, and performs the operation. If the editor hung while talking to the disk itself, every other program waiting on that disk would hang with it.",
+      "whyItMatters": "If you treat the kernel as a bag of features, privilege and syscalls look like trivia. They are how the rental is enforced.",
+      "quiz": [
+        {
+          "id": "k10-1",
+          "stem": "The kernel differs from a library the program links because:",
+          "correctAnswer": "It stays resident, owns the hardware, and runs other programs on its terms",
+          "distractors": [
+            { "text": "It is written in a language user programs cannot use", "kind": "nearby", "rationale": "Language is not what makes it the owner." },
+            { "text": "It only runs while the compiler is translating a file", "kind": "reversed", "rationale": "The kernel is resident; the compiler is a guest." },
+            { "text": "It exists only to draw the desktop wallpaper", "kind": "misapplied", "rationale": "Graphics servers are usually user programs." }
+          ],
+          "correctExplanation": "Residence and ownership. A library dies with you; the kernel does not.",
+          "objectiveIds": ["Explain the kernel as the program that owns the machine and rents it to user programs"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "k10-2",
+          "stem": "A program that only adds numbers in its own variables typically:",
+          "correctAnswer": "Does not need the kernel for that arithmetic",
+          "distractors": [
+            { "text": "Must ask the kernel before every addition", "kind": "reversed", "rationale": "Ordinary computation is not a privileged operation." },
+            { "text": "Cannot run unless a disk write is in progress", "kind": "nearby", "rationale": "CPU work does not wait on the disk by law." },
+            { "text": "Has to reboot the machine between additions", "kind": "misapplied", "rationale": "Reboot is not how arithmetic works." }
+          ],
+          "correctExplanation": "The kernel mediates shared, dangerous work. Adding local numbers is neither.",
+          "objectiveIds": ["Name what the kernel mediates that a lone program cannot safely do itself"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "k10-3",
+          "stem": "Two editors saving at once go through the kernel so that:",
+          "correctAnswer": "The shared device is used in an order the kernel can defend",
+          "distractors": [
+            { "text": "Each editor can rewire the disk controller itself", "kind": "reversed", "rationale": "Direct device access is what the kernel exists to prevent." },
+            { "text": "The compiler can rename their local variables", "kind": "misapplied", "rationale": "Saving a file is not a compile step." },
+            { "text": "The desktop can change the system font mid-write", "kind": "subtle", "rationale": "Presentation is not why the disk is mediated." }
+          ],
+          "correctExplanation": "Shared hardware plus a crash risk. That is the mediation.",
+          "objectiveIds": ["Name what the kernel mediates that a lone program cannot safely do itself"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-privilege-10",
+      "conceptId": "os-privilege",
+      "title": "User code cannot issue the dangerous instructions",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-user-kernel",
+      "diagram": "user-kernel-boundary",
+      "explanation": [
+        "The CPU has a mode bit. In user mode, a long list of instructions is illegal: changing the page tables, talking to device registers, disabling interrupts, returning to an arbitrary privileged state. In kernel mode those instructions work. Privilege is that split, not a social ranking of programs.",
+        "The kernel runs in the privileged mode. User programs do not. The hardware, not a polite convention, rejects a user-mode attempt to execute a privileged instruction. Typically the CPU takes an exception and hands control to the kernel, which can kill the offender or return an error.",
+        "This is why the kernel can be a landlord. Locks on the building are only locks if tenants cannot pick them with an ordinary instruction. Privilege is the hardware lock. System calls, next, are the legal way to ask the landlord to use a key."
+      ],
+      "example": "A user program executes an instruction that writes a device control register. The CPU is in user mode, so the write never happens. The processor traps. The kernel sees an illegal instruction or a protection fault and ends the process, or returns an error if the program was using a defined interface incorrectly.",
+      "whyItMatters": "Without a mode bit, 'the kernel owns the machine' is a comment in a header file. Isolation later in the course sits on this hardware fact.",
+      "quiz": [
+        {
+          "id": "pr10-1",
+          "stem": "Privilege on a CPU is primarily:",
+          "correctAnswer": "A mode in which some instructions are legal only for the kernel",
+          "distractors": [
+            { "text": "A list of which users paid for a faster clock", "kind": "misapplied", "rationale": "Privilege is not a billing plan." },
+            { "text": "The brand name stamped on the processor lid", "kind": "nearby", "rationale": "Brands do not create user and kernel modes." },
+            { "text": "A compiler flag that forbids while loops", "kind": "subtle", "rationale": "Language features are not CPU modes." }
+          ],
+          "correctExplanation": "A mode bit plus a list of dangerous instructions. That is the split.",
+          "objectiveIds": ["Distinguish privileged instructions from ordinary user-mode execution"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pr10-2",
+          "stem": "A user program that tries to write a device register typically:",
+          "correctAnswer": "Traps; the write does not complete in user mode",
+          "distractors": [
+            { "text": "Succeeds, because every program owns every device", "kind": "reversed", "rationale": "That is the situation privilege exists to prevent." },
+            { "text": "Reboots the compiler and continues", "kind": "misapplied", "rationale": "The compiler is not in this path." },
+            { "text": "Silently changes the CPU's advertised clock", "kind": "nearby", "rationale": "A rejected instruction is not a frequency knob." }
+          ],
+          "correctExplanation": "The hardware refuses the instruction. Control goes to the kernel.",
+          "objectiveIds": ["Predict what happens when user code tries a privileged operation"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pr10-3",
+          "stem": "Ordinary addition in a user program stays legal because:",
+          "correctAnswer": "It is not a privileged instruction; the mode bit does not forbid it",
+          "distractors": [
+            { "text": "Addition is secretly performed by the disk controller", "kind": "misapplied", "rationale": "Arithmetic is not a device operation." },
+            { "text": "User mode bans every instruction except halt", "kind": "reversed", "rationale": "User mode bans the dangerous ones, not computation." },
+            { "text": "The kernel must approve each add with a signature", "kind": "nearby", "rationale": "That would make user mode unusable." }
+          ],
+          "correctExplanation": "Privilege is selective. Computation is not on the banned list.",
+          "objectiveIds": ["Distinguish privileged instructions from ordinary user-mode execution"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-syscall-5",
+      "conceptId": "os-syscall",
+      "title": "The narrow door",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-trap",
+      "diagram": "trap-entry",
+      "explanation": [
+        "A user program that needs something privileged cannot just execute the privileged instruction. It asks. A system call is that ask: a documented request that the kernel enter, check, act, and return.",
+        "The door is narrow on purpose. There are tens or hundreds of calls, not an open jump into any kernel function. Each call names an operation — read, write, open, exit — and a small set of arguments. The kernel decides whether the caller may have it."
+      ],
+      "example": "A program wants bytes from a file. It issues a read system call with a handle, a buffer, and a count. The CPU crosses into the kernel. The kernel checks the handle, copies data, and returns a count. The program continues in user mode.",
+      "whyItMatters": "If you picture a system call as an ordinary function, you will miss the privilege crossing. That crossing is the whole point.",
+      "quiz": [
+        {
+          "id": "sc5-1",
+          "stem": "A system call is:",
+          "correctAnswer": "A documented request that the kernel enter, check, act, and return",
+          "distractors": [
+            { "text": "An ordinary jump to any function inside the kernel", "kind": "reversed", "rationale": "The door is numbered and checked, not an open jump." },
+            { "text": "A compiler pass that deletes unused variables", "kind": "misapplied", "rationale": "Compilation is not a kernel request." },
+            { "text": "A hardware reset that restarts the machine", "kind": "nearby", "rationale": "A syscall returns; a reset does not." }
+          ],
+          "correctExplanation": "Ask, cross, check, act, return. That is the door.",
+          "objectiveIds": ["Describe a system call as the narrow door a program uses to request kernel work"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "sc5-2",
+          "stem": "After a successful read system call, control is typically:",
+          "correctAnswer": "Back in the user program, with a result the kernel filled in",
+          "distractors": [
+            { "text": "Stuck in kernel mode until the next reboot", "kind": "reversed", "rationale": "The kernel returns; that is the last step of the call." },
+            { "text": "Inside the compiler rewriting the program", "kind": "misapplied", "rationale": "A read is not a compile." },
+            { "text": "On a different machine that borrowed the disk", "kind": "subtle", "rationale": "The same program continues on the same CPU." }
+          ],
+          "correctExplanation": "Enter, work, return. The caller resumes.",
+          "objectiveIds": ["Trace user request, privilege crossing, kernel action, and return"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "sc5-3",
+          "stem": "The set of system calls is kept small so that:",
+          "correctAnswer": "The kernel can check a known list instead of exposing every internal function",
+          "distractors": [
+            { "text": "User programs never need to read or write", "kind": "reversed", "rationale": "Read and write are on the list. The list is still finite." },
+            { "text": "The compiler can skip generating any binaries", "kind": "misapplied", "rationale": "Call count is not a compile switch." },
+            { "text": "The CPU can forget how to add numbers", "kind": "nearby", "rationale": "Arithmetic is not gated by the syscall table." }
+          ],
+          "correctExplanation": "A numbered door is auditable. An open jump into the kernel is not.",
+          "objectiveIds": ["Describe a system call as the narrow door a program uses to request kernel work"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-syscall-10",
+      "conceptId": "os-syscall",
+      "title": "Ask, cross, check, return",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-trap",
+      "diagram": "trap-entry",
+      "explanation": [
+        "A system call is the supported way a user program requests privileged work. The program puts a call number and arguments in an agreed place (often registers), then executes a special instruction that transfers to the kernel. That instruction is not a normal CALL: it also switches mode.",
+        "Once inside, the kernel looks up the number, copies or checks the arguments, decides whether the caller is allowed the operation, and either performs it or returns an error. Then it restores user mode and resumes the caller. State that changed — a file offset, a newly allocated handle, bytes in a buffer — is the visible result.",
+        "xv6 and MIT 6.1810 treat this path as the kernel's public API. There is no supported way to call an arbitrary kernel function. The table of system calls is the product. Everything else is internal."
+      ],
+      "example": "write(fd, buf, n): the library loads the write number and the three arguments, then traps. The kernel checks that fd is open for writing, copies n bytes from the user buffer, updates the file offset, and returns the count. The program's next instruction after the trap sees that return value.",
+      "whyItMatters": "Debugging 'it failed in the kernel' starts with this path. If you cannot say what crossed the door and what came back, you will blame the wrong side.",
+      "quiz": [
+        {
+          "id": "sc10-1",
+          "stem": "A system call instruction differs from an ordinary CALL because:",
+          "correctAnswer": "It transfers to the kernel and switches into privileged mode",
+          "distractors": [
+            { "text": "It compiles the program a second time", "kind": "misapplied", "rationale": "A trap is not a compile." },
+            { "text": "It erases the caller's registers on purpose every time", "kind": "nearby", "rationale": "Arguments and return values are deliberately preserved." },
+            { "text": "It only works if the disk is powered off", "kind": "reversed", "rationale": "Many syscalls exist to talk to devices that are on." }
+          ],
+          "correctExplanation": "Mode plus destination. That is what CALL does not do.",
+          "objectiveIds": ["Trace user request, privilege crossing, kernel action, and return"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "sc10-2",
+          "stem": "The kernel looks up a system-call number so that:",
+          "correctAnswer": "Only a documented operation runs, not an arbitrary kernel function",
+          "distractors": [
+            { "text": "The compiler can pick a faster clock for that number", "kind": "misapplied", "rationale": "Call numbers are not frequency settings." },
+            { "text": "Every integer becomes a legal jump into kernel internals", "kind": "reversed", "rationale": "The table exists to reject unknown numbers." },
+            { "text": "User mode can be turned off for the rest of the day", "kind": "nearby", "rationale": "The kernel returns to user mode after the call." }
+          ],
+          "correctExplanation": "A table is a filter. Unknown numbers fail.",
+          "objectiveIds": ["Describe a system call as the narrow door a program uses to request kernel work"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "sc10-3",
+          "stem": "After write copies bytes, the caller usually observes:",
+          "correctAnswer": "A return count, and a file offset the kernel advanced",
+          "distractors": [
+            { "text": "That the process has been deleted", "kind": "reversed", "rationale": "write is not exit." },
+            { "text": "That its local variables were renamed", "kind": "misapplied", "rationale": "The compiler is not in this path." },
+            { "text": "That user mode has been permanently revoked", "kind": "nearby", "rationale": "The call returns to user mode." }
+          ],
+          "correctExplanation": "The kernel changed bookkeeping and handed back a count. The program is still the program.",
+          "objectiveIds": ["Trace user request, privilege crossing, kernel action, and return"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-trap-10",
+      "conceptId": "os-trap",
+      "title": "Into the kernel without a CALL",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-syscall"],
+      "goDeeper": "os-interrupt",
+      "diagram": "trap-entry",
+      "explanation": [
+        "A trap is how the CPU transfers control into the kernel without the user program executing a normal CALL to a kernel address. The processor saves a return state, switches to privileged mode, and jumps to a handler the kernel registered. System calls use this mechanism on purpose. Exceptions use it because something went wrong.",
+        "The two cases share the hardware path and differ in intent. A syscall trap is requested: the program executed the special instruction. A divide-by-zero, an illegal instruction, or a bad memory access is not requested. The kernel still arrives through the same door, then decides whether to return an error, kill the process, or — later in the curriculum — treat a missing page as a request.",
+        "xv6's trap chapter is this picture. Do not memorize vector numbers. Remember: the program did not CALL the kernel the way it calls printf. The CPU forced a controlled entry."
+      ],
+      "example": "A program executes the syscall instruction for getpid. The CPU traps, the kernel reads the call number, returns the process id, and resumes the program. The same trap entry, a few instructions later, handles a later divide-by-zero by delivering a fault instead of a result.",
+      "whyItMatters": "If you think the kernel is 'just a function you call', you will not understand why user code cannot jump to an arbitrary kernel address, and you will not be ready for interrupts.",
+      "quiz": [
+        {
+          "id": "tr10-1",
+          "stem": "A trap transfers into the kernel by:",
+          "correctAnswer": "The CPU saving return state, raising privilege, and jumping to a handler",
+          "distractors": [
+            { "text": "The program issuing a normal CALL to a kernel symbol", "kind": "reversed", "rationale": "A normal CALL would need a callable kernel address in user space." },
+            { "text": "The compiler rewriting the program as it runs", "kind": "misapplied", "rationale": "Traps are a CPU mechanism, not a compile step." },
+            { "text": "The disk spinning faster until the kernel notices", "kind": "nearby", "rationale": "Entry is not a storage-speed trick." }
+          ],
+          "correctExplanation": "Hardware entry, not a CALL the program invented.",
+          "objectiveIds": ["Explain a trap as a controlled transfer into the kernel that is not an ordinary CALL"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "tr10-2",
+          "stem": "A syscall trap and a divide-by-zero share a hardware path but differ because:",
+          "correctAnswer": "The syscall was requested; the divide-by-zero was not",
+          "distractors": [
+            { "text": "Divide-by-zero never enters the kernel at all", "kind": "reversed", "rationale": "It is an exception. It still traps." },
+            { "text": "Only divide-by-zero can return a value to the caller", "kind": "nearby", "rationale": "Syscalls are the ones that return results by design." },
+            { "text": "A syscall erases the disk before it returns", "kind": "misapplied", "rationale": "Call type is not a format command." }
+          ],
+          "correctExplanation": "Same door, different reason for knocking.",
+          "objectiveIds": ["Distinguish a requested syscall trap from an unexpected exception"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "tr10-3",
+          "stem": "User code cannot CALL an arbitrary kernel function because:",
+          "correctAnswer": "Kernel addresses are not a user-callable library; entry is through the trap",
+          "distractors": [
+            { "text": "The kernel has no functions of any kind", "kind": "reversed", "rationale": "It has many. They are not on the user CALL path." },
+            { "text": "The compiler deletes every function named open", "kind": "misapplied", "rationale": "open is a syscall, reached by trap." },
+            { "text": "Privilege forbids the program from running at all", "kind": "nearby", "rationale": "User programs run. They just cannot pick kernel addresses." }
+          ],
+          "correctExplanation": "The trap is the supported entry. A CALL to a kernel address is not.",
+          "objectiveIds": ["Explain a trap as a controlled transfer into the kernel that is not an ordinary CALL"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "os-user-kernel-10",
+      "conceptId": "os-user-kernel",
+      "title": "Two maps, one CPU",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-privilege"],
+      "goDeeper": "os-isolation",
+      "diagram": "user-kernel-boundary",
+      "explanation": [
+        "Privilege splits instructions. Memory is split too. The kernel keeps addresses a user program must not read or write: its own code, its stacks, the tables that say who owns what. User programs have their own addresses. One CPU, two maps, and hardware that rejects a user load from kernel memory.",
+        "When a program passes a pointer into a system call — a buffer for read, a path for open — that pointer is a user address. The kernel must not trust it. It checks that the range is something the caller may touch, then copies. A kernel that followed a user pointer blindly could be tricked into reading or writing its own memory on the attacker's behalf.",
+        "This unit does not need page-table machinery. The fact is simpler: some addresses are the kernel's, some are the program's, and the kernel is the one that has to check the handshake."
+      ],
+      "example": "A program calls read with a buffer pointer that actually names kernel memory. A careful kernel rejects the pointer before copying. A sloppy kernel writes the file data over its own tables. The next process to run inherits the wreckage.",
+      "whyItMatters": "Most kernel security holes that make the news start here: a pointer the kernel believed. Isolation in the next module assumes this check exists.",
+      "quiz": [
+        {
+          "id": "uk10-1",
+          "stem": "User versus kernel memory means:",
+          "correctAnswer": "Some addresses are the kernel's and a user load or store there is rejected",
+          "distractors": [
+            { "text": "The CPU has two physical chips, one per mode", "kind": "nearby", "rationale": "One CPU, two maps — not two processors." },
+            { "text": "User programs may freely overwrite kernel tables", "kind": "reversed", "rationale": "That is what the split exists to stop." },
+            { "text": "Only the compiler is allowed to have variables", "kind": "misapplied", "rationale": "Every program has memory. The maps differ." }
+          ],
+          "correctExplanation": "Two maps. User mode may not name the kernel's.",
+          "objectiveIds": ["Contrast user-accessible memory with memory the kernel keeps for itself"],
+          "prerequisiteConceptIds": ["os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "uk10-2",
+          "stem": "A read system call must check the user buffer pointer because:",
+          "correctAnswer": "The kernel could otherwise be tricked into writing its own memory",
+          "distractors": [
+            { "text": "Pointers are illegal in every programming language", "kind": "misapplied", "rationale": "Pointers are normal. Unchecked ones are the hazard." },
+            { "text": "The disk will not spin unless the pointer is even", "kind": "nearby", "rationale": "Alignment folklore is not the security check." },
+            { "text": "The kernel never copies any bytes anywhere", "kind": "reversed", "rationale": "Copying is exactly what read does, after the check." }
+          ],
+          "correctExplanation": "A user pointer is a claim. The kernel verifies the claim before it copies.",
+          "objectiveIds": ["Predict why the kernel must check pointers a program hands it"],
+          "prerequisiteConceptIds": ["os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "uk10-3",
+          "stem": "A kernel that follows a hostile user pointer into its own tables usually:",
+          "correctAnswer": "Kernel memory is corrupted and other programs can fail with it",
+          "distractors": [
+            { "text": "Only the compiler's comments are rewritten", "kind": "misapplied", "rationale": "The tables are runtime state, not source comments." },
+            { "text": "Privilege mode turns itself off as a safety feature", "kind": "nearby", "rationale": "Corruption does not politely disable the mode bit." },
+            { "text": "Nothing happens, because kernel memory cannot change", "kind": "reversed", "rationale": "Kernel memory changes constantly. That is why it must be guarded." }
+          ],
+          "correctExplanation": "The landlord's books got overwritten. Tenants share the wreck.",
+          "objectiveIds": ["Predict why the kernel must check pointers a program hands it"],
+          "prerequisiteConceptIds": ["os-privilege"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-abi-10",
+      "conceptId": "os-abi",
+      "title": "The contract in the registers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-syscall"],
+      "goDeeper": "os-trap",
+      "explanation": [
+        "A system call is a conversation. Both sides have to agree where the call number lives, which registers hold arguments, how a pointer is passed, and how success or error comes back. That agreement is the syscall ABI. It is smaller than a language ABI, and just as sticky.",
+        "The compatibility tax is real. Once user binaries exist, the kernel cannot casually move argument 3 from one register to another, or renumber write. Old programs would put the right values in the wrong place and silently misbehave. New calls get new numbers. Old numbers stay.",
+        "You do not need to memorize RISC-V a7 versus x86 rax. You need the idea: the door has a layout, and the layout is a product promise. xv6's syscall path is one small, readable layout of exactly this."
+      ],
+      "example": "Linux cannot reuse an old syscall number for a different operation without breaking binaries compiled against the old meaning. A new operation gets a new number. Wrappers in libc hide the registers; they do not get to invent a private layout the kernel does not honour.",
+      "whyItMatters": "People blame 'the kernel changed' when a binary fails after an ABI break. The break is the layout, not a vibe. Knowing that keeps you from treating syscall numbers as trivia to quiz.",
+      "quiz": [
+        {
+          "id": "ab10-1",
+          "stem": "The syscall ABI is:",
+          "correctAnswer": "The register and number contract both the program and the kernel honour",
+          "distractors": [
+            { "text": "The list of fonts the desktop may draw", "kind": "misapplied", "rationale": "Presentation is not a calling contract." },
+            { "text": "The compiler's choice of loop-unrolling factor", "kind": "nearby", "rationale": "Optimization policy is not the syscall layout." },
+            { "text": "A suggestion the kernel may ignore per process", "kind": "reversed", "rationale": "If either side ignores it, the call is nonsense." }
+          ],
+          "correctExplanation": "Where the number and arguments live. Both sides must match.",
+          "objectiveIds": ["Describe the syscall ABI as the register and number contract both sides honour"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ab10-2",
+          "stem": "An old binary puts the write number in the register the old ABI named. A kernel that moved that number would:",
+          "correctAnswer": "Treat the old value as a different call, or as garbage",
+          "distractors": [
+            { "text": "Translate every old binary automatically and for free", "kind": "reversed", "rationale": "Compatibility is why the numbers stay put." },
+            { "text": "Refuse to run any program compiled this decade", "kind": "nearby", "rationale": "The break hits the old layout, not every new compile." },
+            { "text": "Speed up the disk to compensate", "kind": "misapplied", "rationale": "Layout is not a throughput knob." }
+          ],
+          "correctExplanation": "The bits still go in the old place. The new kernel reads them as a new meaning.",
+          "objectiveIds": ["Predict why changing that contract breaks old binaries"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ab10-3",
+          "stem": "New kernel operations usually get new syscall numbers because:",
+          "correctAnswer": "Old numbers already mean something to binaries that still run",
+          "distractors": [
+            { "text": "The CPU can only add, not reuse, integers", "kind": "misapplied", "rationale": "Integers reuse just fine. Meanings do not." },
+            { "text": "The compiler forbids any number smaller than 1000", "kind": "nearby", "rationale": "There is no such compiler rule." },
+            { "text": "User mode is about to be removed from the architecture", "kind": "reversed", "rationale": "The ABI exists so user mode can keep calling." }
+          ],
+          "correctExplanation": "Reuse would impersonate an old operation. New work gets a new number.",
+          "objectiveIds": ["Predict why changing that contract breaks old binaries"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-xv6-map-10",
+      "conceptId": "os-xv6-map",
+      "title": "A Unix small enough to finish",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-boot",
+      "explanation": [
+        "xv6 is a teaching Unix: a kernel you can read end to end, with processes, a system-call table, files, and a little shell. MIT 6.1810 uses it so the ideas in this course have one concrete address. It is not Linux, and it is not a product. It is a map.",
+        "On that map you can already point at the pieces this course will name. The kernel is the resident program. System calls are the table of doors. A process is a running program with its own memory. Later chapters of the book — page tables, locks, the file system — exist, and this course will not steal them. You only need to know they live somewhere on the same small map.",
+        "The point of a small system is finishability. A comment in xv6 that says 'see trap.c' is a place you could actually open. A comment in a production kernel that says 'see mm/' is a career."
+      ],
+      "example": "The xv6 book walks organization, then traps, then isolation, before locks and files. You can hold the first half in your head: there is a kernel, it has a syscall table, it runs processes. That is enough to know where you are when a later course opens page tables.",
+      "whyItMatters": "A course that starts in Linux internals has no floor. xv6 is the floor. Everything later is an expansion of a system you could have finished.",
+      "quiz": [
+        {
+          "id": "xv10-1",
+          "stem": "xv6 is used in this course as:",
+          "correctAnswer": "A complete small Unix you can finish reading",
+          "distractors": [
+            { "text": "A replacement for every production kernel", "kind": "reversed", "rationale": "It is a teaching map, not a product swap." },
+            { "text": "A compiler that targets only one laptop model", "kind": "misapplied", "rationale": "xv6 is an operating system, not a compiler." },
+            { "text": "A desktop theme shipped with Linux", "kind": "nearby", "rationale": "It is a kernel you read, not a wallpaper." }
+          ],
+          "correctExplanation": "Small and complete. That is why it is the map.",
+          "objectiveIds": ["Treat xv6 as a complete small Unix you can finish reading"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "xv10-2",
+          "stem": "On the xv6 map, system calls sit where?",
+          "correctAnswer": "In a table of doors the kernel honours, not as later-chapter trivia",
+          "distractors": [
+            { "text": "Only in the lock chapter, after filesystems", "kind": "reversed", "rationale": "Syscalls are part of the organization, not a late extra." },
+            { "text": "Inside the compiler's register allocator", "kind": "misapplied", "rationale": "Call tables are kernel, not codegen." },
+            { "text": "Nowhere; xv6 programs never ask the kernel", "kind": "nearby", "rationale": "The shell and every utility ask constantly." }
+          ],
+          "correctExplanation": "Kernel, table, processes. You can point at those before later chapters.",
+          "objectiveIds": ["Locate kernel, syscalls, and processes on that map without needing later chapters"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "xv10-3",
+          "stem": "This course leaves xv6 page tables and locks alone for now because:",
+          "correctAnswer": "They are later chapters; the map only needs kernel, calls, and processes first",
+          "distractors": [
+            { "text": "xv6 does not implement either one at all", "kind": "reversed", "rationale": "The book has both. They are later." },
+            { "text": "Compilers have already provided virtual memory", "kind": "misapplied", "rationale": "Compilers do not implement page tables." },
+            { "text": "The hardware forbids teaching more than one idea", "kind": "nearby", "rationale": "Order is pedagogical, not a CPU limit." }
+          ],
+          "correctExplanation": "Finish the floor. Expand later. That is the 6.1810 bargain.",
+          "objectiveIds": ["Locate kernel, syscalls, and processes on that map without needing later chapters"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-boot-10",
+      "conceptId": "os-boot",
+      "title": "From reset to a first process",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-kernel"],
+      "goDeeper": "os-process",
+      "explanation": [
+        "At reset the CPU starts at a known address with no kernel, no processes, and no devices initialized. Firmware or a boot loader loads the kernel into memory and jumps to it. The kernel then builds the minimum world a user program needs: its own stacks, a place to put process records, a first address space, and a path to a first program.",
+        "Boot is not a mystery ritual. It is the kernel becoming the landlord before any tenant exists. Until that work finishes, there is no one to handle a system call, because there is no caller and no table.",
+        "xv6's start path is short enough to read: machine in a known mode, kernel C running, first process constructed, then that process execs the init program. You do not need firmware vendor names. You need the dependency: a running kernel, then a first process."
+      ],
+      "example": "xv6 ends boot by creating process 1 and loading init. Init is an ordinary user program. Everything after that — a shell, a command — is that first process or a descendant, asking the kernel through the doors that now exist.",
+      "whyItMatters": "A crash 'before any program starts' is a boot bug. A crash after init exists is a kernel or user bug. Those are different rooms.",
+      "quiz": [
+        {
+          "id": "bt10-1",
+          "stem": "Boot takes the machine from reset to:",
+          "correctAnswer": "A kernel that can construct and run a first process",
+          "distractors": [
+            { "text": "A compiler that has already finished every program", "kind": "misapplied", "rationale": "Boot does not compile the world's software." },
+            { "text": "A state with no kernel and only user programs", "kind": "reversed", "rationale": "User programs need the kernel that boot just installed." },
+            { "text": "A desktop theme the firmware painted in ROM", "kind": "nearby", "rationale": "Pretty firmware screens are not a running kernel." }
+          ],
+          "correctExplanation": "Landlord first, then a tenant. That is the order.",
+          "objectiveIds": ["Trace the machine from reset to a kernel that can run a first process"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "bt10-2",
+          "stem": "A system call cannot be served before boot finishes because:",
+          "correctAnswer": "There is not yet a kernel table or a user program to make the call",
+          "distractors": [
+            { "text": "The disk controller forbids arithmetic until noon", "kind": "misapplied", "rationale": "Time of day is not the dependency." },
+            { "text": "System calls exist only in the compiler", "kind": "nearby", "rationale": "Calls are a kernel interface, built during boot." },
+            { "text": "User mode is the only mode the reset CPU has", "kind": "reversed", "rationale": "Reset is privileged enough to install a kernel." }
+          ],
+          "correctExplanation": "No landlord, no door, no tenant. Boot builds all three.",
+          "objectiveIds": ["Name what must exist before the first user program can start"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "bt10-3",
+          "stem": "After xv6-style boot, the first user program is typically:",
+          "correctAnswer": "An init process the kernel constructed and then let run",
+          "distractors": [
+            { "text": "The firmware ROM executing every command forever", "kind": "reversed", "rationale": "Firmware handed off. It is not the first process." },
+            { "text": "The compiler running inside the reset vector", "kind": "misapplied", "rationale": "Reset is not a compile." },
+            { "text": "A process that exists before the kernel does", "kind": "nearby", "rationale": "The kernel has to exist first to create it." }
+          ],
+          "correctExplanation": "Kernel builds process 1, then process 1 is just a program.",
+          "objectiveIds": ["Name what must exist before the first user program can start"],
+          "prerequisiteConceptIds": ["os-kernel"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}
