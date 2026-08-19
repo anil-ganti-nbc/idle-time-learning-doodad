@@ -26,5 +26,6 @@ describe("persistence contract", () => {
     assert.equal(device.progress, false);
     assert.equal(device.secrets, false);
     assert.match(device.note, /export/i);
+    assert.match(device.note, /not sync/i);
   });
 });

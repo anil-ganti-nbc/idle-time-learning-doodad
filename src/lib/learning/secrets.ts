@@ -1,4 +1,5 @@
 import { SECRETS_STORAGE_KEY } from "./persistence";
+import { secretsStorage } from "./storage";
 import type { AiProviderId, AiSecrets } from "./types";
 
 /**
@@ -40,9 +41,8 @@ export function parseSecrets(raw: unknown): AiSecrets {
 export const browserSecretStore: SecretStore = {
   id: "browser",
   get() {
-    if (typeof window === "undefined") return {};
     try {
-      const raw = localStorage.getItem(SECRETS_STORAGE_KEY);
+      const raw = secretsStorage().getItem(SECRETS_STORAGE_KEY);
       if (!raw) return {};
       return parseSecrets(JSON.parse(raw));
     } catch {
@@ -50,12 +50,18 @@ export const browserSecretStore: SecretStore = {
     }
   },
   set(secrets) {
-    if (typeof window === "undefined") return;
-    localStorage.setItem(SECRETS_STORAGE_KEY, JSON.stringify(parseSecrets(secrets)));
+    try {
+      secretsStorage().setItem(SECRETS_STORAGE_KEY, JSON.stringify(parseSecrets(secrets)));
+    } catch {
+      // blocked or memory-only — do not throw into Settings
+    }
   },
   clear() {
-    if (typeof window === "undefined") return;
-    localStorage.removeItem(SECRETS_STORAGE_KEY);
+    try {
+      secretsStorage().removeItem(SECRETS_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
   },
 };
 

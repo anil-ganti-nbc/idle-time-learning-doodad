@@ -6,8 +6,10 @@ import { JournalistToggle } from "@/components/journalist-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAiStatus } from "@/lib/ai/client";
+import { sanitizeLocalBaseUrl } from "@/lib/ai/local-url";
 import { PROVIDER_META } from "@/lib/ai/providers";
-import { buildExport, loadRollback, secretExportGuard } from "@/lib/learning/export";
+import { buildClientDiagnostics } from "@/lib/learning/diagnostics";
+import { assertImportSize, buildExport, loadRollback, secretExportGuard } from "@/lib/learning/export";
 import { survives } from "@/lib/learning/persistence";
 import { generationsToday, useProgress } from "@/lib/learning/progress";
 import { loadSecrets, saveSecrets, secretFor, secretPatch } from "@/lib/learning/secrets";
@@ -102,6 +104,11 @@ function SettingsReady() {
   }
 
   function onFile(file: File) {
+    const size = assertImportSize(file.size);
+    if (!size.ok) {
+      setNote(size.error);
+      return;
+    }
     void file.text().then((text) => {
       try {
         const parsed = JSON.parse(text) as unknown;
@@ -151,8 +158,9 @@ function SettingsReady() {
       <p className="text-xs tracking-[0.18em] text-muted uppercase">Local</p>
       <h1 className="mt-2 font-display text-3xl tracking-tight">Settings</h1>
       <p className="mt-2 text-sm text-muted">
-        Optional profile and AI. Nothing here is required before a session. Progress stays on this
-        device unless you export it. The server never holds your graph.
+        Optional profile and AI. Nothing here is required before a session. Progress stays in
+        this browser. A hosted URL is not an account and does not sync across devices — export
+        an archive to move. The server never holds your graph.
       </p>
 
       <section className="mt-8 space-y-4">
@@ -386,12 +394,18 @@ function SettingsReady() {
             ? "Browser fallback — local base URL"
             : `Browser fallback key for ${PROVIDER_META[state.ai.provider].label}`}
           {state.ai.provider === "local" ? (
-            <Input
-              className="mt-1 font-mono"
-              value={secrets.localBaseUrl ?? ""}
-              onChange={(e) => persistSecrets({ ...secrets, localBaseUrl: e.target.value })}
-              placeholder="http://127.0.0.1:11434/v1"
-            />
+            <>
+              <Input
+                className="mt-1 font-mono"
+                value={secrets.localBaseUrl ?? ""}
+                onChange={(e) => persistSecrets({ ...secrets, localBaseUrl: e.target.value })}
+                placeholder="http://127.0.0.1:11434/v1"
+              />
+              {(() => {
+                const check = sanitizeLocalBaseUrl(secrets.localBaseUrl, "user");
+                return !check.ok ? <p className="mt-1 text-xs text-bad">{check.error}</p> : null;
+              })()}
+            </>
           ) : (
             <Input
               className="mt-1 font-mono"
@@ -409,8 +423,9 @@ function SettingsReady() {
         </label>
         <p className="text-xs leading-relaxed text-subtle">
           Key lookup order: environment variable, then a local <span className="font-mono">.dau-secrets.json</span>{" "}
-          next to the app, then this browser field. Environment and file keys never leave the server. This field is
-          a labelled convenience fallback, not a vault.
+          next to the app (local server only — not durable on typical serverless hosts), then this
+          browser field. Environment and file keys never leave the server. This field is a labelled
+          convenience fallback, not a vault.
         </p>
       </section>
 
@@ -418,8 +433,9 @@ function SettingsReady() {
         <h2 className="font-display text-xl tracking-tight">Where this lives</h2>
         <p className="text-sm leading-relaxed text-muted">
           Progress, the knowledge graph, reviews, and custom lessons are stored in this browser.
-          Refresh and restart keep them. Switching device or browser profile does not — export a
-          JSON archive first. An unfinished lesson lives only in this tab.
+          Refresh and restart keep them. Opening the same hosted URL in another browser, profile,
+          or device starts a separate local graph unless you import an archive. An unfinished
+          lesson lives only in this tab.
         </p>
         <ul className="space-y-1.5 text-sm text-muted">
           <PersistLine event="refresh" />
@@ -432,8 +448,10 @@ function SettingsReady() {
       <section className="mt-10 space-y-3">
         <h2 className="font-display text-xl tracking-tight">Export / import</h2>
         <p className="text-sm text-muted">
-          Versioned JSON. A replace import downloads your current archive first and keeps a restore
-          snapshot on this device. Merge will not silently overwrite newer local progress.
+          Versioned JSON. This is the official way to move progress between browsers and devices.
+          A replace import downloads your current archive first and keeps a restore snapshot on
+          this device. Merge will not silently overwrite newer local progress. Archives larger
+          than 8 MB are rejected.
         </p>
         <label className="flex items-start gap-2 text-sm text-muted">
           <input
@@ -508,7 +526,60 @@ function SettingsReady() {
       </Button>
 
       {note && <p className="mt-4 text-sm text-muted">{note}</p>}
+
+      <DiagnosticsPanel
+        subjects={catalog.categories.length}
+        courses={catalog.courses.length}
+        concepts={catalog.concepts.length}
+        lessons={catalog.lessons.length}
+        aiEnabled={state.ai.enabled}
+        aiProvider={state.ai.provider}
+        serverSources={keySources}
+      />
     </div>
+  );
+}
+
+function DiagnosticsPanel(props: {
+  subjects: number;
+  courses: number;
+  concepts: number;
+  lessons: number;
+  aiEnabled: boolean;
+  aiProvider: string;
+  serverSources: Record<string, string>;
+}) {
+  const report = buildClientDiagnostics(props);
+  return (
+    <details className="mt-10 rounded-xl bg-surface p-4 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+      <summary className="cursor-pointer text-muted">Diagnostics</summary>
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-muted">
+        <dt>Runtime</dt>
+        <dd className="text-fg">{report.runtime}</dd>
+        <dt>Learning store</dt>
+        <dd className="text-fg">v{report.persistVersion}</dd>
+        <dt>Export schema</dt>
+        <dd className="text-fg">v{report.exportSchemaVersion}</dd>
+        <dt>localStorage</dt>
+        <dd className="text-fg">{report.storage.local}</dd>
+        <dt>sessionStorage</dt>
+        <dd className="text-fg">{report.storage.session}</dd>
+        <dt>Curriculum</dt>
+        <dd className="text-fg">
+          {report.curriculum.courses} courses · {report.curriculum.concepts} concepts ·{" "}
+          {report.curriculum.lessons} lessons
+        </dd>
+        <dt>AI</dt>
+        <dd className="text-fg">
+          {report.aiEnabled ? "on" : "off"} / {report.aiProvider} / server {report.serverProvider}
+        </dd>
+      </dl>
+      <ul className="mt-3 space-y-1 text-xs text-subtle">
+        {report.notes.map((note) => (
+          <li key={note}>{note}</li>
+        ))}
+      </ul>
+    </details>
   );
 }
 

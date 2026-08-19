@@ -1,6 +1,6 @@
+import { LIVE_SESSION_KEY } from "./persistence";
+import { liveStorage } from "./storage";
 import type { AssessmentItemRecord, Mode, TimeBudget } from "./types";
-
-const KEY = "dau-live-session";
 
 export interface LiveSession {
   lessonId: string;
@@ -14,17 +14,24 @@ export interface LiveSession {
   positions?: number[];
 }
 
+function writeLive(next: LiveSession) {
+  try {
+    liveStorage().setItem(LIVE_SESSION_KEY, JSON.stringify(next));
+  } catch {
+    // memory fallback already absorbs typical failures
+  }
+}
+
 export function startLive(session: Omit<LiveSession, "quizCorrect" | "answered">) {
   const next: LiveSession = { generations: 0, ...session };
-  sessionStorage.setItem(KEY, JSON.stringify(next));
+  writeLive(next);
   return next;
 }
 
 export function getLive(): LiveSession | null {
-  if (typeof window === "undefined") return null;
-  const raw = sessionStorage.getItem(KEY);
-  if (!raw) return null;
   try {
+    const raw = liveStorage().getItem(LIVE_SESSION_KEY);
+    if (!raw) return null;
     return JSON.parse(raw) as LiveSession;
   } catch {
     return null;
@@ -35,7 +42,7 @@ export function patchLive(partial: Partial<LiveSession>) {
   const cur = getLive();
   if (!cur) return null;
   const next = { ...cur, ...partial };
-  sessionStorage.setItem(KEY, JSON.stringify(next));
+  writeLive(next);
   return next;
 }
 
@@ -47,8 +54,11 @@ export function bumpLiveGeneration() {
 }
 
 export function clearLive() {
-  if (typeof window === "undefined") return;
-  sessionStorage.removeItem(KEY);
+  try {
+    liveStorage().removeItem(LIVE_SESSION_KEY);
+  } catch {
+    // ignore
+  }
 }
 
 export function elapsedMinutes(startedAt: string, now = Date.now()): number {

@@ -27,6 +27,9 @@ export const runAiCompletion = createServerFn({ method: "POST" })
     const { resolveLocalBaseUrl, resolveProviderKey } = await import("./keys.server");
     const resolved = resolveProviderKey(data.provider, data.userKey);
     const local = resolveLocalBaseUrl(data.localBaseUrl);
+    if (data.provider === "local" && local.error) {
+      return { ok: false as const, attempted: false as const, error: local.error };
+    }
     if (!resolved.key && data.provider !== "local") {
       return {
         ok: false as const,
@@ -44,6 +47,7 @@ export const runAiCompletion = createServerFn({ method: "POST" })
       user: data.user,
       apiKey: resolved.key,
       baseUrl: local.url,
+      localUrlSource: local.source === "env" || local.source === "file" ? local.source : "user",
       maxTokens: 1800,
     });
     return { ...result, attempted: true as const };

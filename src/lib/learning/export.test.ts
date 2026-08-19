@@ -301,4 +301,122 @@ describe("export/import", () => {
     assert.equal(imported.state.assessmentHistory.items[0].questionId, "lt1");
     assert.deepEqual(imported.state.assessmentHistory.recentPositions, [2, 0, 1]);
   });
+
+  it("round-trips a full cross-device archive for the completed courses", () => {
+    const state = defaultState();
+    state.profile.displayName = "Browser A";
+    state.ai.enabled = false;
+    state.concepts["cpu-pipeline"] = {
+      ...emptyProgress("cpu-pipeline"),
+      encountered: true,
+      understanding: "got_it",
+      quizCorrect: 3,
+      quizTotal: 3,
+      lastQuizCorrect: 3,
+      lastQuizTotal: 3,
+      lastQuizScore: 1,
+      lastStudiedAt: "2026-08-10T00:00:00.000Z",
+      updatedAt: "2026-08-10T00:00:00.000Z",
+      timesStudied: 1,
+      nextReviewAt: "2026-08-17T00:00:00.000Z",
+      intervalDays: 7,
+      ease: 2.6,
+      reviewHistory: [
+        {
+          at: "2026-08-10T00:00:00.000Z",
+          quizCorrect: 3,
+          quizTotal: 3,
+          understanding: "got_it",
+          intervalDays: 7,
+          ease: 2.6,
+        },
+      ],
+    };
+    state.concepts["gpu-scheduler"] = {
+      ...emptyProgress("gpu-scheduler"),
+      encountered: true,
+      understanding: "mostly",
+      quizCorrect: 2,
+      quizTotal: 3,
+      lastQuizCorrect: 2,
+      lastQuizTotal: 3,
+      lastQuizScore: 2 / 3,
+      lastStudiedAt: "2026-08-12T00:00:00.000Z",
+      updatedAt: "2026-08-12T00:00:00.000Z",
+      timesStudied: 1,
+      nextReviewAt: "2026-08-14T00:00:00.000Z",
+    };
+    state.concepts["ast-hr"] = {
+      ...emptyProgress("ast-hr"),
+      encountered: true,
+      lastStudiedAt: "2026-06-01T00:00:00.000Z",
+      updatedAt: "2026-06-01T00:00:00.000Z",
+      timesStudied: 1,
+    };
+    state.courses = {
+      "cpu-foundations": {
+        courseId: "cpu-foundations",
+        startedAt: "2026-08-01T00:00:00.000Z",
+        lastStudiedAt: "2026-08-10T00:00:00.000Z",
+        waivedConceptIds: ["cpu-bits"],
+        placement: {
+          at: "2026-08-01T00:00:00.000Z",
+          recommendedTier: 1,
+          waivedConceptIds: ["cpu-bits"],
+          evidence: ["cpu-bits:ok"],
+          kind: "quiz",
+        },
+      },
+      "cpu-microarch": {
+        courseId: "cpu-microarch",
+        startedAt: "2026-08-05T00:00:00.000Z",
+        lastStudiedAt: "2026-08-11T00:00:00.000Z",
+        waivedConceptIds: [],
+      },
+      "arch-gpu": {
+        courseId: "arch-gpu",
+        startedAt: "2026-08-08T00:00:00.000Z",
+        lastStudiedAt: "2026-08-12T00:00:00.000Z",
+        waivedConceptIds: ["arch-latency-throughput"],
+      },
+    };
+    state.assessmentHistory = {
+      items: [
+        {
+          at: "2026-08-12T00:00:00.000Z",
+          lessonId: "gpu-scheduler-10",
+          conceptId: "gpu-scheduler",
+          questionId: "sched-1",
+          courseId: "arch-gpu",
+          objectiveIds: ["Name the scheduler's job"],
+          cognitiveType: "recognize",
+          difficultyTier: 1,
+          answerIndex: 1,
+          correct: true,
+          generationKind: "seeded",
+        },
+      ],
+      recentPositions: [1, 2, 0],
+    };
+    state.sessions = [session("s-gpu", "gpu-scheduler")];
+
+    const bundle = buildExport(state);
+    assert.equal("secrets" in bundle, false);
+    const blob = JSON.stringify(bundle);
+    assert.equal(/sk-|api[_-]?key|authorization:/i.test(blob), false);
+
+    const otherBrowser = importExport(defaultState(), bundle, "replace");
+    assert.equal(otherBrowser.state.profile.displayName, "Browser A");
+    assert.equal(otherBrowser.state.ai.enabled, false);
+    assert.equal(otherBrowser.state.concepts["cpu-pipeline"].nextReviewAt, "2026-08-17T00:00:00.000Z");
+    assert.equal(otherBrowser.state.concepts["gpu-scheduler"].lastQuizCorrect, 2);
+    assert.equal(otherBrowser.state.concepts["ast-hr"].timesStudied, 1);
+    assert.deepEqual(otherBrowser.state.courses["cpu-foundations"].waivedConceptIds, ["cpu-bits"]);
+    assert.equal(otherBrowser.state.courses["cpu-foundations"].placement?.kind, "quiz");
+    assert.equal(otherBrowser.state.courses["cpu-microarch"].startedAt, "2026-08-05T00:00:00.000Z");
+    assert.ok(otherBrowser.state.courses["arch-gpu"].waivedConceptIds.includes("arch-latency-throughput"));
+    assert.equal(otherBrowser.state.assessmentHistory.items[0].questionId, "sched-1");
+    assert.deepEqual(otherBrowser.state.assessmentHistory.recentPositions, [1, 2, 0]);
+    assert.equal(otherBrowser.state.sessions[0].id, "s-gpu");
+  });
 });

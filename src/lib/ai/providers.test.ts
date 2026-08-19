@@ -24,4 +24,17 @@ describe("provider failures", () => {
     assert.equal(r.ok, false);
     if (!r.ok) assert.match(r.error, /base URL/i);
   });
+
+  it("does not fetch a browser-supplied non-loopback local URL", async () => {
+    const r = await complete({
+      provider: "local",
+      model: "local-model",
+      system: "sys",
+      user: "hello",
+      baseUrl: "http://169.254.169.254/latest/meta-data",
+      localUrlSource: "user",
+    });
+    assert.equal(r.ok, false);
+    if (!r.ok) assert.match(r.error, /loopback/i);
+  });
 });

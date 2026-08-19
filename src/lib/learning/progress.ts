@@ -1,9 +1,10 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { emptyCourseProgress } from "./curriculum";
 import { defaultAi, defaultProfile, defaultSettings, defaultState } from "./defaults";
 import { importExport, saveRollback, type ImportMode } from "./export";
 import { PROGRESS_PERSIST_VERSION, PROGRESS_STORAGE_KEY } from "./persistence";
+import { persistStorage } from "./storage";
 import { emptyProgress, normalizeProgressRow, quizRatio, reviewQuality, scheduleReviewFull } from "./srs";
 import type {
   AiSettings,
@@ -345,6 +346,7 @@ export const useProgress = create<ProgressStore>()(
     {
       name: PROGRESS_STORAGE_KEY,
       version: PROGRESS_PERSIST_VERSION,
+      storage: createJSONStorage(() => persistStorage()),
       migrate: (persisted) => migratePersisted(persisted),
       partialize: (s) => ({
         profile: s.profile,

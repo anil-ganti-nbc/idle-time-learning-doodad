@@ -16,6 +16,7 @@ export const PERSISTENCE = {
   progress: {
     key: PROGRESS_STORAGE_KEY,
     backend: "localStorage" as const,
+    fallback: "memory" as const,
     version: PROGRESS_PERSIST_VERSION,
     contains: [
       "profile",
@@ -33,16 +34,19 @@ export const PERSISTENCE = {
   rollback: {
     key: ROLLBACK_STORAGE_KEY,
     backend: "localStorage" as const,
+    fallback: "memory" as const,
     contains: ["last replace-import snapshot"],
   },
   secrets: {
     key: SECRETS_STORAGE_KEY,
     backend: "localStorage" as const,
+    fallback: "memory" as const,
     contains: ["optional browser-fallback API keys"],
   },
   live: {
     key: LIVE_SESSION_KEY,
     backend: "sessionStorage" as const,
+    fallback: "memory" as const,
     contains: ["in-progress lesson (quiz answers, start time)"],
   },
   pglite: {
@@ -86,7 +90,7 @@ export function survives(event: PersistenceEvent): {
         progress: false,
         secrets: false,
         live: false,
-        note: "Nothing moves with you unless you export and import a JSON archive.",
+        note: "A hosted URL is not sync. Export a JSON archive and import it on the other device.",
       };
   }
 }

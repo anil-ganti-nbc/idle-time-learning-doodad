@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseSecrets } from "@/lib/learning/secrets";
 import type { AiProviderId, AiSecrets } from "@/lib/learning/types";
+import { sanitizeLocalBaseUrl, type LocalUrlSource } from "./local-url";
 
 export type ResolvedKeySource = "env" | "file" | "user" | "none";
 
@@ -28,6 +29,11 @@ function secretsFilePath(): string[] {
   return [custom, resolve(process.cwd(), LOCAL_SECRETS_FILENAME)].filter(Boolean) as string[];
 }
 
+/**
+ * Local-operator file only. Serverless hosts typically have no durable cwd,
+ * so this returns {} unless DAU_SECRETS_FILE points at a readable file.
+ * Hosted deployments should use environment variables.
+ */
 export function loadServerSecretsFile(): AiSecrets {
   for (const path of secretsFilePath()) {
     try {
@@ -65,13 +71,26 @@ export function resolveProviderKey(
   return { source: "none" };
 }
 
-export function resolveLocalBaseUrl(userBaseUrl?: string): { url?: string; source: ResolvedKeySource } {
+export function resolveLocalBaseUrl(userBaseUrl?: string): {
+  url?: string;
+  source: ResolvedKeySource;
+  error?: string;
+} {
   const fromEnv = envValue(["DAU_LOCAL_BASE_URL"]);
-  if (fromEnv) return { url: fromEnv, source: "env" };
+  if (fromEnv) return finalizeLocalUrl(fromEnv, "env");
   const fromFile = loadServerSecretsFile().localBaseUrl;
-  if (fromFile) return { url: fromFile, source: "file" };
-  if (userBaseUrl?.trim()) return { url: userBaseUrl.trim(), source: "user" };
+  if (fromFile) return finalizeLocalUrl(fromFile, "file");
+  if (userBaseUrl?.trim()) return finalizeLocalUrl(userBaseUrl, "user");
   return { source: "none" };
+}
+
+function finalizeLocalUrl(
+  raw: string,
+  source: LocalUrlSource,
+): { url?: string; source: ResolvedKeySource; error?: string } {
+  const sanitized = sanitizeLocalBaseUrl(raw, source);
+  if (!sanitized.ok) return { source, error: sanitized.error };
+  return { url: sanitized.url, source };
 }
 
 export function keySourceMap(): Record<AiProviderId, Exclude<ResolvedKeySource, "user">> {

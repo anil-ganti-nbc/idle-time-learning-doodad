@@ -1,11 +1,27 @@
 import { exportBundleV2Schema, formatZodIssues, secretExportGuard } from "./export-schema";
 import { ROLLBACK_STORAGE_KEY } from "./persistence";
+import { persistStorage, memoryStorage, type KeyValueStorage } from "./storage";
 import { normalizeProgressRow } from "./srs";
 import { EXPORT_SCHEMA_VERSION } from "./types";
 import type { AiSecrets, AssessmentHistory, ConceptProgress, Lesson, ProgressState, SessionRecord } from "./types";
 import { emptyAssessmentHistory } from "@/lib/quiz/history";
 
 export { secretExportGuard };
+export { memoryStorage as memoryStore };
+export type KeyValueStore = KeyValueStorage;
+
+/** Hosted imports must stay small enough to parse without pinning the tab. */
+export const MAX_IMPORT_BYTES = 8 * 1024 * 1024;
+
+export function assertImportSize(bytes: number): { ok: true } | { ok: false; error: string } {
+  if (!Number.isFinite(bytes) || bytes < 0) {
+    return { ok: false, error: "Import size is not valid." };
+  }
+  if (bytes > MAX_IMPORT_BYTES) {
+    return { ok: false, error: "Import is larger than 8 MB. Export a smaller archive." };
+  }
+  return { ok: true };
+}
 
 export interface ExportBundleV2 {
   format: "dead-air-university-export";
@@ -337,27 +353,24 @@ function uniqueById<T extends { id: string }>(rows: T[]): T[] {
   return out;
 }
 
-export interface KeyValueStore {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
+function defaultRollbackStore(): KeyValueStorage {
+  return persistStorage();
 }
 
-function browserStore(): KeyValueStore | null {
-  if (typeof localStorage === "undefined") return null;
-  return localStorage;
-}
-
-export function saveRollback(bundle: ExportBundleV2, store: KeyValueStore | null = browserStore()): void {
+export function saveRollback(bundle: ExportBundleV2, store: KeyValueStorage | null = defaultRollbackStore()): void {
   if (!store) return;
-  store.setItem(ROLLBACK_STORAGE_KEY, JSON.stringify(bundle));
+  try {
+    store.setItem(ROLLBACK_STORAGE_KEY, JSON.stringify(bundle));
+  } catch {
+    // blocked storage — replace still applied
+  }
 }
 
-export function loadRollback(store: KeyValueStore | null = browserStore()): ExportBundleV2 | null {
+export function loadRollback(store: KeyValueStorage | null = defaultRollbackStore()): ExportBundleV2 | null {
   if (!store) return null;
-  const raw = store.getItem(ROLLBACK_STORAGE_KEY);
-  if (!raw) return null;
   try {
+    const raw = store.getItem(ROLLBACK_STORAGE_KEY);
+    if (!raw) return null;
     const parsed = parseExport(JSON.parse(raw));
     if (!parsed.ok || !("format" in parsed.data)) return null;
     return parsed.data;
@@ -366,19 +379,10 @@ export function loadRollback(store: KeyValueStore | null = browserStore()): Expo
   }
 }
 
-export function clearRollback(store: KeyValueStore | null = browserStore()): void {
-  store?.removeItem(ROLLBACK_STORAGE_KEY);
-}
-
-export function memoryStore(initial: Record<string, string> = {}): KeyValueStore {
-  const data = { ...initial };
-  return {
-    getItem: (key) => data[key] ?? null,
-    setItem: (key, value) => {
-      data[key] = value;
-    },
-    removeItem: (key) => {
-      delete data[key];
-    },
-  };
+export function clearRollback(store: KeyValueStorage | null = defaultRollbackStore()): void {
+  try {
+    store?.removeItem(ROLLBACK_STORAGE_KEY);
+  } catch {
+    // ignore
+  }
 }

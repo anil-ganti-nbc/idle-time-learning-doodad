@@ -1,4 +1,5 @@
 import type { AiProviderId } from "@/lib/learning/types";
+import { sanitizeLocalBaseUrl, type LocalUrlSource } from "./local-url";
 
 export interface CompletionRequest {
   provider: AiProviderId;
@@ -7,6 +8,7 @@ export interface CompletionRequest {
   user: string;
   apiKey?: string;
   baseUrl?: string;
+  localUrlSource?: LocalUrlSource;
   maxTokens?: number;
 }
 
@@ -86,10 +88,13 @@ export async function complete(req: CompletionRequest): Promise<CompletionResult
           maxTokens: req.maxTokens,
           provider: "openai",
         });
-      case "local":
+      case "local": {
         if (!req.baseUrl) return { ok: false, error: "Local provider needs a base URL." };
+        const sanitized = sanitizeLocalBaseUrl(req.baseUrl, req.localUrlSource ?? "user");
+        if (!sanitized.ok) return { ok: false, error: sanitized.error };
+        if (!sanitized.url) return { ok: false, error: "Local provider needs a base URL." };
         return openaiCompat({
-          url: `${req.baseUrl.replace(/\/$/, "")}/chat/completions`,
+          url: `${sanitized.url}/chat/completions`,
           apiKey: req.apiKey ?? "local",
           model: req.model,
           system: req.system,
@@ -97,6 +102,7 @@ export async function complete(req: CompletionRequest): Promise<CompletionResult
           maxTokens: req.maxTokens,
           provider: "local",
         });
+      }
       case "anthropic":
         return anthropic(req);
       case "gemini":
