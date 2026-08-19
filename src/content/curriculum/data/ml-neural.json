@@ -40,6 +40,14 @@
       "spineIds": [
         "ml-mlp",
         "ml-activation"
+      ],
+      "learningObjectives": [
+        "Compose weighted sums and nonlinearities into a multilayer map",
+        "Explain why a stack without a nonlinearity is still one line"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
       ]
     },
     {
@@ -52,6 +60,14 @@
       ],
       "spineIds": [
         "ml-backprop"
+      ],
+      "learningObjectives": [
+        "Backpropagate a scalar loss to every weight",
+        "Name a reason gradients vanish, explode, or fail to start"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
       ]
     },
     {
@@ -65,6 +81,14 @@
       "spineIds": [
         "ml-emb-intro",
         "ml-seq-rnn"
+      ],
+      "learningObjectives": [
+        "Treat an embedding or convolution as an inductive bias, not magic features",
+        "Reuse a representation trained on a different job"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
       ]
     }
   ],
@@ -78,7 +102,15 @@
         "ml-logistic"
       ],
       "summary": "A weighted sum, a bias, and a nonlinearity.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write an artificial neuron as a weighted sum, a bias, and a nonlinearity",
+        "Predict the output when the nonlinearity is removed"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-activation",
@@ -89,7 +121,15 @@
         "ml-neuron"
       ],
       "summary": "Without one, a stack of layers is still a line.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain why a stack of linear layers without a nonlinearity is still one line",
+        "Compare ReLU, sigmoid, and tanh on saturation and gradient flow"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-mlp",
@@ -100,7 +140,15 @@
         "ml-activation"
       ],
       "summary": "Layers of neurons, each a function of the last.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Compose layers of neurons so each layer is a function of the last",
+        "Trace a small forward pass from input vector to output score"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-softmax",
@@ -111,7 +159,15 @@
         "ml-logistic"
       ],
       "summary": "Turning scores into a distribution over classes.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Turn a vector of scores into a distribution over classes",
+        "Predict what happens to the probabilities if one score dominates"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-ce-loss",
@@ -123,7 +179,15 @@
         "ml-loss"
       ],
       "summary": "The usual loss when the output is a distribution.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use cross-entropy when the output is a distribution over classes",
+        "State why cross-entropy plus softmax is the usual classification pair"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-depth",
@@ -134,7 +198,15 @@
         "ml-mlp"
       ],
       "summary": "Composition of simple functions instead of one wide shallow map.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain depth as composing simple functions instead of one wide shallow map",
+        "Name a function that a shallow net needs far more width to match"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-backprop",
@@ -146,7 +218,15 @@
         "ml-mlp"
       ],
       "summary": "Reverse-mode autodiff, not a separate algorithm from calculus.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe backpropagation as reverse-mode autodiff on a scalar loss",
+        "Trace a local Jacobian backward so every weight receives a partial"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-autodiff",
@@ -157,7 +237,15 @@
         "ml-backprop"
       ],
       "summary": "One backward pass gives every partial you need.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast reverse-mode (one backward, every partial) with forward-mode",
+        "Predict why one loss and millions of parameters choose reverse mode"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-init",
@@ -168,7 +256,15 @@
         "ml-backprop"
       ],
       "summary": "Where the weights start decides whether gradients survive.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Choose an initialization so activations and gradients start at a usable scale",
+        "Diagnose a start that saturates sigmoids or explodes products"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-vanishing",
@@ -180,7 +276,15 @@
         "ml-depth"
       ],
       "summary": "A product of many derivatives that goes to zero or infinity.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe vanishing or exploding gradients as a product of many derivatives",
+        "Predict which activation and depth combinations make the product die"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-sgd-mom",
@@ -191,7 +295,15 @@
         "ml-gd-variants"
       ],
       "summary": "Remembering recent slopes, scaling per-parameter.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Add momentum or a per-parameter scale so recent slopes are remembered",
+        "Compare plain SGD with a momentum or adaptive update on a ravine"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-batchnorm",
@@ -202,7 +314,15 @@
         "ml-mlp"
       ],
       "summary": "Re-centering activations so the next layer sees a stable input.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Re-center and re-scale activations so the next layer sees a stable input",
+        "Predict what batch norm does to the training versus inference pass"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-dropout",
@@ -213,7 +333,15 @@
         "ml-overfit"
       ],
       "summary": "Training as an ensemble of thinned nets.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Train as an ensemble of thinned nets by dropping units at random",
+        "Predict why dropout is off at inference and how the remaining weights are scaled"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-overparam",
@@ -224,8 +352,16 @@
         "ml-capacity",
         "ml-mlp"
       ],
-      "summary": "More parameters than data points — and it can still generalize.",
-      "estimatedMinutes": 10
+      "summary": "More parameters than data points \u2014 and it can still generalize.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State that more parameters than data points can still generalize",
+        "Contrast interpolation of the sample with memorization that fails off the sample"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-inductive",
@@ -236,7 +372,15 @@
         "ml-hypothesis"
       ],
       "summary": "What the architecture refuses to represent.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define inductive bias as what the architecture refuses to represent",
+        "Name a structure a fully connected net wastes capacity relearning"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-cnn",
@@ -248,7 +392,15 @@
         "ml-inductive"
       ],
       "summary": "Weight sharing across space because the world repeats.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Share weights across space because the same pattern can appear anywhere",
+        "Predict what a convolution sees that a dense layer must relearn at every position"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-emb-intro",
@@ -259,7 +411,15 @@
         "ml-mlp"
       ],
       "summary": "A learned lookup from a discrete symbol to a vector.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an embedding as a learned lookup from a discrete symbol to a vector",
+        "Predict why nearby symbols should not start as nearby integers"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-repr",
@@ -270,7 +430,15 @@
         "ml-emb-intro"
       ],
       "summary": "Features the model invented instead of features you wrote.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat a later layer as features the model invented, not features you wrote",
+        "Name what a downstream job can reuse from that representation"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-word2vec",
@@ -281,7 +449,15 @@
         "ml-emb-intro"
       ],
       "summary": "You shall know a word by the company it keeps.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Learn a word vector from the company it keeps",
+        "Predict a geometric analogy the distributional objective can and cannot justify"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-seq-rnn",
@@ -292,7 +468,15 @@
         "ml-mlp"
       ],
       "summary": "A hidden state that walks the sequence.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Walk a sequence with a hidden state that is a function of the previous state",
+        "Trace what the state must remember to map a long input onto an output"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-vanish-seq",
@@ -304,7 +488,15 @@
         "ml-vanishing"
       ],
       "summary": "The same vanishing product, now across time.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain RNN forgetting as the same vanishing product, now across time",
+        "Predict why a distant token's gradient dies in a vanilla recurrence"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-transfer",
@@ -315,7 +507,15 @@
         "ml-repr"
       ],
       "summary": "Reuse a representation trained on a different job.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Reuse a representation trained on a different job",
+        "Predict when the old features help and when they are the wrong inductive bias"
+      ],
+      "sourceIds": [
+        "stanford-cs229",
+        "stanford-cs224n"
+      ]
     }
   ]
 }

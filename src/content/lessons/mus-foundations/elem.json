@@ -1,0 +1,520 @@
+{
+  "courseId": "mus-foundations",
+  "moduleId": "mus-f-elem",
+  "lessons": [
+    {
+      "id": "mus-sound-5",
+      "conceptId": "mus-sound",
+      "title": "Four knobs on one event",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "mus-notation",
+      "diagram": "mus-dimensions",
+      "explanation": [
+        "Sound has four independent knobs on a single event: pitch (how high), duration (how long), loudness (how much energy), and timbre (what kind of source made it). Turning one does not drag the others. A held E on a bass can get louder without becoming a different letter.",
+        "MIT 21M.051 starts with these elements because later names — interval, rest, distortion — organize the knobs. Mix them in speech and you will hear a quieter guitar and claim the pitch fell. Keep the knobs separate and every later claim can be checked."
+      ],
+      "example": "Same open A string: palm-mute it, hold it twice as long, then bend a half-step. Timbre and loudness moved first, then duration, then pitch. Each pass touched one knob.",
+      "whyItMatters": "Later talk of intervals, rests, or a darker tone is a claim about one of these knobs. Name which one moved before you name a theory.",
+      "quiz": [
+        {
+          "id": "mus-snd5-1",
+          "stem": "Pitch, duration, loudness, and timbre are best treated as:",
+          "correctAnswer": "Independent dimensions of one sound event",
+          "distractors": [
+            { "text": "Four names for a single shared knob", "kind": "reversed", "rationale": "The point is that the knobs can move apart." },
+            { "text": "Properties that must rise and fall together", "kind": "misconception", "rationale": "Talk often glues them; the physics still lets them move apart." },
+            { "text": "Mood labels that rank how stable a chord feels", "kind": "misapplied", "rationale": "These are dimensions of one event rather than a chord ethic." }
+          ],
+          "correctExplanation": "Four knobs. One event. None is a nickname for the others.",
+          "objectiveIds": ["Name pitch, duration, loudness, and timbre as independent dimensions of a sound"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-snd5-2",
+          "stem": "A bassist holds the same fret and only turns the amp up. What moved?",
+          "correctAnswer": "Loudness; pitch and duration can stay put",
+          "distractors": [
+            { "text": "Pitch; louder always means a higher letter", "kind": "reversed", "rationale": "Energy is not pitch class." },
+            { "text": "Duration; the note must now last twice as long", "kind": "nearby", "rationale": "Hold time is a different knob." },
+            { "text": "Timbre only; amplifiers cannot change energy", "kind": "misapplied", "rationale": "Gain can raise loudness without renaming the letter." }
+          ],
+          "correctExplanation": "Same fret, more energy. Loudness moved. The letter can sit still.",
+          "objectiveIds": ["Change one dimension without claiming the others moved"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-snd5-3",
+          "stem": "You palm-mute a held E so it sounds shorter and darker. Which claim is honest?",
+          "correctAnswer": "Duration and timbre changed; the letter can still be E",
+          "distractors": [
+            { "text": "Pitch dropped because the note got quieter and shorter", "kind": "reversed", "rationale": "Quieter and shorter are other knobs." },
+            { "text": "All four dimensions moved because any change is global", "kind": "misconception", "rationale": "Independence means you report only what moved." },
+            { "text": "Loudness is the only knob a guitar is allowed to turn", "kind": "misapplied", "rationale": "Mute and pick change duration and timbre too." }
+          ],
+          "correctExplanation": "Shorter and darker can leave the letter E alone. Name the knobs that actually moved.",
+          "objectiveIds": ["Change one dimension without claiming the others moved"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-sound-10",
+      "conceptId": "mus-sound",
+      "title": "Pitch is not loudness",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "mus-notation",
+      "diagram": "mus-dimensions",
+      "explanation": [
+        "Loudness can climb while pitch sits still: the same letter, more energy. Duration can stretch while the letter holds. Timbre can thicken when you switch from a clean pickup to a driven amp and never touch the fret. Four knobs, one event.",
+        "Everyday talk mashes the knobs. 'Higher' might mean louder, brighter, or a raised pitch class. In this course higher means pitch: a frequency you can name. Brighter is timbre. Forte is loudness. A longer hold is duration. Say which knob you mean.",
+        "Isolate one knob on purpose. Write a figure, then change only the pick attack, or only the hold, or only the fret. Fail to name the knob that moved and later interval talk will smuggle volume and distortion into the pitch column."
+      ],
+      "example": "A snare and a floor tom can share duration and loudness and still differ in pitch and timbre. Swapping drums is a pitch-and-timbre move only if those two knobs actually changed.",
+      "whyItMatters": "Isolate a knob or every later sentence about dark or heavy will mix pitch, distortion, and volume into one vague weather report.",
+      "quiz": [
+        {
+          "id": "mus-snd10-1",
+          "stem": "A guitarist plays the same fret louder through a driven amp. Pitch and loudness:",
+          "correctAnswer": "Can move independently; louder does not rename the letter",
+          "distractors": [
+            { "text": "Must move together; extra energy is the pitch class", "kind": "reversed", "rationale": "Energy is loudness. The letter can sit." },
+            { "text": "Are two names for timbre on an electric guitar", "kind": "nearby", "rationale": "Drive changes timbre as well; it still is not pitch." },
+            { "text": "Only exist after someone writes a staff of notes", "kind": "misapplied", "rationale": "The knobs are in the sound, on or off the page." }
+          ],
+          "correctExplanation": "Same fret can get louder. Pitch class does not have to follow the fader.",
+          "objectiveIds": ["Name pitch, duration, loudness, and timbre as independent dimensions of a sound"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-snd10-2",
+          "stem": "You keep the same bass note and switch from fingers to a pick. The honest report is:",
+          "correctAnswer": "Timbre changed; pitch and duration can be unchanged",
+          "distractors": [
+            { "text": "Pitch rose because picks always sound like a higher letter", "kind": "reversed", "rationale": "Attack is timbre. The fret can stay." },
+            { "text": "Duration doubled because picked notes must last longer", "kind": "nearby", "rationale": "Hold time is a separate choice." },
+            { "text": "Loudness is illegal to mention without a calibrated meter", "kind": "misapplied", "rationale": "You can still name loudness; this move was timbre." }
+          ],
+          "correctExplanation": "Pick versus fingers is a source change. The letter and the hold can sit still.",
+          "objectiveIds": ["Change one dimension without claiming the others moved"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-snd10-3",
+          "stem": "Someone says a riff got higher after only the mix fader rose. You should predict:",
+          "correctAnswer": "Loudness moved; the pitch class can be the same letters",
+          "distractors": [
+            { "text": "Every dimension moved because faders are a global rewrite", "kind": "misconception", "rationale": "A fader is an energy knob." },
+            { "text": "Duration collapsed because loud notes have to be short", "kind": "nearby", "rationale": "Hold time did not have to follow the fader." },
+            { "text": "Timbre became a new pitch class by definition of mix", "kind": "reversed", "rationale": "A mix push is not a new letter." }
+          ],
+          "correctExplanation": "Fader up is loudness. 'Higher' in everyday talk is the mash you have to unpick.",
+          "objectiveIds": ["Change one dimension without claiming the others moved"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-notation-10",
+      "conceptId": "mus-notation",
+      "title": "Maps the ear still has to finish",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["mus-sound"],
+      "goDeeper": "mus-clef",
+      "explanation": [
+        "Paper records a subset of the event. A score can name pitch and a grid of duration. It usually omits the loudness curve, the microtiming of the pick, and the exact timbre of the amp. Those still happen. The page is a map of sound the ear has to finish.",
+        "Reading the map as the music itself is the usual trap. Two bands can play the same dots and produce different records because the missing dimensions were never on the page. MIT 21M.051 treats notation as a tool for remembering and sharing while the ear supplies the rest.",
+        "Predict the leftovers. A bass figure written as even eighths may sit behind the click. A 'same' whole note may swell. Distortion is almost never in the dots. The ear still has to hear those facts, or you will argue about the wrong object."
+      ],
+      "example": "A riff written as four quarter-notes on E. The recording palms the second attack, swells the third, and thickens the fourth with a pickup change. The map named pitch and duration. The record added loudness, timing, and timbre.",
+      "whyItMatters": "Argue with the recording using only the dots and you will correct performances the page never promised.",
+      "quiz": [
+        {
+          "id": "mus-not10-1",
+          "stem": "Staff notation is most honestly treated as which of these objects?",
+          "correctAnswer": "A map of sound that the ear still has to complete",
+          "distractors": [
+            { "text": "The music itself, complete in every audible dimension", "kind": "reversed", "rationale": "The page omits timbre, microtiming, and loudness curves." },
+            { "text": "A list of moral ranks for how stable each interval is", "kind": "misapplied", "rationale": "Notation is a map of events rather than an ethic." },
+            { "text": "A full substitute for hearing timbre and loudness live", "kind": "nearby", "rationale": "Those knobs are exactly what the score tends to drop." }
+          ],
+          "correctExplanation": "Dots are a map. The ear still has to hear what the map left out.",
+          "objectiveIds": ["Treat notation as a map of sound, not as the music itself"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-not10-2",
+          "stem": "Two bands play the same written eighths on the same pitches. You should still expect:",
+          "correctAnswer": "Different loudness curves, microtiming, and timbre on the record",
+          "distractors": [
+            { "text": "Identical records, because the page already is the piece", "kind": "reversed", "rationale": "The page never carried those leftover dimensions." },
+            { "text": "The staff to encode the amp model and the pick angle", "kind": "nearby", "rationale": "Ordinary notation does not write those facts." },
+            { "text": "Pitch names to vanish the moment anyone actually listens", "kind": "misapplied", "rationale": "The map still named pitch; listening adds the rest." }
+          ],
+          "correctExplanation": "Same dots, different leftover knobs. That is what a map leaves for the ear.",
+          "objectiveIds": ["Predict what a score leaves out that the ear still has to hear"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-not10-3",
+          "stem": "A score shows even quarters on one pitch. The recording swells and drags the third. What did the page leave out?",
+          "correctAnswer": "Loudness curve and microtiming the ear still has to hear",
+          "distractors": [
+            { "text": "The pitch class, which scores are forbidden from naming", "kind": "reversed", "rationale": "The page did name the pitch. It skipped the swell and drag." },
+            { "text": "A rule that loudness is illegal to perform in a riff", "kind": "misapplied", "rationale": "Loudness still happens. The map just omitted the curve." },
+            { "text": "The fact that duration cannot be written down at all", "kind": "misconception", "rationale": "Duration was on the page. The leftover was how it was shaped." }
+          ],
+          "correctExplanation": "Pitch and a duration grid were on the page. Swell and drag were not.",
+          "objectiveIds": ["Predict what a score leaves out that the ear still has to hear"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-clef-10",
+      "conceptId": "mus-clef",
+      "title": "Lines named by a clef",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["mus-notation"],
+      "goDeeper": "mus-octave",
+      "explanation": [
+        "Staff lines become named pitches only after a clef decides which letter sits on which line. Treble puts G on the second line. Bass puts F on the fourth. Same five lines; different assignment. Change the clef and you change which pitches those lines are claiming.",
+        "Copying a bass riff into treble is a translation. The sounding pitches can match the original; the drawing moved so a treble reader can see them. It is still the riff. The new ink does not invent a second piece, and bass ink does not darken the old one.",
+        "When a guitarist reads a bass part in treble, they are looking at a relocated map of the same letters. Predict the trap: treating the treble version as higher music because it sits higher on the page. Register lives in the sounding pitch, which the clef was chosen to show."
+      ],
+      "example": "A low E riff on bass, rewritten onto a treble staff so a guitarist can read it. The letters and the sounding pitches can match the original. The drawing changed. The piece did not.",
+      "whyItMatters": "Transcribing between clefs is a mapping job. Hear a new song every time the drawing moves and you will arrange by accident.",
+      "quiz": [
+        {
+          "id": "mus-clf10-1",
+          "stem": "A staff and a clef together are a decision about which of these?",
+          "correctAnswer": "Which pitches sit on the lines of that drawing",
+          "distractors": [
+            { "text": "Which instrument is allowed to play the figure", "kind": "misapplied", "rationale": "A clef assigns letters to lines. It does not pick a legal instrument." },
+            { "text": "How loud each line must be performed on stage", "kind": "nearby", "rationale": "Loudness is a different knob, usually off the map." },
+            { "text": "Whether duration exists for that piece at all", "kind": "misconception", "rationale": "Duration is already on the map; the clef names pitch." }
+          ],
+          "correctExplanation": "The clef is the assignment: these lines mean these pitches.",
+          "objectiveIds": ["Read a staff and clef as a decision about which pitches sit on the lines"],
+          "prerequisiteConceptIds": ["mus-notation"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-clf10-2",
+          "stem": "A bass riff is copied onto a treble staff at the same sounding pitches. The result is:",
+          "correctAnswer": "A translation of the same piece into another drawing",
+          "distractors": [
+            { "text": "A different piece, because treble ink always means new music", "kind": "reversed", "rationale": "Same sounding pitches: the drawing moved." },
+            { "text": "A new interval collection forced into being by treble", "kind": "nearby", "rationale": "The clef does not invent a new set of gaps." },
+            { "text": "Proof that bass figures cannot be written down at all", "kind": "misconception", "rationale": "Bass clef writes them; treble can translate them." }
+          ],
+          "correctExplanation": "Same pitches, different drawing. That is a translation of the riff.",
+          "objectiveIds": ["Predict why a bass riff written in treble is a translation, not a different piece"],
+          "prerequisiteConceptIds": ["mus-notation"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-clf10-3",
+          "stem": "Why can a guitarist read a bass riff in treble without it becoming a new song?",
+          "correctAnswer": "The sounding pitches can match; only the map's assignment moved",
+          "distractors": [
+            { "text": "Treble ink raises every pitch by a fixed extra grade", "kind": "misapplied", "rationale": "The translator chooses pitches; the clef does not auto-raise them." },
+            { "text": "Bass clef deletes pitch and leaves only a duration grid", "kind": "reversed", "rationale": "Bass clef names pitches too. It assigns different letters to the lines." },
+            { "text": "The guitarist must invent letters the bassist never played", "kind": "nearby", "rationale": "The job is to show the same letters on a different map." }
+          ],
+          "correctExplanation": "If the sounding pitches match, the song is the same. The clef only relocated the map.",
+          "objectiveIds": ["Read a staff and clef as a decision about which pitches sit on the lines"],
+          "prerequisiteConceptIds": ["mus-notation"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-octave-10",
+      "conceptId": "mus-octave",
+      "title": "Same letter, doubled frequency",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["mus-sound"],
+      "goDeeper": "mus-semitone",
+      "explanation": [
+        "Doubling a frequency lands you on the same pitch class in a new register: the ratio 2:1. A1 and A2 are both A. The ear hears them as the same letter with a height change. That is octave equivalence: same class, new register.",
+        "Guitarists already use this. The A at the fifth fret of the low E string and the open A string sit an octave apart. Same letter, different register. Sing them and the class is obvious even if you cannot name hertz. The 2:1 ratio is why those two notes lock.",
+        "Register still matters for writing and for weight as a texture: a riff dropped an octave is the same letters in a thicker band. Equivalence does not make the two notes interchangeable in a mix. It lets you name them with the same letter and then choose a register on purpose."
+      ],
+      "example": "Play an open E and the E at the twelfth fret on the same string. Frequency doubled, letter still E. Register moved. The class stayed.",
+      "whyItMatters": "Without octave equivalence you will treat every register as a new alphabet. With it you can move a riff up or down and still know which letters you are holding.",
+      "quiz": [
+        {
+          "id": "mus-oct10-1",
+          "stem": "Octave equivalence says two notes an octave apart are which of these?",
+          "correctAnswer": "The same pitch class at a 2:1 frequency ratio",
+          "distractors": [
+            { "text": "Two unrelated letters that happen to sound similar", "kind": "reversed", "rationale": "The class is the same letter, doubled." },
+            { "text": "A loudness pair that must be played at the same forte", "kind": "nearby", "rationale": "Octave is a pitch-class fact. Loudness is a fader choice." },
+            { "text": "A duration rule that doubles the written hold time", "kind": "misapplied", "rationale": "2:1 here is frequency rather than note length." }
+          ],
+          "correctExplanation": "Same class, doubled frequency. That is the octave.",
+          "objectiveIds": ["State octave equivalence as the same pitch class at a 2:1 ratio"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-oct10-2",
+          "stem": "You hear two notes an octave apart. What changed, and what stayed?",
+          "correctAnswer": "Register changed; the letter (pitch class) stayed",
+          "distractors": [
+            { "text": "Pitch class changed; register is required to stay put", "kind": "reversed", "rationale": "The letter stays. Height is what moved." },
+            { "text": "Timbre became the pitch class by definition of height", "kind": "nearby", "rationale": "Register is pitch height rather than a new source." },
+            { "text": "Duration doubled because octaves must last twice as long", "kind": "misapplied", "rationale": "Hold time is a different knob." }
+          ],
+          "correctExplanation": "Same letter, new register. That is what the ear is being asked to hear.",
+          "objectiveIds": ["Hear two notes an octave apart as the same letter with a register change"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-oct10-3",
+          "stem": "Open A on a guitar and the A twelve frets up should be heard as:",
+          "correctAnswer": "The same letter with a register change at a 2:1 ratio",
+          "distractors": [
+            { "text": "A new letter because higher on the neck is always new", "kind": "reversed", "rationale": "Twelve frets is the octave: same A, new register." },
+            { "text": "The same loudness, because octaves ignore energy levels", "kind": "nearby", "rationale": "Loudness can still differ. The class is the letter." },
+            { "text": "Two timbres that cancel pitch class out of the event", "kind": "misconception", "rationale": "Timbre can differ. The class is still A." }
+          ],
+          "correctExplanation": "Twelfth fret on the same string: doubled frequency, letter still A.",
+          "objectiveIds": ["Hear two notes an octave apart as the same letter with a register change"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-semitone-10",
+      "conceptId": "mus-semitone",
+      "title": "Twelve equal steps",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-octave"],
+      "goDeeper": "mus-interval",
+      "explanation": [
+        "Walk twelve equal semitones from a pitch and you return to the same class an octave higher. That stack is the chromatic collection in twelve-tone equal temperament: twelve named steps of the same size. A fret on a modern guitar is one of those steps. Count them rather than guessing from how far apart the noteheads look.",
+        "Visual distance on the staff lies. A third looks like a skip of one line-or-space, but that skip might be three semitones or four. A visual second might be one semitone or two. Size in this tuning is the semitone count, which you get by walking the chromatic steps between the two pitches.",
+        "Build the collection on any starting pitch: twelve steps, then the octave. Accidentals name those in-between steps on a staff. On a bass, one fret is one semitone. From E to G is three frets, three semitones, even when the staff makes the leap look small."
+      ],
+      "example": "Written C to E on a staff looks like a third. Count chromatic steps C–C♯–D–D♯–E: four semitones. Written C to E♭ is three. Same visual distance if you ignore accidentals. The count is the size.",
+      "whyItMatters": "Guessing size from the look of the staff is how people call a leap a step. Count the semitones and the collection is honest.",
+      "quiz": [
+        {
+          "id": "mus-stm10-1",
+          "stem": "On a guitar, open E to G on the same string is three frets. In semitones that interval is:",
+          "correctAnswer": "Three equal chromatic steps you can count fret by fret",
+          "distractors": [
+            { "text": "One step, because the staff will draw it as a third", "kind": "nearby", "rationale": "Staff look is not the count." },
+            { "text": "Twelve steps, because every written skip is an octave", "kind": "misconception", "rationale": "Twelve steps would return the same class." },
+            { "text": "Zero steps, because E and G already share a pitch class", "kind": "reversed", "rationale": "E and G are different letters. Count the frets." }
+          ],
+          "correctExplanation": "One fret, one semitone. Three frets, three semitones. Count, then name.",
+          "objectiveIds": ["Count the semitones in a written interval instead of guessing from the staff"],
+          "prerequisiteConceptIds": ["mus-octave"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-stm10-2",
+          "stem": "The chromatic collection in this course is built from which of these?",
+          "correctAnswer": "Twelve equal semitones stacked until the octave repeats the class",
+          "distractors": [
+            { "text": "Seven staff lines chosen by a clef at random each time", "kind": "nearby", "rationale": "A clef assigns letters. It does not build the twelve steps." },
+            { "text": "Four independent knobs mixed into a single pitch class", "kind": "misapplied", "rationale": "Knobs are dimensions of an event rather than the chromatic stack." },
+            { "text": "Two durations that add up to one written whole note", "kind": "misconception", "rationale": "The collection is a pitch stack rather than a duration sum." }
+          ],
+          "correctExplanation": "Twelve equal steps, then the class repeats. That is the chromatic collection here.",
+          "objectiveIds": ["Build the chromatic collection from twelve equal semitones"],
+          "prerequisiteConceptIds": ["mus-octave"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-stm10-3",
+          "stem": "Two intervals look equally wide on a staff, but one has an accidental. You should:",
+          "correctAnswer": "Count the semitones between the pitches instead of trusting the look",
+          "distractors": [
+            { "text": "Trust the look; accidentals never change the counted size", "kind": "reversed", "rationale": "Accidentals add or remove chromatic steps." },
+            { "text": "Ignore pitch and rank the two gaps by loudness instead", "kind": "misapplied", "rationale": "Size here is a semitone count rather than energy." },
+            { "text": "Call both octaves because twelve is the only legal count", "kind": "nearby", "rationale": "Twelve is one octave. Other counts are legal intervals." }
+          ],
+          "correctExplanation": "Visual width on the staff is a weak proxy. Walk the chromatic steps.",
+          "objectiveIds": ["Count the semitones in a written interval instead of guessing from the staff"],
+          "prerequisiteConceptIds": ["mus-octave"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-interval-10",
+      "conceptId": "mus-interval",
+      "title": "Ratios you can hear beating",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-semitone"],
+      "goDeeper": "mus-ear-interval",
+      "diagram": "mus-interval-ratio",
+      "explanation": [
+        "Measure the distance between two pitches as a frequency ratio or as a semitone count. An octave is 2:1, twelve semitones. A just fifth is 3:2. Play those two tones and the partials lock; beating slows. An interval is that measurable gap, heard as a relationship between the two.",
+        "Equal temperament keeps the octave exact and splits it into twelve equal semitones so every key is reachable on one fretboard. The equal-tempered fifth is seven of those steps: a shade flatter than 3:2. It is a stand-in. Tune two guitar strings to a just fifth by killing the beat, then fret a barred fifth and a slow beat can return.",
+        "Beating is an audible amplitude wobble when two close partials disagree. A just fifth sits still because the third harmonic of the lower tone meets the second of the upper. The tempered fifth misses that meeting by a little, so you may hear a slow beat. Treat the beat as a measurement. Leave virtue rankings out."
+      ],
+      "example": "Tune two open strings toward a fifth until the wah-wah in the air slows and dies: you are near 3:2. Barre the same shape in equal temperament and the fifth is close, the third often more restless. The guitar already chose the stand-in.",
+      "whyItMatters": "Later riffs live in these gaps. If fifth only means a skip on the staff, you cannot hear why a two-note lock sits still or why a tempering wobbles.",
+      "quiz": [
+        {
+          "id": "mus-int10-1",
+          "stem": "A just fifth and its equal-tempered stand-in differ because:",
+          "correctAnswer": "Just is 3:2; tempered is seven equal steps, slightly flat of 3:2",
+          "distractors": [
+            { "text": "Both equal 2:1, so a fifth cannot beat under any tuning", "kind": "reversed", "rationale": "2:1 is the octave. The fifth is 3:2 or its stand-in." },
+            { "text": "Just is twelve semitones; tempered fifths are duration marks", "kind": "nearby", "rationale": "Twelve semitones is the octave. A fifth is seven steps or 3:2." },
+            { "text": "Temperament erases pitch class and leaves only loudness", "kind": "misapplied", "rationale": "ET still names pitch. It shades the ratio." }
+          ],
+          "correctExplanation": "3:2 versus seven equal steps. The stand-in is close and a little flat.",
+          "objectiveIds": ["Distinguish a just fifth from its equal-tempered stand-in"],
+          "prerequisiteConceptIds": ["mus-semitone"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-int10-2",
+          "stem": "Measure an interval in this course as either of which pair?",
+          "correctAnswer": "A frequency ratio or a semitone count you can hear beating",
+          "distractors": [
+            { "text": "A moral grade or a staff color assigned by the clef", "kind": "misapplied", "rationale": "Intervals are measured. Virtue rankings are a different claim." },
+            { "text": "A loudness pair or a timbre that replaces pitch class", "kind": "nearby", "rationale": "Those are other knobs. The gap is still pitch." },
+            { "text": "A duration only, because pitch gaps cannot be measured", "kind": "reversed", "rationale": "The gap is exactly what ratio and semitone count measure." }
+          ],
+          "correctExplanation": "Ratio or count. Beating is how the ear checks the measurement.",
+          "objectiveIds": ["Measure an interval as a ratio or a semitone count you can hear beating"],
+          "prerequisiteConceptIds": ["mus-semitone"],
+          "difficultyTier": 1,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "mus-int10-3",
+          "stem": "Two guitar strings are a little off a 3:2 fifth. What should you hear?",
+          "correctAnswer": "Beating: an amplitude wobble from partials that disagree",
+          "distractors": [
+            { "text": "Silence, because near-miss fifths cancel all remaining sound", "kind": "reversed", "rationale": "They still sound. The miss is the wobble." },
+            { "text": "A new pitch class named by the beat frequency alone", "kind": "nearby", "rationale": "The beat is interference rather than a third letter you named." },
+            { "text": "Proof that duration has replaced pitch on those strings", "kind": "misapplied", "rationale": "The knobs are still pitch. The ratio missed." }
+          ],
+          "correctExplanation": "Close partials that disagree throb. That throb is the measurement.",
+          "objectiveIds": ["Measure an interval as a ratio or a semitone count you can hear beating"],
+          "prerequisiteConceptIds": ["mus-semitone"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-ear-interval-10",
+      "conceptId": "mus-ear-interval",
+      "title": "Name it without the page",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-interval"],
+      "goDeeper": "mus-scale",
+      "explanation": [
+        "Cover the page and the interval still has a name. Sing or play two tones and ask how far they sit: unison, semitone, fifth, octave. The staff can wait. Ear training here means the name survives when the dots are gone, which is how you will actually write and check a riff.",
+        "Close partials that disagree produce a beat you can count. Two intended unisons a few cents apart throb. A fifth that missed 3:2 throbs slower or faster depending on the miss. Predict the beat: locked partials let amplitude sit still; drifting partials produce a wah at the difference frequency.",
+        "Work on an instrument you already hold. Play a pitch, then another, and name the gap before you look at your hand. Wrong names are useful: they tell you which nearby interval you keep substituting. The beat is a second channel — it reports that the intended interval is close but not locked."
+      ],
+      "example": "Play an open D and the A above it with your eyes off the neck. Name fifth before you count frets. If the pair wahs, one string is off; the name can still be fifth while the beat reports the miss.",
+      "whyItMatters": "Writing heavy music by paper alone is how people stack intervals they cannot hear. The name has to survive in the air.",
+      "quiz": [
+        {
+          "id": "mus-ear10-1",
+          "stem": "You hear two sung pitches and no staff is in sight. The job is to:",
+          "correctAnswer": "Identify the interval by ear, without looking at a staff",
+          "distractors": [
+            { "text": "Refuse to name it until a clef is drawn on the page", "kind": "reversed", "rationale": "The name has to survive without the page." },
+            { "text": "Name only the loudness, because pitch gaps need a page", "kind": "nearby", "rationale": "Loudness is another knob. The job is the gap." },
+            { "text": "Treat both pitches as one duration mark on the grid", "kind": "misapplied", "rationale": "Duration is not the interval name." }
+          ],
+          "correctExplanation": "Two tones, a name, no page. That is the ear job.",
+          "objectiveIds": ["Identify a sung or played interval without looking at a staff"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-ear10-2",
+          "stem": "Two close partials on a supposed unison disagree by a few hertz. You should hear:",
+          "correctAnswer": "A beat: amplitude wobble at the difference of those partials",
+          "distractors": [
+            { "text": "A new letter two octaves up, caused by the disagreement", "kind": "nearby", "rationale": "The beat is interference rather than a new pitch class." },
+            { "text": "Total silence, because disagreeing partials cancel music", "kind": "reversed", "rationale": "They still sound. The miss is the throb." },
+            { "text": "A clef change that retitles every line on the staff", "kind": "misapplied", "rationale": "Beating is in the air. The page is not required." }
+          ],
+          "correctExplanation": "Difference frequency becomes a wah. That is the beat the ear uses.",
+          "objectiveIds": ["Predict the beat you hear when two close partials disagree"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-ear10-3",
+          "stem": "A player names octave while the pair throbs and the letters sound adjacent. The likely error is:",
+          "correctAnswer": "They swapped a tight step for a wide interval; the beat flags the miss",
+          "distractors": [
+            { "text": "The staff deleted pitch, so throbbing means duration doubled", "kind": "nearby", "rationale": "Throb is a pitch-ratio miss rather than a hold-time change." },
+            { "text": "Loudness cannot exist unless the interval is an octave", "kind": "misapplied", "rationale": "Energy is a different knob. The name was the gap." },
+            { "text": "Timbre names the interval, so throbbing proves a fifth", "kind": "reversed", "rationale": "Timbre is the source. The beat reports a near miss." }
+          ],
+          "correctExplanation": "Adjacent letters plus a throb is a small gap that is not locked. Octave was the wrong name.",
+          "objectiveIds": ["Identify a sung or played interval without looking at a staff"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

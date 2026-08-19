@@ -13,7 +13,7 @@
   "sourceReferences": [
     {
       "id": "hsny-edu",
-      "title": "HSNY Horology 101–103",
+      "title": "HSNY Horology 101\u2013103",
       "url": "https://hs-ny.org/nyc-education",
       "kind": "syllabus",
       "notes": "101 movement mechanics before 102 gear train before 103 winding/setting. Escapement is 104. Complications are not in the beginner ladder."
@@ -39,6 +39,10 @@
       ],
       "sourceIds": [
         "hsny-edu"
+      ],
+      "learningObjectives": [
+        "Name the stored work, train, escapement, and display of a movement",
+        "Take a simple movement down and put it back without losing location"
       ]
     },
     {
@@ -52,6 +56,14 @@
       "spineIds": [
         "horo-gear-train",
         "horo-mainspring"
+      ],
+      "learningObjectives": [
+        "Trace power from mainspring through the going train to the escape wheel",
+        "Compute beat rate from tooth counts instead of treating 28,800 as a slogan"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
       ]
     },
     {
@@ -65,6 +77,14 @@
       "spineIds": [
         "horo-winding",
         "horo-setting"
+      ],
+      "learningObjectives": [
+        "Wind the spring and set the hands through the keyless works",
+        "Keep oil in the right place and endshake inside freedom, not rattle"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
       ]
     }
   ],
@@ -76,7 +96,15 @@
       "tier": 0,
       "prerequisites": [],
       "summary": "Stored work, a train, an escapement, a display.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name stored work, train, escapement, and display as the four jobs of a movement",
+        "Trace energy from the spring to the hands without skipping the timebase"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-nomenclature",
@@ -86,8 +114,16 @@
       "prerequisites": [
         "horo-movement"
       ],
-      "summary": "Plate, bridge, wheel, pinion, jewel — the words the rest of the course uses.",
-      "estimatedMinutes": 10
+      "summary": "Plate, bridge, wheel, pinion, jewel \u2014 the words the rest of the course uses.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name plate, bridge, wheel, pinion, and jewel so later lessons have words",
+        "Point at those parts on a simple calibre instead of waving at 'the movement'"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-tools-intro",
@@ -98,7 +134,15 @@
         "horo-movement"
       ],
       "summary": "A movement holder and the discipline of not losing a screw.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Hold a movement so a screw cannot roll and a pivot cannot bend",
+        "Name the discipline of the bench before any complication arrives"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-bridges",
@@ -109,7 +153,15 @@
         "horo-nomenclature"
       ],
       "summary": "The frame everything else is located in.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat plates and bridges as the frame that locates every pivot",
+        "Predict what a distorted bridge does to endshake and mesh"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-jewels",
@@ -120,7 +172,15 @@
         "horo-nomenclature"
       ],
       "summary": "Hard, polished holes that reduce friction.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a jewel as a hard, polished hole that reduces friction",
+        "Predict why a dry or cracked jewel is a timing and wear problem"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-disassembly",
@@ -132,7 +192,15 @@
         "horo-bridges"
       ],
       "summary": "Order matters. So does putting it back.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Take a simple movement down in an order you can reverse",
+        "Predict the part that jumps or scores if the order is wrong"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-hands",
@@ -143,7 +211,15 @@
         "horo-movement"
       ],
       "summary": "The hands are not the timebase.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat the hands as a display, not the timebase",
+        "Predict what setting the hands must not do to the oscillator"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-mainspring",
@@ -154,7 +230,15 @@
         "horo-movement"
       ],
       "summary": "A spiral of steel that stores work.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the mainspring as a spiral that stores work",
+        "Predict what a set or tired spring does to torque through the day"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-barrel",
@@ -165,7 +249,15 @@
         "horo-mainspring"
       ],
       "summary": "The drum that holds the spring and drives the first wheel.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name the barrel as the drum that holds the spring and drives the first wheel",
+        "Trace torque from arbor to barrel wall to the centre pinion"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-gear-train",
@@ -176,7 +268,15 @@
         "horo-barrel"
       ],
       "summary": "A reduction from the barrel to the escape wheel.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Follow a reduction from the barrel to the escape wheel",
+        "State why the train counts and does not keep time"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-wheel-pinion",
@@ -187,7 +287,15 @@
         "horo-gear-train"
       ],
       "summary": "A large wheel driving a small pinion, over and over.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a large wheel driving a small pinion, over and over",
+        "Predict backlash and wear if the mesh is too deep or too shallow"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-ratio",
@@ -198,7 +306,15 @@
         "horo-wheel-pinion"
       ],
       "summary": "Tooth counts decide how often the escapement ticks.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read tooth counts as the reason the escapement ticks at a chosen rate",
+        "Compute a simple train ratio from wheel and pinion teeth"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-train-math",
@@ -209,7 +325,15 @@
         "horo-ratio"
       ],
       "summary": "Why 18,000 and 28,800 are not slogans.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Show why 18,000 and 28,800 beats per hour fall out of tooth counts",
+        "Predict the beat rate if one wheel in the train changes teeth"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-beat-rate",
@@ -220,7 +344,15 @@
         "horo-ratio"
       ],
       "summary": "Beats per hour as the movement's clock.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define beat rate as beats per hour, the movement's clock",
+        "Relate beat rate to the oscillator period, not to the case size"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-power-reserve",
@@ -231,7 +363,15 @@
         "horo-mainspring"
       ],
       "summary": "How long the spring can run the train.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State power reserve as how long the spring can run the train",
+        "Predict what extra friction or a thicker oil does to that number"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-click",
@@ -242,7 +382,15 @@
         "horo-barrel"
       ],
       "summary": "The one-way that keeps the spring from unwinding through the crown.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name the click and ratchet as the one-way that keeps the spring wound",
+        "Predict what a failed click does the moment you let go of the crown"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-winding",
@@ -253,7 +401,15 @@
         "horo-click"
       ],
       "summary": "Putting work back into the spring.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Put work back into the spring through the winding path",
+        "Trace the clutch position that connects crown to ratchet"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-stem",
@@ -264,7 +420,15 @@
         "horo-winding"
       ],
       "summary": "The shaft the wearer actually turns.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name the stem and crown as the shaft the wearer actually turns",
+        "Predict what a loose stem does to winding and setting"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-setting",
@@ -276,7 +440,15 @@
         "horo-stem"
       ],
       "summary": "Decoupling the display from the timebase.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Decouple the display from the timebase so the hands can be set",
+        "Predict whether the oscillator should keep running while you set"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-keyless",
@@ -288,7 +460,15 @@
         "horo-winding"
       ],
       "summary": "The clutch that chooses wind versus set.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe keyless works as the clutch that chooses wind versus set",
+        "Trace pull-out positions to the sliding pinion"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-cannon",
@@ -299,7 +479,15 @@
         "horo-setting"
       ],
       "summary": "Hour and minute as a 12:1 reduction.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read hour and minute as a 12:1 reduction at the cannon pinion",
+        "Predict a jumping minute if the cannon slips on the centre arbor"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-dial-train",
@@ -311,7 +499,15 @@
         "horo-gear-train"
       ],
       "summary": "Two trains, two jobs.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish the motion works from the going train by job",
+        "Predict which train a date disc should take power from"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-lubrication",
@@ -322,7 +518,15 @@
         "horo-jewels"
       ],
       "summary": "The right oil in the right place, and nowhere else.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Put the right oil in the right place and nowhere else",
+        "Predict what oil on an escape-tooth locking face does to the rate"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     },
     {
       "id": "horo-endshake",
@@ -333,7 +537,15 @@
         "horo-jewels"
       ],
       "summary": "A pivot that must move, but not rattle.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Leave a pivot free to turn without rattle",
+        "Diagnose a bound or noisy train from too little or too much endshake"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training"
+      ]
     }
   ]
 }

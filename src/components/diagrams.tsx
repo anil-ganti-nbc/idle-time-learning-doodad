@@ -1937,6 +1937,142 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "ml-learn-loop": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Examples in, a rule out, then a held-out check">
+      <rect x="20" y="28" width="120" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="80" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        examples
+      </text>
+      <path d="M140 54 H188" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="188" y="28" width="120" height="52" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="248" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        a rule
+      </text>
+      <path d="M308 54 H356" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="356" y="28" width="180" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="446" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        unseen rows
+      </text>
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the job is the new row · a recited table is storage
+      </text>
+    </svg>
+  ),
+  "horo-power-flow": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Energy from mainspring through train, escapement, display">
+      {["spring", "train", "escapement", "hands"].map((label, i) => (
+        <g key={label} transform={`translate(${18 + i * 136}, 32)`}>
+          <rect width="124" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="62" y="32" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+          {i < 3 && <path d="M128 26 H134" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the oscillator is the timebase · the hands only report it
+      </text>
+    </svg>
+  ),
+  "horo-parts": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Plate and bridges locate wheels, pinions, jewels">
+      <rect x="36" y="20" width="488" height="88" rx="10" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        plate
+      </text>
+      <rect x="70" y="52" width="110" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="125" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        bridge
+      </text>
+      <rect x="210" y="52" width="110" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="265" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        wheel
+      </text>
+      <rect x="350" y="52" width="70" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="385" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        pinion
+      </text>
+      <circle cx="460" cy="72" r="16" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="460" y="76" textAnchor="middle" fill="currentColor" fontSize="11">
+        jewel
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the frame locates every pivot · names come before complications
+      </text>
+    </svg>
+  ),
+  "mus-dimensions": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Pitch, duration, loudness, and timbre as independent axes">
+      {["pitch", "duration", "loudness", "timbre"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 132}, 36)`}>
+          <rect width="118" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="30" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        change one axis · the other three can stay put
+      </text>
+    </svg>
+  ),
+  "mus-interval-ratio": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Octave 2:1 and fifth 3:2 as frequency ratios">
+      <rect x="36" y="28" width="220" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        octave 2:1
+      </text>
+      <text x="146" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">
+        same letter · new register
+      </text>
+      <rect x="304" y="28" width="220" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="414" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        fifth 3:2
+      </text>
+      <text x="414" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">
+        beats slow when just
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        count the ratio · equal temperament is a later compromise
+      </text>
+    </svg>
+  ),
+  "dm-lineage-soil": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Hardcore and thrash as soil under death metal">
+      <rect x="36" y="24" width="150" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        hardcore
+      </text>
+      <rect x="206" y="24" width="150" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="281" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        thrash
+      </text>
+      <path d="M111 76 V100 H281 V76" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="160" y="100" width="240" height="28" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="119" textAnchor="middle" fill="currentColor" fontSize="12">
+        weight takes the job speed had
+      </text>
+    </svg>
+  ),
+  "dm-listen-layers": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Riff, kit, and vocal as equal listening layers">
+      <rect x="48" y="20" width="464" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="41" textAnchor="middle" fill="currentColor" fontSize="13">
+        riff cell
+      </text>
+      <rect x="48" y="60" width="464" height="32" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="81" textAnchor="middle" fill="currentColor" fontSize="13">
+        kit grammar
+      </text>
+      <rect x="48" y="100" width="464" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="121" textAnchor="middle" fill="currentColor" fontSize="13">
+        vocal as rhythm
+      </text>
+      <text x="280" y="150" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the mix is an argument · none of the three is decoration
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

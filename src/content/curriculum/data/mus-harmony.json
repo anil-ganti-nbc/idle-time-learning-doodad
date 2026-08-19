@@ -2,7 +2,7 @@
   "id": "mus-harmony",
   "title": "Harmony, Voice Leading, and Rhythm",
   "categoryId": "music-theory",
-  "description": "Triads to function, voice leading as a craft, then chromaticism and mixture — the bridge from common-practice grammar toward the vocabulary heavy music actually uses.",
+  "description": "Triads to function, voice leading as a craft, then chromaticism and mixture \u2014 the bridge from common-practice grammar toward the vocabulary heavy music actually uses.",
   "curriculumVersion": 1,
   "orderHint": 1,
   "difficultyRange": [
@@ -40,6 +40,14 @@
       "spineIds": [
         "mus-triad",
         "mus-function"
+      ],
+      "learningObjectives": [
+        "Spell a triad or seventh and name its function in a key",
+        "Write a short progression that cadences instead of just listing chords"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
       ]
     },
     {
@@ -52,6 +60,14 @@
       ],
       "spineIds": [
         "mus-voice-lead"
+      ],
+      "learningObjectives": [
+        "Move voices by step where you can, and name the dissonance when you cannot",
+        "Hold a pedal or drop a voice without losing the part"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
       ]
     },
     {
@@ -65,6 +81,14 @@
       "spineIds": [
         "mus-chromatic",
         "mus-modulation"
+      ],
+      "learningObjectives": [
+        "Borrow, tonicize, or leave the key on purpose",
+        "Give an outside pitch a job instead of calling it color"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
       ]
     }
   ],
@@ -79,7 +103,15 @@
         "mus-scale"
       ],
       "summary": "Three notes stacked in thirds.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Spell a triad as root, third, and fifth from a scale degree",
+        "Hear major, minor, diminished, and augmented as four qualities"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-seventh",
@@ -90,7 +122,15 @@
         "mus-triad"
       ],
       "summary": "A fourth note, and a new set of tendencies.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Add a seventh to a triad and name the quality",
+        "Predict the tendency of a chordal seventh in common-practice writing"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-inversion",
@@ -101,7 +141,15 @@
         "mus-triad"
       ],
       "summary": "The same pitch classes, a different bass.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Put a chord tone other than the root in the bass",
+        "Read a figured bass or a slash as an inversion, not a new chord"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-function",
@@ -113,7 +161,15 @@
         "mus-key"
       ],
       "summary": "Three jobs a chord can have in a key.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Assign tonic, predominant, or dominant function in a key",
+        "Predict which function a ii or a V is doing in a short progression"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-cadence",
@@ -124,7 +180,15 @@
         "mus-function"
       ],
       "summary": "How a phrase decides it is over.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "End a phrase with a cadence you can name",
+        "Distinguish authentic, half, plagal, and deceptive by what they leave open"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-progress",
@@ -135,7 +199,15 @@
         "mus-function"
       ],
       "summary": "A grammar, not a law of nature.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write a short common-practice progression that prepares and resolves",
+        "Predict a weak move if two functions are skipped or repeated without reason"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-phrase",
@@ -146,7 +218,15 @@
         "mus-cadence"
       ],
       "summary": "Antecedent and consequent as a small form.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Group bars into a phrase that breathes, and a period that answers",
+        "Mark a phrase ending that is not yet a section ending"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-power-chord",
@@ -157,7 +237,15 @@
         "mus-interval"
       ],
       "summary": "A dyad that refuses to be major or minor.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Play a fifth without a third and treat it as a harmonic object",
+        "Predict what distortion does to that fifth's partials"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-voice-lead",
@@ -168,7 +256,15 @@
         "mus-function"
       ],
       "summary": "Each part as a line, not a stack of names.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Move each voice by the smallest honest step",
+        "Rewrite a leap that could have been a common tone"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-species",
@@ -179,7 +275,15 @@
         "mus-voice-lead"
       ],
       "summary": "Constraints that teach you what a line can do.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use species counterpoint as a craft that teaches what a line can do",
+        "Write a first-species pair that keeps independence"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-parallel",
@@ -190,7 +294,15 @@
         "mus-voice-lead"
       ],
       "summary": "Why they were banned, and when a riff does not care.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State why parallel fifths and octaves were banned in that craft",
+        "Decide when a riff does not owe that ban anything"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-tension-tone",
@@ -202,7 +314,15 @@
         "mus-major"
       ],
       "summary": "Leading tones and chordal sevenths that want to resolve.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name a leading tone or chordal seventh as a pitch that wants a resolution",
+        "Resolve one on purpose and leave one hanging on purpose"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-dissonance",
@@ -213,7 +333,15 @@
         "mus-interval"
       ],
       "summary": "A clash that is prepared, struck, and left.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat a clash as a timed event: prepared, struck, left",
+        "Write a suspension that is not just a wrong note"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-nonchord",
@@ -223,8 +351,16 @@
       "prerequisites": [
         "mus-dissonance"
       ],
-      "summary": "Passing, neighbor, suspension — names for how you got there.",
-      "estimatedMinutes": 10
+      "summary": "Passing, neighbor, suspension \u2014 names for how you got there.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name passing, neighbor, and suspension as ways you arrived",
+        "Label a non-chord tone instead of respelling the harmony"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-texture",
@@ -235,7 +371,15 @@
         "mus-voice-lead"
       ],
       "summary": "How many parts, and whether they share a rhythm.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Count the parts and say whether they share a rhythm",
+        "Contrast unison, homophony, and independent lines in a short excerpt"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-drop",
@@ -246,7 +390,15 @@
         "mus-inversion"
       ],
       "summary": "Spreading a close position by dropping a voice an octave.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Drop a voice an octave to spread a close position",
+        "Write a drop-2 voicing from a close triad"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-pedal",
@@ -257,7 +409,15 @@
         "mus-function"
       ],
       "summary": "A held bass against changing harmony.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Hold a bass against changing harmony",
+        "Predict the clash a pedal is supposed to create and then release"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-secondary",
@@ -268,7 +428,15 @@
         "mus-function"
       ],
       "summary": "Temporarily treating another chord as a tonic.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Temporarily treat another chord as a tonic with its own dominant",
+        "Write a V/V that actually tonicizes, not a random major chord"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-mixture",
@@ -280,7 +448,15 @@
         "mus-modes"
       ],
       "summary": "Borrowing a chord from the parallel mode.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Borrow a chord from the parallel mode",
+        "Predict the color of a bVI or a minor iv in a major key"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-modulation",
@@ -292,7 +468,15 @@
         "mus-key"
       ],
       "summary": "Changing tonic and meaning it.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Change tonic and mean it, with a pivot or a direct shift",
+        "Distinguish a tonicization that comes home from a modulation that stays"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-chromatic",
@@ -303,7 +487,15 @@
         "mus-mixture"
       ],
       "summary": "Pitches outside the key that still have a job.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Give an outside pitch a job: approach, color, or new tonic",
+        "Rewrite a chromatic line that is only filling space"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-neapolitan",
@@ -314,7 +506,15 @@
         "mus-chromatic"
       ],
       "summary": "Predominants that approach the dominant from the side.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Approach the dominant from a lowered second or an augmented sixth",
+        "Spell a Neapolitan or It+6 so the resolution is honest"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     },
     {
       "id": "mus-seq-harm",
@@ -325,7 +525,15 @@
         "mus-progress"
       ],
       "summary": "A pattern that transposes itself.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Transpose a pattern so the sequence is the form",
+        "Predict where a sequence must break to cadence"
+      ],
+      "sourceIds": [
+        "mit-21m301",
+        "mit-21m302"
+      ]
     }
   ]
 }

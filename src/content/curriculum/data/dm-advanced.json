@@ -47,6 +47,15 @@
       "prerequisites": [],
       "spineIds": [
         "dm-tech-vs-func"
+      ],
+      "learningObjectives": [
+        "Judge a hard part by the job it does",
+        "Phrase across the bar or drop density so the next cell can be heard"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
       ]
     },
     {
@@ -60,6 +69,15 @@
       "spineIds": [
         "dm-prog-form",
         "dm-dissonant-comp"
+      ],
+      "learningObjectives": [
+        "Develop a cell instead of stacking another blast",
+        "Distinguish atonal gesture from an atonal system"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
       ]
     },
     {
@@ -73,6 +91,15 @@
       "spineIds": [
         "dm-analysis-riff",
         "dm-analysis-tune"
+      ],
+      "learningObjectives": [
+        "Analyze a riff and a track by cell, meter, form, and production",
+        "Compare scenes by construction, not biography"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
       ]
     }
   ],
@@ -87,7 +114,16 @@
         "dm-riff-cell"
       ],
       "summary": "A hard part that does a job versus a hard part that is the point.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Judge a hard part by the job it does",
+        "Rewrite a hard bar that does not change the cell or the form"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-virtuosity",
@@ -98,7 +134,16 @@
         "dm-tech-vs-func"
       ],
       "summary": "Speed that erases the cell you were supposed to hear.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name speed that erases the cell you were supposed to hear",
+        "Choose a slower statement of the cell over a blur"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-odd-phrasing",
@@ -110,7 +155,16 @@
         "dm-riffs-as-breath"
       ],
       "summary": "A phrase that does not respect the bar the kit is in.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write a phrase that does not respect the bar the kit is in",
+        "Mark where the phrase and the barline next agree"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-riffs-as-breath",
@@ -121,7 +175,16 @@
         "dm-riff-cell"
       ],
       "summary": "Where a player would breathe is where the cell usually turns.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Turn the cell where a player would breathe",
+        "Predict a riff that never breathes and why the ear loses it"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-polyrhythm-dm",
@@ -133,7 +196,16 @@
         "mus-hemiola"
       ],
       "summary": "Hands and feet in different subdivisions.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Put hands and feet in different subdivisions",
+        "Write a 3:2 or 4:3 kit figure that still states a pulse"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-contrast",
@@ -144,7 +216,16 @@
         "dm-song-form"
       ],
       "summary": "A slow riff after a blast is harder to write than another blast.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat a slow riff after a blast as the harder writing problem",
+        "Plan contrast as the technical move, not another layer of density"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-prog-form",
@@ -156,7 +237,16 @@
         "dm-prog-hist"
       ],
       "summary": "Sections that develop instead of returning on schedule.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Develop sections instead of returning on schedule",
+        "Show a long form that still has cells, not a medley"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-dissonant-comp",
@@ -169,7 +259,16 @@
         "dm-dissonant-hist"
       ],
       "summary": "Clash as the material, not the spice.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use clash as the material, not the spice",
+        "Write a dissonant section that still has a cell you can sing on one string"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-atonal-gesture",
@@ -180,7 +279,16 @@
         "dm-dissonant-comp"
       ],
       "summary": "A lick that avoids a tonic is not twelve-tone technique.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish a lick that avoids a tonic from a twelve-tone system",
+        "Refuse the word atonal when you mean 'chromatic cell'"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-metric-mod",
@@ -191,7 +299,16 @@
         "dm-odd-meter"
       ],
       "summary": "The old subdivision becomes the new pulse.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Make the old subdivision become the new pulse",
+        "Write a pivot grouping that the kit can actually play"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-motif",
@@ -203,18 +320,36 @@
         "mus-analysis-method"
       ],
       "summary": "The cell comes back altered. That is the piece.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Bring the cell back altered; that is the piece",
+        "Show three mutations that are still the same cell"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-cliche",
-      "name": "Cliché versus vocabulary",
+      "name": "Clich\u00e9 versus vocabulary",
       "moduleId": "dm-a-prog",
       "tier": 3,
       "prerequisites": [
         "dm-harmony"
       ],
       "summary": "A diminished run that means something versus one that fills a bar.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Tell a diminished run that means something from one that fills a bar",
+        "Cut a fill that does not change the form"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-analysis-riff",
@@ -226,7 +361,16 @@
         "dm-riff-cell"
       ],
       "summary": "Pitch collection, cell, meter, where it sits in the form.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name pitch collection, cell, meter, and where the riff sits in the form",
+        "Do that analysis without requiring the listener to know the band"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-analysis-tune",
@@ -238,7 +382,16 @@
         "dm-song-form"
       ],
       "summary": "The whole cut: contrast, density, production, vocal as rhythm.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read a whole cut: contrast, density, production, vocal as rhythm",
+        "Mark the form as an order of textures, not as verse-chorus"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-compare-scenes",
@@ -250,7 +403,16 @@
         "dm-analysis-tune"
       ],
       "summary": "Same year, two cities, two answers to the same problem.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Compare two cities in the same year by two answers to the same problem",
+        "Keep the comparison on construction and production, not on gossip"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-production-listen",
@@ -260,8 +422,17 @@
       "prerequisites": [
         "dm-production-doctrine"
       ],
-      "summary": "Gate, room, guitar width, kick click — as compositional choices.",
-      "estimatedMinutes": 10
+      "summary": "Gate, room, guitar width, kick click \u2014 as compositional choices.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Hear gate, room, guitar width, and kick click as compositional choices",
+        "Describe a mix doctrine without a brand-name paragraph"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-drum-comp",
@@ -272,7 +443,16 @@
         "dm-blast-types"
       ],
       "summary": "The kit writes form with texture changes.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Let the kit write form with texture changes",
+        "Analyze a drum part as composition, not as sport"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-bass-role",
@@ -283,7 +463,16 @@
         "dm-harmony-two-gtr"
       ],
       "summary": "Unison with the guitar, a picked counter-line, or a distorted bed.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Choose lock, pick, or smear",
+        "Predict what a distorted bass does to a two-guitar cell"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-arrangement",
@@ -294,7 +483,16 @@
         "dm-analysis-tune"
       ],
       "summary": "Who drops out so the next riff can be heard.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Drop someone out so the next riff can be heard",
+        "Rewrite a dense bar by subtraction, not by another layer"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-influence-map",
@@ -305,7 +503,16 @@
         "dm-compare-scenes"
       ],
       "summary": "A borrowed cell, not a borrowed biography.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name a borrowed cell, not a borrowed biography",
+        "Trace an influence as construction you can point at"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-live-vs-record",
@@ -316,7 +523,16 @@
         "dm-production-listen"
       ],
       "summary": "What a three-piece can actually play.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Ask what a three-piece can actually play",
+        "Predict a studio density that will collapse on stage"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-modern-prod",
@@ -328,7 +544,16 @@
         "dm-modern-wave"
       ],
       "summary": "A grid that can erase the performance or reveal it.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat triggers and edits as a grid that can erase or reveal a performance",
+        "Hear when the grid is the composition and when it is a cover-up"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     },
     {
       "id": "dm-notation-limit",
@@ -340,7 +565,16 @@
         "mus-notation"
       ],
       "summary": "Tab shows frets. It hides meter, cell, and function.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State what tablature hides: meter, cell, and function",
+        "Augment tab with a grouping or a cell mark so the riff can be read"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "mit-21m350",
+        "berklee-metal"
+      ]
     }
   ]
 }

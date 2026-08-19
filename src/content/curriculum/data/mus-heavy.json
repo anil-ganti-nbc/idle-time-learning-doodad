@@ -40,6 +40,14 @@
       "spineIds": [
         "mus-nonfunc",
         "mus-planing"
+      ],
+      "learningObjectives": [
+        "Write harmony that does not report to a dominant",
+        "Name planing, tritone, and modal tonic as alternatives to V\u2013I"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
       ]
     },
     {
@@ -53,6 +61,14 @@
       "spineIds": [
         "mus-odd-meter",
         "mus-polymeter"
+      ],
+      "learningObjectives": [
+        "Group an odd bar, a hemiola, or two meters that meet later",
+        "Displace a cell without rewriting its pitches"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
       ]
     },
     {
@@ -66,6 +82,14 @@
       "spineIds": [
         "mus-riff-harmony",
         "mus-analysis-method"
+      ],
+      "learningObjectives": [
+        "Treat the riff as the progression and the form",
+        "Analyze by cell and contrast, not by inventing a chorale"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
       ]
     }
   ],
@@ -79,7 +103,15 @@
         "mus-function"
       ],
       "summary": "Progression that does not report to a dominant.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write a progression that does not report to a dominant",
+        "Analyze it without inventing a V\u2013I that is not there"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-planing",
@@ -91,7 +123,15 @@
         "mus-voice-lead"
       ],
       "summary": "A shape that slides, keeping its intervals.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Slide a shape so the intervals stay and the function does not",
+        "Write a parallel move that is the harmony, not a voice-leading error"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-chromatic-mediant",
@@ -102,7 +142,15 @@
         "mus-nonfunc"
       ],
       "summary": "Roots a third apart, few common tones, a lot of color.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Connect roots a third apart with few common tones",
+        "Hear the color of that jump without forcing a pivot"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-tritone",
@@ -114,7 +162,15 @@
         "mus-nonfunc"
       ],
       "summary": "The interval that bisects the octave.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use the interval that bisects the octave as a relation, not an accident",
+        "Write a tritone substitution or a tritone riff cell on purpose"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-locrian",
@@ -125,7 +181,15 @@
         "mus-modes"
       ],
       "summary": "A mode whose tonic triad is already unstable.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Sit on a tonic whose triad is already diminished",
+        "Predict why Locrian is unstable as a home and useful as a color"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-phrygian",
@@ -136,7 +200,15 @@
         "mus-modes"
       ],
       "summary": "The half-step above the tonic as a signature.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use the flat second against the tonic as a signature",
+        "Write a Phrygian cell that does not secretly cadence in the relative major"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-harmonic-minor",
@@ -147,7 +219,15 @@
         "mus-minor"
       ],
       "summary": "The raised seventh without the rest of the classical contract.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Raise the seventh in minor without taking on the rest of the classical contract",
+        "Write a metal default that wants the leading tone and the minor third"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-octatonic",
@@ -158,7 +238,15 @@
         "mus-semitone"
       ],
       "summary": "Alternating tones and semitones, two flavors.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Build an octatonic collection from alternating tones and semitones",
+        "Predict the two flavors and a diminished cell that lives inside them"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-odd-meter",
@@ -169,7 +257,15 @@
         "mus-meter"
       ],
       "summary": "Bars that are not 2 or 4 on the surface.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Group a bar that is not 2 or 4 on the surface",
+        "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-polymeter",
@@ -181,7 +277,15 @@
         "mus-polyrhythm-intro"
       ],
       "summary": "Two meters at once, coinciding later.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Run two meters at once and mark where they coincide",
+        "Write guitar in 3 against a kit in 4 that meets after a known span"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-metric-ambig",
@@ -192,7 +296,15 @@
         "mus-odd-meter"
       ],
       "summary": "A pulse you cannot yet group.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write a pulse the ear cannot yet group",
+        "Resolve or refuse that ambiguity on purpose"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-displacement",
@@ -203,7 +315,15 @@
         "mus-syncopation"
       ],
       "summary": "The same cell, started on a different beat.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Start the same cell on a different beat",
+        "Predict how the accents flip when the cell moves by one eighth"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-hemiola",
@@ -214,7 +334,15 @@
         "mus-polyrhythm-intro"
       ],
       "summary": "Three in the time of two, or the reverse.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write three in the time of two, or the reverse",
+        "Clap a hemiola that is not just a triplet fill"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-riff-harmony",
@@ -226,7 +354,15 @@
         "mus-power-chord"
       ],
       "summary": "The riff is the progression.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat the riff as the progression",
+        "Analyze a section by the cell, not by a chord chart you invented"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-pedal-riff",
@@ -238,7 +374,15 @@
         "mus-riff-harmony"
       ],
       "summary": "An open string that everything else grinds against.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Grind changing figures against an open string",
+        "Write a pedal riff whose clashes release"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-chromatic-riff",
@@ -250,7 +394,15 @@
         "mus-riff-harmony"
       ],
       "summary": "Semitone motion as the material, not the decoration.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use semitone motion as the material, not the decoration",
+        "Sequence a two-note chromatic cell without turning it into a scale run"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-dissonant-voicing",
@@ -261,7 +413,15 @@
         "mus-dissonance"
       ],
       "summary": "Seconds stacked until the chord has no name.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Stack seconds until the chord has no common-practice name",
+        "Decide whether that cluster is the harmony or a passing smear"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-form-riff",
@@ -273,7 +433,15 @@
         "mus-phrase"
       ],
       "summary": "Contrast and return without a verse-chorus contract.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Build form from contrast and return of cells, not from verse-chorus",
+        "Mark a section change that is only a drum texture and a new cell"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-analysis-method",
@@ -284,7 +452,15 @@
         "mus-form-riff"
       ],
       "summary": "A method: what repeats, what contrasts, what is the cell.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Ask what repeats, what contrasts, and what the cell is",
+        "Refuse an analysis that invents a chorale the music does not play"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-reduction",
@@ -294,8 +470,16 @@
       "prerequisites": [
         "mus-analysis-method"
       ],
-      "summary": "Strip the surface. Do not invent a I–V that is not there.",
-      "estimatedMinutes": 10
+      "summary": "Strip the surface. Do not invent a I\u2013V that is not there.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Strip the surface without inventing a I\u2013V that is not there",
+        "Leave a reduction that still explains the riff"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-timbre-harmony",
@@ -306,7 +490,15 @@
         "mus-power-chord"
       ],
       "summary": "Gain adds partials. A fifth becomes a crowd.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat gain as a harmonic fact that adds partials",
+        "Predict why a fifth becomes a crowd under distortion"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     },
     {
       "id": "mus-drop-tune",
@@ -317,7 +509,15 @@
         "mus-power-chord"
       ],
       "summary": "A lowered sixth string that makes the power chord one finger.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Lower a string so a power chord is one finger, and write for that physics",
+        "Predict what the new open string does to pedals and cells"
+      ],
+      "sourceIds": [
+        "mit-21m302",
+        "mit-21m350"
+      ]
     }
   ]
 }

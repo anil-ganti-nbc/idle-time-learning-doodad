@@ -39,6 +39,15 @@
       "spineIds": [
         "horo-escape",
         "horo-lever"
+      ],
+      "learningObjectives": [
+        "Release the train in ticks and impulse the oscillator",
+        "Name lock, drop, draw, and safety as measured freedoms, not vibes"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
       ]
     },
     {
@@ -52,6 +61,15 @@
       "spineIds": [
         "horo-balance",
         "horo-hairspring"
+      ],
+      "learningObjectives": [
+        "Treat period as a property of balance and hairspring, not the train",
+        "Contrast a regulator index with a free-sprung balance"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
       ]
     },
     {
@@ -65,6 +83,15 @@
       "spineIds": [
         "horo-isochronism",
         "horo-positional"
+      ],
+      "learningObjectives": [
+        "Read daily rate, amplitude, beat error, and positional error on a timing machine",
+        "Name temperature, magnetism, and oil as things that move the rate"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
       ]
     }
   ],
@@ -77,8 +104,17 @@
       "prerequisites": [
         "horo-gear-train"
       ],
-      "summary": "Turning a spring’s unwind into counted ticks.",
-      "estimatedMinutes": 10
+      "summary": "Turning a spring\u2019s unwind into counted ticks.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Release the train in ticks and give the oscillator an impulse",
+        "State that timekeeping lives in the oscillator period, not in the gears"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-recoil-vs-detached",
@@ -89,7 +125,16 @@
         "horo-escape"
       ],
       "summary": "Whether the oscillator is left alone between impulses.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast an oscillator that is dragged between impulses with one left alone",
+        "Predict why a detached lever became the modern default"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-lever",
@@ -100,7 +145,16 @@
         "horo-escape"
       ],
       "summary": "The detached lever as the modern default.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the Swiss lever as a detached escapement with two pallet stones",
+        "Trace lock, impulse, and drop on one beat of the lever"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-escape-wheel",
@@ -111,7 +165,16 @@
         "horo-lever"
       ],
       "summary": "The last wheel of the train, delivering impulse.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name the escape wheel as the last wheel of the train, delivering impulse",
+        "Predict what a bent tooth does to lock and impulse"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-pallet",
@@ -122,7 +185,16 @@
         "horo-lever"
       ],
       "summary": "Entry and exit jewels that lock and impulse.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Give entry and exit jewels the jobs of locking and impulsing",
+        "Predict a short lock if a stone is pushed too far in"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-impulse",
@@ -134,7 +206,16 @@
         "horo-escape-wheel"
       ],
       "summary": "Two jobs that must not blur.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Keep impulse and locking as two jobs that must not blur",
+        "Diagnose a beat that unlocks without delivering a clean impulse"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-draw",
@@ -145,7 +226,16 @@
         "horo-impulse"
       ],
       "summary": "The geometry that pulls the lever onto the banking.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use draw to pull the lever onto the banking after impulse",
+        "Predict a fluttering lever if draw is missing"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-lock-drop",
@@ -156,7 +246,16 @@
         "horo-impulse"
       ],
       "summary": "The measured freedoms that keep the escapement safe.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Measure lock, drop, and slide as the freedoms that keep the escapement safe",
+        "Predict a rebanking or a stall from the wrong drop"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-impulse-pin",
@@ -167,7 +266,16 @@
         "horo-lever"
       ],
       "summary": "How the lever talks to the balance.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Let the lever talk to the balance through the impulse pin and roller",
+        "Predict a missed beat if the pin does not enter the fork horn cleanly"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-safety",
@@ -178,7 +286,16 @@
         "horo-impulse-pin"
       ],
       "summary": "What stops a knock from unlocking the wrong pallet.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Stop a knock from unlocking the wrong pallet",
+        "Name guard pin and safety dart as the geometry that saves the lock"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-balance",
@@ -189,7 +306,16 @@
         "horo-escape"
       ],
       "summary": "The mass that oscillates.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat the balance wheel as the mass that oscillates",
+        "Predict how adding or removing inertia changes the period"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-hairspring",
@@ -200,7 +326,16 @@
         "horo-balance"
       ],
       "summary": "The restoring spring that sets the period.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat the hairspring as the restoring spring that sets the period",
+        "Predict what a magnetic or concentricity error does to the rate"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-regulator",
@@ -211,7 +346,16 @@
         "horo-hairspring"
       ],
       "summary": "Changing effective length versus changing inertia.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast changing effective length with changing inertia",
+        "Predict a drawback of pinning the spring in a regulator boot"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-quartz-contrast",
@@ -222,7 +366,16 @@
         "horo-escape"
       ],
       "summary": "A crystal and a divider, not a lever.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State that quartz counts a crystal, not a sprung balance",
+        "Distinguish a quartz stepper from a mechanical escapement without a luxury claim"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-rate",
@@ -234,7 +387,16 @@
         "horo-hairspring"
       ],
       "summary": "Seconds per day as the number you regulate.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read daily rate as seconds gained or lost per day",
+        "Predict how a timing-machine trace becomes that number"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-isochronism",
@@ -245,8 +407,17 @@
         "horo-hairspring",
         "horo-rate"
       ],
-      "summary": "Period that does not care about amplitude — in theory.",
-      "estimatedMinutes": 10
+      "summary": "Period that does not care about amplitude \u2014 in theory.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define isochronism as period that does not depend on amplitude",
+        "Predict a rate change as the spring winds down if isochronism is poor"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-amplitude",
@@ -257,7 +428,16 @@
         "horo-balance"
       ],
       "summary": "How far the balance swings, and why it fades.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Measure amplitude as how far the balance swings",
+        "Diagnose low amplitude as friction, magnetism, or a tired spring \u2014 not as 'it needs a tourbillon'"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-positional",
@@ -268,7 +448,16 @@
         "horo-rate"
       ],
       "summary": "Dial up is not pendant up.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Time the watch in several positions because gravity biases the oscillator",
+        "Predict a vertical-position error a pocket watch sees that a wrist already averages"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-poise",
@@ -280,7 +469,16 @@
         "horo-balance"
       ],
       "summary": "A heavy spot on the balance that gravity can find.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Balance the rim so a heavy spot does not become a positional error",
+        "Predict the sign of the rate error when a poise error meets a vertical position"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-beat-error",
@@ -291,7 +489,16 @@
         "horo-impulse-pin"
       ],
       "summary": "Rest position that is not the middle of the roller.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define beat error as unequal time from rest to each unlock",
+        "Predict the timing-machine signature of a beat that is out of equal"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-timing-machine",
@@ -302,7 +509,16 @@
         "horo-rate"
       ],
       "summary": "A microphone and a diagram of rate, amplitude, beat.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read rate, amplitude, and beat error from a microphone trace",
+        "Name what the machine cannot see: magnetism, oil placement, a cracked jewel"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-temp",
@@ -313,7 +529,16 @@
         "horo-hairspring"
       ],
       "summary": "Steel that changes modulus when the room does.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State how temperature changes the modulus and the balance diameter",
+        "Predict the compensation a bimetallic or modern alloy is trying to cancel"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-magnet",
@@ -324,7 +549,16 @@
         "horo-hairspring"
       ],
       "summary": "A spring that sticks to itself.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a magnetized hairspring as coils that stick and change the period",
+        "Predict the cure: demagnetize, do not 'regulate it out'"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     },
     {
       "id": "horo-lubrication-escape",
@@ -336,7 +570,16 @@
         "horo-pallet"
       ],
       "summary": "A tiny film on a pallet stone, and the ways it migrates.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Oil the impulse faces that need it and keep oil off the lock",
+        "Predict a greedy or dry escapement from the wrong drop of oil"
+      ],
+      "sourceIds": [
+        "hsny-edu",
+        "wostep-training",
+        "wostep-chrono"
+      ]
     }
   ]
 }

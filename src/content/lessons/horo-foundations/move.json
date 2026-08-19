@@ -1,0 +1,520 @@
+{
+  "courseId": "horo-foundations",
+  "moduleId": "horo-f-move",
+  "lessons": [
+    {
+      "id": "horo-movement-5",
+      "conceptId": "horo-movement",
+      "title": "A spring, a count, a pair of hands",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "horo-nomenclature",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Stored work sits in the mainspring, coiled inside the barrel. A gear train counts that unwind into steps. An escapement and oscillator meter those steps as the timebase. Hands on the dial display a count that has already been made.",
+        "Energy has to hit that timebase before it can mean a second. Skip the balance and hairspring and you have a spring dumping into a pile of wheels. The hands would spin, but nothing would have counted."
+      ],
+      "example": "On a simple three-hand calibre the barrel drives the centre wheel, the fourth drives the escape wheel, and the pallet impulses the balance. The minute hand only reports that count.",
+      "whyItMatters": "Name the four jobs first or later lessons about trains and escapements will sound like a parts list.",
+      "quiz": [
+        {
+          "id": "horo-mv5-1",
+          "stem": "Which four jobs make a mechanical movement in the sense this lesson uses?",
+          "correctAnswer": "Stored work, a train, a timebase, and a display",
+          "distractors": [
+            { "text": "Case, crystal, crown, and strap as those four jobs", "kind": "nearby", "rationale": "The case is housing. It is not a job of the movement." },
+            { "text": "Mainspring, jewels, screws, and a timing machine", "kind": "misapplied", "rationale": "Those names are parts or a bench tool." },
+            { "text": "Power reserve, beat rate, amplitude, and poise", "kind": "subtle", "rationale": "Those names are later measurements." }
+          ],
+          "correctExplanation": "Four jobs: store work, count it, meter it, display it.",
+          "objectiveIds": ["Name stored work, train, escapement, and display as the four jobs of a movement"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-mv5-2",
+          "stem": "Energy from the mainspring reaches the hands only after it has:",
+          "correctAnswer": "Passed through the timebase that meters the unwind",
+          "distractors": [
+            { "text": "Skipped the train and driven the hands from the barrel", "kind": "reversed", "rationale": "The train is on the path. Skipping it is not the path." },
+            { "text": "Been oiled at the caseback until the rate looks stable", "kind": "misapplied", "rationale": "Oil is later. It does not replace the timebase." },
+            { "text": "Filled the jewel count printed on the spec sheet", "kind": "subtle", "rationale": "Jewel count names holes. Energy still has to travel." }
+          ],
+          "correctExplanation": "Barrel, train, then the timebase, then the hands. Skip the meter and you have a dump.",
+          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-mv5-3",
+          "stem": "On a simple three-hand calibre, a correct energy path is:",
+          "correctAnswer": "Barrel, going train, escape, pallet and balance, then hands",
+          "distractors": [
+            { "text": "Barrel, then the hands, with the balance left until last", "kind": "reversed", "rationale": "Hands after the timebase. Last is too late for the meter." },
+            { "text": "Crown, stem, and cannon pinion, with no train at all", "kind": "nearby", "rationale": "That path is how you set the hands." },
+            { "text": "Balance first, then the barrel, so the spring has a beat", "kind": "misconception", "rationale": "Work is stored in the spring. The balance meters it." }
+          ],
+          "correctExplanation": "Work, count, meter, display. That order is the machine.",
+          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-movement-10",
+      "conceptId": "horo-movement",
+      "title": "Four jobs, one machine",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "horo-nomenclature",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Energy leaves the barrel as torque on the first wheel of the going train. Centre, third, and fourth wheels reduce that motion and raise its speed. The escape wheel is the last of the count. It still has not metered a second.",
+        "The pallet fork takes impulse from the escape wheel and delivers it to the balance. The hairspring returns that balance. Together they are the timebase. Each swing unlocks one tooth, so the train advances in counted ticks rather than a runaway dump.",
+        "WOSTEP and HSNY 101 both start with this whole simple calibre. The cannon pinion and hands sit after the count: they display how many swings the timebase allowed. Trace barrel to balance first, then to the hands, or the path skips its meter."
+      ],
+      "example": "Follow a wound barrel through centre, third, and fourth wheels to the escape wheel. Pallet impulse reaches the balance. Only then does the cannon pinion carry the minute hand.",
+      "whyItMatters": "Skip the timebase in the story and you will diagnose the hands when the oscillator was the fault.",
+      "quiz": [
+        {
+          "id": "horo-mv10-1",
+          "stem": "How does the going train differ from the escapement in this machine?",
+          "correctAnswer": "The train counts the unwind; the escapement meters it with the oscillator",
+          "distractors": [
+            { "text": "The train keeps time by itself; the escapement only moves the hands", "kind": "reversed", "rationale": "The train counts. The timebase meters. Hands display." },
+            { "text": "The train stores the work; the escapement is the mainspring", "kind": "misconception", "rationale": "Stored work is the spring in the barrel." },
+            { "text": "They are two names for the same wheel sitting under the dial", "kind": "nearby", "rationale": "Train and escapement are different jobs." }
+          ],
+          "correctExplanation": "Count versus meter. The oscillator is what makes a tick a second.",
+          "objectiveIds": ["Name stored work, train, escapement, and display as the four jobs of a movement"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-mv10-2",
+          "stem": "Trace torque from a wound barrel to a moving minute hand. After the fourth wheel comes:",
+          "correctAnswer": "The escape wheel, then pallet impulse, then the balance and hairspring",
+          "distractors": [
+            { "text": "The cannon pinion immediately, with the balance left sitting idle", "kind": "reversed", "rationale": "The timebase sits between fourth wheel and an honest hand." },
+            { "text": "The winding stem, which is how energy is supposed to leave", "kind": "misapplied", "rationale": "The stem is how energy enters, on the wind." },
+            { "text": "The hour wheel, treated as the timebase of a three-hand watch", "kind": "nearby", "rationale": "The hour wheel is display gearing, after the count." }
+          ],
+          "correctExplanation": "Fourth, escape, pallet, balance. Then the cannon pinion may carry a hand.",
+          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-mv10-3",
+          "stem": "If the train is complete but the balance is locked, the hands typically:",
+          "correctAnswer": "Stay put or lurch, because no counted unlocks are happening",
+          "distractors": [
+            { "text": "Run at a true rate, because the train already knows seconds", "kind": "reversed", "rationale": "The train does not know a second without the oscillator." },
+            { "text": "Set themselves from the stem without any winding at all", "kind": "misapplied", "rationale": "Setting is a later path. It is not the going path." },
+            { "text": "Gain exactly one hour, which is the barrel's natural period", "kind": "subtle", "rationale": "The barrel has no one-hour period that replaces the timebase." }
+          ],
+          "correctExplanation": "No unlocks, no count. The display has nothing new to show.",
+          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-nomenclature-10",
+      "conceptId": "horo-nomenclature",
+      "title": "Plate, bridge, wheel, pinion, jewel",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["horo-movement"],
+      "goDeeper": "horo-bridges",
+      "diagram": "horo-parts",
+      "explanation": [
+        "Names come before diagnosis. The main plate is the floor the rest of the calibre is built on. A bridge is a smaller plate that locates the far end of a pivot. Call both of them 'the movement' and you cannot say which screw to lift.",
+        "A wheel is the large toothed disc; the pinion is the small gear it drives. Together they make a mesh. Jewels are the hard, polished holes those pivots run in. Point at each on a simple calibre until the five words stick as locations.",
+        "Later lessons will talk about endshake, a set mainspring, and a scored pivot. Those sentences stay empty if plate, bridge, wheel, pinion, and jewel are still one blur. Use the words while looking at the calibre so they become places."
+      ],
+      "example": "On a student three-hand calibre, point to the main plate, the train bridge, a centre wheel, its pinion, and a hole jewel before you name anything else.",
+      "whyItMatters": "You cannot reverse a takedown or chase a bent pivot if the parts still share one name.",
+      "quiz": [
+        {
+          "id": "horo-nm10-1",
+          "stem": "Which named part is the floor the rest of a simple calibre is built on?",
+          "correctAnswer": "The main plate, which locates one end of the pivots",
+          "distractors": [
+            { "text": "The cannon pinion, treated here as the largest bridge", "kind": "nearby", "rationale": "A cannon pinion is display gearing." },
+            { "text": "The hairspring, treated here as a plate of steel", "kind": "misapplied", "rationale": "The hairspring belongs to the timebase." },
+            { "text": "The caseback, treated here as the movement's upper plate", "kind": "misconception", "rationale": "The caseback is housing. The plate is inside." }
+          ],
+          "correctExplanation": "Main plate first. Bridges locate the other ends of the same pivots.",
+          "objectiveIds": ["Name plate, bridge, wheel, pinion, and jewel so later lessons have words"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-nm10-2",
+          "stem": "How does a wheel differ from a pinion in the going train?",
+          "correctAnswer": "A wheel is the large toothed disc; a pinion is the small gear it drives",
+          "distractors": [
+            { "text": "A pinion is always the large disc; a wheel is only the arbor", "kind": "reversed", "rationale": "Large disc is the wheel. Small gear is the pinion." },
+            { "text": "A wheel is a jewel; a pinion is the polished hole it sits in", "kind": "misapplied", "rationale": "Jewels are holes. Wheels and pinions are the mesh." },
+            { "text": "They are two words for the same screw that holds a bridge", "kind": "nearby", "rationale": "Screws hold bridges. They are not the mesh." }
+          ],
+          "correctExplanation": "Large wheel drives small pinion. That pair is one step of the train.",
+          "objectiveIds": ["Name plate, bridge, wheel, pinion, and jewel so later lessons have words"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-nm10-3",
+          "stem": "A student points at 'the movement' when asked where a pivot runs. You should have them point at:",
+          "correctAnswer": "The jewel in the plate or bridge that locates that pivot",
+          "distractors": [
+            { "text": "The case, on the claim that the movement is the whole watch", "kind": "nearby", "rationale": "The case is housing. The pivot runs in a jewel." },
+            { "text": "The dial furniture, on the claim that pivots are cut there", "kind": "misapplied", "rationale": "Dial furniture is display. Pivots run in jewels." },
+            { "text": "The timing machine, on the claim that rate is the location", "kind": "subtle", "rationale": "Rate is a later measurement with no location on the calibre." }
+          ],
+          "correctExplanation": "Point at the hole that locates the pivot. That is a jewel in a plate or bridge.",
+          "objectiveIds": ["Point at those parts on a simple calibre instead of waving at 'the movement'"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-tools-intro-10",
+      "conceptId": "horo-tools-intro",
+      "title": "Holder, tray, unbent pivots",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["horo-movement"],
+      "goDeeper": "horo-disassembly",
+      "explanation": [
+        "Hold the movement in a movement holder so both hands are free and the plate cannot skate. A screw that rolls off the bench is a lost hour. A pivot that takes the weight of a slip is a bent arbor you will spend a day chasing.",
+        "Bench discipline is the habit before any complication. Pegwood, a tray with compartments, tweezers that meet, and a screwdriver whose blade fills the slot. An oversized blade jumps that slot and burrs a screw you then cannot start.",
+        "WOSTEP starts component work with this posture. You will take a simple calibre down in a later lesson. Today the job is to name the discipline: nothing rolls, nothing bends, and the holder owns the plate while you work."
+      ],
+      "example": "A 3.5mm screw from a train bridge rolls under a tissue if the tray is not already open. Seat the calibre in the holder first, then turn the screwdriver, then park the screw in one compartment.",
+      "whyItMatters": "A bent pivot and a missing screw are the two fastest ways to turn a simple service into a hunt.",
+      "quiz": [
+        {
+          "id": "horo-tl10-1",
+          "stem": "Bench discipline, in this lesson, means the habit of:",
+          "correctAnswer": "Losing no screw and bending no pivot before any complication",
+          "distractors": [
+            { "text": "Polishing bridges to a mirror before the train is even free", "kind": "nearby", "rationale": "Finishing can wait. The habit is not losing parts." },
+            { "text": "Timing the watch on a machine before it sits in a holder", "kind": "misapplied", "rationale": "Timing is later. The holder comes before the first screw." },
+            { "text": "Naming every complication the calibre will one day carry", "kind": "subtle", "rationale": "Complications wait. The bench comes first." }
+          ],
+          "correctExplanation": "Holder, tray, fitted blade. Nothing rolls. Nothing bends.",
+          "objectiveIds": ["Name the discipline of the bench before any complication arrives"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-tl10-2",
+          "stem": "You are about to lift a screw from a simple calibre. First you:",
+          "correctAnswer": "Seat the movement in a holder and open a tray for the screw",
+          "distractors": [
+            { "text": "Stand the movement on the crystal so both of your hands are free", "kind": "reversed", "rationale": "Standing it on the crystal is how a pivot takes a slip." },
+            { "text": "Press until the blade is wider than the slot and then turn", "kind": "misapplied", "rationale": "An oversized blade jumps the slot and burrs the screw." },
+            { "text": "Hold the plate in a tissue so oil cannot touch the bench", "kind": "nearby", "rationale": "A tissue hides a rolling screw. The holder owns the plate." }
+          ],
+          "correctExplanation": "Holder first, tray open, then the screwdriver. That is the order.",
+          "objectiveIds": ["Hold a movement so a screw cannot roll and a pivot cannot bend"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-tl10-3",
+          "stem": "A movement that is free to skate on the bench while you push a screwdriver will typically:",
+          "correctAnswer": "Let a pivot take the slip and bend, or let a screw roll away",
+          "distractors": [
+            { "text": "Train the hairspring to a better beat by that vibration", "kind": "misapplied", "rationale": "Vibration from a slip is damage." },
+            { "text": "Seat every jewel more firmly because pressure is a kind of oil", "kind": "misconception", "rationale": "Pressure on a skating plate bends steel. It does not oil." },
+            { "text": "Prove the calibre is finished, so the holder is no longer required", "kind": "subtle", "rationale": "Finished or not, the holder still owns the plate." }
+          ],
+          "correctExplanation": "A skating plate turns screwdriver force into a bent pivot or a missing screw.",
+          "objectiveIds": ["Hold a movement so a screw cannot roll and a pivot cannot bend"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-bridges-10",
+      "conceptId": "horo-bridges",
+      "title": "The frame that locates pivots",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-nomenclature"],
+      "goDeeper": "horo-jewels",
+      "explanation": [
+        "Pivots live in holes. The main plate and the bridges are the frame that puts those holes in the right place, at the right height, and parallel. A wheel is free only because both of its jewels were located by that frame.",
+        "Endshake is the leftover axial play of a pivot between those two jewels. Mesh is the radial meeting of wheel and pinion. Distort a bridge with a bent screw seat or a pinched cock and both numbers move. The wheel either binds or drops out of depth.",
+        "Predict the failure before you chase timing. A train that is noisy after a bridge was forced down is usually a mesh problem the frame created. Straighten or replace the distorted bridge rather than oiling a bind."
+      ],
+      "example": "A train bridge screwed down on a trapped speck of dust tilts. Endshake on that wheel vanishes, the mesh goes deep, and the watch stops in one position. The pallet was never the first suspect.",
+      "whyItMatters": "A bent bridge looks like an escapement problem until you check endshake and depth with the frame in mind.",
+      "quiz": [
+        {
+          "id": "horo-br10-1",
+          "stem": "Plates and bridges earn their keep in a movement by:",
+          "correctAnswer": "Locating every pivot in place, height, and alignment",
+          "distractors": [
+            { "text": "Storing the work that the mainspring later releases as torque", "kind": "nearby", "rationale": "Stored work is the spring in the barrel." },
+            { "text": "Metering the unwind as the timebase of the whole watch", "kind": "misapplied", "rationale": "The oscillator meters. The frame only locates." },
+            { "text": "Displaying the count on the dial as a pair of hands", "kind": "subtle", "rationale": "Hands display. Bridges locate pivots." }
+          ],
+          "correctExplanation": "The frame is a pair of located holes for every pivot.",
+          "objectiveIds": ["Treat plates and bridges as the frame that locates every pivot"],
+          "prerequisiteConceptIds": ["horo-nomenclature"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-br10-2",
+          "stem": "A bridge that is bent down over a train wheel will typically:",
+          "correctAnswer": "Kill endshake and drive the mesh too deep, so the wheel binds",
+          "distractors": [
+            { "text": "Add endshake and make the mesh shallower, which always helps", "kind": "reversed", "rationale": "Bent down shortens the hole spacing. Endshake dies." },
+            { "text": "Improve rate by pressing the hairspring from above with the bridge", "kind": "misapplied", "rationale": "A train bridge is not a regulator. It locates train pivots." },
+            { "text": "Raise jewel count, which is how bent metal is supposed to grade", "kind": "misconception", "rationale": "Bending a bridge does not add jewels. It ruins location." }
+          ],
+          "correctExplanation": "Downward distortion steals endshake and deepens the mesh until the wheel binds.",
+          "objectiveIds": ["Predict what a distorted bridge does to endshake and mesh"],
+          "prerequisiteConceptIds": ["horo-nomenclature"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-br10-3",
+          "stem": "A train became noisy right after a bridge screw was forced home. The first suspect is:",
+          "correctAnswer": "A distorted bridge that moved a pivot and ruined the mesh",
+          "distractors": [
+            { "text": "A mainspring that suddenly gained a day's extra torque", "kind": "nearby", "rationale": "Forcing a screw does not rewind the barrel." },
+            { "text": "A dial that became the timebase and now needs to be oiled", "kind": "misapplied", "rationale": "The dial is display. The noisy train is under the bridge." },
+            { "text": "A missing cannon pinion, taken as the only source of noise", "kind": "subtle", "rationale": "A just-forced bridge is the change you actually made." }
+          ],
+          "correctExplanation": "The last thing you forced is the first thing to inspect: the frame.",
+          "objectiveIds": ["Predict what a distorted bridge does to endshake and mesh"],
+          "prerequisiteConceptIds": ["horo-nomenclature"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-jewels-10",
+      "conceptId": "horo-jewels",
+      "title": "Hard, polished holes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-nomenclature"],
+      "goDeeper": "horo-disassembly",
+      "explanation": [
+        "Friction at a steel pivot steals swing from the balance. A jewel is a hard, polished hole, usually synthetic ruby, that the pivot runs in. Cap jewels and hole jewels together can take endthrust. The job is a bearing.",
+        "Jewel count on a spec sheet only names how many holes were fitted. It says nothing about polish, oil, or whether the hole is still round. A dry jewel scores the pivot and steals swing from the balance. A cracked jewel does the same with a sharp edge.",
+        "Oil belongs in the cup, in a measured drop. Too little and the pivot runs dry. Too much and it creeps onto a pallet or a hairspring. A cracked jewel cannot hold that oil. Replace it; the rate will not recover while the edge is cutting steel."
+      ],
+      "example": "A fourth-wheel hole jewel that ran dry leaves a brass-coloured smear on the pivot. Swing is down, the rate is noisy, and the next hour of running will cut a groove if you only re-oil the crack.",
+      "whyItMatters": "A dry or cracked jewel is a timing fault that becomes a worn pivot if you treat it as decoration.",
+      "quiz": [
+        {
+          "id": "horo-jw10-1",
+          "stem": "In this course, a jewel in the train or escape is:",
+          "correctAnswer": "A hard, polished hole that a pivot runs in, to cut friction",
+          "distractors": [
+            { "text": "A count on the spec sheet that grades the whole calibre", "kind": "misconception", "rationale": "A count of holes is not a grade of the work." },
+            { "text": "A decorative stone pressed into the case purely for show", "kind": "nearby", "rationale": "Case stones are show. Train jewels are bearings." },
+            { "text": "The timebase that replaces the balance in a cheap watch", "kind": "misapplied", "rationale": "The oscillator is the timebase. A jewel is a hole." }
+          ],
+          "correctExplanation": "Hard, polished hole. The pivot runs there. That is the whole job.",
+          "objectiveIds": ["Describe a jewel as a hard, polished hole that reduces friction"],
+          "prerequisiteConceptIds": ["horo-nomenclature"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-jw10-2",
+          "stem": "A cracked hole jewel under a train pivot becomes a problem because:",
+          "correctAnswer": "The sharp edge scores steel, steals swing, and then wears the pivot",
+          "distractors": [
+            { "text": "The crack stores extra oil, which always raises the balance swing", "kind": "reversed", "rationale": "A crack leaks oil and cuts steel. It does not store a reserve." },
+            { "text": "The jewel count increases, which is how a movement is graded", "kind": "misconception", "rationale": "A crack does not add a jewel. It ruins the one you had." },
+            { "text": "The hands become the timebase until the crack is filled in", "kind": "misapplied", "rationale": "Hands still display. The bearing is what failed." }
+          ],
+          "correctExplanation": "A sharp ruby edge is a cutter. Timing falls, then the pivot is scored.",
+          "objectiveIds": ["Predict why a dry or cracked jewel is a timing and wear problem"],
+          "prerequisiteConceptIds": ["horo-nomenclature"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-jw10-3",
+          "stem": "The balance swings less and a pivot looks scored. The jewel is dry. You should treat that as:",
+          "correctAnswer": "A timing and wear problem at the bearing, to be cleaned or replaced",
+          "distractors": [
+            { "text": "Proof that jewel count was too high for this particular barrel", "kind": "nearby", "rationale": "Count did not score the pivot. A dry hole did." },
+            { "text": "A display fault, best fixed by fitting a longer pair of hands", "kind": "misapplied", "rationale": "Hands will not restore a scored pivot." },
+            { "text": "Normal running-in that polishes the hole into a better oval", "kind": "subtle", "rationale": "An oval is wear. It is not a finish step." }
+          ],
+          "correctExplanation": "Dry bearing, scored pivot, lost swing. Clean or replace the jewel.",
+          "objectiveIds": ["Predict why a dry or cracked jewel is a timing and wear problem"],
+          "prerequisiteConceptIds": ["horo-nomenclature"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-disassembly-10",
+      "conceptId": "horo-disassembly",
+      "title": "An order you can reverse",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-tools-intro", "horo-bridges"],
+      "goDeeper": "horo-mainspring",
+      "explanation": [
+        "Order is the whole skill. Let the power down first. Then take the balance and its cock, then the pallet, then the train bridge and the wheels, then the barrel. Put it back by reversing that list so every pivot finds its jewel before the next bridge lands.",
+        "Lift a train bridge while the barrel is still wound and a wheel will jump. The pivot can score the jewel or bend as it leaves the hole under load. That is the failure to predict: the part that was still under torque when you freed only one end of it.",
+        "Write the order down the first times. A simple three-hand calibre is enough. You are building a reversible sequence. The next lesson on the mainspring assumes you can reach the barrel without scattering the third wheel across the tray."
+      ],
+      "example": "Power still in, you back out the train-bridge screws. The third wheel jumps, its top pivot leaves the jewel at an angle, and the pivot is scored. Reassembly will not hide that mark.",
+      "whyItMatters": "The order you can reverse is the only order that keeps pivots in their holes while torque dies.",
+      "quiz": [
+        {
+          "id": "horo-ds10-1",
+          "stem": "A reversible takedown of a simple calibre, after power is let down, starts by:",
+          "correctAnswer": "Freeing the balance and pallet, then the train bridge and wheels",
+          "distractors": [
+            { "text": "Pulling the barrel first so the train can run without its jewels", "kind": "reversed", "rationale": "Barrel last among the train. First would scatter wheels." },
+            { "text": "Bending the bridges off with pliers in order to save the screws", "kind": "misapplied", "rationale": "Pliers on a bridge distort the frame you just learned to trust." },
+            { "text": "Setting the hands to twelve so the timebase resets to zero", "kind": "nearby", "rationale": "Hand position is display. It is not a takedown order." }
+          ],
+          "correctExplanation": "Power down, balance, pallet, train, barrel. Reverse that list to assemble.",
+          "objectiveIds": ["Take a simple movement down in an order you can reverse"],
+          "prerequisiteConceptIds": ["horo-tools-intro", "horo-bridges"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-ds10-2",
+          "stem": "You will reassemble this simple movement. The order you want is:",
+          "correctAnswer": "The reverse of the takedown, so each pivot finds its jewel in turn",
+          "distractors": [
+            { "text": "Any order, because a simple calibre has no mesh left to locate", "kind": "misconception", "rationale": "Mesh still needs located pivots. Order is how you keep them." },
+            { "text": "Hands first, then the barrel, with the train still sitting in a cup", "kind": "reversed", "rationale": "Hands last. The train must already be in its frame." },
+            { "text": "Whatever order the timing machine prints on its paper ticket", "kind": "misapplied", "rationale": "A timing ticket is a rate. It is not an assembly sequence." }
+          ],
+          "correctExplanation": "Reverse the list. Each pivot in its jewel, then the next bridge.",
+          "objectiveIds": ["Take a simple movement down in an order you can reverse"],
+          "prerequisiteConceptIds": ["horo-tools-intro", "horo-bridges"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-ds10-3",
+          "stem": "You lift the train bridge while the barrel is still wound. The part that fails is typically:",
+          "correctAnswer": "A wheel that jumps, scoring a pivot as it leaves a jewel under load",
+          "distractors": [
+            { "text": "The crystal, which is how train bridges are supposed to rest", "kind": "misapplied", "rationale": "The crystal is housing. The jumping wheel is under the bridge." },
+            { "text": "The dial feet, which store the remaining mainspring torque", "kind": "nearby", "rationale": "Dial feet do not hold barrel torque. The train does." },
+            { "text": "The hour hand, claimed as the only wheel that is able to jump", "kind": "subtle", "rationale": "The hour hand is display. The going train is what jumps." }
+          ],
+          "correctExplanation": "One end of a loaded pivot is freed. The wheel jumps. The pivot scores.",
+          "objectiveIds": ["Predict the part that jumps or scores if the order is wrong"],
+          "prerequisiteConceptIds": ["horo-tools-intro", "horo-bridges"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-hands-10",
+      "conceptId": "horo-hands",
+      "title": "Readout of counted swings",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-movement"],
+      "goDeeper": "horo-setting",
+      "explanation": [
+        "Hands report what the timebase already counted. The cannon pinion, minute wheel, and hour wheel are a display train. They turn because the going train turned. They do not meter the unwind. The oscillator still owns the second.",
+        "Setting those hands through the stem must leave the mesh of the going train and the oscillator intact. Force a cannon pinion that is too tight and you grind teeth or throw a wheel out of endshake. Yank a stuck hand and you can bend the centre pivot.",
+        "Hacking and keyless detail wait for a later module. The rule here is smaller: when you set, do not back-drive the escape wheel into the pallet under load, and do not lever against the balance. Move the display. Leave the oscillator out of the lever you are using."
+      ],
+      "example": "A cannon pinion seized on the centre arbor. Turning the crown hard back-drives the fourth wheel into the escape wheel. The balance stutters. Setting had become a wrench on the timebase.",
+      "whyItMatters": "Treat the hands as the clock and you will wreck the oscillator the first time a cannon pinion sticks.",
+      "quiz": [
+        {
+          "id": "horo-hd10-1",
+          "stem": "What job do the hands actually do in a mechanical movement?",
+          "correctAnswer": "They display the count the timebase has already allowed",
+          "distractors": [
+            { "text": "They are the timebase that meters the unwind into seconds", "kind": "reversed", "rationale": "The oscillator meters. Hands only report the count." },
+            { "text": "They store the work that the barrel later releases as torque", "kind": "nearby", "rationale": "Stored work is the mainspring. Hands are a readout." },
+            { "text": "They locate the train pivots in the main plate of the calibre", "kind": "misapplied", "rationale": "Plates and bridges locate pivots. Hands sit on the display." }
+          ],
+          "correctExplanation": "Display of a count already made. The timebase still owns the second.",
+          "objectiveIds": ["Treat the hands as a display, not the timebase"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-hd10-2",
+          "stem": "Forcing a stuck hand with the centre arbor as a lever typically risks:",
+          "correctAnswer": "Bending the centre pivot or grinding a mesh the oscillator still sees",
+          "distractors": [
+            { "text": "Improving balance swing by stretching the hairspring from the dial", "kind": "misapplied", "rationale": "A stuck hand is not a regulator. Force goes into a pivot." },
+            { "text": "Letting down the barrel through the hour wheel, which is safe", "kind": "nearby", "rationale": "A yank on a hand is not a controlled let-down." },
+            { "text": "Raising jewel count by one for each extra hand you manage to fit", "kind": "misconception", "rationale": "Hands do not add jewels. They can bend the centre pivot." }
+          ],
+          "correctExplanation": "The centre pivot and the mesh take the force. The oscillator feels it.",
+          "objectiveIds": ["Predict what setting the hands must not do to the oscillator"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-hd10-3",
+          "stem": "When you set the hands on a simple calibre, the oscillator must:",
+          "correctAnswer": "Stay free of back-drive and of being used as a wrench on its pivots",
+          "distractors": [
+            { "text": "Be locked by the hands, which is how setting is supposed to work", "kind": "reversed", "rationale": "Hands are display. They must not lock or wrench the timebase." },
+            { "text": "Drive the stem, so that the crown becomes the true timebase", "kind": "misapplied", "rationale": "The stem is how you set. It is not a timebase." },
+            { "text": "Stop only if the jewel count printed on the spec is below seven", "kind": "subtle", "rationale": "Jewel count does not decide whether setting may wreck the balance." }
+          ],
+          "correctExplanation": "Move the display. Leave the balance and pallet out of the force path.",
+          "objectiveIds": ["Predict what setting the hands must not do to the oscillator"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

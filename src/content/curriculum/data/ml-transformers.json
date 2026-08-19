@@ -33,6 +33,13 @@
       "spineIds": [
         "ml-attention",
         "ml-self-attn"
+      ],
+      "learningObjectives": [
+        "Score keys with a query and mix the values",
+        "Give a sequence order because attention has none of its own"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
       ]
     },
     {
@@ -45,6 +52,13 @@
       ],
       "spineIds": [
         "ml-transformer"
+      ],
+      "learningObjectives": [
+        "Stack attention, residual, norm, and feed-forward as one block",
+        "Choose encoder, decoder, or decoder-only for the job"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
       ]
     },
     {
@@ -58,6 +72,13 @@
       "spineIds": [
         "ml-pretrain",
         "ml-finetune"
+      ],
+      "learningObjectives": [
+        "Pretrain on next-token prediction, then adapt with less freedom",
+        "Contrast fine-tuning, adapters, prompts, and preference signals"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
       ]
     },
     {
@@ -72,6 +93,13 @@
         "ml-inference",
         "ml-rag",
         "ml-failure"
+      ],
+      "learningObjectives": [
+        "Serve a forward pass without the backward pass you trained",
+        "Name context, cache, retrieval, and tools as systems around the weights"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
       ]
     }
   ],
@@ -85,7 +113,14 @@
         "ml-seq-rnn"
       ],
       "summary": "Map one sequence onto another without a fixed window.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State sequence transduction as mapping one sequence onto another without a fixed window",
+        "Name what a fixed-window model cannot see that a longer mixer can"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-tokenizer",
@@ -96,7 +131,14 @@
         "ml-emb-intro"
       ],
       "summary": "The discrete units a model actually sees.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe tokenization as the discrete units a model actually sees",
+        "Predict how a bad split changes what 'word' the model can attend to"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-attention",
@@ -108,7 +150,14 @@
         "ml-seq-problem"
       ],
       "summary": "QKV as a content-addressable lookup, and why it scales.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Score keys with a query and mix the values as a content-addressable lookup",
+        "State why naive all-pairs scoring costs the square of the length"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-qkv",
@@ -119,7 +168,14 @@
         "ml-attention"
       ],
       "summary": "Three roles for the same tokens.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Give the same tokens three roles: query, key, and value",
+        "Predict what breaks if you mix values with scores that were not computed from keys"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-self-attn",
@@ -130,7 +186,14 @@
         "ml-qkv"
       ],
       "summary": "Every position looking at every other position in the same sequence.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Let every position look at every other position in the same sequence",
+        "Trace one token's update as a weighted mix of the other tokens"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-multihead",
@@ -141,7 +204,14 @@
         "ml-self-attn"
       ],
       "summary": "Several lookups in parallel, each free to specialize.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Run several lookups in parallel so heads can specialize",
+        "Predict a job one head can take that a single average would smear"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-positional",
@@ -152,7 +222,14 @@
         "ml-self-attn"
       ],
       "summary": "Attention has no order unless you give it one.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Add order because attention has none of its own",
+        "Predict what a permutation of tokens does to an unpositioned mixer"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-transformer",
@@ -163,8 +240,15 @@
         "ml-multihead",
         "ml-positional"
       ],
-      "summary": "Attention, residual, normalization, feed-forward — stacked.",
-      "estimatedMinutes": 10
+      "summary": "Attention, residual, normalization, feed-forward \u2014 stacked.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Stack attention, residual, normalization, and feed-forward as one block",
+        "Name what the residual path preserves that a bare stack would lose"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-encoder-decoder",
@@ -175,7 +259,14 @@
         "ml-transformer"
       ],
       "summary": "Three layouts for three jobs.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Choose encoder, decoder, or decoder-only for the job",
+        "Predict which layout can see the future of the output and which must not"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-lm-obj",
@@ -187,7 +278,14 @@
         "ml-ce-loss"
       ],
       "summary": "Next-token prediction as the pretraining game.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Train by predicting the next token from the past",
+        "State why that objective produces a useful representation you can later adapt"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-pretrain",
@@ -198,7 +296,14 @@
         "ml-lm-obj"
       ],
       "summary": "A lot of unlabeled text, one objective, a representation you will reuse.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Run one objective on a lot of unlabeled text to get a reusable representation",
+        "Contrast pretraining with the narrower job you will later fine-tune for"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-scale",
@@ -209,7 +314,14 @@
         "ml-pretrain"
       ],
       "summary": "Parameters, data, and compute as coupled knobs.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat parameters, data, and compute as coupled knobs, not independent bragging rights",
+        "Predict what happens if you grow one knob and starve the others"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-finetune",
@@ -221,7 +333,14 @@
         "ml-transfer"
       ],
       "summary": "Continuing training on a narrower distribution.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Continue training on a narrower distribution without throwing the representation away",
+        "Diagnose a fine-tune that forgets the general skill you paid to pretrain"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-peft",
@@ -232,7 +351,14 @@
         "ml-finetune"
       ],
       "summary": "Changing a small adapter instead of every weight.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Change a small adapter instead of every weight",
+        "Compare the cost and flexibility of an adapter with full fine-tuning"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-prompt",
@@ -243,7 +369,14 @@
         "ml-lm-obj"
       ],
       "summary": "Inference-time control written in the model's own language.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Control the model at inference time in its own language",
+        "Predict what a prompt can and cannot change that a weight update can"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-align",
@@ -254,7 +387,14 @@
         "ml-finetune"
       ],
       "summary": "SFT, then a preference signal, then the arguments about reward.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Follow supervised fine-tune with a preference signal, then argue about the reward",
+        "Distinguish next-token likelihood from a preference that prefers one completion"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-inference",
@@ -265,7 +405,14 @@
         "ml-transformer"
       ],
       "summary": "The forward pass you serve, without the backward pass you trained.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Serve the forward pass without the backward pass you trained",
+        "Name a cost that exists at generate time that did not dominate training"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-context",
@@ -277,7 +424,14 @@
         "ml-positional"
       ],
       "summary": "How much past the model can attend to, and what that costs.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State how much past the model can attend to, and what that costs",
+        "Predict what falls out of a window that is shorter than the document"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-kv-cache",
@@ -289,7 +443,14 @@
         "ml-inference"
       ],
       "summary": "Remembering keys and values so you do not recompute the past.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Remember past keys and values so you do not recompute the prefix",
+        "Explain why a causal mask makes that cache valid while generating"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-rag",
@@ -301,7 +462,14 @@
         "ml-emb-intro"
       ],
       "summary": "Looking something up instead of hoping the weights remember.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Look something up instead of hoping the weights remember",
+        "Predict a failure when retrieval is wrong but the continuation is fluent"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-tools",
@@ -312,7 +480,14 @@
         "ml-prompt"
       ],
       "summary": "A model that calls a tool, reads the result, and continues.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Let the model call a tool, read the result, and continue",
+        "Distinguish a tool loop from a single forward pass that only emits text"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-eval-llm",
@@ -323,7 +498,14 @@
         "ml-inference"
       ],
       "summary": "Benchmarks, contamination, and the thing a leaderboard cannot see.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Evaluate a generative model with more than a leaderboard number",
+        "Name contamination and the thing a benchmark cannot see"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-failure",
@@ -334,7 +516,14 @@
         "ml-eval-llm"
       ],
       "summary": "What breaks: reasoning, attribution, calibration, incentives.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name reasoning, attribution, calibration, and incentive failures as different breaks",
+        "Diagnose a fluent answer that fails for a reason other than 'the model is dumb'"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-hallucination",
@@ -345,7 +534,14 @@
         "ml-failure"
       ],
       "summary": "A fluent continuation that is not a retrieved fact.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat hallucination as a fluent continuation that is not a retrieved fact",
+        "Predict why next-token training does not punish a confident falsehood by itself"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     },
     {
       "id": "ml-sparsity-attn",
@@ -357,7 +553,14 @@
         "ml-context"
       ],
       "summary": "Not every pair of tokens has to meet.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Skip pairs of tokens that do not need to meet",
+        "Compare a sparse or linear attention bet with full all-pairs scoring"
+      ],
+      "sourceIds": [
+        "stanford-cs224n"
+      ]
     }
   ]
 }

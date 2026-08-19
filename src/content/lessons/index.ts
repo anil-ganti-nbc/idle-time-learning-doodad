@@ -23,6 +23,10 @@ import { CMP_IR_LESSONS } from "./cmp-ir";
 import { NET_FOUNDATIONS_LESSONS } from "./net-foundations";
 import { NET_INTERNET_LESSONS } from "./net-internet";
 import { NET_TRANSPORT_LESSONS } from "./net-transport";
+import { ML_FOUNDATIONS_LESSONS } from "./ml-foundations";
+import { HORO_FOUNDATIONS_LESSONS } from "./horo-foundations";
+import { MUS_FOUNDATIONS_LESSONS } from "./mus-foundations";
+import { DM_HISTORY_LESSONS } from "./dm-history";
 
 const externalFiles = import.meta.glob("../external/*.json", {
   eager: true,
@@ -63,6 +67,10 @@ export const LESSONS: Lesson[] = [
   ...CMP_FRONTEND_LESSONS,
   ...CMP_IR_LESSONS,
   ...CMP_BACKEND_LESSONS,
+  ...ML_FOUNDATIONS_LESSONS,
+  ...HORO_FOUNDATIONS_LESSONS,
+  ...MUS_FOUNDATIONS_LESSONS,
+  ...DM_HISTORY_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,

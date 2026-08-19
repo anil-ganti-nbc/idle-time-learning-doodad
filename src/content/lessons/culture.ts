@@ -147,29 +147,6 @@ export const CULTURE_LESSONS: Lesson[] = [
   }),
 
   L({
-    id: "mus-int-5",
-    conceptId: "mus-interval",
-    title: "Intervals are ratios you can hear beating",
-    durationMin: 5,
-    effort: "light",
-    level: "intro",
-    prerequisites: [],
-    goDeeper: "mus-modes",
-    explanation: [
-      "An interval is a frequency ratio. An octave is 2:1 — the same pitch class, a doubling. A just fifth is 3:2. When two tones are near a simple ratio, their partials lock and beating slows. When they are not, you hear roughness. Equal temperament lies a little on every interval except the octave so that you can play in every key.",
-      "Consonance is not a moral category. It is a mixture of that acoustic roughness, familiarity, and the music’s own grammar. A minor second is a grind in a hymn and a color in a riff.",
-    ],
-    example:
-      "Tune two guitar strings to a fifth by killing the beat: 3:2. Then play a barre chord in equal temperament and the third will beat a little. The guitar is a compromise you have already accepted.",
-    whyItMatters:
-      "This is the physical layer under ‘it sounds dark’ or ‘that chorus lifts’. Lift is often a fifth or a register change, not a feeling that arrived from nowhere.",
-    quiz: [
-      q("mi1", "A just fifth is the ratio:", ["2:1", "3:2", "5:4", "16:15"], 1, "The next simple integer after the octave."),
-      q("mi2", "Equal temperament exists to:", ["Make every interval just", "Split the octave into equal steps so all keys are usable, at a cost in justness", "Remove beats from unisons only", "Replace rhythm"], 1, "A political acoustic choice."),
-      q("mi3", "Beating between two close partials is:", ["Proof of MIDI", "An audible amplitude oscillation from interference", "A compression setting", "Silence"], 1, "You can tune by it."),
-    ],
-  }),
-  L({
     id: "mus-modes-10",
     conceptId: "mus-modes",
     title: "A mode is a tonic, not a scale shape",
