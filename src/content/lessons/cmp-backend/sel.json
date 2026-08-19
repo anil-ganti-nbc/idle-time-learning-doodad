@@ -1,0 +1,459 @@
+{
+  "courseId": "cmp-backend",
+  "moduleId": "cmp-be-sel",
+  "lessons": [
+    {
+      "id": "cmp-isel-5",
+      "conceptId": "cmp-isel",
+      "title": "The opcode is not the IR operator",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["cmp-three-addr"],
+      "goDeeper": "cmp-alloc",
+      "diagram": "cmp-isel-tile",
+      "explanation": [
+        "IR add is not yet a machine add. `t1 = a + b` names an operator and two operands. Selection replaces that operator with one or more target opcodes that implement it: a two-address add that clobbers its destination, a three-address add that writes a third register, or a load-effective-address that computes the same sum. The IR did not choose the opcode. This pass does.",
+        "Two legal selections can disagree on cost. A short add that destroys an input is cheaper when that input is already dead. A longer form that keeps both inputs is cheaper when a later use still needs them. Cheaper means fewer or cheaper opcodes for the same observable effect, not a prettier mnemonic."
+      ],
+      "example": "`t1 = a + b` becomes `addq %rsi, %rdi` when `a` dies at the add. It becomes `leaq (%rsi,%rdi), %rax` when both inputs stay live. Same IR operator, two legal covers, different register pressure.",
+      "whyItMatters": "A later allocator cannot invent an addressing mode this pass refused. A later scheduler cannot delete a move this pass inserted for no reason.",
+      "quiz": [
+        {
+          "id": "be-isel5-1",
+          "stem": "Replace the IR operator `t1 = a + b` with a legal target sequence when `a` dies at the add:",
+          "correctAnswer": "A two-address add that clobbers the register holding `a`",
+          "distractors": [
+            { "text": "Keep `t1 = a + b` as if it were already an opcode", "kind": "nearby", "rationale": "That is still IR. Selection has to pick a real opcode." },
+            { "text": "Emit the source characters `a`, `+`, `b` as three tokens", "kind": "misapplied", "rationale": "Lexing is over. This pass consumes IR, not characters." },
+            { "text": "Refuse to select until the linker assigns final addresses", "kind": "reversed", "rationale": "Opcodes are chosen here. Addresses are a later hole." }
+          ],
+          "correctExplanation": "The operator becomes one or more opcodes. When `a` is dead, clobbering its register is a legal, cheap cover.",
+          "objectiveIds": ["Replace an IR operator with one or more target opcodes that implement it"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-isel5-2",
+          "stem": "`leaq (%rsi,%rdi), %rax` versus `addq %rsi, %rdi` for the same add. The add is cheaper when:",
+          "correctAnswer": "The clobbered input is already dead, so the shorter opcode is enough",
+          "distractors": [
+            { "text": "The lea is always cheaper because the mnemonic is longer", "kind": "reversed", "rationale": "Length of the name is not cost. Encoding and live ranges are." },
+            { "text": "The add is cheaper because it destroys both inputs on purpose", "kind": "nearby", "rationale": "It clobbers one destination. Destroying the other would change the program." },
+            { "text": "Neither is legal; three-address IR cannot become x86", "kind": "misapplied", "rationale": "Both are legal covers. Cost is the comparison." }
+          ],
+          "correctExplanation": "Both implement the add. The short clobbering form wins when the destroyed input has no later use.",
+          "objectiveIds": ["Compare two legal selections and say what makes one cheaper"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-isel5-3",
+          "stem": "Selection differs from the three-address IR it consumes because:",
+          "correctAnswer": "The IR names an operator; selection picks real opcodes that implement it",
+          "distractors": [
+            { "text": "Both already name architectural registers and encodings", "kind": "nearby", "rationale": "Three-address still uses virtual names. Opcodes come here." },
+            { "text": "Selection is a lexer rewrite of the original spelling", "kind": "misapplied", "rationale": "The lexer is finished. This pass reads IR operators." },
+            { "text": "Three-address is already a specific machine opcode", "kind": "reversed", "rationale": "If it were, this pass would have nothing to do." }
+          ],
+          "correctExplanation": "IR is still machine-independent. Selection is the first cover by real opcodes.",
+          "objectiveIds": ["Replace an IR operator with one or more target opcodes that implement it"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-isel-10",
+      "conceptId": "cmp-isel",
+      "title": "Tiles that cover the tree",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-three-addr"],
+      "goDeeper": "cmp-alloc",
+      "diagram": "cmp-isel-tile",
+      "explanation": [
+        "CMU 15-411 treats instruction selection as covering an IR tree with tiles. Each tile is a pattern: this operator, or a small tree of operators, matches this opcode sequence. A legal cover implements every node. A cheap cover uses fewer or cheaper tiles for the same effect. The pass is a matching problem, not a spelling problem.",
+        "Stanford CS143 keeps the same cut: the IR stays machine-independent until this point. `t1 = a + b` on a System V x86-64 target might become `leaq (%rsi,%rdi), %rax` if both inputs must survive, or `addq %rsi, %rdi` if the destination can reuse a dying input. Both tiles are legal. Cost is encoding length, extra moves, and the live ranges each tile creates.",
+        "A two-instruction expansion that uses an addressing mode can beat a three-instruction sequence that materializes an address into a temporary. A tile that looks cheap in isolation can be expensive after allocation if it minted an extra live range. Selection that ignores that pressure will pick the pretty lea and then watch the allocator spill."
+      ],
+      "example": "`t2 = *(a + 8)` can tile as `movq 8(%rdi), %rax` — one load, address folded. The worse cover is `addq $8, %rdi` then `movq (%rdi), %rax`, which clobbers `a` and spends an extra add. Same tree, different cost.",
+      "whyItMatters": "Missed addressing modes show up later as extra arithmetic and extra pressure. The bug is usually a tile this pass never offered.",
+      "quiz": [
+        {
+          "id": "be-isel10-1",
+          "stem": "Cover `t2 = *(a + 8)` with a cheap x86-64 tile:",
+          "correctAnswer": "One load with the `+ 8` folded into the addressing mode",
+          "distractors": [
+            { "text": "An add of 8 into `a`, then a load, even if `a` is still live", "kind": "nearby", "rationale": "That is a legal cover. It is the more expensive one." },
+            { "text": "Leave `t2 = *(a + 8)` as the machine opcode", "kind": "reversed", "rationale": "That is still IR. A tile has to name real opcodes." },
+            { "text": "Emit the source tokens `*`, `(`, `a`, `+`, `8`, `)`", "kind": "misapplied", "rationale": "Selection consumes IR, not a token stream." }
+          ],
+          "correctExplanation": "One load implements the tree. Folding the offset is the cheaper legal cover.",
+          "objectiveIds": ["Replace an IR operator with one or more target opcodes that implement it"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-isel10-2",
+          "stem": "A lea that keeps both addends and an add that clobbers one are both legal. The lea is cheaper when:",
+          "correctAnswer": "Both inputs are still live, so destroying one would force a later reload or copy",
+          "distractors": [
+            { "text": "The add is always cheaper, because fewer letters in the mnemonic", "kind": "reversed", "rationale": "Mnemonic length is not the cost model." },
+            { "text": "The lea is cheaper only after the linker fills addresses", "kind": "misapplied", "rationale": "Selection cost is local to opcodes and live ranges." },
+            { "text": "Neither tile is legal until registers have already been assigned", "kind": "nearby", "rationale": "Selection runs on virtual names. Allocation is the next job." }
+          ],
+          "correctExplanation": "Same effect, different survivors. Keeping both inputs is what makes the lea the cheaper cover here.",
+          "objectiveIds": ["Compare two legal selections and say what makes one cheaper"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-isel10-3",
+          "stem": "Trace `t1 = a + b; t2 = *t1` through a tiling selector. A cheap cover is:",
+          "correctAnswer": "One load that uses `a + b` as the address, if the ISA can fold that add",
+          "distractors": [
+            { "text": "An add into a temporary, then a load, with no attempt to fold", "kind": "nearby", "rationale": "Legal, but it is the cover that spent an extra instruction." },
+            { "text": "A single IR node left in the stream, named `t2`", "kind": "reversed", "rationale": "The selector's job is to replace those operators with opcodes." },
+            { "text": "A relocation record, because addresses are still unknown", "kind": "misapplied", "rationale": "Relocations come when object files are written, not during tiling." }
+          ],
+          "correctExplanation": "The add and the load are one address tile when the ISA allows it. That is the cheap cover.",
+          "objectiveIds": ["Replace an IR operator with one or more target opcodes that implement it"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-alloc-10",
+      "conceptId": "cmp-alloc",
+      "title": "More names than crayons",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ssa"],
+      "goDeeper": "cmp-spill",
+      "diagram": "cmp-alloc-color",
+      "explanation": [
+        "SSA names outnumber the register file. Allocation assigns interfering live ranges to different physical registers, or to memory when the file is full. Two ranges interfere when they are both live at the same program point: each has been defined, and each still has a later use. They cannot share a crayon.",
+        "The interference graph has a node per live range and an edge whenever two ranges overlap. K-coloring that graph with the K architectural registers is the assignment. A node that cannot take any remaining color is a spill candidate: its value will live in memory for a while.",
+        "A function with three mutually live names and two registers cannot color. One name goes to the stack. A function with many names that never overlap can color easily: the graph is sparse, and the same register is reused after a name dies. Count of names is not the test. Overlap is."
+      ],
+      "example": "`t1` live through a call that also keeps `t2` and `t3` live: three nodes, a triangle of edges. Two general registers cannot color that triangle. One of the three must spill. After `t1` dies, `t4` can reuse whatever crayon `t1` had.",
+      "whyItMatters": "A hot loop that suddenly spills is often one extra live range, not a missing peephole. Pressure is a graph, not a vibe.",
+      "quiz": [
+        {
+          "id": "be-alloc10-1",
+          "stem": "`t1` and `t2` are both live at the same add. Assign them:",
+          "correctAnswer": "Different registers, because overlapping live ranges interfere",
+          "distractors": [
+            { "text": "The same register, because SSA already forbids two names", "kind": "reversed", "rationale": "SSA gives unique names. It does not give unique registers." },
+            { "text": "Memory for both, because allocation never uses registers", "kind": "nearby", "rationale": "Memory is the spill case, not the default assignment." },
+            { "text": "Whatever opcode selection already carved into the IR", "kind": "misapplied", "rationale": "Selection picked opcodes. It did not assign the register file." }
+          ],
+          "correctExplanation": "Interference means they are live together. They need different crayons, or one goes to memory.",
+          "objectiveIds": ["Assign interfering live ranges to different registers or to memory"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-alloc10-2",
+          "stem": "Three names are all live at once and the target has two registers. The interference graph:",
+          "correctAnswer": "Forces a spill, because a 3-clique cannot take two colors",
+          "distractors": [
+            { "text": "Colors easily, because three is only one more than two", "kind": "nearby", "rationale": "A clique of K+1 nodes is exactly the uncolorable case." },
+            { "text": "Is irrelevant, because SSA names are already registers", "kind": "reversed", "rationale": "SSA names are virtual. The file is physical and finite." },
+            { "text": "Waits for the linker to mint extra architectural registers", "kind": "misapplied", "rationale": "The ISA's register file is fixed. Linking does not enlarge it." }
+          ],
+          "correctExplanation": "K+1 mutually interfering ranges and K registers: one range must go to memory.",
+          "objectiveIds": ["Predict when the interference graph forces a spill"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-alloc10-3",
+          "stem": "A function has twelve SSA names but only two are live at any point. Why can two registers still color it?",
+          "correctAnswer": "Non-overlapping ranges do not interfere, so the same register is reused",
+          "distractors": [
+            { "text": "Twelve names always force ten spills, regardless of overlap", "kind": "reversed", "rationale": "Count of names is not the test. Overlap is." },
+            { "text": "SSA guarantees every name a private architectural register", "kind": "nearby", "rationale": "SSA is infinite names. The file is not." },
+            { "text": "The assembler will invent registers when the graph is large", "kind": "misapplied", "rationale": "The assembler encodes the assignment. It does not grow the ISA." }
+          ],
+          "correctExplanation": "Sparse interference reuses crayons. A crowd of names that never meet is easy to color.",
+          "objectiveIds": ["Predict when the interference graph forces a spill"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-alloc-20",
+      "conceptId": "cmp-alloc",
+      "title": "When the graph will not color",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cmp-ssa"],
+      "goDeeper": "cmp-spill",
+      "diagram": "cmp-alloc-color",
+      "explanation": [
+        "Graph coloring is the picture, not a guarantee. Each live range is a node. An edge means the two ranges are live together and cannot share a register. Chaitin's loop simplifies: repeatedly remove a node of degree less than K, push it on a stack, then pop and assign a free color. A node that never drops below degree K is the spill candidate.",
+        "Optimistic coloring still tries to color a high-degree node when it comes off the stack. Neighbors may have reused colors, leaving a free crayon even though the degree looked fatal. A true K+1 clique does not get that luck: every neighbor has a different color, and there is no K+1st crayon. That is when the graph forces a spill.",
+        "Spilling is not a comment on the node. The pass inserts a store after the definition and reloads before later uses. Those new short live ranges go back into the graph. The original long range is gone. The graph has changed, so the next coloring attempt is a different problem, not the same picture with one node deleted.",
+        "Copies are an extra degree of freedom. Coalescing two ranges that do not interfere removes a move. Coalescing two ranges that do interfere would identify nodes that cannot share a color, which is illegal. ABI pins make the same point in the other direction: an argument that must enter in a particular register is a precolored node. Neighbors of that node cannot take that crayon.",
+        "Pressure is therefore local and global at once. Inlining, unrolling, and a selection tile that minted an extra temporary all add nodes. A loop that was colorable becomes a clique of the induction variable, the accumulators, and the address temps. The allocator did not get worse. The graph did."
+      ],
+      "example": "Four accumulators and the induction variable live through a two-register loop: a 5-clique, two colors. Optimistic coloring still fails. Spill the coldest accumulator; the reload is a short range that colors. The loop now pays a load each iteration for that one name, and the other four color.",
+      "whyItMatters": "Reading a spill storm as a missing local rewrite misses the graph. The extra live range is the cause; the store/reload is the symptom.",
+      "quiz": [
+        {
+          "id": "be-alloc20-1",
+          "stem": "Chaitin simplify cannot remove any node, and the remaining graph is a K+1 clique. The next step is:",
+          "correctAnswer": "Spill a node, insert store/reload, and rebuild interference, because K+1 mutual overlap will not color",
+          "distractors": [
+            { "text": "Assign every remaining node the same register and hope uses do not overlap", "kind": "reversed", "rationale": "A clique means they all overlap. Sharing a register would clobber." },
+            { "text": "Leave the SSA names in the object file for the linker to color", "kind": "misapplied", "rationale": "The linker does not assign the register file." },
+            { "text": "Delete the clique, because SSA already promised unique names", "kind": "nearby", "rationale": "Unique names are not unique registers. The values still have to live somewhere." }
+          ],
+          "correctExplanation": "A K+1 clique is the forced-spill case. Insert memory traffic, then color the new shorter ranges.",
+          "objectiveIds": ["Predict when the interference graph forces a spill"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "be-alloc20-2",
+          "stem": "A high-degree node that is not in a K-clique can still color on the way back off the stack because:",
+          "correctAnswer": "Neighbors may have reused colors, leaving a free crayon even though the degree looked fatal",
+          "distractors": [
+            { "text": "High degree is a proof of a clique, so coloring must fail", "kind": "nearby", "rationale": "Degree is an upper bound on distinct neighbor colors, not a clique test." },
+            { "text": "The assembler will mint a new architectural register for that node", "kind": "misapplied", "rationale": "The ISA file is fixed. Optimism is about reused colors, not new crayons." },
+            { "text": "SSA φ-nodes do not occupy registers, so degree never matters", "kind": "reversed", "rationale": "After SSA is lowered, those values are ordinary live ranges." }
+          ],
+          "correctExplanation": "Optimistic coloring exists because degree is not the same as a clique. Reused neighbor colors can leave a gap.",
+          "objectiveIds": ["Assign interfering live ranges to different registers or to memory"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-alloc20-3",
+          "stem": "Spilling the coldest of five mutually live loop values, rather than the induction variable, trades:",
+          "correctAnswer": "One reload per iteration on a cold name, so the hot names keep registers",
+          "distractors": [
+            { "text": "No memory traffic at all, because a spill is only a graph comment", "kind": "reversed", "rationale": "A spill is a store and later reloads. Traffic is the cost." },
+            { "text": "A smaller ISA, because spilling retires an architectural register", "kind": "misapplied", "rationale": "The register file does not shrink. One value moved to memory." },
+            { "text": "The same traffic whichever name you pick, so the choice is cosmetic", "kind": "nearby", "rationale": "Spilling the induction variable hits every address and every increment. Cost is not uniform." }
+          ],
+          "correctExplanation": "You pick what to evict. Evicting a cold range pays less traffic than evicting the name every iteration needs.",
+          "objectiveIds": ["Assign interfering live ranges to different registers or to memory"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cmp-spill-10",
+      "conceptId": "cmp-spill",
+      "title": "The value that lives on the stack",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-alloc", "cmp-liveness"],
+      "goDeeper": "cmp-scheduling",
+      "explanation": [
+        "Losing the coloring contest means the value lives in a stack slot. The pass inserts a store after the definition, then a reload before each later use that still needs the value in a register. Between those points the long live range is gone. What remains are short ranges around the reload, which color because they barely overlap anything.",
+        "A hot loop makes that traffic visible. A spill inside the loop is a load or store on every iteration for a value that used to sit in a register. Two spilled accumulators in a four-wide inner loop are not two extra instructions in the function; they are two extra memory ops per trip, paid for the whole run.",
+        "Choosing which range to evict is the rest of the job. A name used once after the loop is a cheaper victim than the induction variable. Evicting a callee-saved name across a cold call can be cheaper than evicting an address temp the loop touches every trip. The slot is just memory. The trip count is why it hurts."
+      ],
+      "example": "`t9` defined before a loop and used once after it, with the loop already at register capacity: store `t9` once, reload after the loop. Spilling an accumulator instead would reload every iteration and leave `t9` in a register it barely needed.",
+      "whyItMatters": "A 'slow unroll' that added stack traffic did not forget a peephole. It evicted a hot name. The extra loads are the spill you asked for.",
+      "quiz": [
+        {
+          "id": "be-spill10-1",
+          "stem": "`t9` has no free register. Insert the spill around its def and a later use:",
+          "correctAnswer": "A store after the def, then a reload into a short-lived register before the use",
+          "distractors": [
+            { "text": "Delete `t9`, because a value that will not color is dead", "kind": "reversed", "rationale": "The value is still needed. Memory is the holding place, not deletion." },
+            { "text": "Leave the SSA name in the encoding; the CPU will page it", "kind": "misapplied", "rationale": "The ISA has no infinite name file. You emit a real slot." },
+            { "text": "A store with no reload, hoping the use reads the stack by magic", "kind": "nearby", "rationale": "The use still needs a register. The reload is the other half." }
+          ],
+          "correctExplanation": "Store to park it, reload to use it. Those new short ranges are what the next coloring attempt sees.",
+          "objectiveIds": ["Insert a store and later reload because no register is free"],
+          "prerequisiteConceptIds": ["cmp-alloc", "cmp-liveness"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-spill10-2",
+          "stem": "Spilling an accumulator that is live across a million-iteration loop adds:",
+          "correctAnswer": "A load or store on every iteration for a value that used to stay in a register",
+          "distractors": [
+            { "text": "One extra instruction in the function prologue, paid once", "kind": "nearby", "rationale": "The reload sits next to the use. In a loop, that is per trip." },
+            { "text": "No traffic, because spilled names are rewritten as immediates", "kind": "reversed", "rationale": "A spill is memory, not a constant fold." },
+            { "text": "A linker relocation for each iteration of the loop", "kind": "misapplied", "rationale": "Relocations are object-file holes, not per-iteration memory ops." }
+          ],
+          "correctExplanation": "The use is in the loop, so the reload is in the loop. That is the extra memory traffic.",
+          "objectiveIds": ["Predict the extra memory traffic a spill adds to a hot loop"],
+          "prerequisiteConceptIds": ["cmp-alloc", "cmp-liveness"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-spill10-3",
+          "stem": "A spill store was inserted after `t9 = …` but the later use still reads the old virtual name with no reload. The bug is:",
+          "correctAnswer": "The use was not rewritten to the reloaded register, so it still thinks `t9` is in a register",
+          "distractors": [
+            { "text": "The store should have deleted the use, because spilled values are dead", "kind": "reversed", "rationale": "The use is why you spilled instead of deleting." },
+            { "text": "The assembler is required to treat every stack slot as a register", "kind": "misapplied", "rationale": "Slots are memory. Uses need a reload into a register." },
+            { "text": "Interference was computed forward, so reloads are illegal", "kind": "nearby", "rationale": "Direction of liveness is not why the reload is missing." }
+          ],
+          "correctExplanation": "A spill is two rewrites: park the value, then make every later use read the reload. One half is not a spill.",
+          "objectiveIds": ["Insert a store and later reload because no register is free"],
+          "prerequisiteConceptIds": ["cmp-alloc", "cmp-liveness"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-scheduling-10",
+      "conceptId": "cmp-scheduling",
+      "title": "Hide the wait, keep the edge",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-isel", "cpu-pipeline"],
+      "goDeeper": "cmp-peephole",
+      "explanation": [
+        "Latency is how long an opcode occupies the pipeline before its result is ready; a dependence is an edge that forbids moving a consumer before its producer. Scheduling reorders independent instructions so that other work fills the wait, without breaking those edges. A load that takes several cycles can sit above an independent add. The add runs while the load is still in flight.",
+        "Dependences are the fence. A load that reads a location a store just wrote cannot float above that store. An add that uses the load's result cannot float above the load. The scheduler that moves `movq (%rdi), %rax` above `movq %rsi, (%rdi)` when both name the same address has not hidden latency. It has invented a read of the old memory.",
+        "Independent is not the same as adjacent. Two arithmetic ops that do not share a name can swap. A store and a later load to a different, proven-distinct address can swap. A store and a later load the alias analysis cannot separate cannot. The legal schedule is the one that preserves every true dependence and still covers the long-latency holes with other ready work."
+      ],
+      "example": "`movq (%rdi), %rax; addq $1, %rbx; addq %rax, %rcx` can become `movq (%rdi), %rax; addq $1, %rbx; addq %rax, %rcx` with the independent `+ 1` already next to the load, or with more independent work pulled up. Moving the load above an earlier `movq %rsi, (%rdi)` to the same address is illegal.",
+      "whyItMatters": "A stall that looks like a slow ISA is often a load with nothing independent beside it. A 'faster' schedule that read yesterday's memory is a miscompile.",
+      "quiz": [
+        {
+          "id": "be-sched10-1",
+          "stem": "A multi-cycle load is followed by an add that does not use the loaded value. A legal schedule:",
+          "correctAnswer": "Keeps the add next to the load, so the add hides part of the load's latency",
+          "distractors": [
+            { "text": "Moves the add above the store that the load depends on", "kind": "nearby", "rationale": "The add may be independent of the load and still not independent of that store." },
+            { "text": "Deletes the load, because latency means the value is optional", "kind": "reversed", "rationale": "Latency is wait time, not permission to drop the producer." },
+            { "text": "Replaces both opcodes with a relocation the linker will time", "kind": "misapplied", "rationale": "Scheduling reorders issued instructions. It does not invent relocations." }
+          ],
+          "correctExplanation": "Independent work covers the wait. The load still produces the value; the add just fills the hole.",
+          "objectiveIds": ["Reorder independent instructions to hide latency without breaking dependences"],
+          "prerequisiteConceptIds": ["cmp-isel", "cpu-pipeline"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-sched10-2",
+          "stem": "A schedule moves `movq (%rdi), %rax` above `movq %rsi, (%rdi)` when both use the same address. The bug is:",
+          "correctAnswer": "The load now reads the old memory; it depended on the store that was pushed below it",
+          "distractors": [
+            { "text": "Loads are not allowed to move at all, even past independent arithmetic", "kind": "nearby", "rationale": "Independent motion is legal. This motion broke a memory dependence." },
+            { "text": "The store should have been deleted, because the load hides it", "kind": "reversed", "rationale": "The store is the producer. Hiding latency does not erase it." },
+            { "text": "The assembler cannot encode a load that was reordered", "kind": "misapplied", "rationale": "Encoding is fine. The program is wrong." }
+          ],
+          "correctExplanation": "That store-to-load edge is a dependence. Moving the consumer first is a miscompile, not a latency win.",
+          "objectiveIds": ["Diagnose a schedule that moves a load before the store it depends on"],
+          "prerequisiteConceptIds": ["cmp-isel", "cpu-pipeline"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "be-sched10-3",
+          "stem": "Latency and dependence differ in this pass because:",
+          "correctAnswer": "Latency is how long a result takes to appear; a dependence is an edge that forbids reordering",
+          "distractors": [
+            { "text": "They are two names for the same stall, so either word will do", "kind": "nearby", "rationale": "You can have latency with no movable work, or a dependence with no long wait." },
+            { "text": "Dependence is the clock rate; latency is the opcode's mnemonic", "kind": "reversed", "rationale": "Neither word is a clock or a spelling." },
+            { "text": "Latency is assigned by the linker when it fills addresses", "kind": "misapplied", "rationale": "This is a local reorder of already-selected opcodes." }
+          ],
+          "correctExplanation": "You hide latency only with independent work. The edge is what tells you the work is not independent.",
+          "objectiveIds": ["Reorder independent instructions to hide latency without breaking dependences"],
+          "prerequisiteConceptIds": ["cmp-isel", "cpu-pipeline"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-peephole-10",
+      "conceptId": "cmp-peephole",
+      "title": "A cheaper window of the same ISA",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-isel"],
+      "goDeeper": "cmp-abi-call",
+      "explanation": [
+        "Once real opcodes exist, a tiny window can still be rewritten. Peephole looks at two or three adjacent target instructions and replaces them with a cheaper equivalent: `xorl %eax, %eax` instead of `movl $0, %eax`, a fused compare-and-branch, a deleted move whose destination is never read. The input is already the ISA. The output is still the ISA.",
+        "The window's observable effect has to stay the same. Flags, memory, control, and the registers a later instruction still reads are part of that effect. Replacing `movl $0, %eax` with `xorl %eax, %eax` is legal only when nothing after the window needs the incoming flags. A rewrite that clears a flag a later conditional jump reads is not a cheaper window. It is a different program.",
+        "Peephole is not selection and not allocation. Selection already chose opcodes from IR. Allocation already assigned registers. This pass only notices local waste those earlier passes left on the page: a move into a register that is about to be overwritten, an add of zero, a pair that the ISA can say in one instruction. The window is small on purpose so the rewrite stays obviously equivalent."
+      ],
+      "example": "`movl $0, %eax; addl %ebx, %eax` can become `movl %ebx, %eax` when the zeroing exists only to set up the add and no later instruction needed the flags from the move. `movl $0, %eax` followed by `jo L` that reads the incoming overflow flag cannot become `xorl %eax, %eax`, because xor defines flags.",
+      "whyItMatters": "People blame the selector for a two-instruction zero-then-add. The cheaper form is often a local window the peephole was supposed to close.",
+      "quiz": [
+        {
+          "id": "be-peep10-1",
+          "stem": "Rewrite `movl $0, %eax` in a window that does not need the incoming flags:",
+          "correctAnswer": "`xorl %eax, %eax`, a cheaper equivalent that still writes zero to `%eax`",
+          "distractors": [
+            { "text": "Delete the instruction and leave `%eax` holding whatever it held", "kind": "nearby", "rationale": "The window's effect includes writing zero. Deleting drops that write." },
+            { "text": "Replace it with the IR operator `t = 0` and stop", "kind": "reversed", "rationale": "Peephole rewrites target opcodes, not back into IR." },
+            { "text": "Turn it into a relocation so the linker can store the zero", "kind": "misapplied", "rationale": "A zero immediate is not a linker hole." }
+          ],
+          "correctExplanation": "Same write of zero, cheaper encoding, flags defined. Legal when those new flags are not observed.",
+          "objectiveIds": ["Rewrite a short window of target instructions into a cheaper equivalent"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-peep10-2",
+          "stem": "A peephole must preserve the window's observable effect because:",
+          "correctAnswer": "A cheaper encoding that changes flags, memory, or a still-live register is a different program",
+          "distractors": [
+            { "text": "The ISA forbids any rewrite of adjacent opcodes", "kind": "reversed", "rationale": "Peephole exists to rewrite them, under an equivalence rule." },
+            { "text": "Observable effect is only the object-file symbol table", "kind": "misapplied", "rationale": "The effect is what this window does to architectural state." },
+            { "text": "Later allocation will restore any flags the window destroyed", "kind": "nearby", "rationale": "Allocation assigns registers. It does not put flags back." }
+          ],
+          "correctExplanation": "Equivalence is the contract. Cost is secondary. A wrong cheaper window is a miscompile.",
+          "objectiveIds": ["State why a peephole must preserve the window's observable effect"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-peep10-3",
+          "stem": "Peephole differs from instruction selection because:",
+          "correctAnswer": "Selection covers IR with opcodes; peephole rewrites a short window already in the ISA",
+          "distractors": [
+            { "text": "They are two names for the same covering of the IR tree", "kind": "nearby", "rationale": "Selection sees IR. Peephole no longer does." },
+            { "text": "Peephole assigns architectural registers to SSA names", "kind": "misapplied", "rationale": "That is allocation, not a local opcode rewrite." },
+            { "text": "Selection runs after the object file exists; peephole runs before IR", "kind": "reversed", "rationale": "Both run on the function, after IR, before or around emit." }
+          ],
+          "correctExplanation": "Different inputs. IR-to-opcode is selection. Opcode-to-cheaper-opcode is the window.",
+          "objectiveIds": ["Rewrite a short window of target instructions into a cheaper equivalent"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}

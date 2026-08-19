@@ -132,7 +132,7 @@
       "moduleId": "cmp-ir-form",
       "tier": 2,
       "prerequisites": [
-        "cmp-front"
+        "cmp-three-addr"
       ],
       "summary": "Single assignment so dataflow becomes a graph problem.",
       "objectives": [

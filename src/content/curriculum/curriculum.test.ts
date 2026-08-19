@@ -18,6 +18,9 @@ import { OS_STORAGE_LESSONS } from "../lessons/os-storage/index.ts";
 import { NET_FOUNDATIONS_LESSONS } from "../lessons/net-foundations/index.ts";
 import { NET_TRANSPORT_LESSONS } from "../lessons/net-transport/index.ts";
 import { NET_INTERNET_LESSONS } from "../lessons/net-internet/index.ts";
+import { CMP_FRONTEND_LESSONS } from "../lessons/cmp-frontend/index.ts";
+import { CMP_IR_LESSONS } from "../lessons/cmp-ir/index.ts";
+import { CMP_BACKEND_LESSONS } from "../lessons/cmp-backend/index.ts";
 import { SCIENCE_LESSONS } from "../lessons/science.ts";
 import { SYSTEMS_LESSONS } from "../lessons/systems.ts";
 import { LONGFORM_LESSONS } from "../lessons/longform.ts";
@@ -47,6 +50,9 @@ const LESSONS = [
   ...NET_FOUNDATIONS_LESSONS,
   ...NET_TRANSPORT_LESSONS,
   ...NET_INTERNET_LESSONS,
+  ...CMP_FRONTEND_LESSONS,
+  ...CMP_IR_LESSONS,
+  ...CMP_BACKEND_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
@@ -292,34 +298,63 @@ describe("course-specific progression", () => {
 describe("curriculum coverage metrics", () => {
   it("reports lessons versus skeleton and shallow modules", () => {
     const coverage = computeCoverage(catalog);
-    assert.ok(coverage.conceptsLackingLessons > 280);
-    assert.ok(coverage.conceptsWithLessons >= 80);
-    assert.ok(coverage.shallowModules.length > 10);
+    assert.ok(coverage.conceptsLackingLessons > 200);
+    assert.ok(coverage.conceptsWithLessons >= 140);
+    assert.ok(coverage.shallowModules.length > 4);
     const gpu = coverage.coursesCovered.find((c) => c.courseId === "arch-gpu");
     assert.ok(gpu);
     assert.ok(gpu.conceptCount >= 20);
     assert.equal(gpu.coveragePct, 100);
-    for (const id of ["net-foundations", "net-transport", "net-internet"]) {
+    for (const id of [
+      "net-foundations",
+      "net-transport",
+      "net-internet",
+      "cmp-frontend",
+      "cmp-ir",
+      "cmp-backend",
+    ]) {
       const row = coverage.coursesCovered.find((c) => c.courseId === id);
       assert.ok(row, id);
       assert.equal(row.coveragePct, 100, id);
       assert.equal(row.lackingLessons, 0, id);
     }
-    for (const id of ["ml-foundations", "mus-foundations", "cmp-frontend"]) {
+    for (const id of ["ml-foundations", "mus-foundations", "dm-history"]) {
       const row = coverage.coursesCovered.find((c) => c.courseId === id);
       assert.ok(row, id);
       assert.ok(row.coveragePct < 100, `${id} should remain unpopulated`);
     }
   });
 
-  it("retired leftover networking seeds instead of colliding with production lessons", () => {
+  it("does not unlock SSA from front-end entry; it waits for three-address IR", () => {
+    const ssa = catalog.conceptMap["cmp-ssa"];
+    assert.ok(ssa);
+    assert.deepEqual(ssa.prerequisites, ["cmp-three-addr"]);
+    const onlyFront = makeReadinessContext(catalog, { "cmp-front": held("cmp-front") });
+    assert.equal(isConceptUnlocked(ssa, onlyFront), false);
+    const afterFrontend = makeReadinessContext(catalog, {
+      "cmp-front": held("cmp-front"),
+      "cmp-ast": held("cmp-ast"),
+      "cmp-typecheck": held("cmp-typecheck"),
+      "cmp-ir-lower-intro": held("cmp-ir-lower-intro"),
+    });
+    assert.equal(isConceptUnlocked(ssa, afterFrontend), false);
+    const afterThree = makeReadinessContext(catalog, {
+      "cmp-front": held("cmp-front"),
+      "cmp-ir-lower-intro": held("cmp-ir-lower-intro"),
+      "cmp-three-addr": held("cmp-three-addr"),
+    });
+    assert.equal(isConceptUnlocked(ssa, afterThree), true);
+  });
+
+  it("retired leftover networking and compiler seeds instead of colliding with production lessons", () => {
     const leftover = SYSTEMS_LESSONS.filter((l) =>
-      ["net-stack", "net-congestion", "net-bgp"].includes(l.conceptId) ||
-      ["net-stack-5", "net-cc-10", "net-bgp-20"].includes(l.id),
+      ["net-stack", "net-congestion", "net-bgp", "cmp-front", "cmp-ssa", "cmp-alloc"].includes(l.conceptId) ||
+      ["net-stack-5", "net-cc-10", "net-bgp-20", "cmp-front-5", "cmp-ssa-10", "cmp-alloc-20"].includes(l.id),
     );
     assert.deepEqual(leftover.map((l) => l.id), []);
     assert.ok(LESSONS.some((l) => l.id === "net-stack-10"));
-    assert.ok(LESSONS.some((l) => l.id === "net-congestion-10"));
-    assert.ok(LESSONS.some((l) => l.id === "net-bgp-10"));
+    assert.ok(LESSONS.some((l) => l.id === "cmp-front-10"));
+    assert.ok(LESSONS.some((l) => l.id === "cmp-ssa-10"));
+    assert.ok(LESSONS.some((l) => l.id === "cmp-alloc-10"));
   });
 });

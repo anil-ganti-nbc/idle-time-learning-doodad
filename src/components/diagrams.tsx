@@ -1718,6 +1718,225 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "cmp-pipeline": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Front end pipeline from characters to a typed tree">
+      {["characters", "tokens", "tree", "names · types"].map((label, i) => (
+        <g key={label} transform={`translate(${18 + i * 136}, 32)`}>
+          <rect width="124" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="62" y="32" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+          {i < 3 && <path d="M128 26 H134" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        later stages consume the tree · they do not start from bytes
+      </text>
+    </svg>
+  ),
+  "cmp-tokens": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Characters become classified tokens">
+      <text x="90" y="36" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        i f   x = 1 4
+      </text>
+      <path d="M90 48 V72" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="24" y="76" width="70" height="36" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="59" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        if
+      </text>
+      <rect x="106" y="76" width="70" height="36" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="141" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        id x
+      </text>
+      <rect x="188" y="76" width="52" height="36" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="214" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        =
+      </text>
+      <rect x="252" y="76" width="78" height="36" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="291" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        int 14
+      </text>
+      <text x="280" y="138" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        class plus payload · the parser never re-reads the digits
+      </text>
+    </svg>
+  ),
+  "cmp-ast-drop": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Parse tree keeps punctuation the AST drops">
+      <rect x="24" y="24" width="240" height="96" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="144" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        parse tree
+      </text>
+      <text x="144" y="76" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        ( · + · ) kept
+      </text>
+      <path d="M264 72 H316" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="316" y="24" width="220" height="96" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="426" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        AST
+      </text>
+      <text x="426" y="76" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        plus(x, 1)
+      </text>
+      <text x="280" y="146" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        typechecking walks the meaning, not the parentheses
+      </text>
+    </svg>
+  ),
+  "cmp-cfg-blocks": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Basic blocks and the edges between them">
+      <rect x="200" y="16" width="160" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12">
+        entry · t1 = a + b
+      </text>
+      <path d="M280 56 V72" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="40" y="76" width="180" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="130" y="104" textAnchor="middle" fill="currentColor" fontSize="12">
+        then · t2 = t1
+      </text>
+      <rect x="340" y="76" width="180" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="430" y="104" textAnchor="middle" fill="currentColor" fontSize="12">
+        else · t3 = 0
+      </text>
+      <path d="M220 98 H340" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M130 120 V140 H430 V120" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="162" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one entry · one exit · edges carry the joins
+      </text>
+    </svg>
+  ),
+  "cmp-ssa-phi": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="A phi merges two SSA names at a join">
+      <rect x="36" y="20" width="150" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="48" textAnchor="middle" fill="currentColor" fontSize="12">
+        x1 = 1
+      </text>
+      <rect x="374" y="20" width="150" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="449" y="48" textAnchor="middle" fill="currentColor" fontSize="12">
+        x2 = 2
+      </text>
+      <path d="M111 64 V92 H280" stroke="currentColor" strokeOpacity="0.45" fill="none" />
+      <path d="M449 64 V92 H280" stroke="currentColor" strokeOpacity="0.45" fill="none" />
+      <rect x="190" y="92" width="180" height="44" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="120" textAnchor="middle" fill="currentColor" fontSize="13">
+        x3 = φ(x1, x2)
+      </text>
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one name per assignment · the join records the choice
+      </text>
+    </svg>
+  ),
+  "cmp-dataflow": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A dataflow fact walks the graph until it settles">
+      <rect x="28" y="28" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="98" y="52" textAnchor="middle" fill="currentColor" fontSize="12">
+        block
+      </text>
+      <text x="98" y="70" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        in / gen / kill
+      </text>
+      <path d="M168 56 H228" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="228" y="28" width="140" height="56" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="298" y="62" textAnchor="middle" fill="currentColor" fontSize="12">
+        out
+      </text>
+      <path d="M368 56 H428" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="428" y="28" width="108" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="482" y="62" textAnchor="middle" fill="currentColor" fontSize="12">
+        next
+      </text>
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        repeat until the fact stops changing
+      </text>
+    </svg>
+  ),
+  "cmp-isel-tile": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="An IR operator becomes target opcodes">
+      <rect x="36" y="32" width="180" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="126" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        t = a + b
+      </text>
+      <path d="M216 64 H276" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="276" y="20" width="248" height="88" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="400" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        leaq (%rax,%rbx), %rcx
+      </text>
+      <text x="400" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        or add + mov
+      </text>
+      <text x="280" y="134" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        several legal tiles · one cheaper on this machine
+      </text>
+    </svg>
+  ),
+  "cmp-alloc-color": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Interfering live ranges cannot share a register">
+      <circle cx="140" cy="70" r="36" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="140" y="74" textAnchor="middle" fill="currentColor" fontSize="12">
+        t1
+      </text>
+      <circle cx="280" cy="70" r="36" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="74" textAnchor="middle" fill="currentColor" fontSize="12">
+        t2
+      </text>
+      <circle cx="420" cy="70" r="36" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="420" y="74" textAnchor="middle" fill="currentColor" fontSize="12">
+        t3
+      </text>
+      <path d="M176 70 H244" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M316 70 H384" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        an edge means they are live together · different colors
+      </text>
+    </svg>
+  ),
+  "cmp-frame-abi": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="A stack frame the callee and unwinder can both read">
+      <rect x="180" y="16" width="200" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="35" textAnchor="middle" fill="currentColor" fontSize="12">
+        incoming args
+      </text>
+      <rect x="180" y="48" width="200" height="28" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="67" textAnchor="middle" fill="currentColor" fontSize="12">
+        return address
+      </text>
+      <rect x="180" y="80" width="200" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="99" textAnchor="middle" fill="currentColor" fontSize="12">
+        saved rbp
+      </text>
+      <rect x="180" y="112" width="200" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="131" textAnchor="middle" fill="currentColor" fontSize="12">
+        spills · locals
+      </text>
+      <text x="280" y="160" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        prologue builds it · epilogue tears it down
+      </text>
+    </svg>
+  ),
+  "cmp-gc-roots": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="GC walks from roots to find live objects">
+      <rect x="28" y="36" width="120" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="88" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        roots
+      </text>
+      <path d="M148 62 H200" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="200" y="24" width="140" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="49" textAnchor="middle" fill="currentColor" fontSize="12">
+        live
+      </text>
+      <rect x="200" y="76" width="140" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="101" textAnchor="middle" fill="currentColor" fontSize="12">
+        live
+      </text>
+      <rect x="388" y="50" width="140" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="458" y="75" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        unreachable
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        no matching free · liveness is reachability from roots
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

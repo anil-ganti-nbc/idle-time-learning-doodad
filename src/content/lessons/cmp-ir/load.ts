@@ -5,7 +5,7 @@ import { assembleQuiz } from "@/lib/quiz/assemble";
 
 const LINKS = [
   "https://web.stanford.edu/class/cs143/",
-  "https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools",
+  "https://llvm.org/docs/LangRef.html",
 ];
 
 function provenance(courseId: string, moduleId: string, conceptId: string, extra?: Provenance): Provenance {
@@ -19,7 +19,7 @@ function provenance(courseId: string, moduleId: string, conceptId: string, extra
     links: extra?.links ?? LINKS,
     notes:
       extra?.notes ??
-      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by Stanford CS143 and the Dragon Book; course prose not copied.`,
+      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by Stanford CS143, CMU 15-411, and the LLVM Language Reference; course prose not copied.`,
   };
 }
 

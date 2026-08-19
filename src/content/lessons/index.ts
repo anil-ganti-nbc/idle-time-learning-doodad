@@ -17,9 +17,12 @@ import { OS_FOUNDATIONS_LESSONS } from "./os-foundations";
 import { OS_CONCURRENCY_LESSONS } from "./os-concurrency";
 import { OS_STORAGE_LESSONS } from "./os-storage";
 import { LONGFORM_LESSONS } from "./longform";
+import { CMP_BACKEND_LESSONS } from "./cmp-backend";
+import { CMP_FRONTEND_LESSONS } from "./cmp-frontend";
+import { CMP_IR_LESSONS } from "./cmp-ir";
 import { NET_FOUNDATIONS_LESSONS } from "./net-foundations";
-import { NET_TRANSPORT_LESSONS } from "./net-transport";
 import { NET_INTERNET_LESSONS } from "./net-internet";
+import { NET_TRANSPORT_LESSONS } from "./net-transport";
 
 const externalFiles = import.meta.glob("../external/*.json", {
   eager: true,
@@ -57,6 +60,9 @@ export const LESSONS: Lesson[] = [
   ...NET_FOUNDATIONS_LESSONS,
   ...NET_TRANSPORT_LESSONS,
   ...NET_INTERNET_LESSONS,
+  ...CMP_FRONTEND_LESSONS,
+  ...CMP_IR_LESSONS,
+  ...CMP_BACKEND_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,

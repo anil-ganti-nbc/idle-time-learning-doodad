@@ -1,0 +1,522 @@
+{
+  "courseId": "cmp-frontend",
+  "moduleId": "cmp-fe-lex",
+  "lessons": [
+    {
+      "id": "cmp-front-5",
+      "conceptId": "cmp-front",
+      "title": "Bytes are not yet a tree",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "cmp-token",
+      "diagram": "cmp-pipeline",
+      "explanation": [
+        "Source text is a stream of characters. A later pass that wants to know whether `x + 1` is well typed should not be counting quotes or deciding whether `==` is two tokens. The front end exists to turn that stream into a tree later stages can consume, and to report the mistakes that are visible before any intermediate form exists.",
+        "Two jobs sit at the start. The lexer groups characters into tokens: identifiers, numbers, keywords, punctuation. The parser checks whether that token stream belongs to the language and builds nested structure. Name binding and type checking come after a tree exists. None of this is machine code."
+      ],
+      "example": "`if x = 1` in a language that uses `==` for comparison fails at parse or type-check, depending on whether assignment is an expression. The diagnostic is the whole user interface for that moment. No IR has been built.",
+      "whyItMatters": "Blame the wrong end and you will tune the optimizer for a parse that never finished, or rewrite a type checker to catch a missing semicolon.",
+      "quiz": [
+        {
+          "id": "cf-front5-1",
+          "stem": "The front end's job, before any IR exists, is to:",
+          "correctAnswer": "Turn source characters into a tree later stages can consume",
+          "distractors": [
+            { "text": "Assign architectural registers to every local", "kind": "nearby", "rationale": "Register allocation is a backend job after IR exists." },
+            { "text": "Choose a calling convention for the platform", "kind": "misapplied", "rationale": "The ABI is not a front-end question." },
+            { "text": "Rewrite the program into a faster equivalent", "kind": "subtle", "rationale": "Optimization waits until a form you can move exists." }
+          ],
+          "correctExplanation": "Lex, parse, then a tree. Later stages consume that tree. They do not start from bytes.",
+          "objectiveIds": ["Trace source text through lexing and parsing into a tree later stages can consume"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-front5-2",
+          "stem": "Which error can the front end report before any IR exists?",
+          "correctAnswer": "A missing semicolon that the parser cannot shift past",
+          "distractors": [
+            { "text": "A spill because too many values are live", "kind": "nearby", "rationale": "Spills appear during register allocation." },
+            { "text": "A missed vectorization of a hot loop", "kind": "misapplied", "rationale": "Vectorization is an IR transform." },
+            { "text": "A relocation the linker could not apply", "kind": "subtle", "rationale": "Linking is after object files exist." }
+          ],
+          "correctExplanation": "Parse failures are visible on the token stream. Spills and relocations are later.",
+          "objectiveIds": ["Name what errors the front end can report before any IR exists"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-front5-3",
+          "stem": "A type checker usually runs:",
+          "correctAnswer": "After a tree exists, on names that have already been resolved",
+          "distractors": [
+            { "text": "Before the lexer has grouped any characters", "kind": "reversed", "rationale": "There is nothing to type until words and a tree exist." },
+            { "text": "Inside the linker while applying relocations", "kind": "misapplied", "rationale": "The linker does not type-check source." },
+            { "text": "Only after registers have been assigned", "kind": "nearby", "rationale": "Allocation is later and assumes a typed IR." }
+          ],
+          "correctExplanation": "You need structure and bound names before operators can be checked.",
+          "objectiveIds": ["Trace source text through lexing and parsing into a tree later stages can consume"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-front-10",
+      "conceptId": "cmp-front",
+      "title": "A pipeline, not a single pass",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "cmp-token",
+      "diagram": "cmp-pipeline",
+      "explanation": [
+        "Stanford CS143 starts the compiler here: characters become tokens, tokens become a tree, the tree gets names and types. Optimization is not the first idea. The point of the split is that later passes should never re-argue about spelling or about whether a parenthesis was closed.",
+        "Lexing is regular work. Identifiers, numbers, and keywords are words the lexer can recognize with a finite machine. Parsing is not regular: nested expressions need a stack or an equivalent. After a tree exists, name resolution hangs each use on a declaration, and type checking rejects operators that cannot agree. Each stage reports the errors it is allowed to see.",
+        "A missing semicolon is a parse error. Using an undeclared name is a resolution error. Adding a string to a file handle is a type error. None of those is a register-allocation failure. Mixing the stages makes every diagnostic a shrug."
+      ],
+      "example": "The fragment `return x + ;` dies in the parser: `+` is not followed by an operand. The fragment `return x + y;` in a scope that never declared `y` parses, then fails at name resolution. The fragment `return \"hi\" + fopen(\"a\",\"r\");` may resolve and still fail at type check. Three different trees of blame.",
+      "whyItMatters": "When someone says the compiler is slow, the front end is often the one that parsed the world. Know which stage you are accusing before you rewrite LLVM flags.",
+      "quiz": [
+        {
+          "id": "cf-front10-1",
+          "stem": "Lexing and parsing differ because:",
+          "correctAnswer": "Lexing recovers regular words; parsing recovers nested structure",
+          "distractors": [
+            { "text": "Lexing assigns registers; parsing writes the object file", "kind": "misapplied", "rationale": "Neither stage touches registers or object files." },
+            { "text": "They are two names for the same character scan", "kind": "nearby", "rationale": "The jobs split: words versus phrases." },
+            { "text": "Parsing must finish before any character is read", "kind": "reversed", "rationale": "Characters come first; the parser reads tokens." }
+          ],
+          "correctExplanation": "Words versus nesting. That is the split, not registers or files.",
+          "objectiveIds": ["Trace source text through lexing and parsing into a tree later stages can consume"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "cf-front10-2",
+          "stem": "Which failure is a front-end error rather than a later-stage one?",
+          "correctAnswer": "An undeclared name found while walking the typed tree's predecessor",
+          "distractors": [
+            { "text": "A φ-node that the backend cannot emit", "kind": "nearby", "rationale": "φ-nodes appear in SSA, after the front end." },
+            { "text": "A spill inserted because the register file is full", "kind": "misapplied", "rationale": "Spills are allocation." },
+            { "text": "A profile that told the inliner the wrong hot path", "kind": "subtle", "rationale": "PGO is a later policy, not a front-end diagnostic." }
+          ],
+          "correctExplanation": "Unresolved names are a semantic-analysis report. φ-nodes and spills do not exist yet.",
+          "objectiveIds": ["Name what errors the front end can report before any IR exists"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-front10-3",
+          "stem": "Trace `int f(){ return x + ; }` through the front end. It dies when:",
+          "correctAnswer": "The parser sees `+` with no operand and cannot finish a tree",
+          "distractors": [
+            { "text": "The lexer refuses to emit a plus token", "kind": "reversed", "rationale": "`+` is a fine token. The phrase is not." },
+            { "text": "The register allocator runs out of names", "kind": "misapplied", "rationale": "No IR, so no allocation." },
+            { "text": "The linker cannot find a symbol named plus", "kind": "nearby", "rationale": "There is no object file yet." }
+          ],
+          "correctExplanation": "The lexer emits `+`. The parser is the one that needs an operand after it.",
+          "objectiveIds": ["Trace source text through lexing and parsing into a tree later stages can consume"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-token-5",
+      "conceptId": "cmp-token",
+      "title": "A classified lexeme",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["cmp-front"],
+      "goDeeper": "cmp-regex-lex",
+      "diagram": "cmp-tokens",
+      "explanation": [
+        "A token is a classified lexeme plus the payload later stages need. The lexeme is the spelling in the file: `foo`, `14`, `==`. The class says what kind of word it is: identifier, integer, keyword `if`, operator. The payload is whatever the rest of the compiler must not re-scan — the integer value, the identifier string, sometimes a keyword enum.",
+        "The parser does not want characters. It wants a stream of these classified words so it can ask 'is the next thing an identifier?' without looking at letters."
+      ],
+      "example": "`return 14;` becomes something like `kw_return`, `int(14)`, `semi`. The parser never re-reads the characters `1` and `4`.",
+      "whyItMatters": "If a token is just a substring, every later pass re-implements the lexer. If it has no class, the parser is matching letters.",
+      "quiz": [
+        {
+          "id": "cf-tok5-1",
+          "stem": "A token is best described as:",
+          "correctAnswer": "A classified lexeme plus the payload later stages need",
+          "distractors": [
+            { "text": "A machine-code opcode the CPU will run", "kind": "misapplied", "rationale": "Tokens are source words, not opcodes." },
+            { "text": "The entire remaining file after the first character", "kind": "nearby", "rationale": "A token is one word, not the rest of the file." },
+            { "text": "A register assigned to a local variable", "kind": "subtle", "rationale": "Registers appear much later." }
+          ],
+          "correctExplanation": "Class plus payload. That is what the parser consumes.",
+          "objectiveIds": ["Describe a token as a classified lexeme plus the payload later stages need"],
+          "prerequisiteConceptIds": ["cmp-front"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-tok5-2",
+          "stem": "Split `x=14;` into the tokens a parser would see:",
+          "correctAnswer": "identifier `x`, operator `=`, integer `14`, semicolon",
+          "distractors": [
+            { "text": "One token containing the whole statement", "kind": "nearby", "rationale": "The lexer splits words; it does not emit statements." },
+            { "text": "The characters `x`, `=`, `1`, `4`, `;` as five integer tokens", "kind": "reversed", "rationale": "`14` is one integer lexeme, not two digits." },
+            { "text": "A single opcode named store-immediate", "kind": "misapplied", "rationale": "No instruction selection has run." }
+          ],
+          "correctExplanation": "Four words: a name, an operator, a number, punctuation. Digits stay together.",
+          "objectiveIds": ["Split a short source fragment into the tokens a parser would see"],
+          "prerequisiteConceptIds": ["cmp-front"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cf-tok5-3",
+          "stem": "The parser asks for an identifier next. It is looking at:",
+          "correctAnswer": "The token's class, not a fresh scan of the letters",
+          "distractors": [
+            { "text": "The object file's symbol table", "kind": "misapplied", "rationale": "No object file exists yet." },
+            { "text": "Whether the identifier will later get a register", "kind": "nearby", "rationale": "Allocation is not a parse question." },
+            { "text": "The CPU's instruction decoder", "kind": "subtle", "rationale": "The hardware is not in this path." }
+          ],
+          "correctExplanation": "Classification already happened. The parser matches classes.",
+          "objectiveIds": ["Describe a token as a classified lexeme plus the payload later stages need"],
+          "prerequisiteConceptIds": ["cmp-front"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-token-10",
+      "conceptId": "cmp-token",
+      "title": "Words the parser can name",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cmp-front"],
+      "goDeeper": "cmp-regex-lex",
+      "diagram": "cmp-tokens",
+      "explanation": [
+        "The Dragon Book treats the lexer as the compiler's first regular language. A token is the unit that language emits: a class, a lexeme, and a payload. The class is what productions mention — `id`, `num`, `if`. The lexeme is the spelling, kept so diagnostics can quote it. The payload is the interpreted value so later stages do not parse `0x10` again.",
+        "Keywords are the awkward overlap. `if` looks like an identifier until the lexer checks a reserved-word table and reclassifies it. Whitespace and comments are usually discarded rather than turned into tokens the parser must skip. That is a policy, not a law: some languages keep newline tokens because the grammar cares.",
+        "A good token also carries a source span. Without it, the next lesson's diagnostic has nothing to point at. The payload is not the span; both travel together."
+      ],
+      "example": "`if count >= 0x10` becomes `kw_if`, `id(\"count\")`, `op_ge`, `int(16)`. The parser never sees the letters `i` and `f` as an identifier, and never re-interprets `0x10`.",
+      "whyItMatters": "Every later 'unexpected token' message is only as good as this classification. Get the class wrong and the grammar looks broken.",
+      "quiz": [
+        {
+          "id": "cf-tok10-1",
+          "stem": "The payload on an integer token exists so that:",
+          "correctAnswer": "Later stages can use the numeric value without re-scanning digits",
+          "distractors": [
+            { "text": "The linker can relocate the token in the object file", "kind": "misapplied", "rationale": "Tokens do not go in object files." },
+            { "text": "The parser can ignore the token's class", "kind": "reversed", "rationale": "The class is what the parser matches." },
+            { "text": "The CPU can fetch the token from the instruction cache", "kind": "nearby", "rationale": "Hardware caches are not in the lexer." }
+          ],
+          "correctExplanation": "Interpret once. The parser matches the class; later math uses the value.",
+          "objectiveIds": ["Describe a token as a classified lexeme plus the payload later stages need"],
+          "prerequisiteConceptIds": ["cmp-front"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cf-tok10-2",
+          "stem": "Split `if(n!=0)` into the tokens a typical lexer emits:",
+          "correctAnswer": "`if` keyword, `(`, identifier `n`, `!=`, integer `0`, `)`",
+          "distractors": [
+            { "text": "One identifier token spelling `if(n!=0)`", "kind": "nearby", "rationale": "Punctuation and keywords are not identifier characters." },
+            { "text": "Characters `i`, `f`, `(`, `n`, `!`, `=`, `0`, `)` as eight identifiers", "kind": "reversed", "rationale": "Keywords, operators, and numbers are grouped." },
+            { "text": "A single compare-and-branch opcode", "kind": "misapplied", "rationale": "No instruction selection has run." }
+          ],
+          "correctExplanation": "Six tokens: a reserved word, two parens, a name, an operator, a number.",
+          "objectiveIds": ["Split a short source fragment into the tokens a parser would see"],
+          "prerequisiteConceptIds": ["cmp-front"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "cf-tok10-3",
+          "stem": "`if` is usually not left as an identifier because:",
+          "correctAnswer": "A reserved-word table reclassifies that lexeme as a keyword",
+          "distractors": [
+            { "text": "The parser is forbidden from seeing two-letter tokens", "kind": "misconception", "rationale": "Length is not the rule." },
+            { "text": "Keywords are inserted by the linker", "kind": "misapplied", "rationale": "The linker never classifies source words." },
+            { "text": "The type checker erases every identifier named if", "kind": "subtle", "rationale": "Classification happens in the lexer, not during typing." }
+          ],
+          "correctExplanation": "Same spelling, different class. The table is how `if` becomes a keyword.",
+          "objectiveIds": ["Describe a token as a classified lexeme plus the payload later stages need"],
+          "prerequisiteConceptIds": ["cmp-front"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-regex-lex-10",
+      "conceptId": "cmp-regex-lex",
+      "title": "Maximal munch, regular only",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cmp-token"],
+      "goDeeper": "cmp-source-loc",
+      "diagram": "cmp-tokens",
+      "explanation": [
+        "Identifiers and numbers are regular: a finite automaton can accept them. Nested expressions are not. That is why the lexer is a regular scanner and the parser is not. You can write a regex for `[A-Za-z_][A-Za-z0-9_]*`. You cannot write one that matches arbitrarily nested parentheses.",
+        "When two patterns match at the same position, industrial lexers take the longest lexeme — maximal munch. `==` is one operator, not two assigns. `foo` is one identifier, not `f` then `oo`. If two patterns have the same length, a priority table usually prefers the keyword over the identifier.",
+        "Maximal munch is a policy with teeth. `x-----y` in C is `x -- -- - y` or a syntax error, not five unary minuses the human imagined. The lexer does not know the grammar; it only knows the current position and the longest rule that fires."
+      ],
+      "example": "At the start of `integer`, the identifier pattern and the keyword `int` both match. Maximal munch takes `integer`. At the start of `==`, both `=` and `==` match; the longer operator wins.",
+      "whyItMatters": "People blame the parser for `==` splitting. It is usually the lexer, following a regular rule the grammar never sees.",
+      "quiz": [
+        {
+          "id": "cf-re10-1",
+          "stem": "Identifiers and numbers are regular while nested expressions are not because:",
+          "correctAnswer": "A finite automaton can accept the words; nested phrases need a stack",
+          "distractors": [
+            { "text": "Numbers are infinite and expressions are finite", "kind": "reversed", "rationale": "The issue is nesting, not infinity of digits." },
+            { "text": "The CPU has a regex instruction that parses expressions", "kind": "misapplied", "rationale": "Hardware is not the classification." },
+            { "text": "Keywords are illegal inside regular languages", "kind": "nearby", "rationale": "Keywords are regular too; nesting is the split." }
+          ],
+          "correctExplanation": "Regular = finite memory. Nesting needs a stack. That is the lexer/parser cut.",
+          "objectiveIds": ["Explain why identifiers and numbers are regular while nested expressions are not"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "cf-re10-2",
+          "stem": "At the start of `==`, a maximal-munch lexer accepts:",
+          "correctAnswer": "The two-character operator `==`, not a single `=`",
+          "distractors": [
+            { "text": "Two assign tokens, because shorter matches run first", "kind": "reversed", "rationale": "Longest match wins, not shortest." },
+            { "text": "The rest of the file as one identifier", "kind": "nearby", "rationale": "`=` is not an identifier character." },
+            { "text": "A compare opcode from the target ISA", "kind": "misapplied", "rationale": "The lexer does not select instructions." }
+          ],
+          "correctExplanation": "Both `=` and `==` match. The longer lexeme is the token.",
+          "objectiveIds": ["Predict which lexeme a maximal-munch lexer accepts at a given position"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cf-re10-3",
+          "stem": "At the start of `integer`, keyword `int` and the identifier pattern both match. The lexer emits:",
+          "correctAnswer": "One identifier `integer`, because it is the longer lexeme",
+          "distractors": [
+            { "text": "The keyword `int` plus an identifier `eger`", "kind": "nearby", "rationale": "That is shortest-match, not maximal munch." },
+            { "text": "A parse error, because two patterns matched", "kind": "misconception", "rationale": "Conflicts are resolved by length and priority." },
+            { "text": "A type named integer, decided by the type checker", "kind": "misapplied", "rationale": "Classification is not typing." }
+          ],
+          "correctExplanation": "Longest match: `integer` beats `int`. Keywords win only on equal length.",
+          "objectiveIds": ["Predict which lexeme a maximal-munch lexer accepts at a given position"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-source-loc-10",
+      "conceptId": "cmp-source-loc",
+      "title": "A span or a shrug",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cmp-token"],
+      "goDeeper": "cmp-preproc",
+      "diagram": "cmp-tokens",
+      "explanation": [
+        "Every diagnostic needs a span. A token that forgets where it came from can still drive a parser, but the error it produces can only say 'somewhere'. A source location is usually a file, a start offset, and an end offset — or a line and column pair — attached to the token when the lexer cuts the lexeme.",
+        "Later nodes inherit spans from the tokens they ate. An AST plus-node should cover from the left operand through the right. When a type error fires on that plus, the caret lands on the operator the human typed, not on a temporary the IR invented.",
+        "Macros and generated code make this sharper: the span must remember the use site, not only the expansion. That is the next lesson. Here the rule is simpler. If the token has no span, the rest of the compiler has nothing honest to point at."
+      ],
+      "example": "`return x + ;` with spans can underline the `+`. The same token stream without spans yields `error: expected expression` and a shrug. Both parsers failed in the same place; only one can show it.",
+      "whyItMatters": "A compiler's user interface is its diagnostics. A correct tree with no spans is a tool the human cannot use.",
+      "quiz": [
+        {
+          "id": "cf-loc10-1",
+          "stem": "A source span is attached to a token so that:",
+          "correctAnswer": "A later diagnostic can point at the original text",
+          "distractors": [
+            { "text": "The register allocator knows which crayon to use", "kind": "misapplied", "rationale": "Spans are not colors or registers." },
+            { "text": "The linker can relocate the token into the text section", "kind": "nearby", "rationale": "Tokens are not object-file records." },
+            { "text": "The CPU can prefetch the next source line", "kind": "subtle", "rationale": "Hardware prefetch is not a compiler span." }
+          ],
+          "correctExplanation": "Pointing is the job. Allocation and linking do not read source spans.",
+          "objectiveIds": ["Attach a source span to a token so a diagnostic can point at the original text"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-loc10-2",
+          "stem": "When tokens forget where they came from, a type error typically:",
+          "correctAnswer": "Can name the operator but cannot underline the source that produced it",
+          "distractors": [
+            { "text": "Becomes a linker error about a missing span symbol", "kind": "misapplied", "rationale": "The linker is not in this path." },
+            { "text": "Automatically inserts the correct type conversion", "kind": "reversed", "rationale": "Missing locations do not fix types." },
+            { "text": "Forces the lexer to rerun in the debugger", "kind": "nearby", "rationale": "The lexer already finished; the span was just dropped." }
+          ],
+          "correctExplanation": "The analysis can still fail. The caret has nowhere to go.",
+          "objectiveIds": ["Predict what a diagnostic loses if tokens forget where they came from"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cf-loc10-3",
+          "stem": "An AST plus-node should carry a span that:",
+          "correctAnswer": "Covers from the left operand through the right, inherited from tokens",
+          "distractors": [
+            { "text": "Names the register the plus will later occupy", "kind": "nearby", "rationale": "Spans are source ranges, not registers." },
+            { "text": "Is always the entire input file, for safety", "kind": "misconception", "rationale": "A whole-file span is a shrug in a longer file." },
+            { "text": "Points at the object-file offset of the add opcode", "kind": "misapplied", "rationale": "No opcode exists yet." }
+          ],
+          "correctExplanation": "Inherit and cover the phrase. That is how the caret lands on `+`.",
+          "objectiveIds": ["Attach a source span to a token so a diagnostic can point at the original text"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-preproc-10",
+      "conceptId": "cmp-preproc",
+      "title": "A language before the language",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-token"],
+      "goDeeper": "cmp-macro",
+      "explanation": [
+        "Some languages run a rewrite before the language parser sees the file. C's preprocessor is the usual exhibit: include, define, conditional compilation. The rewrite consumes tokens or raw text and emits a different token stream. The parser of the real language never saw the `#include` line.",
+        "That split creates errors that exist only after expansion. A missing header is a preprocessor failure. A macro that pastes two tokens into something that is not a token is an expansion failure. A type error inside an expanded body may point at a line the human did not type, unless locations remember the use site.",
+        "Preprocessing is not parsing the language. It has its own grammar, usually shallower, and it is allowed to be textual and brittle. Treating `#define` as just another C statement is how people lose a day to a paste that is not even in the language yet."
+      ],
+      "example": "`#include \"missing.h\"` fails before any C parser runs. `#define PLUS +` then `return x PLUS ;` fails in the C parser after expansion, on a plus with no operand — an error that is not visible in the raw `#define` line.",
+      "whyItMatters": "If you debug the language parser for a missing header, you are one stage early. The rewrite already lost.",
+      "quiz": [
+        {
+          "id": "cf-pp10-1",
+          "stem": "Preprocessing is best described as:",
+          "correctAnswer": "A rewrite of the token stream before the language parser runs",
+          "distractors": [
+            { "text": "A register-allocation pass on the expanded tree", "kind": "misapplied", "rationale": "No tree, and no registers." },
+            { "text": "The same job as type checking, under another name", "kind": "nearby", "rationale": "Types come after a tree exists." },
+            { "text": "A linker step that pastes object files together", "kind": "subtle", "rationale": "Includes paste source, not object files." }
+          ],
+          "correctExplanation": "Rewrite first. The language parser sees the result, not the directives.",
+          "objectiveIds": ["Describe preprocessing as a rewrite of the token stream before the language parser runs"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-pp10-2",
+          "stem": "Which error appears only after expansion, not in the raw source line that defined the macro?",
+          "correctAnswer": "`x PLUS ;` becoming `x + ;` and then failing as an incomplete expression",
+          "distractors": [
+            { "text": "A missing `#` on a directive the preprocessor itself rejects", "kind": "nearby", "rationale": "That fails in the preprocessor, on the raw line." },
+            { "text": "A spill in a hot loop after inlining", "kind": "misapplied", "rationale": "Spills are not expansion." },
+            { "text": "An undefined reference at link time", "kind": "subtle", "rationale": "Linking is after object files." }
+          ],
+          "correctExplanation": "The `#define` line is fine. The use site is what becomes illegal after paste.",
+          "objectiveIds": ["Name an error that appears only after expansion, not in the raw source"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-pp10-3",
+          "stem": "A missing header is reported by the preprocessor, not the C parser, because:",
+          "correctAnswer": "The include rewrite never produced a token stream for the language parser",
+          "distractors": [
+            { "text": "Headers are object files the linker should have found", "kind": "misapplied", "rationale": "A header is source, included before parse." },
+            { "text": "The type checker forbids files named .h", "kind": "nearby", "rationale": "Types never ran." },
+            { "text": "The lexer cannot emit identifier tokens until link time", "kind": "reversed", "rationale": "Lexing does not wait for the linker." }
+          ],
+          "correctExplanation": "No include, no tokens for C. The language parser is not yet on stage.",
+          "objectiveIds": ["Describe preprocessing as a rewrite of the token stream before the language parser runs"],
+          "prerequisiteConceptIds": ["cmp-token"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-macro-10",
+      "conceptId": "cmp-macro",
+      "title": "The use site still owes a caret",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-preproc"],
+      "goDeeper": "cmp-cfg",
+      "explanation": [
+        "A macro is an expansion rule the preprocessor applies at a use site. Function-like macros take arguments and paste them into a body. Object-like macros are a straight substitution. After expansion, the parser sees ordinary tokens. It does not see the `#define`.",
+        "That is why a later diagnostic must still mention the use site, not only the expansion. If `CHECK(p)` expands to `if(!p) die(__FILE__, __LINE__)`, a type error on `p` should point at the call to `CHECK`, and preferably also at the body. Pointing only inside a header the human did not write is how compilers earn hate mail.",
+        "Hygiene is the other half. A textual paste can capture a name from the use site or inject a name from the body. Token-paste operators (`##`) can invent lexemes the raw file never contained. The parser will then classify a word nobody typed. The span still has to explain it."
+      ],
+      "example": "`#define TWICE(x) ((x)+(x))` used as `TWICE(i++)` becomes `((i++)+(i++))`. The increment runs twice. The diagnostic for a later overflow, if any, that only names the `#define` line and not the `TWICE(i++)` call has dropped the use site.",
+      "whyItMatters": "Macros are not functions. Expansion is textual. The caret that forgets the call is lying about where the program went wrong.",
+      "quiz": [
+        {
+          "id": "cf-mac10-1",
+          "stem": "After `TWICE(i++)` expands, the parser actually sees:",
+          "correctAnswer": "The token stream `(( i ++ ) + ( i ++ ))`, not a call named TWICE",
+          "distractors": [
+            { "text": "A function call node that the inliner will later open", "kind": "nearby", "rationale": "A textual macro is gone before the parser builds calls." },
+            { "text": "The `#define` line as a statement in the function body", "kind": "reversed", "rationale": "Directives do not survive into the language parse." },
+            { "text": "A single opcode that adds i to itself", "kind": "misapplied", "rationale": "No instruction selection has run." }
+          ],
+          "correctExplanation": "Paste first. The parser's input is the expanded tokens.",
+          "objectiveIds": ["Trace a macro expansion and the token stream the parser actually sees"],
+          "prerequisiteConceptIds": ["cmp-preproc"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "cf-mac10-2",
+          "stem": "A type error inside an expanded macro body should still mention the use site because:",
+          "correctAnswer": "The human wrote the call, not the header line that supplied the body",
+          "distractors": [
+            { "text": "Use sites are the only places the lexer is allowed to run", "kind": "misconception", "rationale": "The lexer runs on the expanded stream too." },
+            { "text": "The linker requires every error to name a function symbol", "kind": "misapplied", "rationale": "This is a source diagnostic, not a link error." },
+            { "text": "Macros cannot carry types, so the use site is always wrong", "kind": "subtle", "rationale": "The issue is pointing, not whether macros have types." }
+          ],
+          "correctExplanation": "Blame the call the human wrote. The body is supporting evidence.",
+          "objectiveIds": ["Explain why a later diagnostic must still mention the use site, not only the expansion"],
+          "prerequisiteConceptIds": ["cmp-preproc"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cf-mac10-3",
+          "stem": "`TWICE(i++)` incrementing twice is a consequence of:",
+          "correctAnswer": "Textual paste duplicating the argument tokens, including the increment",
+          "distractors": [
+            { "text": "The type checker inserting an extra add", "kind": "nearby", "rationale": "Types did not duplicate the increment." },
+            { "text": "The register allocator spilling i twice", "kind": "misapplied", "rationale": "No allocation yet." },
+            { "text": "The parser treating ++ as a binary operator", "kind": "reversed", "rationale": "`++` is still postfix; it just appears twice." }
+          ],
+          "correctExplanation": "The argument is tokens, pasted twice. Side effects duplicate with them.",
+          "objectiveIds": ["Trace a macro expansion and the token stream the parser actually sees"],
+          "prerequisiteConceptIds": ["cmp-preproc"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

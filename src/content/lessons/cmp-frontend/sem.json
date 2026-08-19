@@ -1,0 +1,521 @@
+{
+  "courseId": "cmp-frontend",
+  "moduleId": "cmp-fe-sem",
+  "lessons": [
+    {
+      "id": "cmp-symbol-table-10",
+      "conceptId": "cmp-symbol-table",
+      "title": "Stacked maps from names",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ast"],
+      "goDeeper": "cmp-scope",
+      "explanation": [
+        "Lookups need a map, and nested blocks need a stack of maps. A symbol table records, for the names currently in play, the declaration each spelling refers to — type, whether it is a variable or a function, sometimes a nesting depth. The stack is the block structure: push a fresh map at `{`, pop it at `}`. The inner map is searched first.",
+        "Insert happens at a declaration. Lookup happens at a use. After a new scope is pushed, a name that exists only in the outer map is still found, because lookup walks downward through the stack. A name that exists only in the inner map is found only until that map is popped. The table is not the AST; it is the environment the walk consults while it visits declarations and uses.",
+        "Stanford CS143 treats this as the first semantic structure after the tree exists. Without a stack, every `x` in the file would collide, or every inner `x` would have nowhere to live. The map is stacked so the same spelling can mean different declarations at different moments of the walk."
+      ],
+      "example": "`{ int x; { int y; use(x); use(y); } use(x); }` — push, insert `x`, push, insert `y`. Lookup of `x` inside the inner block walks to the outer map. After pop, lookup of `y` finds nothing. `x` is still there.",
+      "whyItMatters": "Name binding is a stack walk, not a global dictionary. Flatten the table and inner declarations either clash or leak.",
+      "quiz": [
+        {
+          "id": "cf-stab10-1",
+          "stem": "A symbol table is best described as:",
+          "correctAnswer": "A stacked map from names to the declarations currently in force",
+          "distractors": [
+            { "text": "The concrete parse tree including every parenthesis", "kind": "nearby", "rationale": "The table is an environment, not the derivation." },
+            { "text": "A register file indexed by hardware names", "kind": "misapplied", "rationale": "Declarations are source meanings, not registers." },
+            { "text": "A flat list of every identifier the lexer ever emitted", "kind": "reversed", "rationale": "Uses are not declarations, and nesting would be lost." }
+          ],
+          "correctExplanation": "Stack of maps, name to declaration. That is the environment the walk queries.",
+          "objectiveIds": ["Describe a symbol table as a stacked map from names to declarations"],
+          "prerequisiteConceptIds": ["cmp-ast"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-stab10-2",
+          "stem": "After a new scope is pushed, a lookup of an outer-only name `x` returns:",
+          "correctAnswer": "The outer declaration, because lookup walks the stack past the empty inner map",
+          "distractors": [
+            { "text": "Nothing: a push hides every outer name until it is redeclared", "kind": "reversed", "rationale": "A new map is empty, not a wall. Walk continues outward." },
+            { "text": "A fresh declaration of `x` the parser invents on the push", "kind": "nearby", "rationale": "Insert happens at a declaration node, not at `{`." },
+            { "text": "The register the backend already assigned to `x`", "kind": "misapplied", "rationale": "The table stores declarations, not machine names." }
+          ],
+          "correctExplanation": "Push does not erase the outer map. Lookup misses inner, then hits outer `x`.",
+          "objectiveIds": ["Predict what a lookup returns after a new scope is pushed"],
+          "prerequisiteConceptIds": ["cmp-ast"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cf-stab10-3",
+          "stem": "After the inner block that declared `y` is popped, lookup of `y` returns:",
+          "correctAnswer": "No declaration: that map is gone, so `y` is not in the environment",
+          "distractors": [
+            { "text": "The same inner `y`, because names are immortal once inserted", "kind": "reversed", "rationale": "Pop removes the inner map. `y` leaves with it." },
+            { "text": "The outer `x`, because any leftover name will do", "kind": "nearby", "rationale": "Lookup matches spelling. `y` is not `x`." },
+            { "text": "A stack slot the allocator reserved for `y` at parse time", "kind": "misapplied", "rationale": "No allocation has run; the question is the environment." }
+          ],
+          "correctExplanation": "Pop ends the inner map. `y` is not visible. `x` still is.",
+          "objectiveIds": ["Predict what a lookup returns after a new scope is pushed"],
+          "prerequisiteConceptIds": ["cmp-ast"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-scope-10",
+      "conceptId": "cmp-scope",
+      "title": "Visible until a hole hides it",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-symbol-table"],
+      "goDeeper": "cmp-name-resolve",
+      "explanation": [
+        "Visibility is the interval where a lookup can still see a declaration. In a block-structured language, a name is visible from its declaration to the end of the block that contains it, except where an inner declaration of the same spelling punches a hole. That hole is a shadow: the inner map answers first, so the outer declaration is hidden, not deleted.",
+        "A use in the inner block therefore sees the inner declaration. A use after the inner block closes sees the outer one again, because the inner map was popped. A use before the inner declaration, still in that inner block, may see the outer name or be an error, depending on whether the language forbids using a name in its own hole — C's 'not yet declared in this block' versus a full-block shadow.",
+        "Scope is not the same as the symbol table, but the table is how you implement it. The rule you must state is where the name can be seen, and where a hole or a shadow hides it. Get that wrong and every later 'which `x`?' question is a guess."
+      ],
+      "example": "`int x = 1; { int x = 2; use(x); } use(x);` — the inner use sees `x = 2`. The outer use after the block sees `x = 1`. The inner declaration is a shadow, a hole in the outer `x`'s visibility, not a rewrite of the outer declaration.",
+      "whyItMatters": "Shadowing is how two `x`s coexist. If you think the inner declaration destroyed the outer one, you will mis-bind uses after the block.",
+      "quiz": [
+        {
+          "id": "cf-scope10-1",
+          "stem": "Where is a block-local name visible, and where does a hole hide it?",
+          "correctAnswer": "From its declaration to block end, except where an inner same name shadows it",
+          "distractors": [
+            { "text": "From file start to file end, with no holes, like a linker symbol", "kind": "nearby", "rationale": "Block structure is the point; visibility is not file-global by default." },
+            { "text": "Only in the lexer, because names are tokens, not declarations", "kind": "reversed", "rationale": "Tokens are spellings. Visibility is a declaration's range." },
+            { "text": "Only after hardware registers have been assigned to that name", "kind": "misapplied", "rationale": "Scope is a source rule, decided during the tree walk." }
+          ],
+          "correctExplanation": "Declaration to block end, minus inner shadows. That is the interval to state.",
+          "objectiveIds": ["State where a name is visible and where a hole or shadow hides it"],
+          "prerequisiteConceptIds": ["cmp-symbol-table"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-scope10-2",
+          "stem": "In `int x = 1; { int x = 2; use(x); }`, the inner use sees:",
+          "correctAnswer": "The inner declaration `x = 2`, which shadows the outer `x`",
+          "distractors": [
+            { "text": "The outer `x = 1`, because outer names always win", "kind": "reversed", "rationale": "The inner map is searched first. That is the shadow." },
+            { "text": "Both declarations, to be merged by the type checker", "kind": "nearby", "rationale": "A use binds to one declaration, not a pair." },
+            { "text": "A hardware register that aliases both `x`s", "kind": "misapplied", "rationale": "Binding is not allocation." }
+          ],
+          "correctExplanation": "Inner spelling hits the inner map first. The outer `x` is hidden, not gone.",
+          "objectiveIds": ["Predict which declaration an inner use sees when an outer name is shadowed"],
+          "prerequisiteConceptIds": ["cmp-symbol-table"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cf-scope10-3",
+          "stem": "After the inner block of `int x = 1; { int x = 2; } use(x);` closes, `use(x)` sees:",
+          "correctAnswer": "The outer `x = 1`, because the shadowing map has been popped",
+          "distractors": [
+            { "text": "The inner `x = 2`, which leaked out of the block", "kind": "reversed", "rationale": "Pop ends the hole. The outer name is visible again." },
+            { "text": "No `x`, because the inner declaration deleted the outer one", "kind": "nearby", "rationale": "A shadow hides; it does not destroy the outer declaration." },
+            { "text": "A parse error: two `x`s in one file are illegal tokens", "kind": "subtle", "rationale": "The tokens parsed. This is a visibility question." }
+          ],
+          "correctExplanation": "The hole was the inner map. After pop, lookup finds the outer `x` again.",
+          "objectiveIds": ["Predict which declaration an inner use sees when an outer name is shadowed"],
+          "prerequisiteConceptIds": ["cmp-symbol-table"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-name-resolve-10",
+      "conceptId": "cmp-name-resolve",
+      "title": "Bind the use to one declaration",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-scope"],
+      "goDeeper": "cmp-typecheck",
+      "explanation": [
+        "Uses become pointers. Each identifier in the tree should hang on exactly one declaration from the active scope stack. Name resolution is that walk: at a declaration, insert; at a use, lookup, and store the result on the node. After a successful bind, later passes should not search the spelling again.",
+        "An unbound name is a resolution failure, not a parse failure. `return y;` with no `y` in any map is a legal token stream and a legal tree. The parser did its job. The environment did not contain `y`. Reporting it as 'unexpected identifier' pretends the grammar rejected the phrase. It did not.",
+        "Shadows make the bind local. The inner `x` and the outer `x` are two declarations; each use gets one of them, never both. If lookup returns nothing, you record an error on that node and keep walking so the next use can fail too. Resolution is allowed to report more than one missing name."
+      ],
+      "example": "`int x; return y + x;` parses. Resolution binds `x` to the declaration and fails on `y`. The plus node still exists. A diagnostic that says 'expected semicolon' at `y` is blaming the parser for an environment miss.",
+      "whyItMatters": "If you file an unbound name as a syntax error, you will rewrite a working grammar to catch a missing declaration.",
+      "quiz": [
+        {
+          "id": "cf-nres10-1",
+          "stem": "Binding a use on the active scope stack means:",
+          "correctAnswer": "Lookup the spelling and hang the use on exactly one declaration",
+          "distractors": [
+            { "text": "Leave every identifier as a spelling for the type checker to guess", "kind": "nearby", "rationale": "Resolution is the pass that turns spelling into a declaration pointer." },
+            { "text": "Attach the use to every declaration of that spelling at once", "kind": "reversed", "rationale": "Exactly one. Shadows pick the innermost, not the set." },
+            { "text": "Assign the use a hardware register named after the spelling", "kind": "misapplied", "rationale": "Binding is a declaration pointer, not a register." }
+          ],
+          "correctExplanation": "One use, one declaration, from the stack as it stands at that node.",
+          "objectiveIds": ["Bind a use to exactly one declaration using the active scope stack"],
+          "prerequisiteConceptIds": ["cmp-scope"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cf-nres10-2",
+          "stem": "The fragment `return y;` with `y` never declared fails at:",
+          "correctAnswer": "Name resolution: the tree is legal, but no declaration is in the stack",
+          "distractors": [
+            { "text": "Parse time: an identifier that is not a keyword is illegal", "kind": "reversed", "rationale": "The parser accepts identifiers. Binding is who they refer to." },
+            { "text": "Lexing: `y` is not a legal maximal-munch identifier token", "kind": "nearby", "rationale": "`y` is a fine identifier token." },
+            { "text": "Link time: the object file lacks a relocation for `y`", "kind": "misapplied", "rationale": "This is a source diagnostic, before any object file." }
+          ],
+          "correctExplanation": "Parsed, not bound. Unbound is a resolution report, not a syntax error.",
+          "objectiveIds": ["Diagnose an unbound name as a resolution failure, not a parse failure"],
+          "prerequisiteConceptIds": ["cmp-scope"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-nres10-3",
+          "stem": "Trace `int x; { int x; use(x); }`. The use binds to:",
+          "correctAnswer": "The inner `x`, the unique declaration the stack returns at that point",
+          "distractors": [
+            { "text": "The outer `x`, because the first declaration always wins", "kind": "reversed", "rationale": "The inner map is on top. Lookup hits it first." },
+            { "text": "Neither: two `x`s in one function are a parse error", "kind": "nearby", "rationale": "The tree is fine. Resolution picks the inner one." },
+            { "text": "A single fused declaration the linker will later split", "kind": "misapplied", "rationale": "There is no linker in this walk." }
+          ],
+          "correctExplanation": "Stack top has the inner `x`. The use hangs on that one declaration.",
+          "objectiveIds": ["Bind a use to exactly one declaration using the active scope stack"],
+          "prerequisiteConceptIds": ["cmp-scope"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-typecheck-10",
+      "conceptId": "cmp-typecheck",
+      "title": "When operators cannot agree",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-name-resolve"],
+      "goDeeper": "cmp-overload",
+      "explanation": [
+        "Operators still have to agree after every name is bound. Type checking walks the already-resolved tree and rejects combinations the language does not allow: adding a string to a file handle, assigning an integer to a pointer, calling a two-argument function with one argument. The phrase parsed. The names exist. The operators still cannot mean anything together.",
+        "Leaves get types from their declarations or from literals. `1` is an int. A variable `x` declared `int` is an int. A plus node is well typed only if both children are types the plus rule accepts, and then the node itself gets a result type. `1+2` is an int. `\"hi\" + fopen(\"a\",\"r\")` may have two bound names and still fail.",
+        "This is a different diagnostic from parse or resolution. `return x + ;` never built a plus with two children. `return y;` with no `y` never got a type to check. `return \"hi\" + 3;` in a language without that plus is the type checker's to refuse. Blame the right pass or you will add a grammar production to catch a type error."
+      ],
+      "example": "`int x; return x + 1;` — both operands int, plus yields int. `FILE *f; return \"hi\" + f;` — both names resolve; plus of string and pointer is rejected. Same tree shape, one agreement, one refusal.",
+      "whyItMatters": "A well-parsed tree is not yet a program. Type checking is how the front end refuses operators that cannot agree.",
+      "quiz": [
+        {
+          "id": "cf-tchk10-1",
+          "stem": "A well-parsed tree whose operators cannot agree is rejected by:",
+          "correctAnswer": "Type checking, after names are already bound to declarations",
+          "distractors": [
+            { "text": "The parser, which forbids any plus whose operands look different", "kind": "nearby", "rationale": "The parser checks phrase structure, not types." },
+            { "text": "The lexer, which refuses to emit a plus between a string and a name", "kind": "reversed", "rationale": "`+` is a token either way. Agreement is later." },
+            { "text": "Register allocation, which cannot color disagreeing operands", "kind": "misapplied", "rationale": "Allocation is not a type rule." }
+          ],
+          "correctExplanation": "Parsed and bound, still meaningless. That refusal is type checking.",
+          "objectiveIds": ["Reject a well-parsed tree whose operators and operands cannot agree"],
+          "prerequisiteConceptIds": ["cmp-name-resolve"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-tchk10-2",
+          "stem": "After names resolve, the type of `x + 1` with `x` declared `int` is:",
+          "correctAnswer": "int, because both operands are int and plus on int yields int",
+          "distractors": [
+            { "text": "Unknown, because plus never has a type until codegen", "kind": "reversed", "rationale": "The point of this pass is to give the plus a type now." },
+            { "text": "string, because `1` will be converted to text by the lexer", "kind": "nearby", "rationale": "The lexer classified `1` as an integer token." },
+            { "text": "A machine register class, such as general-purpose", "kind": "misapplied", "rationale": "Result types here are language types, not register files." }
+          ],
+          "correctExplanation": "Leaves from declarations and literals; plus from a rule. `int + int` is `int`.",
+          "objectiveIds": ["Predict the type of a small expression after names have been resolved"],
+          "prerequisiteConceptIds": ["cmp-name-resolve"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cf-tchk10-3",
+          "stem": "Which tree should type checking reject even though it parsed and resolved?",
+          "correctAnswer": "`\"hi\" + f` with `f` a file handle, if plus forbids that pair",
+          "distractors": [
+            { "text": "`return x + ;` with a plus and no right-hand operand", "kind": "nearby", "rationale": "That phrase never parsed; there is no complete plus node." },
+            { "text": "`return y;` with `y` never declared in any scope map", "kind": "subtle", "rationale": "That is an unbound name, caught at resolution." },
+            { "text": "`x + 1` with `x` declared `int`, which plus accepts", "kind": "reversed", "rationale": "Those operands agree; the tree should survive." }
+          ],
+          "correctExplanation": "Legal phrase, bound names, illegal operator. That is the type checker's refusal.",
+          "objectiveIds": ["Reject a well-parsed tree whose operators and operands cannot agree"],
+          "prerequisiteConceptIds": ["cmp-name-resolve"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-typecheck-20",
+      "conceptId": "cmp-typecheck",
+      "title": "A type at every nested node",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cmp-name-resolve"],
+      "goDeeper": "cmp-overload",
+      "explanation": [
+        "Nested plus-nodes each carry a result type, computed from children that already have one. `1+2*3` is not one type question. The times node is int from two int literals. The plus node is int from int and that times result. Walk bottom-up, or you will ask plus to agree with children that have not been checked.",
+        "Leaves are the easy cases. A literal has a type from its token payload. A resolved identifier has a type from its declaration. After name resolution, you are allowed to assume the identifier node already points at that declaration — or that an unbound name was already reported and this node is poison. Type checking does not re-walk the scope stack to find `x`.",
+        "Statements have rules too. An `if` condition has to be whatever the language uses for truth — often bool, sometimes int. A `return` expression has to agree with the enclosing function's result type. A void function that returns `1` parsed and resolved; it still fails here. Agreement is not only for `+`.",
+        "Conversions, when the language has them, are not a parse rewrite. `1.0 + 2` may become plus(float, int-to-float(2)) by inserting a node. The original tree was well formed. The checker either inserts that node and continues, or refuses if no conversion exists. Either way the parse already finished.",
+        "Rejection is local and total. One disagreeing operator fails the tree even when every other node is fine. `f(1) + \"hi\"` can have a well-typed call and a plus that cannot take that result and a string. Report the plus. Do not delete the call from the tree just because a parent failed."
+      ],
+      "example": "`int f() { return 1+2*3; }` — `2*3` is int, `1+int` is int, return int matches `f`. `int f() { return \"hi\"; }` — the string literal is well typed as string; it disagrees with `f`'s int result. `if (\"hi\") ...` may parse and still fail the condition rule.",
+      "whyItMatters": "People typecheck only the operators they can see in one line. Nested nodes and statement rules are where the rest of the refusals live.",
+      "quiz": [
+        {
+          "id": "cf-tchk20-1",
+          "stem": "The type of nested `1+2*3` after names resolve, with int plus and times, is:",
+          "correctAnswer": "int at the times node and int at the plus node that uses it",
+          "distractors": [
+            { "text": "Only a type on the plus; inner times is punctuation and untyped", "kind": "nearby", "rationale": "Every expression node gets a type, including the nested times." },
+            { "text": "A parse error, because two operators cannot share a tree", "kind": "reversed", "rationale": "The tree parsed. This is a type walk over nested nodes." },
+            { "text": "A machine instruction class, fused multiply-add", "kind": "misapplied", "rationale": "Language types, not opcodes." }
+          ],
+          "correctExplanation": "Bottom-up: times is int, plus of int and that result is int. Both nodes are typed.",
+          "objectiveIds": ["Predict the type of a small expression after names have been resolved"],
+          "prerequisiteConceptIds": ["cmp-name-resolve"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cf-tchk20-2",
+          "stem": "Which well-parsed, resolved tree should this walk still reject?",
+          "correctAnswer": "`int f() { return \"hi\"; }` — string result, function declared int",
+          "distractors": [
+            { "text": "`int f() { return 1+2; }` — plus of two ints returned from `f`", "kind": "reversed", "rationale": "Operands agree and match the result type." },
+            { "text": "`return x + ;` — plus with no right operand in the token stream", "kind": "nearby", "rationale": "That never became a complete tree. Parse already failed." },
+            { "text": "`return y;` with `y` never declared in any active scope", "kind": "subtle", "rationale": "Unbound names die at resolution, before this walk." }
+          ],
+          "correctExplanation": "The return parsed and the literal resolved. The result type still disagrees with `f`.",
+          "objectiveIds": ["Reject a well-parsed tree whose operators and operands cannot agree"],
+          "prerequisiteConceptIds": ["cmp-name-resolve"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cf-tchk20-3",
+          "stem": "Type checking does not re-lookup `x` on an identifier node because:",
+          "correctAnswer": "Name resolution already hung the use on a declaration, or marked it unbound",
+          "distractors": [
+            { "text": "Identifier nodes are erased before typing begins on the tree", "kind": "reversed", "rationale": "The node stays. It should already carry a declaration pointer." },
+            { "text": "The lexer stored the type in the token payload for `x`", "kind": "nearby", "rationale": "The lexer classified a spelling, not a declaration's type." },
+            { "text": "Register allocation will pick a type when it colors `x`", "kind": "misapplied", "rationale": "Coloring is not typing, and it has not run." }
+          ],
+          "correctExplanation": "Binding finished. Typing reads the declaration's type from the pointer already stored.",
+          "objectiveIds": ["Predict the type of a small expression after names have been resolved"],
+          "prerequisiteConceptIds": ["cmp-name-resolve"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-overload-10",
+      "conceptId": "cmp-overload",
+      "title": "Picking which f this call is",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-typecheck"],
+      "goDeeper": "cmp-visitor",
+      "explanation": [
+        "Viable candidates are the declarations of `f` whose parameters can accept the argument types. Overload resolution takes a call, the argument types type checking already knows, and the set of `f`s in scope, and keeps those that fit. If exactly one remains, that is the `f` the call binds to. The spelling was never unique; the types made it unique.",
+        "Picking is a ranking, not a parse. `f(int)` and `f(string)` with argument `1` leaves `f(int)` as the unique viable candidate. Exact match usually beats a conversion. The call node, after this step, hangs on one declaration, the same way an ordinary use hung on one `x`.",
+        "Ambiguous means more than one equally good candidate, not 'no `f` exists' and not 'the parser saw two identifiers'. `g(int, double)` and `g(double, int)` on `g(1, 1)` both fit with one conversion, neither better. That is a resolution failure at the call, reported as ambiguous, while the phrase `g(1, 1)` parsed and each argument typed as int."
+      ],
+      "example": "`void f(int); void f(const char*); f(1);` — unique viable `f(int)`. `void g(int, double); void g(double, int); g(1, 1);` — two equally good candidates, ambiguous. `f(\"hi\")` with only `f(int)` in scope is not ambiguous; it is zero viable candidates.",
+      "whyItMatters": "A call that parsed is not yet a chosen function. Ambiguity is two winners, not a missing semicolon.",
+      "quiz": [
+        {
+          "id": "cf-ovl10-1",
+          "stem": "Given `f(int)` and `f(string)` in scope, the call `f(1)` picks:",
+          "correctAnswer": "The unique viable candidate `f(int)`, which accepts that argument",
+          "distractors": [
+            { "text": "Both declarations, to be compiled as two separate calls", "kind": "nearby", "rationale": "A call binds to one function, the unique survivor." },
+            { "text": "`f(string)`, because literals prefer text in the lexer", "kind": "reversed", "rationale": "`1` is an integer token; `f(int)` is the fit." },
+            { "text": "Neither, until the register allocator names a symbol `f`", "kind": "misapplied", "rationale": "Candidate choice is a type-and-scope question, not allocation." }
+          ],
+          "correctExplanation": "One argument type, one fitting `f`. Unique viable candidate.",
+          "objectiveIds": ["Pick the unique viable candidate for a call given argument types"],
+          "prerequisiteConceptIds": ["cmp-typecheck"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cf-ovl10-2",
+          "stem": "`g(1, 1)` with `g(int, double)` and `g(double, int)` in scope is ambiguous because:",
+          "correctAnswer": "Both candidates fit equally well; more than one is equally good",
+          "distractors": [
+            { "text": "The parser cannot shift two arguments after `g`", "kind": "nearby", "rationale": "The call parsed. The clash is in ranking, not in the phrase." },
+            { "text": "No candidate accepts two ints, so the set is empty, not ambiguous", "kind": "reversed", "rationale": "Each candidate accepts after one conversion. Empty is a different error." },
+            { "text": "The linker found two object files that both define `g`", "kind": "misapplied", "rationale": "This is a source ranking of declarations, not a link collision." }
+          ],
+          "correctExplanation": "Two winners of the same rank. Diagnose that as ambiguous, not as a missing `g`.",
+          "objectiveIds": ["Diagnose an ambiguous call as more than one equally good candidate"],
+          "prerequisiteConceptIds": ["cmp-typecheck"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "cf-ovl10-3",
+          "stem": "Zero viable candidates for `f(\"hi\")` when only `f(int)` is in scope means:",
+          "correctAnswer": "No declaration of `f` accepts the argument types; that is not ambiguity",
+          "distractors": [
+            { "text": "The call is ambiguous, because `\"hi\"` might still be an int", "kind": "nearby", "rationale": "Ambiguity needs two equally good fits. Here the set is empty." },
+            { "text": "The parse failed, because string literals cannot be arguments", "kind": "reversed", "rationale": "The phrase is a fine call. No candidate typed it." },
+            { "text": "The backend lacks a machine opcode named after `f`", "kind": "misapplied", "rationale": "Candidate sets are a front-end ranking of declarations." }
+          ],
+          "correctExplanation": "Empty set versus two winners. Only the second is an ambiguous call.",
+          "objectiveIds": ["Diagnose an ambiguous call as more than one equally good candidate"],
+          "prerequisiteConceptIds": ["cmp-typecheck"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-visitor-10",
+      "conceptId": "cmp-visitor",
+      "title": "Share the traversal across passes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ast"],
+      "goDeeper": "cmp-ir-lower-intro",
+      "explanation": [
+        "Sharing one traversal shape keeps name binding, typing, and later walks from each inventing a different recursion. A visitor is a set of methods, one per node kind, that a walk calls as it enters `plus`, `ident`, `if`, `return`. The tree's `accept` dispatches on the kind. Each pass implements the methods it cares about and recurses the same way.",
+        "The point is the contract between passes, not the object-oriented spelling. After a name-resolution walk has finished, a type-checking visitor may assume every identifier already has a declaration pointer — or an error mark if it was unbound. It should not rebuild the scope stack from scratch unless the language truly requires a second bind.",
+        "A later pass may also assume what an earlier one wrote onto the nodes: types on expressions, a chosen overload on a call, spans copied from tokens. If the type walk has not run, a lowering walk must not pretend every plus already has a result type. The shared shape is how you keep those assumptions honest instead of re-deriving them with a one-off recursion each time."
+      ],
+      "example": "`plus(id(x), int(1)).accept(resolver)` inserts or looks up, then `accept(typechecker)` reads `x`'s declaration type and checks plus. Both walks use `visitPlus` → children, `visitIdent`, `visitInt`. The second walk does not parse and does not search scopes for `x` again.",
+      "whyItMatters": "Ad-hoc recursion per pass is how types get checked on a tree that was never resolved, or how a later walk reimplements name lookup badly.",
+      "quiz": [
+        {
+          "id": "cf-vis10-1",
+          "stem": "An AST visitor exists so that:",
+          "correctAnswer": "Several passes can share one traversal shape, dispatching per node kind",
+          "distractors": [
+            { "text": "The parser can skip building a tree and visit tokens instead", "kind": "nearby", "rationale": "A visitor walks an AST that already exists." },
+            { "text": "Each pass can assign registers while it recurses", "kind": "misapplied", "rationale": "The shared walk is for semantic passes on the tree, not allocation." },
+            { "text": "One pass can delete the node kinds another pass still needs", "kind": "reversed", "rationale": "Sharing a shape assumes the kinds remain for later walks." }
+          ],
+          "correctExplanation": "Same recursion, different methods. That is how resolution and typing share a tree walk.",
+          "objectiveIds": ["Walk an AST with a visitor so several passes share one traversal shape"],
+          "prerequisiteConceptIds": ["cmp-ast"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-vis10-2",
+          "stem": "After a name-resolution walk has finished, a type-checking pass may assume:",
+          "correctAnswer": "Each identifier already points at a declaration, or is marked unbound",
+          "distractors": [
+            { "text": "Each identifier is still only a spelling, with scopes yet to be searched", "kind": "reversed", "rationale": "That was this walk's job. The later pass should not re-bind from scratch." },
+            { "text": "Every plus has already been rewritten into a machine add", "kind": "nearby", "rationale": "Resolution does not lower operators to opcodes." },
+            { "text": "Registers have been colored, so types are no longer needed", "kind": "misapplied", "rationale": "Allocation has not run, and typing still has work." }
+          ],
+          "correctExplanation": "The earlier walk's output is the later walk's input. Binding pointers are that output.",
+          "objectiveIds": ["Name what a later pass may assume after an earlier walk has finished"],
+          "prerequisiteConceptIds": ["cmp-ast"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-vis10-3",
+          "stem": "Trace `plus(id(x), int(1))` through a resolver then a typechecker sharing a visitor. The type walk:",
+          "correctAnswer": "Reads `x`'s declaration type from the resolver's pointer, then checks plus",
+          "distractors": [
+            { "text": "Re-parses the characters `x + 1` to rebuild a parse tree", "kind": "reversed", "rationale": "The AST is already there. The visitor walks it." },
+            { "text": "Looks up `x` in a new global map that ignores the scope stack", "kind": "nearby", "rationale": "Lookup already happened. Re-searching is the ad-hoc recursion the visitor avoids." },
+            { "text": "Emits an add opcode and two registers for the plus node", "kind": "misapplied", "rationale": "This pair of walks still produces types, not instructions." }
+          ],
+          "correctExplanation": "Shared walk, different methods. Resolver binds; typechecker reads the bind and checks operators.",
+          "objectiveIds": ["Walk an AST with a visitor so several passes share one traversal shape"],
+          "prerequisiteConceptIds": ["cmp-ast"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-ir-lower-intro-10",
+      "conceptId": "cmp-ir-lower-intro",
+      "title": "Temps and blocks still missing",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-typecheck"],
+      "goDeeper": "cmp-three-addr",
+      "diagram": "cmp-pipeline",
+      "explanation": [
+        "Temporaries do not exist on a typed tree. `1+2*3` is still a nested plus of a times, not a sequence of named results. A register allocator wants to color names: each intermediate value needs a name that lives across a straight-line stretch. A plus node with two full subtrees does not offer those names. Nesting is the first reason the typed tree is not allocatable.",
+        "Control is still a tree too. `if` and `while` are nodes with children, not a list of straight-line blocks with explicit jumps. There is no place to say 'this value is live from here to there' because there is not yet a here and there in the block sense. Allocation that expects a flat sequence has nothing legal to walk.",
+        "Lowering is the work that makes those things explicit before a three-address form exists. Evaluation order of nested operands becomes a sequence. Intermediate results get temporary names. `if`/`while` become blocks and jumps. The typed tree remains the source of truth for types and for diagnostics; it is just not the form you can hand to a register allocator. This course has not yet written that flatter form down. It has named why the tree is not it."
+      ],
+      "example": "Typed AST for `1+2*3`: `plus(int(1), times(int(2), int(3)))`, types on every node, no temporary names, no blocks. An allocator cannot color 'the times result' because that result is an anonymous child pointer, not a named value in a straight-line list. Lowering has to invent that name and that list.",
+      "whyItMatters": "People hand a typed AST to an allocator and wonder why nested plus has no home. The tree was never that form.",
+      "quiz": [
+        {
+          "id": "cf-irl10-1",
+          "stem": "A typed tree is still not a form you can allocate registers for because:",
+          "correctAnswer": "Nested expressions lack named temps, and control is still a statement tree",
+          "distractors": [
+            { "text": "Types were erased, so the allocator cannot see operand sizes", "kind": "reversed", "rationale": "The tree is typed. The missing pieces are names and blocks, not types." },
+            { "text": "The lexer never classified those integer literal tokens", "kind": "nearby", "rationale": "Literals were tokens, then leaves, then typed nodes. Lexing is done." },
+            { "text": "The calling convention has not picked argument registers yet", "kind": "misapplied", "rationale": "ABI is a later convention. Nesting and missing temps are the tree's own problem." }
+          ],
+          "correctExplanation": "Anonymous nested children and tree-shaped control. That is why allocation has nothing to color yet.",
+          "objectiveIds": ["Explain why a typed tree is still not a form you can allocate registers for"],
+          "prerequisiteConceptIds": ["cmp-typecheck"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cf-irl10-2",
+          "stem": "Before a three-address form exists, lowering must make explicit:",
+          "correctAnswer": "Evaluation order, temporary names for nested results, and blocks with jumps",
+          "distractors": [
+            { "text": "Maximal-munch rules for `==` and the keyword table for `if`", "kind": "nearby", "rationale": "Those were lexer jobs, finished before the tree existed." },
+            { "text": "Which architectural registers the plus node already occupies", "kind": "reversed", "rationale": "Lowering creates names to allocate later; it does not color them now." },
+            { "text": "A new context-free grammar for walking the typed tree", "kind": "subtle", "rationale": "The phrase structure is done. This step flattens a typed tree, not a grammar." }
+          ],
+          "correctExplanation": "Order, temps, blocks. Those are the missing pieces the nested typed tree does not have.",
+          "objectiveIds": ["Name what lowering must make explicit before three-address code exists"],
+          "prerequisiteConceptIds": ["cmp-typecheck"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "cf-irl10-3",
+          "stem": "On typed `plus(int(1), times(int(2), int(3)))`, an allocator cannot color the times result because:",
+          "correctAnswer": "It is an anonymous nested child, not a named value in a straight-line list",
+          "distractors": [
+            { "text": "Times has no type yet, so its result cannot exist at all", "kind": "reversed", "rationale": "The node is typed int. The problem is the missing name, not the type." },
+            { "text": "The parse tree still holds the `*` token, which blocks coloring", "kind": "nearby", "rationale": "Typechecking walked the AST. Punctuation is not the limiter." },
+            { "text": "Integer literals are illegal to allocate on any architecture", "kind": "misapplied", "rationale": "Literals are fine. Nesting without temps is the issue." }
+          ],
+          "correctExplanation": "A child pointer is not a name. Lowering has to invent the temporary before anyone can color it.",
+          "objectiveIds": ["Explain why a typed tree is still not a form you can allocate registers for"],
+          "prerequisiteConceptIds": ["cmp-typecheck"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import { assembleQuiz } from "@/lib/quiz/assemble";
 
 const LINKS = [
   "https://web.stanford.edu/class/cs143/",
-  "https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools",
+  "https://gitlab.com/x86-psABIs/x86-64-ABI",
 ];
 
 function provenance(courseId: string, moduleId: string, conceptId: string, extra?: Provenance): Provenance {
@@ -19,7 +19,7 @@ function provenance(courseId: string, moduleId: string, conceptId: string, extra
     links: extra?.links ?? LINKS,
     notes:
       extra?.notes ??
-      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by Stanford CS143 and the Dragon Book; course prose not copied.`,
+      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by Stanford CS143, the System V AMD64 ABI, and the JVM Specification; course prose not copied.`,
   };
 }
 
