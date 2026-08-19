@@ -6,6 +6,7 @@ import { COURSES } from "../courses/index.ts";
 import { CPU_SEMI_LESSONS } from "../lessons/cpu-semi.ts";
 import { CPU_MICROARCH_LESSONS } from "../lessons/cpu-microarch/index.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
+import { ARCH_GPU_LESSONS } from "../lessons/arch-gpu/index.ts";
 import { buildCatalog } from "../../lib/learning/catalog.ts";
 import { quizContextForConcept } from "../../lib/learning/quiz-context.ts";
 import { makeReadinessContext } from "../../lib/learning/readiness.ts";
@@ -15,7 +16,7 @@ import { allowedKnowledge } from "../../lib/quiz/knowledge.ts";
 import { mixIsDistinct, objectiveCoverage } from "../../lib/quiz/mix.ts";
 import { ARCH_REFERENCE_DRAFTS } from "./arch-reference.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...CPU_MICROARCH_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...CPU_MICROARCH_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 function held(id: string) {
   return {

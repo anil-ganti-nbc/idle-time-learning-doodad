@@ -11,7 +11,7 @@ export const CURRICULUM_SOURCES: CurriculumSourceRecord[] = [
     url: "https://ocw.mit.edu/courses/6-823-computer-system-architecture-fall-2005/pages/syllabus/",
     institution: "MIT OCW 6.823",
     kind: "ocw",
-    informed: ["cpu-foundations", "cpu-microarch"],
+    informed: ["cpu-foundations", "cpu-microarch", "arch-gpu"],
     notes:
       "Assumes digital-design fluency. Five sequential modules: ISA and microarchitecture, caches/VM, protection/I/O, ILP (superscalar/VLIW/vector/threads), then multiprocessors and memory models. Quizzes sit after modules, not after every micro-topic. Self-evaluation before the deep end.",
   },

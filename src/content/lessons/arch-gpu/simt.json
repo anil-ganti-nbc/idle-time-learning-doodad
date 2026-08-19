@@ -1,0 +1,395 @@
+{
+  "courseId": "arch-gpu",
+  "moduleId": "arch-gpu-simt",
+  "lessons": [
+    {
+      "id": "gpu-why-throughput-10",
+      "conceptId": "gpu-why-throughput",
+      "title": "Spend silicon on ALUs, not crystal balls",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["arch-data-parallel", "cpu-pipeline"],
+      "goDeeper": "gpu-execution-model",
+      "diagram": "latency-throughput",
+      "explanation": [
+        "A latency-optimized core spends a large fraction of its area making one thread look fast. Predictors, reorder buffers, and large private caches exist because the next instruction often depends on this one, and a person is waiting on a single program counter. That is the right bet for a sequential pipeline you already know.",
+        "A throughput-oriented GPU makes the opposite bet. If thousands of elements are independent, you can run them on many simple arithmetic pipelines and keep those pipelines fed while any one item is still waiting on memory. Area goes to ALUs and memory bandwidth, not to guessing the next branch of one lonely thread. The machine is built for maps, not for chains.",
+        "The cost is real. Lightly parallel work, pointer chasing, and short sequential dependences starve those extra ALUs. A GPU also wants the independence written down — a function over an index space — instead of a sequential loop the hardware must discover. The win appears only when the program matches the bet."
+      ],
+      "example": "Shading a million pixels or multiplying large independent tiles of a matrix keeps extra ALUs busy. Walking a linked list of objects does not: each step needs the previous address, the working set is a chain, and a latency-optimized core's caches and predictors win.",
+      "whyItMatters": "Stories that a laptop 'has more cores so everything is faster' collapse once you can say which program is a map and which is a chain. The rest of this course is how a map is actually launched and executed — not a claim that every program should move.",
+      "quiz": [
+        {
+          "id": "gw10-1",
+          "stem": "A latency-optimized core spends relatively more area on:",
+          "correctAnswer": "Prediction, reordering, and caches for one thread",
+          "distractors": [
+            { "text": "Many identical arithmetic pipelines", "kind": "nearby", "rationale": "Many ALUs is the throughput bet, not the single-thread bet." },
+            { "text": "A wider memory bus and nothing else", "kind": "misapplied", "rationale": "Bandwidth helps both machines; the distinctive spend is speculation and caches." },
+            { "text": "Removing the program counter", "kind": "subtle", "rationale": "A sequential core is built around one PC, not without one." }
+          ],
+          "correctExplanation": "The CPU bet is 'make this one program counter look fast'.",
+          "objectiveIds": ["Contrast a latency-optimized core with a throughput-optimized one"],
+          "prerequisiteConceptIds": ["cpu-pipeline", "arch-data-parallel"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "gw10-2",
+          "stem": "A throughput GPU is a good match when:",
+          "correctAnswer": "Many elements can be processed independently",
+          "distractors": [
+            { "text": "The next instruction always depends on the last", "kind": "reversed", "rationale": "That is the sequential-core case." },
+            { "text": "The working set is one cache line", "kind": "nearby", "rationale": "A tiny working set favours caches, not thousands of ALUs." },
+            { "text": "The program must take a precise exception on every instruction", "kind": "subtle", "rationale": "Precise exceptions are a sequential-core luxury, not the GPU's bet." }
+          ],
+          "correctExplanation": "Independence is what extra ALUs can spend. A chain cannot use them.",
+          "objectiveIds": ["Say what kind of program a GPU is for"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "gw10-3",
+          "stem": "Moving a pointer-chasing walk onto a GPU typically:",
+          "correctAnswer": "Leaves most of the extra ALUs idle because each step needs the last address",
+          "distractors": [
+            { "text": "Automatically becomes a data-parallel map", "kind": "reversed", "rationale": "The hardware cannot invent independence the algorithm did not have." },
+            { "text": "Removes the need for a pipeline", "kind": "nearby", "rationale": "The GPU still pipelines; the work is still a chain." },
+            { "text": "Makes DRAM latency disappear", "kind": "subtle", "rationale": "The miss is still slow. There is just no independent neighbour to run." }
+          ],
+          "correctExplanation": "A chain is the wrong program for a throughput machine. Extra ALUs have nothing independent to do.",
+          "objectiveIds": ["Say what kind of program a GPU is for"],
+          "prerequisiteConceptIds": ["arch-data-parallel", "cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "gpu-execution-model-10",
+      "conceptId": "gpu-execution-model",
+      "title": "A kernel is a launch over an index space",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["gpu-why-throughput"],
+      "goDeeper": "gpu-kernel-launch",
+      "diagram": "gpu-grid",
+      "explanation": [
+        "You do not hand a GPU a sequential program and hope. You write a kernel: a function that runs once per thread. You launch it over a grid of thread blocks. Each thread knows its index and uses that index to pick the element it owns. The launch geometry is the parallel loop.",
+        "The hierarchy is a programming model, not yet the hardware. A thread is the finest name you write. A block is the unit that can share a small on-chip scratchpad and a barrier. The grid is the whole launch. Hardware will later group consecutive threads into a warp — a scheduling quantum, not something you declare. Keep those two vocabularies apart for one more unit.",
+        "This is why a kernel can look like a scalar function and still use the machine. If you launch too few threads, you underfill the chip. If you launch a geometry that later fights the hardware grouping, you waste work. The model comes first so you can reason before counting hardware widths."
+      ],
+      "example": "A vector add launches a grid of blocks; each thread computes i from its block and thread index and does C[i] = A[i] + B[i]. The body is scalar. The launch is the map. Choosing 256 threads per block on a million-element vector is a geometry decision, not a change to the addition.",
+      "whyItMatters": "Every later hardware word in this course is an implementation of this launch. If you skip the model, those words become vendor folklore instead of names for a hierarchy you already wrote.",
+      "quiz": [
+        {
+          "id": "ge10-1",
+          "stem": "In this programming model, the function that runs once per thread is a:",
+          "correctAnswer": "Kernel",
+          "distractors": [
+            { "text": "Grid", "kind": "nearby", "rationale": "The grid is the whole launch, not the per-thread body." },
+            { "text": "Reorder buffer", "kind": "misapplied", "rationale": "ROBs belong to out-of-order CPU cores." },
+            { "text": "Page table", "kind": "subtle", "rationale": "Address translation is a different contract." }
+          ],
+          "correctExplanation": "A kernel is the per-thread body. The launch supplies the index space.",
+          "objectiveIds": ["Map a kernel launch onto threads, blocks, and a grid"],
+          "prerequisiteConceptIds": ["gpu-why-throughput"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ge10-2",
+          "stem": "A thread block is the level that can:",
+          "correctAnswer": "Share a small on-chip memory and a barrier",
+          "distractors": [
+            { "text": "Replace the grid as the entire launch", "kind": "reversed", "rationale": "The grid contains blocks; a block is not the launch." },
+            { "text": "Address all of device memory privately", "kind": "nearby", "rationale": "Device memory is a device resource, not block-private." },
+            { "text": "Retire the host CPU's instructions", "kind": "misapplied", "rationale": "Blocks are not CPU cores." }
+          ],
+          "correctExplanation": "Shared scratchpad and a block-scoped barrier are why the block exists as a name.",
+          "objectiveIds": ["Map a kernel launch onto threads, blocks, and a grid"],
+          "prerequisiteConceptIds": ["gpu-why-throughput"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ge10-3",
+          "stem": "A warp is not part of the launch geometry because:",
+          "correctAnswer": "It is a later hardware grouping, not a name the programmer launches",
+          "distractors": [
+            { "text": "Kernels cannot have more than one thread", "kind": "reversed", "rationale": "The whole point of a launch is many threads." },
+            { "text": "Blocks already are the hardware scheduling quantum", "kind": "nearby", "rationale": "A block is a programming-model grouping that can share memory." },
+            { "text": "The host has no program counter", "kind": "subtle", "rationale": "The host has a PC. It is just not the device grouping." }
+          ],
+          "correctExplanation": "Thread, block, and grid are what you launch. The hardware grouping comes next.",
+          "objectiveIds": ["Keep the programming model separate from the hardware warp"],
+          "prerequisiteConceptIds": ["gpu-why-throughput"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "gpu-kernel-launch-10",
+      "conceptId": "gpu-kernel-launch",
+      "title": "The host creates the index space",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["gpu-execution-model"],
+      "goDeeper": "gpu-simt",
+      "explanation": [
+        "A kernel launch is a host-side decision. The host names the kernel and the geometry — how many blocks, how many threads per block — and hands that work to the device. The device then creates the threads. You did not spawn them in a loop on the CPU. The launch is the fork.",
+        "That geometry is how much work the device can see. Too few threads and large parts of the chip have nothing to run. A launch that does not cover the data leaves leftover elements for a tail, or drops them. The arithmetic in the kernel does not change; the index space does. Launch is asynchronous in the usual model: the host can queue more work or do its own computation while the device runs.",
+        "Because the host is outside the per-thread loop, a short kernel over a small grid can spend more time being launched than being run. That is a later capture story. For this unit, hold the simpler fact: launch geometry is a host decision that creates the threads, and the device cannot invent work you did not launch."
+      ],
+      "example": "Launching a 1-block, 1-thread kernel that adds two vectors of a million elements does one addition. Launching enough threads to cover the million does the map. The kernel source can be identical. The host's geometry was the algorithm.",
+      "whyItMatters": "People blame the compiler or the ALU count when the launch was too small. The host created the index space. If that space is empty, the throughput machine has nothing to be throughput about.",
+      "quiz": [
+        {
+          "id": "kl10-1",
+          "stem": "A kernel launch is primarily:",
+          "correctAnswer": "A host decision that creates the thread index space on the device",
+          "distractors": [
+            { "text": "A device-side loop that discovers how many threads it needs", "kind": "reversed", "rationale": "The device runs the geometry the host named. It does not invent it." },
+            { "text": "A compile-time rewrite of the ISA", "kind": "nearby", "rationale": "Launch happens at run time. The ISA is already compiled." },
+            { "text": "A page-table walk on the host", "kind": "subtle", "rationale": "Translation is not what creates the thread index space." }
+          ],
+          "correctExplanation": "The host names the kernel and the geometry. The device instantiates the threads.",
+          "objectiveIds": ["Describe a kernel launch as a host decision that creates the thread index space"],
+          "prerequisiteConceptIds": ["gpu-execution-model"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "kl10-2",
+          "stem": "A correct kernel launched with far too few threads typically:",
+          "correctAnswer": "Leaves most of the data untouched because those indices were never created",
+          "distractors": [
+            { "text": "Makes the device invent extra threads until the array is covered", "kind": "reversed", "rationale": "The device does not grow the launch behind your back." },
+            { "text": "Changes the addition into a multiply", "kind": "nearby", "rationale": "Geometry is not the opcode." },
+            { "text": "Forces the host to single-step each thread", "kind": "subtle", "rationale": "The host is not in the per-thread loop." }
+          ],
+          "correctExplanation": "No thread, no index, no element. Launch geometry is how much work exists.",
+          "objectiveIds": ["Predict how launch geometry changes how much work the device can see"],
+          "prerequisiteConceptIds": ["gpu-execution-model"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "kl10-3",
+          "stem": "The host can often queue another launch or do its own work during a kernel because:",
+          "correctAnswer": "The usual launch is asynchronous: creating the index space does not keep the host inside each thread",
+          "distractors": [
+            { "text": "The device pauses until the host finishes the kernel body", "kind": "reversed", "rationale": "The host is not executing the kernel body." },
+            { "text": "Kernels are compiled on every launch from source", "kind": "nearby", "rationale": "Compilation is not why the host is free." },
+            { "text": "The grid has only one thread by definition", "kind": "subtle", "rationale": "Grids are large. Asynchrony is the point even then." }
+          ],
+          "correctExplanation": "Launch creates work and returns. The host is not the inner loop.",
+          "objectiveIds": ["Describe a kernel launch as a host decision that creates the thread index space"],
+          "prerequisiteConceptIds": ["gpu-execution-model"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "gpu-simt-10",
+      "conceptId": "gpu-simt",
+      "title": "Scalar code, lockstep hardware",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["gpu-execution-model"],
+      "goDeeper": "gpu-warps",
+      "diagram": "gpu-simt",
+      "explanation": [
+        "Packed SIMD is a contract you write: one instruction names a vector of elements in one register. SIMT (single instruction, multiple threads) lets you write scalar thread code. The hardware still issues one instruction across a group of threads, and it masks the lanes that should not participate.",
+        "That is why a kernel can contain a scalar if and still be a vector machine. Threads that should not take the instruction sit idle under a mask; they do not fetch a different instruction. The programming model hid the pack. The energy cost of an idle lane did not go away.",
+        "People collapse SIMT into 'it is just SIMD'. The distinction matters. SIMD that you wrote as a packed add cannot silently look like two control-flow paths. SIMT can look like ordinary C and still run in lockstep. The next unit names the group that shares the instruction."
+      ],
+      "example": "Thirty-two threads execute y[i] = x[i] + 1. You wrote a scalar add. The hardware issues one add across the group. A thread whose predicate is false still occupies its lane for that issue; it just does not commit a result.",
+      "whyItMatters": "SIMT is why GPU kernels read like C and profile like vector machines. If you think the hardware forked into independent programs, later performance words will sound like superstition.",
+      "quiz": [
+        {
+          "id": "gs10-1",
+          "stem": "SIMT differs from packed SIMD mainly because:",
+          "correctAnswer": "You write scalar thread code; the hardware groups and masks lanes",
+          "distractors": [
+            { "text": "It uses slower arithmetic units", "kind": "misconception", "rationale": "The ALUs are not the distinction." },
+            { "text": "It cannot do floating point", "kind": "nearby", "rationale": "SIMT machines do plenty of floating point." },
+            { "text": "It has no registers", "kind": "subtle", "rationale": "Threads still have a register file." }
+          ],
+          "correctExplanation": "The pack is implicit. You did not name a vector register.",
+          "objectiveIds": ["Distinguish SIMT from packed SIMD"],
+          "prerequisiteConceptIds": ["gpu-execution-model"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "gs10-2",
+          "stem": "A kernel that looks like scalar C still runs in lockstep because:",
+          "correctAnswer": "The hardware issues one instruction across a group and masks unused lanes",
+          "distractors": [
+            { "text": "The compiler rewrites the kernel into a sequential host loop", "kind": "reversed", "rationale": "The point is that the device keeps the group together." },
+            { "text": "Each thread fetches a private instruction stream", "kind": "nearby", "rationale": "That would be MIMD, not SIMT." },
+            { "text": "The launch geometry forbids more than one thread", "kind": "subtle", "rationale": "The launch created many threads. Hardware grouped them." }
+          ],
+          "correctExplanation": "Scalar source, one issue, a mask. That is lockstep.",
+          "objectiveIds": ["Explain why a scalar-looking kernel still runs in lockstep"],
+          "prerequisiteConceptIds": ["gpu-execution-model"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "gs10-3",
+          "stem": "Packed SIMD you write by hand cannot silently look like two control-flow paths because:",
+          "correctAnswer": "You named the pack; both sides of a scalar if are not implicit in one vector instruction",
+          "distractors": [
+            { "text": "Packed SIMD has no registers", "kind": "reversed", "rationale": "Packed SIMD is exactly about vector registers." },
+            { "text": "GPUs refuse to add floating-point numbers", "kind": "nearby", "rationale": "The distinction is the programming model, not the ALU." },
+            { "text": "The host compiles away every branch in every program", "kind": "subtle", "rationale": "Branches exist. SIMT hides the pack around them." }
+          ],
+          "correctExplanation": "Explicit SIMD is a pack you wrote. SIMT is a pack the hardware imposed on scalar threads.",
+          "objectiveIds": ["Distinguish SIMT from packed SIMD"],
+          "prerequisiteConceptIds": ["gpu-execution-model"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "gpu-simd-lane-10",
+      "conceptId": "gpu-simd-lane",
+      "title": "A disabled lane still pays rent",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["gpu-simt", "cpu-vector-simd"],
+      "goDeeper": "gpu-warps",
+      "diagram": "gpu-simt",
+      "explanation": [
+        "A lane is one slot in the lockstep group. When the mask says this thread should not participate, the lane does not get a different instruction. It sits through the issue. The cycle still happens. The arithmetic pipe still occupies that slot. You saved a writeback, not a cycle.",
+        "That is different from packed SIMD you wrote on a CPU. There you named the elements in the vector. A masked packed add is still one instruction you asked for, and you can often rearrange the pack so unused slots are not in the register at all. SIMT chose the grouping for you from consecutive threads. You cannot pack the live ones tighter without changing which threads sit next to each other.",
+        "The bill is why a predicate that is true for one thread in a group is expensive: the whole group issues the instruction. The unused lanes are not free workers you can send elsewhere. They are empty seats on a bus that already left."
+      ],
+      "example": "A packed CPU add on eight floats you loaded into one register does eight useful operations if you filled all eight. A SIMT group of thirty-two threads where only thread 0 is active still issues a thirty-two-lane instruction. One useful add, thirty-one idle lanes, one cycle spent.",
+      "whyItMatters": "CPU SIMD taught you that a pack you named can be dense. SIMT taught you the pack is implicit. This unit is the cost of that implicit pack: a mask does not shrink the issue.",
+      "quiz": [
+        {
+          "id": "ln10-1",
+          "stem": "When a SIMT lane is masked off it typically:",
+          "correctAnswer": "Still occupies the issue slot for that cycle",
+          "distractors": [
+            { "text": "Is freed to run a different instruction from another thread", "kind": "reversed", "rationale": "The group shares one instruction. A masked lane does not freelance." },
+            { "text": "Shrinks the group width for the rest of the kernel", "kind": "nearby", "rationale": "The hardware width does not collapse because one predicate was false." },
+            { "text": "Migrates onto the host CPU for that instruction", "kind": "subtle", "rationale": "Masking is a device issue story, not a host offload." }
+          ],
+          "correctExplanation": "Idle is not absent. The slot is paid for whether or not the lane commits.",
+          "objectiveIds": ["State that a masked lane still occupies the cycle"],
+          "prerequisiteConceptIds": ["gpu-simt"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ln10-2",
+          "stem": "Packed SIMD you wrote by hand can avoid empty slots more easily than SIMT because:",
+          "correctAnswer": "You named which elements sit in the vector, so you can pack only the live ones",
+          "distractors": [
+            { "text": "Packed SIMD never uses a mask", "kind": "reversed", "rationale": "Masked packed ops exist. The difference is who chose the grouping." },
+            { "text": "CPU vectors are always one element wide", "kind": "nearby", "rationale": "Packed SIMD is many elements in one register." },
+            { "text": "SIMT has no registers at all", "kind": "subtle", "rationale": "SIMT threads have registers. The grouping is the issue." }
+          ],
+          "correctExplanation": "Explicit pack versus implicit group. Density is a layout you control only in the first.",
+          "objectiveIds": ["Contrast a SIMT mask with packed SIMD you wrote by hand"],
+          "prerequisiteConceptIds": ["gpu-simt", "cpu-vector-simd"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ln10-3",
+          "stem": "A SIMT group where only one thread's predicate is true still:",
+          "correctAnswer": "Issues the instruction across the whole group, with the other lanes idle",
+          "distractors": [
+            { "text": "Issues a one-lane instruction and donates the rest of the pipes to another group", "kind": "reversed", "rationale": "The width is a machine grouping, not a live-count." },
+            { "text": "Turns into packed SIMD of width one", "kind": "nearby", "rationale": "The programming model did not become an explicit vector of one." },
+            { "text": "Waits for the host to recompile the kernel", "kind": "subtle", "rationale": "Masks are a runtime issue fact." }
+          ],
+          "correctExplanation": "One useful lane, a full-width issue. That is the rent a disabled lane pays.",
+          "objectiveIds": ["State that a masked lane still occupies the cycle"],
+          "prerequisiteConceptIds": ["gpu-simt"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "gpu-warps-10",
+      "conceptId": "gpu-warps",
+      "title": "The scheduler does not see your threads",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["gpu-simt"],
+      "goDeeper": "gpu-exec-resources",
+      "diagram": "gpu-simt",
+      "explanation": [
+        "Hardware groups consecutive threads into a warp (NVIDIA, 32) or a wavefront (AMD, historically 64, now often 32). That group shares a program counter and is the unit a scheduler considers ready or stalled. You launched threads. The chip runs warps.",
+        "A block whose size is not a multiple of the warp width pads out a partial warp. Those extra lanes do nothing useful and still occupy the group. A block of one thread and a block of thirty-two threads that do the same math are not the same machine: the first still occupies a full-width warp.",
+        "This is why 'how many threads can I launch?' is the wrong first hardware question. The chip thinks in warps. Two threads in different warps have different program counters; they are not one lockstep group. The programming-model block can contain many warps. The scheduler's quantum is the smaller one."
+      ],
+      "example": "A block of 40 threads on a 32-wide warp is two warps: 32 full, then 8 useful plus 24 idle. A 256-thread block is exactly 8 warps. The 256 looks neat in a slide. The 8 is what issue logic counts.",
+      "whyItMatters": "The rest of this course — resources, memory, and later scheduling — is warp-shaped. If you keep thinking in individual threads, those words will stay metaphorical.",
+      "quiz": [
+        {
+          "id": "ww10-1",
+          "stem": "A warp (or wavefront) is primarily:",
+          "correctAnswer": "The hardware group that shares an instruction and is scheduled as one",
+          "distractors": [
+            { "text": "A programmer-declared block", "kind": "nearby", "rationale": "Blocks are the programming-model grouping." },
+            { "text": "A DRAM page", "kind": "misapplied", "rationale": "Pages are an address-translation idea." },
+            { "text": "The entire grid of a launch", "kind": "subtle", "rationale": "A grid is many blocks. A warp is a handful of consecutive threads." }
+          ],
+          "correctExplanation": "The scheduler's quantum, not the kernel's syntax.",
+          "objectiveIds": ["Name the warp/wavefront as the unit the scheduler sees"],
+          "prerequisiteConceptIds": ["gpu-simt"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ww10-2",
+          "stem": "A 40-thread block on a 32-wide warp wastes lanes because:",
+          "correctAnswer": "The second warp is only 8 threads and still occupies 32 lanes",
+          "distractors": [
+            { "text": "40 is prime, so hardware rejects the block", "kind": "misconception", "rationale": "Primality is irrelevant." },
+            { "text": "Blocks cannot exceed 32 threads", "kind": "reversed", "rationale": "Blocks can be much larger than a warp." },
+            { "text": "The compiler rounds down to 32 and drops the extra work", "kind": "nearby", "rationale": "The extra 8 threads still run; they just pad a warp." }
+          ],
+          "correctExplanation": "Partial warps still take a full-width group. The idle lanes are the waste.",
+          "objectiveIds": ["Explain why block size that is not a multiple of the warp width wastes lanes"],
+          "prerequisiteConceptIds": ["gpu-simt"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ww10-3",
+          "stem": "You launched 256 threads in one block. The scheduler's first count is:",
+          "correctAnswer": "How many warps that block became, not 256 independent program counters",
+          "distractors": [
+            { "text": "256 separate instruction streams, one per thread", "kind": "reversed", "rationale": "SIMT grouped them. The scheduler sees the groups." },
+            { "text": "One warp, because a block is a warp", "kind": "nearby", "rationale": "A 256-thread block is several warps." },
+            { "text": "The host's thread count, because the device has no grouping", "kind": "subtle", "rationale": "The host launched threads. The device grouped them." }
+          ],
+          "correctExplanation": "256 threads on a 32-wide machine is 8 warps. That is the quantum.",
+          "objectiveIds": ["Name the warp/wavefront as the unit the scheduler sees"],
+          "prerequisiteConceptIds": ["gpu-simt"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import { CPU_MICROARCH_LESSONS } from "../lessons/cpu-microarch/index.ts";
 import { CPU_SEMI_LESSONS } from "../lessons/cpu-semi.ts";
 import { CULTURE_LESSONS } from "../lessons/culture.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
+import { ARCH_GPU_LESSONS } from "../lessons/arch-gpu/index.ts";
 import { SCIENCE_LESSONS } from "../lessons/science.ts";
 import { SYSTEMS_LESSONS } from "../lessons/systems.ts";
 import { LONGFORM_LESSONS } from "../lessons/longform.ts";
@@ -27,6 +28,7 @@ import { validateCurriculum } from "./validate.ts";
 const LESSONS = [
   ...CPU_FOUNDATIONS_LESSONS,
   ...CPU_MICROARCH_LESSONS,
+  ...ARCH_GPU_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
@@ -272,6 +274,6 @@ describe("curriculum coverage metrics", () => {
     const gpu = coverage.coursesCovered.find((c) => c.courseId === "arch-gpu");
     assert.ok(gpu);
     assert.ok(gpu.conceptCount >= 20);
-    assert.ok(gpu.coveragePct < 100);
+    assert.equal(gpu.coveragePct, 100);
   });
 });

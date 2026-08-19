@@ -5,12 +5,13 @@ import { CONCEPTS } from "../../content/concepts.ts";
 import { COURSES } from "../../content/courses/index.ts";
 import { CPU_SEMI_LESSONS } from "../../content/lessons/cpu-semi.ts";
 import { GPU_LESSONS } from "../../content/lessons/gpu.ts";
+import { ARCH_GPU_LESSONS } from "../../content/lessons/arch-gpu/index.ts";
 import { buildCatalog } from "./catalog.ts";
 import { quizContextFor, quizContextForConcept } from "./quiz-context.ts";
 import { makeReadinessContext } from "./readiness.ts";
 import { emptyProgress } from "./srs.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 function held(id: string) {
   return {

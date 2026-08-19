@@ -9,6 +9,7 @@ import { SYSTEMS_LESSONS } from "./systems";
 import { SCIENCE_LESSONS } from "./science";
 import { CULTURE_LESSONS } from "./culture";
 import { GPU_LESSONS } from "./gpu";
+import { ARCH_GPU_LESSONS } from "./arch-gpu";
 import { LONGFORM_LESSONS } from "./longform";
 
 const externalFiles = import.meta.glob("../external/*.json", {
@@ -37,6 +38,7 @@ export const LESSONS: Lesson[] = [
   ...CPU_FOUNDATIONS_LESSONS,
   ...CPU_MICROARCH_LESSONS,
   ...CPU_SEMI_LESSONS,
+  ...ARCH_GPU_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,

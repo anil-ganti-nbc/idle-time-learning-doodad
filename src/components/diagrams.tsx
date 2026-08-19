@@ -279,6 +279,155 @@ const DIAGRAMS: Record<string, ReactNode> = {
       <text x="280" y="127" textAnchor="middle" fill="currentColor" fontSize="12">one address · one writer</text>
     </svg>
   ),
+  "gpu-grid": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Grid of blocks of threads">
+      <rect x="20" y="18" width="520" height="118" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="38" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        grid
+      </text>
+      {[0, 1, 2].map((b) => (
+        <g key={b} transform={`translate(${48 + b * 168}, 52)`}>
+          <rect width="148" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+          <text x="74" y="18" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+            block {b}
+          </text>
+          {[0, 1, 2, 3].map((t) => (
+            <rect key={t} x={10 + t * 32} y="28" width="26" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+          ))}
+        </g>
+      ))}
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        you launch threads and blocks · hardware groups them later
+      </text>
+    </svg>
+  ),
+  "gpu-simt": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="SIMT lockstep group">
+      <text x="280" y="22" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        one instruction
+      </text>
+      <path d="M280 28 V44" stroke="currentColor" strokeOpacity="0.4" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <g key={i} transform={`translate(${36 + i * 64}, 52)`}>
+          <rect
+            width="52"
+            height="52"
+            rx="6"
+            fill="currentColor"
+            fillOpacity={i === 2 || i === 5 ? 0.06 : 0.14}
+            stroke="currentColor"
+            strokeOpacity="0.4"
+          />
+          <text x="26" y="32" textAnchor="middle" fill="currentColor" fontSize="11">
+            {i === 2 || i === 5 ? "off" : "lane"}
+          </text>
+        </g>
+      ))}
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        masked lanes still occupy the issue
+      </text>
+      <text x="280" y="150" textAnchor="middle" fill="currentColor" fillOpacity="0.5" fontSize="11">
+        scalar source · lockstep hardware
+      </text>
+    </svg>
+  ),
+  "gpu-diverge": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Divergent paths in one warp">
+      <rect x="200" y="12" width="160" height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="31" textAnchor="middle" fill="currentColor" fontSize="12">
+        one warp PC
+      </text>
+      <path d="M280 40 L160 78" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M280 40 L400 78" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="88" y="78" width="144" height="36" rx="6" fill="currentColor" fillOpacity="0.1" />
+      <text x="160" y="101" textAnchor="middle" fill="currentColor" fontSize="12">
+        if path · some lanes
+      </text>
+      <rect x="328" y="78" width="144" height="36" rx="6" fill="currentColor" fillOpacity="0.1" />
+      <text x="400" y="101" textAnchor="middle" fill="currentColor" fontSize="12">
+        else path · rest
+      </text>
+      <path d="M160 114 L280 142" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M400 114 L280 142" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="162" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        both sides issue · then reconverge
+      </text>
+    </svg>
+  ),
+  "gpu-mem": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="GPU memory hierarchy">
+      {[
+        { y: 16, label: "registers", note: "per thread" },
+        { y: 52, label: "shared / LDS", note: "named · per block" },
+        { y: 88, label: "L1 / L2", note: "hardware caches" },
+        { y: 124, label: "device DRAM / HBM", note: "off-chip" },
+      ].map((row) => (
+        <g key={row.label} transform={`translate(80, ${row.y})`}>
+          <rect width="400" height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="16" y="19" fill="currentColor" fontSize="13">
+            {row.label}
+          </text>
+          <text x="384" y="19" textAnchor="end" fill="currentColor" fontSize="11" fillOpacity="0.55">
+            {row.note}
+          </text>
+        </g>
+      ))}
+    </svg>
+  ),
+  "gpu-coalesce": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Coalesced versus scattered access">
+      <text x="140" y="22" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        coalesced
+      </text>
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={`c${i}`} x={48 + i * 30} y="36" width="26" height="26" rx="3" fill="currentColor" fillOpacity="0.16" />
+      ))}
+      <rect x="44" y="72" width="188" height="22" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="138" y="87" textAnchor="middle" fill="currentColor" fontSize="11">
+        one transaction
+      </text>
+      <text x="420" y="22" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        scattered
+      </text>
+      {[0, 1, 2, 3].map((i) => (
+        <g key={`s${i}`}>
+          <rect x={320 + i * 52} y="36" width="26" height="26" rx="3" fill="currentColor" fillOpacity="0.16" />
+          <rect x={316 + i * 52} y={72 + (i % 2) * 18} width="34" height="16" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+        </g>
+      ))}
+      <text x="280" y="154" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        adjacent threads · adjacent addresses · few trips
+      </text>
+    </svg>
+  ),
+  "gpu-occupancy": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Occupancy as a budget">
+      <rect x="24" y="20" width="160" height="100" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="104" y="44" textAnchor="middle" fill="currentColor" fontSize="12">
+        registers
+      </text>
+      <text x="104" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        per thread × warps
+      </text>
+      <rect x="200" y="20" width="160" height="100" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="44" textAnchor="middle" fill="currentColor" fontSize="12">
+        shared / LDS
+      </text>
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        per block
+      </text>
+      <rect x="376" y="20" width="160" height="100" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="456" y="44" textAnchor="middle" fill="currentColor" fontSize="12">
+        warp slots
+      </text>
+      <text x="456" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        architectural cap
+      </text>
+      <text x="280" y="148" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        first ceiling wins · that many warps reside
+      </text>
+    </svg>
+  ),
   litho: (
     <svg viewBox="0 0 560 160" className={svg} aria-label="Lithography stack">
       <rect x="80" y="20" width="400" height="16" rx="2" fill="currentColor" fillOpacity="0.55" />

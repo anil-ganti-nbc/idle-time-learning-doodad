@@ -4,13 +4,14 @@ import { CATEGORIES } from "../../content/categories.ts";
 import { CONCEPTS } from "../../content/concepts.ts";
 import { COURSES } from "../../content/courses/index.ts";
 import { GPU_LESSONS } from "../../content/lessons/gpu.ts";
+import { ARCH_GPU_LESSONS } from "../../content/lessons/arch-gpu/index.ts";
 import { CPU_SEMI_LESSONS } from "../../content/lessons/cpu-semi.ts";
 import { buildCatalog } from "../learning/catalog.ts";
 import { isConceptUnlocked, makeReadinessContext } from "../learning/readiness.ts";
 import { emptyProgress } from "../learning/srs.ts";
 import { conceptEvidence, courseReadiness, lessonResult, onePerfectQuizUnlocksSpecialist } from "./evidence.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 describe("assessment vs mastery", () => {
   it("records a lesson result without claiming course readiness", () => {

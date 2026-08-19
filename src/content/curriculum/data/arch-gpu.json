@@ -133,6 +133,10 @@
       ],
       "summary": "A host-side decision that creates millions of threads the hardware will schedule.",
       "parentId": "gpu-execution-model",
+      "objectives": [
+        "Describe a kernel launch as a host decision that creates the thread index space",
+        "Predict how launch geometry changes how much work the device can see"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -161,6 +165,10 @@
         "cpu-vector-simd"
       ],
       "summary": "A disabled lane still occupies the cycle.",
+      "objectives": [
+        "State that a masked lane still occupies the cycle",
+        "Contrast a SIMT mask with packed SIMD you wrote by hand"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -189,6 +197,10 @@
       ],
       "summary": "ALUs, special-function units, and load/store pipes a SM/CU actually has.",
       "parentId": "gpu-warps",
+      "objectives": [
+        "Name the pipes a streaming multiprocessor actually has",
+        "Explain why not every instruction can issue on every unit"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -201,6 +213,10 @@
       ],
       "summary": "Registers, shared/LDS, L1/L2, and HBM — different spaces, different costs.",
       "parentId": "gpu-warps",
+      "objectives": [
+        "Place registers, shared/LDS, caches, and device memory in cost order",
+        "Say which spaces are programmer-named and which are hardware caches"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -213,6 +229,10 @@
       ],
       "summary": "A software-managed scratchpad visible to a block.",
       "parentId": "gpu-memory-hierarchy",
+      "objectives": [
+        "Describe shared memory as a software-managed scratchpad visible to a block",
+        "Explain why a block barrier exists around that scratchpad"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -224,6 +244,10 @@
         "gpu-shared-mem"
       ],
       "summary": "When several threads hit the same shared-memory bank and serialize.",
+      "objectives": [
+        "Diagnose when several threads hit the same shared-memory bank",
+        "Predict the serialization cost of a strided shared-memory access"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -236,6 +260,10 @@
       ],
       "summary": "Adjacent threads touching adjacent addresses become one transaction.",
       "parentId": "gpu-memory-hierarchy",
+      "objectives": [
+        "State that adjacent threads touching adjacent addresses become one transaction",
+        "Diagnose a scattered access pattern as many transactions"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -249,6 +277,10 @@
       ],
       "summary": "How many warps can live on a processor at once, limited by registers and shared memory.",
       "parentId": "gpu-exec-resources",
+      "objectives": [
+        "Define occupancy as how many warps can reside given registers and shared memory",
+        "Predict when more resident warps stop raising throughput"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -261,6 +293,10 @@
       ],
       "summary": "Registers × warps × blocks against a finite file.",
       "parentId": "gpu-occupancy",
+      "objectives": [
+        "Compute a register or shared-memory budget against a finite file",
+        "Trade per-thread state against how many warps can live"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -274,6 +310,10 @@
       ],
       "summary": "Threads in a warp taking different paths, so both sides run under a mask.",
       "parentId": "gpu-warps",
+      "objectives": [
+        "Locate divergence inside one warp, not across warps",
+        "Diagnose the issue cost of a mixed if/else"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -286,6 +326,10 @@
       ],
       "summary": "Switching to another ready warp instead of stalling the whole machine on a miss.",
       "parentId": "gpu-occupancy",
+      "objectives": [
+        "Explain switching to another ready warp instead of stalling the machine",
+        "Say what occupancy is buying when a load is in flight"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -298,6 +342,10 @@
         "cpu-ilp-idea"
       ],
       "summary": "Instruction slack inside a thread versus more warps.",
+      "objectives": [
+        "Contrast instruction slack inside a thread with more resident warps",
+        "Predict which knob helps a math-heavy versus a memory-waiting kernel"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -311,6 +359,10 @@
       ],
       "summary": "Which ready warp runs next, and why that interacts with caches and issue width.",
       "parentId": "gpu-latency-hiding",
+      "objectives": [
+        "State what the warp scheduler actually chooses",
+        "Diagnose how issue order interacts with caches and stalls"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -324,6 +376,10 @@
       ],
       "summary": "Registers, shared memory, and warp slots as coupled constraints on a kernel.",
       "parentId": "gpu-occupancy",
+      "objectives": [
+        "Treat registers, shared memory, and warp slots as coupled launch limits",
+        "Diagnose which resource is actually capping a kernel"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -335,6 +391,10 @@
         "gpu-scheduler"
       ],
       "summary": "A kernel that lives and pulls work, instead of one launch per tile.",
+      "objectives": [
+        "Contrast a persistent kernel that pulls work with one launch per tile",
+        "Say why launch overhead and irregular work motivate staying resident"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -346,6 +406,10 @@
         "gpu-memory-hierarchy"
       ],
       "summary": "Read-modify-write that stays correct when many threads hit one address.",
+      "objectives": [
+        "Explain a read-modify-write that stays correct when many threads hit one address",
+        "Predict why contention on one location serializes throughput"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -358,6 +422,10 @@
         "cpu-virtual-addr"
       ],
       "summary": "A single address space whose pages migrate, with a cost.",
+      "objectives": [
+        "Describe a single address space whose pages migrate",
+        "Predict the cost of a first-touch page fault on the device"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -370,6 +438,10 @@
         "cpu-vector-simd"
       ],
       "summary": "Specialized pipes for dense matrix fragments.",
+      "objectives": [
+        "Describe specialized pipes that consume dense matrix fragments",
+        "Contrast a tensor/matrix unit with a general SIMT ALU"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -381,6 +453,10 @@
         "gpu-memory-hierarchy"
       ],
       "summary": "NVLink, PCIe, and the fact that 'the GPU' is often several.",
+      "objectives": [
+        "Explain that 'the GPU' is often several devices with a link between them",
+        "Contrast a fast device-to-device link with going through host memory"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -392,6 +468,10 @@
         "gpu-kernel-launch"
       ],
       "summary": "Recording a launch sequence so the host is not in the inner loop.",
+      "objectives": [
+        "Describe recording a launch sequence so the host is not in the inner loop",
+        "Predict when capture helps a short kernel that would otherwise pay launch latency"
+      ],
       "estimatedMinutes": 10
     }
   ]
