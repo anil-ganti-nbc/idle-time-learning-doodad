@@ -63,6 +63,8 @@ export interface Category {
   name: string;
   blurb: string;
   custom?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Concept {
@@ -256,6 +258,7 @@ export interface GenerationLogEntry {
   lessonId?: string;
   conceptId?: string;
   cached?: boolean;
+  billable?: boolean;
   inputTokens?: number;
   outputTokens?: number;
 }

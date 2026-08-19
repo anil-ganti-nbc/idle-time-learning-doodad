@@ -6,6 +6,7 @@ import { HydrateGate } from "@/components/hydrate";
 import { ProvenanceLine, SourceBadge } from "@/components/provenance";
 import { Button } from "@/components/ui/button";
 import { generateExplain, generateQuiz } from "@/lib/ai/client";
+import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
@@ -76,6 +77,8 @@ function LessonReady() {
     const result = await generateExplain(aiCtx, unit, style);
     setBusy(null);
     setStyleOpen(false);
+    if (result.billable) bumpLiveGeneration();
+    logGeneration(toGenerationLog("explain", result, { lessonId: unit.id, conceptId: unit.conceptId }));
     if (!result.ok) {
       toast.error(result.error);
       return;
@@ -105,18 +108,6 @@ function LessonReady() {
         custom: true,
       },
     );
-    bumpLiveGeneration();
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "explain",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-      lessonId: unit.id,
-      conceptId: unit.conceptId,
-    });
     toast("Explanation rewritten.");
   }
 
@@ -124,6 +115,8 @@ function LessonReady() {
     setBusy("quiz");
     const result = await generateQuiz(aiCtx, unit);
     setBusy(null);
+    if (result.billable) bumpLiveGeneration();
+    logGeneration(toGenerationLog("quiz", result, { lessonId: unit.id, conceptId: unit.conceptId }));
     if (!result.ok) {
       toast.error(result.error);
       return;
@@ -146,18 +139,6 @@ function LessonReady() {
       },
       { ...unit, quiz: result.value, custom: true },
     );
-    bumpLiveGeneration();
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "quiz",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-      lessonId: unit.id,
-      conceptId: unit.conceptId,
-    });
     toast("Quiz replaced.");
   }
 

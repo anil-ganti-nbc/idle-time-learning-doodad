@@ -9,6 +9,7 @@
 export const PROGRESS_STORAGE_KEY = "dau-progress-v1";
 export const SECRETS_STORAGE_KEY = "dau-secrets";
 export const LIVE_SESSION_KEY = "dau-live-session";
+export const ROLLBACK_STORAGE_KEY = "dau-import-rollback";
 export const PROGRESS_PERSIST_VERSION = 3;
 
 export const PERSISTENCE = {
@@ -26,6 +27,11 @@ export const PERSISTENCE = {
       "generation log",
       "pending learning path",
     ],
+  },
+  rollback: {
+    key: ROLLBACK_STORAGE_KEY,
+    backend: "localStorage" as const,
+    contains: ["last replace-import snapshot"],
   },
   secrets: {
     key: SECRETS_STORAGE_KEY,

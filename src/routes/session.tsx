@@ -5,8 +5,9 @@ import { HydrateGate } from "@/components/hydrate";
 import { JournalistToggle } from "@/components/journalist-toggle";
 import { Button } from "@/components/ui/button";
 import { generateLesson } from "@/lib/ai/client";
+import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
-import { startLive, getLive } from "@/lib/learning/live";
+import { startLive, getLive, generationsAfterStart } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
 import { missingConceptForGeneration, selectLesson } from "@/lib/learning/select";
 import { conceptState } from "@/lib/learning/state";
@@ -104,13 +105,14 @@ function SessionReady() {
     [minutes, category, effort, mode, settings.journalistDepth, progress, catalog, profile],
   );
 
-  function go(lessonId: string) {
+  function go(lessonId: string, live?: { generations?: number }) {
     remember({ lastTime: minutes, lastCategory: category, lastEffort: effort, lastMode: mode });
     startLive({
       lessonId,
       startedAt: new Date().toISOString(),
       mode,
       timeBudget: minutes,
+      generations: live?.generations ?? 0,
     });
     void navigate({ to: "/learn/$lessonId", params: { lessonId } });
   }
@@ -151,27 +153,19 @@ function SessionReady() {
       { hasLocalMatch: Boolean(preview) },
     );
     setBusy(false);
+    logGeneration(
+      toGenerationLog("lesson", result, {
+        lessonId: result.ok ? result.value.id : undefined,
+        conceptId: concept.id,
+      }),
+    );
     if (!result.ok) {
       setError(result.error + (result.issues ? ` ${result.issues[0]}` : ""));
       return;
     }
     upsertLesson(result.value);
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "lesson",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: result.value.source.promptVersion ?? "dau-lesson-v1",
-      ok: true,
-      lessonId: result.value.id,
-      conceptId: concept.id,
-      cached: result.cached,
-      inputTokens: result.inputTokens,
-      outputTokens: result.outputTokens,
-    });
     toast(result.cached ? "Reused a cached unit." : "Generated a structured unit.");
-    go(result.value.id);
+    go(result.value.id, { generations: generationsAfterStart(result.billable) });
   }
 
   return (

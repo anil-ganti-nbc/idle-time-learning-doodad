@@ -31,9 +31,9 @@ export const defaultState = (): Omit<
   ProgressState,
   never
 > => ({
-  profile: defaultProfile,
-  settings: defaultSettings,
-  ai: defaultAi,
+  profile: { ...defaultProfile, preferredTopics: [], knownConceptIds: [], avoidTopics: [], customInterests: [] },
+  settings: { ...defaultSettings },
+  ai: { ...defaultAi },
   concepts: {},
   sessions: [],
   recentCategoryIds: [],

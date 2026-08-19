@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { generateLesson, generatePath } from "@/lib/ai/client";
+import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { makeId } from "@/lib/learning/catalog";
 import { useProgress } from "@/lib/learning/progress";
@@ -74,20 +75,12 @@ function TopicsReady() {
     setBusy(true);
     const result = await generatePath(aiCtx, subject.trim(), profile.customInterests);
     setBusy(false);
+    logGeneration(toGenerationLog("path", result));
     if (!result.ok) {
       toast.error(result.error);
       return;
     }
     setPending(result.value);
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "path",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-    });
   }
 
   async function fromSource() {
@@ -118,6 +111,12 @@ function TopicsReady() {
       sourceText: source,
     });
     setBusy(false);
+    logGeneration(
+      toGenerationLog("source", result, {
+        lessonId: result.ok ? result.value.id : undefined,
+        conceptId: concept.id,
+      }),
+    );
     if (!result.ok) {
       toast.error(result.error);
       return;
@@ -125,17 +124,6 @@ function TopicsReady() {
     upsertLesson({
       ...result.value,
       source: { ...result.value.source, sourceExcerpt: source.slice(0, 400) },
-    });
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "source",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-      lessonId: result.value.id,
-      conceptId: concept.id,
     });
     toast("Grounded lesson saved.");
     setSource("");

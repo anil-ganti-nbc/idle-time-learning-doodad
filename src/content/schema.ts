@@ -23,6 +23,7 @@ export const provenanceSchema = z.object({
   links: z.array(z.string()).optional(),
   sourceExcerpt: z.string().optional(),
   notes: z.string().optional(),
+  cacheKey: z.string().optional(),
 });
 
 const legacySourceSchema = z.object({

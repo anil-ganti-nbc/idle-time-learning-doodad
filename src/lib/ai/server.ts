@@ -30,6 +30,7 @@ export const runAiCompletion = createServerFn({ method: "POST" })
     if (!resolved.key && data.provider !== "local") {
       return {
         ok: false as const,
+        attempted: false as const,
         error:
           data.provider === "xai"
             ? "No xAI key. Set XAI_API_KEY, add .dau-secrets.json, or store a browser fallback in Settings."
@@ -45,5 +46,5 @@ export const runAiCompletion = createServerFn({ method: "POST" })
       baseUrl: local.url,
       maxTokens: 1800,
     });
-    return result;
+    return { ...result, attempted: true as const };
   });

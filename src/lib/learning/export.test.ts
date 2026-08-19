@@ -1,7 +1,17 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { defaultState } from "./defaults.ts";
-import { buildExport, importExport, isNewer } from "./export.ts";
+import {
+  buildExport,
+  importExport,
+  isNewer,
+  loadRollback,
+  memoryStore,
+  mergeDefinitions,
+  parseExport,
+  saveRollback,
+  secretExportGuard,
+} from "./export.ts";
 import { emptyProgress } from "./srs.ts";
 import type { SessionRecord } from "./types.ts";
 
@@ -61,6 +71,99 @@ describe("export/import", () => {
     assert.equal(bare.secrets, undefined);
     const withKeys = buildExport(defaultState(), { openai: "sk-test" }, true);
     assert.equal(withKeys.secrets?.openai, "sk-test");
+  });
+
+  it("refuses a key export without explicit confirmation", () => {
+    assert.equal(secretExportGuard(false, false).ok, true);
+    assert.equal(secretExportGuard(true, false).ok, false);
+    assert.equal(secretExportGuard(true, true).ok, true);
+  });
+
+  it("rejects a v2 file that is only a format stamp", () => {
+    const parsed = parseExport({
+      format: "dead-air-university-export",
+      schema_version: 2,
+    });
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) assert.match(parsed.error, /Invalid export/i);
+  });
+
+  it("rejects a partial v2 archive missing catalog", () => {
+    const bundle = buildExport(defaultState()) as Record<string, unknown>;
+    delete bundle.catalog;
+    const parsed = parseExport(bundle);
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) assert.match(parsed.error, /catalog/i);
+  });
+
+  it("rejects a corrupted v2 archive before mutating state", () => {
+    const local = defaultState();
+    local.profile.displayName = "Keep me";
+    const bad = {
+      ...buildExport(defaultState()),
+      progress: { concepts: "nope", sessions: [], recentCategoryIds: [] },
+    };
+    assert.throws(() => importExport(local, bad, "replace"), /Invalid export|progress/i);
+    assert.equal(local.profile.displayName, "Keep me");
+  });
+
+  it("persists a replace-import rollback that can restore prior state", () => {
+    const local = defaultState();
+    local.profile = { ...local.profile, displayName: "Before" };
+    local.concepts.a = { ...emptyProgress("a"), encountered: true, timesStudied: 4 };
+    const incoming = defaultState();
+    incoming.profile = { ...incoming.profile, displayName: "After" };
+    const result = importExport(local, buildExport(incoming), "replace");
+    assert.equal(result.state.profile.displayName, "After");
+    assert.equal(result.backup.profile.displayName, "Before");
+
+    const store = memoryStore();
+    saveRollback(result.backup, store);
+    const restored = loadRollback(store);
+    assert.ok(restored);
+    const rolled = importExport(result.state, restored, "replace");
+    assert.equal(rolled.state.profile.displayName, "Before");
+    assert.equal(rolled.state.concepts.a.timesStudied, 4);
+  });
+
+  it("keeps a conflicting local category without a newer timestamp", () => {
+    const warnings: string[] = [];
+    const merged = mergeDefinitions(
+      [{ id: "cpu", name: "Local CPU", blurb: "mine", updatedAt: "2026-08-19T00:00:00.000Z" }],
+      [{ id: "cpu", name: "Imported CPU", blurb: "theirs", updatedAt: "2026-08-01T00:00:00.000Z" }],
+      "category",
+      ["name", "blurb"],
+      warnings,
+    );
+    assert.equal(merged[0].name, "Local CPU");
+    assert.ok(warnings.some((w) => /Kept local category cpu/.test(w)));
+  });
+
+  it("keeps local concept when stamps are missing and fields differ", () => {
+    const warnings: string[] = [];
+    const merged = mergeDefinitions(
+      [{ id: "cpu-pipeline", name: "Local", category: "cpu", prerequisites: ["cpu-fetch"], level: "intro", summary: "mine" }],
+      [{ id: "cpu-pipeline", name: "Imported", category: "cpu", prerequisites: [], level: "core", summary: "theirs" }],
+      "concept",
+      ["name", "category", "prerequisites", "level", "summary"],
+      warnings,
+    );
+    assert.equal(merged[0].name, "Local");
+    assert.equal(merged[0].level, "intro");
+    assert.ok(warnings.some((w) => /Kept local concept cpu-pipeline/.test(w)));
+  });
+
+  it("takes a newer incoming category stamp", () => {
+    const warnings: string[] = [];
+    const merged = mergeDefinitions(
+      [{ id: "cpu", name: "Local CPU", blurb: "mine", updatedAt: "2026-08-01T00:00:00.000Z" }],
+      [{ id: "cpu", name: "Imported CPU", blurb: "theirs", updatedAt: "2026-08-19T00:00:00.000Z" }],
+      "category",
+      ["name", "blurb"],
+      warnings,
+    );
+    assert.equal(merged[0].name, "Imported CPU");
+    assert.equal(warnings.length, 0);
   });
 
   it("migrates a legacy integer quiz score on import", () => {

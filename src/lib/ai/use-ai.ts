@@ -16,5 +16,6 @@ export function useAiContext(sessionGenerations = 0): GenerateContext {
     logCountToday: generationsToday(log),
     sessionGenerations,
     existingLessons: catalog.lessons,
+    conceptIds: catalog.concepts.map((c) => c.id),
   };
 }

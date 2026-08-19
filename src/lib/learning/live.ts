@@ -52,3 +52,8 @@ export function clearLive() {
 export function elapsedMinutes(startedAt: string, now = Date.now()): number {
   return Math.max(1, Math.round((now - new Date(startedAt).getTime()) / 60_000));
 }
+
+/** Opening a gap with a freshly generated lesson already consumed one billable call. */
+export function generationsAfterStart(billable: boolean): number {
+  return billable ? 1 : 0;
+}

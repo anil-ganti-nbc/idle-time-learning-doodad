@@ -1,5 +1,5 @@
 import { PROMPT_VERSION } from "@/lib/learning/types";
-import type { AiSecrets, AiSettings, Lesson } from "@/lib/learning/types";
+import type { AiSecrets, AiSettings, Lesson, PendingPath } from "@/lib/learning/types";
 import { cacheKey, findCachedLesson, hashText } from "./cache";
 import { assertAiAllowed, assertMissingOnly } from "./guard";
 import {
@@ -24,6 +24,7 @@ import {
   type LessonPromptInput,
 } from "./prompts";
 import { estimateTokens } from "./providers";
+import { bindGeneratedLesson } from "./semantics";
 import { getAiStatus, runAiCompletion } from "./server";
 
 export { getAiStatus };
@@ -34,6 +35,7 @@ export interface GenerateContext {
   logCountToday: number;
   sessionGenerations: number;
   existingLessons: Lesson[];
+  conceptIds: string[];
 }
 
 export type ClientResult<T> =
@@ -41,12 +43,38 @@ export type ClientResult<T> =
       ok: true;
       value: T;
       cached?: boolean;
+      billable: boolean;
       model: string;
       provider: string;
       inputTokens?: number;
       outputTokens?: number;
     }
-  | { ok: false; error: string; issues?: string[] };
+  | {
+      ok: false;
+      error: string;
+      issues?: string[];
+      billable: boolean;
+      model?: string;
+      provider?: string;
+      inputTokens?: number;
+      outputTokens?: number;
+    };
+
+type CompletionReply = Awaited<ReturnType<typeof runAiCompletion>>;
+
+function billed(completion: CompletionReply): boolean {
+  return "attempted" in completion ? Boolean(completion.attempted) : true;
+}
+
+function usageFrom(completion: CompletionReply, user: string): { inputTokens: number; outputTokens?: number } {
+  if (completion.ok) {
+    return {
+      inputTokens: completion.inputTokens ?? estimateTokens(user),
+      outputTokens: completion.outputTokens,
+    };
+  }
+  return { inputTokens: estimateTokens(user) };
+}
 
 async function completeText(settings: AiSettings, secrets: AiSecrets, system: string, user: string) {
   return runAiCompletion({
@@ -90,10 +118,11 @@ export async function generateLesson(
   input: LessonPromptInput,
   opts?: { hasLocalMatch?: boolean },
 ): Promise<ClientResult<Lesson>> {
+  const meta = { provider: ctx.settings.provider, model: ctx.settings.model };
   const guard = assertAiAllowed(ctx.settings, ctx.logCountToday, ctx.sessionGenerations);
-  if (!guard.ok) return guard;
+  if (!guard.ok) return { ...guard, billable: false, ...meta };
   const missing = assertMissingOnly(ctx.settings.policy, Boolean(opts?.hasLocalMatch));
-  if (!missing.ok) return missing;
+  if (!missing.ok) return { ...missing, billable: false, ...meta };
 
   const query = lessonCacheQuery(input);
   const cached = findCachedLesson(ctx.existingLessons, query);
@@ -104,6 +133,7 @@ export async function generateLesson(
         ok: true,
         value: full,
         cached: true,
+        billable: false,
         model: full.source.model ?? ctx.settings.model,
         provider: full.source.provider ?? ctx.settings.provider,
       };
@@ -112,28 +142,50 @@ export async function generateLesson(
 
   const user = lessonUserPrompt(input);
   const completion = await completeText(ctx.settings, ctx.secrets, lessonSystemPrompt(), user);
-  if (!completion.ok) return completion;
+  const billable = billed(completion);
+  const usage = usageFrom(completion, user);
+  if (!completion.ok) {
+    return { ok: false, error: completion.error, billable, ...meta, ...usage };
+  }
   const json = extractJson(completion.text);
-  if (!json.ok) return json;
+  if (!json.ok) return { ...json, billable, provider: completion.provider, model: completion.model, ...usage };
   const parsed = parseGeneratedLesson(json.value);
-  if (!parsed.ok) return parsed;
+  if (!parsed.ok) return { ...parsed, billable, provider: completion.provider, model: completion.model, ...usage };
+  const bound = bindGeneratedLesson(parsed.value, {
+    concept: input.concept,
+    durationMin: input.durationMin,
+    effort: input.effort,
+    journalist: input.journalist,
+    knownConceptIds: new Set(ctx.conceptIds),
+  });
+  if (!bound.ok) {
+    return { ...bound, billable, provider: completion.provider, model: completion.model, ...usage };
+  }
+  const notes = bound.value.discrepancies.length
+    ? `curriculum bound: ${bound.value.discrepancies.join("; ")}`
+    : undefined;
   const lesson = lessonFromGenerated(parsed.value, {
-    conceptId: input.concept.id,
-    level: input.concept.level,
+    conceptId: bound.value.conceptId,
+    level: bound.value.level,
+    durationMin: bound.value.durationMin,
+    effort: bound.value.effort,
+    prerequisites: bound.value.prerequisites,
+    goDeeper: bound.value.goDeeper,
     provenance: defaultAiProvenance({
       provider: completion.provider,
       model: completion.model,
       sourceExcerpt: input.sourceText?.slice(0, 400),
       cacheKey: cacheKey(query),
+      notes,
     }),
   });
   return {
     ok: true,
     value: lesson,
+    billable: true,
     model: completion.model,
     provider: completion.provider,
-    inputTokens: completion.inputTokens ?? estimateTokens(user),
-    outputTokens: completion.outputTokens,
+    ...usage,
   };
 }
 
@@ -142,65 +194,74 @@ export async function generateExplain(
   lesson: Lesson,
   style: NonNullable<LessonPromptInput["style"]>,
 ): Promise<ClientResult<{ explanation: string[]; example: string }>> {
+  const meta = { provider: ctx.settings.provider, model: ctx.settings.model };
   const guard = assertAiAllowed(ctx.settings, ctx.logCountToday, ctx.sessionGenerations);
-  if (!guard.ok) return guard;
-  const completion = await completeText(
-    ctx.settings,
-    ctx.secrets,
-    explainSystemPrompt(),
-    explainUserPrompt(lesson, style),
-  );
-  if (!completion.ok) return completion;
+  if (!guard.ok) return { ...guard, billable: false, ...meta };
+  const user = explainUserPrompt(lesson, style);
+  const completion = await completeText(ctx.settings, ctx.secrets, explainSystemPrompt(), user);
+  const billable = billed(completion);
+  const usage = usageFrom(completion, user);
+  if (!completion.ok) return { ok: false, error: completion.error, billable, ...meta, ...usage };
   const json = extractJson(completion.text);
-  if (!json.ok) return json;
+  if (!json.ok) return { ...json, billable, provider: completion.provider, model: completion.model, ...usage };
   const parsed = parseGeneratedExplain(json.value);
-  if (!parsed.ok) return parsed;
+  if (!parsed.ok) return { ...parsed, billable, provider: completion.provider, model: completion.model, ...usage };
   const explanation = Array.isArray(parsed.value.explanation)
     ? parsed.value.explanation
     : [parsed.value.explanation];
   return {
     ok: true,
     value: { explanation, example: parsed.value.example },
+    billable: true,
     model: completion.model,
     provider: completion.provider,
-    inputTokens: completion.inputTokens,
-    outputTokens: completion.outputTokens,
+    ...usage,
   };
 }
 
-export async function generateQuiz(ctx: GenerateContext, lesson: Lesson) {
+export async function generateQuiz(
+  ctx: GenerateContext,
+  lesson: Lesson,
+): Promise<ClientResult<Lesson["quiz"]>> {
+  const meta = { provider: ctx.settings.provider, model: ctx.settings.model };
   const guard = assertAiAllowed(ctx.settings, ctx.logCountToday, ctx.sessionGenerations);
-  if (!guard.ok) return guard;
-  const completion = await completeText(ctx.settings, ctx.secrets, quizSystemPrompt(), quizUserPrompt(lesson));
-  if (!completion.ok) return completion;
+  if (!guard.ok) return { ...guard, billable: false, ...meta };
+  const user = quizUserPrompt(lesson);
+  const completion = await completeText(ctx.settings, ctx.secrets, quizSystemPrompt(), user);
+  const billable = billed(completion);
+  const usage = usageFrom(completion, user);
+  if (!completion.ok) return { ok: false, error: completion.error, billable, ...meta, ...usage };
   const json = extractJson(completion.text);
-  if (!json.ok) return json;
+  if (!json.ok) return { ...json, billable, provider: completion.provider, model: completion.model, ...usage };
   const parsed = parseGeneratedQuiz(json.value);
-  if (!parsed.ok) return parsed;
+  if (!parsed.ok) return { ...parsed, billable, provider: completion.provider, model: completion.model, ...usage };
   return {
     ok: true as const,
     value: parsed.value.quiz,
+    billable: true,
     model: completion.model,
     provider: completion.provider,
-    inputTokens: completion.inputTokens,
-    outputTokens: completion.outputTokens,
+    ...usage,
   };
 }
 
-export async function generatePath(ctx: GenerateContext, subject: string, interests: string[]) {
+export async function generatePath(
+  ctx: GenerateContext,
+  subject: string,
+  interests: string[],
+): Promise<ClientResult<PendingPath>> {
+  const meta = { provider: ctx.settings.provider, model: ctx.settings.model };
   const guard = assertAiAllowed(ctx.settings, ctx.logCountToday, ctx.sessionGenerations);
-  if (!guard.ok) return guard;
-  const completion = await completeText(
-    ctx.settings,
-    ctx.secrets,
-    pathSystemPrompt(),
-    pathUserPrompt(subject, interests),
-  );
-  if (!completion.ok) return completion;
+  if (!guard.ok) return { ...guard, billable: false, ...meta };
+  const user = pathUserPrompt(subject, interests);
+  const completion = await completeText(ctx.settings, ctx.secrets, pathSystemPrompt(), user);
+  const billable = billed(completion);
+  const usage = usageFrom(completion, user);
+  if (!completion.ok) return { ok: false, error: completion.error, billable, ...meta, ...usage };
   const json = extractJson(completion.text);
-  if (!json.ok) return json;
+  if (!json.ok) return { ...json, billable, provider: completion.provider, model: completion.model, ...usage };
   const parsed = parseGeneratedPath(json.value);
-  if (!parsed.ok) return parsed;
+  if (!parsed.ok) return { ...parsed, billable, provider: completion.provider, model: completion.model, ...usage };
   const categoryId = `path-${subject
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
@@ -218,9 +279,9 @@ export async function generatePath(ctx: GenerateContext, subject: string, intere
       concepts: pathConceptsFromGenerated(parsed.value, categoryId),
       sequence: parsed.value.sequence,
     },
+    billable: true,
     model: completion.model,
     provider: completion.provider,
-    inputTokens: completion.inputTokens,
-    outputTokens: completion.outputTokens,
+    ...usage,
   };
 }

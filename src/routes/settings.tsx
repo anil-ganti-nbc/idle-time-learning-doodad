@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAiStatus } from "@/lib/ai/client";
 import { PROVIDER_META } from "@/lib/ai/providers";
-import { buildExport } from "@/lib/learning/export";
+import { buildExport, loadRollback, secretExportGuard } from "@/lib/learning/export";
 import { survives } from "@/lib/learning/persistence";
 import { generationsToday, useProgress } from "@/lib/learning/progress";
 import { loadSecrets, saveSecrets, secretFor, secretPatch } from "@/lib/learning/secrets";
@@ -15,6 +15,10 @@ import type { AiProviderId, AiSecrets, Effort, TimeBudget } from "@/lib/learning
 import { useCatalog } from "@/lib/learning/use-catalog";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
+
+const SECRET_EXPORT_WARNING =
+  "The file will contain API keys in plaintext. Anyone with the file can spend those keys. Export anyway?";
+
 
 function SettingsPage() {
   return (
@@ -49,16 +53,32 @@ function SettingsReady() {
     saveSecrets(next);
   }
 
-  function exportJson() {
-    const bundle = buildExport(snapshot(), includeKeys ? secrets : undefined, includeKeys);
+  function downloadBundle(bundle: ReturnType<typeof buildExport>, filename: string) {
     const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `dead-air-university-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    setNote("Exported a versioned JSON archive.");
+  }
+
+  function exportJson() {
+    if (includeKeys) {
+      const gate = secretExportGuard(true, confirm(SECRET_EXPORT_WARNING));
+      if (!gate.ok) {
+        setNote(gate.error);
+        return;
+      }
+    }
+    const bundle = buildExport(snapshot(), includeKeys ? secrets : undefined, includeKeys);
+    downloadBundle(
+      bundle,
+      includeKeys
+        ? `dead-air-university-WITH-SECRETS-${new Date().toISOString().slice(0, 10)}.json`
+        : `dead-air-university-${new Date().toISOString().slice(0, 10)}.json`,
+    );
+    setNote(includeKeys ? "Exported an archive that includes plaintext API keys." : "Exported a versioned JSON archive.");
   }
 
   function snapshot() {
@@ -82,19 +102,43 @@ function SettingsReady() {
     void file.text().then((text) => {
       try {
         const parsed = JSON.parse(text) as unknown;
+        if (mode === "replace") {
+          const current = buildExport(snapshot());
+          downloadBundle(
+            current,
+            `dead-air-university-rollback-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`,
+          );
+        }
         const result = state.importBundle(parsed, mode);
         if (includeKeys && parsed && typeof parsed === "object" && "secrets" in (parsed as object)) {
           persistSecrets({ ...secrets, ...((parsed as { secrets?: AiSecrets }).secrets ?? {}) });
         }
         setNote(
-          `Imported (${mode}). Backup taken at ${new Date(result.backupAt).toLocaleString()}. ${result.warnings[0] ?? ""}`.trim(),
+          mode === "replace"
+            ? `Replaced local state. A rollback file was downloaded and a restore snapshot was saved. ${result.warnings[0] ?? ""}`.trim()
+            : `Imported (merge). ${result.warnings[0] ?? ""}`.trim(),
         );
         if (result.warnings.length) toast(result.warnings[0]);
-        else toast("Import complete.");
+        else toast(mode === "replace" ? "Replace complete. Rollback saved." : "Import complete.");
       } catch (err) {
         setNote(err instanceof Error ? err.message : "That file was not a progress export.");
       }
     });
+  }
+
+  function restoreRollback() {
+    const snap = loadRollback();
+    if (!snap) {
+      setNote("No replace-import snapshot on this device.");
+      return;
+    }
+    try {
+      const result = state.importBundle(snap, "replace");
+      setNote(`Restored the pre-replace snapshot from ${new Date(result.backupAt).toLocaleString()}.`);
+      toast("Restored previous state.");
+    } catch (err) {
+      setNote(err instanceof Error ? err.message : "Could not restore the snapshot.");
+    }
   }
 
   const used = generationsToday(state.generationLog);
@@ -385,12 +429,29 @@ function SettingsReady() {
       <section className="mt-10 space-y-3">
         <h2 className="font-display text-xl tracking-tight">Export / import</h2>
         <p className="text-sm text-muted">
-          Versioned JSON. Import makes a backup first and will not silently overwrite newer local
-          progress.
+          Versioned JSON. A replace import downloads your current archive first and keeps a restore
+          snapshot on this device. Merge will not silently overwrite newer local progress.
         </p>
-        <label className="flex items-center gap-2 text-sm text-muted">
-          <input type="checkbox" checked={includeKeys} onChange={(e) => setIncludeKeys(e.target.checked)} />
-          Include API keys in the file
+        <label className="flex items-start gap-2 text-sm text-muted">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={includeKeys}
+            onChange={(e) => {
+              if (!e.target.checked) {
+                setIncludeKeys(false);
+                return;
+              }
+              const allowed = confirm(SECRET_EXPORT_WARNING);
+              setIncludeKeys(allowed);
+            }}
+          />
+          <span>
+            Include API keys in the file
+            <span className="mt-1 block text-xs text-bad">
+              Off by default. The JSON will contain plaintext credentials if you confirm twice.
+            </span>
+          </span>
         </label>
         <label className="flex items-center gap-2 text-sm text-muted">
           Replace everything on import
@@ -406,6 +467,9 @@ function SettingsReady() {
           </Button>
           <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()}>
             Import
+          </Button>
+          <Button type="button" variant="ghost" onClick={restoreRollback}>
+            Restore last replace
           </Button>
           <input
             ref={fileRef}

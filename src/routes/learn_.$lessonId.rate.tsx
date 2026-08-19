@@ -3,9 +3,10 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { generateLesson } from "@/lib/ai/client";
+import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { lessonsForConceptFrom } from "@/lib/learning/catalog";
-import { clearLive, elapsedMinutes, getLive, startLive } from "@/lib/learning/live";
+import { clearLive, elapsedMinutes, getLive, startLive, generationsAfterStart } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
 import { daysUntil } from "@/lib/learning/srs";
 import { conceptState } from "@/lib/learning/state";
@@ -107,28 +108,23 @@ function RatePage() {
       adapt: stored && (stored.lastQuizScore ?? 0) >= 0.67 ? "harder" : "simpler",
     });
     setBusy(false);
+    logGeneration(
+      toGenerationLog("deeper", result, {
+        lessonId: result.ok ? result.value.id : undefined,
+        conceptId: concept.id,
+      }),
+    );
     if (!result.ok) {
       toast.error(result.error);
       return;
     }
     upsertLesson(result.value);
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "deeper",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-      lessonId: result.value.id,
-      conceptId: concept.id,
-      cached: result.cached,
-    });
     startLive({
       lessonId: result.value.id,
       startedAt: new Date().toISOString(),
       mode: "explore",
       timeBudget: result.value.durationMin,
+      generations: generationsAfterStart(result.billable),
     });
     void navigate({ to: "/learn/$lessonId", params: { lessonId: result.value.id } });
   }

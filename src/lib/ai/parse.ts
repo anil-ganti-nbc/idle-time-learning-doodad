@@ -85,6 +85,10 @@ export function lessonFromGenerated(
     id?: string;
     conceptId: string;
     level: Level;
+    durationMin?: TimeBudget;
+    effort?: Effort;
+    prerequisites?: string[];
+    goDeeper?: string;
     provenance: Provenance;
   },
 ): Lesson {
@@ -95,11 +99,11 @@ export function lessonFromGenerated(
       id: meta.id ?? makeId("ai", data.title),
       conceptId: meta.conceptId,
       title: data.title,
-      durationMin: data.estimated_minutes as TimeBudget,
-      effort: data.effort as Effort,
-      level: data.level ?? meta.level,
-      prerequisites: data.prerequisites,
-      goDeeper: data.go_deeper?.[0],
+      durationMin: meta.durationMin ?? (data.estimated_minutes as TimeBudget),
+      effort: meta.effort ?? (data.effort as Effort),
+      level: meta.level,
+      prerequisites: meta.prerequisites ?? data.prerequisites,
+      goDeeper: meta.goDeeper,
       source: meta.provenance,
       explanation,
       example: data.example,
@@ -137,6 +141,7 @@ export function defaultAiProvenance(input: {
   sourceExcerpt?: string;
   links?: string[];
   cacheKey?: string;
+  notes?: string;
 }): Provenance {
   return {
     type: "ai",
@@ -148,5 +153,6 @@ export function defaultAiProvenance(input: {
     sourceExcerpt: input.sourceExcerpt,
     links: input.links,
     cacheKey: input.cacheKey,
+    notes: input.notes,
   };
 }

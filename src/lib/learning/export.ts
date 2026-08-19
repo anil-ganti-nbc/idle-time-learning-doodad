@@ -1,6 +1,10 @@
+import { exportBundleV2Schema, formatZodIssues, secretExportGuard } from "./export-schema";
+import { ROLLBACK_STORAGE_KEY } from "./persistence";
 import { normalizeProgressRow } from "./srs";
 import { EXPORT_SCHEMA_VERSION } from "./types";
 import type { AiSecrets, ConceptProgress, Lesson, ProgressState, SessionRecord } from "./types";
+
+export { secretExportGuard };
 
 export interface ExportBundleV2 {
   format: "dead-air-university-export";
@@ -66,7 +70,12 @@ export function parseExport(
   if (!raw || typeof raw !== "object") return { ok: false, error: "Not a JSON object." };
   const obj = raw as Record<string, unknown>;
   if (obj.format === "dead-air-university-export" && obj.schema_version === 2) {
-    return { ok: true, data: raw as ExportBundleV2 };
+    const parsed = exportBundleV2Schema.safeParse(raw);
+    if (!parsed.success) return { ok: false, error: formatZodIssues(parsed.error) };
+    return { ok: true, data: parsed.data as ExportBundleV2 };
+  }
+  if (obj.format === "dead-air-university-export") {
+    return { ok: false, error: `Unsupported export schema_version ${String(obj.schema_version)}.` };
   }
   if (obj.settings && obj.concepts && obj.sessions) {
     return { ok: true, data: raw as V1Export };
@@ -122,7 +131,7 @@ export function importExport(
           recentCategoryIds: data.progress.recentCategoryIds,
           customCategories: data.catalog.categories,
           customConcepts: data.catalog.concepts,
-          customLessons: data.catalog.lessons,
+          customLessons: data.catalog.lessons as Lesson[],
           generationLog: data.generation_log ?? [],
           pendingPath: data.pending_path ?? null,
         },
@@ -183,12 +192,57 @@ function mergeStates(current: ProgressState, data: ExportBundleV2, warnings: str
     concepts,
     sessions: mergeSessions(current.sessions, data.progress.sessions ?? []),
     recentCategoryIds: unique([...(data.progress.recentCategoryIds ?? []), ...current.recentCategoryIds]),
-    customCategories: mergeById(current.customCategories, data.catalog.categories ?? []),
-    customConcepts: mergeById(current.customConcepts, data.catalog.concepts ?? []),
-    customLessons: mergeLessons(current.customLessons, data.catalog.lessons ?? [], warnings),
+    customCategories: mergeDefinitions(
+      current.customCategories,
+      data.catalog.categories ?? [],
+      "category",
+      ["name", "blurb"],
+      warnings,
+    ),
+    customConcepts: mergeDefinitions(
+      current.customConcepts,
+      data.catalog.concepts ?? [],
+      "concept",
+      ["name", "category", "parentId", "prerequisites", "level", "summary"],
+      warnings,
+    ),
+    customLessons: mergeLessons(current.customLessons, (data.catalog.lessons ?? []) as Lesson[], warnings),
     generationLog: uniqueById([...(data.generation_log ?? []), ...current.generationLog]).slice(0, 400),
     pendingPath: current.pendingPath ?? data.pending_path ?? null,
   };
+}
+
+function stampOf(item: { updatedAt?: string; createdAt?: string }): string | null {
+  return item.updatedAt ?? item.createdAt ?? null;
+}
+
+function materiallyDifferent<T extends Record<string, unknown>>(local: T, incoming: T, keys: (keyof T)[]): boolean {
+  return keys.some((key) => JSON.stringify(local[key]) !== JSON.stringify(incoming[key]));
+}
+
+export function mergeDefinitions<T extends { id: string; updatedAt?: string; createdAt?: string }>(
+  local: T[],
+  incoming: T[],
+  kind: string,
+  compareKeys: (keyof T)[],
+  warnings: string[],
+): T[] {
+  const map = new Map(local.map((item) => [item.id, item]));
+  for (const item of incoming) {
+    const cur = map.get(item.id);
+    if (!cur) {
+      map.set(item.id, item);
+      continue;
+    }
+    if (isNewer(stampOf(item), stampOf(cur))) {
+      map.set(item.id, { ...cur, ...item });
+      continue;
+    }
+    if (materiallyDifferent(cur as Record<string, unknown>, item as Record<string, unknown>, compareKeys as string[])) {
+      warnings.push(`Kept local ${kind} ${item.id}; incoming definition conflicted.`);
+    }
+  }
+  return [...map.values()];
 }
 
 function mergeSessions(local: SessionRecord[], incoming: SessionRecord[]): SessionRecord[] {
@@ -212,15 +266,6 @@ function mergeLessons(local: Lesson[], incoming: Lesson[], warnings: string[]): 
   return [...map.values()];
 }
 
-function mergeById<T extends { id: string }>(local: T[], incoming: T[]): T[] {
-  const map = new Map(local.map((x) => [x.id, x]));
-  for (const item of incoming) {
-    if (!map.has(item.id)) map.set(item.id, item);
-    else map.set(item.id, { ...map.get(item.id)!, ...item });
-  }
-  return [...map.values()];
-}
-
 function unique(ids: string[]): string[] {
   return [...new Set(ids)].slice(0, 12);
 }
@@ -234,4 +279,50 @@ function uniqueById<T extends { id: string }>(rows: T[]): T[] {
     out.push(row);
   }
   return out;
+}
+
+export interface KeyValueStore {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+function browserStore(): KeyValueStore | null {
+  if (typeof localStorage === "undefined") return null;
+  return localStorage;
+}
+
+export function saveRollback(bundle: ExportBundleV2, store: KeyValueStore | null = browserStore()): void {
+  if (!store) return;
+  store.setItem(ROLLBACK_STORAGE_KEY, JSON.stringify(bundle));
+}
+
+export function loadRollback(store: KeyValueStore | null = browserStore()): ExportBundleV2 | null {
+  if (!store) return null;
+  const raw = store.getItem(ROLLBACK_STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = parseExport(JSON.parse(raw));
+    if (!parsed.ok || !("format" in parsed.data)) return null;
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+export function clearRollback(store: KeyValueStore | null = browserStore()): void {
+  store?.removeItem(ROLLBACK_STORAGE_KEY);
+}
+
+export function memoryStore(initial: Record<string, string> = {}): KeyValueStore {
+  const data = { ...initial };
+  return {
+    getItem: (key) => data[key] ?? null,
+    setItem: (key, value) => {
+      data[key] = value;
+    },
+    removeItem: (key) => {
+      delete data[key];
+    },
+  };
 }

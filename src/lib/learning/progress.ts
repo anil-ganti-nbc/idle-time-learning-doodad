@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { defaultAi, defaultProfile, defaultSettings, defaultState } from "./defaults";
-import { importExport, type ImportMode } from "./export";
+import { importExport, saveRollback, type ImportMode } from "./export";
 import { PROGRESS_PERSIST_VERSION, PROGRESS_STORAGE_KEY } from "./persistence";
 import { emptyProgress, normalizeProgressRow, quizRatio, reviewQuality, scheduleReviewFull } from "./srs";
 import type {
@@ -173,7 +173,7 @@ export const useProgress = create<ProgressStore>()(
       },
       upsertCategory: (category) =>
         set((s) => ({
-          customCategories: upsert(s.customCategories, category),
+          customCategories: upsert(s.customCategories, stamp(category)),
         })),
       removeCategory: (id) =>
         set((s) => ({
@@ -185,7 +185,7 @@ export const useProgress = create<ProgressStore>()(
           }),
         })),
       upsertConcept: (concept) =>
-        set((s) => ({ customConcepts: upsert(s.customConcepts, concept) })),
+        set((s) => ({ customConcepts: upsert(s.customConcepts, stamp(concept)) })),
       removeConcept: (id) =>
         set((s) => ({
           customConcepts: s.customConcepts.filter((c) => c.id !== id),
@@ -262,6 +262,7 @@ export const useProgress = create<ProgressStore>()(
       replaceState: (state) => set(state),
       importBundle: (raw, mode = "merge") => {
         const result = importExport(snapshot(get()), raw, mode);
+        if (mode === "replace") saveRollback(result.backup);
         set(result.state);
         return { warnings: result.warnings, backupAt: result.backup.exported_at };
       },
@@ -288,6 +289,15 @@ export const useProgress = create<ProgressStore>()(
   ),
 );
 
+function stamp<T extends { createdAt?: string; updatedAt?: string }>(item: T): T {
+  const now = new Date().toISOString();
+  return {
+    ...item,
+    createdAt: item.createdAt ?? now,
+    updatedAt: now,
+  };
+}
+
 function upsert<T extends { id: string }>(list: T[], item: T): T[] {
   const idx = list.findIndex((x) => x.id === item.id);
   if (idx === -1) return [...list, item];
@@ -312,8 +322,4 @@ function snapshot(s: ProgressState): ProgressState {
   };
 }
 
-export function generationsToday(log: { at: string; ok: boolean }[], now = new Date()): number {
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  return log.filter((e) => e.ok && new Date(e.at).getTime() >= start.getTime()).length;
-}
+export { generationsToday, isBillableAttempt } from "./accounting";
