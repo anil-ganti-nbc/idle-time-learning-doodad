@@ -805,6 +805,163 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "high-na-field": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="High-NA is a new family with a smaller field">
+      <rect x="40" y="28" width="200" height="80" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="56" y="44" width="168" height="48" rx="3" fill="currentColor" fillOpacity="0.1" />
+      <text x="140" y="72" textAnchor="middle" fill="currentColor" fontSize="12">
+        0.33 field
+      </text>
+      <text x="140" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        one shot · thicker focus
+      </text>
+      <rect x="320" y="28" width="200" height="80" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="336" y="44" width="80" height="48" rx="3" fill="currentColor" fillOpacity="0.16" />
+      <rect x="424" y="44" width="80" height="48" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="420" y="72" textAnchor="middle" fill="currentColor" fontSize="12">
+        0.55 · stitch
+      </text>
+      <text x="420" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        two shots · thinner slice
+      </text>
+    </svg>
+  ),
+  "anamorphic-field": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Anamorphic demagnification keeps the mask printable">
+      <rect x="48" y="36" width="140" height="80" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="118" y="80" textAnchor="middle" fill="currentColor" fontSize="12">
+        mask
+      </text>
+      <path d="M196 76 H250" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="222" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        4× / 8×
+      </text>
+      <rect x="258" y="52" width="100" height="48" rx="3" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="308" y="80" textAnchor="middle" fill="currentColor" fontSize="12">
+        wafer field
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        not a simple 4× shrink in both axes
+      </text>
+    </svg>
+  ),
+  "mask-3d-stack": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Absorber on a multilayer is not a 2D drawing">
+      <rect x="80" y="28" width="160" height="18" rx="2" fill="currentColor" fillOpacity="0.28" />
+      <text x="160" y="42" textAnchor="middle" fill="currentColor" fontSize="11">
+        absorber
+      </text>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect key={i} x="80" y={50 + i * 10} width="320" height="8" rx="1" fill="currentColor" fillOpacity={i % 2 ? 0.2 : 0.08} />
+      ))}
+      <text x="400" y="78" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        Bragg stack
+      </text>
+      <path d="M40 20 L120 48" stroke="currentColor" strokeOpacity="0.55" />
+      <path d="M120 48 L200 20" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        thickness shadows · the drawing is not the image
+      </text>
+    </svg>
+  ),
+  "stochastic-wall": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="More NA does not buy photons">
+      <rect x="40" y="36" width="150" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="115" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        smaller feature
+      </text>
+      <text x="115" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        fewer photons
+      </text>
+      <rect x="210" y="36" width="140" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        more NA
+      </text>
+      <text x="280" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        no extra count
+      </text>
+      <rect x="370" y="36" width="150" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="445" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        more dose
+      </text>
+      <text x="445" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        fewer wafers / h
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        NA is not a photon source
+      </text>
+    </svg>
+  ),
+  "overlay-budget": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Overlay budget as a stack of small errors">
+      {["stage", "mask write", "warp", "stitch"].map((label, i) => (
+        <g key={label} transform={`translate(${36 + i * 130}, 36)`}>
+          <rect width="112" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="56" y="32" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+        </g>
+      ))}
+      <text x="280" y="124" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        each term is a fraction of a nanometre · the tail still eats the pad
+      </text>
+    </svg>
+  ),
+  "gag-sheet": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Nanosheets wrapped on every face">
+      <rect x="70" y="36" width="22" height="80" rx="3" fill="currentColor" fillOpacity="0.16" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="108" y="36" width="22" height="80" rx="3" fill="currentColor" fillOpacity="0.16" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="100" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        fins · wrap three sides
+      </text>
+      <rect x="280" y="44" width="180" height="16" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="280" y="70" width="180" height="16" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="280" y="96" width="180" height="16" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="268" y="36" width="12" height="84" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="460" y="36" width="12" height="84" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="370" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        sheets · wrap every face
+      </text>
+    </svg>
+  ),
+  "backside-power": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Power from the back, signals on the front">
+      <rect x="80" y="24" width="400" height="28" rx="3" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12">
+        front-side signals
+      </text>
+      <rect x="80" y="56" width="400" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        devices
+      </text>
+      <rect x="80" y="96" width="400" height="28" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="114" textAnchor="middle" fill="currentColor" fontSize="12">
+        backside power
+      </text>
+      <path d="M160 96 V124" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M400 96 V124" stroke="currentColor" strokeOpacity="0.5" />
+      <text x="280" y="152" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        power vias from the other face · the front can breathe
+      </text>
+    </svg>
+  ),
+  "chiplet-bond": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Small die assembled on a package">
+      <rect x="70" y="36" width="90" height="52" rx="4" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="172" y="36" width="90" height="52" rx="4" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="274" y="36" width="70" height="52" rx="4" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="207" y="66" textAnchor="middle" fill="currentColor" fontSize="12">
+        chiplets
+      </text>
+      <rect x="56" y="96" width="448" height="22" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="112" textAnchor="middle" fill="currentColor" fontSize="11">
+        interposer / hybrid bond
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        yield the small pieces · assemble the product
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

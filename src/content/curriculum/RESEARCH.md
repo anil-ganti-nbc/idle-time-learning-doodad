@@ -50,4 +50,8 @@ Where they disagree, prerequisite logic wins.
 - Lithography depends on a wafer and on planarity.
 - EUV depends on DUV (and therefore Rayleigh): it is a later light source,
   and "why refractive optics die" is only a sentence after lenses exist.
+- High-NA is a new scanner family after ordinary NA exists, not a bigger number
+  on the same tool (ASML EXE platform notes).
+- Nanosheet GAA and backside power are device/routing successors, not lithography
+  slogans (imec).
 - Transformers depend on backprop and sequence models.

@@ -1,0 +1,395 @@
+{
+  "courseId": "semi-leading",
+  "moduleId": "semi-a-pack",
+  "lessons": [
+    {
+      "id": "semi-chiplets-10",
+      "conceptId": "semi-chiplets",
+      "title": "Yield the small pieces, assemble the product",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-yield-model"],
+      "goDeeper": "semi-advanced-packaging",
+      "diagram": "chiplet-bond",
+      "explanation": [
+        "The yield model said a large die loses to the same defect density. Chiplets are the arithmetic response: cut the product into smaller dice that yield, then assemble them. Each chiplet sees a smaller A in e^(−A·D). The product's area comes back at packaging time, where a bond fail is a different class than a stochastic via on a 400 mm² monolith.",
+        "What you spend is an interconnect that used to be on-die: latency, energy, and a thermal and mechanical interface. What you buy is yield, mix-and-match process nodes, and the right to bin or replace a piece. A chiplet strategy that ignores the yield model is a marketing deck. A yield model that ignores the assembly fail rate is also incomplete.",
+        "Read 'chiplets improve yield' as: smaller A, then a new factory after the fab. Advanced packaging, next, is that factory."
+      ],
+      "example": "A 400 mm² GPU-class die yields poorly. Four 100 mm² chiplets on the same front-end yield. Assembly loses a few percent to bond and known-good-die test. The product still ships more good systems than the monolith did.",
+      "whyItMatters": "If chiplets are fashion, hybrid bonding will look like glue. If they are e^(−A·D) plus an assembly yield, you know which number to ask for.",
+      "quiz": [
+        {
+          "id": "ch10-1",
+          "stem": "Chiplets yield small die and assemble the product because:",
+          "correctAnswer": "Each piece sees a smaller area in the yield model, and the product is rebuilt after the fab",
+          "distractors": [
+            { "text": "Defect density automatically falls when you saw the wafer", "kind": "reversed", "rationale": "D did not change. A did." },
+            { "text": "k1 is the number of chiplets", "kind": "misapplied", "rationale": "k1 is lithography." },
+            { "text": "Assembly deletes the need for a yield model", "kind": "nearby", "rationale": "Assembly has its own fail rate." }
+          ],
+          "correctExplanation": "Smaller A, then a new join. That is the move.",
+          "objectiveIds": ["Explain chiplets as yielding small die and assembling the product"],
+          "prerequisiteConceptIds": ["semi-yield-model"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ch10-2",
+          "stem": "A monolith that dies where four smaller dice on the same flow live usually hit:",
+          "correctAnswer": "The area term in the yield model, not a new species of defect that only hates large rectangles",
+          "distractors": [
+            { "text": "A High-NA field that cannot cover a large die at all", "kind": "nearby", "rationale": "Fields stitch. Area is the yield term here." },
+            { "text": "Poisson being repealed for small dice only", "kind": "reversed", "rationale": "The same law makes the large one worse." },
+            { "text": "A pellicle that only fits small die", "kind": "subtle", "rationale": "A membrane is not this area law." }
+          ],
+          "correctExplanation": "Same D, bigger A, worse Y. Cutting A is the chiplet bet.",
+          "objectiveIds": ["Predict why a large monolithic die loses to the same defect density"],
+          "prerequisiteConceptIds": ["semi-yield-model"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ch10-3",
+          "stem": "Chiplets versus one monolith is a trade because:",
+          "correctAnswer": "You buy yield and mix-and-match, and you spend an interconnect, a thermal interface, and assembly yield",
+          "distractors": [
+            { "text": "Assembly is always lossless and free", "kind": "reversed", "rationale": "Bonds fail. Tests cost." },
+            { "text": "Smaller dice automatically have infinite overlay margin", "kind": "nearby", "rationale": "On-die overlay did not vanish." },
+            { "text": "Cutting a die repeals stochastic EUV defects", "kind": "subtle", "rationale": "Each chiplet still prints its own vias." }
+          ],
+          "correctExplanation": "e^(−A·D) versus a new join. Both numbers have to win.",
+          "objectiveIds": ["Predict why a large monolithic die loses to the same defect density"],
+          "prerequisiteConceptIds": ["semi-yield-model"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-hbm-stack-10",
+      "conceptId": "semi-hbm-stack",
+      "title": "Memory cubes next to compute, with a thermal bill",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-chiplets"],
+      "goDeeper": "semi-advanced-packaging",
+      "diagram": "chiplet-bond",
+      "explanation": [
+        "HBM is a chiplet story specialized to memory: stacked DRAM dice, a logic base, a short, wide interconnect sitting next to compute. Bandwidth per watt and per millimetre of edge look brilliant because the wires are short and many. The cube is also a heater sitting on the same package as a heater.",
+        "What it does not repeal: DRAM refresh and retention physics, the thermal resistance of the stack, and the mechanical stress of many bonds in a tall cube. A system that 'adds HBM' and then throttles in a sustained load hit the thermal bill, not a surprise about capacity.",
+        "Read HBM as chiplets plus a thermal interface, not as a magic memory type. Advanced packaging is how the cube is actually joined."
+      ],
+      "example": "A package with a compute die and an HBM cube hits the advertised bandwidth in a burst and then clocks down. The cube's top dice are hot. The interconnect did its job. The heat path did not.",
+      "whyItMatters": "If HBM is only a bandwidth slogan, you will misread every 'we attached a cube' announcement. The missing noun is usually heat.",
+      "quiz": [
+        {
+          "id": "hb10-1",
+          "stem": "HBM is memory cubes next to compute because:",
+          "correctAnswer": "Stacked DRAM with a short, wide join buys bandwidth; the cube still sits on the same package thermal budget",
+          "distractors": [
+            { "text": "The stack deletes the need for DRAM refresh", "kind": "reversed", "rationale": "Retention physics did not leave." },
+            { "text": "k1 is the number of DRAM dice", "kind": "misapplied", "rationale": "k1 is lithography." },
+            { "text": "The cube runs without any interconnect", "kind": "nearby", "rationale": "The join is the product." }
+          ],
+          "correctExplanation": "Short wires, many of them, next to a heater. That is HBM.",
+          "objectiveIds": ["Describe HBM as memory cubes next to compute, with a thermal bill"],
+          "prerequisiteConceptIds": ["semi-chiplets"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "hb10-2",
+          "stem": "A package that makes the burst bandwidth and then throttles usually hit:",
+          "correctAnswer": "The stack's thermal path, not a sudden loss of the interconnect's wire count",
+          "distractors": [
+            { "text": "Poisson deleting every other DRAM bit", "kind": "nearby", "rationale": "A thermal throttle is not a yield model." },
+            { "text": "The High-NA stitch on the cube", "kind": "subtle", "rationale": "This is a package thermal, not a field seam." },
+            { "text": "A wet oxide grown in the TSVs during burst", "kind": "misapplied", "rationale": "No oxidant step ran in the benchmark." }
+          ],
+          "correctExplanation": "The wires worked. The heat did not leave. That is the bill.",
+          "objectiveIds": ["Predict a thermal or interconnect limit that the stack does not repeal"],
+          "prerequisiteConceptIds": ["semi-chiplets"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "hb10-3",
+          "stem": "More HBM stacks versus a hotter, closer cube is a trade because:",
+          "correctAnswer": "More cubes buy bandwidth and spend package area and more thermal interfaces; closer spends heat into the compute die",
+          "distractors": [
+            { "text": "Stacking always cools the compute die", "kind": "reversed", "rationale": "A cube is a heater." },
+            { "text": "Bandwidth deletes the thermal resistance of the join", "kind": "nearby", "rationale": "Short wires still sit in a stack of dice." },
+            { "text": "HBM stacking repeals DRAM retention physics at the cell", "kind": "subtle", "rationale": "The physics of the cell remains." }
+          ],
+          "correctExplanation": "Wires versus heat. The cube does not let you pick both for free.",
+          "objectiveIds": ["Predict a thermal or interconnect limit that the stack does not repeal"],
+          "prerequisiteConceptIds": ["semi-chiplets"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-advanced-packaging-10",
+      "conceptId": "semi-advanced-packaging",
+      "title": "The factory after the fab",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-chiplets"],
+      "goDeeper": "semi-scaling-wall",
+      "diagram": "chiplet-bond",
+      "explanation": [
+        "Once the product is several dice, someone has to join them. Advanced packaging is that factory: organic substrates, silicon interposers, silicon bridges, and hybrid bonds that join copper pad to copper pad at pitches solder cannot. Hybrid bonding is how 'chiplet density' becomes a real number rather than a slide. A solder bump is a fat, forgiving, thermally mediocre join. A hybrid bond is a dense, unforgiving, thermally better join.",
+        "The bill is cleanliness, overlay of die-to-die marks, and a known-good-die test that has to be right before you spend the bond. A particle that was a nuisance on a bump is a killer on a hybrid pad. You have seen that sentence at wafer CD. It recurs here.",
+        "Read 'hybrid bonding improves chiplet density' as: the join pitch shrank, so the pad is now a leading-edge overlay and defectivity problem on a package tool."
+      ],
+      "example": "A solder-bumped interposer cannot fit the wire count a compute-HBM pair wants. A hybrid-bonded pair can. A single particle on a pad, invisible at bump scale, opens the pair. The clean that used to be 'good enough' for bumps is now the yield model.",
+      "whyItMatters": "If packaging is 'assembly', you will miss that the join inherited lithography's overlay and defectivity budgets. The factory moved; the physics did not retire.",
+      "quiz": [
+        {
+          "id": "ap10-1",
+          "stem": "Advanced packaging is the factory after the fab because:",
+          "correctAnswer": "Interposers, bridges, and hybrid bonds join yielded dice into the product the wafer no longer is",
+          "distractors": [
+            { "text": "Packaging replaces lithography and front-end entirely", "kind": "reversed", "rationale": "The dice still have to be made." },
+            { "text": "k1 is defined as the bump pitch of the hybrid bond pad", "kind": "misapplied", "rationale": "k1 is wafer lithography." },
+            { "text": "Solder automatically becomes a Bragg mirror", "kind": "nearby", "rationale": "A bump is a join, not an EUV optic." }
+          ],
+          "correctExplanation": "Yield the pieces, then a second factory joins them. That is the course's last module.",
+          "objectiveIds": ["Describe advanced packaging as interposers, bridges, and hybrid bonds after the fab"],
+          "prerequisiteConceptIds": ["semi-chiplets"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ap10-2",
+          "stem": "A hybrid-bond open that a solder bump of the same net would have survived is usually:",
+          "correctAnswer": "A particle or overlay miss at a pad pitch solder never had to hit",
+          "distractors": [
+            { "text": "Proof that copper cannot be a conductor", "kind": "reversed", "rationale": "The pad is copper. It missed." },
+            { "text": "A High-NA stitch on the organic substrate only", "kind": "subtle", "rationale": "This is die-to-die pad overlay." },
+            { "text": "Wet oxidation of the compute ISA", "kind": "misapplied", "rationale": "No architecture melted." }
+          ],
+          "correctExplanation": "Denser join, smaller legal miss. Same classes of killer, new factory.",
+          "objectiveIds": ["Contrast a hybrid bond with a solder bump as a density and thermal choice"],
+          "prerequisiteConceptIds": ["semi-chiplets"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ap10-3",
+          "stem": "Hybrid bonding versus solder bumps is a trade because:",
+          "correctAnswer": "Hybrid buys pitch and a better thermal path, and spends cleanliness, die-to-die overlay, and known-good-die test",
+          "distractors": [
+            { "text": "Hybrid bonds are lossless and ignore particles", "kind": "reversed", "rationale": "A smaller pad is a pickier pad." },
+            { "text": "Solder automatically yields better than any model", "kind": "nearby", "rationale": "Solder is forgiving and fat, not magic." },
+            { "text": "Either join repeals the wafer yield model", "kind": "subtle", "rationale": "The dice still have to yield." }
+          ],
+          "correctExplanation": "Density versus forgiveness. That is the join's triangle.",
+          "objectiveIds": ["Contrast a hybrid bond with a solder bump as a density and thermal choice"],
+          "prerequisiteConceptIds": ["semi-chiplets"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-multi-beam-10",
+      "conceptId": "semi-multi-beam",
+      "title": "One beam cannot visit every feature in time",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-metrology"],
+      "goDeeper": "semi-cost-per-wafer",
+      "diagram": "stochastic-wall",
+      "explanation": [
+        "In-line metrology already taught measuring before the lot is lost. At leading-edge CDs the number of features on a wafer outgrows a single electron or optical beam. Visiting every contact, every via, every line edge would take longer than the process step you are trying to control. Multi-beam write and inspection split the work across many columns so the visit finishes in factory time.",
+        "This is not a new physics of electrons. It is a throughput argument identical in shape to the EUV dose/WPH budget: events per second versus events demanded. Mask write has the same problem — a single beam cannot paint a High-NA, OPC-heavy reticle in a night. Inspection of stochastic leftovers has it worse, because the killers are sparse and small.",
+        "Read 'multi-beam' as: the metrology and mask shops hit the same wall the scanner hit. More columns, or you sample and hope. Sampling is how stochastic tails hide."
+      ],
+      "example": "After-develop inspection with one beam samples 1% of contacts and calls the lot clean. Electrical test finds a motif-clustered missing-hole population the sample missed. A multi-beam inspect of the same layer sees the cluster in time to stop the next lot. The process did not change. The visit rate did.",
+      "whyItMatters": "If inspection is 'a tool that looks', you will believe a clean sample. If it is a visit-rate budget, you will ask what fraction of the tail anyone actually saw.",
+      "quiz": [
+        {
+          "id": "mb10-1",
+          "stem": "Multi-beam write and inspection exist because:",
+          "correctAnswer": "A single beam cannot visit every leading-edge feature in factory time",
+          "distractors": [
+            { "text": "Electrons stopped interacting with silicon", "kind": "reversed", "rationale": "The physics still works. The clock does not." },
+            { "text": "k1 is the number of beams", "kind": "misapplied", "rationale": "k1 is lithography cleverness." },
+            { "text": "Overlay residuals are a form of electron beam", "kind": "nearby", "rationale": "Placement is not a column count." }
+          ],
+          "correctExplanation": "Events demanded versus events per second. Split the work or miss the tail.",
+          "objectiveIds": ["Explain multi-beam write and inspection as what you do when a single beam cannot visit every feature in time"],
+          "prerequisiteConceptIds": ["semi-metrology"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "mb10-2",
+          "stem": "A lot that looks clean on a 1% single-beam sample and fails electrical on one motif usually means:",
+          "correctAnswer": "The visit rate missed a clustered tail; the process may have been screaming in the other 99%",
+          "distractors": [
+            { "text": "Electrical test invented contacts that were never drawn", "kind": "reversed", "rationale": "The motif was drawn. The sample missed it." },
+            { "text": "The Czochralski notch failed at probe", "kind": "subtle", "rationale": "A notch is not this cluster." },
+            { "text": "Wet oxidation during inspect deleted the sample", "kind": "misapplied", "rationale": "No oxidant step ran in the SEM." }
+          ],
+          "correctExplanation": "Sparse killers plus a thin sample is how a tail hides. Multi-beam is how you thicken the sample.",
+          "objectiveIds": ["Predict why leading-edge CD and defect inspection outgrow a single-beam tool"],
+          "prerequisiteConceptIds": ["semi-metrology"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mb10-3",
+          "stem": "Sampling versus adding columns is a trade because:",
+          "correctAnswer": "Sampling is cheap and hides sparse tails; more columns spend tool cost and see the killers in time",
+          "distractors": [
+            { "text": "Sampling always sees every stochastic hole", "kind": "reversed", "rationale": "That is what it does not do." },
+            { "text": "Columns automatically thicken depth of focus", "kind": "nearby", "rationale": "Beams are not an NA knob." },
+            { "text": "Either choice repeals the yield model", "kind": "subtle", "rationale": "Metrology feeds the model. It does not cancel it." }
+          ],
+          "correctExplanation": "Time versus coverage. The tail only exists if someone visits it.",
+          "objectiveIds": ["Predict why leading-edge CD and defect inspection outgrow a single-beam tool"],
+          "prerequisiteConceptIds": ["semi-metrology"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-cost-per-wafer-10",
+      "conceptId": "semi-cost-per-wafer",
+      "title": "A scanner is a factory. Depreciation shows up in the die.",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv-throughput", "semi-yield-model"],
+      "goDeeper": "semi-scaling-wall",
+      "diagram": "high-na-field",
+      "explanation": [
+        "A High-NA or even a 0.33-NA EUV scanner costs what a factory used to cost. Depreciation per hour, divided by wafers per hour, is a cost per wafer. Yield turns that into a cost per good die. A layer that prints but only at a dose that halves WPH just doubled its scanner bill. A layer that moves to High-NA and then needs two stitched fields pays twice on the scarce tool.",
+        "So cost per wafer is not an accountant's afterthought. It is throughput times yield times a machine you cannot buy two of this quarter. Multipatterned 193 can still win a layer on cost even when High-NA can print it, if the 193 tools exist and the EUV hours do not.",
+        "Read any 'we adopted High-NA' sentence with a cost question: which layers, at what dose, at what WPH, at what yield. Without those, it is a press release."
+      ],
+      "example": "A via layer can be one High-NA pass at a stochastic dose that yields 40 WPH, or two 0.33 passes at 80 WPH each on a cheaper tool. The 'advanced' choice is the expensive one. The cost model, not the Rayleigh criterion, picks.",
+      "whyItMatters": "If cost is rude to mention in a physics course, you will believe every layer should move to the newest cone. The factory will not.",
+      "quiz": [
+        {
+          "id": "cw10-1",
+          "stem": "A scanner's depreciation shows up in the die because:",
+          "correctAnswer": "Cost per wafer is hours of a scarce machine divided by WPH, then divided again by yield",
+          "distractors": [
+            { "text": "Tools are free once the first wafer prints", "kind": "reversed", "rationale": "The machine is still being paid for." },
+            { "text": "k1 is the depreciation schedule", "kind": "misapplied", "rationale": "k1 is process cleverness." },
+            { "text": "Yield cancels capital cost by definition", "kind": "nearby", "rationale": "Yield turns wafer cost into die cost. It does not delete it." }
+          ],
+          "correctExplanation": "Time on the tool, times the tool, over good dice. That is the bill.",
+          "objectiveIds": ["Treat a scanner as a factory whose depreciation shows up in the die"],
+          "prerequisiteConceptIds": ["semi-euv-throughput", "semi-yield-model"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "cw10-2",
+          "stem": "A High-NA layer that prints and still dominates wafer cost usually:",
+          "correctAnswer": "Is sitting on a scarce tool at a dose or stitch count that wrecked WPH",
+          "distractors": [
+            { "text": "Has repealed depreciation by printing at all", "kind": "reversed", "rationale": "Printing is necessary, not sufficient." },
+            { "text": "Must be using 193 nm glass again", "kind": "nearby", "rationale": "The expensive tool is the EUV family." },
+            { "text": "Has a k1 of zero so the tool is free", "kind": "misapplied", "rationale": "k1 is not a price." }
+          ],
+          "correctExplanation": "It printed. It printed slowly on the machine you cannot buy more of. That is dominance.",
+          "objectiveIds": ["Predict why a slower, higher-dose EUV layer can dominate wafer cost even if it prints"],
+          "prerequisiteConceptIds": ["semi-euv-throughput", "semi-yield-model"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "cw10-3",
+          "stem": "Leaving a layer on multipatterned 193 instead of High-NA can be the cost winner when:",
+          "correctAnswer": "The older tools exist, their hours are cheaper, and the EUV hours are the scarce resource",
+          "distractors": [
+            { "text": "193 nm always has better resolution than 0.55 NA at 13.5", "kind": "reversed", "rationale": "This is a cost sentence, not a Rayleigh sentence." },
+            { "text": "High-NA tools have no depreciation", "kind": "nearby", "rationale": "They have more of it." },
+            { "text": "Yield models ignore which tool ran the layer", "kind": "subtle", "rationale": "WPH is tool-specific. So is the bill." }
+          ],
+          "correctExplanation": "Physics can print it on the new cone. The factory may not want to.",
+          "objectiveIds": ["Predict why a slower, higher-dose EUV layer can dominate wafer cost even if it prints"],
+          "prerequisiteConceptIds": ["semi-euv-throughput", "semi-yield-model"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-scaling-wall-10",
+      "conceptId": "semi-scaling-wall",
+      "title": "Cost, heat, stochastics, and a spent wavelength",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-stochastic-limit", "semi-cost-per-wafer"],
+      "diagram": "stochastic-wall",
+      "explanation": [
+        "This course's last sentence is not a new device. It is why the old sentence — shrink λ, raise NA, wrap the channel, ship a bigger die — no longer pays for itself. Wavelength already jumped to 13.5 nm. The next jump is not on the calendar the way 193-to-EUV was. NA can still move, and High-NA showed the bill: field, focus, photons, money. Stochastics do not care that the optic could print the pitch. Heat does not care that the CFET inverter is smaller. Cost does not care that the slide is pretty.",
+        "The wall is the product of those constraints, not the maximum of them. A layer can have the pitch and lose on count. A die can have the pitch and lose on e^(−A·D). A package can have the bandwidth and throttle. Another wrap or another cone can move one term and worsen two others.",
+        "Read a node announcement by naming which term they bought and which term they spent. If the announcement names only the purchase, it is a brochure. You now own the vocabulary to finish the sentence."
+      ],
+      "example": "A slide says High-NA plus GAA plus backside power 'enables the next node.' Translate: they bought a pitch, a wrap, and some front-side tracks. They spent a stitch overlay, a release etch, a grind, a photon tail, and a depreciation line. Whether that is a node depends on those spends, not on the shopping list.",
+      "whyItMatters": "The reporter who can name the spend will not confuse a platform announcement with cheap scaling. Cheap scaling already left, when λ jumped and the triangle closed.",
+      "quiz": [
+        {
+          "id": "sw10-1",
+          "stem": "The scaling wall is cost, heat, stochastics, and a spent wavelength because:",
+          "correctAnswer": "λ already jumped, NA and wraps still spend other budgets, and the product of those spends is the node",
+          "distractors": [
+            { "text": "Physics forbids any further device or optic change", "kind": "reversed", "rationale": "Changes still happen. They no longer come cheap." },
+            { "text": "k1 has been repealed by law", "kind": "misapplied", "rationale": "k1 still exists. It is not the wall." },
+            { "text": "Only heat remains; photons and money are free", "kind": "nearby", "rationale": "The wall is the product of the terms." }
+          ],
+          "correctExplanation": "Four constraints, one product. That is why another cone is not a renaissance.",
+          "objectiveIds": ["Name the wall as cost, heat, stochastics, and the fact that wavelength already jumped"],
+          "prerequisiteConceptIds": ["semi-stochastic-limit", "semi-cost-per-wafer"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sw10-2",
+          "stem": "A node slide that lists High-NA, GAA, and backside power and names no spend is usually:",
+          "correctAnswer": "A shopping list; the node is whether stitch, release, grind, count, and depreciation still close",
+          "distractors": [
+            { "text": "Proof that all five spends went to zero", "kind": "reversed", "rationale": "Unnamed is not zero." },
+            { "text": "A reason to ignore the yield model", "kind": "nearby", "rationale": "Area and D still fight." },
+            { "text": "A legal requirement to skip overlay", "kind": "subtle", "rationale": "The stitch is still a pair." }
+          ],
+          "correctExplanation": "Purchases without spends are brochures. You can now name the spends.",
+          "objectiveIds": ["Predict why another NA or another device wrap does not automatically restore cheap scaling"],
+          "prerequisiteConceptIds": ["semi-stochastic-limit", "semi-cost-per-wafer"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sw10-3",
+          "stem": "Another NA step or another wrap does not automatically restore cheap scaling because:",
+          "correctAnswer": "Each buys one term and typically spends photons, field, heat, or depreciation the last purchase already strained",
+          "distractors": [
+            { "text": "No further NA or wrap is physically imaginable", "kind": "reversed", "rationale": "They are imaginable. They are not cheap." },
+            { "text": "Wavelength can jump every year for free", "kind": "nearby", "rationale": "The last jump already happened." },
+            { "text": "Cost models ignore which tool and which film ran", "kind": "subtle", "rationale": "Cost is exactly those choices." }
+          ],
+          "correctExplanation": "A purchase is not a renaissance. The wall is the spend you did not put on the slide.",
+          "objectiveIds": ["Predict why another NA or another device wrap does not automatically restore cheap scaling"],
+          "prerequisiteConceptIds": ["semi-stochastic-limit", "semi-cost-per-wafer"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

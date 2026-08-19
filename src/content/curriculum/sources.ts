@@ -265,6 +265,36 @@ export const CURRICULUM_SOURCES: CurriculumSourceRecord[] = [
     notes:
       "Technique and basic harmonic literacy that death-metal construction should assume, not duplicate.",
   },
+  {
+    id: "asml-high-na",
+    title: "High-NA EUV: TWINSCAN EXE platform",
+    url: "https://www.asml.com/en/products/euv-lithography-systems/twinscan-exe-5000",
+    institution: "ASML",
+    kind: "vendor",
+    informed: ["semi-leading"],
+    notes:
+      "0.55 NA as a new scanner family: anamorphic projection so reticles stay a workable size, half-size exposure field, faster stages. Used for platform consequences, not model-name trivia.",
+  },
+  {
+    id: "imec-nanosheet",
+    title: "Entering the nanosheet transistor era",
+    url: "https://www.imec-int.com/en/articles/entering-nanosheet-transistor-era-0",
+    institution: "imec",
+    kind: "notes",
+    informed: ["semi-leading"],
+    notes:
+      "Nanosheet GAA as the fin successor; stacked sheets for width and electrostatics; forksheet and CFET as later vertical complementary scaling. Mechanisms, not a node slogan.",
+  },
+  {
+    id: "imec-bspdn",
+    title: "How to power chips from the backside",
+    url: "https://www.imec-int.com/en/articles/how-power-chips-backside",
+    institution: "imec",
+    kind: "notes",
+    informed: ["semi-leading"],
+    notes:
+      "Backside power decouples power delivery from front-side signal routing. Alignment through the thinned wafer and the new via stack are the bill, not a free routing lunch.",
+  },
 ];
 
 export const SOURCE_MAP: Record<string, CurriculumSourceRecord> = Object.fromEntries(

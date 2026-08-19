@@ -1,0 +1,463 @@
+{
+  "courseId": "semi-leading",
+  "moduleId": "semi-a-device",
+  "lessons": [
+    {
+      "id": "semi-finfet-10",
+      "conceptId": "semi-finfet",
+      "title": "A channel you wrap, not a plane you sit on",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-gate-stack", "semi-integration"],
+      "goDeeper": "semi-gag",
+      "diagram": "gag-sheet",
+      "explanation": [
+        "Process Foundations left you a planar gate stack: a dielectric plus an electrode sitting on a plane of silicon. As the gate gets shorter, that plane is a worse electrostatic object. Drain field sneaks under the gate. The device leaks when it should be off. A FinFET stands a thin silicon fin up and wraps the gate around three sides. The channel is no longer a plane you sit on. It is a ridge you hug.",
+        "Wrapping buys electrostatics: more gate control per length, less leak at a given threshold. It spends width quantization (drive comes in fin-count steps), harder topography for the films and etches you already know, and a fin that has to be uniform along its height. Isolation and the gate stack did not go away. They grew a third dimension.",
+        "This is the last planar-looking MOSFET most leading-edge logic will admit to. Gate-all-around, next, wraps the fourth side. Do not treat 'FinFET node' as a length. Treat it as a wrap."
+      ],
+      "example": "A planar 20 nm-class gate leaks because the drain sees under the channel. The same drawn length on a thin fin, gate hugging three sides, turns off. Drive now comes as 2, 3, or 4 fins, not as any width the designer liked.",
+      "whyItMatters": "If a FinFET is just 'a smaller transistor', GAA will look like another shrink. If it is a wrap that bought electrostatics and spent quantization, you can read the next wrap as the same bargain.",
+      "quiz": [
+        {
+          "id": "ff10-1",
+          "stem": "A FinFET is a channel you wrap rather than a plane you sit on because:",
+          "correctAnswer": "The gate hugs three sides of a standing fin so drain field cannot sneak under a slab",
+          "distractors": [
+            { "text": "The fin is a metal wire with no silicon", "kind": "reversed", "rationale": "The fin is the silicon channel." },
+            { "text": "k1 is the number of fins", "kind": "misapplied", "rationale": "k1 is lithography cleverness." },
+            { "text": "The gate stack is omitted on purpose", "kind": "nearby", "rationale": "Dielectric plus electrode still wrap the fin." }
+          ],
+          "correctExplanation": "Three sides of control. That is the wrap, not a slogan shrink.",
+          "objectiveIds": ["Describe a FinFET as a channel you wrap, not a plane you sit on"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-integration"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ff10-2",
+          "stem": "A designer who wants 'a little more drive' on a FinFET and cannot have it usually hit:",
+          "correctAnswer": "Width quantization: drive comes in fin-count steps, not any continuous width",
+          "distractors": [
+            { "text": "A missing EUV pellicle on the fin", "kind": "subtle", "rationale": "Pellicles are a lithography membrane." },
+            { "text": "Proof that oxidation cannot grow on silicon any more", "kind": "nearby", "rationale": "The stack still sits on silicon." },
+            { "text": "A Poisson yield law that forbids fins", "kind": "misapplied", "rationale": "Yield is not why width is quantized." }
+          ],
+          "correctExplanation": "Two fins or three. There is no two-and-a-half. That is the spend.",
+          "objectiveIds": ["Predict what wrapping the channel improves and what it spends"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-integration"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ff10-3",
+          "stem": "Wrapping the channel is a trade because:",
+          "correctAnswer": "It buys electrostatics and spends fin quantization plus a taller, harder integration",
+          "distractors": [
+            { "text": "It deletes the gate dielectric and the need for isolation", "kind": "reversed", "rationale": "Both still exist, now in 3D." },
+            { "text": "It automatically thickens lithographic depth of focus", "kind": "nearby", "rationale": "A taller fin is worse for focus, not better." },
+            { "text": "It converts overlay into drive current", "kind": "subtle", "rationale": "Placement is not transconductance." }
+          ],
+          "correctExplanation": "Control versus geometry. The next wrap will pay a similar bill.",
+          "objectiveIds": ["Predict what wrapping the channel improves and what it spends"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-integration"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-gag-10",
+      "conceptId": "semi-gag",
+      "title": "Nanosheets wrap every face",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-finfet"],
+      "goDeeper": "semi-cfet",
+      "diagram": "gag-sheet",
+      "explanation": [
+        "A FinFET wraps three sides and leaves the bottom of the fin sitting on the wafer. Shorten the gate further and that unwrapped face is the leak path again. Gate-all-around wraps the fourth side. The usual leading-edge form is stacked nanosheets: thin silicon ribbons, one above another, each fully hugged by the gate. Effective width is the sum of the ribbons, not the footprint of one fin.",
+        "Stacked sheets buy electrostatics and drive per area. They spend a release etch that has to free the sheets without wrecking them, inner spacers that define the channel ends, and a gate fill that has to reach between ribbons. The sequence is the device, just as process integration already taught — now with sacrificial layers you remove on purpose.",
+        "Read 'GAA improves electrostatics' as: every face is a gate face. Read the rest of the sentence as the release and fill bill. CFET, next, stacks n and p. This unit is the wrap that made that thinkable."
+      ],
+      "example": "A three-sheet device in the footprint of one fin has roughly three channels of width. The release etch that freed those sheets, if it over-etches, thins the ribbons and shifts threshold. The drawing assumed a ribbon. The etch wrote the device.",
+      "whyItMatters": "If GAA is a marketing node, CFET will look like another acronym. If GAA is a full wrap plus a release sequence, you can see why stacking complementary devices is the next integration fight.",
+      "quiz": [
+        {
+          "id": "ga10-1",
+          "stem": "Gate-all-around nanosheets succeed the fin because:",
+          "correctAnswer": "Every face of each stacked ribbon is gated, so the leftover leak path under a fin is gone",
+          "distractors": [
+            { "text": "The sheets are metal wires with no channel", "kind": "reversed", "rationale": "The sheets are the silicon channels." },
+            { "text": "k1 is the number of sheets", "kind": "misapplied", "rationale": "k1 is lithography." },
+            { "text": "The gate dielectric is omitted between sheets", "kind": "nearby", "rationale": "The wrap is dielectric plus electrode on every face." }
+          ],
+          "correctExplanation": "Four sides, stacked. That is the successor, not a thinner fin.",
+          "objectiveIds": ["Describe gate-all-around nanosheets as the fin's successor that wraps every face"],
+          "prerequisiteConceptIds": ["semi-finfet"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ga10-2",
+          "stem": "A threshold that shifts after the sheet-release etch usually means:",
+          "correctAnswer": "The release spent silicon the drawing assumed was still there",
+          "distractors": [
+            { "text": "The scanner forgot the High-NA flag", "kind": "subtle", "rationale": "This is a film sequence, not a cone." },
+            { "text": "Poisson yield forbids stacked channels", "kind": "nearby", "rationale": "Yield is not why the ribbon thinned." },
+            { "text": "Overlay residuals doped the sheet", "kind": "misapplied", "rationale": "Placement is not a dopant source." }
+          ],
+          "correctExplanation": "The etch wrote the thickness. Thickness wrote the threshold.",
+          "objectiveIds": ["Predict what stacked sheets buy and what release and inner-spacer process they spend"],
+          "prerequisiteConceptIds": ["semi-finfet"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ga10-3",
+          "stem": "Stacked sheets versus more fins in the same cell is a trade because:",
+          "correctAnswer": "Sheets buy width and wrap in the same footprint, and they spend release, inner spacers, and fill",
+          "distractors": [
+            { "text": "Sheets delete the need for a gate stack", "kind": "reversed", "rationale": "The wrap is the stack, on every face." },
+            { "text": "More fins automatically wrap the fourth side", "kind": "nearby", "rationale": "Fins still leave a bottom." },
+            { "text": "Release etches thicken lithographic DoF", "kind": "subtle", "rationale": "A taller stack is worse for focus." }
+          ],
+          "correctExplanation": "Drive per area versus a harder sequence. That is the GAA bargain.",
+          "objectiveIds": ["Predict what stacked sheets buy and what release and inner-spacer process they spend"],
+          "prerequisiteConceptIds": ["semi-finfet"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-gag-20",
+      "conceptId": "semi-gag",
+      "title": "The release sequence is the nanosheet",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-finfet"],
+      "goDeeper": "semi-cfet",
+      "diagram": "gag-sheet",
+      "explanation": [
+        "The ten-minute unit said every face is gated. This one is the integration that makes a ribbon exist. You grow or deposit a superlattice of silicon and a sacrificial alloy. You pattern a fin-like stack. You recess the sacrificial layers to place inner spacers — those spacers set where the channel ends and where the source/drain will later sit. Then you remove the rest of the sacrificial material so the silicon ribbons hang, fully wrap-able, in a cavity the gate metal has to fill.",
+        "Each of those steps can write a different device than the drawing. Over-release thins the sheet and drops threshold. Under-release leaves a bridge and a leak. Inner spacers that are too thick starve the channel; too thin and the gate sees the source. Fill that does not reach the inner sheet makes a two-threshold device in one footprint. Sequence is the device — the same sentence as process integration, now with a cavity.",
+        "Designers get a new knob the fin did not give as cleanly: sheet width can vary for drive versus capacitance, and sheet count can vary for effective width, inside a cell height the library already assumed. That is DTCO talking through a device. The library and the release etch invent each other.",
+        "Do not memorise a foundry's sheet count for a named node. Ask whether the electrostatics needed the fourth face, what the release does to thickness, and whether the fill actually reached the inner ribbon. Those questions survive the next press cycle."
+      ],
+      "example": "A four-sheet device looks great in a cross-section cartoon. After etch, the inner two sheets are still bridged. Half the designed width is a leaky slab. Electrical test calls it 'GAA variability.' The owner is the release, not the lithography slogan on the slide.",
+      "whyItMatters": "A sentence that says 'GAA improves electrostatics' and never names release, inner spacer, or fill is a brochure. The device is those three steps.",
+      "quiz": [
+        {
+          "id": "ga20-1",
+          "stem": "A nanosheet device exists because a sequence:",
+          "correctAnswer": "Builds a superlattice, places inner spacers, releases the ribbons, and fills a gate around every face",
+          "distractors": [
+            { "text": "Prints a fin and then declares the fourth side gated", "kind": "reversed", "rationale": "The bottom does not wrap itself." },
+            { "text": "Uses k1 as the sacrificial alloy", "kind": "misapplied", "rationale": "k1 is not a film." },
+            { "text": "Skips isolation because sheets float in vacuum forever", "kind": "nearby", "rationale": "Isolation and fill still happen." }
+          ],
+          "correctExplanation": "The sequence is the wrap. There is no other GAA.",
+          "objectiveIds": ["Describe gate-all-around nanosheets as the fin's successor that wraps every face"],
+          "prerequisiteConceptIds": ["semi-finfet"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ga20-2",
+          "stem": "A two-threshold signature on a designed four-sheet device often means:",
+          "correctAnswer": "Gate fill or release left an inner ribbon unwrapped or still bridged",
+          "distractors": [
+            { "text": "The High-NA field stitch doped two sheets", "kind": "subtle", "rationale": "A stitch is placement, not a threshold pair." },
+            { "text": "Poisson noise created two extra sheets", "kind": "nearby", "rationale": "Count noise does not grow silicon." },
+            { "text": "Overlay residuals are now a channel", "kind": "misapplied", "rationale": "Placement is not a ribbon." }
+          ],
+          "correctExplanation": "The drawing assumed four wraps. The cavity wrote fewer.",
+          "objectiveIds": ["Predict what stacked sheets buy and what release and inner-spacer process they spend"],
+          "prerequisiteConceptIds": ["semi-finfet"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ga20-3",
+          "stem": "Varying sheet width and count inside a fixed cell height is a DTCO move because:",
+          "correctAnswer": "The library and the release sequence invent the width knob together; neither owns it alone",
+          "distractors": [
+            { "text": "The designer can ignore the release etch entirely", "kind": "reversed", "rationale": "The etch writes the thickness the library assumed." },
+            { "text": "Sheet count is set only by the EUV source power", "kind": "nearby", "rationale": "Source power is a lithography budget." },
+            { "text": "Inner spacers automatically legalize overlay", "kind": "subtle", "rationale": "Spacers set channel ends, not layer placement." }
+          ],
+          "correctExplanation": "A new geometric knob that only exists if the process can actually free and fill it.",
+          "objectiveIds": ["Predict what stacked sheets buy and what release and inner-spacer process they spend"],
+          "prerequisiteConceptIds": ["semi-finfet"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-cfet-10",
+      "conceptId": "semi-cfet",
+      "title": "Stack n on p to keep scaling the inverter",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-gag"],
+      "goDeeper": "semi-backside-power",
+      "diagram": "gag-sheet",
+      "explanation": [
+        "A CMOS inverter is an n device next to a p device. Nanosheets already stacked channels of one polarity. A CFET stacks the complementary pair: n over p (or the reverse) so the inverter's footprint shrinks toward one device. The cell height that standard-cell scaling has been eating can drop again because the two polarities share a vertical column instead of a lateral pair.",
+        "What it spends is the integration the GAA release already made painful, now twice, with isolation between the stacked polarities, independent contacts that have to find the right sheet tier, and thermal and parasitic coupling between n and p that used to sit a contacted-poly-pitch apart. Yield now cares about two release sequences in one stack.",
+        "Read 'CFET keeps scaling the inverter' as a footprint sentence. Read the rest as vertical isolation and contacts. It is not a new physics of inversion. It is a 3D library move."
+      ],
+      "example": "A 6-track cell that needed n and p side by side becomes a taller, narrower stack. The n contact that punches too far shorts to p. Electrical test calls it a 'CFET defect.' The owner is the contact etch, not the inverter equation.",
+      "whyItMatters": "If CFET is just 'the next transistor', you will miss that the library, the isolation, and the contact are the product. The physics was already GAA.",
+      "quiz": [
+        {
+          "id": "cf10-1",
+          "stem": "A CFET stacks n and p so that:",
+          "correctAnswer": "The inverter can share a vertical footprint instead of a lateral n-next-to-p pair",
+          "distractors": [
+            { "text": "One polarity can be omitted from CMOS", "kind": "reversed", "rationale": "You still need both. You stack them." },
+            { "text": "k1 becomes the cell height", "kind": "misapplied", "rationale": "k1 is lithography." },
+            { "text": "The gate no longer wraps the sheets", "kind": "nearby", "rationale": "Each tier is still a GAA wrap." }
+          ],
+          "correctExplanation": "Same complementary pair, now a column. That is the inverter shrink.",
+          "objectiveIds": ["Describe a CFET as stacking n and p to keep scaling the inverter"],
+          "prerequisiteConceptIds": ["semi-gag"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "cf10-2",
+          "stem": "A short between stacked n and p after contact etch usually means:",
+          "correctAnswer": "The contact punched through the vertical isolation to the other polarity",
+          "distractors": [
+            { "text": "The High-NA stitch wrote a p-well", "kind": "subtle", "rationale": "A stitch is overlay, not a well." },
+            { "text": "Poisson noise inverted the polarity", "kind": "nearby", "rationale": "Count noise does not swap n and p." },
+            { "text": "The pellicle doped the lower sheet", "kind": "misapplied", "rationale": "A membrane is not a dopant source." }
+          ],
+          "correctExplanation": "Two polarities, one column, one etch that went too far. That is the new short.",
+          "objectiveIds": ["Predict the vertical isolation and contact bill a stacked complementary pair introduces"],
+          "prerequisiteConceptIds": ["semi-gag"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "cf10-3",
+          "stem": "CFET versus a wider nanosheet cell is a trade because:",
+          "correctAnswer": "The stack buys cell height and spends vertical isolation, tiered contacts, and coupled thermals",
+          "distractors": [
+            { "text": "The stack deletes the need for complementary logic", "kind": "reversed", "rationale": "It is still CMOS, just vertical." },
+            { "text": "Isolation is free once sheets exist", "kind": "nearby", "rationale": "The new isolation is between polarities, not just devices." },
+            { "text": "Contacts automatically legalize overlay tails", "kind": "subtle", "rationale": "A contact etch is not a placement budget." }
+          ],
+          "correctExplanation": "Footprint versus a harder column. The inverter equation did not change.",
+          "objectiveIds": ["Predict the vertical isolation and contact bill a stacked complementary pair introduces"],
+          "prerequisiteConceptIds": ["semi-gag"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-backside-power-10",
+      "conceptId": "semi-backside-power",
+      "title": "Power from the other face so signals can breathe",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-metals", "semi-integration"],
+      "goDeeper": "semi-dtco",
+      "diagram": "backside-power",
+      "explanation": [
+        "Front-side metals have been sharing one dwindling wiring stack between power and signals. Power rails are fat, hungry, and in the way. Backside power delivery flips the wafer after the devices exist, thins it, and brings power vias up from the other face. Signal routing keeps the front. The two networks stop fighting for the same tracks.",
+        "What it frees is front-side routing resource and, often, a path to a shorter, quieter power connection. What it spends is a through-wafer alignment to devices you can no longer see the usual way, a thin remaining silicon that can warp, and a new via/metallization stack whose defects are killers just like the old ones. Process integration already said later heat and later etches wreck earlier work. A backside grind is a later mechanical insult of that kind.",
+        "Read 'backside power frees routing' as a real sentence. Read the rest as grind, align, and a new via. It is not free power. It is a second factory on the other face."
+      ],
+      "example": "A 6-track cell that could not fit power and signals on the front loses the power rails to the back. Front-side congestion eases. A via that misses the device after grind is a new open the front-side overlay model never owned.",
+      "whyItMatters": "If backside power is a slogan, you will not ask about warp after grind — and that warp is the overlay lot you already know how to read.",
+      "quiz": [
+        {
+          "id": "bp10-1",
+          "stem": "Backside power brings vias from the other face so that:",
+          "correctAnswer": "Power and signals stop sharing one dwindling front-side wiring stack",
+          "distractors": [
+            { "text": "Devices can omit metallization entirely", "kind": "reversed", "rationale": "You still need both networks. They move apart." },
+            { "text": "k1 is measured from the wafer back", "kind": "misapplied", "rationale": "k1 is lithography cleverness." },
+            { "text": "The gate stack is grown on the backside only", "kind": "nearby", "rationale": "Devices still sit on the front face." }
+          ],
+          "correctExplanation": "Decouple the two networks. That is the whole move.",
+          "objectiveIds": ["Explain backside power as bringing power vias from the other face so signal wiring can breathe"],
+          "prerequisiteConceptIds": ["semi-metals", "semi-integration"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "bp10-2",
+          "stem": "Opens that appear only after a backside grind, with legal front-side CD, often mean:",
+          "correctAnswer": "The new via missed a device the thinned, warped wafer no longer sits where the model thought",
+          "distractors": [
+            { "text": "The tin source only fires from the back", "kind": "subtle", "rationale": "The source is still a front-side lithography tool." },
+            { "text": "Poisson noise deleted the front metals", "kind": "nearby", "rationale": "Count noise does not lift a grind." },
+            { "text": "Wet oxidation consumed the power rails on purpose", "kind": "misapplied", "rationale": "No oxidant step is required for a miss after grind." }
+          ],
+          "correctExplanation": "A new face, a new via, a wafer that changed shape. That is the new open.",
+          "objectiveIds": ["Predict what it frees on the front side and what alignment and thinning risks it adds"],
+          "prerequisiteConceptIds": ["semi-metals", "semi-integration"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "bp10-3",
+          "stem": "Freeing front-side tracks with backside power is a trade because:",
+          "correctAnswer": "You buy routing and often a quieter power path, and you spend grind, through-wafer align, and a new via stack",
+          "distractors": [
+            { "text": "The back face needs no metals and no alignment", "kind": "reversed", "rationale": "The new stack is the point, and it must land." },
+            { "text": "Thinning automatically thickens depth of focus", "kind": "nearby", "rationale": "A warped thin wafer is worse for focus and overlay." },
+            { "text": "Power vias repeal stochastic EUV defects", "kind": "subtle", "rationale": "A via stack is not a photon count." }
+          ],
+          "correctExplanation": "A second factory on the other face. Routing is what you bought. Warp is what you spend.",
+          "objectiveIds": ["Predict what it frees on the front side and what alignment and thinning risks it adds"],
+          "prerequisiteConceptIds": ["semi-metals", "semi-integration"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-backside-power-20",
+      "conceptId": "semi-backside-power",
+      "title": "The grind is a process step, not a flip",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-metals", "semi-integration"],
+      "goDeeper": "semi-dtco",
+      "diagram": "backside-power",
+      "explanation": [
+        "The ten-minute unit decoupled the networks. This one is the mechanical sequence. Devices and front metals exist. You bond the wafer to a carrier, grind and polish the back until a designed remaining thickness, then pattern power vias that must land on nano-scale device contacts you cannot see with the old front-side marks in the old way. Then you put a power metal stack on that new face.",
+        "Remaining thickness is a knob. Too thick and the via is a high-aspect nightmare. Too thin and the wafer warps, breaks, or lets the via punch into something it should not. Warp after grind is an overlay input the last module already taught you to fear. High-NA's thinner focus slice does not forgive a potato-chip wafer any more than 0.33 did.",
+        "DTCO shows up because the standard cell can now drop buried front-side power rails and reclaim tracks. Cell height targets that were fantasies on a single face become drawings. They remain fantasies if the backside via cannot land or if the thermal path through the thin silicon is worse than the model.",
+        "Do not memorise a vendor's via name. Ask what was freed on the front, how the via finds the device, and what the grind did to the plane. Those are the durable nouns."
+      ],
+      "example": "A library drops from 6-track to a tighter height because power left the front. Yield falls on a checkerboard of backside-via opens after grind. The remaining silicon was thinner at the wafer edge. The via landed in a plane the alignment model treated as flat. Same class of error as a High-NA stitch, new face.",
+      "whyItMatters": "A sentence that says 'backside power frees routing' and never says grind or land is a brochure. The product is a landed via on a thinned wafer.",
+      "quiz": [
+        {
+          "id": "bp20-1",
+          "stem": "Backside power is a sequence of grind, align, and via — not a flip — because:",
+          "correctAnswer": "The other face has to be made, aimed, and wired to devices that already exist on the front",
+          "distractors": [
+            { "text": "The wafer is discarded and a new one is grown from the back", "kind": "reversed", "rationale": "It is the same wafer, thinned." },
+            { "text": "k1 is the remaining silicon thickness", "kind": "misapplied", "rationale": "k1 is not a grind target." },
+            { "text": "Front metals automatically migrate through the bulk", "kind": "nearby", "rationale": "Vias are etched and filled on purpose." }
+          ],
+          "correctExplanation": "Make a face, find the device, wire it. That is a factory, not a slogan.",
+          "objectiveIds": ["Explain backside power as bringing power vias from the other face so signal wiring can breathe"],
+          "prerequisiteConceptIds": ["semi-metals", "semi-integration"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "bp20-2",
+          "stem": "A checkerboard of backside-via opens that tracks remaining thickness usually means:",
+          "correctAnswer": "The grind left a non-uniform plane, so the via did not land where the model aimed",
+          "distractors": [
+            { "text": "The EUV source only fires on thick silicon", "kind": "subtle", "rationale": "This miss is a via on a thinned wafer." },
+            { "text": "Poisson deleted every other device", "kind": "nearby", "rationale": "A thickness map is not shot noise." },
+            { "text": "Wet oxidation consumed alternate fins", "kind": "misapplied", "rationale": "No oxidant step is required for a grind map." }
+          ],
+          "correctExplanation": "The plane is the input. The via inherited it. You have seen this budget before.",
+          "objectiveIds": ["Predict what it frees on the front side and what alignment and thinning risks it adds"],
+          "prerequisiteConceptIds": ["semi-metals", "semi-integration"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "bp20-3",
+          "stem": "Dropping cell height because power left the front is a trade because:",
+          "correctAnswer": "The library buys tracks and spends a landed backside via plus whatever warp the grind wrote",
+          "distractors": [
+            { "text": "Cell height can fall with no via and no align", "kind": "reversed", "rationale": "The reclaim is the via working." },
+            { "text": "Thinner silicon automatically yields better overlay", "kind": "nearby", "rationale": "Warp usually makes overlay worse." },
+            { "text": "Backside metals repeal the stochastic wall", "kind": "subtle", "rationale": "A power stack is not a photon count." }
+          ],
+          "correctExplanation": "DTCO can draw the tighter cell. The grind has to honour it.",
+          "objectiveIds": ["Predict what it frees on the front side and what alignment and thinning risks it adds"],
+          "prerequisiteConceptIds": ["semi-metals", "semi-integration"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-dtco-10",
+      "conceptId": "semi-dtco",
+      "title": "The cell and the process invent each other",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-integration"],
+      "goDeeper": "semi-chiplets",
+      "diagram": "gag-sheet",
+      "explanation": [
+        "Process integration said the sequence is the device. DTCO says the standard cell is part of that sequence. Track height, contacted-poly pitch, fin or sheet count, whether power sits on the front or the back — those are not 'design' after the process is frozen. They are how the process is invented. A library that assumes a 6-track cell with front-side rails will not fit a process that just spent its overlay budget on backside vias.",
+        "The cheap knob is often a design rule, not a new tool. Fatter via landings beat another millijoule of EUV dose. A cell that uses two sheets instead of four can yield a release etch that cannot fill four. A routing direction that avoids a High-NA stitch can beat a new alignment model. DTCO is the habit of asking which side owns the cheaper fix.",
+        "Read 'design-technology co-optimization' as: the drawing and the flow have one yield model. It is not a committee name. It is why a node slide mixes cell cartoons with scanner cartoons."
+      ],
+      "example": "A via chain fails at 0.1%. Extra High-NA dose cuts it and drops WPH. A fatter landing in the standard cell cuts it with no dose. The cheaper owner was the library. Shipping the dose split would have been treating a DTCO problem as a scanner problem.",
+      "whyItMatters": "If process and design are two teams throwing slides over a wall, every leading-edge knob looks more expensive than it is. The cheap one is often a rule, not a tool.",
+      "quiz": [
+        {
+          "id": "dt10-1",
+          "stem": "DTCO means the standard cell and the process invent each other because:",
+          "correctAnswer": "Track height, pitch, sheet count, and where power sits are how the flow is designed, not decoration after freeze",
+          "distractors": [
+            { "text": "The library is written only after the last wafer ships", "kind": "reversed", "rationale": "The cell is an input to the flow." },
+            { "text": "k1 is defined as the standard cell's track height in libraries", "kind": "misapplied", "rationale": "k1 is lithography cleverness." },
+            { "text": "Designers can ignore release etches and grind maps", "kind": "nearby", "rationale": "Those etches write the device the cell assumed." }
+          ],
+          "correctExplanation": "One yield model, two drawings. That is the co-optimization.",
+          "objectiveIds": ["Treat DTCO as the standard cell and the process inventing each other"],
+          "prerequisiteConceptIds": ["semi-integration"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "dt10-2",
+          "stem": "A via fail that a fatter landing kills without extra EUV dose was:",
+          "correctAnswer": "A library-owned knob, not a scanner-owned dose problem",
+          "distractors": [
+            { "text": "Proof the source cannot make tin plasma", "kind": "reversed", "rationale": "The field printed. The pad was small." },
+            { "text": "A reason to skip incoming planarity", "kind": "nearby", "rationale": "A pad is not a plane." },
+            { "text": "k1 failing as a contact etch", "kind": "misapplied", "rationale": "k1 is not an etch." }
+          ],
+          "correctExplanation": "The cheaper owner was the drawing. That is DTCO as a diagnosis.",
+          "objectiveIds": ["Predict a design-rule or cell-library change that is cheaper than a new process knob"],
+          "prerequisiteConceptIds": ["semi-integration"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dt10-3",
+          "stem": "Choosing extra dose versus a cell-library change is a trade because:",
+          "correctAnswer": "Dose spends scanner time on every wafer; a rule change spends a tapeout and then is free per wafer",
+          "distractors": [
+            { "text": "Library changes always cost more than a new scanner family", "kind": "reversed", "rationale": "A pad is cheaper than a tool." },
+            { "text": "Dose automatically fattens every landing", "kind": "nearby", "rationale": "Dose is photons, not metal." },
+            { "text": "Rules repeal Poisson at any area", "kind": "subtle", "rationale": "A landing is not a yield-model repeal." }
+          ],
+          "correctExplanation": "Per-wafer time versus one drawing. Ask who owns the cheaper knob.",
+          "objectiveIds": ["Predict a design-rule or cell-library change that is cheaper than a new process knob"],
+          "prerequisiteConceptIds": ["semi-integration"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

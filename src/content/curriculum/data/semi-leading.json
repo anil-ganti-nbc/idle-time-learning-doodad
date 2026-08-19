@@ -28,6 +28,27 @@
       "url": "https://www.asml.com/en/technology/lithography-principles/lenses-and-mirrors",
       "kind": "vendor",
       "notes": "NA is not a score. Wavelength travels with it."
+    },
+    {
+      "id": "asml-high-na",
+      "title": "ASML High-NA EXE platform",
+      "url": "https://www.asml.com/en/products/euv-lithography-systems/twinscan-exe-5000",
+      "kind": "vendor",
+      "notes": "0.55 as a new scanner family: anamorphic optics, half field, faster stages."
+    },
+    {
+      "id": "imec-nanosheet",
+      "title": "imec: entering the nanosheet transistor era",
+      "url": "https://www.imec-int.com/en/articles/entering-nanosheet-transistor-era-0",
+      "kind": "notes",
+      "notes": "Nanosheet GAA, forksheet, CFET as a device sequence after fins."
+    },
+    {
+      "id": "imec-bspdn",
+      "title": "imec: backside power delivery",
+      "url": "https://www.imec-int.com/en/articles/how-power-chips-backside",
+      "kind": "notes",
+      "notes": "Decouple power from front-side signal routing. Alignment and thinning are the bill."
     }
   ],
   "modules": [
@@ -39,6 +60,10 @@
       "prerequisites": [],
       "spineIds": [
         "semi-high-na"
+      ],
+      "learningObjectives": [
+        "Treat High-NA as a new scanner family",
+        "Name the field and focus bills that come with 0.55"
       ]
     },
     {
@@ -52,6 +77,10 @@
       "spineIds": [
         "semi-stochastic-limit",
         "semi-defectivity"
+      ],
+      "learningObjectives": [
+        "Treat stochastics as a wall NA cannot buy past",
+        "Read overlay and defectivity as yield budgets"
       ]
     },
     {
@@ -64,6 +93,10 @@
       ],
       "spineIds": [
         "semi-finfet"
+      ],
+      "learningObjectives": [
+        "Wrap the channel, then wrap every face",
+        "Move power off the signal face"
       ]
     },
     {
@@ -77,6 +110,10 @@
       "spineIds": [
         "semi-chiplets",
         "semi-scaling-wall"
+      ],
+      "learningObjectives": [
+        "Yield small die and assemble the product",
+        "Name the wall as cost, heat, stochastics, and a spent wavelength"
       ]
     }
   ],
@@ -91,7 +128,15 @@
       ],
       "summary": "0.55 NA as a new scanner family, not a bigger number on the same tool.",
       "parentId": "semi-na",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Treat 0.55 NA as a new scanner family, not a bigger number on the same tool",
+        "Predict what High-NA buys in pitch and what it spends in focus, field, and overlay"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-high-na",
+        "asml-euv"
+      ]
     },
     {
       "id": "semi-high-na-optics",
@@ -103,7 +148,14 @@
         "semi-euv-mirrors"
       ],
       "summary": "Different demagnification in X and Y so the mask stays printable.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Explain anamorphic High-NA optics as different demagnification in X and Y so the mask stays printable",
+        "Predict why a reflective mask cannot simply grow to feed a larger NA at 4× in both axes"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-high-na"
+      ]
     },
     {
       "id": "semi-high-na-mask",
@@ -115,7 +167,15 @@
         "semi-mask"
       ],
       "summary": "The absorber has thickness. At these angles that matters.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Explain why absorber thickness matters more at High-NA angles",
+        "Predict a CD or placement error that comes from the mask stack, not the wafer"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-high-na",
+        "asml-optics"
+      ]
     },
     {
       "id": "semi-high-na-process",
@@ -127,7 +187,14 @@
         "semi-process-window"
       ],
       "summary": "Smaller depth of focus, new resists, new inspection.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Predict how a thinner High-NA focus slice changes resist thickness and inspection",
+        "Contrast a High-NA process window with the 0.33-NA window already taught"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-high-na"
+      ]
     },
     {
       "id": "semi-mask-3d",
@@ -139,7 +206,14 @@
         "semi-mask"
       ],
       "summary": "A '2D' pattern sitting on a multilayer is not 2D to the light.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Explain why a pattern on a multilayer mirror is not a 2D chrome drawing to the light",
+        "Diagnose a print error as a mask-3D or shadowing effect rather than a dose miss"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics"
+      ]
     },
     {
       "id": "semi-anamorphic",
@@ -150,7 +224,14 @@
         "semi-high-na-optics"
       ],
       "summary": "Why the reticle field is no longer a simple 4× shrink in both axes.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "State that the reticle field is no longer a simple 4× shrink in both axes",
+        "Predict why a smaller or stretched scanner field multiplies exposure shots and stitch overlay"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-high-na"
+      ]
     },
     {
       "id": "semi-stochastic-limit",
@@ -162,7 +243,14 @@
         "semi-na"
       ],
       "summary": "More NA does not buy you photons.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Explain why raising NA does not buy more photons at the feature",
+        "Predict a yield wall when dose, roughness, and throughput cannot be satisfied together"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
     },
     {
       "id": "semi-defectivity",
@@ -174,6 +262,10 @@
         "semi-euv"
       ],
       "summary": "What a killer defect looks like when the CD is a handful of nanometers.",
+      "objectives": [
+        "Describe a killer defect when the CD is a handful of nanometers",
+        "Distinguish a stochastic or pattern killer from a particle leftover from an earlier module"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -186,7 +278,14 @@
         "semi-multi-pattern"
       ],
       "summary": "Error budgets measured in fractions of a nanometer.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Treat leading-edge overlay as a budget measured in fractions of a nanometer",
+        "Predict how field stitches and multipatterning multiply the pairs you must control"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-high-na"
+      ]
     },
     {
       "id": "semi-euv-throughput",
@@ -198,7 +297,14 @@
         "semi-stochastics"
       ],
       "summary": "Source power versus the dose stochastics demand.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Explain source power versus the dose stochastics demand as a wafers-per-hour budget",
+        "Predict why raising dose to fight noise spends scanner time"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
     },
     {
       "id": "semi-yield-model",
@@ -209,6 +315,10 @@
         "semi-yield-intro"
       ],
       "summary": "Poisson and beyond: why die size and defect density fight.",
+      "objectives": [
+        "State a yield model as die size fighting defect density",
+        "Predict why a large die loses more to the same defect density than a small one"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -221,7 +331,14 @@
         "semi-integration"
       ],
       "summary": "A channel you wrap, not a plane you sit on.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Describe a FinFET as a channel you wrap, not a plane you sit on",
+        "Predict what wrapping the channel improves and what it spends"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "imec-nanosheet"
+      ]
     },
     {
       "id": "semi-gag",
@@ -232,7 +349,14 @@
         "semi-finfet"
       ],
       "summary": "Nanosheets as the fin's successor.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Describe gate-all-around nanosheets as the fin's successor that wraps every face",
+        "Predict what stacked sheets buy and what release and inner-spacer process they spend"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "imec-nanosheet"
+      ]
     },
     {
       "id": "semi-cfet",
@@ -243,7 +367,14 @@
         "semi-gag"
       ],
       "summary": "Stacking n and p to keep scaling the inverter.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Describe a CFET as stacking n and p to keep scaling the inverter",
+        "Predict the vertical isolation and contact bill a stacked complementary pair introduces"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "imec-nanosheet"
+      ]
     },
     {
       "id": "semi-backside-power",
@@ -255,7 +386,14 @@
         "semi-integration"
       ],
       "summary": "Power vias from the other face so signal wiring can breathe.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Explain backside power as bringing power vias from the other face so signal wiring can breathe",
+        "Predict what it frees on the front side and what alignment and thinning risks it adds"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "imec-bspdn"
+      ]
     },
     {
       "id": "semi-dtco",
@@ -266,6 +404,10 @@
         "semi-integration"
       ],
       "summary": "The standard cell and the process invent each other.",
+      "objectives": [
+        "Treat DTCO as the standard cell and the process inventing each other",
+        "Predict a design-rule or cell-library change that is cheaper than a new process knob"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -277,6 +419,10 @@
         "semi-yield-model"
       ],
       "summary": "Yielding small die and assembling the product.",
+      "objectives": [
+        "Explain chiplets as yielding small die and assembling the product",
+        "Predict why a large monolithic die loses to the same defect density"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -288,6 +434,10 @@
         "semi-chiplets"
       ],
       "summary": "Memory cubes next to compute, with a thermal bill.",
+      "objectives": [
+        "Describe HBM as memory cubes next to compute, with a thermal bill",
+        "Predict a thermal or interconnect limit that the stack does not repeal"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -299,6 +449,10 @@
         "semi-chiplets"
       ],
       "summary": "Interposers, bridges, and the factory after the fab.",
+      "objectives": [
+        "Describe advanced packaging as interposers, bridges, and hybrid bonds after the fab",
+        "Contrast a hybrid bond with a solder bump as a density and thermal choice"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -310,6 +464,10 @@
         "semi-metrology"
       ],
       "summary": "When a single beam cannot visit every feature in time.",
+      "objectives": [
+        "Explain multi-beam write and inspection as what you do when a single beam cannot visit every feature in time",
+        "Predict why leading-edge CD and defect inspection outgrow a single-beam tool"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -322,6 +480,10 @@
         "semi-yield-model"
       ],
       "summary": "A scanner is a factory. Depreciation shows up in the die.",
+      "objectives": [
+        "Treat a scanner as a factory whose depreciation shows up in the die",
+        "Predict why a slower, higher-dose EUV layer can dominate wafer cost even if it prints"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -334,6 +496,10 @@
         "semi-cost-per-wafer"
       ],
       "summary": "Cost, heat, stochastics, and the fact that λ already jumped.",
+      "objectives": [
+        "Name the wall as cost, heat, stochastics, and the fact that wavelength already jumped",
+        "Predict why another NA or another device wrap does not automatically restore cheap scaling"
+      ],
       "estimatedMinutes": 10
     }
   ]

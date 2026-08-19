@@ -12,6 +12,7 @@ import { GPU_LESSONS } from "./gpu";
 import { ARCH_GPU_LESSONS } from "./arch-gpu";
 import { SEMI_PROCESS_LESSONS } from "./semi-process";
 import { SEMI_LITHO_LESSONS } from "./semi-litho";
+import { SEMI_LEADING_LESSONS } from "./semi-leading";
 import { LONGFORM_LESSONS } from "./longform";
 
 const externalFiles = import.meta.glob("../external/*.json", {
@@ -43,6 +44,7 @@ export const LESSONS: Lesson[] = [
   ...ARCH_GPU_LESSONS,
   ...SEMI_PROCESS_LESSONS,
   ...SEMI_LITHO_LESSONS,
+  ...SEMI_LEADING_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,
