@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { CATEGORIES } from "../categories.ts";
 import { CONCEPTS, CONCEPT_MAP } from "../concepts.ts";
+import { CPU_FOUNDATIONS_LESSONS } from "../lessons/cpu-foundations/index.ts";
 import { CPU_SEMI_LESSONS } from "../lessons/cpu-semi.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
 import { ARCH_GPU_LESSONS } from "../lessons/arch-gpu/index.ts";
@@ -9,7 +10,7 @@ import { buildCatalog } from "../../lib/learning/catalog.ts";
 import { prereqClosure } from "../../lib/learning/curriculum.ts";
 import { ARCH_GPU_COURSE, COURSES } from "./index.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_FOUNDATIONS_LESSONS, ...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 describe("arch-gpu course integrity", () => {
   it("is a later course in the CPU subject and points at real ids", () => {

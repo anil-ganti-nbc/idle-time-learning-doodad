@@ -26,7 +26,7 @@
           "correctAnswer": "The gate hugs three sides of a standing fin so drain field cannot sneak under a slab",
           "distractors": [
             { "text": "The fin is a metal wire with no silicon", "kind": "reversed", "rationale": "The fin is the silicon channel." },
-            { "text": "k1 is the number of fins", "kind": "misapplied", "rationale": "k1 is lithography cleverness." },
+            { "text": "The channel is a buried implant under a planar gate, counted in fins for marketing", "kind": "misapplied", "rationale": "The fin is the silicon channel the gate wraps." },
             { "text": "The gate stack is omitted on purpose", "kind": "nearby", "rationale": "Dielectric plus electrode still wrap the fin." }
           ],
           "correctExplanation": "Three sides of control. That is the wrap, not a slogan shrink.",
@@ -40,9 +40,9 @@
           "stem": "A designer who wants 'a little more drive' on a FinFET and cannot have it usually hit:",
           "correctAnswer": "Width quantization: drive comes in fin-count steps, not any continuous width",
           "distractors": [
-            { "text": "A missing EUV pellicle on the fin", "kind": "subtle", "rationale": "Pellicles are a lithography membrane." },
-            { "text": "Proof that oxidation cannot grow on silicon any more", "kind": "nearby", "rationale": "The stack still sits on silicon." },
-            { "text": "A Poisson yield law that forbids fins", "kind": "misapplied", "rationale": "Yield is not why width is quantized." }
+            { "text": "A planar drawn width they can still step in 1 nm increments", "kind": "subtle", "rationale": "Fin width is quantized by fin count, not a continuous drawn W." },
+            { "text": "Gate-length quantization: Lgate only comes in contacted-poly pitches", "kind": "nearby", "rationale": "The usual spend here is width, not Lgate." },
+            { "text": "A Vdd ceiling: extra fins would violate the process voltage spec", "kind": "misapplied", "rationale": "Drive is quantized by fin count, not forbidden by Vdd." }
           ],
           "correctExplanation": "Two fins or three. There is no two-and-a-half. That is the spend.",
           "objectiveIds": ["Predict what wrapping the channel improves and what it spends"],
@@ -340,7 +340,7 @@
       "diagram": "backside-power",
       "explanation": [
         "The ten-minute unit decoupled the networks. This one is the mechanical sequence. Devices and front metals exist. You bond the wafer to a carrier, grind and polish the back until a designed remaining thickness, then pattern power vias that must land on nano-scale device contacts you cannot see with the old front-side marks in the old way. Then you put a power metal stack on that new face.",
-        "Remaining thickness is a knob. Too thick and the via is a high-aspect nightmare. Too thin and the wafer warps, breaks, or lets the via punch into something it should not. Warp after grind is an overlay input the last module already taught you to fear. High-NA's thinner focus slice does not forgive a potato-chip wafer any more than 0.33 did.",
+        "Remaining thickness is a knob. Too thick and the via is a high-aspect nightmare. Too thin and the wafer warps, breaks, or lets the via punch into something it should not. Warp after grind is an overlay input: the wafer is a different shape than the alignment model assumed. A thinner focus slice does not forgive a potato-chip wafer any more than a thicker one did.",
         "DTCO shows up because the standard cell can now drop buried front-side power rails and reclaim tracks. Cell height targets that were fantasies on a single face become drawings. They remain fantasies if the backside via cannot land or if the thermal path through the thin silicon is worse than the model.",
         "Do not memorise a vendor's via name. Ask what was freed on the front, how the via finds the device, and what the grind did to the plane. Those are the durable nouns."
       ],
@@ -406,10 +406,10 @@
       "diagram": "gag-sheet",
       "explanation": [
         "Process integration said the sequence is the device. DTCO says the standard cell is part of that sequence. Track height, contacted-poly pitch, fin or sheet count, whether power sits on the front or the back — those are not 'design' after the process is frozen. They are how the process is invented. A library that assumes a 6-track cell with front-side rails will not fit a process that just spent its overlay budget on backside vias.",
-        "The cheap knob is often a design rule, not a new tool. Fatter via landings beat another millijoule of EUV dose. A cell that uses two sheets instead of four can yield a release etch that cannot fill four. A routing direction that avoids a High-NA stitch can beat a new alignment model. DTCO is the habit of asking which side owns the cheaper fix.",
-        "Read 'design-technology co-optimization' as: the drawing and the flow have one yield model. It is not a committee name. It is why a node slide mixes cell cartoons with scanner cartoons."
+        "The cheap knob is often a design rule, not a new tool. Fatter via landings beat another implant or etch pass. A cell that uses two fins instead of four can yield a release or fill the four-fin cell cannot. A routing direction that avoids a tight overlay pair can beat a new alignment model. DTCO is the habit of asking which side owns the cheaper fix.",
+        "Read 'design-technology co-optimization' as: the drawing and the flow have one yield model. It is not a committee name. It is why a node slide mixes cell cartoons with process cartoons."
       ],
-      "example": "A via chain fails at 0.1%. Extra High-NA dose cuts it and drops WPH. A fatter landing in the standard cell cuts it with no dose. The cheaper owner was the library. Shipping the dose split would have been treating a DTCO problem as a scanner problem.",
+      "example": "A via chain fails at 0.1%. Extra etch time or a hotter implant anneal cuts it and spends the thermal budget. A fatter landing in the standard cell cuts it with no extra heat. The cheaper owner was the library. Shipping another process split would have been treating a DTCO problem as a tool problem.",
       "whyItMatters": "If process and design are two teams throwing slides over a wall, every leading-edge knob looks more expensive than it is. The cheap one is often a rule, not a tool.",
       "quiz": [
         {

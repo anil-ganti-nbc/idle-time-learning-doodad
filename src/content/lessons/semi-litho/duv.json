@@ -25,9 +25,9 @@
           "stem": "The DUV workhorse wavelengths in this course are:",
           "correctAnswer": "248 nm and 193 nm",
           "distractors": [
-            { "text": "13.5 nm and 0.55 NA only", "kind": "nearby", "rationale": "13.5 nm is the later EUV source." },
-            { "text": "365 cm and 10 m", "kind": "subtle", "rationale": "Wrong units and the wrong era as a workhorse claim." },
-            { "text": "The Czochralski pull rate in mm/min", "kind": "misapplied", "rationale": "That is crystal growth." }
+            { "text": "13.5 nm only, the later EUV source", "kind": "nearby", "rationale": "13.5 nm is the later EUV source." },
+            { "text": "365 nm and 436 nm, the older mercury lines", "kind": "subtle", "rationale": "Those lamps existed. They are not the 248/193 workhorses here." },
+            { "text": "157 nm F2, treated here as the DUV workhorse", "kind": "misapplied", "rationale": "157 nm was a dead-end, not the workhorse pair." }
           ],
           "correctExplanation": "KrF 248 and ArF 193. Those lamps still print most layers.",
           "objectiveIds": ["Identify 248 nm and 193 nm as the workhorse wavelengths that still print most layers"],

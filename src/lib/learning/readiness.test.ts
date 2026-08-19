@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { CATEGORIES } from "../../content/categories.ts";
 import { CONCEPTS } from "../../content/concepts.ts";
 import { COURSES } from "../../content/courses/index.ts";
+import { CPU_FOUNDATIONS_LESSONS } from "../../content/lessons/cpu-foundations/index.ts";
 import { CPU_SEMI_LESSONS } from "../../content/lessons/cpu-semi.ts";
 import { GPU_LESSONS } from "../../content/lessons/gpu.ts";
 import { ARCH_GPU_LESSONS } from "../../content/lessons/arch-gpu/index.ts";
@@ -18,7 +19,7 @@ import {
 import { emptyProgress } from "./srs.ts";
 import type { ConceptProgress } from "./types.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_FOUNDATIONS_LESSONS, ...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 const gpuCourse = catalog.courseMap["arch-gpu"];
 const foundations = catalog.courseMap["cpu-foundations"];
 
@@ -71,7 +72,7 @@ describe("readiness", () => {
     const ctx = makeReadinessContext(catalog, {});
     assert.equal(isConceptUnlocked(catalog.conceptMap["gpu-simt"], ctx), false);
     assert.equal(isLessonUnlocked(catalog.lessonMap["gpu-warps-10"], ctx), false);
-    assert.equal(isLessonUnlocked(catalog.lessonMap["arch-latency-throughput-5"], ctx), true);
+    assert.equal(isLessonUnlocked(catalog.lessonMap["arch-latency-throughput-10"], ctx), true);
   });
 
   it("implicitly waives foundation ancestors of a later demonstrated concept", () => {

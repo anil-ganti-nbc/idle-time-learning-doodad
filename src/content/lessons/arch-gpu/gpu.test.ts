@@ -62,7 +62,6 @@ const KNOWN_DIAGRAMS = new Set([
   "gpu-occupancy",
 ]);
 const OTHER_BULK_COURSES = [
-  "semi-process",
   "os-foundations",
   "net-foundations",
   "ml-foundations",

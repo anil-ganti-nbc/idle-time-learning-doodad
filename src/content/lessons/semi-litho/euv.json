@@ -27,7 +27,7 @@
           "distractors": [
             { "text": "Mirrors are cheaper than glass at 193 nm too, so DUV already abandoned lenses", "kind": "nearby", "rationale": "DUV still uses glass. The die-off is at 13.5 nm." },
             { "text": "13.5 nm cannot be imaged at all, even with mirrors", "kind": "reversed", "rationale": "Mirrors are how it is imaged." },
-            { "text": "The Czochralski melt emits 13.5 nm as the wafer grows", "kind": "misapplied", "rationale": "The source is a later unit. It is not the crystal puller." }
+            { "text": "13.5 nm still transmits in fused silica, so the DUV lens column can be kept", "kind": "misapplied", "rationale": "Glass eats 13.5 nm. That is why the column flipped." }
           ],
           "correctExplanation": "Glass works at 193. Glass eats 13.5. That is why the optic flipped.",
           "objectiveIds": ["Identify 13.5 nm as the light and mirrors as the optic because refractive materials absorb it"],
@@ -431,9 +431,9 @@
           "stem": "Raising dose to fight stochastics typically:",
           "correctAnswer": "Lowers relative noise and spends throughput, because the wafer must collect more photons",
           "distractors": [
-            { "text": "Speeds the scanner and also deletes Poisson from the resist", "kind": "reversed", "rationale": "More photons are more time or more source." },
-            { "text": "Lets you skip vacuum because extra dose replaces the empty path", "kind": "subtle", "rationale": "Air still eats the beam." },
-            { "text": "Removes the need for a mask once the photon count is high enough", "kind": "nearby", "rationale": "Dose is not an original." }
+            { "text": "Raises relative noise because a larger dose has a larger variance", "kind": "reversed", "rationale": "Variance grows, but relative noise falls as 1/√N." },
+            { "text": "Lets you drop NA, treating extra photons as a substitute for resolution", "kind": "subtle", "rationale": "Dose is not a Rayleigh knob." },
+            { "text": "Kills photoacid noise as well, so LER is unchanged while holes yield", "kind": "nearby", "rationale": "Photon count and acid shot noise are different terms." }
           ],
           "correctExplanation": "Noise falls as the square root of count. Count is time.",
           "objectiveIds": ["Predict why raising dose fights noise and spends throughput"],

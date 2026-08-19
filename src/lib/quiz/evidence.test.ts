@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { CATEGORIES } from "../../content/categories.ts";
 import { CONCEPTS } from "../../content/concepts.ts";
 import { COURSES } from "../../content/courses/index.ts";
+import { CPU_FOUNDATIONS_LESSONS } from "../../content/lessons/cpu-foundations/index.ts";
 import { GPU_LESSONS } from "../../content/lessons/gpu.ts";
 import { ARCH_GPU_LESSONS } from "../../content/lessons/arch-gpu/index.ts";
 import { CPU_SEMI_LESSONS } from "../../content/lessons/cpu-semi.ts";
@@ -11,12 +12,12 @@ import { isConceptUnlocked, makeReadinessContext } from "../learning/readiness.t
 import { emptyProgress } from "../learning/srs.ts";
 import { conceptEvidence, courseReadiness, lessonResult, onePerfectQuizUnlocksSpecialist } from "./evidence.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_FOUNDATIONS_LESSONS, ...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 describe("assessment vs mastery", () => {
   it("records a lesson result without claiming course readiness", () => {
     const result = lessonResult({
-      lessonId: "arch-latency-throughput-5",
+      lessonId: "arch-latency-throughput-10",
       conceptId: "arch-latency-throughput",
       quizCorrect: 3,
       quizTotal: 3,

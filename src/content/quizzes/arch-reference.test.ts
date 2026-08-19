@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { CATEGORIES } from "../categories.ts";
 import { CONCEPTS } from "../concepts.ts";
 import { COURSES } from "../courses/index.ts";
+import { CPU_FOUNDATIONS_LESSONS } from "../lessons/cpu-foundations/index.ts";
 import { CPU_SEMI_LESSONS } from "../lessons/cpu-semi.ts";
 import { CPU_MICROARCH_LESSONS } from "../lessons/cpu-microarch/index.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
@@ -16,7 +17,7 @@ import { allowedKnowledge } from "../../lib/quiz/knowledge.ts";
 import { mixIsDistinct, objectiveCoverage } from "../../lib/quiz/mix.ts";
 import { ARCH_REFERENCE_DRAFTS } from "./arch-reference.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...CPU_MICROARCH_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_FOUNDATIONS_LESSONS, ...CPU_SEMI_LESSONS, ...CPU_MICROARCH_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 function held(id: string) {
   return {
@@ -35,9 +36,9 @@ function held(id: string) {
 describe("CPU/GPU reference quizzes", () => {
   it("upgrades foundation through SIMT lessons with distinct jobs and objectives", () => {
     for (const id of [
-      "arch-latency-throughput-5",
-      "cpu-pipeline-5",
-      "cpu-hazards-10",
+      "arch-latency-throughput-10",
+      "cpu-pipeline-10",
+      "cpu-hazards-5",
       "gpu-simt-10",
       "cpu-renaming-10",
       "cpu-coherency-10",

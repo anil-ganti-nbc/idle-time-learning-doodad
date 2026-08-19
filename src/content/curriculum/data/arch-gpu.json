@@ -24,7 +24,7 @@
     {
       "id": "nvidia-educators",
       "title": "NVIDIA CUDA C++ Programming Guide",
-      "url": "https://developer.nvidia.com/educators/existing-courses",
+      "url": "https://docs.nvidia.com/cuda/cuda-c-programming-guide/",
       "kind": "vendor",
       "notes": "Thread hierarchy → SIMT/warps → memory → occupancy/divergence as performance."
     },

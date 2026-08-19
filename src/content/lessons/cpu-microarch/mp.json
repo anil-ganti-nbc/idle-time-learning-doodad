@@ -18,7 +18,7 @@
         "Hardware keeps the rule with a protocol you will name in the next unit. For now you only need the invariant and the split. A core that never shares an address does not exercise coherence. A program that shares without a protocol is not a program you can debug."
       ],
       "example": "Core 0 writes `x = 1`. Core 1's cache still holds `x = 0`. Without coherence, core 1 can keep reading 0 forever. With the single-writer rule, core 0's write invalidates or updates core 1's copy before the write is done. Core 1's next read of `x` cannot invent a second truth. Whether core 1 has already seen some other store `y = 1` is a different question.",
-      "whyItMatters": "Foundations gave you a cache as a latency bet for one core. This course is what that bet costs the moment two cores share. If you cannot separate 'one address' from 'the order of two addresses', MESI and TSO will sound like two names for the same slide.",
+      "whyItMatters": "A private copy of an address is a latency bet for one core. This course is what that bet costs the moment two cores share. If you cannot separate 'one address' from 'the order of two addresses', MESI and TSO will sound like two names for the same slide.",
       "quiz": [
         {
           "id": "coh10-1",

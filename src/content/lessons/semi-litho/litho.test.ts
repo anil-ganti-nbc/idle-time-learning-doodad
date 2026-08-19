@@ -41,7 +41,6 @@ const PROCESS_ID = "semi-process";
 const FOUNDATIONS_ID = "cpu-foundations";
 const MICROARCH_ID = "cpu-microarch";
 const GPU_ID = "arch-gpu";
-const LEADING_ID = "semi-leading";
 const KNOWN_DIAGRAMS = new Set([
   "pipeline",
   "hazards",
@@ -84,7 +83,6 @@ const KNOWN_DIAGRAMS = new Set([
   "process-flow",
 ]);
 const OTHER_BULK_COURSES = [
-  "semi-leading",
   "os-foundations",
   "net-foundations",
   "ml-foundations",
@@ -197,7 +195,6 @@ describe("Lithography and Patterning coverage", () => {
     const foundations = coverage.coursesCovered.find((row) => row.courseId === FOUNDATIONS_ID);
     const microarch = coverage.coursesCovered.find((row) => row.courseId === MICROARCH_ID);
     const gpu = coverage.coursesCovered.find((row) => row.courseId === GPU_ID);
-    const leading = coverage.coursesCovered.find((row) => row.courseId === LEADING_ID);
     assert.ok(self);
     assert.equal(self.coveragePct, 100);
     assert.equal(self.lackingLessons, 0);
@@ -209,8 +206,6 @@ describe("Lithography and Patterning coverage", () => {
     assert.equal(microarch.coveragePct, 100);
     assert.ok(gpu);
     assert.equal(gpu.coveragePct, 100);
-    assert.ok(leading);
-    assert.ok(leading.coveragePct < 100, "semi-leading should not be fully populated");
     for (const id of OTHER_BULK_COURSES) {
       const row = coverage.coursesCovered.find((c) => c.courseId === id);
       assert.ok(row, id);

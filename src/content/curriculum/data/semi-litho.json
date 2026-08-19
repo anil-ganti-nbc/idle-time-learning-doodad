@@ -543,7 +543,7 @@
       "prerequisites": [
         "semi-euv"
       ],
-      "summary": "How High-NA EUV buys resolution and spends depth of focus.",
+      "summary": "NA as a knob at EUV: resolution as 1/NA, depth of focus as ~1/NA².",
       "parentId": "semi-euv",
       "objectives": [
         "State numerical aperture as the sine of the half-angle the optic can accept",

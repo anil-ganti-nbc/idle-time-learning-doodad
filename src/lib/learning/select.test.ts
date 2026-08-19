@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { CATEGORIES } from "../../content/categories.ts";
 import { CONCEPTS } from "../../content/concepts.ts";
 import { COURSES } from "../../content/courses/index.ts";
+import { CPU_FOUNDATIONS_LESSONS } from "../../content/lessons/cpu-foundations/index.ts";
 import { CPU_SEMI_LESSONS } from "../../content/lessons/cpu-semi.ts";
 import { GPU_LESSONS } from "../../content/lessons/gpu.ts";
 import { ARCH_GPU_LESSONS } from "../../content/lessons/arch-gpu/index.ts";
@@ -19,7 +20,7 @@ import { emptyProgress } from "./srs.ts";
 import type { ConceptProgress, SessionRequest } from "./types.ts";
 
 const catalog = testCatalog();
-const real = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const real = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_FOUNDATIONS_LESSONS, ...CPU_SEMI_LESSONS, ...ARCH_GPU_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 function req(partial: Partial<SessionRequest> = {}): SessionRequest {
   return {

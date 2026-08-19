@@ -220,8 +220,8 @@
           "correctAnswer": "You write scalar thread code; the hardware groups and masks lanes",
           "distractors": [
             { "text": "It uses slower arithmetic units", "kind": "misconception", "rationale": "The ALUs are not the distinction." },
-            { "text": "It cannot do floating point", "kind": "nearby", "rationale": "SIMT machines do plenty of floating point." },
-            { "text": "It has no registers", "kind": "subtle", "rationale": "Threads still have a register file." }
+            { "text": "Each thread fetches its own instruction stream, like a CPU SMT lane", "kind": "nearby", "rationale": "SIMT still issues one instruction across a group." },
+            { "text": "You must write packed vector intrinsics; scalar thread code is not legal", "kind": "subtle", "rationale": "Scalar thread code is the SIMT programming model." }
           ],
           "correctExplanation": "The pack is implicit. You did not name a vector register.",
           "objectiveIds": ["Distinguish SIMT from packed SIMD"],

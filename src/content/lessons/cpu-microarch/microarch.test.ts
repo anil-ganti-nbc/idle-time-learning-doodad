@@ -54,8 +54,6 @@ const KNOWN_DIAGRAMS = new Set([
   "two-caches",
 ]);
 const OTHER_BULK_COURSES = [
-  "arch-gpu",
-  "semi-process",
   "os-foundations",
   "net-foundations",
   "ml-foundations",

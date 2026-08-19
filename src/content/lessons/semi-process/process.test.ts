@@ -74,8 +74,6 @@ const KNOWN_DIAGRAMS = new Set([
   "process-flow",
 ]);
 const OTHER_BULK_COURSES = [
-  "semi-litho",
-  "semi-leading",
   "os-foundations",
   "net-foundations",
   "ml-foundations",

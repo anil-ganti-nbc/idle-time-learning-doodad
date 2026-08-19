@@ -44,9 +44,6 @@ const KNOWN_DIAGRAMS = new Set([
   "hierarchy",
 ]);
 const OTHER_BULK_COURSES = [
-  "cpu-microarch",
-  "arch-gpu",
-  "semi-process",
   "os-foundations",
   "net-foundations",
   "ml-foundations",

@@ -47,8 +47,8 @@ export const CURRICULUM_SOURCES: CurriculumSourceRecord[] = [
   },
   {
     id: "nvidia-educators",
-    title: "CUDA educational resources / CUDA C++ Programming Guide",
-    url: "https://developer.nvidia.com/educators/existing-courses",
+    title: "CUDA C++ Programming Guide",
+    url: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/",
     institution: "NVIDIA",
     kind: "vendor",
     informed: ["arch-gpu"],
