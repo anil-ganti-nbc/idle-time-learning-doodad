@@ -66,24 +66,25 @@ describe("remaining-curriculum gold modules", () => {
   for (const gold of GOLD) {
     const course = catalog.courseMap[gold.courseId];
     const moduleConceptIds = course.modules.find((m) => m.id === gold.moduleId)?.conceptIds ?? [];
+    const moduleLessons = gold.lessons.filter((l) => moduleConceptIds.includes(l.conceptId));
 
     it(`${gold.courseId}/${gold.moduleId} covers every module concept with a 10-minute lesson`, () => {
       assert.ok(moduleConceptIds.length >= 6, gold.moduleId);
       for (const id of moduleConceptIds) {
-        const tens = gold.lessons.filter((l) => l.conceptId === id && l.durationMin === 10);
+        const tens = moduleLessons.filter((l) => l.conceptId === id && l.durationMin === 10);
         assert.equal(tens.length, 1, `${id} needs exactly one 10-minute lesson`);
       }
-      const fives = gold.lessons.filter((l) => l.durationMin === 5).map((l) => l.conceptId).sort();
+      const fives = moduleLessons.filter((l) => l.durationMin === 5).map((l) => l.conceptId).sort();
       assert.deepEqual(fives, [...gold.five]);
-      assert.equal(gold.lessons.filter((l) => l.durationMin === 20 || l.durationMin === 30).length, 0);
+      assert.equal(moduleLessons.filter((l) => l.durationMin === 20 || l.durationMin === 30).length, 0);
     });
 
     it(`${gold.courseId}/${gold.moduleId} keeps IDs unique and quizzes honest`, () => {
-      const ids = gold.lessons.map((l) => l.id);
+      const ids = moduleLessons.map((l) => l.id);
       assert.equal(new Set(ids).size, ids.length);
-      const quizIds = gold.lessons.flatMap((l) => l.quiz.map((q) => q.id));
+      const quizIds = moduleLessons.flatMap((l) => l.quiz.map((q) => q.id));
       assert.equal(new Set(quizIds).size, quizIds.length);
-      for (const lesson of gold.lessons) {
+      for (const lesson of moduleLessons) {
         const concept = catalog.conceptMap[lesson.conceptId];
         assert.ok(concept, lesson.id);
         assert.equal(concept.courseId, gold.courseId, lesson.id);

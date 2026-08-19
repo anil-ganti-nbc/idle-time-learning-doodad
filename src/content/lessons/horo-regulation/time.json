@@ -1,0 +1,720 @@
+{
+  "courseId": "horo-regulation",
+  "moduleId": "horo-r-time",
+  "lessons": [
+    {
+      "id": "horo-rate-10",
+      "conceptId": "horo-rate",
+      "title": "Seconds per day on the ticket",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-beat-rate", "horo-hairspring"],
+      "goDeeper": "horo-isochronism",
+      "explanation": [
+        "Daily rate is seconds gained or lost in twenty-four hours. Plus means the watch is fast. Minus means it is slow. That is the number you regulate toward, once the oscillator is clean, in beat, and showing a usable amplitude.",
+        "A timing machine hears the ticks, measures the interval between them, and scales that interval to a day. A 4 Hz watch should tick every 0.125 s. A shorter interval prints a plus rate. The trace is that interval, drawn as a line.",
+        "Read the ticket as a conversion, not as a verdict on the calibre. A plus-twelve line in one position is a period that is short there. Move the index, or the screws, only after you know which error you are scaling into that number."
+      ],
+      "example": "A 4 Hz pair of ticks 0.1248 s apart scales to about plus fourteen seconds a day. The machine prints +14. That is the interval, not a moral grade of the movement.",
+      "whyItMatters": "Regulate a number you can name. Seconds per day is that number, scaled from the tick interval.",
+      "quiz": [
+        {
+          "id": "horo-rt10-1",
+          "stem": "Daily rate, in the sense this lesson uses, is:",
+          "correctAnswer": "Seconds gained or lost per day, plus for fast and minus for slow",
+          "distractors": [
+            { "text": "The beat rate in vibrations per hour, taken as the only ticket number", "kind": "nearby", "rationale": "Beat rate is the design frequency. Daily rate is the error." },
+            { "text": "Jewel count on the spec sheet, which is how a day is graded", "kind": "misapplied", "rationale": "A count of holes is not seconds per day." },
+            { "text": "How far the balance swings, printed as a plus or minus", "kind": "misconception", "rationale": "That is amplitude. Rate is the period error, scaled to a day." }
+          ],
+          "correctExplanation": "Plus-fast, minus-slow, seconds in twenty-four hours. That is the number.",
+          "objectiveIds": ["Read daily rate as seconds gained or lost per day"],
+          "prerequisiteConceptIds": ["horo-beat-rate", "horo-hairspring"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-rt10-2",
+          "stem": "A timing-machine trace becomes a daily-rate number by:",
+          "correctAnswer": "Measuring tick intervals and scaling the error from the design period to a day",
+          "distractors": [
+            { "text": "Counting jewels and printing that count as seconds per day", "kind": "misapplied", "rationale": "Jewels are holes. The machine hears ticks." },
+            { "text": "Reading the mainspring turns and treating each turn as one second", "kind": "nearby", "rationale": "Barrel turns are not the period." },
+            { "text": "Guessing amplitude and doubling it, which is the factory conversion", "kind": "misconception", "rationale": "Amplitude is a different number. Rate is the interval." }
+          ],
+          "correctExplanation": "Hear the ticks, measure the interval, scale to twenty-four hours.",
+          "objectiveIds": ["Predict how a timing-machine trace becomes that number"],
+          "prerequisiteConceptIds": ["horo-beat-rate", "horo-hairspring"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-rt10-3",
+          "stem": "If the ticks arrive closer together than the design interval, the ticket typically:",
+          "correctAnswer": "Prints a plus rate, because each period is short and the day gains",
+          "distractors": [
+            { "text": "Prints a minus rate, because closer ticks always mean a losing day", "kind": "reversed", "rationale": "Shorter period is a fast watch. Plus, not minus." },
+            { "text": "Prints amplitude only, because interval is not what the microphone hears", "kind": "subtle", "rationale": "The microphone hears interval first. Amplitude is inferred." },
+            { "text": "Prints jewel count, because that is how a short period is graded", "kind": "misapplied", "rationale": "The ticket is a time error, not a hole count." }
+          ],
+          "correctExplanation": "Short interval, fast watch, plus on the ticket. That is the conversion.",
+          "objectiveIds": ["Predict how a timing-machine trace becomes that number"],
+          "prerequisiteConceptIds": ["horo-beat-rate", "horo-hairspring"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-isochronism-10",
+      "conceptId": "horo-isochronism",
+      "title": "Period that ignores amplitude",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-hairspring", "horo-rate"],
+      "goDeeper": "horo-amplitude",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Harmonic theory says period does not depend on amplitude. That independence is isochronism. A real sprung balance is close, not perfect. Escapement error, the terminal curve, and regulator pins all make the period care how far the rim travels.",
+        "If isochronism is poor, the rate moves as the mainspring winds down. Amplitude falls with torque. A period that lengthens at lower swing will lose in the afternoon. A period that shortens will gain. The ticket at full wind is not the day.",
+        "Test it by reading rate at high and low amplitude, or at full wind and after a day's run. The difference is the isochronism error. Do not chase it with the index until the spring is concentric and the escapement is delivering a clean impulse."
+      ],
+      "example": "Full wind, dial up, plus-two at 280 degrees. Twenty-four hours later, same position, minus-twelve at 220 degrees. The index did not walk. The period cared about the lost swing.",
+      "whyItMatters": "A rate you set at full wind is a lie if the period changes as amplitude falls.",
+      "quiz": [
+        {
+          "id": "horo-iso10-1",
+          "stem": "Isochronism, in the sense this lesson uses, means:",
+          "correctAnswer": "A period that does not depend on how far the balance swings",
+          "distractors": [
+            { "text": "A period that is set only by the going-train tooth count", "kind": "misconception", "rationale": "Period still lives in the oscillator. Isochronism is about amplitude." },
+            { "text": "A rate that must change whenever amplitude changes, by definition", "kind": "reversed", "rationale": "That dependence is the failure of isochronism." },
+            { "text": "A quartz property that a lever borrows when the oil is fresh", "kind": "misapplied", "rationale": "The word names a mechanical ideal, not a crystal." }
+          ],
+          "correctExplanation": "Same period at any swing. That is the ideal. Real watches miss it.",
+          "objectiveIds": ["Define isochronism as period that does not depend on amplitude"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-iso10-2",
+          "stem": "If isochronism is poor and the mainspring winds down, the rate will typically:",
+          "correctAnswer": "Walk as amplitude falls, so the full-wind ticket is not the day",
+          "distractors": [
+            { "text": "Hold the full-wind number, because period never cares about swing", "kind": "reversed", "rationale": "Poor isochronism means period does care about swing." },
+            { "text": "Become a quartz step, which is how a tired barrel is supposed to recover", "kind": "misapplied", "rationale": "A tired barrel is still a mechanical amplitude story." },
+            { "text": "Freeze at plus-zero, because a wound-down spring is the definition of isochronism", "kind": "subtle", "rationale": "Wound-down is the test, not the definition." }
+          ],
+          "correctExplanation": "Torque drops, swing drops, period moves. That walk is the error.",
+          "objectiveIds": ["Predict a rate change as the spring winds down if isochronism is poor"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-iso10-3",
+          "stem": "You want to test isochronism on a clean lever. A fair method is to:",
+          "correctAnswer": "Read rate at high and low amplitude in the same position and compare",
+          "distractors": [
+            { "text": "Slide the index until the full-wind ticket is zero and stop there", "kind": "misapplied", "rationale": "The index hides the walk. It does not measure it." },
+            { "text": "Count jewels, because isochronism is a hole-count property", "kind": "nearby", "rationale": "Jewel count does not name a period-versus-swing error." },
+            { "text": "Time only at full wind, which is the definition of a day's rate", "kind": "reversed", "rationale": "Full wind is one end of the test. You need the other." }
+          ],
+          "correctExplanation": "Same position, two swings. The difference is the isochronism error.",
+          "objectiveIds": ["Predict a rate change as the spring winds down if isochronism is poor"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-isochronism-20",
+      "conceptId": "horo-isochronism",
+      "title": "When swing falls, the day moves",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["horo-hairspring", "horo-rate"],
+      "goDeeper": "horo-amplitude",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Theory gives a period of two pi times the square root of inertia over stiffness. Amplitude does not appear. Real watches add three disturbances: the escapement's lock and impulse, the hairspring's terminal curve, and any pins that grab the outer coil.",
+        "Escapement error usually makes the watch gain as amplitude falls, because lock and unlock take a larger fraction of a short swing. Spring error can go either way, depending on the curve and on whether the coil breathes in the regulator pins.",
+        "A wind-down test is the honest picture. Rate at full barrel, then at twenty-four hours, in the same position. If the line walks, isochronism is poor. Opening the index to fix the full-wind ticket will not hold the next afternoon.",
+        "WOSTEP treats this as a spring and escapement problem, not a marketing one. Restore concentricity, check the pins are parallel and not pinching, confirm impulse is clean at low swing. Only then decide whether the residual walk is acceptable."
+      ],
+      "example": "Full wind plus-four at 300 degrees. Next day minus-ten at 210, same position. Pins were pinching. Opening them a hair and recentering the coil cut the walk to two seconds without touching the index.",
+      "whyItMatters": "The day is a wind-down, not a full-wind ticket. Isochronism is whether those two numbers agree.",
+      "quiz": [
+        {
+          "id": "horo-iso20-1",
+          "stem": "Why does a real lever usually gain as amplitude falls, even though theory ignores swing?",
+          "correctAnswer": "Lock and unlock take a larger fraction of a short swing, which is escapement error",
+          "distractors": [
+            { "text": "The train tooth count grows as the barrel empties, which is the definition", "kind": "misconception", "rationale": "Tooth count does not grow. Escapement error is a fraction of the swing." },
+            { "text": "Theory already includes amplitude, so a gain at low swing is impossible", "kind": "reversed", "rationale": "Theory omits amplitude. The real disturbances put it back." },
+            { "text": "A dying cell always speeds a lever, which is the quartz explanation", "kind": "misapplied", "rationale": "This is still a sprung balance. No cell is in the story." }
+          ],
+          "correctExplanation": "Short swing, same lock work, larger fraction. Period shortens. The watch gains.",
+          "objectiveIds": ["Define isochronism as period that does not depend on amplitude"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "horo-iso20-2",
+          "stem": "A wind-down test that walks from plus-four to minus-ten in one position tells you:",
+          "correctAnswer": "Isochronism is poor: the period moved as amplitude fell with the barrel",
+          "distractors": [
+            { "text": "Isochronism is perfect, because any walk is only a ticket-printer fault", "kind": "reversed", "rationale": "The walk is the definition of poor isochronism." },
+            { "text": "The index must be opened, because a walk is always a long spring at full wind", "kind": "misapplied", "rationale": "The index will not hold tomorrow if the period still cares about swing." },
+            { "text": "The escape wheel has gained teeth, which is how a barrel writes rate", "kind": "nearby", "rationale": "The wheel did not grow. Swing fell." }
+          ],
+          "correctExplanation": "Same position, less swing, different rate. That is the wind-down error.",
+          "objectiveIds": ["Predict a rate change as the spring winds down if isochronism is poor"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-iso20-3",
+          "stem": "Pins that pinch the outer coil, with a walk on the wind-down test, should be treated as:",
+          "correctAnswer": "A spring-and-pin problem to restore before anyone trusts an index setting",
+          "distractors": [
+            { "text": "A finished isochronism, because a pinch is the modern terminal curve", "kind": "reversed", "rationale": "A pinch is a disturbance, not a curve." },
+            { "text": "A quartz fault, best fixed by dividing the crystal to a new beat", "kind": "misapplied", "rationale": "Pins grab a hairspring. There is no crystal here." },
+            { "text": "Proof the train, not the oscillator, is what walked overnight", "kind": "nearby", "rationale": "The train counted the same way. The period moved." }
+          ],
+          "correctExplanation": "Pinch, breathe, walk. Restore the coil and the pins. Then regulate.",
+          "objectiveIds": ["Predict a rate change as the spring winds down if isochronism is poor"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-amplitude-10",
+      "conceptId": "horo-amplitude",
+      "title": "How far the rim travels",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-balance"],
+      "goDeeper": "horo-positional",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Swing of the balance, measured in degrees from rest to the extreme, is amplitude. A healthy horizontal reading often sits near two hundred seventy to three hundred ten. Vertical is lower. The timing machine infers this from the sound of the ticks.",
+        "Low amplitude is friction, magnetism, or a tired spring. Dry jewels, thick oil, a magnetized coil, a mainspring that has set, or a stone that is not delivering impulse will all cut the swing. It is not a missing tourbillon.",
+        "Diagnose before you regulate. A watch at one hundred eighty degrees will not hold a rate you set at three hundred. Find the stolen energy: oil, a scored pivot, a coil that sticks, a barrel that is empty. Amplitude is the health reading."
+      ],
+      "example": "Dial up reads 180 degrees and plus-twenty. Vertical is worse. The fourth-wheel jewel is dry and the impulse plane is matte. Oil and a clean stone bring 280 degrees. The plus-twenty was a sick oscillator, not a long spring.",
+      "whyItMatters": "Regulate a low swing and you have set a rate that will not survive the next day of friction.",
+      "quiz": [
+        {
+          "id": "horo-amp10-1",
+          "stem": "Amplitude, in this course, is measured as:",
+          "correctAnswer": "How far the balance swings, in degrees from rest to the extreme",
+          "distractors": [
+            { "text": "Seconds gained or lost per day, printed as a plus or minus", "kind": "nearby", "rationale": "That is daily rate. Amplitude is the size of the swing." },
+            { "text": "The tooth count of the escape wheel, taken as a swing number", "kind": "misapplied", "rationale": "Tooth count is train. Amplitude is the rim." },
+            { "text": "Jewel count on the spec sheet, which is how swing is graded", "kind": "misconception", "rationale": "Holes are not degrees of travel." }
+          ],
+          "correctExplanation": "Rest to extreme, in degrees. That is the swing you measure.",
+          "objectiveIds": ["Measure amplitude as how far the balance swings"],
+          "prerequisiteConceptIds": ["horo-balance"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-amp10-2",
+          "stem": "Low amplitude on a lever watch should be diagnosed first as:",
+          "correctAnswer": "Friction, magnetism, or a tired spring — not as a missing tourbillon",
+          "distractors": [
+            { "text": "A missing tourbillon, which is the only cure for a short swing", "kind": "misconception", "rationale": "A rotating cage is not the stolen-energy diagnosis." },
+            { "text": "Proof the train is the timebase, so the rim no longer needs to swing", "kind": "reversed", "rationale": "A short swing is a sick oscillator, not a retired one." },
+            { "text": "A quartz property, best fixed by fitting a new cell under the balance", "kind": "misapplied", "rationale": "No cell restores a dry jewel or a stuck coil." }
+          ],
+          "correctExplanation": "Stolen energy: friction, a stuck coil, a tired barrel. Not a cage.",
+          "objectiveIds": ["Diagnose low amplitude as friction, magnetism, or a tired spring — not as 'it needs a tourbillon'"],
+          "prerequisiteConceptIds": ["horo-balance"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "horo-amp10-3",
+          "stem": "A watch at 180 degrees prints a rate you like. Before you call it regulated you should:",
+          "correctAnswer": "Find the stolen energy, because that rate will not hold as swing stays sick",
+          "distractors": [
+            { "text": "Fit a tourbillon, which is how a short swing is supposed to be finished", "kind": "misconception", "rationale": "The objective names that sentence as the wrong diagnosis." },
+            { "text": "Leave it, because 180 degrees is the definition of a healthy horizontal", "kind": "reversed", "rationale": "Healthy horizontal is much higher. 180 is a health warning." },
+            { "text": "Open the index only, because a short swing is always a long spring", "kind": "nearby", "rationale": "The index will not restore a dry jewel or a set mainspring." }
+          ],
+          "correctExplanation": "180 is sick. Restore swing, then regulate. The pretty ticket is a loan.",
+          "objectiveIds": ["Diagnose low amplitude as friction, magnetism, or a tired spring — not as 'it needs a tourbillon'"],
+          "prerequisiteConceptIds": ["horo-balance"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-positional-10",
+      "conceptId": "horo-positional",
+      "title": "Dial up is not pendant up",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-rate"],
+      "goDeeper": "horo-poise",
+      "diagram": "horo-positions",
+      "explanation": [
+        "Gravity biases the oscillator. Dial up, dial down, and the four verticals each present a different axis to the rim and to the spring. Time the watch in several positions because one number is not the day a wearer will see.",
+        "A pocket watch sits pendant-up for hours. A vertical-position error that a wrist already averages, by moving, will print on that pocket all afternoon. The same calibre on a wrist still needs the verticals checked; it just hides them better.",
+        "HSNY and WOSTEP both teach a set of positions, not a single DU ticket. Read DU, DD, then CU, CD, CL, CR as needed. The spread is the positional error. Regulate the mean only after the worst positions are understood."
+      ],
+      "example": "Dial up plus-two, pendant up minus-sixteen. A pocket in a vest will wear the minus-sixteen. A wrist that turns through the day will wear something closer to the mean — still not the DU ticket alone.",
+      "whyItMatters": "One position is a sample. The wearer lives in several. Time those.",
+      "quiz": [
+        {
+          "id": "horo-pos10-1",
+          "stem": "Why time a watch in several positions rather than trusting dial-up alone?",
+          "correctAnswer": "Gravity biases the oscillator differently in each attitude, so one number is not the day",
+          "distractors": [
+            { "text": "Jewel count changes with attitude, which is how a position is graded", "kind": "misapplied", "rationale": "Holes do not appear and vanish when you turn the watch." },
+            { "text": "The train becomes the timebase in the verticals, so DU can be skipped", "kind": "misconception", "rationale": "The oscillator is still the timebase. Gravity just biases it." },
+            { "text": "Quartz crystals only run dial-up, so a lever must copy that habit", "kind": "nearby", "rationale": "This is a gravity-and-oscillator story, not a crystal habit." }
+          ],
+          "correctExplanation": "Each attitude is a different bias. Several readings, then a mean.",
+          "objectiveIds": ["Time the watch in several positions because gravity biases the oscillator"],
+          "prerequisiteConceptIds": ["horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-pos10-2",
+          "stem": "A vertical-position error a pocket watch sees all afternoon is one a wrist will typically:",
+          "correctAnswer": "Average down by moving, though the verticals still need to be checked",
+          "distractors": [
+            { "text": "Print twice as large, because a wrist never leaves pendant-up", "kind": "reversed", "rationale": "A wrist turns. A pocket in a vest often does not." },
+            { "text": "Ignore entirely, so verticals can be skipped on any wrist calibre", "kind": "subtle", "rationale": "Averaging is not permission to skip the check." },
+            { "text": "Convert into a quartz step, which is how a wrist hides gravity", "kind": "misapplied", "rationale": "Motion averages a bias. It does not change the resonator." }
+          ],
+          "correctExplanation": "Pocket sits. Wrist turns. The error is the same geometry, worn differently.",
+          "objectiveIds": ["Predict a vertical-position error a pocket watch sees that a wrist already averages"],
+          "prerequisiteConceptIds": ["horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-pos10-3",
+          "stem": "Dial-up plus-two and pendant-up minus-sixteen on a pocket to be worn in a vest means:",
+          "correctAnswer": "The wearer lives near the vertical error; the DU ticket is not the afternoon",
+          "distractors": [
+            { "text": "The wearer lives on the DU ticket, because vest pockets cancel gravity", "kind": "reversed", "rationale": "A vest holds the watch pendant-up. That is the vertical." },
+            { "text": "The two numbers must be added to jewel count to grade the calibre", "kind": "misapplied", "rationale": "This is a positional spread, not a grade-by-holes." },
+            { "text": "The train has become the timebase, so both tickets can be ignored", "kind": "nearby", "rationale": "Both tickets are oscillator readings in different attitudes." }
+          ],
+          "correctExplanation": "Vest equals pendant-up. The minus-sixteen is the day, not the plus-two.",
+          "objectiveIds": ["Predict a vertical-position error a pocket watch sees that a wrist already averages"],
+          "prerequisiteConceptIds": ["horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "horo-poise-10",
+      "conceptId": "horo-poise",
+      "title": "Heavy spot gravity can find",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-positional", "horo-balance"],
+      "goDeeper": "horo-beat-error",
+      "diagram": "horo-positions",
+      "explanation": [
+        "Poise is whether the rim is even. A heavy spot is mass gravity can find when the staff is horizontal. In vertical positions that spot speeds or slows the period depending on whether it hangs below the axis at rest or sits to one side.",
+        "Sign of the rate error follows the heavy spot. If the spot rests at the bottom, gravity helps and fights the spring in a way that usually loses. Rotate the watch and the sign can flip. Dial-up hides most of it because the staff is then vertical.",
+        "Balance the rim so the heavy spot dies. Timing screws, undercutters, or a poising tool are the means. Do not chase a vertical-only error with the regulator index; that index moves every position, including the ones that were already fine."
+      ],
+      "example": "Crown-down loses twelve; crown-up gains ten; dial-up is near zero. The heavy spot is showing in the verticals. Lighten that sector of the rim and the pair closes. Sliding the index would have moved dial-up off zero.",
+      "whyItMatters": "A vertical-only spread is often poise. The index will wreck the positions that were already quiet.",
+      "quiz": [
+        {
+          "id": "horo-poi10-1",
+          "stem": "Poising the balance, in this lesson, means you:",
+          "correctAnswer": "Even the rim so a heavy spot cannot become a positional rate error",
+          "distractors": [
+            { "text": "Slide the index so every vertical inherits the same new error", "kind": "misapplied", "rationale": "The index is a global length change, not a rim evenness." },
+            { "text": "Oil the lock faces, which is how a heavy spot is supposed to dissolve", "kind": "nearby", "rationale": "Oil is not poise. Mass on the rim is poise." },
+            { "text": "Add a tooth to the escape wheel so gravity can no longer find the rim", "kind": "misconception", "rationale": "The wheel is not the heavy spot. The rim is." }
+          ],
+          "correctExplanation": "Even rim, no heavy spot, gravity has less to find in the verticals.",
+          "objectiveIds": ["Balance the rim so a heavy spot does not become a positional error"],
+          "prerequisiteConceptIds": ["horo-positional", "horo-balance"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-poi10-2",
+          "stem": "When a poise error meets a vertical position, the sign of the rate error typically:",
+          "correctAnswer": "Follows where the heavy spot sits at rest, and can flip if you rotate the watch",
+          "distractors": [
+            { "text": "Is always plus, because extra mass can only make a watch fast", "kind": "reversed", "rationale": "A bottom-resting heavy spot usually loses. Sign depends on rest." },
+            { "text": "Disappears, because verticals cancel poise by definition", "kind": "misconception", "rationale": "Verticals are where poise shows. Dial-up is where it hides." },
+            { "text": "Becomes a quartz step, which is how a heavy spot is supposed to recover", "kind": "misapplied", "rationale": "Poise is still rim mass under gravity." }
+          ],
+          "correctExplanation": "Heavy spot at rest sets the sign. Turn the watch, sign can flip.",
+          "objectiveIds": ["Predict the sign of the rate error when a poise error meets a vertical position"],
+          "prerequisiteConceptIds": ["horo-positional", "horo-balance"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-poi10-3",
+          "stem": "Dial-up is quiet, two opposite verticals have opposite signs. The first suspect is:",
+          "correctAnswer": "A heavy spot on the rim, to be poised, not an index move that shifts every position",
+          "distractors": [
+            { "text": "A long hairspring, best shortened with the index until the verticals match DU", "kind": "misapplied", "rationale": "The index would drag the quiet DU off zero." },
+            { "text": "A missing escape tooth, which only prints in the verticals", "kind": "nearby", "rationale": "A missing tooth is a once-per-turn lock fault, not a DU-quiet pair." },
+            { "text": "Proof poise only exists dial-up, so the verticals can be ignored", "kind": "reversed", "rationale": "Poise hides dial-up and shows in the verticals." }
+          ],
+          "correctExplanation": "Quiet DU, opposite verticals: classic poise. Even the rim.",
+          "objectiveIds": ["Balance the rim so a heavy spot does not become a positional error"],
+          "prerequisiteConceptIds": ["horo-positional", "horo-balance"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-beat-error-10",
+      "conceptId": "horo-beat-error",
+      "title": "Unequal times from rest",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-impulse-pin"],
+      "goDeeper": "horo-timing-machine",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Rest position of the balance should put the impulse pin in the middle of the fork. Beat error is the unequal time from that rest to each unlock. One side unlocks early, the other late. The two tick intervals are no longer a pair.",
+        "A timing machine draws this as a split line, or prints a beat error in milliseconds. Two traces, one for each tick in the pair, sit apart. Closing the gap means rotating the collet or the stud until rest is the middle of the roller again.",
+        "Out of beat also steals amplitude and can look like a safety problem, because the pin no longer enters both horns the same way. Equalize the beat before you regulate the rate. A plus ticket on an unequal pair is a number you cannot trust."
+      ],
+      "example": "The machine prints 2.8 ms of beat error and a split line. You rotate the collet a hair. The lines merge, the milliseconds fall under 0.5, and amplitude rises because both horns now see the pin the same way.",
+      "whyItMatters": "An unequal pair is not a rate. Close the beat, then regulate.",
+      "quiz": [
+        {
+          "id": "horo-be10-1",
+          "stem": "Beat error is defined, in this lesson, as:",
+          "correctAnswer": "Unequal time from rest to each unlock, because rest is not the middle of the roller",
+          "distractors": [
+            { "text": "Seconds gained or lost per day, which is just beat error under another name", "kind": "nearby", "rationale": "Daily rate is a different number. Beat error is the unequal pair." },
+            { "text": "How far the rim travels, printed in milliseconds on the ticket", "kind": "misapplied", "rationale": "That is amplitude, not the rest-to-unlock pair." },
+            { "text": "A quartz divider fault that a lever prints when the cell is dying", "kind": "misconception", "rationale": "Beat error is a mechanical rest-position error." }
+          ],
+          "correctExplanation": "Rest off-centre, one unlock early, one late. That gap is beat error.",
+          "objectiveIds": ["Define beat error as unequal time from rest to each unlock"],
+          "prerequisiteConceptIds": ["horo-impulse-pin"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-be10-2",
+          "stem": "The timing-machine signature of a beat that is out of equal is typically:",
+          "correctAnswer": "A split line, or a beat-error reading in milliseconds between the two ticks",
+          "distractors": [
+            { "text": "A single clean line and a zero millisecond reading, by definition", "kind": "reversed", "rationale": "In-beat is the merged line. Out-of-beat is the split." },
+            { "text": "A jewel-count printout, which is how beat error is officially graded", "kind": "misapplied", "rationale": "The machine hears ticks, not holes." },
+            { "text": "A tourbillon cage speed, which is the only other name for a split", "kind": "nearby", "rationale": "A split is the two ticks of one pair, not a cage." }
+          ],
+          "correctExplanation": "Two traces apart, or a millisecond gap. That is the signature.",
+          "objectiveIds": ["Predict the timing-machine signature of a beat that is out of equal"],
+          "prerequisiteConceptIds": ["horo-impulse-pin"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-be10-3",
+          "stem": "You see a 2.8 ms split and a plus-six ticket. Before you move the index you should:",
+          "correctAnswer": "Rotate collet or stud until rest is centred and the lines merge",
+          "distractors": [
+            { "text": "Slide the index first, because a split is just a fast daily rate", "kind": "reversed", "rationale": "A plus on an unequal pair is not a rate you can trust." },
+            { "text": "Oil the lock faces, because a split is missing draw under another name", "kind": "nearby", "rationale": "A split is rest position, not lock-face oil." },
+            { "text": "Fit a tourbillon, which is how a millisecond gap is supposed to close", "kind": "misapplied", "rationale": "Centre the pin. Do not add a cage." }
+          ],
+          "correctExplanation": "Close the beat, then regulate. The plus-six was a pair, not a period.",
+          "objectiveIds": ["Predict the timing-machine signature of a beat that is out of equal"],
+          "prerequisiteConceptIds": ["horo-impulse-pin"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-timing-machine-10",
+      "conceptId": "horo-timing-machine",
+      "title": "Three numbers a microphone can hear",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-rate"],
+      "goDeeper": "horo-temp",
+      "explanation": [
+        "Microphones on the bench hear the lock and the impulse as ticks. The machine turns those sounds into three numbers: daily rate, amplitude, and beat error. The line on the screen is the tick interval, drawn against time.",
+        "Read the line, not only the digits. A clean rate with a wandering amplitude, a split that is beat error, a once-per-turn wobble from a bent escape tooth: those shapes are the diagnosis. The printed plus-four is only the average.",
+        "The machine cannot see magnetism, oil placement, or a cracked jewel. It sees their symptoms. A fast, unstable rate may be a magnetized spring. A falling amplitude may be a dry hole. Open the calibre for those. Do not regulate a ghost."
+      ],
+      "example": "Plus-four, 292 degrees, 0.3 ms, line straight. Then the line frays and amplitude falls after a minute. The digits were a first minute. The oil had already started to drag. The machine reported the symptom; it did not name the oil.",
+      "whyItMatters": "Three numbers and a line. What the microphone cannot see still has to be opened and looked at.",
+      "quiz": [
+        {
+          "id": "horo-tm10-1",
+          "stem": "A timing-machine microphone trace is read, first, as which three numbers?",
+          "correctAnswer": "Daily rate, amplitude, and beat error, taken from the tick sounds",
+          "distractors": [
+            { "text": "Jewel count, case metal, and power reserve, taken from the spec sheet", "kind": "misapplied", "rationale": "The machine hears ticks. It does not read a spec sheet." },
+            { "text": "Lock, drop, and slide, measured in millimetres on the stones", "kind": "nearby", "rationale": "Those freedoms are under the glass, not on the microphone ticket." },
+            { "text": "Temperature, magnetism, and oil placement, printed as three grades", "kind": "subtle", "rationale": "Those are what the machine cannot see. It sees symptoms." }
+          ],
+          "correctExplanation": "Rate, amplitude, beat error. Three numbers from the ticks.",
+          "objectiveIds": ["Read rate, amplitude, and beat error from a microphone trace"],
+          "prerequisiteConceptIds": ["horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-tm10-2",
+          "stem": "A fast, unstable line with coils that look bunched is a symptom the machine heard. What it could not see is:",
+          "correctAnswer": "Magnetism on the spring, which you still have to test and demagnetize",
+          "distractors": [
+            { "text": "Daily rate, which a microphone is forbidden from printing", "kind": "reversed", "rationale": "Rate is one of the three numbers it does print." },
+            { "text": "Beat error, which can only be read under a microscope", "kind": "nearby", "rationale": "Beat error is on the ticket. Magnetism is not." },
+            { "text": "Amplitude, because swing cannot be inferred from tick sounds", "kind": "subtle", "rationale": "Amplitude is inferred and printed. Magnetism is not named." }
+          ],
+          "correctExplanation": "The machine printed fast and ragged. Magnetism is your diagnosis, not its.",
+          "objectiveIds": ["Name what the machine cannot see: magnetism, oil placement, a cracked jewel"],
+          "prerequisiteConceptIds": ["horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "horo-tm10-3",
+          "stem": "The ticket is plus-four and pretty. Amplitude is falling and you have not opened the calibre. You should:",
+          "correctAnswer": "Treat oil placement or a cracked jewel as unseen causes and look inside",
+          "distractors": [
+            { "text": "Regulate the plus-four away, because a pretty ticket is a finished watch", "kind": "reversed", "rationale": "Falling amplitude is a symptom the digits are hiding." },
+            { "text": "Trust the machine to have printed the oil drop and the crack already", "kind": "misconception", "rationale": "It cannot see those. It only hears what they do to the ticks." },
+            { "text": "Fit a tourbillon, which is how a falling line is supposed to be finished", "kind": "misapplied", "rationale": "Open the calibre. Do not add a cage." }
+          ],
+          "correctExplanation": "Pretty digits, falling swing. Open it. Oil or a crack will not print their names.",
+          "objectiveIds": ["Name what the machine cannot see: magnetism, oil placement, a cracked jewel"],
+          "prerequisiteConceptIds": ["horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-temp-10",
+      "conceptId": "horo-temp",
+      "title": "Heat that weakens the coil",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-hairspring"],
+      "goDeeper": "horo-magnet",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Steel changes modulus when the room warms. The hairspring goes softer, so the restoring force drops and the watch loses. The balance diameter also grows, which adds inertia and loses again. Both effects point the same way on a plain steel pair.",
+        "Compensation is the attempt to cancel that pair. A bimetallic cut balance shrinks its effective inertia as it warms. Modern alloys, and silicon springs, flatten the modulus curve instead. Either way the goal is a period that does not follow the thermometer.",
+        "Predict the residual: a steel spring on a monometallic brass balance will lose in heat and gain in cold. An over-compensated cut balance can reverse the sign. Time the same watch at two temperatures before you blame the regulator for a seasonal drift."
+      ],
+      "example": "A steel-and-brass pair reads plus-two at 20 °C and minus-twelve at 35 °C. The modulus dropped and the rim grew. A Nivarox or silicon spring on a monometallic rim is what that pair was trying, badly, to be.",
+      "whyItMatters": "A seasonal drift is often temperature, not a regulator that 'came loose'.",
+      "quiz": [
+        {
+          "id": "horo-tmp10-1",
+          "stem": "When temperature rises, a plain steel spring and a growing brass rim typically:",
+          "correctAnswer": "Soften the modulus and add inertia, so both effects make the watch lose",
+          "distractors": [
+            { "text": "Stiffen the modulus and cut inertia, so both effects make the watch gain", "kind": "reversed", "rationale": "Heat softens steel and grows the rim. Both lose." },
+            { "text": "Leave period alone, because temperature cannot touch a sprung balance", "kind": "misconception", "rationale": "Modulus and diameter both move. Period follows." },
+            { "text": "Convert the lever into a quartz crystal until the room cools", "kind": "misapplied", "rationale": "The pair is still steel and brass. Heat is not a resonator swap." }
+          ],
+          "correctExplanation": "Softer spring, larger rim. Two losses. That is the uncompensated pair.",
+          "objectiveIds": ["State how temperature changes the modulus and the balance diameter"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-tmp10-2",
+          "stem": "A bimetallic cut balance, or a modern alloy spring, is trying to cancel:",
+          "correctAnswer": "The heat-driven loss from a softer modulus and a larger diameter",
+          "distractors": [
+            { "text": "Beat error, which is the only temperature error a cut rim can see", "kind": "nearby", "rationale": "Beat error is rest position. Compensation is a thermal story." },
+            { "text": "Jewel count, which rises in the cold and must be brought back down", "kind": "misapplied", "rationale": "Holes do not appear with the thermometer." },
+            { "text": "The need for an oscillator, because heat is itself a timebase", "kind": "misconception", "rationale": "Compensation keeps the same oscillator from following the room." }
+          ],
+          "correctExplanation": "Cancel the two thermal losses. Cut rim or flatter alloy. Same goal.",
+          "objectiveIds": ["Predict the compensation a bimetallic or modern alloy is trying to cancel"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-tmp10-3",
+          "stem": "A steel-on-brass watch that loses in summer and gains in winter is showing:",
+          "correctAnswer": "The uncompensated pair: modulus down and diameter up in the heat",
+          "distractors": [
+            { "text": "Over-compensation, which always loses in the cold and gains in the heat", "kind": "reversed", "rationale": "Over-compensation flips that sign. This is the plain pair." },
+            { "text": "A regulator that came loose, which is the only seasonal story allowed", "kind": "subtle", "rationale": "Time it at two temperatures before you accuse the index." },
+            { "text": "A quartz cell dying in the heat, which a lever always hides under the cock", "kind": "misapplied", "rationale": "No cell. The steel and the brass moved." }
+          ],
+          "correctExplanation": "Summer loss, winter gain: textbook uncompensated steel and brass.",
+          "objectiveIds": ["Predict the compensation a bimetallic or modern alloy is trying to cancel"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "horo-magnet-10",
+      "conceptId": "horo-magnet",
+      "title": "Coils that stick to themselves",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-hairspring"],
+      "goDeeper": "horo-lubrication-escape",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Magnetized coils stick. The hairspring no longer breathes as a free spiral. Effective stiffness and length both change, so the period jumps, often toward a fast, unstable rate. Amplitude can fall because the stuck coils drag each other.",
+        "The cure is to demagnetize. Pass the movement through a degausser until a compass or a magnetometer is quiet, then check that the coils have separated. Do not regulate it out. The next door, phone, or clasp will move the error again.",
+        "A timing-machine line that is fast and ragged, with a spring that looks bunched under the glass, is this fault until proven otherwise. Regulate after the spring is free. A plus-forty you fixed with the index is still a magnetized spring."
+      ],
+      "example": "Plus-forty, amplitude 190, coils bunched. After the degausser the coils open, amplitude returns to 280, and the ticket is plus-three. The index never moved. The magnetism did.",
+      "whyItMatters": "A magnetized spring is not a regulation job. Demagnetize, then see what rate you actually have.",
+      "quiz": [
+        {
+          "id": "horo-mag10-1",
+          "stem": "A magnetized hairspring shows up as coils that:",
+          "correctAnswer": "Stick together and change the period, often toward a fast, unstable rate",
+          "distractors": [
+            { "text": "Separate more widely and always slow the watch to a stable minus", "kind": "reversed", "rationale": "They stick, not separate. Period usually jumps fast." },
+            { "text": "Become a quartz crystal until the next service oils the stud", "kind": "misapplied", "rationale": "Stuck steel is still a hairspring." },
+            { "text": "Leave period alone and only colour the plates under the cock", "kind": "misconception", "rationale": "Stuck coils change stiffness and length. Period moves." }
+          ],
+          "correctExplanation": "Stuck coils, changed spring, jumped period. Usually fast and ragged.",
+          "objectiveIds": ["Describe a magnetized hairspring as coils that stick and change the period"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-mag10-2",
+          "stem": "The cure for a magnetized hairspring is to:",
+          "correctAnswer": "Demagnetize the movement; do not regulate the error out with the index",
+          "distractors": [
+            { "text": "Slide the index until the plus-forty is zero and call the spring free", "kind": "reversed", "rationale": "The next magnet will move the error you just indexed over." },
+            { "text": "Oil the lock faces, which is how magnetism is supposed to dissolve", "kind": "misapplied", "rationale": "Oil is not a degausser." },
+            { "text": "Add rim mass, because extra inertia is the definition of demagnetizing", "kind": "nearby", "rationale": "Inertia is a different knob. Free the coils." }
+          ],
+          "correctExplanation": "Degauss, confirm the coils opened, then regulate what is left.",
+          "objectiveIds": ["Predict the cure: demagnetize, do not 'regulate it out'"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-mag10-3",
+          "stem": "Plus-forty, bunched coils, you slide the index to zero. Next week a phone brings the plus back. That sequence shows:",
+          "correctAnswer": "The fault was magnetism; indexing hid it until the next field arrived",
+          "distractors": [
+            { "text": "The index is the cure, and the phone proved the spring needed more length", "kind": "reversed", "rationale": "The phone re-magnetized what you never demagnetized." },
+            { "text": "A tourbillon would have blocked the phone, which is the missing part", "kind": "misapplied", "rationale": "A cage does not degauss a coil." },
+            { "text": "Jewel count was too low, which is why fields can reach the spring", "kind": "nearby", "rationale": "Holes do not stop a magnetic field. A degausser does." }
+          ],
+          "correctExplanation": "You regulated a magnet. The field came back. Demagnetize next time.",
+          "objectiveIds": ["Predict the cure: demagnetize, do not 'regulate it out'"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-lubrication-escape-10",
+      "conceptId": "horo-lubrication-escape",
+      "title": "Oil on impulse, not on lock",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-lubrication", "horo-pallet"],
+      "goDeeper": "horo-accuracy-claim",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Impulse faces need a tiny film. The tooth must slide, not grind. Locking faces should stay dry. Oil on the lock kills draw, lets the fork flutter, and can turn a safe landing into a skid that unlocks on a knock.",
+        "A greedy drop creeps off the stone onto the lock, the wheel, or the fork slot. The escapement then runs thick, amplitude falls, and later the oil gums. A dry stone cuts the impulse plane and the swing dies within a day or two of service.",
+        "WOSTEP oils the impulse planes with a measured, small drop and leaves the lock clean. Revisit the stones after a few minutes; migration shows up early. Treat escapement oil as a timing problem. The rate you set on a wet lock will not hold."
+      ],
+      "example": "One heavy drop on the entry stone crawls onto the locking face. Draw dies on that side, the fork flutters, and a plus-six ticket becomes a skip by evening. A dry exit stone, the other fault, leaves a matte plane and 200 degrees by the next morning.",
+      "whyItMatters": "Escapement oil is a timing fault waiting to migrate. The drop is part of the rate.",
+      "quiz": [
+        {
+          "id": "horo-leo10-1",
+          "stem": "Where should escapement oil go, and where must it stay off?",
+          "correctAnswer": "A tiny film on the impulse faces; the locking faces stay dry",
+          "distractors": [
+            { "text": "A film on the lock; the impulse faces stay dry so draw can grow", "kind": "reversed", "rationale": "Oil on the lock kills draw. Impulse is the face that slides." },
+            { "text": "A flood on both faces, because more oil is always more amplitude", "kind": "misconception", "rationale": "A flood migrates, gums, and steals swing." },
+            { "text": "A drop on the hairspring, which is how a lever is supposed to be timed", "kind": "misapplied", "rationale": "Oil on the coil is a fault, not a method." }
+          ],
+          "correctExplanation": "Impulse wet, lock dry. That is the whole placement.",
+          "objectiveIds": ["Oil the impulse faces that need it and keep oil off the lock"],
+          "prerequisiteConceptIds": ["horo-lubrication", "horo-pallet"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-leo10-2",
+          "stem": "A greedy drop that has crept onto the lock will typically:",
+          "correctAnswer": "Kill draw, let the fork flutter, and turn a safe landing into a skid",
+          "distractors": [
+            { "text": "Improve draw, because oil on the lock is extra angle on the stone", "kind": "reversed", "rationale": "Oil on the lock is a skid, not extra angle." },
+            { "text": "Demagnetize the spring, which is the hidden job of a wet lock", "kind": "misapplied", "rationale": "Oil is not a degausser." },
+            { "text": "Raise amplitude forever, which is why WOSTEP floods the lock", "kind": "subtle", "rationale": "WOSTEP leaves the lock clean. A flood steals swing later." }
+          ],
+          "correctExplanation": "Wet lock, dead draw, flutter and skid. That is the greedy drop.",
+          "objectiveIds": ["Predict a greedy or dry escapement from the wrong drop of oil"],
+          "prerequisiteConceptIds": ["horo-lubrication", "horo-pallet"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-leo10-3",
+          "stem": "Amplitude was fine at the bench and dead the next morning, impulse plane now matte. First suspect is:",
+          "correctAnswer": "A dry stone that cut the plane overnight — the other wrong drop",
+          "distractors": [
+            { "text": "A greedy flood still sitting on the lock, which always leaves a matte plane", "kind": "reversed", "rationale": "Matte plane is a dry slide, not a flood." },
+            { "text": "A tourbillon the watch needed, which is how a matte plane is finished", "kind": "misapplied", "rationale": "Oil the impulse face. Do not add a cage." },
+            { "text": "A regulator boot that pinched only after sunset, which mattes steel", "kind": "nearby", "rationale": "A boot pinches the coil. It does not matte a pallet plane." }
+          ],
+          "correctExplanation": "Dry impulse, cut plane, dead swing by morning. Too little oil, not too much.",
+          "objectiveIds": ["Predict a greedy or dry escapement from the wrong drop of oil"],
+          "prerequisiteConceptIds": ["horo-lubrication", "horo-pallet"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

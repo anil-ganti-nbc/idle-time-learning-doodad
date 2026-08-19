@@ -1,0 +1,649 @@
+{
+  "courseId": "ml-foundations",
+  "moduleId": "ml-f-gen",
+  "lessons": [
+    {
+      "id": "ml-train-val-test-5",
+      "conceptId": "ml-train-val-test",
+      "title": "Three splits, three jobs",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["ml-learning-problem"],
+      "goDeeper": "ml-overfit",
+      "diagram": "ml-splits",
+      "explanation": [
+        "Hide some rows before you search. Train is the set you fit on. Validation is the set you use to choose a model or a knob. Test is the set you report on once. Mixing those jobs is how a leaderboard number becomes a private training score.",
+        "The original sin is tuning on the set you later report. Every peek at test, every extra hyperparameter tried against test, spends the unseen-example contract. Validation exists so you can peek without spending test."
+      ],
+      "example": "Eighty rows to fit, ten to pick α and the features, ten locked in a drawer. You open the drawer once, after the choosing is finished. Opening it to 'just check' ten times is ten choices.",
+      "whyItMatters": "A published number that guided the search is a training number. The split ritual is the job, not bureaucracy.",
+      "quiz": [
+        {
+          "id": "ml-tvt5-1",
+          "stem": "Train, validation, and test keep three jobs honest when you:",
+          "correctAnswer": "Fit on train, choose on validation, and report on test once",
+          "distractors": [
+            { "text": "Fit, choose, and report on the same shuffled pile", "kind": "reversed", "rationale": "One pile cannot do three honest jobs." },
+            { "text": "Report on train and fit on test so the number looks held-out", "kind": "nearby", "rationale": "That swaps the names and still mixes the jobs." },
+            { "text": "Skip validation because a larger model does not need a split", "kind": "misapplied", "rationale": "Size does not replace the three jobs." }
+          ],
+          "correctExplanation": "Fit, choose, report. Three sets. Mixing them is the failure.",
+          "objectiveIds": ["Give train, validation, and test three different jobs and keep them unmixed"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-tvt5-2",
+          "stem": "The original sin this lesson names, for the three splits, is:",
+          "correctAnswer": "Tuning on the set you later report as the unseen number",
+          "distractors": [
+            { "text": "Using a loss the optimizer can actually differentiate", "kind": "misapplied", "rationale": "A loss is how you search, not the sin." },
+            { "text": "Holding out a validation split at all", "kind": "reversed", "rationale": "Validation is how you avoid spending test." },
+            { "text": "Writing the prediction as a weighted sum plus a bias", "kind": "nearby", "rationale": "That is a model, not a split crime." }
+          ],
+          "correctExplanation": "If you used it to choose, it is not a test. That is the sin.",
+          "objectiveIds": ["Name the original sin of tuning on the set you later report"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-tvt5-3",
+          "stem": "You peek at the test drawer ten times 'just to check' while picking α. The honest reading is:",
+          "correctAnswer": "Those ten peeks were ten choices, so test has been spent",
+          "distractors": [
+            { "text": "Checking is free as long as you do not change weights", "kind": "reversed", "rationale": "Choosing α is a choice even without a weight update." },
+            { "text": "Test becomes a better training set after ten peeks", "kind": "nearby", "rationale": "It becomes a worse report, not a better train." },
+            { "text": "The drawer ritual only matters for linear models", "kind": "misapplied", "rationale": "The contract is the job, not the architecture." }
+          ],
+          "correctExplanation": "A peek that changes what you keep is a choice. Test was used.",
+          "objectiveIds": ["Name the original sin of tuning on the set you later report"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-train-val-test-10",
+      "conceptId": "ml-train-val-test",
+      "title": "Mixing the report with the search",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-learning-problem"],
+      "goDeeper": "ml-overfit",
+      "diagram": "ml-splits",
+      "explanation": [
+        "Train fits the weights. Validation compares candidates and stops the search. Test is a one-shot report that must not have guided either job. Three jobs. Three splits. A single pile of rows cannot honestly do all three.",
+        "Tuning on the set you later report is the original sin. The number you publish is then a training number with extra steps. CS229 treats this as a contract violation, not a style preference. If you used it to choose, it is not a test.",
+        "A common cheat is to keep peeking at test 'just to check'. Ten checks are ten choices. The test mean drifts toward the models that got lucky on those rows. Lock test in a drawer. Argue on validation. Open the drawer once."
+      ],
+      "example": "Two feature sets, three values of α. Compare all six on validation. Pick one. Then — and only then — score test. Scoring test after each of the six is six reports and no test.",
+      "whyItMatters": "Leaderboards and internal demos skip the drawer. The unseen-example contract does not.",
+      "quiz": [
+        {
+          "id": "ml-tvt10-1",
+          "stem": "How do the three splits differ in the job they are allowed to do?",
+          "correctAnswer": "Train fits, validation chooses, test reports once and must guide neither",
+          "distractors": [
+            { "text": "Test fits, train chooses, validation is a nickname for train", "kind": "reversed", "rationale": "Those jobs are swapped and collapsed." },
+            { "text": "All three may be mixed if the loss is squared error", "kind": "misapplied", "rationale": "The loss does not excuse a mixed split." },
+            { "text": "Validation is optional once the training loss is zero", "kind": "nearby", "rationale": "Zero train loss is when you need the other two more." }
+          ],
+          "correctExplanation": "Fit, choose, report. Keep the names attached to the jobs.",
+          "objectiveIds": ["Give train, validation, and test three different jobs and keep them unmixed"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-tvt10-2",
+          "stem": "You try six (features, α) pairs and pick the winner by its test score. That procedure:",
+          "correctAnswer": "Committed the original sin: the report set did the choosing",
+          "distractors": [
+            { "text": "Is required, because validation is not a legal split", "kind": "reversed", "rationale": "Validation exists so test does not choose." },
+            { "text": "Keeps test unseen, because weights were fit only on train", "kind": "subtle", "rationale": "Unseen means unused for choices, not only unused for steps." },
+            { "text": "Fails only if the model is logistic rather than linear", "kind": "misapplied", "rationale": "The sin is the split, not the curve." }
+          ],
+          "correctExplanation": "Test chose the winner. The published number is no longer a test.",
+          "objectiveIds": ["Name the original sin of tuning on the set you later report"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-tvt10-3",
+          "stem": "Locking test in a drawer and arguing only on validation is the repair because:",
+          "correctAnswer": "You can still choose without spending the one-shot report",
+          "distractors": [
+            { "text": "Validation is a leaked copy of the test labels", "kind": "reversed", "rationale": "Validation is a different split, not a leak by design." },
+            { "text": "The drawer removes the need for a training set", "kind": "nearby", "rationale": "You still fit on train." },
+            { "text": "Opening the drawer every epoch is what 'once' means", "kind": "subtle", "rationale": "Once means after choosing is finished." }
+          ],
+          "correctExplanation": "Peek on val. Report on test. Once. That keeps the jobs unmixed.",
+          "objectiveIds": ["Give train, validation, and test three different jobs and keep them unmixed"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-overfit-10",
+      "conceptId": "ml-overfit",
+      "title": "Sample fit, population miss",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-train-val-test", "ml-hypothesis"],
+      "goDeeper": "ml-generalization",
+      "explanation": [
+        "Overfitting is fitting the sample and missing the population. The rule recites accidents that will not recur: last night's noise, one outlier's address, a spurious correlation in 80 rows. Training loss can still fall. That is not a win.",
+        "Read the two curves. Training loss falling while validation loss rises is the signature. The hypothesis class had enough room to memorize the sheet. The population did not contain those accidents, so the held-out number gets worse.",
+        "A class that is too small underfits: both curves stay high. A class that is too large overfits: train looks great, validation does not. The split you kept unmixed is what makes this diagnosis possible."
+      ],
+      "example": "A polynomial that threads 80 noisy points with training error near zero, then misses the next 20 badly. The sheet was stored. The population was not.",
+      "whyItMatters": "A falling training curve is the most common fake win. The other curve is the one that can contradict it.",
+      "quiz": [
+        {
+          "id": "ml-of10-1",
+          "stem": "Overfitting, in the sense this lesson uses, means:",
+          "correctAnswer": "Fitting the sample's accidents and missing the population they came from",
+          "distractors": [
+            { "text": "Using a loss that is too simple to compute a gradient", "kind": "misapplied", "rationale": "A computable loss is not the overfit." },
+            { "text": "Underfitting: both train and validation stay high", "kind": "reversed", "rationale": "That is the too-small-class story." },
+            { "text": "Reporting test once after validation has chosen", "kind": "nearby", "rationale": "That is the split ritual, not the fit failure." }
+          ],
+          "correctExplanation": "Sample stored, population missed. That is the overfit.",
+          "objectiveIds": ["Describe overfitting as fitting the sample and missing the population"],
+          "prerequisiteConceptIds": ["ml-train-val-test", "ml-hypothesis"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-of10-2",
+          "stem": "Training loss keeps falling while validation loss has turned upward. You should read that as:",
+          "correctAnswer": "The signature of overfit: the sheet is being stored, the held-out number is not",
+          "distractors": [
+            { "text": "Proof the model has generalized, because train is excellent", "kind": "reversed", "rationale": "Train excellence is the suspicious half." },
+            { "text": "A reason to fold validation into train immediately", "kind": "misapplied", "rationale": "That would hide the only alarm you have." },
+            { "text": "A broken gradient that can no longer be computed", "kind": "nearby", "rationale": "The train curve is still moving. The slope works." }
+          ],
+          "correctExplanation": "Train down, val up. Memorizing the sample, missing the rest.",
+          "objectiveIds": ["Read a training loss that falls while validation loss rises"],
+          "prerequisiteConceptIds": ["ml-train-val-test", "ml-hypothesis"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-of10-3",
+          "stem": "A lookup on 80 training addresses with near-zero train loss and poor validation is overfit because:",
+          "correctAnswer": "Those 80 accidents were stored; the population of new addresses was not",
+          "distractors": [
+            { "text": "Zero train loss is illegal in supervised learning", "kind": "misconception", "rationale": "It is legal. It can still be storage." },
+            { "text": "Validation should be ignored when train is perfect", "kind": "reversed", "rationale": "Perfect train is when you need validation most." },
+            { "text": "The hypothesis class was too small to represent the sheet", "kind": "nearby", "rationale": "A lookup is too large, not too small." }
+          ],
+          "correctExplanation": "The sheet is not the population. Validation is how you notice.",
+          "objectiveIds": ["Describe overfitting as fitting the sample and missing the population"],
+          "prerequisiteConceptIds": ["ml-train-val-test", "ml-hypothesis"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-overfit-20",
+      "conceptId": "ml-overfit",
+      "title": "Training loss falls, validation rises",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["ml-train-val-test", "ml-hypothesis"],
+      "goDeeper": "ml-regularization",
+      "explanation": [
+        "Watch both numbers. The sample is finite. A flexible enough family can drive training loss toward zero by storing the rows. The population is not those rows. Validation, drawn from the same process but hidden from the search, is the first alarm.",
+        "The signature is a training curve that keeps descending after validation has turned upward. Early in the walk both fall: the signal is being found. Later, extra room in the family, or extra steps, starts fitting noise. That turn is the overfit.",
+        "Memorizing 80 training addresses is easy for a lookup. It is also easy for a polynomial of high degree, or a linear model with more columns than rows. The population of future addresses does not contain those 80 accidents. The validation addresses are the check.",
+        "Do not 'fix' overfit by reporting the training number. Do not fold validation into train after you already used it to pick the winner, then call that a test. Later tools tax the wander or stop the walk. The diagnosis — train down, val up — comes first."
+      ],
+      "example": "Epoch 20: train 0.12, val 0.14. Epoch 80: train 0.01, val 0.31. The extra sixty epochs stored the sheet. A launch that quotes 0.01 quoted the wrong curve.",
+      "whyItMatters": "The most expensive production failures in this course's sense are this plot, ignored, with the training number in the email.",
+      "quiz": [
+        {
+          "id": "ml-of20-1",
+          "stem": "Epoch 20 has train 0.12 and val 0.14; epoch 80 has train 0.01 and val 0.31. The reading is:",
+          "correctAnswer": "Overfit after the turn: the extra epochs stored the sample, not the population",
+          "distractors": [
+            { "text": "Generalization improved, because the training number is smaller", "kind": "reversed", "rationale": "The held-out number got worse." },
+            { "text": "The split was illegal at epoch 20, so both numbers are noise", "kind": "nearby", "rationale": "Early agreement is the healthy part of the plot." },
+            { "text": "Validation should now be reported as the product metric", "kind": "misapplied", "rationale": "Val diagnosed. Test still reports, once." }
+          ],
+          "correctExplanation": "Train down, val up after a healthy start. That turn is the overfit.",
+          "objectiveIds": ["Read a training loss that falls while validation loss rises"],
+          "prerequisiteConceptIds": ["ml-train-val-test", "ml-hypothesis"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-of20-2",
+          "stem": "A polynomial of high degree threads 80 noisy training points. The population miss shows up as:",
+          "correctAnswer": "Tiny training error and a validation error that does not follow it down",
+          "distractors": [
+            { "text": "Both curves stuck high, which is the too-small-family case", "kind": "reversed", "rationale": "Stuck high is underfit." },
+            { "text": "A singular XᵀX that forbids any polynomial", "kind": "nearby", "rationale": "High degree can fit; that is the problem." },
+            { "text": "A logistic curve that refuses to squash the score", "kind": "misapplied", "rationale": "This diagnosis is the two curves, not a squash." }
+          ],
+          "correctExplanation": "Room enough to store 80 accidents. Validation is those accidents' absence.",
+          "objectiveIds": ["Describe overfitting as fitting the sample and missing the population"],
+          "prerequisiteConceptIds": ["ml-train-val-test", "ml-hypothesis"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-of20-3",
+          "stem": "Compare reporting the training number with reading the two curves. The honest move is:",
+          "correctAnswer": "Trust the pair of curves; a solo training number can be storage dressed as a win",
+          "distractors": [
+            { "text": "Drop validation, because a falling train curve is the product", "kind": "reversed", "rationale": "That is the fake win this lesson exists to stop." },
+            { "text": "Average train and val and call the mean a test", "kind": "subtle", "rationale": "Mixing the jobs does not create a test." },
+            { "text": "Replace both losses with accuracy before you look", "kind": "misapplied", "rationale": "The plot is about the two losses you already have." }
+          ],
+          "correctExplanation": "Two curves. One of them can contradict the other. That is the point.",
+          "objectiveIds": ["Read a training loss that falls while validation loss rises"],
+          "prerequisiteConceptIds": ["ml-train-val-test", "ml-hypothesis"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "ml-generalization-10",
+      "conceptId": "ml-generalization",
+      "title": "Performance on the distribution",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-overfit"],
+      "goDeeper": "ml-bias-variance",
+      "explanation": [
+        "Generalization is performance on the distribution that generates rows, not on the spreadsheet you happened to collect. A tiny test split is still a sample. The number you want is expected risk under P, of which test is only an estimate.",
+        "A distribution shift breaks a number you trusted on the test split. Last year's houses, this year's market. Night photos, day-trained detector. The test rows were honest last year and are now a different P. No split ritual repairs that by itself.",
+        "If train, val, and test were shuffled from one pile, they estimate the same P. That is why the ritual worked. When production is another P, the test number is a story about the pile, not about tomorrow. Name the shift before you retune."
+      ],
+      "example": "A detector trained and tested on daytime photos, then deployed at night. The test accuracy was honest for day. Night is another distribution. The number did not transfer.",
+      "whyItMatters": "People treat a locked test as tomorrow. Tomorrow is a draw from P, and P can move.",
+      "quiz": [
+        {
+          "id": "ml-gen10-1",
+          "stem": "Generalization, as this lesson uses the word, is:",
+          "correctAnswer": "Performance on the distribution that generates rows, not on the spreadsheet",
+          "distractors": [
+            { "text": "A training loss of zero on the rows you already have", "kind": "reversed", "rationale": "Zero train loss can be the spreadsheet, stored." },
+            { "text": "The learning rate schedule you picked on validation", "kind": "misapplied", "rationale": "A schedule is how you walk, not the distribution." },
+            { "text": "Accuracy on train after you fold test back in", "kind": "nearby", "rationale": "That is a mixed split, not generalization." }
+          ],
+          "correctExplanation": "Expected risk under P. The sheet is only a sample of P.",
+          "objectiveIds": ["Define generalization as performance on the distribution, not the spreadsheet"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-gen10-2",
+          "stem": "A day-trained detector with a locked night-free test, then deployed at night, typically:",
+          "correctAnswer": "Keeps a number you trusted for day and loses it, because night is another P",
+          "distractors": [
+            { "text": "Is safe, because a locked test is a promise about every future hour", "kind": "reversed", "rationale": "The lock was for the same P, not a new one." },
+            { "text": "Fails only if you forgot to shuffle the daytime pile", "kind": "nearby", "rationale": "Shuffle does not create night rows." },
+            { "text": "Becomes a linear regression automatically at night", "kind": "misapplied", "rationale": "Shift is about P, not a change of model class." }
+          ],
+          "correctExplanation": "Honest test, different P. The number was about day.",
+          "objectiveIds": ["Predict what a distribution shift does to a number you trusted on the test split"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-gen10-3",
+          "stem": "Train, val, and test shuffled from one pile estimate the same P. Production from another P means:",
+          "correctAnswer": "The test number is a story about the pile, not about tomorrow's draw",
+          "distractors": [
+            { "text": "The three-split ritual secretly repaired the shift", "kind": "reversed", "rationale": "The ritual estimates one P. It does not invent another." },
+            { "text": "You should report training loss as the product metric", "kind": "nearby", "rationale": "Wrong P is not a reason to quote train." },
+            { "text": "Squared error becomes undefined under any new P", "kind": "misapplied", "rationale": "The loss still computes. It is just the wrong world." }
+          ],
+          "correctExplanation": "Same pile, same P. New world, new P. Name the shift.",
+          "objectiveIds": ["Predict what a distribution shift does to a number you trusted on the test split"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-bias-variance-10",
+      "conceptId": "ml-bias-variance",
+      "title": "Blind to the signal",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-generalization"],
+      "goDeeper": "ml-capacity",
+      "diagram": "ml-bias-var",
+      "explanation": [
+        "Bias is a model that cannot see the signal: the class is too small, the line cannot bend, train and val both stay wrong. Variance is a model that sees the noise: different samples would have produced very different rules. Overfit is variance made visible.",
+        "More data typically cuts variance: accidents average out, the rule has to work on more rows. Less capacity cuts variance and can raise bias: a smaller family cannot memorize, and may also miss the signal. Those two knobs move the two errors in opposite ways.",
+        "A learning curve helps. If extra rows still do not drop training error, you are looking at bias: the family cannot represent the signal. If training is excellent and validation is not, you are looking at variance: gather more data or tax the wander."
+      ],
+      "example": "A straight line on a spiral: high bias, more data will not save it. A degree-40 polynomial on 80 points: high variance, more points or a smaller family will.",
+      "whyItMatters": "People add data to a line that cannot bend, or add room to a fit that already recites noise. Name which error you have.",
+      "quiz": [
+        {
+          "id": "ml-bv10-1",
+          "stem": "How does a high-bias model differ from a high-variance one?",
+          "correctAnswer": "Bias cannot see the signal; variance sees the noise and would change with a new sample",
+          "distractors": [
+            { "text": "Bias sees noise; variance cannot represent any signal", "kind": "reversed", "rationale": "Those roles are swapped." },
+            { "text": "Both words mean the learning rate was too large", "kind": "misapplied", "rationale": "α is a step size, not this split of errors." },
+            { "text": "Bias is a locked test set; variance is a training set", "kind": "nearby", "rationale": "The split is not the bias-variance pair." }
+          ],
+          "correctExplanation": "Blind versus jumpy. Signal missed versus noise stored.",
+          "objectiveIds": ["Contrast a model that cannot see the signal with one that sees the noise"],
+          "prerequisiteConceptIds": ["ml-generalization"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-bv10-2",
+          "stem": "Collecting more rows, with the family held fixed, typically:",
+          "correctAnswer": "Cuts variance, because accidents have to survive more examples",
+          "distractors": [
+            { "text": "Cuts bias to zero even if the family cannot bend", "kind": "reversed", "rationale": "A line still cannot fit a spiral. That is bias." },
+            { "text": "Replaces the need for a validation split", "kind": "subtle", "rationale": "More data still needs unmixed jobs." },
+            { "text": "Turns squared error into a class probability", "kind": "misapplied", "rationale": "Data volume is not a squash." }
+          ],
+          "correctExplanation": "More rows, fewer surviving accidents. Variance falls. Bias may stay.",
+          "objectiveIds": ["Predict how more data or less capacity moves bias and variance"],
+          "prerequisiteConceptIds": ["ml-generalization"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-bv10-3",
+          "stem": "Shrinking the family (less capacity) typically moves the two errors how?",
+          "correctAnswer": "Variance falls and bias can rise, because the room to memorize and to fit both shrink",
+          "distractors": [
+            { "text": "Variance rises and bias falls, which is the larger-family story", "kind": "reversed", "rationale": "Less room is the opposite move." },
+            { "text": "Both errors become the learning rate α", "kind": "misapplied", "rationale": "α is not this trade." },
+            { "text": "Neither error exists if the test drawer stays locked", "kind": "nearby", "rationale": "A lock does not remove bias or variance." }
+          ],
+          "correctExplanation": "Smaller room: less noise, maybe less signal. Two errors, opposite ways.",
+          "objectiveIds": ["Predict how more data or less capacity moves bias and variance"],
+          "prerequisiteConceptIds": ["ml-generalization"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "ml-regularization-10",
+      "conceptId": "ml-regularization",
+      "title": "Tax on wandering weights",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-overfit"],
+      "goDeeper": "ml-early-stop",
+      "explanation": [
+        "Regularization taxes complexity so the fit cannot wander as far as the sample would like. Add a penalty to the loss: the search now pays for large weights as well as for residual error. The extra term is a budget, not a decoration.",
+        "L2 (ridge) penalizes the sum of squares of weights. It shrinks all of them smoothly toward zero and likes to spread a direction across correlated features. L1 (lasso) penalizes absolute values. It can drive some weights to exact zero and drop those features.",
+        "Choose the penalty for a reason. Want a dense, stable shrink on many small effects? L2. Want a sparse story that can ignore columns? L1. Treating 'add regularizer' as a checkbox skips that choice. The strength λ is itself a knob you set on validation."
+      ],
+      "example": "Ridge on the size-and-size-in-mm pair shares the weight instead of dumping it on one copy. Lasso on a wide table of mostly useless columns can zero the junk and keep a few.",
+      "whyItMatters": "A regularizer is a tax with a shape. The shape is the method. A checkbox is not.",
+      "quiz": [
+        {
+          "id": "ml-rg10-1",
+          "stem": "A regularizer is added to the loss in order to:",
+          "correctAnswer": "Tax complexity so the fit cannot wander as far as the sample would like",
+          "distractors": [
+            { "text": "Replace the held-out set with a larger training sheet", "kind": "misapplied", "rationale": "A tax is not a split." },
+            { "text": "Force training loss to zero as fast as possible", "kind": "reversed", "rationale": "The tax usually prevents that last bit of storage." },
+            { "text": "Turn every score into a calibrated 0.99", "kind": "nearby", "rationale": "Calibration is a frequency audit, not a weight tax." }
+          ],
+          "correctExplanation": "Pay for large weights. The sample then cannot drag w as far.",
+          "objectiveIds": ["Tax complexity so the fit cannot wander as far as the sample would like"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-rg10-2",
+          "stem": "L2 versus L1 is a choice of tax shape because:",
+          "correctAnswer": "L2 shrinks all weights smoothly; L1 can zero some and drop those features",
+          "distractors": [
+            { "text": "L2 zeros weights; L1 forbids any shrink at all", "kind": "reversed", "rationale": "Those shapes are swapped." },
+            { "text": "Both taxes are nicknames for the learning rate α", "kind": "misapplied", "rationale": "α is a step size. λ is the tax strength." },
+            { "text": "L1 is only legal on convex bowls, L2 only on basins", "kind": "nearby", "rationale": "Both are used on ordinary linear losses." }
+          ],
+          "correctExplanation": "Smooth shrink versus sparsity. Pick the shape that matches the job.",
+          "objectiveIds": ["Choose an L2 or L1 penalty for a reason, not as a checkbox"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-rg10-3",
+          "stem": "You want a sparse story on a wide table of mostly useless columns. The better tax is:",
+          "correctAnswer": "L1, because it can drive junk weights to exact zero",
+          "distractors": [
+            { "text": "L2, because a smooth shrink is the only way to drop a column", "kind": "reversed", "rationale": "L2 shrinks; it rarely zeros." },
+            { "text": "No tax, and report training loss as the product", "kind": "subtle", "rationale": "That is the wander you are trying to stop." },
+            { "text": "Accuracy, used as the gradient of the walk", "kind": "misapplied", "rationale": "Accuracy is not this penalty." }
+          ],
+          "correctExplanation": "Sparse job, L1 tax. A checkbox that says 'L2' would miss the job.",
+          "objectiveIds": ["Choose an L2 or L1 penalty for a reason, not as a checkbox"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 2,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "ml-crossval-10",
+      "conceptId": "ml-crossval",
+      "title": "Rotating the held-out slice",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-train-val-test"],
+      "goDeeper": "ml-regularization",
+      "explanation": [
+        "Cross-validation rotates the held-out slice when a single split is too noisy. Fold 1 is held out, then fold 2, then fold 3, and you average the scores. Each row is training in most rounds and validation in one.",
+        "K-fold does not create a test set. The average is still a validation number used to choose. If you peek at a held-out fold while choosing a model and then report that same fold as test, you leaked. Keep a true test outside the rotation.",
+        "What leaks is the selection itself: the family, the λ, the features you kept after seeing the fold's score. Nested loops exist because people report the inner winner as if it were unseen. The outer loop is the one that may be published, and even that is not production P."
+      ],
+      "example": "200 rows, 5 folds. Each fold of 40 is validation once. Average the five scores to pick λ. A sixth locked pile of 40, never rotated, is still the test.",
+      "whyItMatters": "Rotating a slice is not a license to spend every row on the report. Test still sits outside the wheel.",
+      "quiz": [
+        {
+          "id": "ml-xv10-1",
+          "stem": "You rotate the held-out slice across K folds because:",
+          "correctAnswer": "A single validation split is too noisy when data is scarce, and averaging the folds stabilizes the choice",
+          "distractors": [
+            { "text": "Rotation invents a test set that may be reported freely each fold", "kind": "reversed", "rationale": "The average is still validation." },
+            { "text": "K-fold replaces the need to fit on any training rows", "kind": "misapplied", "rationale": "Each round still trains on the other folds." },
+            { "text": "Shuffling folds turns any P into the same P as production", "kind": "nearby", "rationale": "Rotation does not repair a shift." }
+          ],
+          "correctExplanation": "Noisy single split, rotate, average. That is a better val, not a test.",
+          "objectiveIds": ["Rotate the held-out slice when a single split is too noisy"],
+          "prerequisiteConceptIds": ["ml-train-val-test"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-xv10-2",
+          "stem": "You pick λ by the best fold score, then publish that same fold as test. What leaked?",
+          "correctAnswer": "The selection: that fold helped you choose, so it is no longer an unseen report",
+          "distractors": [
+            { "text": "Nothing, because K-fold is defined to be a test", "kind": "reversed", "rationale": "K-fold is a validation ritual." },
+            { "text": "Only the learning rate α, which folds cannot see", "kind": "nearby", "rationale": "λ was chosen on that fold. That is the leak." },
+            { "text": "The logistic curve, which becomes linear after a fold", "kind": "misapplied", "rationale": "The crime is the split, not the squash." }
+          ],
+          "correctExplanation": "Chose on it, then reported it. That is the original sin on a wheel.",
+          "objectiveIds": ["Predict what leaks if you peek at the test fold while choosing a model"],
+          "prerequisiteConceptIds": ["ml-train-val-test"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-xv10-3",
+          "stem": "A sixth locked pile that never enters the K-fold rotation is there so that:",
+          "correctAnswer": "The published number is still a one-shot test, outside the choosing wheel",
+          "distractors": [
+            { "text": "You can retune λ on it after seeing the folds", "kind": "reversed", "rationale": "That would spend the pile." },
+            { "text": "Training loss can be replaced by the fold average", "kind": "nearby", "rationale": "You still train; you still need a true test." },
+            { "text": "Each fold can be reported as its own product launch", "kind": "subtle", "rationale": "Five reports are five spent tests." }
+          ],
+          "correctExplanation": "Wheel chooses. Locked pile reports. Mixing them is the leak.",
+          "objectiveIds": ["Predict what leaks if you peek at the test fold while choosing a model"],
+          "prerequisiteConceptIds": ["ml-train-val-test"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-capacity-10",
+      "conceptId": "ml-capacity",
+      "title": "Room in the family",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-bias-variance"],
+      "goDeeper": "ml-regularization",
+      "explanation": [
+        "Capacity is how much structure the hypothesis class can represent. All lines: low. Polynomials of degree 20: higher. Arbitrary lookup tables: enormous. It is a property of the family, not of the optimizer's mood on Tuesday.",
+        "Too small a capacity underfits: the signal is outside the room, so train and validation both stay high. Too large a capacity overfits: the room holds the sample's noise, so train falls and validation rises. The earlier bias-variance picture is this size knob.",
+        "You raise capacity by enlarging the family: more features, higher degree, a wider net later. You lower it by shrinking the family or by taxing weights. More data can support a larger room. Capacity without data is a permission to memorize."
+      ],
+      "example": "One number, a line through it: almost no room. A degree-20 polynomial through 20 noisy points: enough room to store them. Same optimizer. Different families.",
+      "whyItMatters": "People upgrade an optimizer when the room never contained the answer, or when it contained last night's noise too.",
+      "quiz": [
+        {
+          "id": "ml-cap10-1",
+          "stem": "Capacity, as this lesson uses it, names:",
+          "correctAnswer": "How much structure the hypothesis class can represent, not the optimizer's mood",
+          "distractors": [
+            { "text": "The learning rate α you happened to pick this run", "kind": "misapplied", "rationale": "α is a step size, not the size of the family." },
+            { "text": "The number of rows in the locked test drawer", "kind": "nearby", "rationale": "A split is not the room." },
+            { "text": "Whether the loss bowl is convex", "kind": "subtle", "rationale": "Shape of J is not how large the family is." }
+          ],
+          "correctExplanation": "The room you allowed. Lines versus lookups. That is capacity.",
+          "objectiveIds": ["Describe capacity as how much structure the hypothesis class can represent"],
+          "prerequisiteConceptIds": ["ml-bias-variance"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-cap10-2",
+          "stem": "A family that is too small typically produces which pair of curves?",
+          "correctAnswer": "Train and validation both stay high: the signal never fit in the room",
+          "distractors": [
+            { "text": "Train falls, validation rises: that is the too-large story", "kind": "reversed", "rationale": "Too large stores the sample." },
+            { "text": "Both curves become probabilities in (0, 1)", "kind": "misapplied", "rationale": "Capacity is room, not a squash." },
+            { "text": "Test may now be mixed into train legally", "kind": "nearby", "rationale": "Underfit does not excuse a mixed split." }
+          ],
+          "correctExplanation": "No room, no signal. Both numbers stay bad. That is underfit.",
+          "objectiveIds": ["Predict underfit and overfit from a capacity that is too small or too large"],
+          "prerequisiteConceptIds": ["ml-bias-variance"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-cap10-3",
+          "stem": "A lookup table on the training x's, used as the whole class, is too large because:",
+          "correctAnswer": "The room can hold the sample's noise, so train falls and validation typically rises",
+          "distractors": [
+            { "text": "It cannot fit any training row, which is underfit", "kind": "reversed", "rationale": "A lookup can fit them all." },
+            { "text": "Lookups forbid a validation split by definition", "kind": "nearby", "rationale": "You can still split; the class is still too free." },
+            { "text": "Capacity is measured only in learning-rate units", "kind": "misapplied", "rationale": "Capacity is the family, not α." }
+          ],
+          "correctExplanation": "Enormous room. The sheet's accidents become the function.",
+          "objectiveIds": ["Predict underfit and overfit from a capacity that is too small or too large"],
+          "prerequisiteConceptIds": ["ml-bias-variance"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-early-stop-10",
+      "conceptId": "ml-early-stop",
+      "title": "Quit while validation is honest",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-overfit", "ml-gd"],
+      "goDeeper": "ml-gd-variants",
+      "explanation": [
+        "Stop training when validation loss is still honest, before the sample is memorized. Both curves fall, then validation turns. That turn is the time to quit. Continuing is extra capacity in time: more steps, more chance to store the sheet.",
+        "Early stopping is a regularizer. It limits how far the walk may wander, just as an L2 tax does, except the budget is the number of steps rather than the size of w. It only works if the validation split is real and was not mixed into train.",
+        "If you stop on training loss, you will quit when the sample looks perfect. If you stop on test, you spent the report. Validation is the only legal tripwire. After you stop, the test number is still a one-shot. Do not then resume because test 'looked high'."
+      ],
+      "example": "Val bottoms at epoch 18. You keep the epoch-18 weights. Epoch 90 has a prettier train curve and a worse val. The extra 72 epochs were the overfit. Stopping was the tax.",
+      "whyItMatters": "A walk with no tripwire will store the sheet. The tripwire has to be a split you did not train on.",
+      "quiz": [
+        {
+          "id": "ml-es10-1",
+          "stem": "You stop at the turn where validation bottoms, rather than at the last epoch, so that:",
+          "correctAnswer": "You quit while val is still honest, before extra steps memorize the sample",
+          "distractors": [
+            { "text": "Training loss can reach zero, which is the real goal", "kind": "reversed", "rationale": "Zero train is often the stored sheet." },
+            { "text": "Test can be mixed into the walk as a second tripwire", "kind": "subtle", "rationale": "A test tripwire spends the report." },
+            { "text": "The gradient no longer needs to be computed", "kind": "misapplied", "rationale": "You still computed it, then you quit." }
+          ],
+          "correctExplanation": "Val turn is the stop. Extra epochs are time-capacity for storage.",
+          "objectiveIds": ["Stop training when validation loss is still honest, before the sample is memorized"],
+          "prerequisiteConceptIds": ["ml-overfit", "ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-es10-2",
+          "stem": "Early stopping counts as a regularizer because:",
+          "correctAnswer": "It taxes how far the walk may wander, and that tax needs a real validation split",
+          "distractors": [
+            { "text": "It replaces L2 only if you stop on training loss", "kind": "reversed", "rationale": "Stopping on train is not a tax. It is a surrender to the sample." },
+            { "text": "It turns the step size α into a class probability", "kind": "misapplied", "rationale": "A tripwire is not a squash." },
+            { "text": "It lets you fold test into train after the turn", "kind": "nearby", "rationale": "The split must stay real after you stop." }
+          ],
+          "correctExplanation": "Budget in steps, not in ||w||. Still a tax. Still needs an honest val.",
+          "objectiveIds": ["Predict why early stopping is a regularizer that needs a real validation split"],
+          "prerequisiteConceptIds": ["ml-overfit", "ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-es10-3",
+          "stem": "Stopping when test 'looked high', then resuming the walk, fails as a regularizer because:",
+          "correctAnswer": "Test was spent as the tripwire, so the one-shot report is no longer unseen",
+          "distractors": [
+            { "text": "Test is the only legal tripwire, so resuming is required", "kind": "reversed", "rationale": "Validation is the legal tripwire." },
+            { "text": "A high test score means the sample is not yet stored", "kind": "nearby", "rationale": "You do not know that; you just spent the report." },
+            { "text": "Regularizers are illegal once gradient descent has started", "kind": "misapplied", "rationale": "Early stopping is a regularizer during the walk." }
+          ],
+          "correctExplanation": "Val trips. Test reports. Using test to decide is the original sin again.",
+          "objectiveIds": ["Predict why early stopping is a regularizer that needs a real validation split"],
+          "prerequisiteConceptIds": ["ml-overfit", "ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}

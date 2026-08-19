@@ -1,0 +1,649 @@
+{
+  "courseId": "dm-history",
+  "moduleId": "dm-h-branches",
+  "lessons": [
+    {
+      "id": "dm-brutal-10",
+      "conceptId": "dm-brutal",
+      "title": "Thickness without a sung interval",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-ossuary",
+      "diagram": "dm-branch-map",
+      "explanation": [
+        "Brutal death metal, as a construction contract, sits lower and thicker and cares less whether the guitar cell could be sung as a tune. The riff is a mass and a rhythm. Using 'brutal' as a compliment or a grade of heaviness is a different sentence, and this lesson will not use it that way.",
+        "Lower means the register of the cell and often the vocal. Thicker means more mid-low mass, less air between hits, less interest in a clean sung interval. The job is density of load, not a melody you could whistle on the bus. Check the register and the mass before you check a ranking.",
+        "Keep the word as a contract you can check: register, mass, and a declined sung interval. If you use it as a compliment, you will rank records instead of hearing them. Heavier is not a score in this course. Thickness is a writing choice with a job."
+      ],
+      "example": "A low chromatic mass with no interval you could hum, next to a cell that still wants a third. Thickness is the first job. A compliment is not.",
+      "whyItMatters": "If brutal is only a compliment, later slam dialects and grind borders will look like insults or medals. They are other contracts.",
+      "quiz": [
+        {
+          "id": "dm-bru10-1",
+          "stem": "Brutal death metal, as a construction contract in this lesson, is:",
+          "correctAnswer": "Lower, thicker, and less interested in a guitar cell you could sing",
+          "distractors": [
+            { "text": "A compliment that ranks a record as heavier and therefore better", "kind": "nearby", "rationale": "A compliment is the substitute this lesson drops." },
+            { "text": "A sung-interval style that wants a tune you could whistle on the bus", "kind": "reversed", "rationale": "A sung interval is what this contract declines." },
+            { "text": "A lyric-trivia tag that replaces register, mass, and declined melody", "kind": "misapplied", "rationale": "A lyric tag is not the construction contract." }
+          ],
+          "correctExplanation": "Lower, thicker, declined sung interval. That is the contract, not a compliment.",
+          "objectiveIds": ["Describe brutal death metal as lower, thicker, less interested in a sung interval"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-bru10-2",
+          "stem": "Using brutal as a compliment rather than a construction contract typically:",
+          "correctAnswer": "Ranks records by heaviness instead of checking register, mass, and interval",
+          "distractors": [
+            { "text": "Automatically recovers the desk doctrine from how angry the logo looks", "kind": "nearby", "rationale": "A logo is not register, mass, or interval." },
+            { "text": "Is required, because the word has no checkable construction job at all", "kind": "reversed", "rationale": "The word has a job: lower, thicker, declined sung interval." },
+            { "text": "Is the only honest way to refuse a celebrity list when naming a scene", "kind": "subtle", "rationale": "Compliments are how rankings sneak back in." }
+          ],
+          "correctExplanation": "Compliment ranks. Contract checks register, mass, and declined melody.",
+          "objectiveIds": ["Keep 'brutal' as a construction contract, not a compliment"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-bru10-3",
+          "stem": "A low, thick cell that declines a sung interval is evidence of the brutal contract when:",
+          "correctAnswer": "You can point at register, mass, and a declined sung interval as the jobs",
+          "distractors": [
+            { "text": "The players are more famous, so the thickness must be the better grade", "kind": "nearby", "rationale": "Fame is a roster card, not the contract." },
+            { "text": "The cell could be hummed, so thickness has already failed the contract", "kind": "reversed", "rationale": "A hummed cell is the sung interval this contract declines." },
+            { "text": "A map of cities is named, and that passport stands in for the low register", "kind": "misapplied", "rationale": "A passport is not register or mass." }
+          ],
+          "correctExplanation": "Point at register, mass, declined melody. That is the evidence.",
+          "objectiveIds": ["Describe brutal death metal as lower, thicker, less interested in a sung interval"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-tech-hist-10",
+      "conceptId": "dm-tech-hist",
+      "title": "Odd grouping as a scene grammar",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-tech-90s",
+      "diagram": "dm-branch-map",
+      "explanation": [
+        "Density and odd grouping can be a scene's grammar, not a medal. Technical death metal, in this course, means bars that pack more cells, more subdivision, and groupings that are not always four. It does not mean the good one. A sparse bar can still be the right construction.",
+        "Odd grouping as a scene means a local habit: five, seven, or displaced four as a normal riff length, plus kit patterns that follow or fight that length. You can hear the habit without a virtuoso scorecard. The scorecard is how the compliment sneaks back in.",
+        "Refuse technical as a synonym for good. A sparse mid-tempo bar can be the right construction. A dense odd bar can be the right construction. They are different jobs. Ranking them by difficulty is sport, and sport is not this branch's definition."
+      ],
+      "example": "A five-beat cell answered by a seven-beat cell, kit following, no speech about difficulty. That is the scene habit. A medal is not.",
+      "whyItMatters": "If technical means good, you will miss sparse bars that are the right job, and you will treat odd grouping as a trophy.",
+      "quiz": [
+        {
+          "id": "dm-tch10-1",
+          "stem": "Refusing technical as a synonym for good is a claim that this branch:",
+          "correctAnswer": "Names density and odd grouping as jobs, not as a medal for being better",
+          "distractors": [
+            { "text": "Bans odd grouping, because only sparse bars are allowed to count as real", "kind": "nearby", "rationale": "Refusing the synonym does not ban the grammar." },
+            { "text": "Treats difficulty rank as the definition, so denser is automatically good", "kind": "reversed", "rationale": "That is the synonym this lesson refuses." },
+            { "text": "Requires a jazz exam before any odd bar is allowed to be heard as grammar", "kind": "subtle", "rationale": "No exam gates hearing five and seven as habit." }
+          ],
+          "correctExplanation": "Jobs, not medals. Technical is density and odd grouping, not a grade.",
+          "objectiveIds": ["Refuse 'technical' as a synonym for good"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-tch10-2",
+          "stem": "A scene where five- and seven-beat cells are a normal riff length is showing:",
+          "correctAnswer": "Technical death metal as density and odd grouping used as local grammar",
+          "distractors": [
+            { "text": "A sport ranking in which whoever plays more notes wins the scene's name", "kind": "nearby", "rationale": "Note-count sport is the compliment sneaking back in." },
+            { "text": "That technical means good, so the sparse neighbor bar cannot be the job", "kind": "reversed", "rationale": "Sparse can still be the right construction." },
+            { "text": "A passport fact: odd grouping only counts if the players live in one city", "kind": "misapplied", "rationale": "The habit is in the bar, not in a visa." }
+          ],
+          "correctExplanation": "Five and seven as normal length is the scene grammar, not a medal.",
+          "objectiveIds": ["Describe technical death metal as density and odd grouping as a scene"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-tch10-3",
+          "stem": "Density and odd grouping as a scene, rather than as a compliment, means:",
+          "correctAnswer": "Packed cells and non-four lengths as a habit you can hear without a medal",
+          "distractors": [
+            { "text": "A ranked list of famous shredders treated as the whole of the grammar", "kind": "nearby", "rationale": "A shredder list is a compliment roster." },
+            { "text": "A promise that every dense bar is better than every sparse mid-tempo bar", "kind": "reversed", "rationale": "That is technical-as-good, which this lesson refuses." },
+            { "text": "A mix argument that smear is required before odd grouping can be legal", "kind": "subtle", "rationale": "Odd grouping is length grammar, not a smear rule." }
+          ],
+          "correctExplanation": "Packed cells, non-four lengths, as habit. A medal is a different sentence.",
+          "objectiveIds": ["Describe technical death metal as density and odd grouping as a scene"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "dm-prog-hist-10",
+      "conceptId": "dm-prog-hist",
+      "title": "Longer forms borrow a grammar",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-dissonant-hist",
+      "explanation": [
+        "Progressive death metal, as a branch, stretches the form and borrows grammar from jazz and fusion without requiring you to pass a jazz exam. Longer means sections that develop, return, or modulate instead of only cycling a cell. Borrowed means a tool, not a credential.",
+        "What the form borrowed is often a few jobs: extended harmony colors, odd phrase lengths used as narrative, a solo as an argument rather than a sticker, maybe a clean or odd-meter passage as contrast. You can name those jobs in ordinary words. The exam is not the evidence.",
+        "Name the borrow without the exam. If a section lasts long enough to change its own kit grammar, or a chord color arrives that the riff did not need for a blast, you are in the longer-form contract. A diploma on the wall is not what makes the form progressive."
+      ],
+      "example": "A section that returns in a new kit grammar, with a color the blast did not need. You can say that in ordinary words. The exam is optional.",
+      "whyItMatters": "If progressive means a diploma, you will miss the form job. Length and borrowed tools are the branch. Credentials are not.",
+      "quiz": [
+        {
+          "id": "dm-prg10-1",
+          "stem": "Progressive death metal, as a branch in this lesson, is described as:",
+          "correctAnswer": "Longer forms plus borrowed jazz or fusion grammar used as tools, not badges",
+          "distractors": [
+            { "text": "A shorter blast song that refuses any section longer than a hardcore burst", "kind": "nearby", "rationale": "Short blast form is a different contract." },
+            { "text": "A diploma requirement: no form counts until a jazz exam has been passed", "kind": "reversed", "rationale": "The exam is what this lesson refuses as evidence." },
+            { "text": "A lyric register of occult words that replaces the need for a longer form", "kind": "misapplied", "rationale": "A lyric domain is not longer form." }
+          ],
+          "correctExplanation": "Longer forms, borrowed grammar as tools. A badge is not the branch.",
+          "objectiveIds": ["Describe progressive death metal as longer forms and borrowed grammar"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-prg10-2",
+          "stem": "You can name what the form borrowed without a jazz exam when you can:",
+          "correctAnswer": "Point at color, longer phrase, or contrast as jobs in ordinary words",
+          "distractors": [
+            { "text": "Recite a famous player's conservatory resume as a stand-in for the form", "kind": "nearby", "rationale": "A resume is a credential, not the borrowed job." },
+            { "text": "Wait for the diploma, because borrowed grammar cannot be heard without it", "kind": "reversed", "rationale": "The exam is not the evidence. The jobs are." },
+            { "text": "Replace the form with a roster of fusion records treated as a purity test", "kind": "subtle", "rationale": "A roster is not naming the borrow." }
+          ],
+          "correctExplanation": "Color, phrase length, contrast: ordinary words. No exam required.",
+          "objectiveIds": ["Name what the form borrowed without requiring a jazz exam"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-prg10-3",
+          "stem": "A section that develops, returns, or changes kit grammar rather than only cycling a cell is:",
+          "correctAnswer": "Longer-form contract: development and return rather than a cycling-only cell",
+          "distractors": [
+            { "text": "Proof the song failed, as if death metal were banned from changing grammar", "kind": "nearby", "rationale": "Changing grammar is the longer-form job, not a failure." },
+            { "text": "Evidence the form got shorter and now has no room left for any return", "kind": "reversed", "rationale": "Development and return are how the form got longer." },
+            { "text": "A reason to treat mix smear as the only fact that makes a form count", "kind": "misapplied", "rationale": "Form length is not a smear argument." }
+          ],
+          "correctExplanation": "Develop, return, change kit grammar. That is the longer-form contract.",
+          "objectiveIds": ["Describe progressive death metal as longer forms and borrowed grammar"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-dissonant-hist-10",
+      "conceptId": "dm-dissonant-hist",
+      "title": "Friction the riff chooses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-modern-wave",
+      "explanation": [
+        "Dissonant construction starts when the riff stops agreeing with itself: intervals that grind, clusters that do not resolve, harmony that refuses the sung third. That is a writing choice. It is not a mistake list, and it is not automatically a higher rank than a consonant cell.",
+        "Distinguish dissonant construction from 'they played wrong notes.' Wrong would mean the cell failed its own job. Dissonant means the job is friction — stacked minor seconds, tritone motion, a chord that will not sit. You can transcribe the friction. A wrong-note story cannot.",
+        "Mark the branch by that job. If the guitar cell is built to clash with its own held tone, or two guitars refuse a common triad, you are in the dissonant contract. Calling it noise is a refusal to name the interval. The interval is still there to point at."
+      ],
+      "example": "Two guitars holding a minor second against a pedal tone that never becomes a triad. Transcribe the clash. 'Wrong notes' will not name it.",
+      "whyItMatters": "If clash is only error, you cannot hear this branch. Friction is a job. Wrong-note talk is a refusal to transcribe.",
+      "quiz": [
+        {
+          "id": "dm-dis10-1",
+          "stem": "Dissonant construction differs from 'they played wrong notes' because:",
+          "correctAnswer": "Friction is the cell's job; wrong would mean the cell failed its own job",
+          "distractors": [
+            { "text": "Dissonant always means the players missed the take and should redo it", "kind": "nearby", "rationale": "A missed take is the wrong-note story, not the branch." },
+            { "text": "Wrong notes are the job, and friction means the cell accidentally worked", "kind": "reversed", "rationale": "That swaps the two accounts." },
+            { "text": "Only a later trigger-and-edit wave can make friction legal as a branch", "kind": "subtle", "rationale": "Friction is already a writing choice here. No later wave is required." }
+          ],
+          "correctExplanation": "Friction is the job. Wrong would be a failed job. Those are different accounts.",
+          "objectiveIds": ["Distinguish dissonant construction from 'they played wrong notes'"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-dis10-2",
+          "stem": "The riff stops agreeing with itself, as this branch's marker, when:",
+          "correctAnswer": "Intervals grind, clusters refuse to resolve, and the sung third is declined",
+          "distractors": [
+            { "text": "The players name more famous influences than the previous scene managed", "kind": "nearby", "rationale": "A name-drop is not the riff disagreeing with itself." },
+            { "text": "The cell locks into a hummed tune and the clash is treated as a mistake", "kind": "reversed", "rationale": "A hummed tune is agreement. This branch declines it." },
+            { "text": "A passport is produced, and the clash is ignored in favor of a city list", "kind": "misapplied", "rationale": "A city list is not the interval job." }
+          ],
+          "correctExplanation": "Grind, unresolving clusters, declined sung third. That is the marker.",
+          "objectiveIds": ["Mark the branch where the riff stops agreeing with itself"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-dis10-3",
+          "stem": "Two guitars that refuse a common triad, built to clash with a held tone, mark:",
+          "correctAnswer": "Dissonant construction: the riff's job is friction you can transcribe",
+          "distractors": [
+            { "text": "A wrong-note story, so the take failed and the interval cannot be named", "kind": "nearby", "rationale": "The interval can be named. That is the point." },
+            { "text": "A melodic fork, because any clash is secretly a sung third in disguise", "kind": "reversed", "rationale": "A sung third would be agreement. This is friction." },
+            { "text": "A mix-only fact, as if the clash vanished whenever the desk was dry", "kind": "subtle", "rationale": "Dry or smear, the interval is still written." }
+          ],
+          "correctExplanation": "Refused triad, clash with a held tone. Transcribable friction is the branch.",
+          "objectiveIds": ["Mark the branch where the riff stops agreeing with itself"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-melodeath-10",
+      "conceptId": "dm-melodeath",
+      "title": "Sung harmony under distortion",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-stockholm"],
+      "goDeeper": "dm-regional",
+      "explanation": [
+        "Harmony that wants to be sung, still under distortion, is a fork from the Stockholm wall rather than a purity test. Melodic death metal keeps the cell and the kit grammar, then lets intervals lock into a tune you could hum. Distortion does not cancel the hum. It coats it.",
+        "The fork is construction: more consonant thirds, often dual-guitar lines that state a melody, sometimes a cleaner sung vocal beside the harsh one. The wall can still be there. What changed is that the riff now agrees with a tune you could sing back.",
+        "Keep it as a fork, not as a purity test. Calling it not-real because you can hum it is gatekeeping. Calling it better because you can hum it is a pop ranking. Both miss the job: sung harmony under a distorted surface, still a death-metal cell underneath."
+      ],
+      "example": "A dual-guitar third you can hum, still over a blast or a crushed mid-tempo, still distorted. That is the fork. A purity test is a different sport.",
+      "whyItMatters": "Gatekeeping and pop ranking both hide the construction. The fork is sung harmony under distortion. Hear that job.",
+      "quiz": [
+        {
+          "id": "dm-mld10-1",
+          "stem": "Melodic death metal, as a fork in this lesson, is harmony that:",
+          "correctAnswer": "Wants to be sung, still under distortion, as a tune the riff agrees with",
+          "distractors": [
+            { "text": "Bans distortion, because a hummed interval cannot share a guitar wall", "kind": "nearby", "rationale": "The fork keeps distortion. It coats the hum." },
+            { "text": "Refuses any sung interval, so the cell must stay unhummable to count", "kind": "reversed", "rationale": "Unhummable is closer to the brutal contract." },
+            { "text": "Is a lyric-trivia tag that replaces dual-guitar lines and kit grammar", "kind": "misapplied", "rationale": "A lyric tag is not the harmony fork." }
+          ],
+          "correctExplanation": "Sung under distortion. The riff agrees with a tune. That is the fork.",
+          "objectiveIds": ["Describe melodic death metal as harmony that wants to be sung, still under distortion"],
+          "prerequisiteConceptIds": ["dm-stockholm"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-mld10-2",
+          "stem": "Keeping melodic death metal as a fork rather than a purity test means you:",
+          "correctAnswer": "Refuse both 'not-real because hummable' and 'better because hummable'",
+          "distractors": [
+            { "text": "Rank hummed records above walls because pop melody is the moral upgrade", "kind": "nearby", "rationale": "That is the pop ranking this lesson drops." },
+            { "text": "Gatekeep the fork out, because a sung third cannot sit under distortion", "kind": "reversed", "rationale": "That is the not-real test this lesson drops." },
+            { "text": "Treat the fork as a passport list of cities instead of a harmony job", "kind": "subtle", "rationale": "A city list is not the sung-harmony job." }
+          ],
+          "correctExplanation": "Fork, not purity. Hummable is neither a ban nor a medal.",
+          "objectiveIds": ["Keep it as a fork, not as a purity test"],
+          "prerequisiteConceptIds": ["dm-stockholm"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-mld10-3",
+          "stem": "Dual-guitar lines that lock into a hummed tune under a distorted surface show:",
+          "correctAnswer": "Sung harmony under distortion: the fork's construction, not a purity score",
+          "distractors": [
+            { "text": "That the record failed the Stockholm wall and must be retired from the name", "kind": "nearby", "rationale": "The fork can keep a wall. Humming is not a failure." },
+            { "text": "That distortion cancelled the hum, so the tune cannot be the riff's job", "kind": "reversed", "rationale": "Distortion coats the hum. It does not cancel it." },
+            { "text": "A celebrity list of singers, which is enough analysis without the intervals", "kind": "misapplied", "rationale": "Singer names are not the dual-guitar intervals." }
+          ],
+          "correctExplanation": "Hummed dual-guitar under distortion is the fork. Not a purity score.",
+          "objectiveIds": ["Describe melodic death metal as harmony that wants to be sung, still under distortion"],
+          "prerequisiteConceptIds": ["dm-stockholm"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-grind-border-10",
+      "conceptId": "dm-grind-border",
+      "title": "Forty seconds is a different form",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-brutal"],
+      "goDeeper": "dm-ossuary",
+      "explanation": [
+        "Grind's contract is duration and blast, not failed death metal. A forty-second song is a different form problem: there is no room for a second development, so the blast and the cell have to state the whole argument at once. That is a job, not a shortage of riffs.",
+        "Treat the border as a contract you can hear. Short form, blast as default grid, hardcore's shortness kept as the point. Death-metal thickness can sit on that grid. The mistake is to grade the short song as an unfinished long one. Duration is the form budget.",
+        "Predict the form problem: if you only have forty seconds, you cannot spend a third of the track setting up a later return. You front-load the cell and the roll. A seven-minute death-metal form would be a different budget. Same family of weight, different problem."
+      ],
+      "example": "A forty-second blast-and-cell statement with no second development. Front-loaded on purpose. Grading it as an unfinished seven-minute track misses the budget.",
+      "whyItMatters": "If grind is only failed death metal, you will miss a form job. Duration and blast are the contract. Length-as-grade is not.",
+      "quiz": [
+        {
+          "id": "dm-grb10-1",
+          "stem": "Grind's contract, at the border with death metal, is best treated as:",
+          "correctAnswer": "Duration and blast as a different form job, not as failed death metal",
+          "distractors": [
+            { "text": "An unfinished long song that would have been death metal with more riffs", "kind": "nearby", "rationale": "That grades the short song as a failed long one." },
+            { "text": "A longer-form progressive budget that needs seven minutes to state a cell", "kind": "reversed", "rationale": "Seven minutes is a different budget, not grind's contract." },
+            { "text": "A lyric register of gore words that replaces blast and short-form duration", "kind": "misapplied", "rationale": "Gore words are not duration and blast." }
+          ],
+          "correctExplanation": "Duration and blast, a different job. Not a failed long death-metal song.",
+          "objectiveIds": ["Treat grind's contract as duration and blast, not as failed death metal"],
+          "prerequisiteConceptIds": ["dm-brutal"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-grb10-2",
+          "stem": "A forty-second song is a different form problem than a seven-minute one because:",
+          "correctAnswer": "There is no room to set up a later return, so cell and blast must front-load",
+          "distractors": [
+            { "text": "The short song is automatically worse, being a failed long death-metal form", "kind": "nearby", "rationale": "Worse is a grade. The issue is budget, not failure." },
+            { "text": "The short song has extra space, so development is easier than in a long form", "kind": "reversed", "rationale": "Forty seconds has less space, not extra space." },
+            { "text": "Only a passport city can decide whether forty seconds is allowed to count", "kind": "subtle", "rationale": "A city stamp does not write the form budget." }
+          ],
+          "correctExplanation": "No room for a later return. Front-load the cell and the blast. Different problem.",
+          "objectiveIds": ["Predict why a forty-second song is a different form problem"],
+          "prerequisiteConceptIds": ["dm-brutal"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-grb10-3",
+          "stem": "Hearing a short blast-default song as failed death metal typically misses that:",
+          "correctAnswer": "Shortness and blast are the contract, so the form is doing a different job",
+          "distractors": [
+            { "text": "The players were too famous to bother writing a second development section", "kind": "nearby", "rationale": "Fame is not the form budget." },
+            { "text": "Death metal forbids blast, so the short song cannot share any family of weight", "kind": "reversed", "rationale": "Blast can sit with thickness. The border is duration, not a ban." },
+            { "text": "A desk smear is required before duration can be allowed to count as form", "kind": "misapplied", "rationale": "Duration is a form budget, not a smear rule." }
+          ],
+          "correctExplanation": "Shortness and blast are the job. Failed-long is a missed contract.",
+          "objectiveIds": ["Treat grind's contract as duration and blast, not as failed death metal"],
+          "prerequisiteConceptIds": ["dm-brutal"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-ossuary-10",
+      "conceptId": "dm-ossuary",
+      "title": "Brutality a decade later",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-brutal"],
+      "goDeeper": "dm-regional",
+      "explanation": [
+        "What 'brutal' meant a decade later is not the same thickness. Early brutal construction was lower mass and a declined sung interval. A later slam or ossuary vocabulary added breakdown-like halts, a different kick-and-snare chop, and a riff language built from fewer, heavier gestures.",
+        "Contrast early thickness with that later vocabulary. Early: packed chromatic cells, continuous load. Later: stop-start slams, mid-tempo stomps, sometimes a vocal as a percussive bark on the halt. Both can be thick. They do not use the same sentence, and one does not retire the other.",
+        "Say the later meaning as a dialect of the contract, not as a promotion. The second wave did not make the first wave obsolete. It changed which gestures counted as the load. Hear the halt and the chop before you hear a ranking of decades. Decade rank is a substitute."
+      ],
+      "example": "Continuous chromatic load, then a halt-and-chop slam that uses fewer gestures for the same mass. Two sentences of thickness. One word, two dialects.",
+      "whyItMatters": "If later brutality is only a promotion, you will miss halt and chop as a new sentence. Dialects change the load. Rankings do not.",
+      "quiz": [
+        {
+          "id": "dm-oss10-1",
+          "stem": "Early brutal thickness and a later slam or ossuary vocabulary differ when:",
+          "correctAnswer": "Early packs continuous load; later adds halt, chop, and fewer thick gestures",
+          "distractors": [
+            { "text": "Later automatically wins, because a newer decade is a moral upgrade of mass", "kind": "nearby", "rationale": "Newer is not a grade. Halt and chop are the change." },
+            { "text": "Early is already slam-halt grammar, and later returns to continuous cells only", "kind": "reversed", "rationale": "That swaps the two vocabularies." },
+            { "text": "The only difference is which passport city gets printed on the later sleeve", "kind": "subtle", "rationale": "A city stamp is not halt-and-chop grammar." }
+          ],
+          "correctExplanation": "Continuous load versus halt, chop, fewer gestures. Two thickness sentences.",
+          "objectiveIds": ["Contrast early thickness with a later slam or ossuary vocabulary"],
+          "prerequisiteConceptIds": ["dm-brutal"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "dm-oss10-2",
+          "stem": "What brutal meant a decade later, in this lesson's description, is:",
+          "correctAnswer": "A later dialect of load: halt, chop, and fewer gestures as the thickness",
+          "distractors": [
+            { "text": "The same thickness with a new celebrity list glued on as the whole change", "kind": "nearby", "rationale": "A new roster is not a new vocabulary." },
+            { "text": "A promotion that retired early thickness as obsolete and no longer a contract", "kind": "reversed", "rationale": "Later is a dialect, not a retirement of the first wave." },
+            { "text": "A lyric-trivia change from occult words to gore words with the riff untouched", "kind": "misapplied", "rationale": "Lyric swap is not halt-and-chop vocabulary." }
+          ],
+          "correctExplanation": "Halt, chop, fewer gestures. Later meaning is a dialect of load, not a promotion.",
+          "objectiveIds": ["Say what 'brutal' meant a decade later"],
+          "prerequisiteConceptIds": ["dm-brutal"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-oss10-3",
+          "stem": "Treating the later wave as a promotion rather than a dialect typically:",
+          "correctAnswer": "Ranks decades instead of hearing halt and chop as a changed load sentence",
+          "distractors": [
+            { "text": "Automatically recovers the Florida click from the later sleeve's city name", "kind": "nearby", "rationale": "A city name does not decode halt-and-chop grammar." },
+            { "text": "Is required, because later brutality has no checkable gestures of its own", "kind": "reversed", "rationale": "Halt and chop are checkable. Promotion talk hides them." },
+            { "text": "Is the only way to keep 'brutal' from ever meaning a construction contract", "kind": "subtle", "rationale": "Promotion talk is how the contract gets replaced by a rank." }
+          ],
+          "correctExplanation": "Promotion ranks decades. Dialect hears halt and chop. Keep the contract.",
+          "objectiveIds": ["Say what 'brutal' meant a decade later"],
+          "prerequisiteConceptIds": ["dm-brutal"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-tech-90s-10",
+      "conceptId": "dm-tech-90s",
+      "title": "Ordinary odd bars in the nineties",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-tech-hist"],
+      "goDeeper": "dm-modern-wave",
+      "explanation": [
+        "Some 1990s records treated odd grouping as normal: a five-beat cell, a seven-beat return, a kit that counted those lengths without making a speech about them. That is grammar becoming default. It is not a later fashion layered onto four-four as a trick.",
+        "Hear 1990s technicality as grammar. The riff is allowed to last a length that is not four or eight, and the next riff can answer in another length. Blast and a clicky kit can still sit underneath. The new fact is that odd is no longer a special effect.",
+        "Naming a shopping list of those records is not the hearing. Point at a bar that is ordinary in five or seven, then at a neighboring bar that does not apologize for it. That pointing is how you name the records as a class. Fashion would wait for a later decade's branding."
+      ],
+      "example": "A verse that is ordinarily in five, a return in seven, no announcement. That class of record is the naming. A shopping list of titles is not.",
+      "whyItMatters": "If 1990s odd bars are only later fashion, you will miss the date they became default. Grammar first. Branding later.",
+      "quiz": [
+        {
+          "id": "dm-t90-10-1",
+          "stem": "The first records that treated odd grouping as normal are named here by:",
+          "correctAnswer": "Ordinary five- or seven-beat bars that do not apologize to a four default",
+          "distractors": [
+            { "text": "A shopping list of famous album titles treated as the whole of the grammar", "kind": "nearby", "rationale": "A title list is a roster. The class is the ordinary odd bar." },
+            { "text": "A later-decade brand, so 1990s odd bars were only fashion layered on four", "kind": "reversed", "rationale": "That is the fashion model this lesson drops." },
+            { "text": "A passport stamp, so odd grouping counted only if the studio was in one city", "kind": "misapplied", "rationale": "A city stamp does not make five ordinary." }
+          ],
+          "correctExplanation": "Name them as a class: ordinary odd bars, no apology. Not a shopping list.",
+          "objectiveIds": ["Name the first records that treated odd grouping as normal"],
+          "prerequisiteConceptIds": ["dm-tech-hist"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-t90-10-2",
+          "stem": "Hearing 1990s technicality as grammar rather than later fashion means you:",
+          "correctAnswer": "Treat odd lengths as default grid on those records, not as a trick on four",
+          "distractors": [
+            { "text": "Wait for a 2000s brand name before any five-beat cell is allowed to count", "kind": "nearby", "rationale": "Waiting on a later brand is the fashion model." },
+            { "text": "Treat four-four as the only 1990s grid, with odd lengths as future branding", "kind": "reversed", "rationale": "Odd lengths were already default grammar on those records." },
+            { "text": "Replace the hearing with a roster of players ranked by how many notes they ran", "kind": "subtle", "rationale": "A note-count roster is sport, not 1990s grammar." }
+          ],
+          "correctExplanation": "Odd as default grid, not a trick on four. That is grammar, not later fashion.",
+          "objectiveIds": ["Hear 1990s technicality as grammar, not as a later fashion"],
+          "prerequisiteConceptIds": ["dm-tech-hist"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-t90-10-3",
+          "stem": "A shopping list of those 1990s records fails as the naming this lesson wants because it:",
+          "correctAnswer": "Lists titles instead of pointing at ordinary odd bars as the class of records",
+          "distractors": [
+            { "text": "Includes too many engineers next to guitarists and still only names people", "kind": "nearby", "rationale": "Adding job titles still leaves you with a list of people." },
+            { "text": "Is forbidden even as a supporting detail after the odd-bar grammar is named", "kind": "reversed", "rationale": "Titles may support. They may not replace the pointing." },
+            { "text": "Cannot be printed, as if 1990s desks were banned from counting in five at all", "kind": "misapplied", "rationale": "The failure is roster-as-naming, not a printing ban." }
+          ],
+          "correctExplanation": "A title list is not the class. Point at ordinary odd bars to name the records.",
+          "objectiveIds": ["Name the first records that treated odd grouping as normal"],
+          "prerequisiteConceptIds": ["dm-tech-hist"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-modern-wave-10",
+      "conceptId": "dm-modern-wave",
+      "title": "Tighter grids, colder harmony",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-dissonant-hist", "dm-tech-hist"],
+      "goDeeper": "dm-regional",
+      "explanation": [
+        "Later technical and dissonant records, from the 2000s onward, tightened the grid and cooled the harmony. Triggers and edits made kick and guitar lock to a click in a way earlier rooms could not. The harmony often sat colder: more cluster, less leftover blues residue.",
+        "Tighter grids mean the kit's attacks land in a narrower window, and guitar edits can stack that window. Colder harmony means the cell agrees less with a sung third and more with a dissonant stack. Both are construction. Neither is a moral upgrade on the earlier factories.",
+        "Predict what triggers and edits do to that grammar: more identical kick transients, less room-noise between hits, easier odd grouping because the click holds the length. They can also flatten the human push that earlier desks left in. That trade is audible on the grid."
+      ],
+      "example": "Kick transients that match like copies, guitar edits stacked to the same click, a cluster that will not sit as a sung third. Tighter and colder. Not a medal.",
+      "whyItMatters": "If triggers are only cheating talk, you will miss a grammar change. Tighter grids and colder stacks are the later wave's jobs.",
+      "quiz": [
+        {
+          "id": "dm-mdw10-1",
+          "stem": "The later technical and dissonant wave is described here as which pair of facts?",
+          "correctAnswer": "Tighter grids and colder harmony from the 2000s onward, heard as construction",
+          "distractors": [
+            { "text": "Looser rooms and warmer leftover blues thirds as the later wave's whole grammar", "kind": "nearby", "rationale": "Looser and warmer is closer to earlier rooms, not this wave." },
+            { "text": "A moral upgrade that retires earlier factories for being insufficiently famous", "kind": "reversed", "rationale": "This course refuses moral upgrades. Construction is the pair." },
+            { "text": "A lyric-domain swap that leaves grid, triggers, and harmony stack untouched", "kind": "misapplied", "rationale": "A lyric swap is not tighter grids or colder harmony." }
+          ],
+          "correctExplanation": "Tighter grids, colder harmony, from the 2000s. Construction, not a medal.",
+          "objectiveIds": ["Describe the later technical and dissonant wave as tighter grids and colder harmony"],
+          "prerequisiteConceptIds": ["dm-dissonant-hist", "dm-tech-hist"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-mdw10-2",
+          "stem": "Triggers and edits, applied to that later grammar, typically do which pair of jobs?",
+          "correctAnswer": "Lock kick and guitar to a click, and can flatten the human push earlier desks left",
+          "distractors": [
+            { "text": "Automatically restore room-noise and make odd grouping harder to hold in length", "kind": "nearby", "rationale": "Triggers reduce room-noise and can make odd lengths easier to hold." },
+            { "text": "Widen every attack window and forbid the kit from locking onto a shared click", "kind": "reversed", "rationale": "That is the opposite of a tighter triggered grid." },
+            { "text": "Change only the lyric register, leaving transients and harmony stack untouched", "kind": "misapplied", "rationale": "Triggers act on transients, not on lyric domains." }
+          ],
+          "correctExplanation": "Click-lock plus possible flattened push. That is the trigger-and-edit trade.",
+          "objectiveIds": ["Predict what triggers and edits do to that grammar"],
+          "prerequisiteConceptIds": ["dm-dissonant-hist", "dm-tech-hist"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-mdw10-3",
+          "stem": "A click-locked kit under a colder cluster harmony, compared with an earlier room, shows:",
+          "correctAnswer": "Later-wave construction: a tighter grid and colder, less-sung harmony",
+          "distractors": [
+            { "text": "That the earlier room was a fashion error and the click is a moral upgrade", "kind": "nearby", "rationale": "Neither room is a moral rank. Both are construction." },
+            { "text": "That grids got looser and the harmony warmed back toward a hummed third", "kind": "reversed", "rationale": "That swaps later-wave facts for earlier-room facts." },
+            { "text": "A passport win for whichever city printed the later sleeve's studio address", "kind": "misapplied", "rationale": "A studio address is not the grid or the cluster." }
+          ],
+          "correctExplanation": "Click-lock plus colder cluster is the later wave. Not a medal over earlier rooms.",
+          "objectiveIds": ["Describe the later technical and dissonant wave as tighter grids and colder harmony"],
+          "prerequisiteConceptIds": ["dm-dissonant-hist", "dm-tech-hist"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-regional-10",
+      "conceptId": "dm-regional",
+      "title": "Accent lives in the riff",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-compare-scenes",
+      "diagram": "dm-branch-map",
+      "explanation": [
+        "After the two capitals, regional dialects show up in the riff, not in the passport. A Quebec-like dialect may stack dissonant technical cells. A Polish-like dialect may favor industrial precision and a certain kit chop. A Southern US dialect may keep sludge-thick mid-tempo mass. Hear the construction.",
+        "The accent is the riff: which intervals, which kit grammar, which mix claim. A map quiz that lists cities without those facts is trivia. Two scenes can share a continent and still speak different contracts. Two scenes can sit an ocean apart and share a factory's job.",
+        "Compare two later scenes by construction rather than by map trivia. Ask whether the guitar is a wall or a click, whether the form is short or long, whether the harmony sings or clashes. Passports will not answer. The bar will, and that is the dialect."
+      ],
+      "example": "Two records, different continents, same wall-versus-click job — or same continent, opposite jobs. Construction compared. Map trivia did not get a vote.",
+      "whyItMatters": "If dialect is only a passport, later scenes collapse into tourism. The accent is the riff. Compare that.",
+      "quiz": [
+        {
+          "id": "dm-reg10-1",
+          "stem": "Hearing a regional dialect in the riff rather than in the passport means you:",
+          "correctAnswer": "Name intervals, kit grammar, and mix claim as the accent, not the visa stamp",
+          "distractors": [
+            { "text": "List cities first and treat construction as optional extra credit after the map", "kind": "nearby", "rationale": "A city list is the passport model this lesson drops." },
+            { "text": "Treat the passport as the accent and the riff as a detail that can always wait", "kind": "reversed", "rationale": "That swaps passport and riff." },
+            { "text": "Wait for a celebrity who moved cities before any dialect is allowed to count", "kind": "subtle", "rationale": "A moving celebrity is a roster card, not an accent in the bar." }
+          ],
+          "correctExplanation": "Intervals, kit, mix claim. That is the accent. A visa stamp is not.",
+          "objectiveIds": ["Hear a regional dialect in the riff, not in the passport"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-reg10-2",
+          "stem": "Two later scenes are compared by construction rather than map trivia when you ask:",
+          "correctAnswer": "Wall or click, short or long form, sung or clashing harmony — not the map",
+          "distractors": [
+            { "text": "Which airport the players used, treated as the whole of the dialect contrast", "kind": "nearby", "rationale": "An airport is map trivia, not construction." },
+            { "text": "Which passport is older, because the older stamp always wins the construction", "kind": "reversed", "rationale": "Age of a stamp is not a riff job." },
+            { "text": "Which lyric domain is grosser, as a substitute for guitar job and kit grammar", "kind": "misapplied", "rationale": "Lyric trivia is not the construction compare." }
+          ],
+          "correctExplanation": "Wall or click, short or long, sung or clash. The map does not answer.",
+          "objectiveIds": ["Compare two later scenes by construction rather than by map trivia"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "dm-reg10-3",
+          "stem": "A riff that stacks dissonant technical cells, regardless of the sleeve's country, is:",
+          "correctAnswer": "A dialect living in the riff; a passport cannot confirm or deny that accent",
+          "distractors": [
+            { "text": "Proof the players must live in one capital or the cells cannot be technical", "kind": "nearby", "rationale": "Residence does not license a cell." },
+            { "text": "Map trivia: the country on the sleeve is the accent, and the riff can wait", "kind": "reversed", "rationale": "The sleeve country is the passport model." },
+            { "text": "A reason to ignore kit grammar once a city name is printed in the booklet", "kind": "subtle", "rationale": "A city name is not permission to skip the bar." }
+          ],
+          "correctExplanation": "The stacked cells are the dialect. A passport does not get a vote.",
+          "objectiveIds": ["Hear a regional dialect in the riff, not in the passport"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

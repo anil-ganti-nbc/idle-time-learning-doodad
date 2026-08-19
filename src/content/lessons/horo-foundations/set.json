@@ -1,0 +1,654 @@
+{
+  "courseId": "horo-foundations",
+  "moduleId": "horo-f-set",
+  "lessons": [
+    {
+      "id": "horo-winding-5",
+      "conceptId": "horo-winding",
+      "title": "Putting work back in",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["horo-click"],
+      "goDeeper": "horo-stem",
+      "diagram": "horo-keyless",
+      "explanation": [
+        "Turn the crown and work goes back into the spring. Stem, clutch in the winding position, winding pinion, crown wheel, ratchet, arbor. That is the winding path. Miss the clutch and you are turning a shaft that is no longer meshed.",
+        "Pushed in, the sliding pinion sits on the winding pinion. Pulled out, it leaves that mesh. Winding is the pushed-in job. Feel the click as the ratchet takes each tooth; that is work arriving at the arbor."
+      ],
+      "example": "Crown in, you feel the click. Crown out, the same turn moves the hands. The clutch chose. The spring only takes work in the first position.",
+      "whyItMatters": "If the clutch is not on the winding pinion, a morning of turning stores nothing.",
+      "quiz": [
+        {
+          "id": "horo-wd5-1",
+          "stem": "Work gets back into the spring through which winding path?",
+          "correctAnswer": "Crown, stem, clutch in the wind position, then ratchet and arbor",
+          "distractors": [
+            { "text": "Cannon pinion, hour wheel, then the escape, with no clutch at all", "kind": "nearby", "rationale": "That path is display, or the going train. It is not how you wind." },
+            { "text": "Balance, pallet, then the barrel wall, so the organ restocks the spring", "kind": "reversed", "rationale": "The organ spends work. It does not put work back." },
+            { "text": "Jewel count, then a timing machine, which is how a spring is supposed to fill", "kind": "misapplied", "rationale": "Holes and a machine do not wind a barrel." }
+          ],
+          "correctExplanation": "Crown to clutch in wind, then the ratchet on the arbor. That path stores work.",
+          "objectiveIds": ["Put work back into the spring through the winding path"],
+          "prerequisiteConceptIds": ["horo-click"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-wd5-2",
+          "stem": "The clutch position that connects crown to ratchet is:",
+          "correctAnswer": "Pushed in, so the sliding pinion meshes with the winding pinion",
+          "distractors": [
+            { "text": "Pulled out, so the sliding pinion meshes with the winding pinion", "kind": "reversed", "rationale": "Pulled out is set. Pushed in is wind." },
+            { "text": "Anywhere, because the ratchet is driven directly by the cannon pinion", "kind": "nearby", "rationale": "The cannon is display. The winding pinion is the wind mesh." },
+            { "text": "Removed, because a modern calibre winds through the crystal", "kind": "misapplied", "rationale": "The crystal is housing. The clutch still has to sit on the winding pinion." }
+          ],
+          "correctExplanation": "Pushed in: sliding pinion on winding pinion, then crown wheel, ratchet, arbor.",
+          "objectiveIds": ["Trace the clutch position that connects crown to ratchet"],
+          "prerequisiteConceptIds": ["horo-click"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-wd5-3",
+          "stem": "Winding, in this lesson, means the job of:",
+          "correctAnswer": "Putting work back into the spring through the winding path",
+          "distractors": [
+            { "text": "Metering the unwind as the timebase of the whole watch", "kind": "nearby", "rationale": "The oscillator meters. Winding restocks the store." },
+            { "text": "Displaying the count on the dial as a pair of hands", "kind": "misapplied", "rationale": "Hands display. Winding is how energy enters." },
+            { "text": "Grading the calibre by how many jewels sit under the barrel", "kind": "subtle", "rationale": "Jewel count is not a winding path." }
+          ],
+          "correctExplanation": "Work back into the spring. That is winding.",
+          "objectiveIds": ["Put work back into the spring through the winding path"],
+          "prerequisiteConceptIds": ["horo-click"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "horo-winding-10",
+      "conceptId": "horo-winding",
+      "title": "Crown to ratchet, clutch in",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-click"],
+      "goDeeper": "horo-stem",
+      "diagram": "horo-keyless",
+      "explanation": [
+        "Pushed in, the clutch — the sliding pinion on the stem — meshes with the winding pinion. That pinion drives the crown wheel, which drives the ratchet on the barrel arbor. Work enters the spring only while that chain is complete.",
+        "Trace it: crown, stem, sliding pinion in the wind position, winding pinion, crown wheel, ratchet, arbor, mainspring. A clutch left in the set position means the crown turns the hands, not the arbor. You can wind all morning and store nothing.",
+        "WOSTEP treats winding as a path with a chosen mesh, not a vibe in the crown. If the click is silent while you turn, the clutch is probably off the winding pinion. Seat it before you decide the spring is broken."
+      ],
+      "example": "Crown in, silent click, hands not moving either: the sliding pinion is in the gap between meshes. Seat the yoke and the click returns. The spring was never the fault.",
+      "whyItMatters": "A crown that turns without a click is a clutch off the winding pinion, not a dead barrel.",
+      "quiz": [
+        {
+          "id": "horo-wd10-1",
+          "stem": "Trace the winding path from a turning crown to a filling spring. After the winding pinion comes:",
+          "correctAnswer": "The crown wheel, then the ratchet on the barrel arbor",
+          "distractors": [
+            { "text": "The escape wheel, then the pallet, with the arbor left idle", "kind": "reversed", "rationale": "That is the going path out. Winding still has to hit the ratchet." },
+            { "text": "The cannon pinion, which is how a spring is supposed to take work", "kind": "nearby", "rationale": "The cannon is display. The ratchet is on the arbor." },
+            { "text": "The hairspring, so the organ can restock the barrel from above", "kind": "misapplied", "rationale": "The organ spends work. It does not fill the barrel." }
+          ],
+          "correctExplanation": "Winding pinion, crown wheel, ratchet, arbor, spring. That is the restock.",
+          "objectiveIds": ["Put work back into the spring through the winding path"],
+          "prerequisiteConceptIds": ["horo-click"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-wd10-2",
+          "stem": "The clutch is in the set position and you turn the crown as if to wind. Typically:",
+          "correctAnswer": "The hands move, or nothing useful happens, and the arbor does not take work",
+          "distractors": [
+            { "text": "The ratchet still fills, because set is a second winding mesh", "kind": "reversed", "rationale": "Set is off the winding pinion. The arbor is not in that chain." },
+            { "text": "The balance winds the barrel, which is how set is supposed to store", "kind": "misapplied", "rationale": "The balance is the timebase. It does not restock the spring." },
+            { "text": "Jewel count rises by one for each turn you make in that position", "kind": "misconception", "rationale": "Turns in set do not add jewels. They also do not wind." }
+          ],
+          "correctExplanation": "Clutch on set, winding path open. Morning of turning, nothing stored.",
+          "objectiveIds": ["Trace the clutch position that connects crown to ratchet"],
+          "prerequisiteConceptIds": ["horo-click"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-wd10-3",
+          "stem": "You turn the crown in the pushed-in position and the click stays silent. The first suspect is:",
+          "correctAnswer": "A sliding pinion that is not meshed with the winding pinion",
+          "distractors": [
+            { "text": "A hairspring that is too short, which is how a silent click is supposed to read", "kind": "misapplied", "rationale": "The organ is not on the winding path. The clutch is." },
+            { "text": "A fourth wheel that has become the ratchet under the dial", "kind": "nearby", "rationale": "The fourth wheel is going train. Silence here is a missing wind mesh." },
+            { "text": "A set mainspring, taken as the only reason a click can go quiet", "kind": "subtle", "rationale": "A set spring still clicks when the ratchet turns. No mesh, no click." }
+          ],
+          "correctExplanation": "Silent click while you turn: the clutch is off the winding pinion. Seat it.",
+          "objectiveIds": ["Trace the clutch position that connects crown to ratchet"],
+          "prerequisiteConceptIds": ["horo-click"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-stem-10",
+      "conceptId": "horo-stem",
+      "title": "Shaft the wearer turns",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-winding"],
+      "goDeeper": "horo-setting",
+      "diagram": "horo-keyless",
+      "explanation": [
+        "Crown and stem are the shaft the wearer actually turns. The crown is the knurled button. The stem is the rod that carries the sliding pinion and reaches the keyless works. The wearer never holds the ratchet. This shaft is how both wind and set begin.",
+        "A loose stem fails both jobs. Winding becomes a slip: the crown spins and the sliding pinion does not drive. Setting becomes sloppy, or the stem walks out of the case. Either way the clutch cannot keep a mesh it does not sit in.",
+        "Predict a stem whose set-screw is backed out: the next pull on the crown may draw the whole shaft free. Park it, fit the screw, then test wind and set as two distinct meshes. A rattling crown is not a mainspring problem."
+      ],
+      "example": "The set-screw was not seated. A wearer pulls to set and the stem comes out in the crown. No wind, no set, a hole in the case. The barrel was still fully wound.",
+      "whyItMatters": "A loose stem looks like a dead movement until you notice the shaft is no longer in the clutch.",
+      "quiz": [
+        {
+          "id": "horo-st10-1",
+          "stem": "The stem and crown, in this lesson, are:",
+          "correctAnswer": "The shaft the wearer actually turns, carrying the sliding pinion",
+          "distractors": [
+            { "text": "The drum that holds the spring and drives the first wheel", "kind": "nearby", "rationale": "That drum is the barrel. The wearer turns the stem." },
+            { "text": "The timebase that meters the unwind into counted seconds", "kind": "misapplied", "rationale": "The oscillator meters. The stem is a shaft." },
+            { "text": "A jewel count printed on the spec as a grade of the calibre", "kind": "misconception", "rationale": "A shaft is not a count of holes." }
+          ],
+          "correctExplanation": "Crown on a stem. That is the shaft. The ratchet is inside.",
+          "objectiveIds": ["Name the stem and crown as the shaft the wearer actually turns"],
+          "prerequisiteConceptIds": ["horo-winding"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-st10-2",
+          "stem": "A stem that has come loose in the case will typically:",
+          "correctAnswer": "Slip in wind and set, or walk out, so the clutch cannot keep a mesh",
+          "distractors": [
+            { "text": "Improve rate by stretching the hairspring from the winding pinion", "kind": "misapplied", "rationale": "A loose shaft is not a regulator. It drops the clutch out of mesh." },
+            { "text": "Fill the barrel faster, because a rattling crown stores extra work", "kind": "reversed", "rationale": "A slip stores less, not more. The pinion is not being driven." },
+            { "text": "Raise jewel count by one for each millimetre the stem can walk", "kind": "misconception", "rationale": "Walking out is a lost shaft, not an added bearing." }
+          ],
+          "correctExplanation": "Loose shaft, lost mesh, failed wind and set. Seat the stem first.",
+          "objectiveIds": ["Predict what a loose stem does to winding and setting"],
+          "prerequisiteConceptIds": ["horo-winding"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-st10-3",
+          "stem": "The crown rattles and neither wind nor set takes. After you look at the calibre you should:",
+          "correctAnswer": "Seat the stem so the sliding pinion can stay in a mesh, then retest both jobs",
+          "distractors": [
+            { "text": "Fit a longer mainspring, because a rattle always means a tired store", "kind": "nearby", "rationale": "A rattling crown is a shaft problem. The spring may still be full." },
+            { "text": "Oil the crystal, which is how a loose stem is supposed to be seated", "kind": "misapplied", "rationale": "The crystal is housing. The set-screw or clutch is what locates the shaft." },
+            { "text": "Time it on 18,000, because beat setting pulls a stem back into the case", "kind": "subtle", "rationale": "A machine switch does not locate a shaft." }
+          ],
+          "correctExplanation": "Rattle, no mesh. Seat the stem, then test wind and set as two jobs.",
+          "objectiveIds": ["Predict what a loose stem does to winding and setting"],
+          "prerequisiteConceptIds": ["horo-winding"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-setting-10",
+      "conceptId": "horo-setting",
+      "title": "Move the hands, spare the oscillator",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-hands", "horo-stem"],
+      "goDeeper": "horo-keyless",
+      "diagram": "horo-keyless",
+      "explanation": [
+        "Decouple the display from the timebase so the hands can be set. The cannon pinion is a friction fit on the centre arbor: turn the minute wheel and the cannon slips, carrying the hands, while the going train can keep counting underneath.",
+        "A simple calibre without a hack leaves the oscillator running while you set. That is correct. Your job is not to stall the balance. Force a seized cannon and you back-drive the fourth wheel into the escape, and the balance stutters under a wrench.",
+        "Some later calibres add a lever that stops the balance on pull-out so you can set to the second. Until then, predict this: the oscillator should keep swinging. Setting moves the display. It must not become a lever on the pallet."
+      ],
+      "example": "A cannon seized on the centre arbor. Turning the crown in set back-drives the fourth into the escape. The balance stutters. Setting had become a wrench on the timebase.",
+      "whyItMatters": "If setting is allowed to stall the balance, you will wreck the organ the first time a cannon sticks.",
+      "quiz": [
+        {
+          "id": "horo-se10-1",
+          "stem": "Setting the hands on a simple calibre works by:",
+          "correctAnswer": "Decoupling the display from the timebase so the cannon can slip and carry the hands",
+          "distractors": [
+            { "text": "Locking the balance first, which is how every simple calibre is supposed to set", "kind": "reversed", "rationale": "A simple calibre leaves the organ running. You move the display." },
+            { "text": "Winding the barrel through the hour wheel, taken as the only set path", "kind": "nearby", "rationale": "Setting is display. Winding is the other clutch position." },
+            { "text": "Adding jewels until the hands can move without a stem at all", "kind": "misapplied", "rationale": "Jewel count does not decouple a display." }
+          ],
+          "correctExplanation": "Friction at the cannon. Display moves. Timebase can keep counting.",
+          "objectiveIds": ["Decouple the display from the timebase so the hands can be set"],
+          "prerequisiteConceptIds": ["horo-hands", "horo-stem"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-se10-2",
+          "stem": "On a simple calibre with no stop-seconds lever, the oscillator while you set should:",
+          "correctAnswer": "Keep running, because setting is supposed to move the display, not stall the organ",
+          "distractors": [
+            { "text": "Stop, because every stem pull is required to lock the balance", "kind": "reversed", "rationale": "Hack is a later lever. A simple calibre leaves the organ free." },
+            { "text": "Drive the stem, so the crown becomes the true timebase during set", "kind": "misapplied", "rationale": "The stem is how you set. It is not a timebase." },
+            { "text": "Run only if jewel count printed on the spec is above seventeen", "kind": "subtle", "rationale": "Jewel count does not decide whether setting may stall the balance." }
+          ],
+          "correctExplanation": "No hack: the organ keeps swinging. You move the hands. You do not wrench the pallet.",
+          "objectiveIds": ["Predict whether the oscillator should keep running while you set"],
+          "prerequisiteConceptIds": ["horo-hands", "horo-stem"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-se10-3",
+          "stem": "A seized cannon pinion during setting typically risks:",
+          "correctAnswer": "Back-driving the going train into the escape so the balance stutters under load",
+          "distractors": [
+            { "text": "Filling the barrel faster, because a seized cannon is a second winding path", "kind": "nearby", "rationale": "A seized cannon is a wrench, not a winding pinion." },
+            { "text": "Raising beat rate, which is how a stuck hand is supposed to grade", "kind": "misapplied", "rationale": "Force on the escape does not recut the train." },
+            { "text": "Improving endshake on the balance, taken as a free regulation step", "kind": "misconception", "rationale": "You are loading the organ, not freeing a pivot." }
+          ],
+          "correctExplanation": "Tight cannon, back-drive, stuttering balance. Free the display. Leave the organ out of the lever.",
+          "objectiveIds": ["Decouple the display from the timebase so the hands can be set"],
+          "prerequisiteConceptIds": ["horo-hands", "horo-stem"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-keyless-10",
+      "conceptId": "horo-keyless",
+      "title": "The clutch that chooses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-setting", "horo-winding"],
+      "goDeeper": "horo-cannon",
+      "diagram": "horo-keyless",
+      "explanation": [
+        "Keyless works are the clutch that chooses wind versus set without a removable key. The sliding pinion rides the stem. A yoke, pushed by the setting lever, slides that pinion between the winding pinion and the intermediate setting wheel.",
+        "Pull the crown and the stem's groove moves the setting lever — the pull-out piece. The lever throws the yoke. The sliding pinion leaves the winding pinion and meets the set wheels. Two positions, two meshes, one shaft.",
+        "Trace pull-out to the sliding pinion until both meshes are places you can point at. A watch that neither winds nor sets often has a yoke spring that is not throwing the clutch far enough. The stem is turning. The clutch is in the gap."
+      ],
+      "example": "Crown in, click as you wind. Crown out, minute wheel turns as you set. Same stem, two meshes. A yoke that stops short leaves you in the gap: crown turns, nothing useful happens.",
+      "whyItMatters": "If you cannot name the clutch that chooses, wind and set will look like two unrelated machines.",
+      "quiz": [
+        {
+          "id": "horo-kl10-1",
+          "stem": "Keyless works, in this course, are best described as:",
+          "correctAnswer": "The clutch that chooses wind versus set without a removable key",
+          "distractors": [
+            { "text": "The going train that counts the unwind toward the escape wheel", "kind": "nearby", "rationale": "The going train is the count. Keyless is the clutch on the stem." },
+            { "text": "The timebase that meters the unwind into counted seconds", "kind": "misapplied", "rationale": "The oscillator meters. Keyless chooses a mesh." },
+            { "text": "A jewel count printed on the spec as a grade of the winding path", "kind": "misconception", "rationale": "A clutch is not a count of holes." }
+          ],
+          "correctExplanation": "Clutch, wind versus set, no removable key. That is the name.",
+          "objectiveIds": ["Describe keyless works as the clutch that chooses wind versus set"],
+          "prerequisiteConceptIds": ["horo-setting", "horo-winding"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-kl10-2",
+          "stem": "Trace a full pull-out from the crown to the sliding pinion. The order is:",
+          "correctAnswer": "Stem groove, setting lever, yoke, then the sliding pinion changing mesh",
+          "distractors": [
+            { "text": "Escape wheel, pallet, balance, then the sliding pinion as a last thought", "kind": "reversed", "rationale": "That path is the timebase. Pull-out is stem to yoke to clutch." },
+            { "text": "Barrel, centre, third, then the sliding pinion as a going-train step", "kind": "nearby", "rationale": "The going train does not throw the clutch." },
+            { "text": "Crystal, caseback, then the sliding pinion, with no lever on the path", "kind": "misapplied", "rationale": "Housing is not the keyless chain. The setting lever is." }
+          ],
+          "correctExplanation": "Groove, pull-out piece, yoke, sliding pinion. That is the throw.",
+          "objectiveIds": ["Trace pull-out positions to the sliding pinion"],
+          "prerequisiteConceptIds": ["horo-setting", "horo-winding"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-kl10-3",
+          "stem": "The crown turns in both positions and neither wind nor set takes. The clutch is typically:",
+          "correctAnswer": "In the gap, because the yoke is not throwing the sliding pinion onto a mesh",
+          "distractors": [
+            { "text": "Correct, because a keyless calibre is supposed to freewheel at both stops", "kind": "reversed", "rationale": "Each stop should be a mesh. Freewheeling is a failed throw." },
+            { "text": "A dry jewel under the fourth wheel, taken as the only keyless fault", "kind": "nearby", "rationale": "A fourth-wheel jewel is going train. The clutch is on the stem." },
+            { "text": "A longer hairspring, which is how a gap between meshes is supposed to grade", "kind": "misapplied", "rationale": "The organ is not the yoke. Seat the yoke spring." }
+          ],
+          "correctExplanation": "Stem turning, nothing meshed: the sliding pinion sits between jobs. Throw it.",
+          "objectiveIds": ["Trace pull-out positions to the sliding pinion"],
+          "prerequisiteConceptIds": ["horo-setting", "horo-winding"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-keyless-20",
+      "conceptId": "horo-keyless",
+      "title": "Pull-out, yoke, sliding pinion",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["horo-setting", "horo-winding"],
+      "goDeeper": "horo-cannon",
+      "diagram": "horo-keyless",
+      "explanation": [
+        "Stem groove, setting lever, yoke, sliding pinion: that is the keyless chain. Pull-out is not magic in the crown. The groove drags the setting lever; the lever's pin throws the yoke; the yoke fork slides the clutch along the stem squares.",
+        "Pushed in, the sliding pinion's teeth meet the winding pinion. Half-out, some calibres park in a neutral or date position. Full-out, the other face of the sliding pinion meets the intermediate wheel that drives the minute wheel. Wind versus set is which face is meshed.",
+        "A yoke spring that is weak leaves the clutch between meshes. Turning the crown then does nothing useful, or it grazes both and chips a tooth. Seat the spring, watch the throw, and confirm each position with a finger on the ratchet and a finger on the cannon.",
+        "HSNY 103 walks this on a simple calibre before any calendar. Predict a stem that winds in the pulled-out position: the yoke never threw, or the sliding pinion is in backwards. Reverse the clutch and the two jobs swap. That is a diagnostic, not a feature."
+      ],
+      "example": "Sliding pinion fitted backwards: pulled out, you wind; pushed in, you set. The yoke is throwing. The clutch faces are swapped. Reverse the pinion and the jobs return to their stops.",
+      "whyItMatters": "Keyless faults are position faults. Name the mesh at each stop or you will oil a spring that was never the path.",
+      "quiz": [
+        {
+          "id": "horo-kl20-1",
+          "stem": "From a pulled crown to a sliding pinion in the set mesh, the throw runs:",
+          "correctAnswer": "Groove in the stem, setting lever, yoke fork, then the clutch sliding onto the set wheel",
+          "distractors": [
+            { "text": "Barrel, centre, fourth, then the clutch as if it were a going-train pinion", "kind": "nearby", "rationale": "The going train does not throw the sliding pinion." },
+            { "text": "Hairspring, regulator, then the clutch, so the organ can choose wind versus set", "kind": "misapplied", "rationale": "The organ does not throw a yoke. The setting lever does." },
+            { "text": "Crystal first, because pull-out is a case job rather than a clutch job", "kind": "reversed", "rationale": "Housing is not the chain. Stem groove to yoke is." }
+          ],
+          "correctExplanation": "Groove, lever, yoke, sliding pinion onto the set wheel. Point at each.",
+          "objectiveIds": ["Trace pull-out positions to the sliding pinion"],
+          "prerequisiteConceptIds": ["horo-setting", "horo-winding"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-kl20-2",
+          "stem": "How does the pushed-in mesh differ from the full pull-out mesh in keyless works?",
+          "correctAnswer": "Pushed in meets the winding pinion; full-out meets the intermediate set wheel",
+          "distractors": [
+            { "text": "Pushed in meets the set wheel; full-out meets the winding pinion", "kind": "reversed", "rationale": "Wind is in. Set is out. Swap those and you have the backwards clutch." },
+            { "text": "Both meshes are the same face, because a clutch only has one set of teeth", "kind": "misconception", "rationale": "Two faces, two jobs. That is why a backwards pinion swaps them." },
+            { "text": "Neither mesh exists; the cannon pinion is what chooses wind versus set", "kind": "nearby", "rationale": "The cannon is display. The sliding pinion is the clutch." }
+          ],
+          "correctExplanation": "In: winding pinion. Out: set wheel. Which face is meshed is the choice.",
+          "objectiveIds": ["Describe keyless works as the clutch that chooses wind versus set"],
+          "prerequisiteConceptIds": ["horo-setting", "horo-winding"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-kl20-3",
+          "stem": "A stem winds in the pulled-out position and sets when pushed in. You should treat that as:",
+          "correctAnswer": "A sliding pinion in backwards, or a yoke that never threw, swapping the two jobs",
+          "distractors": [
+            { "text": "Correct keyless order, because pulled-out is how a going barrel is supposed to wind", "kind": "reversed", "rationale": "Pulled-out is set. Winding there is a swapped clutch, not a feature." },
+            { "text": "A tired mainspring, which is the only reason jobs can swap at the stem", "kind": "nearby", "rationale": "A tired spring fades through the day. It does not swap meshes." },
+            { "text": "Proof that jewel count was too low for this particular sliding pinion", "kind": "misapplied", "rationale": "Count did not reverse the pinion. Assembly did." }
+          ],
+          "correctExplanation": "Jobs swapped at the stops: reverse the clutch or finish the throw.",
+          "objectiveIds": ["Trace pull-out positions to the sliding pinion"],
+          "prerequisiteConceptIds": ["horo-setting", "horo-winding"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-cannon-10",
+      "conceptId": "horo-cannon",
+      "title": "Twelve to one at the cannon",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-setting"],
+      "goDeeper": "horo-dial-train",
+      "diagram": "horo-train",
+      "explanation": [
+        "Friction at the cannon pinion is how the minute hand sits on a live centre arbor. The cannon is a pipe, sprung onto that arbor, carrying the minute hand. The minute-wheel pinion and hour wheel then make a 12:1 reduction so the hour hand turns once per twelve cannon turns.",
+        "Read hour and minute as that reduction, not as two independent motors. One turn of the cannon is sixty minutes on the dial. The hour wheel must turn one-twelfth of a turn for each of those. Tooth counts on the minute wheel and hour wheel are chosen to be 12:1.",
+        "Predict a jumping minute: the cannon is too loose on the arbor. The train turns, the cannon slips, the minute hand stutters or sits while seconds run. Too tight, and setting back-drives the centre wheel. Tension is a measured grip, not a crush."
+      ],
+      "example": "Seconds run, minute hand sits, then jumps a few minutes at once. The cannon is slipping on the centre arbor. Tighten the pipe's grip and the 12:1 reduction has a shaft again.",
+      "whyItMatters": "A slipping cannon looks like a rate fault until you notice only the minute hand is lying.",
+      "quiz": [
+        {
+          "id": "horo-cn10-1",
+          "stem": "Hour and minute on a simple calibre are a 12:1 reduction at the cannon because:",
+          "correctAnswer": "Twelve cannon turns drive one hour-wheel turn, so the hour hand laps the dial once per twelve hours",
+          "distractors": [
+            { "text": "The going train has twelve wheels, which is how an hour is supposed to be counted", "kind": "nearby", "rationale": "The going train is the count to the escape. 12:1 lives in the motion works." },
+            { "text": "The case is twelve millimetres, which is how a reduction is supposed to grade", "kind": "misapplied", "rationale": "Case size is not a 12:1 mesh." },
+            { "text": "Jewel count is twelve, taken as the only reason an hour hand can turn", "kind": "misconception", "rationale": "Holes are not the reduction. Minute wheel to hour wheel is." }
+          ],
+          "correctExplanation": "Cannon once an hour, hour wheel once per twelve of those. That is 12:1.",
+          "objectiveIds": ["Read hour and minute as a 12:1 reduction at the cannon pinion"],
+          "prerequisiteConceptIds": ["horo-setting"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-cn10-2",
+          "stem": "If the cannon pinion slips on the centre arbor while the watch runs, you should expect:",
+          "correctAnswer": "A jumping or sitting minute hand while the seconds, if present, keep counting",
+          "distractors": [
+            { "text": "A faster beat, because a slipping cannon recuts the escape teeth", "kind": "misapplied", "rationale": "Slip is at the display pipe. It does not recut the train." },
+            { "text": "A longer reserve, because slip stores extra turns in the hour wheel", "kind": "reversed", "rationale": "Slip wastes display. It does not restock the barrel." },
+            { "text": "A locked balance, which is how a loose cannon is supposed to hack", "kind": "subtle", "rationale": "The organ can still run. The minute hand is what lied." }
+          ],
+          "correctExplanation": "Loose pipe, slipping cannon, jumping minute. The count underneath can still be honest.",
+          "objectiveIds": ["Predict a jumping minute if the cannon slips on the centre arbor"],
+          "prerequisiteConceptIds": ["horo-setting"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-cn10-3",
+          "stem": "The 12:1 reduction from minute to hour is made by:",
+          "correctAnswer": "The cannon driving a minute wheel, whose pinion drives the hour wheel",
+          "distractors": [
+            { "text": "The barrel driving the escape, taken as a 12:1 display step", "kind": "nearby", "rationale": "Barrel to escape is the going train. Display 12:1 is motion works." },
+            { "text": "The click and ratchet, which is how an hour hand is supposed to be reduced", "kind": "misapplied", "rationale": "Click holds the arbor. It does not reduce hour to minute." },
+            { "text": "Two identical wheels, because 12:1 is only a name for a 1:1 mesh", "kind": "reversed", "rationale": "1:1 would keep hour and minute together. You need twelve to one." }
+          ],
+          "correctExplanation": "Cannon, minute wheel, hour wheel. Tooth counts chosen for 12:1.",
+          "objectiveIds": ["Read hour and minute as a 12:1 reduction at the cannon pinion"],
+          "prerequisiteConceptIds": ["horo-setting"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "horo-dial-train-10",
+      "conceptId": "horo-dial-train",
+      "title": "Two trains, two jobs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-cannon", "horo-gear-train"],
+      "goDeeper": "horo-lubrication",
+      "diagram": "horo-train",
+      "explanation": [
+        "Two trains, two jobs. The going train counts the unwind toward the escape wheel. The motion works — cannon pinion, minute wheel, hour wheel — display that count on the dial. Mix the names and you will oil a display wheel to fix a rate.",
+        "A date disc should take power from the motion works, usually off the hour wheel, so midnight on the dial is midnight on the disc. Drive it from the going train and setting the hands will not walk the date, or the date will jump while you are still on the timing machine.",
+        "Distinguish them under the dial: if it turns because the cannon turned, it is motion works. If it turns because the barrel turned and the escape allowed it, it is the going train. Complications that read the time of day borrow from the display train."
+      ],
+      "example": "A date that jumps when you set the hands is driven from the hour wheel. A date that jumps on the timing machine with the hands held still was tapped off the going train. One is civil time; the other is a count.",
+      "whyItMatters": "If a date takes power from the going train, setting the hands will lie about the day.",
+      "quiz": [
+        {
+          "id": "horo-dt10-1",
+          "stem": "How do the motion works differ from the going train by job?",
+          "correctAnswer": "Motion works display the count; the going train counts toward the escape",
+          "distractors": [
+            { "text": "Motion works count toward the escape; the going train only displays hands", "kind": "reversed", "rationale": "Going train counts. Motion works display. Swap those names and diagnosis dies." },
+            { "text": "They are two names for the barrel teeth sitting under the dial", "kind": "nearby", "rationale": "Barrel teeth start the going train. They are not the motion works." },
+            { "text": "Motion works store work; the going train is the click on the arbor", "kind": "misapplied", "rationale": "Stored work is the spring. The click is the one-way. Neither is a display train." }
+          ],
+          "correctExplanation": "Count versus display. Two trains. Two jobs.",
+          "objectiveIds": ["Distinguish the motion works from the going train by job"],
+          "prerequisiteConceptIds": ["horo-cannon", "horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-dt10-2",
+          "stem": "A date disc that should follow civil time on the dial ought to take power from:",
+          "correctAnswer": "The motion works, usually the hour wheel, so setting the hands also walks the date",
+          "distractors": [
+            { "text": "The going train at the fourth wheel, so the date ignores the hands when you set", "kind": "reversed", "rationale": "Fourth-wheel drive follows the count, not the displayed time of day." },
+            { "text": "The click and ratchet, which is how a date is supposed to be wound", "kind": "misapplied", "rationale": "The click holds the arbor. It does not index a date at midnight." },
+            { "text": "Jewel count, taken as a substitute train that jumps the disc at noon", "kind": "misconception", "rationale": "Holes do not drive a date. The hour wheel can." }
+          ],
+          "correctExplanation": "Hour wheel, midnight on the dial, midnight on the disc. Display train, not going train.",
+          "objectiveIds": ["Predict which train a date disc should take power from"],
+          "prerequisiteConceptIds": ["horo-cannon", "horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-dt10-3",
+          "stem": "You need to decide which train a wheel under the dial belongs to. The honest test is:",
+          "correctAnswer": "If it turns because the cannon turned, it is motion works; if the barrel and escape allow it, going train",
+          "distractors": [
+            { "text": "If it is brass it is going train; if it is steel it is motion works, always", "kind": "subtle", "rationale": "Metal is not the job. What drives the wheel is the job." },
+            { "text": "If it has a jewel it is the timebase, so neither train owns it", "kind": "misapplied", "rationale": "A jewel is a hole. Ownership is still count versus display." },
+            { "text": "If it is under the dial it cannot be going train, even a centre wheel", "kind": "nearby", "rationale": "A centre wheel can live on the plate. Job, not side of the plate, decides." }
+          ],
+          "correctExplanation": "Ask what turns it. Cannon: display. Barrel and unlocks: count.",
+          "objectiveIds": ["Distinguish the motion works from the going train by job"],
+          "prerequisiteConceptIds": ["horo-cannon", "horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-lubrication-10",
+      "conceptId": "horo-lubrication",
+      "title": "A measured film, nowhere else",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-jewels"],
+      "goDeeper": "horo-endshake",
+      "explanation": [
+        "Oil belongs in the jewel cup as a measured film, and on a few sliding faces as grease. A train hole gets a small drop that stays in the oil sink. A balance jewel gets less. The escape-tooth locking face gets none. Right place, nowhere else.",
+        "Oil on an escape-tooth locking face kills draw. The tooth sticks to the pallet instead of sliding into a clean lock. Rate becomes noisy, amplitude falls, and the watch can stop in positions. That film is a timing fault you poured.",
+        "WOSTEP oils from a chart, not from a feeling that more is safer. Too little, the pivot runs dry and scores. Too much, oil creeps onto a pallet or a hairspring. Cap the cup, leave the locking faces dry, and treat a flooded jewel as a clean-and-retry."
+      ],
+      "example": "A drop on the escape-tooth locking face. Draw dies, the tooth clings, the rate is a scribble, and one position stops. Wipe the face, oil only the impulse, and the lock is a lock again.",
+      "whyItMatters": "A flooded locking face looks like an escapement problem until you notice you poured it.",
+      "quiz": [
+        {
+          "id": "horo-lb10-1",
+          "stem": "Putting the right oil in the right place, in this lesson, means:",
+          "correctAnswer": "A measured film in the jewel cup, grease on a few sliders, and nowhere else",
+          "distractors": [
+            { "text": "A flood on every tooth, because more oil is always a safer grade", "kind": "reversed", "rationale": "More is how oil creeps onto a pallet. Measured is the job." },
+            { "text": "Oil on the hairspring, which is how a balance is supposed to be damped", "kind": "misapplied", "rationale": "Oil on a hairspring is a rate fault, not a damping step." },
+            { "text": "A count of jewels, taken as the volume of oil the calibre is allowed", "kind": "misconception", "rationale": "Count names holes. Each hole still gets a measured drop, not a volume slogan." }
+          ],
+          "correctExplanation": "Cup, measured film, a few greases. Locking faces stay dry.",
+          "objectiveIds": ["Put the right oil in the right place and nowhere else"],
+          "prerequisiteConceptIds": ["horo-jewels"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-lb10-2",
+          "stem": "Oil on an escape-tooth locking face typically does what to the rate?",
+          "correctAnswer": "Makes it noisy and positional, because the tooth sticks instead of drawing into lock",
+          "distractors": [
+            { "text": "Makes it true in every position, because a wet lock is a safer lock", "kind": "reversed", "rationale": "A wet lock kills draw. Safety and rate both fall." },
+            { "text": "Converts beat rate from 18,000 to 28,800 without a train change", "kind": "misapplied", "rationale": "A film does not recut teeth. It sticks a lock." },
+            { "text": "Stores extra reserve in the pallet, which is how locking faces are supposed to grade", "kind": "subtle", "rationale": "Oil on a lock is a fault you poured, not a store." }
+          ],
+          "correctExplanation": "Stuck tooth, dead draw, noisy positional rate. Wipe the locking face.",
+          "objectiveIds": ["Predict what oil on an escape-tooth locking face does to the rate"],
+          "prerequisiteConceptIds": ["horo-jewels"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-lb10-3",
+          "stem": "Rate is a scribble and one position stops after you oiled the escape. The locking faces look wet. You should:",
+          "correctAnswer": "Treat that film as the fault, clean the locking faces, and leave them dry",
+          "distractors": [
+            { "text": "Add more oil, because a stopping position always means the pallet ran dry", "kind": "reversed", "rationale": "The faces are wet. More oil is how you got here." },
+            { "text": "Fit a longer spring, taken as the only cure for a scribble on the machine", "kind": "nearby", "rationale": "A wet lock is not a short reserve. It is a stuck tooth." },
+            { "text": "Raise jewel count so the extra holes can drink the flood you poured", "kind": "misapplied", "rationale": "You do not add holes to hide a flooded lock. You clean it." }
+          ],
+          "correctExplanation": "Wet locking face, dead draw, scribble. Clean it. Do not flood it again.",
+          "objectiveIds": ["Predict what oil on an escape-tooth locking face does to the rate"],
+          "prerequisiteConceptIds": ["horo-jewels"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-endshake-10",
+      "conceptId": "horo-endshake",
+      "title": "Play the jewel must allow",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-jewels"],
+      "goDeeper": "horo-escape",
+      "explanation": [
+        "Axial play between two jewels is endshake. The pivot must be free to turn without the shoulders binding on the hole jewels. The jewel must allow that gap. Zero play is not precision; it is a bind waiting for a temperature change or a speck of dust.",
+        "Too little endshake binds the train: noisy, then stopped, often in one position. Too much and the wheel rattles, the pivot can climb the hole, and mesh depth wanders. Freedom is a small measured shake, not a rattle you can hear across the bench.",
+        "Diagnose from the symptom. A wheel that is silent and locked after a bridge was tightened is starved of endshake. A wheel that knocks and throws oil is swimming in it. Lift the bridge, check both jewels, and set play before you chase the pallet."
+      ],
+      "example": "Train bridge seated on a trapped speck. Endshake on the third wheel vanishes, the mesh goes deep, and the watch stops dial-up. The pallet was never the first suspect.",
+      "whyItMatters": "Endshake is the axial play the jewel must allow — freedom, not rattle, and never a bind.",
+      "quiz": [
+        {
+          "id": "horo-es10-1",
+          "stem": "Endshake, as this lesson uses the word, is the job of:",
+          "correctAnswer": "Leaving a pivot free to turn between two jewels, without rattle or bind",
+          "distractors": [
+            { "text": "Locking the pivot with zero play, which is how a jewel is supposed to grade", "kind": "reversed", "rationale": "Zero play is a bind. The jewel must allow a small axial gap." },
+            { "text": "Storing work in the barrel, taken as a second name for power reserve", "kind": "nearby", "rationale": "Reserve is stored turns. Endshake is axial play." },
+            { "text": "Metering the unwind as the timebase of the whole watch", "kind": "misapplied", "rationale": "The oscillator meters. Endshake is freedom at a bearing." }
+          ],
+          "correctExplanation": "A small axial gap. Free to turn, not rattling, not bound.",
+          "objectiveIds": ["Leave a pivot free to turn without rattle"],
+          "prerequisiteConceptIds": ["horo-jewels"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-es10-2",
+          "stem": "A train that is silent and locked right after a bridge was tightened is typically:",
+          "correctAnswer": "Starved of endshake, so a pivot is binding in its jewels",
+          "distractors": [
+            { "text": "Swimming in endshake, which is the only way a tightened bridge can fail", "kind": "reversed", "rationale": "Tightening a bridge shortens the hole spacing. Play dies, then the bind." },
+            { "text": "Under-oiled at the hairspring, taken as the first bearing to inspect", "kind": "misapplied", "rationale": "The hairspring is not a train jewel. The bridge you just seated is." },
+            { "text": "Proof that jewel count was too high for this particular third wheel", "kind": "misconception", "rationale": "Count did not lock the wheel. Lost axial play did." }
+          ],
+          "correctExplanation": "Seated bridge, vanished play, bound pivot. Restore endshake before you chase the pallet.",
+          "objectiveIds": ["Diagnose a bound or noisy train from too little or too much endshake"],
+          "prerequisiteConceptIds": ["horo-jewels"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "horo-es10-3",
+          "stem": "A train wheel knocks, throws oil, and the mesh depth wanders. Endshake is typically:",
+          "correctAnswer": "Too much, so the pivot rattles, can climb the hole, and the mesh is no longer steady",
+          "distractors": [
+            { "text": "Too little, because a bind is the only way oil can leave a cup", "kind": "reversed", "rationale": "A bind is quiet and locked. Knocking and climbing are too much play." },
+            { "text": "Correct, because a rattle you can hear is how freedom is supposed to grade", "kind": "subtle", "rationale": "Freedom is a small shake. A rattle across the bench is too much." },
+            { "text": "Irrelevant, because beat rate on the spec sets how much a pivot may shake", "kind": "misapplied", "rationale": "Beat rate is unlocks per hour. Endshake is a gap at the jewel." }
+          ],
+          "correctExplanation": "Too much play: rattle, climbing pivot, wandering mesh. Set the gap.",
+          "objectiveIds": ["Diagnose a bound or noisy train from too little or too much endshake"],
+          "prerequisiteConceptIds": ["horo-jewels"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

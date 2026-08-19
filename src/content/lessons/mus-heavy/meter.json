@@ -1,0 +1,812 @@
+{
+  "courseId": "mus-heavy",
+  "moduleId": "mus-x-meter",
+  "lessons": [
+    {
+      "id": "mus-odd-meter-5",
+      "conceptId": "mus-odd-meter",
+      "title": "Bars that refuse two and four",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "goDeeper": "mus-polymeter",
+      "diagram": "mus-odd-grid",
+      "explanation": [
+        "Group a bar that is not 2 or 4 on the surface. Five, seven, and eleven are additive piles of 2s and 3s, not a broken 4 with a leftover beat taped on. Feel the group starts. The barline is a claim about those groups.",
+        "Seven as 3+2+2 is a different bar from 2+2+3. Same count, different accents. Counting 'hard 4 then three extra' hides the grouping the kit is actually playing. Name the addends before you name the time signature."
+      ],
+      "example": "A 7/8 riff accented kick-snare as 3+2+2. Recite 1-2-3, 1-2, 1-2. Reciting 1-2-3-4-1-2-3 against it fights the grouping the drums already chose.",
+      "whyItMatters": "Call every odd bar a broken 4 and you will write fills that land on the wrong shoulder of the bar.",
+      "quiz": [
+        {
+          "id": "mus-om5-1",
+          "stem": "An odd meter on the surface is a bar grouped as which of these?",
+          "correctAnswer": "A count that is not 2 or 4, felt as additive 2s and 3s",
+          "distractors": [
+            {
+              "text": "A 4/4 bar with the last beat deleted and then restored",
+              "kind": "reversed",
+              "rationale": "Odd meter is not a vandalized 4."
+            },
+            {
+              "text": "A tempo change that only looks like a new barline",
+              "kind": "nearby",
+              "rationale": "Tempo can sit. Grouping is what moved."
+            },
+            {
+              "text": "A pitch collection with seven notes instead of four",
+              "kind": "misapplied",
+              "rationale": "The topic is grouping of pulse, not scale size."
+            }
+          ],
+          "correctExplanation": "Not 2, not 4. Additive groups. The barline names that pile.",
+          "objectiveIds": [
+            "Group a bar that is not 2 or 4 on the surface"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-om5-2",
+          "stem": "Feeling 7 as 3+2+2 rather than as hard 4 means you should do which of these?",
+          "correctAnswer": "Accent the three group starts, not a 4-count with three leftover",
+          "distractors": [
+            {
+              "text": "Count 1-2-3-4 then cram the last three as a triplet fill",
+              "kind": "reversed",
+              "rationale": "Leftover-4 is the habit this lesson refuses."
+            },
+            {
+              "text": "Ignore accents and tap only the barline as a single hit",
+              "kind": "nearby",
+              "rationale": "The inner groups are the feel."
+            },
+            {
+              "text": "Rewrite the riff in 4/4 so the odd count can be illegal",
+              "kind": "misapplied",
+              "rationale": "Keep 7. Change how you group it."
+            }
+          ],
+          "correctExplanation": "3+2+2 and 2+2+3 are different sevens. Hard 4 is neither.",
+          "objectiveIds": [
+            "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-om5-3",
+          "stem": "A kit plays kick on 1, snare on the fourth eighth, kick on the sixth of a 7/8 bar. Group it as:",
+          "correctAnswer": "3+2+2, with accents at the start of each addend",
+          "distractors": [
+            {
+              "text": "Hard 4 plus a leftover 3 that does not get its own accent",
+              "kind": "reversed",
+              "rationale": "The sixth eighth is a group start, not leftover."
+            },
+            {
+              "text": "A 3/4 bar, because three kicks mean the meter must be 3",
+              "kind": "nearby",
+              "rationale": "Two kicks and a snare can still be 7/8."
+            },
+            {
+              "text": "Unmetered time, because seven cannot be grouped at all",
+              "kind": "misapplied",
+              "rationale": "Seven groups. It is not a fog."
+            }
+          ],
+          "correctExplanation": "Accents at 1, 4, and 6 of the eight-note grid: 3+2+2.",
+          "objectiveIds": [
+            "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-odd-meter-10",
+      "conceptId": "mus-odd-meter",
+      "title": "Seven as three plus two plus two",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "goDeeper": "mus-polymeter",
+      "diagram": "mus-odd-grid",
+      "explanation": [
+        "Seven on paper is a count. Seven in the body is an additive grouping. 3+2+2 leans forward; 2+2+3 lands late; 2+3+2 puts the long group in the middle. Write the addends into the riff and the kit, or the bar will collapse back into a 4 the ear already knows.",
+        "Surface meter that is not 2 or 4 still has a pulse. The oddness is the grouping, not a fog. MIT analysis treats the barline as a claim: these pulses belong together this way. If your 7 is only '4 plus leftover,' the claim on the page is a lie the body will not keep.",
+        "Clap 3+2+2 until the three hits are as obvious as a backbeat. Then clap 2+2+3 on the same pulse. Same seven eighths, different bar. Switching the grouping is a compositional move. Counting past 4 with leftover beats is not that move."
+      ],
+      "example": "Guitar cell of three eighths, two, two, matching kick-snare-kick. Rewrite it as 2+2+3 without changing pitches: the snare now sits later. That is a new bar, not a denser 4.",
+      "whyItMatters": "If you cannot feel the addends, you cannot write a fill that lands, and you cannot tell 3+2+2 from a rushed 4.",
+      "quiz": [
+        {
+          "id": "mus-om10-1",
+          "stem": "Grouping a bar that is not 2 or 4 on the surface means you should do what?",
+          "correctAnswer": "Pile the pulse into 2s and 3s and feel those group starts",
+          "distractors": [
+            {
+              "text": "Keep a 4-count going and treat extra beats as mistakes",
+              "kind": "reversed",
+              "rationale": "The extra beats are the meter, not errors."
+            },
+            {
+              "text": "Stop the pulse so odd bars can exist only as fermatas",
+              "kind": "misapplied",
+              "rationale": "Odd meter still has a pulse."
+            },
+            {
+              "text": "Name the key signature instead of the addends",
+              "kind": "nearby",
+              "rationale": "This job is grouping, not pitch collection."
+            }
+          ],
+          "correctExplanation": "Additive groups. The barline is a claim about those piles.",
+          "objectiveIds": [
+            "Group a bar that is not 2 or 4 on the surface"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-om10-2",
+          "stem": "3+2+2 versus 'hard 4' in a bar of 7 is which kind of difference?",
+          "correctAnswer": "Different accent placement on the same seven pulses",
+          "distractors": [
+            {
+              "text": "The same accents, because seven always hides a 4 inside",
+              "kind": "reversed",
+              "rationale": "Hard 4 puts weight where 3+2+2 does not."
+            },
+            {
+              "text": "A tempo doubling that only looks like a grouping change",
+              "kind": "nearby",
+              "rationale": "Pulse can stay. Accents move."
+            },
+            {
+              "text": "A new pitch cell required before 7 can be felt at all",
+              "kind": "misapplied",
+              "rationale": "Grouping is independent of the letters."
+            }
+          ],
+          "correctExplanation": "Same count, different shoulders. That is why leftover-4 fails.",
+          "objectiveIds": [
+            "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-om10-3",
+          "stem": "You switch a 7/8 riff from 3+2+2 to 2+2+3 without rewriting pitches. Predict the feel:",
+          "correctAnswer": "The long group moves later, so the snare accent lands later",
+          "distractors": [
+            {
+              "text": "Nothing moves, because seven is seven regardless of addends",
+              "kind": "reversed",
+              "rationale": "Addends are the feel."
+            },
+            {
+              "text": "The riff becomes 4/4 automatically after one bar",
+              "kind": "misconception",
+              "rationale": "Grouping did not convert the count to 4."
+            },
+            {
+              "text": "Pitch classes invert, because meter always drags harmony",
+              "kind": "misapplied",
+              "rationale": "Pitches were held. Accents moved."
+            }
+          ],
+          "correctExplanation": "Same letters, new shoulders. 2+2+3 is a different seven.",
+          "objectiveIds": [
+            "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-odd-meter-20",
+      "conceptId": "mus-odd-meter",
+      "title": "Additive grouping as the written meter",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "goDeeper": "mus-polymeter",
+      "diagram": "mus-odd-grid",
+      "explanation": [
+        "Written 7/8 is a permission slip. The music still has to choose 3+2+2, 2+2+3, or 2+3+2, and the kit has to mark those group starts or the permission expires. Additive meter is that choice made audible, bar after bar, not a time signature worn as a badge.",
+        "Five is 3+2 or 2+3. Eleven is often 3+3+3+2, or 2+2+3+2+2, and those two elevens do not share an accent map. Changing the map mid-section is a form move: same count, new gait. MIT 21M.350 would ask what grouping repeats and what grouping contrasts. Answer with addends, not with 'it is in odd time.'",
+        "Players who count leftover-4 will land fills on a ghost 1 that the rest of the band did not play. Write the grouping into the right hand of the kit and into the guitar's cell length. If the cell is three eighths, two, two, the fill should know which of those is the wall.",
+        "A transcription that only prints 7/8 with no beaming into 3+2+2 still owes the reader the grouping. Beam it. Kick it. If you later switch to 4/4, that is a new claim, not a confession that 7 was fake. Odd meter is a grouping you can keep."
+      ],
+      "example": "Section A in 7/8 beamed 3+2+2, kick on each beam start. Section B keeps 7/8 but beams 2+2+3. Pitches can match. The gait does not. That contrast is form, not a denser click.",
+      "whyItMatters": "Without addends, 'odd time' is a costume. With them you can write, fill, and contrast on purpose.",
+      "quiz": [
+        {
+          "id": "mus-om20-1",
+          "stem": "Additive grouping as the written meter asks you to treat 7/8 as which object?",
+          "correctAnswer": "A chosen pile of 2s and 3s the kit and the cell must mark",
+          "distractors": [
+            {
+              "text": "A badge that makes any 4/4 riff count as progressive",
+              "kind": "misapplied",
+              "rationale": "The grouping has to be audible, not worn."
+            },
+            {
+              "text": "A leftover-4 count with extra eighths taped after beat four",
+              "kind": "reversed",
+              "rationale": "Leftover-4 is the false grouping."
+            },
+            {
+              "text": "A key signature of seven flats that replaces the barline",
+              "kind": "nearby",
+              "rationale": "This is meter, not accidentals."
+            }
+          ],
+          "correctExplanation": "The signature permits the count. The addends are the music.",
+          "objectiveIds": [
+            "Group a bar that is not 2 or 4 on the surface"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-om20-2",
+          "stem": "A fill keeps landing on a 1 the rest of the band does not play in 7/8. Diagnose it:",
+          "correctAnswer": "The fill was counted as hard 4, so its 1 is a ghost grouping",
+          "distractors": [
+            {
+              "text": "Odd meters forbid fills, so any fill will miss by law",
+              "kind": "misconception",
+              "rationale": "Fills can land if they know the addends."
+            },
+            {
+              "text": "The guitar cell is in a different key, which drags the snare",
+              "kind": "misapplied",
+              "rationale": "The miss is grouping, not pitch."
+            },
+            {
+              "text": "Seven cannot have a 1 at all, so every downbeat is illegal",
+              "kind": "reversed",
+              "rationale": "7 has a 1. It is the start of the first addend."
+            }
+          ],
+          "correctExplanation": "Ghost 1s come from leftover-4. Beam and kick the real groups.",
+          "objectiveIds": [
+            "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-om20-3",
+          "stem": "Section A is 3+2+2; section B is 2+2+3, same 7/8 and often the same pitches. Integrating that means:",
+          "correctAnswer": "Treat the grouping change as form contrast, not as a denser click",
+          "distractors": [
+            {
+              "text": "Merge both into hard 4 so the sections can count as one",
+              "kind": "reversed",
+              "rationale": "Collapsing to 4 erases the contrast you wrote."
+            },
+            {
+              "text": "Call B a modulation because new accents always mean a new key",
+              "kind": "nearby",
+              "rationale": "Accents moved. Letters can sit."
+            },
+            {
+              "text": "Delete B's barlines so eleven leftover eighths can float",
+              "kind": "misapplied",
+              "rationale": "B is still 7. The addends changed."
+            }
+          ],
+          "correctExplanation": "Same count, new gait. That is a section change you can mark.",
+          "objectiveIds": [
+            "Feel 7 as 3+2+2 or 2+2+3 rather than as 'hard 4'"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "mus-polymeter-10",
+      "conceptId": "mus-polymeter",
+      "title": "Two meters that meet later",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-odd-meter",
+        "mus-polyrhythm-intro"
+      ],
+      "goDeeper": "mus-metric-ambig",
+      "diagram": "mus-polymeter",
+      "explanation": [
+        "Guitar in 3 against a kit in 4 is two meters at once, not one bar stuffed with mixed subdivisions. Each part keeps its own downbeat. They coincide after a known span: three bars of 4 equal four bars of 3, twelve quarter-notes later. Mark that meeting. That is the cadence of the device.",
+        "Polyrhythm shares a bar and splits the pulse inside it. Polymeter shares a pulse and splits the barline. Mixing the names will make you look for a triplet where you should be counting to the least common multiple. Write the two grids, then circle the first shared downbeat.",
+        "Write a three-quarter guitar cell looping under a 4/4 backbeat. Do not 'correct' the guitar into 4 by adding a rest. Let it take four cycles to shake hands with the snare's 1. If they never meet, you wrote two songs. If they meet every beat, you wrote one meter."
+      ],
+      "example": "Kick-snare in 4/4. Guitar repeats a three-beat E–F–G cell. After twelve beats the guitar's 1 and the kit's 1 land together. That downbeat is the device resolving, not a random accent.",
+      "whyItMatters": "Without a meeting point you cannot tell polymeter from a train wreck. Name the span, then you can aim the handshake.",
+      "quiz": [
+        {
+          "id": "mus-pm10-1",
+          "stem": "Running two meters at once and marking where they coincide means you should do what?",
+          "correctAnswer": "Keep two barlines on one pulse and circle the shared downbeat",
+          "distractors": [
+            {
+              "text": "Cram both parts into one bar of mixed triplets and forget barlines",
+              "kind": "nearby",
+              "rationale": "That would be a polyrhythm inside one meter."
+            },
+            {
+              "text": "Stop one part until the other finishes, so only one meter remains",
+              "kind": "reversed",
+              "rationale": "Stopping one part cancels the device."
+            },
+            {
+              "text": "Change keys so each meter can own a different tonic",
+              "kind": "misapplied",
+              "rationale": "The job is metric, not a double tonic."
+            }
+          ],
+          "correctExplanation": "Two grids, one pulse, a later handshake. Mark the meeting.",
+          "objectiveIds": [
+            "Run two meters at once and mark where they coincide"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-odd-meter",
+            "mus-polyrhythm-intro"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-pm10-2",
+          "stem": "Guitar in 3 against a kit in 4 should meet after which known span?",
+          "correctAnswer": "Twelve quarter-notes: four guitar cycles against three kit bars",
+          "distractors": [
+            {
+              "text": "One beat, because 3 and 4 already share every pulse as a downbeat",
+              "kind": "reversed",
+              "rationale": "Sharing a pulse is not sharing a 1."
+            },
+            {
+              "text": "Never, because two meters are forbidden to coincide",
+              "kind": "misconception",
+              "rationale": "The point is that they do coincide later."
+            },
+            {
+              "text": "Seven bars, because odd numbers are required for any meeting",
+              "kind": "nearby",
+              "rationale": "The least common multiple of 3 and 4 is 12, not 7."
+            }
+          ],
+          "correctExplanation": "3 against 4 meets at 12. Write toward that downbeat.",
+          "objectiveIds": [
+            "Write guitar in 3 against a kit in 4 that meets after a known span"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-odd-meter",
+            "mus-polyrhythm-intro"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-pm10-3",
+          "stem": "A three-beat guitar cell under 4/4 never shares a 1 with the snare. Integrating the device, you should:",
+          "correctAnswer": "Adjust cycle lengths so a known span produces a shared downbeat",
+          "distractors": [
+            {
+              "text": "Add a rest to the guitar every bar so it becomes 4/4 immediately",
+              "kind": "reversed",
+              "rationale": "That erases the second meter instead of meeting it."
+            },
+            {
+              "text": "Call the result hemiola and stop counting cycles",
+              "kind": "nearby",
+              "rationale": "Hemiola is 3:2 inside a span, not two barlines."
+            },
+            {
+              "text": "Mute the kit so only the guitar's 3 can be called meter",
+              "kind": "misapplied",
+              "rationale": "You need both meters for the handshake."
+            }
+          ],
+          "correctExplanation": "Polymeter is two meters that do meet. Aim the span. Do not delete a grid.",
+          "objectiveIds": [
+            "Run two meters at once and mark where they coincide"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-odd-meter",
+            "mus-polyrhythm-intro"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "mus-metric-ambig-10",
+      "conceptId": "mus-metric-ambig",
+      "title": "A pulse you cannot yet group",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-odd-meter"
+      ],
+      "goDeeper": "mus-displacement",
+      "explanation": [
+        "Pulse without grouping is a fog the ear will try to resolve. Write even attacks with no accent map, or accents that refuse 2, 3, and 4, and the listener cannot yet name the bar. That fog can be the intro. It can also be the point. Either way it is a choice, not a rehearsal problem.",
+        "Resolve it by letting a kick pattern elect a 1, or by beaming a guitar cell into 3+2+2. Refuse it by keeping the even grid and never electing a downbeat. MIT analysis would still ask which of those you did. Ambiguity that happens by accident is just a click the band did not share.",
+        "Write eight bars of equal eighths, no snare, no beamed groups. Then either drop a 3+2+2 kick under bar nine, or never drop it. The first is a reveal. The second is a held refusal. Do not split the difference with a shy 4 the ear will grab anyway."
+      ],
+      "example": "Intro: muted eighths, no kick pattern. Bar nine: kick on 1, 4, and 6 of a 7/8 grid. The fog grouped. Leave the kick out for the whole track and the fog was the form.",
+      "whyItMatters": "If you cannot tell a reveal from a refusal, you will 'fix' an intro that was the piece, or leave a click the band never agreed on.",
+      "quiz": [
+        {
+          "id": "mus-ma10-1",
+          "stem": "A pulse the ear cannot yet group is written by doing which of these?",
+          "correctAnswer": "Even attacks with no accent map the ear can elect as a bar",
+          "distractors": [
+            {
+              "text": "A loud 4/4 backbeat so grouping is obvious from beat one",
+              "kind": "reversed",
+              "rationale": "That is grouping, not ambiguity."
+            },
+            {
+              "text": "A new key every attack, because tonic is what grouping means",
+              "kind": "misapplied",
+              "rationale": "This fog is metric, not harmonic."
+            },
+            {
+              "text": "A rest on every pulse, so there is no pulse left to group",
+              "kind": "nearby",
+              "rationale": "No pulse is silence, not an ungrouped pulse."
+            }
+          ],
+          "correctExplanation": "Pulse present. Bar not yet elected. That is the fog.",
+          "objectiveIds": [
+            "Write a pulse the ear cannot yet group"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-odd-meter"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-ma10-2",
+          "stem": "You wrote the fog, then dropped 3+2+2 kicks at bar nine. That choice is:",
+          "correctAnswer": "A resolve: the later grouping elects a 1 the intro withheld",
+          "distractors": [
+            {
+              "text": "A refusal, because any kick pattern keeps the fog going",
+              "kind": "reversed",
+              "rationale": "Kicks that elect 1 are a reveal, not a refusal."
+            },
+            {
+              "text": "A modulation, because grouping changes always change key",
+              "kind": "nearby",
+              "rationale": "Meter revealed. Letters can sit."
+            },
+            {
+              "text": "An error, because ambiguity is illegal to resolve on purpose",
+              "kind": "misconception",
+              "rationale": "Resolve and refuse are both on-purpose jobs."
+            }
+          ],
+          "correctExplanation": "Bar nine grouped what the intro would not. That is a resolve.",
+          "objectiveIds": [
+            "Resolve or refuse that ambiguity on purpose"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-odd-meter"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-ma10-3",
+          "stem": "Keeping even eighths with no elected 1 for a whole section is which tradeoff?",
+          "correctAnswer": "You refuse grouping on purpose, and you give up a shared downbeat",
+          "distractors": [
+            {
+              "text": "You gain a leftover-4 feel without writing any 4/4 accents",
+              "kind": "reversed",
+              "rationale": "No elected 1 is not a hidden 4."
+            },
+            {
+              "text": "You force a polymeter handshake every twelve beats anyway",
+              "kind": "nearby",
+              "rationale": "Polymeter needs two meters, not a fog."
+            },
+            {
+              "text": "You convert the pulse into a cadence because fog equals V–I",
+              "kind": "misapplied",
+              "rationale": "Ambiguity is metric. It does not hire a dominant."
+            }
+          ],
+          "correctExplanation": "Held refusal costs the handshake. That can still be the form.",
+          "objectiveIds": [
+            "Resolve or refuse that ambiguity on purpose"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-odd-meter"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "mus-displacement-10",
+      "conceptId": "mus-displacement",
+      "title": "Same cell, a later downbeat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-syncopation"
+      ],
+      "goDeeper": "mus-hemiola",
+      "explanation": [
+        "Keep the pitches and the inner rhythm. Start the cell one eighth later. The accents that used to land on 1 now land off it, and a formerly weak note inherits the downbeat. Displacement is that slide along the grid, not a rewrite of the letters.",
+        "Syncopation already puts weight off the beat inside a cell. Displacement moves the whole cell relative to the bar. The kit can stay. The guitar can stay. Only the alignment changes. Predict the flip: whatever sat on 1 now sits on the and, and the next downbeat bites a different letter.",
+        "Write a four-eighth cell E–F–G–F starting on beat 1, then start it on the and of 1. Do not change frets. Listen for which letter now gets the snare. That new bite is the variation. A new riff would have been new pitches. This is the old riff, late."
+      ],
+      "example": "Cell E–F–Bb–F in eighths from beat 1. Shift it one eighth. Beat 1 now holds the last F, or a rest if you shifted into the bar. Accents flip. Letters did not.",
+      "whyItMatters": "Rewrite the pitches when you only needed a slide, and you will invent a B section that is just the A section late.",
+      "quiz": [
+        {
+          "id": "mus-dp10-1",
+          "stem": "Starting the same cell on a different beat is which kind of move?",
+          "correctAnswer": "A slide along the grid that keeps pitches and inner rhythm",
+          "distractors": [
+            {
+              "text": "A new pitch collection required before the bar can move",
+              "kind": "reversed",
+              "rationale": "Pitches stay. Alignment moves."
+            },
+            {
+              "text": "A tempo change that only looks like a late entrance",
+              "kind": "nearby",
+              "rationale": "The click can sit. The cell is late."
+            },
+            {
+              "text": "A mute of the first note so displacement means deletion",
+              "kind": "misapplied",
+              "rationale": "The first note still plays. It plays later."
+            }
+          ],
+          "correctExplanation": "Same cell, new 1. That is displacement.",
+          "objectiveIds": [
+            "Start the same cell on a different beat"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-syncopation"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-dp10-2",
+          "stem": "The cell moves later by one eighth under a steady backbeat. Predict the accent flip:",
+          "correctAnswer": "The letter that had 1 now sits off the beat; a new letter inherits 1",
+          "distractors": [
+            {
+              "text": "Accents stay glued to letters, so the snare must move with the guitar",
+              "kind": "reversed",
+              "rationale": "The kit can stay. Alignment is what flipped."
+            },
+            {
+              "text": "All accents vanish because a late cell cannot be heard",
+              "kind": "misconception",
+              "rationale": "Late is still audible. The bite moved."
+            },
+            {
+              "text": "Pitch classes rotate by a fifth, because eighths retune the riff",
+              "kind": "misapplied",
+              "rationale": "Frets did not change."
+            }
+          ],
+          "correctExplanation": "One eighth of slide. The downbeat bites a different letter.",
+          "objectiveIds": [
+            "Predict how the accents flip when the cell moves by one eighth"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-syncopation"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-dp10-3",
+          "stem": "Trace E–F–G–F eighths from beat 1, then from the and of 1. What stayed and what moved?",
+          "correctAnswer": "Letters and inner gaps stayed; which letter meets 1 moved",
+          "distractors": [
+            {
+              "text": "Letters changed to a new tetrachord; the grid stayed aligned",
+              "kind": "reversed",
+              "rationale": "That would be a rewrite, not a displacement."
+            },
+            {
+              "text": "Inner gaps stretched to quarters so the cell could stay on 1",
+              "kind": "nearby",
+              "rationale": "Inner rhythm stays. Start point moves."
+            },
+            {
+              "text": "The barline deleted itself, because late cells forbid meter",
+              "kind": "misapplied",
+              "rationale": "The bar is what the cell is late against."
+            }
+          ],
+          "correctExplanation": "Trace the four letters. Then trace them one slot later. Alignment is the variation.",
+          "objectiveIds": [
+            "Predict how the accents flip when the cell moves by one eighth"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-syncopation"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "mus-hemiola-10",
+      "conceptId": "mus-hemiola",
+      "title": "Three in the time of two",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-polyrhythm-intro"
+      ],
+      "goDeeper": "mus-riff-harmony",
+      "explanation": [
+        "Three in the time of two, or two in the time of three, regroups a span without changing its length. Two dotted quarters against three quarters is the classic 3:2. The bar can stay 2 or 3 on paper. The accents argue. That argument is the hemiola, not a fill you dump at the end of a phrase.",
+        "A triplet run that ornaments beat 4 is not this device. Hemiola is a competing grouping across a span you can clap: three even hits where two used to live, felt as a new gait, then often a return to the old gait. Polyrhythm intro already split a pulse; this lesson writes the 3:2 as form, not as sparkle.",
+        "Clap quarters in 3/4, then clap dotted quarters across two bars so three hits cover the same time as two dotted-half bars of 3. Or write 3/4 accents inside a 2/4 riff for two bars. Put it in the kit, not only in a lead fill. If it only happens once as a snare roll, you wrote an ornament."
+      ],
+      "example": "Two bars of 3/4: clap 1 of each bar, then clap three even hits across the same two bars. The three hits are the hemiola. A 16th-note triplet on beat 3 of bar 2 is not.",
+      "whyItMatters": "Call every triplet a hemiola and you will never write the gait change. Clap the 3:2 across a span, then you can put it in a riff.",
+      "quiz": [
+        {
+          "id": "mus-he10-1",
+          "stem": "Writing three in the time of two, or the reverse, means you regroup which object?",
+          "correctAnswer": "A span of the same length, with a competing 3:2 accent map",
+          "distractors": [
+            {
+              "text": "A single beat's ornamental triplet dumped at the end of a phrase",
+              "kind": "nearby",
+              "rationale": "An end-fill triplet is not a span-level 3:2."
+            },
+            {
+              "text": "The pitch collection, retuned so three notes last like two",
+              "kind": "misapplied",
+              "rationale": "The device is grouping, not retuning."
+            },
+            {
+              "text": "The form of the whole album, because hemiola means new sections",
+              "kind": "misconception",
+              "rationale": "Hemiola can live inside one phrase."
+            }
+          ],
+          "correctExplanation": "Same span, new gait. Three against two, or two against three.",
+          "objectiveIds": [
+            "Write three in the time of two, or the reverse"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-polyrhythm-intro"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-he10-2",
+          "stem": "A hemiola you can clap, rather than a triplet fill, should feel like which of these?",
+          "correctAnswer": "A competing grouping across a span, then often a return to the old gait",
+          "distractors": [
+            {
+              "text": "A snare roll on the last beat that does not regroup anything",
+              "kind": "reversed",
+              "rationale": "That roll is the ornament this lesson sets aside."
+            },
+            {
+              "text": "A mute of the pulse so 3:2 can exist only as silence",
+              "kind": "misapplied",
+              "rationale": "You clap hits, not rests, to feel 3:2."
+            },
+            {
+              "text": "A key change to a meter where three is the only legal count",
+              "kind": "nearby",
+              "rationale": "No new key is required. The span regroups."
+            }
+          ],
+          "correctExplanation": "Clap the three even hits across the two. That is the device.",
+          "objectiveIds": [
+            "Clap a hemiola that is not just a triplet fill"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-polyrhythm-intro"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-he10-3",
+          "stem": "Two bars of 3/4 with three even dotted-quarter accents across them are best identified as:",
+          "correctAnswer": "A hemiola: three in the time of two bars of the old gait",
+          "distractors": [
+            {
+              "text": "Polymeter, because two time signatures were printed on the page",
+              "kind": "nearby",
+              "rationale": "One span, competing grouping: hemiola, not two barlines."
+            },
+            {
+              "text": "Odd meter leftover-4, because three never fits in two",
+              "kind": "reversed",
+              "rationale": "Three in the time of two is exactly the fit."
+            },
+            {
+              "text": "Displacement of a pitch cell with no grouping change",
+              "kind": "misapplied",
+              "rationale": "Letters can sit. Accents regroup the span."
+            }
+          ],
+          "correctExplanation": "Two bars still last two bars. Three hits now walk them.",
+          "objectiveIds": [
+            "Clap a hemiola that is not just a triplet fill"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-polyrhythm-intro"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

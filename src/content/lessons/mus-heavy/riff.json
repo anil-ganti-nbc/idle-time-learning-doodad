@@ -1,0 +1,1164 @@
+{
+  "courseId": "mus-heavy",
+  "moduleId": "mus-x-riff",
+  "lessons": [
+    {
+      "id": "mus-riff-harmony-10",
+      "conceptId": "mus-riff-harmony",
+      "title": "The riff is the progression",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-nonfunc",
+        "mus-power-chord"
+      ],
+      "goDeeper": "mus-pedal-riff",
+      "diagram": "mus-riff-cell-harm",
+      "explanation": [
+        "Treat the riff as the progression. The cell's letters, intervals, and return are the harmony. A chord chart you invent after the fact — four Roman numerals that never get struck as chords — is a second piece. Analyze the piece that was played.",
+        "Power chords, pedals, and chromatic neighbors can be the whole harmonic story of a section. MIT 21M.350 still asks what repeats. Answer with the cell, not with a chorale reduction that stacks SATB on a palm mute. If the guitar plays E–F–E, that is the progression.",
+        "Write a two-bar cell and refuse to 'realize' it as i–ii°–i. Name the cell, the interval content, and where it returns. A chart is allowed only when those chords are actually voiced. Otherwise the riff is the chart."
+      ],
+      "example": "Palm-muted E–F–Gb–F, two bars, no other guitar. The progression is that chromatic cell. A chart that writes Em–F–Gb+–F invents qualities the riff never voiced.",
+      "whyItMatters": "Invent a chorale and you will rehearse voicings nobody tracked. Analyze the cell and you can write the next one.",
+      "quiz": [
+        {
+          "id": "mus-rh10-1",
+          "stem": "Treating the riff as the progression means you should report which object?",
+          "correctAnswer": "The cell's letters, intervals, and return as the harmony",
+          "distractors": [
+            {
+              "text": "A Roman-numeral chart invented so the riff can look like a chorale",
+              "kind": "reversed",
+              "rationale": "The invented chart is a second piece."
+            },
+            {
+              "text": "Only the drum pattern, because riffs cannot carry harmony",
+              "kind": "misapplied",
+              "rationale": "The cell is harmonic material."
+            },
+            {
+              "text": "The mix fader position at the start of each bar",
+              "kind": "nearby",
+              "rationale": "Loudness is not the progression."
+            }
+          ],
+          "correctExplanation": "What the guitar strikes is the progression. Report that.",
+          "objectiveIds": [
+            "Treat the riff as the progression"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc",
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-rh10-2",
+          "stem": "A section is a repeating E–F–E cell. Analyzing by an invented i–ii–i chart is a mistake because:",
+          "correctAnswer": "The chart names chords the riff never voiced; the cell was the harmony",
+          "distractors": [
+            {
+              "text": "E–F–E cannot be harmonic until someone adds a third on top",
+              "kind": "misconception",
+              "rationale": "The two-note cell is already the progression."
+            },
+            {
+              "text": "Analysis is banned in riff music, so no report should exist",
+              "kind": "misapplied",
+              "rationale": "Report the cell. That is the analysis."
+            },
+            {
+              "text": "The letters must be rewritten as C major before a chart can speak",
+              "kind": "nearby",
+              "rationale": "Relative-major rescue is another invention."
+            }
+          ],
+          "correctExplanation": "If the chords were not struck, they are not the section.",
+          "objectiveIds": [
+            "Analyze a section by the cell, not by a chord chart you invented"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc",
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-rh10-3",
+          "stem": "You transcribe a palm-muted two-bar cell with no chord stabs. Honest analysis should:",
+          "correctAnswer": "Name the cell and refuse a chord chart those attacks never played",
+          "distractors": [
+            {
+              "text": "Stack SATB on the mute so a chorale can replace the riff",
+              "kind": "reversed",
+              "rationale": "SATB on a mute is the invented second piece."
+            },
+            {
+              "text": "Delete the pitches and keep only beaming, because cells are rhythm only",
+              "kind": "misapplied",
+              "rationale": "Letters are half of the cell."
+            },
+            {
+              "text": "Force a V–I at the barline so the cell can graduate to a phrase",
+              "kind": "nearby",
+              "rationale": "A cadence the riff skipped is not the cell."
+            }
+          ],
+          "correctExplanation": "Cell, interval content, return. That is the section's harmony.",
+          "objectiveIds": [
+            "Analyze a section by the cell, not by a chord chart you invented"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc",
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-pedal-riff-10",
+      "conceptId": "mus-pedal-riff",
+      "title": "Open string everything else grinds against",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-pedal",
+        "mus-riff-harmony"
+      ],
+      "goDeeper": "mus-chromatic-riff",
+      "explanation": [
+        "Hold an open string while the figures above it change. The pedal is a tonic drone, a grinding post, not a missing chord tone waiting to be named. Clashes happen when the moving figure leaves the unison or the fifth. Release happens when it comes back.",
+        "Write the grind on purpose: F against an E pedal, then Gb, then back to E. Each clash is a measured dissonance against a fixed pitch. If the open string stops whenever the figure moves, you wrote changing roots, not a pedal riff.",
+        "A useful pedal riff lets the clash last long enough to hear, then releases. MIT 21M.302 still knows a pedal as a held tone under changing harmony. Here the changing 'harmony' is the riff cell. Keep the open string ringing through the neighbors."
+      ],
+      "example": "Open low E through a whole bar. Fretted F, Gb, F, E on the next string. The E never lifts. F and Gb clash; E releases. Lift the open string on the Gb and the pedal job ends.",
+      "whyItMatters": "Lift the drone when the figure moves and you lose the grind. The clashes need a wall that stays.",
+      "quiz": [
+        {
+          "id": "mus-pr10-1",
+          "stem": "Grinding changing figures against an open string requires which of these to stay put?",
+          "correctAnswer": "The open pitch, ringing while neighbors leave and return",
+          "distractors": [
+            {
+              "text": "The open pitch, muted the moment the figure leaves unison",
+              "kind": "reversed",
+              "rationale": "Muting ends the pedal and the grind."
+            },
+            {
+              "text": "A new open string for every neighbor, so nothing can clash",
+              "kind": "nearby",
+              "rationale": "One wall. Many neighbors."
+            },
+            {
+              "text": "The snare only, because pedals are a drum technique here",
+              "kind": "misapplied",
+              "rationale": "The pedal is a held pitch."
+            }
+          ],
+          "correctExplanation": "The wall stays. The figure moves. That is the grind.",
+          "objectiveIds": [
+            "Grind changing figures against an open string"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-pedal",
+            "mus-riff-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-pr10-2",
+          "stem": "A pedal riff whose clashes release should do which of these jobs?",
+          "correctAnswer": "Let neighbors bite the open string, then return to unison or fifth",
+          "distractors": [
+            {
+              "text": "Keep every neighbor forever so release is banned as too consonant",
+              "kind": "reversed",
+              "rationale": "Release is part of the writing."
+            },
+            {
+              "text": "Change the open string to match each neighbor and cancel clashes",
+              "kind": "nearby",
+              "rationale": "Matching cancels the pedal."
+            },
+            {
+              "text": "Resolve each clash through a dominant of the neighbor pitch",
+              "kind": "misapplied",
+              "rationale": "The release is return to the wall, not a cadence."
+            }
+          ],
+          "correctExplanation": "Clash, then return. The open string is still there for both.",
+          "objectiveIds": [
+            "Write a pedal riff whose clashes release"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-pedal",
+            "mus-riff-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-pr10-3",
+          "stem": "The open E stops whenever the figure plays F. Diagnose the writing:",
+          "correctAnswer": "The drone lifted, so the F is a new root rather than a grind",
+          "distractors": [
+            {
+              "text": "The pedal got stronger, because silence proves the E is still home",
+              "kind": "reversed",
+              "rationale": "Silence is not a pedal."
+            },
+            {
+              "text": "The clash released by becoming a tritone substitution of E",
+              "kind": "nearby",
+              "rationale": "No E sounded. There was no wall to grind."
+            },
+            {
+              "text": "Form changed to verse-chorus because a mute is a section break",
+              "kind": "misapplied",
+              "rationale": "The issue is the missing drone, not form labels."
+            }
+          ],
+          "correctExplanation": "If the wall leaves with the figure, you wrote changing roots.",
+          "objectiveIds": [
+            "Write a pedal riff whose clashes release"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-pedal",
+            "mus-riff-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-chromatic-riff-10",
+      "conceptId": "mus-chromatic-riff",
+      "title": "Semitone motion as the material",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-chromatic",
+        "mus-riff-harmony"
+      ],
+      "goDeeper": "mus-dissonant-voicing",
+      "explanation": [
+        "Semitone motion can be the riff, not a passing tone on the way to a 'real' chord. A two-note cell E–F, sequenced up or down, is already the material. Decorating a pentatonic skeleton with one chromatic neighbor is a different job. Here the half-steps are the skeleton.",
+        "Sequence the cell without turning it into a scale run. E–F, then F–Gb, then Gb–G is a sequenced two-note unit. E–F–F#–G–Ab–A as one smear is a run. The difference is whether you can still point to the two-note object that repeats.",
+        "Write three sequences of a descending E–Eb cell, then stop. Do not fill the leftover frets 'to complete the chromatic scale.' Completing the scale erases the cell. MIT analysis would still ask what repeats: the two-note unit, or a pan up the neck."
+      ],
+      "example": "E–F, then D#–E, then D–D#, each pair an eighth-eighth. Three cells. A six-note chromatic sweep on the same beats is the run this lesson refuses.",
+      "whyItMatters": "If the half-steps are only decoration, a diatonic rewrite will not hurt. If they are the cell, that rewrite deletes the piece.",
+      "quiz": [
+        {
+          "id": "mus-cr10-1",
+          "stem": "Using semitone motion as the material, not the decoration, means which of these?",
+          "correctAnswer": "The half-step cell is the riff's skeleton, not a neighbor on a diatonic frame",
+          "distractors": [
+            {
+              "text": "One chromatic passing tone on an otherwise pentatonic riff",
+              "kind": "nearby",
+              "rationale": "That passing tone is decoration, not the skeleton."
+            },
+            {
+              "text": "A ban on half-steps so only whole tones can be material",
+              "kind": "reversed",
+              "rationale": "Half-steps are the material here."
+            },
+            {
+              "text": "A mix-fader sweep that only sounds like pitch motion",
+              "kind": "misapplied",
+              "rationale": "The frets move by semitone. That is pitch."
+            }
+          ],
+          "correctExplanation": "The cell is E–F, or whatever half-step you chose. That is the riff.",
+          "objectiveIds": [
+            "Use semitone motion as the material, not the decoration"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-chromatic",
+            "mus-riff-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-cr10-2",
+          "stem": "Sequencing a two-note chromatic cell without a scale run looks like which writing?",
+          "correctAnswer": "Repeat the pair at new starting frets, keeping the two-note object audible",
+          "distractors": [
+            {
+              "text": "Fill every fret in a row so the neck becomes one smear",
+              "kind": "reversed",
+              "rationale": "The smear is the run this lesson refuses."
+            },
+            {
+              "text": "Hold one pitch and decorate it with random chromatic grace notes",
+              "kind": "nearby",
+              "rationale": "Grace notes are ornaments, not a sequenced cell."
+            },
+            {
+              "text": "Replace the pair with a seven-note minor scale in eighths",
+              "kind": "misapplied",
+              "rationale": "A scale run is a different object."
+            }
+          ],
+          "correctExplanation": "Point to the pair. If you cannot, you wrote a run.",
+          "objectiveIds": [
+            "Sequence a two-note chromatic cell without turning it into a scale run"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-chromatic",
+            "mus-riff-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-cr10-3",
+          "stem": "A chart 'completes' your E–F sequences into a full chromatic scale. Diagnose it:",
+          "correctAnswer": "The extra notes erased the two-note cell that was the material",
+          "distractors": [
+            {
+              "text": "The completion proved the cell was only decoration all along",
+              "kind": "reversed",
+              "rationale": "The cell was the skeleton. Completion buried it."
+            },
+            {
+              "text": "Chromatic scales are required before any half-step can count",
+              "kind": "misconception",
+              "rationale": "Two notes already count."
+            },
+            {
+              "text": "The chart only changed loudness, so the cell is still intact",
+              "kind": "misapplied",
+              "rationale": "New letters were added. That is pitch."
+            }
+          ],
+          "correctExplanation": "If the repeating object is gone, the riff is gone.",
+          "objectiveIds": [
+            "Sequence a two-note chromatic cell without turning it into a scale run"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-chromatic",
+            "mus-riff-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-dissonant-voicing-10",
+      "conceptId": "mus-dissonant-voicing",
+      "title": "Seconds stacked until the name fails",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-dissonance"
+      ],
+      "goDeeper": "mus-form-riff",
+      "explanation": [
+        "Stack seconds until the chord has no common-practice name. E–F–G–Ab in one fist is a cluster, not a misspelled dominant. Close dissonance is a voicing choice: the bite is the interval packing, not a wrong inversion of a triad you wished had been there.",
+        "Decide whether that cluster is the harmony or a passing smear. If it sits for a bar and returns, it is a chord the riff owns. If it is a rake into an E5, it is a smear. MIT analysis still asks what repeats. A smear does not repeat as an object. A cluster-harmony does.",
+        "Write a two-beat cluster, then either hold it as the section's home voicing or spill it into a fifth. Do not respell it as C7b9 just to give the page a textbook label. If no one voiced C7, the name is a costume."
+      ],
+      "example": "Left-hand cluster E–F–G held under a vocal. That is the harmony. The same three notes raked in a 32nd-note slide into E5 is a smear into a fifth.",
+      "whyItMatters": "Name a cluster as a broken seventh and you will 'resolve' a chord the band is using as home. Decide the job first.",
+      "quiz": [
+        {
+          "id": "mus-dv10-1",
+          "stem": "Stacking seconds until the chord has no common-practice name produces which object?",
+          "correctAnswer": "A cluster whose bite is the packed intervals, not a misspelled triad",
+          "distractors": [
+            {
+              "text": "A dominant seventh that is hiding and must be respelled as V",
+              "kind": "reversed",
+              "rationale": "If no one voiced V, the name is a costume."
+            },
+            {
+              "text": "A rest, because unnamed chords are legally silent",
+              "kind": "misapplied",
+              "rationale": "The cluster still sounds."
+            },
+            {
+              "text": "A power chord with extra gain that only looks like seconds",
+              "kind": "nearby",
+              "rationale": "Seconds are pitch packing, not a gain knob."
+            }
+          ],
+          "correctExplanation": "Packed seconds. No textbook nickname required.",
+          "objectiveIds": [
+            "Stack seconds until the chord has no common-practice name"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-dissonance"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-dv10-2",
+          "stem": "A cluster that sits for a bar and returns, versus a rake into E5, should be distinguished as:",
+          "correctAnswer": "Harmony if it repeats as an object; smear if it only leads into another chord",
+          "distractors": [
+            {
+              "text": "Always harmony, because any dissonance is a tonic by law",
+              "kind": "misconception",
+              "rationale": "Job depends on whether the cluster is the object."
+            },
+            {
+              "text": "Always a smear, because clusters cannot be harmonic material",
+              "kind": "reversed",
+              "rationale": "A held, returning cluster is material."
+            },
+            {
+              "text": "A meter change, because stacked seconds regroup the bar",
+              "kind": "misapplied",
+              "rationale": "This is voicing, not grouping."
+            }
+          ],
+          "correctExplanation": "What repeats is the harmony. What only passes is a smear.",
+          "objectiveIds": [
+            "Decide whether that cluster is the harmony or a passing smear"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-dissonance"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-dv10-3",
+          "stem": "Holding a cluster as home versus using it as a pickup is which tradeoff?",
+          "correctAnswer": "Home cluster costs a named triad; smear keeps a target chord and spends the bite",
+          "distractors": [
+            {
+              "text": "Both jobs require respelling the cluster as a chorale V–I",
+              "kind": "reversed",
+              "rationale": "Respell is the costume this lesson refuses."
+            },
+            {
+              "text": "Home clusters forbid return, so they cannot be form",
+              "kind": "nearby",
+              "rationale": "Return is how a cluster proves it is harmony."
+            },
+            {
+              "text": "Smears must last a full section or they do not count as dissonance",
+              "kind": "misapplied",
+              "rationale": "A smear is short by job, not by law."
+            }
+          ],
+          "correctExplanation": "Choose the job. Home or pickup. The packing is the same intervals.",
+          "objectiveIds": [
+            "Decide whether that cluster is the harmony or a passing smear"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-dissonance"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "mus-form-riff-10",
+      "conceptId": "mus-form-riff",
+      "title": "Contrast and return without verse-chorus",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-riff-harmony",
+        "mus-phrase"
+      ],
+      "goDeeper": "mus-analysis-method",
+      "explanation": [
+        "Form from riffs is contrast and return of cells, not a verse-chorus contract borrowed from a different song type. Section B can be a new cell, or the old cell displaced, or the old cell under a new kit texture. You mark the change where the repeating object changes.",
+        "A drum texture swap with a new cell is already a section. You do not owe a chorus lyric or a lift into relative major. MIT 21M.350 still asks what contrasts. If the cell and the kit both change, that is a boundary. If only the vocal enters, you may still be in the same riff-section.",
+        "Build A as cell X for eight bars, B as cell Y plus blast or half-time, then return to X. That ABA is form. Writing 'verse' on A and 'chorus' on B does not add a mechanism. It adds a costume from a map the music did not use."
+      ],
+      "example": "Cell X, open hat, four bars. Cell Y, closed hat and a new kick map, four bars. Back to X. The boundary is the new cell plus the kit. No chorus lift is required for the return to count.",
+      "whyItMatters": "Wait for a chorus that never arrives and you will miss the actual boundaries. Mark cell and texture. That is the map.",
+      "quiz": [
+        {
+          "id": "mus-fr10-1",
+          "stem": "Building form from contrast and return of cells, not verse-chorus, means which map?",
+          "correctAnswer": "Section boundaries where the repeating cell or its contrast changes",
+          "distractors": [
+            {
+              "text": "A required chorus lift into relative major before any section can count",
+              "kind": "reversed",
+              "rationale": "No chorus contract is owed."
+            },
+            {
+              "text": "A single cell for the whole track, because return forbids contrast",
+              "kind": "nearby",
+              "rationale": "Return needs something to return from."
+            },
+            {
+              "text": "Bar numbers only, with cells ignored as mere pitch decoration",
+              "kind": "misapplied",
+              "rationale": "The cell is what form is made of here."
+            }
+          ],
+          "correctExplanation": "What repeats, what contrasts, what returns. That is the form.",
+          "objectiveIds": [
+            "Build form from contrast and return of cells, not from verse-chorus"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-riff-harmony",
+            "mus-phrase"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-fr10-2",
+          "stem": "A section change that is only a drum texture and a new cell should be marked as:",
+          "correctAnswer": "A real boundary: new repeating object plus a new kit gait",
+          "distractors": [
+            {
+              "text": "Not a section, because no chorus lyric arrived to certify it",
+              "kind": "reversed",
+              "rationale": "Lyric costume is not the mechanism."
+            },
+            {
+              "text": "A modulation, because kit changes always mean a new tonic",
+              "kind": "nearby",
+              "rationale": "Texture and cell moved. Key can sit."
+            },
+            {
+              "text": "An intro forever, because odd textures cannot leave the opening",
+              "kind": "misapplied",
+              "rationale": "A new cell in the middle is a middle section."
+            }
+          ],
+          "correctExplanation": "New cell, new kit. You already have a section change.",
+          "objectiveIds": [
+            "Mark a section change that is only a drum texture and a new cell"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-riff-harmony",
+            "mus-phrase"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-fr10-3",
+          "stem": "Cell X, then cell Y with half-time, then X again. Compared with verse-chorus labels, this is:",
+          "correctAnswer": "ABA by cell and texture; the labels would only costume the same map",
+          "distractors": [
+            {
+              "text": "Not form, because ABA is illegal without a sung chorus",
+              "kind": "reversed",
+              "rationale": "Return of X is already form."
+            },
+            {
+              "text": "Verse-chorus in disguise, so Y must be rewritten as a hook",
+              "kind": "misconception",
+              "rationale": "Y is a contrasting cell, not a owed hook."
+            },
+            {
+              "text": "Through-composed chaos, because riffs cannot return on purpose",
+              "kind": "nearby",
+              "rationale": "The return of X is the purpose."
+            }
+          ],
+          "correctExplanation": "Contrast, then return. Name the cells. Skip the costume.",
+          "objectiveIds": [
+            "Build form from contrast and return of cells, not from verse-chorus"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-riff-harmony",
+            "mus-phrase"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "mus-analysis-method-10",
+      "conceptId": "mus-analysis-method",
+      "title": "What repeats, what contrasts, what is the cell",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-form-riff"
+      ],
+      "goDeeper": "mus-reduction",
+      "explanation": [
+        "Ask three questions before you name a theory: what repeats, what contrasts, and what is the cell. The cell is the smallest object that still explains the section when you point at it. If you cannot point, you do not have a cell yet. You have a fog of notes.",
+        "Refuse an analysis that invents a chorale the music does not play. SATB on a two-note mute, or a V–I the guitar skipped, is a second piece. MIT 21M.350 is a method for saying what a work does. Use it on riffs. Do not use it as a machine that outputs Bach.",
+        "Work a section: circle the repeating pitch-rhythm object, mark where a new object or texture enters, and stop. If a Roman numeral helps because those chords were voiced, keep it. If it only makes the page look like a harmony exam, cut it."
+      ],
+      "example": "Two-bar E–F cell, eight times; then a three-note chromatic cell under half-time. The analysis is: cell X repeats, cell Y contrasts, kit gait contrasts. No chorale.",
+      "whyItMatters": "Start from a theory nickname and you will force the tape to match the nickname. Start from the cell and the theory has to match the tape.",
+      "quiz": [
+        {
+          "id": "mus-am10-1",
+          "stem": "The first three questions of this method, in the job they do, are which of these?",
+          "correctAnswer": "What repeats, what contrasts, and what object is the cell",
+          "distractors": [
+            {
+              "text": "What key, what cadence, and which chorale the riff secretly is",
+              "kind": "reversed",
+              "rationale": "Those questions invent a second piece."
+            },
+            {
+              "text": "What plugin, what decade, and which band to name-drop",
+              "kind": "misapplied",
+              "rationale": "The method is about the sounding object."
+            },
+            {
+              "text": "What tempo only, because riffs cannot repeat pitch on purpose",
+              "kind": "nearby",
+              "rationale": "Pitch-rhythm cells repeat. Ask that too."
+            }
+          ],
+          "correctExplanation": "Repeat, contrast, cell. Point at the object or you do not have it.",
+          "objectiveIds": [
+            "Ask what repeats, what contrasts, and what the cell is"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-am10-2",
+          "stem": "An analysis that stacks SATB and a V–I on a two-note mute should be refused because:",
+          "correctAnswer": "It invents a chorale the music does not play",
+          "distractors": [
+            {
+              "text": "All analysis is banned, so even naming the cell is illegal",
+              "kind": "misconception",
+              "rationale": "Name the cell. Refuse the invented chorale."
+            },
+            {
+              "text": "SATB is required; the mute must be rewritten until it cadences",
+              "kind": "reversed",
+              "rationale": "Rewriting is the invention."
+            },
+            {
+              "text": "Two-note mutes cannot repeat, so contrast is the only legal question",
+              "kind": "nearby",
+              "rationale": "The mute can be the repeating cell."
+            }
+          ],
+          "correctExplanation": "If the chorale was not played, it is not the analysis.",
+          "objectiveIds": [
+            "Refuse an analysis that invents a chorale the music does not play"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-am10-3",
+          "stem": "Integrating the method on a section with cell X then cell Y means you should report:",
+          "correctAnswer": "X repeats, Y contrasts, and both cells named without an invented chorale",
+          "distractors": [
+            {
+              "text": "A single Roman-numeral paragraph that replaces both cells",
+              "kind": "reversed",
+              "rationale": "Replacement is the second piece."
+            },
+            {
+              "text": "Only the kit, because cells are too small to count as form",
+              "kind": "misapplied",
+              "rationale": "Cells are what form is made of here."
+            },
+            {
+              "text": "A modulation chart into the relative major of whichever cell is louder",
+              "kind": "nearby",
+              "rationale": "Loudness does not elect a chorale key."
+            }
+          ],
+          "correctExplanation": "Point at X. Point at Y. Do not dress them as SATB.",
+          "objectiveIds": [
+            "Ask what repeats, what contrasts, and what the cell is"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "mus-analysis-method-20",
+      "conceptId": "mus-analysis-method",
+      "title": "A method that starts from the cell",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-form-riff"
+      ],
+      "goDeeper": "mus-reduction",
+      "explanation": [
+        "MIT 21M.350 trains a habit: say what the work does before you say what school it belongs to. On riff music that habit starts at the cell. Pitch plus rhythm, short enough to point at, long enough that repeating it still is the section. If your object is 'the song is Phrygian,' you skipped the cell and jumped to a nickname.",
+        "Repeat and contrast are operations, not moods. A cell that comes back unchanged is a return. A cell that comes back displaced is a variation. A new cell under a new kit texture is a contrast. Write those operations in that order. A paragraph of genre adjectives is not a substitute for the list.",
+        "Refuse the invented chorale in detail. Common-practice tools still help when the music uses them: a voiced triad, an actual dominant, a pedal that behaves like a textbook pedal. They fail when you stack inner voices the guitar never played, or when you complete a cadence to make the phrase 'correct.' Cut anything the tape does not support.",
+        "A finished report names the cell, lists what repeats and what contrasts, notes meter and timbre when they are harmonic facts, and stops. It does not award moral ranks to intervals. It does not rescue the riff into a key it refused. The method is done when another player could rebuild the section from your notes."
+      ],
+      "example": "Cell X: E–F eighths, two bars. Repeats four times. Contrast: X displaced one eighth, then cell Y (E–Bb) under half-time. Timbre: the fifth under gain is a crowd, not a clean triad. No V–I. That paragraph is the analysis.",
+      "whyItMatters": "A method you can rerun beats a nickname you cannot check. Start from the cell or you will analyze a chorale that was never tracked.",
+      "quiz": [
+        {
+          "id": "mus-am20-1",
+          "stem": "Starting from the cell, a report that another player could rebuild should contain which of these?",
+          "correctAnswer": "The pointed-at object, what repeats, what contrasts, and no unsupported cadence",
+          "distractors": [
+            {
+              "text": "A school nickname first, then a chorale that makes the nickname true",
+              "kind": "reversed",
+              "rationale": "Nickname-first is the habit the method drops."
+            },
+            {
+              "text": "Only plugin names and a decade, because cells cannot be written down",
+              "kind": "misapplied",
+              "rationale": "The cell is the writable object."
+            },
+            {
+              "text": "A complete SATB realization so the riff can pass a species exam",
+              "kind": "nearby",
+              "rationale": "Species on a mute is the invented chorale."
+            }
+          ],
+          "correctExplanation": "Point, list operations, stop. That is a rebuildable report.",
+          "objectiveIds": [
+            "Ask what repeats, what contrasts, and what the cell is"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-am20-2",
+          "stem": "When do common-practice labels still belong in this method, and when do you refuse them?",
+          "correctAnswer": "Keep them if those chords were voiced; refuse them if they invent a chorale",
+          "distractors": [
+            {
+              "text": "Always keep V–I, because analysis is the completing of cadences",
+              "kind": "reversed",
+              "rationale": "Completing cadences is the invention."
+            },
+            {
+              "text": "Always refuse every triad name, even when a triad was struck",
+              "kind": "nearby",
+              "rationale": "Struck triads can keep their names."
+            },
+            {
+              "text": "Keep them only for the kit, because drums are the true harmony",
+              "kind": "misapplied",
+              "rationale": "Labels track sounding pitch, not a drum ethic."
+            }
+          ],
+          "correctExplanation": "Supported by the tape: keep. Invented SATB: cut.",
+          "objectiveIds": [
+            "Refuse an analysis that invents a chorale the music does not play"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "mus-am20-3",
+          "stem": "A report that awards moral ranks to intervals and rescues a riff into a refused key is which tradeoff failure?",
+          "correctAnswer": "It traded a rebuildable method for a nickname the tape does not support",
+          "distractors": [
+            {
+              "text": "It gained accuracy, because ranks and rescues are what analysis is for",
+              "kind": "reversed",
+              "rationale": "Accuracy is matching the tape, not ranking it."
+            },
+            {
+              "text": "It only failed if the nickname was Phrygian rather than Locrian",
+              "kind": "nearby",
+              "rationale": "The failure is nickname-first, not which nickname."
+            },
+            {
+              "text": "It succeeded as long as the cell was mentioned in a footnote",
+              "kind": "misapplied",
+              "rationale": "A footnote cell still lost to the rescue."
+            }
+          ],
+          "correctExplanation": "Method first. Nickname only if the cell still matches after you check.",
+          "objectiveIds": [
+            "Refuse an analysis that invents a chorale the music does not play"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "mus-reduction-10",
+      "conceptId": "mus-reduction",
+      "title": "Strip the surface, keep the riff",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-analysis-method"
+      ],
+      "goDeeper": "mus-timbre-harmony",
+      "explanation": [
+        "Strip doublings, fills, and pickup smears until the remaining object still explains the riff. That leftover is the reduction. If the leftover is a I–V the guitar never played, you did not reduce. You replaced. MIT 21M.350 still reduces; it does not get to invent a chorale on the way down.",
+        "A honest reduction of a pedal riff is the pedal plus the moving cell, not a triad cycle. A honest reduction of a chromatic cell is the two-note unit and its sequence path. Extra inner voices that 'complete' the stack belong on the cutting-room floor unless they were tracked.",
+        "Leave a reduction another player could use to rebuild the section. If they would rebuild a cadence the tape skipped, your reduction failed. Keep meter grouping if the addends were the form. Drop a lead fill that never returns. The test is still: does this explain the riff that was played?"
+      ],
+      "example": "Surface: E5 doubled, a 32nd rake, then E–F–E cell with a harmonic squeal. Reduction: E pedal, E–F cell, 3+2+2 grouping. Not Em–B7. The squeal and the rake do not survive.",
+      "whyItMatters": "A reduction that invents I–V will teach the next player the wrong piece. Strip until the riff is still there, then stop.",
+      "quiz": [
+        {
+          "id": "mus-rd10-1",
+          "stem": "Stripping the surface without inventing a I–V that is not there means you should keep what?",
+          "correctAnswer": "The sounding cell and pedal, not a cadence the guitar skipped",
+          "distractors": [
+            {
+              "text": "A I–V skeleton, because every riff secretly cadences underneath",
+              "kind": "reversed",
+              "rationale": "A skipped cadence is not a reduction; it is a replacement."
+            },
+            {
+              "text": "Every fill and rake, because reduction is forbidden to cut anything",
+              "kind": "nearby",
+              "rationale": "Fills that never return are surface."
+            },
+            {
+              "text": "Only the kit click, because pitch cannot survive a reduction",
+              "kind": "misapplied",
+              "rationale": "The cell is pitch. It should survive."
+            }
+          ],
+          "correctExplanation": "Cut the extra. Do not add a handshake the tape omitted.",
+          "objectiveIds": [
+            "Strip the surface without inventing a I–V that is not there"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-analysis-method"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-rd10-2",
+          "stem": "A reduction of a chromatic E–F cell that comes out Em–B7 should be diagnosed as:",
+          "correctAnswer": "A replacement chorale, not a stripping that still explains the riff",
+          "distractors": [
+            {
+              "text": "A success, because I–V is the only legal leftover of any riff",
+              "kind": "reversed",
+              "rationale": "I–V was not on the tape."
+            },
+            {
+              "text": "A meter reduction, because Roman numerals secretly group 7/8",
+              "kind": "misapplied",
+              "rationale": "The error is harmonic invention, not grouping."
+            },
+            {
+              "text": "An incomplete reduction that still needs more inner voices added",
+              "kind": "nearby",
+              "rationale": "Adding voices is the opposite of stripping."
+            }
+          ],
+          "correctExplanation": "If the leftover is a cadence nobody played, you replaced the riff.",
+          "objectiveIds": [
+            "Strip the surface without inventing a I–V that is not there"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-analysis-method"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-rd10-3",
+          "stem": "Integrating reduction with the cell method, a leftover another player could rebuild should:",
+          "correctAnswer": "Still explain the riff: cell, grouping, pedal; no invented I–V",
+          "distractors": [
+            {
+              "text": "Explain a chorale exam, even if that exam needs extra voices",
+              "kind": "reversed",
+              "rationale": "The exam is the second piece."
+            },
+            {
+              "text": "Drop the cell and keep only genre adjectives as the leftover",
+              "kind": "misapplied",
+              "rationale": "Adjectives do not rebuild a riff."
+            },
+            {
+              "text": "Convert every pedal into a dominant so function can resume",
+              "kind": "nearby",
+              "rationale": "A pedal is a wall, not an automatic V."
+            }
+          ],
+          "correctExplanation": "Rebuildable leftover. Same riff. No rescue cadence.",
+          "objectiveIds": [
+            "Leave a reduction that still explains the riff"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-analysis-method"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "mus-timbre-harmony-10",
+      "conceptId": "mus-timbre-harmony",
+      "title": "Gain adds partials to the fifth",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-power-chord"
+      ],
+      "goDeeper": "mus-drop-tune",
+      "explanation": [
+        "Gain is a harmonic fact, not a coat of paint. Distortion adds partials and intermodulation products. A clean fifth is two letters. The same fifth under drive is a crowd: extra harmonics, difference tones, a thickening that can make a missing third seem present. Report that crowd as harmony.",
+        "Predict why a fifth becomes a crowd: the spectrum of each string is already harmonic; clipping multiplies those spectra and sums them. Close intervals get harsher because their extra partials beat. Wide, simple intervals (octave, fifth) stay readable longer, which is why the power chord survives gain that would mud a cluster.",
+        "Write the same E5 clean, then driven. The letter did not change. The harmonic stack did. A chart that treats both as identical 'E5' is incomplete. Note the gain as part of the voicing, the way you would note an added seventh that was actually fingered."
+      ],
+      "example": "Clean E5: E and B. Same frets, amp driven: a thicker stack, sometimes a ghost G, more beat frequencies if a neighbor F is added. The fifth became a crowd without a new fret.",
+      "whyItMatters": "Ignore gain and you will wonder why a voicing that worked clean turns to mud driven. The extra partials were the missing voices.",
+      "quiz": [
+        {
+          "id": "mus-th10-1",
+          "stem": "Treating gain as a harmonic fact means you should report which change?",
+          "correctAnswer": "Added partials and intermodulation, not just a louder coat of paint",
+          "distractors": [
+            {
+              "text": "A new fret, because gain cannot add spectrum without new letters",
+              "kind": "reversed",
+              "rationale": "The same frets can grow a crowd."
+            },
+            {
+              "text": "A tempo lift, because distortion is a rhythmic device here",
+              "kind": "misapplied",
+              "rationale": "The fact is spectral, not metric."
+            },
+            {
+              "text": "A mute of the fifth, because drive legally deletes pitch",
+              "kind": "nearby",
+              "rationale": "Drive thickens the fifth. It does not delete it."
+            }
+          ],
+          "correctExplanation": "Clipping adds partials. That is harmony on the same frets.",
+          "objectiveIds": [
+            "Treat gain as a harmonic fact that adds partials"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-th10-2",
+          "stem": "Why does a fifth become a crowd under distortion while staying readable longer than a cluster?",
+          "correctAnswer": "Clipping multiplies spectra; simple intervals' extra partials beat less than packed seconds",
+          "distractors": [
+            {
+              "text": "Gain retunes the B string up a third so a triad is fingered for you",
+              "kind": "misconception",
+              "rationale": "No new fret appears. The third can be a ghost in the spectrum."
+            },
+            {
+              "text": "Fifth and cluster behave identically, because drive flattens all intervals",
+              "kind": "reversed",
+              "rationale": "Packed seconds mud sooner. That is the prediction."
+            },
+            {
+              "text": "The crowd is only loudness, so interval packing cannot matter",
+              "kind": "nearby",
+              "rationale": "Loudness is energy. The crowd is extra partials."
+            }
+          ],
+          "correctExplanation": "Simple ratio, thicker spectrum. Packed seconds, harsher beats.",
+          "objectiveIds": [
+            "Predict why a fifth becomes a crowd under distortion"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-th10-3",
+          "stem": "Clean E5 and driven E5 on the same frets. Distinguishing them as harmony means you should:",
+          "correctAnswer": "Keep the letter and note the thicker partial stack as part of the voicing",
+          "distractors": [
+            {
+              "text": "Rename the driven take as a new chord because gain always changes the root",
+              "kind": "reversed",
+              "rationale": "The root can sit. The stack grew."
+            },
+            {
+              "text": "Call them identical in every dimension, including spectrum",
+              "kind": "nearby",
+              "rationale": "The letter matches. The partials do not."
+            },
+            {
+              "text": "Treat the driven take as a meter change into a denser bar",
+              "kind": "misapplied",
+              "rationale": "Spectrum changed. Grouping need not."
+            }
+          ],
+          "correctExplanation": "Same letters, new crowd. Write the gain into the voicing report.",
+          "objectiveIds": [
+            "Predict why a fifth becomes a crowd under distortion"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "mus-drop-tune-10",
+      "conceptId": "mus-drop-tune",
+      "title": "Lowered sixth, power chord one finger",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-power-chord"
+      ],
+      "goDeeper": "mus-analysis-method",
+      "explanation": [
+        "Drop a sixth string a whole step and a power chord becomes one finger: 0-0-0 on the bottom in drop D is D–A–D. The physics is a longer or slacker string whose open pitch is now a fifth below the fifth string, matching the power-chord shape. Write for that shape. Do not pretend the old E-standard fingering still applies.",
+        "Predict what the new open string does to pedals and cells. You now have a drone a whole step lower, easier unison chugs, and a fifth that can be barred across three strings. Chromatic cells still work, but their lowest wall moved. A riff that leaned on open E as pedal has a new wall at D, or C, or wherever you dropped.",
+        "Lower, then write a one-finger fifth, a pedal on the new open, and a cell that grinds against it. If you only drop the sixth and keep the old cells, you retuned a riff and left the new wall unused. The harmonic choice is the open string as a drone and a one-finger stack."
+      ],
+      "example": "Drop D. One finger at the fifth fret is G–D–G. Open strings pedal D. A cell G–Ab–G now grinds against that D wall, which E-standard open E would not have given you for free.",
+      "whyItMatters": "Treat drop tuning as a fashion and you will ignore the new wall. Treat it as physics and the pedal and the one-finger fifth are waiting.",
+      "quiz": [
+        {
+          "id": "mus-dt10-1",
+          "stem": "Lowering a string so a power chord is one finger, and writing for that physics, means you should:",
+          "correctAnswer": "Use the new fifth-shape and the new open as material, not the old fingering",
+          "distractors": [
+            {
+              "text": "Keep E-standard shapes and ignore that the sixth string changed pitch",
+              "kind": "reversed",
+              "rationale": "The sixth is a new letter. Write for it."
+            },
+            {
+              "text": "Mute the sixth string forever, because drop tunings ban open notes",
+              "kind": "misapplied",
+              "rationale": "The open string is the new wall."
+            },
+            {
+              "text": "Raise the other five strings to match, cancelling the drop",
+              "kind": "nearby",
+              "rationale": "Cancelling the drop erases the physics."
+            }
+          ],
+          "correctExplanation": "One-finger fifths. New open pitch. That is the writing.",
+          "objectiveIds": [
+            "Lower a string so a power chord is one finger, and write for that physics"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-dt10-2",
+          "stem": "Predict what the new open string does to pedals and cells in a drop tuning:",
+          "correctAnswer": "A lower drone wall, easier unison chugs, and cells that grind against that new 0",
+          "distractors": [
+            {
+              "text": "Nothing, because open strings cannot pedal after a drop",
+              "kind": "reversed",
+              "rationale": "The new 0 is often a better pedal."
+            },
+            {
+              "text": "An automatic V–I, because lower strings always cadence",
+              "kind": "misapplied",
+              "rationale": "A lower wall is not a dominant."
+            },
+            {
+              "text": "A mandatory 7/8, because drop tunings rewrite meter",
+              "kind": "nearby",
+              "rationale": "Tuning is pitch physics, not grouping."
+            }
+          ],
+          "correctExplanation": "New wall, new unisons, same cells possible against a different 0.",
+          "objectiveIds": [
+            "Predict what the new open string does to pedals and cells"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-dt10-3",
+          "stem": "You drop to D but keep an E-standard riff that never uses the sixth string. Identify the unused choice:",
+          "correctAnswer": "The new open wall and the one-finger fifth were available and left idle",
+          "distractors": [
+            {
+              "text": "The drop secretly rewrote the riff's meter, so the idle string still counts",
+              "kind": "nearby",
+              "rationale": "Meter did not move. The sixth did."
+            },
+            {
+              "text": "Idle sixths are required, because one-finger fifths are illegal",
+              "kind": "reversed",
+              "rationale": "The one-finger fifth is the point of the drop."
+            },
+            {
+              "text": "The riff became Locrian automatically, so the sixth is now a diminished tonic",
+              "kind": "misapplied",
+              "rationale": "Tuning is not a mode assignment."
+            }
+          ],
+          "correctExplanation": "If the new 0 never sounds, you retuned without taking the harmonic choice.",
+          "objectiveIds": [
+            "Predict what the new open string does to pedals and cells"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-power-chord"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

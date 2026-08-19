@@ -1,0 +1,1425 @@
+{
+  "courseId": "dm-construction",
+  "moduleId": "dm-c-riff",
+  "lessons": [
+    {
+      "id": "dm-riff-cell-5",
+      "conceptId": "dm-riff-cell",
+      "title": "Short figure you can move",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [
+        "mus-interval",
+        "dm-listening"
+      ],
+      "goDeeper": "dm-tremolo",
+      "diagram": "dm-riff-cell",
+      "explanation": [
+        "A cell is a short figure: a handful of attacks with a shape you can hum even when the pitches are chromatic. Repeat it, start it on a later beat, or mutate one interval. If the figure cannot travel, it is a lick, not a cell.",
+        "Name the cell before you name the band. The recorded riff is a shape plus a rhythm you can tap. Biography is a later card. Construction starts when the figure can be moved without collapsing."
+      ],
+      "example": "Hum a four-attack low-string figure, play it twice, then start it on the and of two. Same pitches, new place in the bar. That move is the cell doing its job.",
+      "whyItMatters": "Later displacement, mute, and form lessons all assume a figure you can move. A lick that only works once has no next section.",
+      "quiz": [
+        {
+          "id": "dm-rfc5-1",
+          "stem": "A riff cell in this lesson's sense is which kind of object?",
+          "correctAnswer": "A short figure built so it can be repeated, shifted, or mutated",
+          "distractors": [
+            {
+              "text": "A finished song form that already has a chorus and a return",
+              "kind": "nearby",
+              "rationale": "Form is later. The cell is the movable figure."
+            },
+            {
+              "text": "A lick that only works in the take where it was first played",
+              "kind": "reversed",
+              "rationale": "A lick that cannot travel is the opposite of a cell."
+            },
+            {
+              "text": "A celebrity list that stands in for the pitches and the rhythm",
+              "kind": "misapplied",
+              "rationale": "A roster is not a figure you can move."
+            }
+          ],
+          "correctExplanation": "A cell is short and movable. Songs, licks, and lists are other objects.",
+          "objectiveIds": [
+            "Write a short figure that can be repeated, displaced, or mutated"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "dm-listening"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-rfc5-2",
+          "stem": "You hear a recorded riff and want the cell. The honest first move is to:",
+          "correctAnswer": "Hum the shape and count the attacks before naming the band",
+          "distractors": [
+            {
+              "text": "Name the player first so the figure can be allowed to count",
+              "kind": "reversed",
+              "rationale": "The name is the substitute this lesson drops."
+            },
+            {
+              "text": "Wait for a verse-chorus map before any figure can be a cell",
+              "kind": "misapplied",
+              "rationale": "Pop maps are not the entry ticket to a short figure."
+            },
+            {
+              "text": "List every album that used a similar low-string idea",
+              "kind": "nearby",
+              "rationale": "A discography is not the shape in the bar."
+            }
+          ],
+          "correctExplanation": "Shape plus attacks. The band name is not the analysis.",
+          "objectiveIds": [
+            "Identify the cell in a recorded riff before naming the band"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "dm-listening"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-rfc5-3",
+          "stem": "A four-attack figure played again starting on a later beat is evidence that:",
+          "correctAnswer": "The figure is a cell because it can travel without collapsing",
+          "distractors": [
+            {
+              "text": "The figure failed, because a cell may never leave beat one",
+              "kind": "reversed",
+              "rationale": "Starting later is displacement, which cells are built for."
+            },
+            {
+              "text": "The band must be named before the shift is allowed to count",
+              "kind": "nearby",
+              "rationale": "Travel is construction. A surname is not."
+            },
+            {
+              "text": "The kit must stop, because only a silent bar can host a cell",
+              "kind": "misapplied",
+              "rationale": "The cell lives with the kit, not instead of it."
+            }
+          ],
+          "correctExplanation": "Same pitches, new place. That is a cell doing the job it was written for.",
+          "objectiveIds": [
+            "Write a short figure that can be repeated, displaced, or mutated"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "dm-listening"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-riff-cell-10",
+      "conceptId": "dm-riff-cell",
+      "title": "Repeat, shift, or mutate",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval",
+        "dm-listening"
+      ],
+      "goDeeper": "dm-tremolo",
+      "diagram": "dm-riff-cell",
+      "explanation": [
+        "Treat a recorded riff as a cell before you reach for a band name. Hum the shape, count the attacks, and mark whether the next bar repeats, starts later, or changes one interval. The player's name is not that report.",
+        "Repeat is the same figure again. Displacement is the same pitches begun on a different beat. Mutation is a small rewrite: invert an interval, sequence the shape, choke what was open. Those three moves are how a cell becomes a section instead of a one-bar slogan.",
+        "Write the cell short enough to move. Four to eight attacks is a working size. A figure that already fills eight bars has nowhere to go when the kit changes texture, and you will be forced to invent a new song instead of a next bar."
+      ],
+      "example": "A two-beat chromatic cell, played twice, then started on beat three, then with the last pitch raised a semitone. Three sections from one figure. No chorus was required.",
+      "whyItMatters": "If you cannot name the cell, mute, displacement, and form have nothing to act on. Start with a figure that can travel.",
+      "quiz": [
+        {
+          "id": "dm-rfc10-1",
+          "stem": "Repeat, displacement, and mutation differ as moves on a cell because:",
+          "correctAnswer": "Repeat copies; displacement relocates; mutation rewrites a small part",
+          "distractors": [
+            {
+              "text": "All three are the same move measured at three metronome marks",
+              "kind": "nearby",
+              "rationale": "Tempo is not the split. Place and rewrite are."
+            },
+            {
+              "text": "Displacement rewrites pitches; mutation only copies the original bar",
+              "kind": "reversed",
+              "rationale": "That swaps relocation with rewrite."
+            },
+            {
+              "text": "Mutation is illegal unless a famous band already licensed the figure",
+              "kind": "misapplied",
+              "rationale": "A cell is a construction object, not a license."
+            }
+          ],
+          "correctExplanation": "Copy, relocate, rewrite. Those are three jobs, not three speeds.",
+          "objectiveIds": [
+            "Write a short figure that can be repeated, displaced, or mutated"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "dm-listening"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-rfc10-2",
+          "stem": "A useful first analysis of a recorded riff, before any roster, is to:",
+          "correctAnswer": "Name the short figure, then say whether the next bar copies, shifts, or mutates it",
+          "distractors": [
+            {
+              "text": "Name the band, then treat the riff as already fully explained",
+              "kind": "reversed",
+              "rationale": "The roster is what this lesson refuses as the first move."
+            },
+            {
+              "text": "Find a V–I cadence so the riff can be allowed into harmony class",
+              "kind": "misapplied",
+              "rationale": "Cadence hunting is a later, often wrong, first step."
+            },
+            {
+              "text": "Count only the cymbals, because the guitar figure cannot be a cell",
+              "kind": "nearby",
+              "rationale": "The guitar figure is exactly the cell you are after."
+            }
+          ],
+          "correctExplanation": "Figure first, then the next bar's job. Names come after that report.",
+          "objectiveIds": [
+            "Identify the cell in a recorded riff before naming the band"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "dm-listening"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-rfc10-3",
+          "stem": "If the guitar figure already fills eight bars with no leftover room, you should expect:",
+          "correctAnswer": "No place to displace or mutate, so the next change must invent a new song",
+          "distractors": [
+            {
+              "text": "Easier displacement, because a long figure has more beats to slide",
+              "kind": "reversed",
+              "rationale": "Length that already occupies the section leaves nowhere to move."
+            },
+            {
+              "text": "That the band name will automatically supply the missing cell",
+              "kind": "nearby",
+              "rationale": "A surname does not shrink a figure."
+            },
+            {
+              "text": "That palm mute is forbidden until the figure is even longer",
+              "kind": "subtle",
+              "rationale": "Mute is orchestration. Length is the problem here."
+            }
+          ],
+          "correctExplanation": "A cell needs leftover room. A full-section lick has no next bar.",
+          "objectiveIds": [
+            "Write a short figure that can be repeated, displaced, or mutated"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "dm-listening"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-tremolo-10",
+      "conceptId": "dm-tremolo",
+      "title": "Picking that becomes a surface",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "goDeeper": "dm-pick-hand",
+      "explanation": [
+        "Tremolo picking is an articulation that turns a pitch into a surface. The right hand fills the duration so the ear hears a band of sound rather than a single attack. Harmony is still which pitch occupies that surface, not how fast the pick moves.",
+        "Write the line so the surface has a job: a pedal that the cell grinds, a chromatic spine, a target pitch the phrase lands on. A tremolo that wanders with no spine is a warmup occupying a bar. Speed without a pitch job is not writing.",
+        "Keep the cell audible under the surface. If the picking erases the figure's contour, you have density without a riff. Slow the right hand, or thin the notes, until the shape can still be hummed as a cell."
+      ],
+      "example": "Hold a low E as a tremolo surface, then walk a three-note chromatic cell across it. The surface is the pedal. The cell is the harmony. The pick speed is only how the surface is made.",
+      "whyItMatters": "Tremolo is how this style sustains a cell without a singing melody. If you treat it as speed practice, the harmonic job disappears.",
+      "quiz": [
+        {
+          "id": "dm-trm10-1",
+          "stem": "Tremolo picking, in this lesson's construction sense, is used to:",
+          "correctAnswer": "Turn a pitch into a surface the ear can hold as a band of sound",
+          "distractors": [
+            {
+              "text": "Replace harmony so the pitches no longer need a job in the bar",
+              "kind": "reversed",
+              "rationale": "Articulation is not a substitute for a pitch job."
+            },
+            {
+              "text": "Prove the right hand in a contest the kit is not allowed to join",
+              "kind": "nearby",
+              "rationale": "A contest is sport. The surface is writing."
+            },
+            {
+              "text": "Force a verse-chorus map onto a cell that was already complete",
+              "kind": "misapplied",
+              "rationale": "Form maps are not what the pick is doing."
+            }
+          ],
+          "correctExplanation": "The pick makes a surface. The pitch on that surface is still the harmony.",
+          "objectiveIds": [
+            "Use tremolo picking to turn a pitch into a surface"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-trm10-2",
+          "stem": "A tremolo line still has a harmonic job when it:",
+          "correctAnswer": "Occupies a pedal, a chromatic spine, or a target pitch the phrase lands on",
+          "distractors": [
+            {
+              "text": "Moves as fast as possible with no pitch chosen as the spine",
+              "kind": "reversed",
+              "rationale": "Speed without a spine is a warmup, not a job."
+            },
+            {
+              "text": "Stops the kit so the guitar can be the only remaining layer",
+              "kind": "nearby",
+              "rationale": "The kit still has a grammar. Tremolo does not fire it."
+            },
+            {
+              "text": "Borrows a full Phrygian lecture before any pitch may ring",
+              "kind": "misapplied",
+              "rationale": "A local spine is enough. A mode course is not required."
+            }
+          ],
+          "correctExplanation": "Pedal, spine, or landing. Those are jobs. Raw speed is not.",
+          "objectiveIds": [
+            "Write a tremolo line that still has a harmonic job"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-trm10-3",
+          "stem": "Tremolo as articulation differs from the cell's harmony because:",
+          "correctAnswer": "Articulation is how the pitch is sustained; harmony is which pitch occupies it",
+          "distractors": [
+            {
+              "text": "Articulation is the pitch; harmony is only how fast the pick moves",
+              "kind": "reversed",
+              "rationale": "That swaps the two jobs."
+            },
+            {
+              "text": "They are the same word for a right-hand endurance contest",
+              "kind": "nearby",
+              "rationale": "Endurance is later. These are two construction jobs."
+            },
+            {
+              "text": "Harmony is illegal under tremolo, so the surface cannot have a pitch",
+              "kind": "subtle",
+              "rationale": "The surface is made of a pitch. That pitch is the harmony."
+            }
+          ],
+          "correctExplanation": "How you sustain versus which pitch you sustain. Keep the words apart.",
+          "objectiveIds": [
+            "Use tremolo picking to turn a pitch into a surface",
+            "Write a tremolo line that still has a harmonic job"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-chromatic-move-10",
+      "conceptId": "dm-chromatic-move",
+      "title": "Semitone as the riff's spine",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-semitone"
+      ],
+      "goDeeper": "dm-harmony",
+      "explanation": [
+        "Chromatic motion uses semitone steps as the riff's spine, not as leftover passing tones on the way to a major scale. The cell's identity is a short chromatic shape plus a rhythm. The diatonic leftover is optional color, not the home.",
+        "Sequence that cell. Move the whole shape by a minor third, or repeat it starting one fret over, and keep the rhythm. Running twelve semitones in a row is a warmup. Sequencing a three-note chromatic cell is writing.",
+        "Stop the run when the cell has said its piece. A chromatic spine that never cadences is allowed; a chromatic blur that erases the attacks is not. The kit still has to phrase against a figure you can count."
+      ],
+      "example": "Three descending semitones on the low string, then the same three-note cell started a minor third higher. Two bars, one spine, no scale exam.",
+      "whyItMatters": "If you hear chromatic metal as 'they forgot the key,' you will miss the spine. The semitone is the argument, not a mistake.",
+      "quiz": [
+        {
+          "id": "dm-cmo10-1",
+          "stem": "Semitone steps work as a riff spine in this style when they:",
+          "correctAnswer": "Form the cell's identity rather than leftover passing tones toward a scale",
+          "distractors": [
+            {
+              "text": "Are banned until a major-key cadence has already closed the phrase",
+              "kind": "reversed",
+              "rationale": "The spine can be chromatic. A cadence is not the ticket."
+            },
+            {
+              "text": "Must always run all twelve pitches before a cell is allowed to exist",
+              "kind": "nearby",
+              "rationale": "A twelve-note run is a warmup, not a spine."
+            },
+            {
+              "text": "Only count if a later blast catalog has licensed the semitone",
+              "kind": "misapplied",
+              "rationale": "The spine is a guitar figure. A kit catalog is another lesson."
+            }
+          ],
+          "correctExplanation": "The semitone is the home of the cell, not a leftover on the way to a scale.",
+          "objectiveIds": [
+            "Use semitone steps as the riff's spine"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-semitone"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-cmo10-2",
+          "stem": "Sequencing a chromatic cell differs from a scale exercise because:",
+          "correctAnswer": "The short shape and its rhythm move together; a run of twelve notes does not",
+          "distractors": [
+            {
+              "text": "A scale exercise is the only legal way to use a semitone in a riff",
+              "kind": "reversed",
+              "rationale": "That is the warmup this lesson refuses as writing."
+            },
+            {
+              "text": "Sequencing forbids keeping the rhythm when the pitches move",
+              "kind": "nearby",
+              "rationale": "Keeping the rhythm is exactly how the cell stays a cell."
+            },
+            {
+              "text": "Both are identical once a metronome is running in the room",
+              "kind": "subtle",
+              "rationale": "Tempo does not turn a warmup into a sequenced cell."
+            }
+          ],
+          "correctExplanation": "Move the short shape. Do not empty the chromatic leftover into the bar.",
+          "objectiveIds": [
+            "Sequence a chromatic cell without turning it into a scale exercise"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-semitone"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "dm-cmo10-3",
+          "stem": "If a chromatic line never stops and the attacks can no longer be counted, expect:",
+          "correctAnswer": "A blur that erases the cell, so the kit has no figure left to phrase against",
+          "distractors": [
+            {
+              "text": "A stronger spine, because more semitones always mean more writing",
+              "kind": "reversed",
+              "rationale": "More notes can erase the figure rather than build it."
+            },
+            {
+              "text": "That a band name will restore the missing attacks on the tape",
+              "kind": "nearby",
+              "rationale": "A surname does not re-articulate a blur."
+            },
+            {
+              "text": "That odd meter is required before any chromatic cell may end",
+              "kind": "misapplied",
+              "rationale": "Stopping the cell is a writing choice, not a meter exam."
+            }
+          ],
+          "correctExplanation": "A spine you cannot count is not a cell. Stop the run while the figure still exists.",
+          "objectiveIds": [
+            "Sequence a chromatic cell without turning it into a scale exercise"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-semitone"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-pedal-tone-10",
+      "conceptId": "dm-pedal-tone",
+      "title": "Open string the cell grinds",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-pedal"
+      ],
+      "goDeeper": "dm-guitar-tune",
+      "explanation": [
+        "Grind the cell against an open string that keeps sounding. The pedal is a pitch that does not move while the figure does. Clash against that drone is the harmony. The open string is not leftover ringing; it is the wall the cell is written to hit.",
+        "Choose which string is the wall. An open low string under a chromatic cell is the common grind. A higher open string can be the wall while the cell lives below. The job is the held pitch, not the brand of the guitar.",
+        "Release the pedal so the clash has a form. Lift the open string, mute it, or stop the bar. A grind that never ends is a texture with no section change. The release is the punctuation the next cell can answer."
+      ],
+      "example": "Open low E held while a three-note chromatic cell walks above it for two bars, then the E is muted and the cell sits alone. The mute is the form. The grind was the harmony.",
+      "whyItMatters": "Without a pedal you can name, the clash is just 'dissonant.' With a pedal and a release, the clash has a beginning and an end.",
+      "quiz": [
+        {
+          "id": "dm-pdl10-1",
+          "stem": "Grinding a cell against an open string is a claim that:",
+          "correctAnswer": "A held pitch is the wall the moving figure is written to hit",
+          "distractors": [
+            {
+              "text": "Open strings are mistakes the mix should gate out of the take",
+              "kind": "reversed",
+              "rationale": "The open string is the wall, not a tracking error."
+            },
+            {
+              "text": "The cell must stop whenever any string is allowed to ring",
+              "kind": "nearby",
+              "rationale": "The cell moves against the ring. That is the grind."
+            },
+            {
+              "text": "A pedal is illegal until a chorale cadence has already occurred",
+              "kind": "misapplied",
+              "rationale": "Cadence class is not the ticket to an open-string wall."
+            }
+          ],
+          "correctExplanation": "Held pitch, moving figure. The clash is the writing, not a leak.",
+          "objectiveIds": [
+            "Grind the cell against an open string"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-pedal"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-pdl10-2",
+          "stem": "Releasing the pedal so the clash has a form means you:",
+          "correctAnswer": "Stop, mute, or lift the held string so the grind can begin and end",
+          "distractors": [
+            {
+              "text": "Let the open string ring forever so the section never has to change",
+              "kind": "reversed",
+              "rationale": "Never ending is texture without punctuation."
+            },
+            {
+              "text": "Replace the guitar with a spoken lecture on species counterpoint",
+              "kind": "misapplied",
+              "rationale": "Release is a mute or a lift, not a theory exam."
+            },
+            {
+              "text": "Name a famous studio before the open string is allowed to stop",
+              "kind": "nearby",
+              "rationale": "A room name is not a release."
+            }
+          ],
+          "correctExplanation": "The grind needs an edge. Mute, lift, or stop the bar.",
+          "objectiveIds": [
+            "Release the pedal so the clash has a form"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-pedal"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-pdl10-3",
+          "stem": "If the open string never stops under a two-minute grind, the likely formal cost is:",
+          "correctAnswer": "No punctuation, so the clash cannot mark a section change",
+          "distractors": [
+            {
+              "text": "A clearer cell, because infinite pedals always sharpen the figure",
+              "kind": "reversed",
+              "rationale": "Endless grind is texture. It does not sharpen a section."
+            },
+            {
+              "text": "That drop tunings become illegal until the string is retuned up",
+              "kind": "subtle",
+              "rationale": "Tuning is a later choice. The cost here is missing release."
+            },
+            {
+              "text": "That the vocal must sing a hook or the pedal does not count",
+              "kind": "misapplied",
+              "rationale": "A pop hook is not the punctuation this lesson is after."
+            }
+          ],
+          "correctExplanation": "A wall with no edge cannot be a section. Release is the form of the clash.",
+          "objectiveIds": [
+            "Release the pedal so the clash has a form"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-pedal"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-harmony-10",
+      "conceptId": "dm-harmony",
+      "title": "Cells that replace a cadence",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval",
+        "mus-modes",
+        "dm-riff-cell"
+      ],
+      "goDeeper": "dm-diminished",
+      "explanation": [
+        "Harmony here is built from short cells, not from a chord chart that reports to a dominant. Diminished shapes, chromatic planing, and the riff itself as the harmony do the tension that V–I would do in a chorale. The song is the order of those cells.",
+        "Planing moves a voicing or a cell in parallel without functional voice-leading. The shape stays; the whole thing slides. That parallel slide is color and motion. It is not a broken chorale, and it does not owe you a cadence.",
+        "Analyze a section by the cell and the drum texture, not by hunting V–I. Name the figure, name whether the kit is a roll, a backbeat, or half-time, and you have the form. Inventing a dominant that is not there is a category error."
+      ],
+      "example": "A two-bar chromatic descent sequenced up a minor third over a packed kit roll, then the same cell in half-time. That pair is the section. No chorus and no V–I were required.",
+      "whyItMatters": "If you start from a cadence chart you will invent functions the riff never used. Start from the cell and the kit, and the piece is already composed.",
+      "quiz": [
+        {
+          "id": "dm-dhm10-1",
+          "stem": "Death-metal harmony, in this lesson's construction sense, is built from:",
+          "correctAnswer": "Diminished cells, chromatic planing, and the riff itself as the form",
+          "distractors": [
+            {
+              "text": "A required V–I cadence that every cell must report to before it counts",
+              "kind": "reversed",
+              "rationale": "Cadence hunting is the method this lesson drops."
+            },
+            {
+              "text": "A celebrity list of guitarists treated as the complete harmonic system",
+              "kind": "nearby",
+              "rationale": "People are not cells, planing, or riff-as-form."
+            },
+            {
+              "text": "A mix bus setting that replaces any need to name a figure",
+              "kind": "misapplied",
+              "rationale": "Spectrum is presentation. Harmony here is the cell."
+            }
+          ],
+          "correctExplanation": "Cells, parallel slides, riff-as-form. A cadence chart is another sport.",
+          "objectiveIds": [
+            "Build harmony from diminished cells, chromatic planing, and riff-as-form"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-modes",
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-dhm10-2",
+          "stem": "A useful first analysis of a death-metal section is to:",
+          "correctAnswer": "Name the guitar cell and the drum texture instead of hunting V–I",
+          "distractors": [
+            {
+              "text": "Find the dominant chord so the riff can be admitted to harmony class",
+              "kind": "reversed",
+              "rationale": "The dominant may not be there. Stop inventing it."
+            },
+            {
+              "text": "Ignore the kit, because drum texture cannot be part of the form",
+              "kind": "nearby",
+              "rationale": "The kit is the second formal axis this lesson names."
+            },
+            {
+              "text": "Wait for a pop chorus before any cell is allowed to be harmony",
+              "kind": "misapplied",
+              "rationale": "A chorus is optional. The cell is already the harmony."
+            }
+          ],
+          "correctExplanation": "Cell plus kit texture. That is the analysis. Cadence class is a wrong first tool.",
+          "objectiveIds": [
+            "Analyze a section by the cell and the drum texture, not by V–I"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-modes",
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-dhm10-3",
+          "stem": "Planing in this context is best described as which motion?",
+          "correctAnswer": "Moving a voicing or cell in parallel without functional voice-leading",
+          "distractors": [
+            {
+              "text": "Resolving every voice to a tonic so the chorale can close",
+              "kind": "reversed",
+              "rationale": "Resolution is the opposite of a parallel slide."
+            },
+            {
+              "text": "Tuning the guitar down until the cell is no longer needed",
+              "kind": "nearby",
+              "rationale": "Tuning is a later lever. Planing is motion of a shape."
+            },
+            {
+              "text": "A studio explosion sample used as a substitute for a riff",
+              "kind": "misapplied",
+              "rationale": "Planing is a voicing move, not a sound-effect."
+            }
+          ],
+          "correctExplanation": "The shape stays and slides. That is color, not a broken cadence.",
+          "objectiveIds": [
+            "Build harmony from diminished cells, chromatic planing, and riff-as-form"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-modes",
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "dm-harmony-20",
+      "conceptId": "dm-harmony",
+      "title": "Planing, cells, and kit as form",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval",
+        "mus-modes",
+        "dm-riff-cell"
+      ],
+      "goDeeper": "dm-diminished",
+      "explanation": [
+        "Building from cells is the ten-minute claim. This pass treats three materials as a kit: diminished shapes that stack minor thirds, chromatic cells that plane in parallel, and the riff's own contour as the harmony of the bar. None of those materials reports to a dominant.",
+        "Planing is the mechanism that lets a cell travel without becoming a chorale. Keep the intervals of the shape; slide the whole thing. The ear tracks the slide as motion. Functional voice-leading would have split the voices toward a tonic. Here the voices refuse that split on purpose.",
+        "Drum texture is the second formal axis. The same guitar cell over a packed kit roll is one section; the same cell over half-time is another. You do not need a new chord to change the piece. You need a new occupation of the kit, or a mutation of the cell, or both.",
+        "Refuse V–I as the first question. Ask what the cell is, whether it is planed or sequenced, and what the kit is doing. If those three answers are in hand, the section is analyzed. A cadence you cannot hear was not the missing key. It was the wrong key."
+      ],
+      "example": "Dim cell planed up a minor third under a blast; same pitches under a half-time ride; then the cell inverted and the pedal released. Three sections, one shape, no dominant required.",
+      "whyItMatters": "This is how to write and hear the music as composed. Name the material and the kit change, or you will only have a lifestyle caption.",
+      "quiz": [
+        {
+          "id": "dm-dhm20-1",
+          "stem": "Taken together, diminished cells, planing, and riff-as-form are doing the job of:",
+          "correctAnswer": "Supplying tension and motion without reporting to a dominant chord",
+          "distractors": [
+            {
+              "text": "Preparing a required V–I that every honest section must still reach",
+              "kind": "reversed",
+              "rationale": "The point is that the dominant is not the job."
+            },
+            {
+              "text": "Replacing the kit so drum texture can no longer be a formal axis",
+              "kind": "nearby",
+              "rationale": "The kit stays. It is the second axis, not a casualty."
+            },
+            {
+              "text": "Proving a right-hand contest that harmony is no longer allowed to join",
+              "kind": "misapplied",
+              "rationale": "This is harmonic material, not a picking contest."
+            }
+          ],
+          "correctExplanation": "Tension without a dominant. The kit still has its own axis.",
+          "objectiveIds": [
+            "Build harmony from diminished cells, chromatic planing, and riff-as-form"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-modes",
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "dm-dhm20-2",
+          "stem": "The same guitar cell over a packed kit roll, then over half-time, should be read as:",
+          "correctAnswer": "Two sections, because drum texture is a formal axis of its own",
+          "distractors": [
+            {
+              "text": "One section, because only a new chord chart can change the form",
+              "kind": "reversed",
+              "rationale": "The kit change is the section change."
+            },
+            {
+              "text": "Proof that the cell failed and must be replaced by a pop chorus",
+              "kind": "nearby",
+              "rationale": "The cell succeeded. The kit did the contrast."
+            },
+            {
+              "text": "A mix argument about smear that does not involve the drums at all",
+              "kind": "misapplied",
+              "rationale": "This is kit grammar as form, not a desk choice."
+            }
+          ],
+          "correctExplanation": "Same cell, new kit occupation. That is already a section pair.",
+          "objectiveIds": [
+            "Analyze a section by the cell and the drum texture, not by V–I"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-modes",
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-dhm20-3",
+          "stem": "Functional voice-leading and chromatic planing differ here because:",
+          "correctAnswer": "Voice-leading splits voices toward a tonic; planing slides the whole shape",
+          "distractors": [
+            {
+              "text": "Planing splits voices toward a tonic; voice-leading slides the shape",
+              "kind": "reversed",
+              "rationale": "That swaps the two motions."
+            },
+            {
+              "text": "They are the same motion once distortion is on the guitar chain",
+              "kind": "nearby",
+              "rationale": "Distortion is a spectrum. The motion of the voices is still different."
+            },
+            {
+              "text": "Planing is illegal unless a chorale workbook has already been finished",
+              "kind": "misapplied",
+              "rationale": "A workbook is not the ticket. Parallel slide is the mechanism."
+            }
+          ],
+          "correctExplanation": "Split toward tonic versus slide the shape. Those are different writings.",
+          "objectiveIds": [
+            "Build harmony from diminished cells, chromatic planing, and riff-as-form"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-modes",
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "dm-diminished-10",
+      "conceptId": "dm-diminished",
+      "title": "Minor thirds until the octave",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-harmony",
+        "mus-tritone"
+      ],
+      "goDeeper": "dm-tritone-riff",
+      "explanation": [
+        "Stack minor thirds and the octave repeats: four steps fill the octave and the set comes back. That closed loop is the diminished seventh as a cell, not as a jazz ornament glued onto a major key. The symmetry is the material.",
+        "Write a diminished cell that sequences instead of running. Take three or four notes from the stack, give them a rhythm, and move the whole shape. Running the full diminished scale as a warmup erases the cell. Sequencing keeps a figure the kit can phrase.",
+        "Because the set repeats every minor third, sequencing by a minor third can stay inside the same pitches. Sequencing by another interval leaves the set on purpose. Either is a choice. Neither requires a dominant to justify the next bar."
+      ],
+      "example": "E, G, Bb as a three-attack cell, then the same rhythm on G, Bb, Db. Same diminished set, new place. A run of the whole scale would have been a warmup in the same register.",
+      "whyItMatters": "Diminished material is how this style gets tension without a V chord. If you only run it, you have a drill. If you sequence it, you have a riff.",
+      "quiz": [
+        {
+          "id": "dm-dim10-1",
+          "stem": "Stacking minor thirds until the octave repeats produces which object?",
+          "correctAnswer": "A closed diminished set that comes back after four minor thirds",
+          "distractors": [
+            {
+              "text": "A major scale that still needs a dominant before it may be used",
+              "kind": "reversed",
+              "rationale": "The stack does not report to a major-key dominant."
+            },
+            {
+              "text": "A tuning recipe that only works if every string is dropped equally",
+              "kind": "nearby",
+              "rationale": "This is an interval stack, not a tuning chart."
+            },
+            {
+              "text": "A blast type named after the number of minor thirds in the bar",
+              "kind": "misapplied",
+              "rationale": "Kit taxonomy is another lesson. This is pitch material."
+            }
+          ],
+          "correctExplanation": "Four minor thirds, octave, same set. That loop is the cell's material.",
+          "objectiveIds": [
+            "Stack minor thirds until the octave repeats"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-tritone"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "dm-dim10-2",
+          "stem": "A diminished cell that sequences instead of running is a figure that:",
+          "correctAnswer": "Keeps a short rhythm and moves the shape rather than emptying the scale",
+          "distractors": [
+            {
+              "text": "Must play every pitch of the diminished set before any rhythm is allowed",
+              "kind": "reversed",
+              "rationale": "That is the run this lesson refuses as writing."
+            },
+            {
+              "text": "Is illegal unless a Phrygian lecture has already named the tonic",
+              "kind": "misapplied",
+              "rationale": "The stack is its own material. A mode lecture is not the ticket."
+            },
+            {
+              "text": "Can only be sequenced by bands already listed on a roster",
+              "kind": "nearby",
+              "rationale": "A cell is a figure, not a license."
+            }
+          ],
+          "correctExplanation": "Short rhythm, moved shape. The leftover scale is not the riff.",
+          "objectiveIds": [
+            "Write a diminished cell that sequences instead of running"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-tritone"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-dim10-3",
+          "stem": "Sequencing a diminished cell by a minor third typically:",
+          "correctAnswer": "Stays inside the same pitch set, because the set repeats at that interval",
+          "distractors": [
+            {
+              "text": "Always leaves the set, because a minor third is a modulation by law",
+              "kind": "reversed",
+              "rationale": "The set is built from minor thirds. Sliding by one can stay inside."
+            },
+            {
+              "text": "Requires a V–I in the new key before the next attack may land",
+              "kind": "nearby",
+              "rationale": "No new key is owed. The set may simply slide."
+            },
+            {
+              "text": "Forces the kit into a half-time breakdown for the sequence to count",
+              "kind": "subtle",
+              "rationale": "The kit is free. The pitch-set fact does not hire a breakdown."
+            }
+          ],
+          "correctExplanation": "Minor-third symmetry means the same pitches can return. Leaving the set is a different, optional move.",
+          "objectiveIds": [
+            "Stack minor thirds until the octave repeats",
+            "Write a diminished cell that sequences instead of running"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-tritone"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-tritone-riff-10",
+      "conceptId": "dm-tritone-riff",
+      "title": "Tritone and flat-2 as home",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-harmony",
+        "mus-phrygian"
+      ],
+      "goDeeper": "dm-song-form",
+      "explanation": [
+        "Tritone and flat-2 sit as home intervals in this style, not as spicy visitors on a major-key trip. A riff that rocks between a tonic and a pitch a tritone away, or that leans on the semitone above the tonic, is already at rest in its own grammar.",
+        "Write the riff so those intervals are the cell, not a scale homework. Two or three attacks that sit on E against Bb, or E against F, are enough. You do not need a Phrygian lecture to justify the flat-2. The interval is the home. The lecture is optional color-naming after the fact.",
+        "Keep a rhythmic identity so the interval is a riff rather than two isolated power chords. Mute, repeat, or grind a pedal under the pair. The style's 'dark' reputation is this construction: home is a clash, and the clash has a groove."
+      ],
+      "example": "Palm-muted E to F, then E to Bb, as a two-bar cell over a mid-tempo kick. The flat-2 and the tritone are the entire harmony. No mode workbook was opened.",
+      "whyItMatters": "If you treat tritone and flat-2 as mistakes on the way to a nicer scale, you will rewrite the riff into something this style is not.",
+      "quiz": [
+        {
+          "id": "dm-trt10-1",
+          "stem": "Tritone and flat-2 are treated in this style as which kind of interval?",
+          "correctAnswer": "Home intervals the riff can sit on without visiting a major-key cadence",
+          "distractors": [
+            {
+              "text": "Illegal clashes that must resolve to a third before the bar may end",
+              "kind": "reversed",
+              "rationale": "Resolution to a prettier third is the grammar this style drops."
+            },
+            {
+              "text": "Proof that a Phrygian lecture must be finished before any riff starts",
+              "kind": "nearby",
+              "rationale": "The lecture is optional naming. The interval is already home."
+            },
+            {
+              "text": "Mix problems that only a scooped midrange can be allowed to host",
+              "kind": "misapplied",
+              "rationale": "These are pitch intervals, not a desk setting."
+            }
+          ],
+          "correctExplanation": "Home is the clash. A cadence that erases it is a different style.",
+          "objectiveIds": [
+            "Treat tritone and flat-2 as home intervals for this style"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-phrygian"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-trt10-2",
+          "stem": "A riff that sits on tritone and flat-2 without a Phrygian lecture is honest when it:",
+          "correctAnswer": "Uses those two intervals as the cell, with a rhythm, not as scale homework",
+          "distractors": [
+            {
+              "text": "Names every mode in the catalog before the first attack is allowed",
+              "kind": "reversed",
+              "rationale": "A catalog of modes is the lecture this lesson refuses as a ticket."
+            },
+            {
+              "text": "Hides the flat-2 so a major scale can still be claimed as the home",
+              "kind": "nearby",
+              "rationale": "Hiding the home interval is rewriting the riff."
+            },
+            {
+              "text": "Waits for a vocal hook to explain why the clash is allowed to exist",
+              "kind": "misapplied",
+              "rationale": "The clash is the riff. A hook is not the license."
+            }
+          ],
+          "correctExplanation": "Two intervals plus a rhythm. That is the riff. The lecture can wait.",
+          "objectiveIds": [
+            "Write a riff that sits on those intervals without borrowing a Phrygian lecture"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-phrygian"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-trt10-3",
+          "stem": "Calling a flat-2 riff 'in a major key with a wrong note' fails because:",
+          "correctAnswer": "It treats the home interval as a mistake instead of the cell's resting clash",
+          "distractors": [
+            {
+              "text": "It is required, because this style has no home except a major tonic",
+              "kind": "reversed",
+              "rationale": "The style's home is the clash this lesson names."
+            },
+            {
+              "text": "It would be correct if the drummer also played a d-beat under the riff",
+              "kind": "nearby",
+              "rationale": "Kit grammar does not re-home the interval."
+            },
+            {
+              "text": "It only fails when the guitar is in drop tuning, never in standard",
+              "kind": "subtle",
+              "rationale": "Tuning is a later lever. The interval job is the same."
+            }
+          ],
+          "correctExplanation": "Wrong-note talk is major-key gravity. Here the clash is the tonic job.",
+          "objectiveIds": [
+            "Treat tritone and flat-2 as home intervals for this style"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-phrygian"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-palm-mute-10",
+      "conceptId": "dm-palm-mute",
+      "title": "Mute, not more notes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "goDeeper": "dm-harmony",
+      "explanation": [
+        "Choked and open strings are two instruments on one guitar. The palm on the bridge shortens and darkens the attack. Lifting it lets the pitch ring. That switch is orchestration. It is not a decoration glued on after the notes were chosen.",
+        "Orchestrate the cell by mute instead of adding pitches. The same three notes, choked then open, are already a section pair. Adding a fourth note because the bar felt empty is a different, often worse, fix. Density can come from the right hand's contact, not from a thicker scale.",
+        "Place the open hit where the kit also accents, or against it on purpose. An open chord on a half-time snare is one arrangement. An open pitch in the middle of a choked stream is another. Either is a choice you can hear. Random ringing is not orchestration."
+      ],
+      "example": "A four-attack chromatic cell fully choked for two bars, then the last attack left open. Same pitches, new instrument. No extra note was hired.",
+      "whyItMatters": "Mute is how a one-guitar arrangement gets contrast without a new riff. If you only add notes, you will bury the cell you were writing.",
+      "quiz": [
+        {
+          "id": "dm-pmu10-1",
+          "stem": "Choked versus open is treated here as which kind of construction fact?",
+          "correctAnswer": "Two instruments on one guitar, because mute changes attack and sustain",
+          "distractors": [
+            {
+              "text": "One instrument, because mute is only a decoration after the notes",
+              "kind": "reversed",
+              "rationale": "Mute is orchestration, not a sticker on finished pitches."
+            },
+            {
+              "text": "A mix trick that only a scooped midrange pedal can legally produce",
+              "kind": "nearby",
+              "rationale": "The palm is on the bridge. A pedal is not the mute."
+            },
+            {
+              "text": "A requirement that every open note must be a vocal hook",
+              "kind": "misapplied",
+              "rationale": "Open is a guitar instrument, not a pop hook."
+            }
+          ],
+          "correctExplanation": "Choke and ring are two timbres. That is two instruments, one neck.",
+          "objectiveIds": [
+            "Use choked versus open as two instruments"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-pmu10-2",
+          "stem": "Orchestrating a cell by mute rather than by adding notes means you:",
+          "correctAnswer": "Keep the pitches and change choked versus open to make the contrast",
+          "distractors": [
+            {
+              "text": "Add scale leftover until the bar is full, then mute nothing",
+              "kind": "reversed",
+              "rationale": "Adding notes is the fix this lesson refuses as first resort."
+            },
+            {
+              "text": "Retune every string before mute is allowed to count as arrangement",
+              "kind": "nearby",
+              "rationale": "Tuning is a different lever. Mute is this one."
+            },
+            {
+              "text": "Replace the cell with a breakdown chug so mute has a new genre",
+              "kind": "misapplied",
+              "rationale": "A genre swap is not mute-as-orchestration."
+            }
+          ],
+          "correctExplanation": "Same pitches, new contact. That is the orchestration.",
+          "objectiveIds": [
+            "Orchestrate a cell by mute, not by adding notes"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-pmu10-3",
+          "stem": "A fully choked stream with one open attack on the snare differs from random ringing because:",
+          "correctAnswer": "The open hit is placed against a kit accent on purpose, as arrangement",
+          "distractors": [
+            {
+              "text": "Random ringing is the only honest mute, because control is cheating",
+              "kind": "reversed",
+              "rationale": "Control is the orchestration. Leak is not a style."
+            },
+            {
+              "text": "They are the same once any distortion is on the chain",
+              "kind": "nearby",
+              "rationale": "Distortion does not place the open hit for you."
+            },
+            {
+              "text": "The snare forbids open guitar, so the hit cannot be arrangement",
+              "kind": "subtle",
+              "rationale": "The snare is exactly where an open hit can be placed."
+            }
+          ],
+          "correctExplanation": "Placed ring versus leftover ring. Only the first is orchestration.",
+          "objectiveIds": [
+            "Use choked versus open as two instruments",
+            "Orchestrate a cell by mute, not by adding notes"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "dm-guitar-tune-10",
+      "conceptId": "dm-guitar-tune",
+      "title": "Tuning, not a weight contest",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-pedal-tone",
+        "mus-drop-tune"
+      ],
+      "goDeeper": "dm-harmony",
+      "explanation": [
+        "Dropping a string is a harmonic choice because it changes which pitch is open, which power-chord shape the left hand can grab, and which pedal the cell can grind. Lower is not automatically better. Lower is a new open-string fact.",
+        "Predict the new pedal a drop creates. Drop D turns the sixth string into a D that power-chords as a one-finger fifth against the open A. Other drops move that wall again. Write the cell to use the new open pitch, or you retuned for a slogan.",
+        "Refuse heavier-as-better as a reason. If the riff does not use the new open string, the new fifth shape, or the new grind, the tuning did not change the riff. It changed the marketing. Choose the tuning because the cell needs that wall."
+      ],
+      "example": "A cell that grinds an open D and grabs a one-finger D5 is using drop D as harmony. The same cell played in standard, with no open D, did not need the drop.",
+      "whyItMatters": "Tuning is orchestration of the pedal and the shape. If you chase low for its own sake, you will lose the open-string job this style actually writes with.",
+      "quiz": [
+        {
+          "id": "dm-gtu10-1",
+          "stem": "A tuning is chosen well in this lesson when it:",
+          "correctAnswer": "Changes the riff's open pitch, shape, or pedal, not because lower ranks as better",
+          "distractors": [
+            {
+              "text": "Is lower than the last record, which is the only allowed reason to retune",
+              "kind": "reversed",
+              "rationale": "Lower-as-better is the ranking this lesson refuses."
+            },
+            {
+              "text": "Matches a famous player's biography regardless of the open-string job",
+              "kind": "nearby",
+              "rationale": "A biography is not a pedal."
+            },
+            {
+              "text": "Is required by a blast catalog before any open string may ring",
+              "kind": "misapplied",
+              "rationale": "Kit taxonomy does not hire a tuning."
+            }
+          ],
+          "correctExplanation": "New open pitch, new shape, new grind. Those are reasons. A weight contest is not.",
+          "objectiveIds": [
+            "Choose a tuning because it changes the riff, not because it is 'heavier'"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-pedal-tone",
+            "mus-drop-tune"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-gtu10-2",
+          "stem": "Drop D typically creates which new open-string fact for a riff?",
+          "correctAnswer": "A D pedal and a one-finger fifth against the open A string",
+          "distractors": [
+            {
+              "text": "A ban on pedals, because dropped strings may never be left open",
+              "kind": "reversed",
+              "rationale": "The drop is how a new pedal appears."
+            },
+            {
+              "text": "A required major-key cadence on the new D before any cell may start",
+              "kind": "nearby",
+              "rationale": "The new wall is a pedal, not a chorale tonic exam."
+            },
+            {
+              "text": "A guarantee that the riff is heavier and therefore automatically better",
+              "kind": "misconception",
+              "rationale": "Heavier-as-better is the ranking this course refuses."
+            }
+          ],
+          "correctExplanation": "Open D plus a one-finger fifth. That is the new harmonic wall.",
+          "objectiveIds": [
+            "Predict the new open-string pedal a drop creates"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-pedal-tone",
+            "mus-drop-tune"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-gtu10-3",
+          "stem": "If a band retunes lower but the cell never uses the new open string, the honest report is:",
+          "correctAnswer": "The tuning did not change the riff; it changed a slogan about weight",
+          "distractors": [
+            {
+              "text": "The riff automatically improved because lower is always the better wall",
+              "kind": "reversed",
+              "rationale": "Unused open strings do not rewrite the cell."
+            },
+            {
+              "text": "The kit must blast or the unused drop is not allowed to exist",
+              "kind": "nearby",
+              "rationale": "A blast does not supply the missing pedal job."
+            },
+            {
+              "text": "Voice-leading class must be repeated before any drop is legal",
+              "kind": "misapplied",
+              "rationale": "A theory exam is not the missing job. The open string is."
+            }
+          ],
+          "correctExplanation": "No new pedal, no new shape, no new grind. The drop was marketing.",
+          "objectiveIds": [
+            "Choose a tuning because it changes the riff, not because it is 'heavier'",
+            "Predict the new open-string pedal a drop creates"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-pedal-tone",
+            "mus-drop-tune"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "dm-pick-hand-10",
+      "conceptId": "dm-pick-hand",
+      "title": "Speed that still has a downbeat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-tremolo"
+      ],
+      "goDeeper": "dm-blast",
+      "explanation": [
+        "Keep a downbeat inside speed. Tremolo and fast mute can erase the bar if every pick is equal. An accent — a slightly heavier stroke, an open note, a kick lock — is what lets the ear find beat one while the right hand is still moving.",
+        "Write an accent pattern a right hand can survive. A section is not a sprint you win and then collapse. Place accents on a grid the forearm can last: every four picks, or mute-open, or a kick-locked downbeat. Endurance without a pattern is still a blur.",
+        "If the downbeat disappears, thin the picking or slow the surface until the accent can be felt. Proving the hand at a tempo the bar cannot host is sport. The cell still has to be countable against the kit."
+      ],
+      "example": "Sixteenth-note mute with an accent every four picks locked to the kick on one and three. The hand is fast. The bar is still findable. Equal picks at the same tempo would have been a wall with no downbeat.",
+      "whyItMatters": "Right-hand vocabulary is how speed stays music. Without a survivable accent, the next section has nothing to land on.",
+      "quiz": [
+        {
+          "id": "dm-pkh10-1",
+          "stem": "Keeping a downbeat inside speed means the right hand still:",
+          "correctAnswer": "Marks beat one with an accent, an open hit, or a kick lock while picking fast",
+          "distractors": [
+            {
+              "text": "Makes every pick identical so the bar can no longer be found",
+              "kind": "reversed",
+              "rationale": "Equal picks erase the downbeat this lesson is keeping."
+            },
+            {
+              "text": "Stops whenever the kit is allowed to play, so only guitar has a pulse",
+              "kind": "nearby",
+              "rationale": "The kick lock is a partnership, not a solo."
+            },
+            {
+              "text": "Waits for a sung melody before any accent is legal on the guitar",
+              "kind": "misapplied",
+              "rationale": "A pop melody is not the downbeat marker."
+            }
+          ],
+          "correctExplanation": "Fast and findable. The accent is how the bar survives the surface.",
+          "objectiveIds": [
+            "Keep a downbeat inside speed"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-tremolo"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-pkh10-2",
+          "stem": "An accent pattern a right hand can survive is one that:",
+          "correctAnswer": "Repeats on a grid the forearm can last through the section, not a sprint collapse",
+          "distractors": [
+            {
+              "text": "Peaks once at bar one and then has no pattern for the rest of the take",
+              "kind": "reversed",
+              "rationale": "A single sprint is the collapse this lesson refuses."
+            },
+            {
+              "text": "Requires a new tuning on every downbeat or the hand may not continue",
+              "kind": "nearby",
+              "rationale": "Tuning is not an accent pattern."
+            },
+            {
+              "text": "Is illegal unless the player has already finished a mode workbook",
+              "kind": "misapplied",
+              "rationale": "Endurance is a pick-hand job, not a theory exam."
+            }
+          ],
+          "correctExplanation": "A grid you can last. That is vocabulary. A collapse is sport.",
+          "objectiveIds": [
+            "Write an accent pattern a right hand can survive"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-tremolo"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dm-pkh10-3",
+          "stem": "If equal sixteenth picks erase beat one against the kit, the likely fix is:",
+          "correctAnswer": "Thin or slow the surface until an accent can mark the downbeat again",
+          "distractors": [
+            {
+              "text": "Add more equal picks so the missing downbeat can be inferred from density",
+              "kind": "reversed",
+              "rationale": "More equal picks deepen the blur."
+            },
+            {
+              "text": "Mute the kick so the guitar no longer has to share a pulse",
+              "kind": "nearby",
+              "rationale": "Removing the kit hides the problem. It does not mark beat one."
+            },
+            {
+              "text": "Switch to a breakdown chug from another genre as the only legal accent",
+              "kind": "subtle",
+              "rationale": "A genre swap is not the pick-hand fix. An accent on this cell is."
+            }
+          ],
+          "correctExplanation": "The bar has to be findable. Thin the surface. Do not hire a different song.",
+          "objectiveIds": [
+            "Keep a downbeat inside speed",
+            "Write an accent pattern a right hand can survive"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-tremolo"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

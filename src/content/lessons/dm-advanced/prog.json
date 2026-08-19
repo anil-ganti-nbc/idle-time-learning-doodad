@@ -1,0 +1,455 @@
+{
+  "courseId": "dm-advanced",
+  "moduleId": "dm-a-prog",
+  "lessons": [
+    {
+      "id": "dm-prog-form-10",
+      "conceptId": "dm-prog-form",
+      "title": "Sections that refuse the schedule",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-riff-form", "dm-prog-hist"],
+      "goDeeper": "dm-motif",
+      "explanation": [
+        "Return on schedule is one form. Progressive long form develops a section instead: the cell mutates, the texture thins or thickens, a new grouping arrives, and the old riff comes back altered rather than on a clock. Riff-as-form already said the piece is the order of cells and their mutations. This lesson refuses the clock.",
+        "Progressive death metal as a branch borrowed longer spans and some jazz or fusion grammar — odd grouping, a solo as a section, a cadence that is not a chorus. You do not need a jazz exam. You need to hear that the next minute is a development of what you already have, not a new song bolted on.",
+        "A medley is a stack of unrelated cells. A long form still has cells you can name across minutes. Show the thread: interval stretch, displacement, a half-time restatement, a new drum texture on the same pitches. If you cannot point at the thread, you wrote a playlist, not a piece."
+      ],
+      "example": "Cell A in a blast, then A displaced by an eighth over a dry kit, then A's contour in half-time. That is one form. Cell A, an unrelated sweep, a new chromatic run, and no return is a medley.",
+      "whyItMatters": "Motivic work is how the thread stays audible. Without it, 'progressive' is only runtime.",
+      "quiz": [
+        {
+          "id": "dm-pgf10-1",
+          "stem": "Progressive long form develops sections instead of doing what?",
+          "correctAnswer": "Returning the same cell on a clock whether it has grown or not",
+          "distractors": [
+            { "text": "Allowing any mutation, because development is forbidden here", "kind": "reversed", "rationale": "Mutation is the development this form wants." },
+            { "text": "Borrowing a jazz exam as the only legal next section", "kind": "nearby", "rationale": "The branch borrowed grammar, not an exam." },
+            { "text": "Replacing cells with a celebrity setlist treated as form", "kind": "misapplied", "rationale": "A setlist is a medley of names, not a form." }
+          ],
+          "correctExplanation": "The clock is optional. The cell has to grow or the section did not develop.",
+          "objectiveIds": ["Develop sections instead of returning on schedule"],
+          "prerequisiteConceptIds": ["dm-riff-form", "dm-prog-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-pgf10-2",
+          "stem": "A long form that still has cells, rather than a medley, will show:",
+          "correctAnswer": "A thread you can point at: stretch, displacement, or restatement",
+          "distractors": [
+            { "text": "A stack of unrelated cells whose only link is runtime", "kind": "reversed", "rationale": "That stack is the medley this lesson refuses." },
+            { "text": "A verse-chorus map copied over the blast so pop form can count", "kind": "nearby", "rationale": "Pop maps are not this thread." },
+            { "text": "A roster of fusion players printed as the formal analysis", "kind": "misapplied", "rationale": "Names are not a cell thread." }
+          ],
+          "correctExplanation": "Point at the mutation. If you cannot, you have a playlist.",
+          "objectiveIds": ["Show a long form that still has cells, not a medley"],
+          "prerequisiteConceptIds": ["dm-riff-form", "dm-prog-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-pgf10-3",
+          "stem": "Cell A, then A displaced, then A's contour in half-time, is long form because:",
+          "correctAnswer": "The same cell is still the material across changing textures",
+          "distractors": [
+            { "text": "Three unrelated ideas were stacked until the runtime felt progressive", "kind": "reversed", "rationale": "They are related. That is why it is not a medley." },
+            { "text": "The blast never left, so density did the formal work alone", "kind": "nearby", "rationale": "Texture changed. Density was not the whole form." },
+            { "text": "A twelve-tone row replaced the cell after the first statement", "kind": "misapplied", "rationale": "The cell stayed. No row was required." }
+          ],
+          "correctExplanation": "Same cell, new jobs. That is development, not a medley.",
+          "objectiveIds": ["Show a long form that still has cells, not a medley"],
+          "prerequisiteConceptIds": ["dm-riff-form", "dm-prog-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-prog-form-20",
+      "conceptId": "dm-prog-form",
+      "title": "Long form that still has cells",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["dm-riff-form", "dm-prog-hist"],
+      "goDeeper": "dm-motif",
+      "explanation": [
+        "Long form still has to be built from cells. Riff-as-form already treated the piece as an order of figures and mutations. Progressive history added span and borrowed grammar. This pass is the inventory of how a section grows without becoming a medley or a scheduled chorus.",
+        "Name four growth moves and use more than one. Displacement starts the same cell on a new beat. Interval stretch widens a leap and keeps the contour. Texture change puts the same pitches on a new kit grammar. Half-time restatement is a contrast that is still the cell. A fifth move — a brand-new figure with no parent — is how medleys begin.",
+        "Borrowed fusion grammar is a local tool, not an exam. An odd group, a solo that develops the cell instead of leaving it, a cadence that is a held pitch plus a drum drop: those can open a section. They fail when they import a new song that never talks to A. Span is not evidence. Talk between sections is evidence.",
+        "Audit a long cut by writing the cells in order and drawing arrows for the growth moves. If a box has no arrow in or out, you found a medley insert. Cut it or give it a parent. Return is allowed when the return is earned — A after it has been stretched — and optional when the last mutation is already the close."
+      ],
+      "example": "Map: A blast; A plus one eighth; A in fifths over a dry kit; a solo that sequences A's last two attacks; A half-time to close. Every box has a parent. Swap the solo for an unrelated sweep and the map grows a medley island.",
+      "whyItMatters": "Without the map, 'progressive' is a runtime claim. With it, you can cut, keep, or rewrite a section on purpose.",
+      "quiz": [
+        {
+          "id": "dm-pgf20-1",
+          "stem": "Which inventory best keeps long form from collapsing into a medley?",
+          "correctAnswer": "Cells in order, with arrows for displacement, stretch, texture, or restatement",
+          "distractors": [
+            { "text": "A runtime clock and a list of famous guests on the cut", "kind": "nearby", "rationale": "Span and names are not growth moves." },
+            { "text": "A rule that every new bar must be an unrelated figure", "kind": "reversed", "rationale": "Unrelated figures are how medleys start." },
+            { "text": "A forced verse-chorus grid pasted over the blast track", "kind": "misapplied", "rationale": "A pop grid is not this inventory." }
+          ],
+          "correctExplanation": "Boxes and arrows. A box with no parent is a medley insert.",
+          "objectiveIds": ["Show a long form that still has cells, not a medley"],
+          "prerequisiteConceptIds": ["dm-riff-form", "dm-prog-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "dm-pgf20-2",
+          "stem": "A solo section develops the form when it:",
+          "correctAnswer": "Sequences or stretches the cell instead of importing a new song",
+          "distractors": [
+            { "text": "Leaves the cell so the solo can prove unused speed", "kind": "reversed", "rationale": "Leaving the cell is a medley move." },
+            { "text": "Names a fusion player so borrowed grammar is a biography", "kind": "nearby", "rationale": "Grammar is grouping and cadence, not a person." },
+            { "text": "Requires a jazz exam before the next riff is allowed", "kind": "misapplied", "rationale": "No exam gates the next section." }
+          ],
+          "correctExplanation": "The solo talks to A. If it does not, it is a bolted-on piece.",
+          "objectiveIds": ["Develop sections instead of returning on schedule"],
+          "prerequisiteConceptIds": ["dm-riff-form", "dm-prog-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dm-pgf20-3",
+          "stem": "Return of cell A after a stretch is earned long form when:",
+          "correctAnswer": "The return is the cell after growth, not a clock hitting a chorus slot",
+          "distractors": [
+            { "text": "The clock hits four minutes, so A must come back unchanged", "kind": "reversed", "rationale": "A scheduled unchanged return is the clock this form can refuse." },
+            { "text": "A is replaced by an unrelated sweep so the return can feel new", "kind": "nearby", "rationale": "An unrelated sweep is a medley insert, not a return." },
+            { "text": "A V–I is invented under A so the return can count as tonal", "kind": "misapplied", "rationale": "A forced chorale is not how this return is earned." }
+          ],
+          "correctExplanation": "Earned return is A after it has grown. A clock is optional.",
+          "objectiveIds": ["Develop sections instead of returning on schedule"],
+          "prerequisiteConceptIds": ["dm-riff-form", "dm-prog-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "dm-dissonant-comp-10",
+      "conceptId": "dm-dissonant-comp",
+      "title": "Clash as the material",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-harmony", "mus-dissonant-voicing", "dm-dissonant-hist"],
+      "goDeeper": "dm-atonal-gesture",
+      "explanation": [
+        "Clash can be the material, not the spice. Death-metal harmony already works from diminished cells, chromatic planing, and riff-as-progression. Dissonant voicing stacks seconds until the chord has no common-practice name. This lesson keeps that clash as the stuff the section is made of, not a color you sprinkle on a consonant riff.",
+        "The dissonant branch is the history where the riff stops agreeing with itself: two guitar parts grind, a pedal sits under a cell that refuses it, a cluster is the harmony rather than a passing smear. That is construction. It is not 'they played wrong notes,' and it is not a moral rank of coldness.",
+        "Write a dissonant section that still has a cell you can sing on one string. The ear needs a figure — two or three pitches, a contour — or the clash is only a texture wash. Hum the line, then add the grind against it. If you cannot hum anything, you wrote fog, not a section."
+      ],
+      "example": "A three-note chromatic cell on one string, then a second guitar a second away, held as the harmony. The cell is still singable. A page of clusters with no contour is spice with the main riff deleted.",
+      "whyItMatters": "Atonal-gesture talk will abuse the word atonal unless you can already point at a sung cell inside the clash.",
+      "quiz": [
+        {
+          "id": "dm-dis10-1",
+          "stem": "Clash as the material, rather than the spice, means the section:",
+          "correctAnswer": "Is built from the grind, not from a consonant riff with extras",
+          "distractors": [
+            { "text": "Sprinkles a cluster on a consonant riff and calls the job done", "kind": "reversed", "rationale": "That sprinkle is spice, not material." },
+            { "text": "Ranks the band as colder and therefore better than a scene", "kind": "nearby", "rationale": "Coldness is not a grade in this course." },
+            { "text": "Requires a common-practice name before the clash can count", "kind": "misapplied", "rationale": "The voicing may have no such name. That is the point." }
+          ],
+          "correctExplanation": "The grind is the stuff. Spice is a consonant riff with extras.",
+          "objectiveIds": ["Use clash as the material, not the spice"],
+          "prerequisiteConceptIds": ["dm-harmony", "mus-dissonant-voicing", "dm-dissonant-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-dis10-2",
+          "stem": "A dissonant section still needs a cell you can sing on one string so that:",
+          "correctAnswer": "The ear has a figure inside the grind instead of only fog",
+          "distractors": [
+            { "text": "The clash can be deleted once a singable major triad arrives", "kind": "reversed", "rationale": "The cell lives inside the clash; it does not cancel it." },
+            { "text": "A jazz exam can certify the cluster as a named chord", "kind": "nearby", "rationale": "A name is optional. The sung figure is not." },
+            { "text": "Wrong-note talk can replace construction as the analysis", "kind": "misapplied", "rationale": "Wrong-note talk is the history lesson's refuse pile." }
+          ],
+          "correctExplanation": "Hum the line, then add the grind. Fog has no cell.",
+          "objectiveIds": ["Write a dissonant section that still has a cell you can sing on one string"],
+          "prerequisiteConceptIds": ["dm-harmony", "mus-dissonant-voicing", "dm-dissonant-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-dis10-3",
+          "stem": "A page of clusters with no contour fails this writing test because:",
+          "correctAnswer": "There is no singable cell, so the clash is fog rather than a section",
+          "distractors": [
+            { "text": "Clusters are banned once death-metal harmony has been named", "kind": "nearby", "rationale": "Clusters can be the harmony. They still need a cell." },
+            { "text": "The page is already a section, because fog is a complete cell", "kind": "reversed", "rationale": "Fog is the failure. A cell is a figure." },
+            { "text": "A brand of distortion is required before any cell can be sung", "kind": "misapplied", "rationale": "A brand is not a contour." }
+          ],
+          "correctExplanation": "No contour, no section. The grind needs a figure to grind against.",
+          "objectiveIds": ["Write a dissonant section that still has a cell you can sing on one string"],
+          "prerequisiteConceptIds": ["dm-harmony", "mus-dissonant-voicing", "dm-dissonant-hist"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-atonal-gesture-10",
+      "conceptId": "dm-atonal-gesture",
+      "title": "A chromatic cell is not a system",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-dissonant-comp"],
+      "goDeeper": "dm-cliche",
+      "explanation": [
+        "Avoiding a tonic is a gesture, not a system. A lick that never sits on a home pitch can still be a chromatic cell with a contour you can sing. Twelve-tone technique is a different object: an ordered set of all twelve pitch classes, with rules about repetition and derivation. Death metal almost never writes that object.",
+        "Refuse the word atonal when you mean chromatic cell. Atonal, in the textbook sense, names a method for organizing pitch without a tonic and often without a hierarchy you can hum. A death-metal bar that slithers by semitone and then leans on a low E is tonal enough to have a lean. Call the lean what it is.",
+        "Keep the distinction when you analyze. Point at the cell, the lean or the refusal to lean, and the clash that is the material. If someone says atonal, ask whether they can show a row, a derived hexachord, or only a lick that ducked a resolution. Gesture is common. System is rare. Do not inflate the former."
+      ],
+      "example": "A four-note chromatic descent that ends on an open low string is a cell with a lean. Calling it twelve-tone because it used four pitch classes is a category error. A row that uses all twelve before repeating is the system you did not write.",
+      "whyItMatters": "Cliche talk will need honest names. If every run is 'atonal,' you cannot tell vocabulary from a fill.",
+      "quiz": [
+        {
+          "id": "dm-ato10-1",
+          "stem": "A lick that avoids a tonic differs from a twelve-tone system because:",
+          "correctAnswer": "The lick is a gesture; a system orders all twelve with derivation rules",
+          "distractors": [
+            { "text": "Any avoided tonic is already a complete twelve-tone method", "kind": "reversed", "rationale": "Avoidance is a gesture, not a row technique." },
+            { "text": "Twelve-tone music is just a faster chromatic cell under distortion", "kind": "nearby", "rationale": "Speed and distortion do not create a row." },
+            { "text": "Both require a celebrity serialist named in the liner notes", "kind": "misapplied", "rationale": "A name is not a pitch system." }
+          ],
+          "correctExplanation": "Gesture ducks a home. System is an ordered twelve with rules.",
+          "objectiveIds": ["Distinguish a lick that avoids a tonic from a twelve-tone system"],
+          "prerequisiteConceptIds": ["dm-dissonant-comp"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-ato10-2",
+          "stem": "You should refuse the word atonal when what you actually have is:",
+          "correctAnswer": "A chromatic cell, often with a lean, not a row-based method",
+          "distractors": [
+            { "text": "A documented twelve-tone row with derived hexachords", "kind": "reversed", "rationale": "That case is the rare system. The word can stay." },
+            { "text": "A verse-chorus map that already names a pop tonic", "kind": "nearby", "rationale": "A pop map is a different error, not this word." },
+            { "text": "A brand of amplifier that makes any riff count as a system", "kind": "misapplied", "rationale": "A brand is not a pitch method." }
+          ],
+          "correctExplanation": "Chromatic cell plus a lean is not atonal technique. Say cell.",
+          "objectiveIds": ["Refuse the word atonal when you mean 'chromatic cell'"],
+          "prerequisiteConceptIds": ["dm-dissonant-comp"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-ato10-3",
+          "stem": "A four-note chromatic descent that leans on an open low string is best named:",
+          "correctAnswer": "A chromatic cell with a lean, not a twelve-tone system",
+          "distractors": [
+            { "text": "Atonal twelve-tone technique, because four pitches already make a row", "kind": "misconception", "rationale": "Four pitches are not all twelve, and a lean is a tonic-like job." },
+            { "text": "A failed riff, because any lean is illegal in this style", "kind": "reversed", "rationale": "Leans are common. They are why atonal is the wrong word." },
+            { "text": "A production doctrine about gates and kick clicks", "kind": "misapplied", "rationale": "This is a pitch-organization question." }
+          ],
+          "correctExplanation": "Cell plus lean. Save atonal for a method you can actually show.",
+          "objectiveIds": ["Refuse the word atonal when you mean 'chromatic cell'"],
+          "prerequisiteConceptIds": ["dm-dissonant-comp"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-metric-mod-10",
+      "conceptId": "dm-metric-mod",
+      "title": "Old subdivision, new pulse",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-odd-meter"],
+      "goDeeper": "dm-prog-form",
+      "explanation": [
+        "Metric modulation makes the old subdivision become the new pulse. A triplet that was a decoration becomes the quarter of the next tempo. A five-grouping you were already feeling becomes the bar. Odd meter here is still a felt additive group, not a count said out loud. The pivot has to be a grouping the kit can play.",
+        "Write the pivot as a shared figure. If the last bar's dotted quarter is about to be the new beat, let the kit state that dotted quarter as a clear attack, then keep it as the new nod. A paper modulation that only exists in a click track, while the kit slurs both grids, is not playable.",
+        "Check the body. After the pivot, can a drummer keep the new pulse without subdividing the old one out loud? If not, simplify the hinge: fewer attacks, a cymbal on the new beat, a guitar cell that already matches the new group. The ear should feel a handoff, not a train wreck and a new song."
+      ],
+      "example": "Eights under a mid-tempo cell; the last bar groups those eights in threes; the next section nods on that three as the new quarter. The kit plays the three as a ride figure both before and after the cut.",
+      "whyItMatters": "Long form often needs a tempo door. A door the kit cannot play is only a DAW edit.",
+      "quiz": [
+        {
+          "id": "dm-mmod10-1",
+          "stem": "Metric modulation in this lesson is the move where:",
+          "correctAnswer": "The old subdivision becomes the new pulse the band nods to",
+          "distractors": [
+            { "text": "The metronome jumps with no shared grouping as a hinge", "kind": "nearby", "rationale": "A jump without a hinge is a cut, not a modulation." },
+            { "text": "The old pulse stays forever so no subdivision can be promoted", "kind": "reversed", "rationale": "Promotion of the subdivision is the move." },
+            { "text": "A spoken count replaces any figure the kit could play", "kind": "misapplied", "rationale": "The pivot has to be playable, not recited." }
+          ],
+          "correctExplanation": "Old part becomes new whole. That is the handoff.",
+          "objectiveIds": ["Make the old subdivision become the new pulse"],
+          "prerequisiteConceptIds": ["dm-odd-meter"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-mmod10-2",
+          "stem": "A pivot grouping is honest only when the kit can:",
+          "correctAnswer": "State the shared figure before and after so the new pulse is playable",
+          "distractors": [
+            { "text": "Hide both grids in a smear so the paper tempo can change alone", "kind": "reversed", "rationale": "A paper-only change is not a playable pivot." },
+            { "text": "Stop playing entirely so the click track can finish the job", "kind": "nearby", "rationale": "The kit has to carry the handoff." },
+            { "text": "Replace the figure with a brand name printed on the ride", "kind": "misapplied", "rationale": "A brand is not a grouping." }
+          ],
+          "correctExplanation": "Shared figure, then new nod. If the kit cannot play it, rewrite the hinge.",
+          "objectiveIds": ["Write a pivot grouping that the kit can actually play"],
+          "prerequisiteConceptIds": ["dm-odd-meter"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-mmod10-3",
+          "stem": "Eights grouped in threes that then become the new quarter succeed when:",
+          "correctAnswer": "The three is audible on both sides of the cut as the handed-off pulse",
+          "distractors": [
+            { "text": "The three exists only in a DAW grid the drummer cannot feel", "kind": "reversed", "rationale": "An unfelt grid is a train wreck, not a modulation." },
+            { "text": "The guitar starts an unrelated cell so the hinge can be ignored", "kind": "nearby", "rationale": "An unrelated cell is a cut to a new song." },
+            { "text": "A twelve-tone row is assigned to the ride as the new pulse", "kind": "misapplied", "rationale": "A row is not a metric hinge." }
+          ],
+          "correctExplanation": "The three has to be heard, then kept. That is the old subdivision as new pulse.",
+          "objectiveIds": ["Make the old subdivision become the new pulse"],
+          "prerequisiteConceptIds": ["dm-odd-meter"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-motif-10",
+      "conceptId": "dm-motif",
+      "title": "The cell returns altered",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-riff-cell", "mus-analysis-method"],
+      "goDeeper": "dm-dissonant-comp",
+      "explanation": [
+        "Motivic work in this music is the cell coming back altered. A riff cell is still a short figure you can repeat, displace, or mutate. Analysis asks what repeats, what contrasts, and what the cell is. When the answer to all three is 'the same figure in a new job,' that return is the piece, not a leftover intro.",
+        "Show three mutations that are still the same cell. Keep the contour and change the rhythm. Keep the rhythm and stretch an interval. Keep the pitches and change the kit texture. If a listener cannot hear the parent, you wrote a new cell and called it a variation. Honesty is the audible parent.",
+        "Refuse an analysis that invents a chorale the band did not play. The method stays on the figure. A diminished outline, a chromatic pair, a leap-and-fall: name that, then name the mutation. Extreme music does not get a free pass from motivic listening, and it does not owe a textbook sonata."
+      ],
+      "example": "Two attacks and a fall. Later: the same two attacks as a triplet pickup. Later: the fall widened by a semitone. Later: the same pitches over half-time. Three mutations, one cell.",
+      "whyItMatters": "Long form without motif is a medley. Cliché talk without motif cannot tell a run that means something from a fill.",
+      "quiz": [
+        {
+          "id": "dm-mot10-1",
+          "stem": "Motivic development in this lesson treats the piece as:",
+          "correctAnswer": "The cell coming back altered rather than a leftover intro",
+          "distractors": [
+            { "text": "A stack of new cells so nothing has to return", "kind": "reversed", "rationale": "No return means no motivic piece." },
+            { "text": "A chorale you invent under the riff to replace the cell", "kind": "nearby", "rationale": "Invented chorales are what the method refuses." },
+            { "text": "A biography of who first played a similar contour", "kind": "misapplied", "rationale": "A biography is not a mutation." }
+          ],
+          "correctExplanation": "Altered return is the piece. A leftover intro is not development.",
+          "objectiveIds": ["Bring the cell back altered; that is the piece"],
+          "prerequisiteConceptIds": ["dm-riff-cell", "mus-analysis-method"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-mot10-2",
+          "stem": "Three mutations still count as the same cell when a listener can:",
+          "correctAnswer": "Hear the parent in contour, rhythm, or pitch through each change",
+          "distractors": [
+            { "text": "Hear three unrelated figures that share only a genre tag", "kind": "reversed", "rationale": "Unrelated figures are new cells, not mutations." },
+            { "text": "Read a famous name printed next to each variation", "kind": "nearby", "rationale": "A name is not an audible parent." },
+            { "text": "Find a V–I you added so the mutations can look tonal", "kind": "misapplied", "rationale": "An invented chorale is not the parent." }
+          ],
+          "correctExplanation": "Audible parent through rhythm, contour, or pitch. That is the same cell.",
+          "objectiveIds": ["Show three mutations that are still the same cell"],
+          "prerequisiteConceptIds": ["dm-riff-cell", "mus-analysis-method"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-mot10-3",
+          "stem": "Two attacks and a fall, then a triplet pickup, then a wider fall, is:",
+          "correctAnswer": "One cell in three jobs, which is the motivic piece",
+          "distractors": [
+            { "text": "Three songs glued together because any change starts a medley", "kind": "reversed", "rationale": "Change with a parent is mutation, not a medley." },
+            { "text": "A twelve-tone derivation because the fall moved a semitone", "kind": "nearby", "rationale": "A wider fall is a mutation, not a row." },
+            { "text": "Proof that analysis must invent a chorale to explain the fall", "kind": "misapplied", "rationale": "The method stays on the figure." }
+          ],
+          "correctExplanation": "Same parent, three jobs. That is the return this lesson wants.",
+          "objectiveIds": ["Show three mutations that are still the same cell"],
+          "prerequisiteConceptIds": ["dm-riff-cell", "mus-analysis-method"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "dm-cliche-10",
+      "conceptId": "dm-cliche",
+      "title": "Vocabulary that actually turns",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-harmony"],
+      "goDeeper": "dm-analysis-riff",
+      "explanation": [
+        "Vocabulary earns its keep when it turns the form. A diminished run that sequences the cell, aims a cadence, or opens a new texture is vocabulary. The same run used to fill a bar because diminished cells are what this style does is a cliché. Harmony here is still diminished cells, chromatic planing, and riff-as-form — which is why the run is so easy to fake.",
+        "Tell the two apart by asking what would break if you cut the run. If the next section lost its pickup, or the cell lost its last mutation, keep it. If nothing but duration would change, cut it. Fills that do not change the form are unused technicality wearing a familiar scale.",
+        "Do not ban the vocabulary. Ban the autopilot. A tritone leap, a flat-2 grind, a sweep that is actually an arpeggio with a job: those remain available. They become cliché when they are the default bar you paste while thinking of something else. Write the job, then choose the familiar shape if it still fits."
+      ],
+      "example": "A diminished sequence that lands on the next cell's first pitch is vocabulary. The same sequence pasted over a held chord while the form waits is a fill. Cut the second. Keep the first.",
+      "whyItMatters": "Riff analysis will otherwise list every diminished run as structure. Some of them are only duration.",
+      "quiz": [
+        {
+          "id": "dm-cli10-1",
+          "stem": "A diminished run that means something differs from a bar-fill when it:",
+          "correctAnswer": "Sequences the cell, aims a cadence, or opens a new texture",
+          "distractors": [
+            { "text": "Fills a bar because diminished cells are what the style must do", "kind": "reversed", "rationale": "That autopilot is the cliché." },
+            { "text": "Uses more notes than the last fill, which automatically adds form", "kind": "nearby", "rationale": "Note-count is not a formal job." },
+            { "text": "Names a famous player so the run can count as vocabulary", "kind": "misapplied", "rationale": "A name does not give the run a job." }
+          ],
+          "correctExplanation": "Job first: sequence, cadence, texture. Autopilot is the cliché.",
+          "objectiveIds": ["Tell a diminished run that means something from one that fills a bar"],
+          "prerequisiteConceptIds": ["dm-harmony"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-cli10-2",
+          "stem": "A fill that does not change the form should be:",
+          "correctAnswer": "Cut, because only duration would move if it disappeared",
+          "distractors": [
+            { "text": "Kept, because unused vocabulary is already a section", "kind": "reversed", "rationale": "Unused vocabulary is the cliché this lesson cuts." },
+            { "text": "Doubled so the form can be rescued by more of the same run", "kind": "nearby", "rationale": "Doubling a jobless fill is still jobless." },
+            { "text": "Justified by inventing a V–I under the held chord", "kind": "misapplied", "rationale": "An invented chorale does not create a job." }
+          ],
+          "correctExplanation": "If cutting it only shortens the track, it was duration. Cut it.",
+          "objectiveIds": ["Cut a fill that does not change the form"],
+          "prerequisiteConceptIds": ["dm-harmony"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-cli10-3",
+          "stem": "The same diminished sequence is vocabulary when it lands on the next cell, and a cliché when it:",
+          "correctAnswer": "Sits on a held chord while the form waits for the next job",
+          "distractors": [
+            { "text": "Is banned forever once it has been used as a pickup once", "kind": "nearby", "rationale": "The shape can return if it still has a job." },
+            { "text": "Becomes more structural the longer the form waits under it", "kind": "reversed", "rationale": "Waiting is the fill. Landing is the job." },
+            { "text": "Requires a brand of distortion before either use can count", "kind": "misapplied", "rationale": "A brand does not sort vocabulary from cliché." }
+          ],
+          "correctExplanation": "Landing is a job. Waiting is a fill. Same notes, two verdicts.",
+          "objectiveIds": ["Tell a diminished run that means something from one that fills a bar"],
+          "prerequisiteConceptIds": ["dm-harmony"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    }
+  ]
+}

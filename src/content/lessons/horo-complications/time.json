@@ -1,0 +1,583 @@
+{
+  "courseId": "horo-complications",
+  "moduleId": "horo-c-time",
+  "lessons": [
+    {
+      "id": "horo-date-5",
+      "conceptId": "horo-date",
+      "title": "Once a day, from the motion works",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["horo-cannon"],
+      "goDeeper": "horo-calendar",
+      "diagram": "horo-date-works",
+      "explanation": [
+        "Motion works turn the hour wheel twice a day. A date-driving wheel takes that motion down to one turn in twenty-four hours. A finger on that driver then pushes a 31-tooth date disc one step, usually around midnight.",
+        "Force the disc while that finger still sits in a tooth and the jumper is half-cocked. The finger bends, a tooth chips, or the setting clutch slips. Changeover is a loaded mesh, not a free wheel you can spin from the crown."
+      ],
+      "example": "At 23:40 the finger is already in a date-disc gap. Turning the crown in the date position fights that finger. The disc cannot jump, so the finger or a tooth yields.",
+      "whyItMatters": "A simple date is a once-a-day push from the motion works. Treat it as a free spinner and you jam the changeover.",
+      "quiz": [
+        {
+          "id": "horo-dt5-1",
+          "stem": "What actually advances a simple date disc once each day?",
+          "correctAnswer": "A finger on a 24-hour driver fed by the motion works",
+          "distractors": [
+            { "text": "The balance, which trips a date pallet every 86,400 swings", "kind": "nearby", "rationale": "The oscillator meters time. It does not push the date disc." },
+            { "text": "The mainspring barrel, which clicks the disc each time you wind", "kind": "misapplied", "rationale": "Winding stores work. It does not index the date." },
+            { "text": "The seconds hand, which carries a pin that hits the disc at 60", "kind": "subtle", "rationale": "Seconds are display. The date driver turns once a day." }
+          ],
+          "correctExplanation": "Hour wheel, 24-hour driver, finger, 31-tooth disc. That is the simple date.",
+          "objectiveIds": ["Advance a date disc once a day from the motion works"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-dt5-2",
+          "stem": "The date-driving wheel in this simple calendar turns:",
+          "correctAnswer": "Once per day, so its finger can push one tooth of a 31-tooth disc",
+          "distractors": [
+            { "text": "Once per hour, matching the minute hand as a date stepper", "kind": "reversed", "rationale": "An hourly stepper would burn through the month in a day." },
+            { "text": "Once per week, because seven is the natural calendar ratio", "kind": "nearby", "rationale": "A week wheel is a different extra. Simple date is daily." },
+            { "text": "With every balance swing, which is how a disc stays in step", "kind": "misapplied", "rationale": "The timebase does not index the disc. The motion works do." }
+          ],
+          "correctExplanation": "One turn a day, one tooth, 31 days around the disc.",
+          "objectiveIds": ["Advance a date disc once a day from the motion works"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-dt5-3",
+          "stem": "You force the date from the crown at 23:40. The likely result is:",
+          "correctAnswer": "A jammed finger or chipped tooth, because the changeover is already loaded",
+          "distractors": [
+            { "text": "A cleaner jump, because load at midnight is how dates are meant to be set", "kind": "reversed", "rationale": "Load is the hazard. Setting through it fights the finger." },
+            { "text": "A faster balance, because the disc stores extra impulse for the pallet", "kind": "misapplied", "rationale": "The date disc is display gearing. It does not impulse the oscillator." },
+            { "text": "A perpetual month, because forcing the disc teaches it February", "kind": "subtle", "rationale": "Force does not add a month cam. It bends steel." }
+          ],
+          "correctExplanation": "Finger already in the gap, jumper half-cocked. Pushing then yields a part.",
+          "objectiveIds": ["Predict a jammed setting if you force the date near the changeover"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-date-10",
+      "conceptId": "horo-date",
+      "title": "Thirty-one teeth and a midnight finger",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-cannon"],
+      "goDeeper": "horo-calendar",
+      "diagram": "horo-date-works",
+      "explanation": [
+        "Hour wheel to date driver to a 31-tooth disc is the whole simple date. The driver turns once per day. Its finger or cam advances one tooth, and a jumper spring parks the disc on a number until the next midnight.",
+        "Slow dates drag that finger across a tooth for hours. Instant dates store a spring and dump it at a trip. Either way the mesh is loaded near the jump. Setting through that window fights the finger with the stem.",
+        "Predict the jam: crown in the date position, time showing late evening into the first hour, and you push. The finger is already in the gap. The disc cannot jump, so something yields — usually the finger, a tooth, or a clutched pinion."
+      ],
+      "example": "A student sets the date at 23:50 on a slow-change calibre. The finger is deep in a tooth. The crown fights, the finger bends, and the disc later hangs between two numbers.",
+      "whyItMatters": "Know which wheel pushes the disc, and when that push is live, or date-setting becomes a way to break the motion works.",
+      "quiz": [
+        {
+          "id": "horo-dt10-1",
+          "stem": "How does a simple date disc differ from the going train in this machine?",
+          "correctAnswer": "The disc is display advanced once a day; the going train still counts the unwind",
+          "distractors": [
+            { "text": "The disc meters the second; the going train only prints the date", "kind": "reversed", "rationale": "The oscillator meters. The date disc is a daily display." },
+            { "text": "The disc stores the mainspring; the going train is only a jumper", "kind": "misconception", "rationale": "Stored work is still the spring in the barrel." },
+            { "text": "They are two names for the same 31-tooth escape wheel", "kind": "nearby", "rationale": "Escape wheel and date disc are different jobs." }
+          ],
+          "correctExplanation": "Motion works, 24-hour driver, finger, disc. The timebase is not in that chain.",
+          "objectiveIds": ["Advance a date disc once a day from the motion works"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-dt10-2",
+          "stem": "Trace a simple date from the cannon pinion to a new number on the disc. After the hour wheel comes:",
+          "correctAnswer": "A 24-hour driver whose finger then pushes one tooth of the 31-tooth disc",
+          "distractors": [
+            { "text": "The escape wheel, whose pallet then prints the date on the jumper", "kind": "misapplied", "rationale": "The escapement meters the going train. It does not index the disc." },
+            { "text": "The barrel arbor, which clicks the disc each time you wind the crown", "kind": "nearby", "rationale": "Winding is a different path. Date comes from the motion works." },
+            { "text": "The fourth wheel, treated here as a 31-tooth calendar driver", "kind": "subtle", "rationale": "The fourth wheel is seconds of the going train, not a date driver." }
+          ],
+          "correctExplanation": "Cannon, hour wheel, 24-hour driver, finger, disc. That is the path.",
+          "objectiveIds": ["Advance a date disc once a day from the motion works"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-dt10-3",
+          "stem": "A slow date is mid-jump at 23:45 and you set from the crown. Predict the failure:",
+          "correctAnswer": "The loaded finger or a tooth yields, and the disc can hang between numbers",
+          "distractors": [
+            { "text": "The jump finishes cleaner, because stem torque is the intended midnight spring", "kind": "reversed", "rationale": "Stem torque fights the finger. It is not the date spring." },
+            { "text": "The balance gains amplitude, which is how dates are supposed to be oiled", "kind": "misapplied", "rationale": "Setting the disc does not oil or feed the oscillator." },
+            { "text": "The month cam advances, so a simple date becomes an annual calendar", "kind": "subtle", "rationale": "A simple date has no month cam. Force does not add one." }
+          ],
+          "correctExplanation": "Changeover is a loaded mesh. Forcing it bends the finger or chips a tooth.",
+          "objectiveIds": ["Predict a jammed setting if you force the date near the changeover"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-calendar-10",
+      "conceptId": "horo-calendar",
+      "title": "What the month cam has to remember",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-date"],
+      "goDeeper": "horo-equation",
+      "explanation": [
+        "Remembering is the cost. A simple date has a 31-tooth disc and a human. After a 30-day month, and after February, someone must skip the extra numbers. The mechanism does not know the month.",
+        "Annual calendars add a 12-month cam or program wheel that withholds the 31st on short months. February is still a lie: the cam treats it as 30, so a human still corrects once a year, usually on March 1.",
+        "Perpetual calendars add a four-year, often 48-month, program that includes February 29. Mechanism cost is extra cams, extra fingers, extra jumpers. A human still appears if the watch stops for days, or in Gregorian exceptions such as 2100."
+      ],
+      "example": "On 1 March a simple date still shows 29 or 30 from February. An annual needs the wearer then. A running perpetual has already skipped to 1 March, because its program wheel included the leap day.",
+      "whyItMatters": "Simple, annual, and perpetual are not grades of a watch. They are three answers to how many month lengths the mechanism stores.",
+      "quiz": [
+        {
+          "id": "horo-cal10-1",
+          "stem": "How do simple, annual, and perpetual calendars differ in what they remember?",
+          "correctAnswer": "Simple remembers 31 days; annual remembers 30 versus 31; perpetual also remembers leap Februaries",
+          "distractors": [
+            { "text": "Simple remembers leap years; annual remembers only hours; perpetual remembers nothing", "kind": "reversed", "rationale": "Simple remembers the least. Perpetual remembers the most." },
+            { "text": "They differ only by how many jewels sit under the date disc", "kind": "misapplied", "rationale": "Jewel count is not a month program." },
+            { "text": "Annual and perpetual are two names for the same 31-tooth disc", "kind": "nearby", "rationale": "A 31-tooth disc is the simple date. The others add cams." }
+          ],
+          "correctExplanation": "The extra cams are extra memory. Cost tracks what the mechanism stores.",
+          "objectiveIds": ["Distinguish simple, annual, and perpetual calendars by what they remember"],
+          "prerequisiteConceptIds": ["horo-date"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-cal10-2",
+          "stem": "Which calendar still needs a human every February in a non-leap year?",
+          "correctAnswer": "Simple and annual; a running perpetual has a program for that February",
+          "distractors": [
+            { "text": "Only the perpetual, because leap cams always jam in February", "kind": "reversed", "rationale": "The perpetual is the one built to pass February without a hand." },
+            { "text": "None of them, because a 31-tooth disc already knows the month length", "kind": "misconception", "rationale": "A 31-tooth disc does not know February. That is the simple date's gap." },
+            { "text": "Only world-time watches, because cities encode the calendar", "kind": "nearby", "rationale": "Cities are a time-zone display. They do not store month lengths." }
+          ],
+          "correctExplanation": "Annual treats February as 30. Simple treats every month as 31. Both need a hand in February.",
+          "objectiveIds": ["Predict which one needs a human in February"],
+          "prerequisiteConceptIds": ["horo-date"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-cal10-3",
+          "stem": "An annual calendar and a perpetual calendar on 1 March of a leap year. Who needed a wearer overnight?",
+          "correctAnswer": "The annual, whose month cam still treated February as thirty days",
+          "distractors": [
+            { "text": "The perpetual, whose four-year wheel always stops on 29 February", "kind": "reversed", "rationale": "The perpetual's program includes the leap day. The annual's does not." },
+            { "text": "Neither, because both discs are 31-tooth and therefore leap-aware", "kind": "subtle", "rationale": "Tooth count on the date disc does not encode leap years." },
+            { "text": "Both, because only a tourbillon cage can remember February", "kind": "misapplied", "rationale": "A cage averages a positional error. It is not a month program." }
+          ],
+          "correctExplanation": "Annual remembers short months except the leap rule. Perpetual stores that rule in a four-year program.",
+          "objectiveIds": ["Predict which one needs a human in February"],
+          "prerequisiteConceptIds": ["horo-date"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "horo-moon-10",
+      "conceptId": "horo-moon",
+      "title": "Fifty-nine teeth against the sky",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-date"],
+      "goDeeper": "horo-gmt",
+      "explanation": [
+        "Two moons painted on a disc, 59 teeth around the edge, one tooth per day: that is the common moonphase. The disc turns once in 59 days, so each moon takes 29.5 days to cross the aperture. The sky's synodic month is about 29.53 days.",
+        "Drive comes from a reduction off the date or hour path, not from the oscillator. A star wheel or finger advances the 59-tooth wheel once a day, the same daily cadence as a simple date, geared for a slower disc.",
+        "The 0.03-day gap per lunation is accepted on purpose. It builds to about a day of error in two and a half years. A finer tooth count shrinks that gap. It does not make the disc a telescope; it is still a ratio."
+      ],
+      "example": "A 59-tooth disc set at a true full moon is about eleven hours late after one year of daily steps. After roughly 2.7 years the aperture is a day off the sky, and you recorrect the disc.",
+      "whyItMatters": "Moonphase is a gear ratio with a known residual, not a picture that tracks the sky by magic.",
+      "quiz": [
+        {
+          "id": "horo-mn10-1",
+          "stem": "How is a common moon disc driven so that it approximates a lunation?",
+          "correctAnswer": "A daily finger advances a 59-tooth disc that carries two moons",
+          "distractors": [
+            { "text": "The balance trips a moon pallet once per swing so the disc tracks the sky", "kind": "misapplied", "rationale": "The oscillator does not index the moon. A daily reduction does." },
+            { "text": "The rotor winds a separate moon barrel that turns with the wearer", "kind": "nearby", "rationale": "Automatic winding is a different extra. Moonphase is a ratio." },
+            { "text": "A 31-tooth date disc is the lunation, read through a second aperture", "kind": "subtle", "rationale": "31 days is a month of dates, not a synodic month of 29.5 days." }
+          ],
+          "correctExplanation": "59 teeth, two moons, one step a day. Each painted moon takes 29.5 days to pass.",
+          "objectiveIds": ["Drive a moon disc from a reduction that approximates the lunation"],
+          "prerequisiteConceptIds": ["horo-date"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-mn10-2",
+          "stem": "A 59-tooth moon disc with two moons accepts, on purpose, which error?",
+          "correctAnswer": "About 0.03 days per lunation, building to a day in roughly 2.7 years",
+          "distractors": [
+            { "text": "Exactly zero, because 59 is the sky's true tooth count", "kind": "misconception", "rationale": "The synodic month is 29.53 days, not 29.5. The gap is the point." },
+            { "text": "One hour per day, which is why the disc must be reset every night", "kind": "reversed", "rationale": "The disc is stepped once a day. The residual is minutes per month, not an hour a day." },
+            { "text": "A full month per year, which is the perpetual calendar's moon error", "kind": "nearby", "rationale": "Calendars store month lengths. This error is a lunation ratio." }
+          ],
+          "correctExplanation": "29.5 versus 29.53 days. That residual is the 59-tooth compromise.",
+          "objectiveIds": ["State the error a 59-tooth disc accepts on purpose"],
+          "prerequisiteConceptIds": ["horo-date"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-mn10-3",
+          "stem": "After two and a half years a 59-tooth moon disc that was set true will typically:",
+          "correctAnswer": "Sit about a day off the sky, which is the residual the ratio accepted",
+          "distractors": [
+            { "text": "Stay exact, because two moons cancel the 0.03-day gap", "kind": "reversed", "rationale": "Two moons give 29.5 days each. They do not cancel the 0.03." },
+            { "text": "Lock the date jumper, which is how moonphase corrects February", "kind": "misapplied", "rationale": "Moonphase is not a month program. It does not run the calendar." },
+            { "text": "Gain a full hour, because the fourth wheel drives the moon disc", "kind": "subtle", "rationale": "The fourth wheel is going-train seconds. Moonphase is a daily reduction." }
+          ],
+          "correctExplanation": "The accepted gap accumulates. Recorrect the disc; do not blame the timebase.",
+          "objectiveIds": ["State the error a 59-tooth disc accepts on purpose"],
+          "prerequisiteConceptIds": ["horo-date"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-gmt-10",
+      "conceptId": "horo-gmt",
+      "title": "Second hour hand, or a city disc",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-setting"],
+      "goDeeper": "horo-alarm",
+      "explanation": [
+        "Local hours still come from the motion works. A true GMT adds a 24-hour hand on its own wheel, settable without dragging those local hours — or the other way around: local hours jump while the 24-hour hand holds home time.",
+        "World time is a different display. A disc of cities sits against a 24-hour ring. You index one city to local time; every other city reads off the same ring. No independent 24-hour hand is required for that reading.",
+        "A 24-hour hand locked to local hours is neither. It only restates the same count on a 24-hour scale. Independent set is the GMT test. A city ring is the world-time test. Do not swap those names."
+      ],
+      "example": "You land and jump local hours with the crown. A true GMT 24-hour hand still shows home time. A world-time disc instead lets you rotate a city to the new local hour and read the others on the ring.",
+      "whyItMatters": "GMT and world time are two mechanisms. Calling both 'a second time zone' hides which wheel you can actually set.",
+      "quiz": [
+        {
+          "id": "horo-gmt10-1",
+          "stem": "What makes a 24-hour hand a true GMT rather than a locked extra hour?",
+          "correctAnswer": "It can be set independently of the local-hour motion works",
+          "distractors": [
+            { "text": "It is painted 24 hours, even if it is geared 1:1 to local hours", "kind": "nearby", "rationale": "A locked 24-hour hand only restates local time on another scale." },
+            { "text": "It sits on the chronograph runner and starts when you push", "kind": "misapplied", "rationale": "A chronograph is a stopwatch register, not a second time zone." },
+            { "text": "It shares a cannon pinion, so setting hours must drag it", "kind": "reversed", "rationale": "Independent set is the test. Dragging it with local hours fails that test." }
+          ],
+          "correctExplanation": "Independent 24-hour set, or jumping local hours while the 24-hour hand holds. That is GMT.",
+          "objectiveIds": ["Add a 24-hour hand that can be set independently of local time"],
+          "prerequisiteConceptIds": ["horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-gmt10-2",
+          "stem": "You need home time to stay put while local hours jump after a flight. The mechanism that does that is:",
+          "correctAnswer": "A 24-hour GMT hand on its own wheel, left alone while local hours index",
+          "distractors": [
+            { "text": "A city disc with no independent hand, read as if it were home time", "kind": "nearby", "rationale": "A city disc is world time. It does not hold a second independently set hour." },
+            { "text": "A date finger, jumped twelve times to stand in for a 24-hour hand", "kind": "misapplied", "rationale": "The date disc is a daily display. It is not a second hour hand." },
+            { "text": "A locked 24-hour hand geared to the local hour wheel at 2:1", "kind": "subtle", "rationale": "Geared 2:1 to local hours, it jumps when local hours jump." }
+          ],
+          "correctExplanation": "Local hours index. The 24-hour wheel stays. That independent set is the GMT.",
+          "objectiveIds": ["Add a 24-hour hand that can be set independently of local time"],
+          "prerequisiteConceptIds": ["horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-gmt10-3",
+          "stem": "How does a world-time city disc differ from a true GMT 24-hour hand?",
+          "correctAnswer": "The disc shows many cities on one ring; GMT is one independently settable 24-hour hand",
+          "distractors": [
+            { "text": "They are the same wheel with two names, both locked to local hours", "kind": "misconception", "rationale": "City disc and independent 24-hour hand are different displays." },
+            { "text": "World time is the date disc; GMT is the moon disc read as hours", "kind": "misapplied", "rationale": "Date and moon are other extras. Neither is a time-zone display." },
+            { "text": "A city disc can be set only at midnight, like a date changeover", "kind": "subtle", "rationale": "World time is indexed by rotating a ring, not by a midnight finger." }
+          ],
+          "correctExplanation": "Cities on a ring versus one 24-hour hand you can set without dragging local time.",
+          "objectiveIds": ["Distinguish a true GMT from a world-time disc that only shows cities"],
+          "prerequisiteConceptIds": ["horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "horo-alarm-10",
+      "conceptId": "horo-alarm",
+      "title": "Noise from a second release",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-mainspring"],
+      "goDeeper": "horo-auto-winding",
+      "explanation": [
+        "Strike needs stored work. A second barrel, or a second release of a dedicated spring, powers a hammer that hits a gong or the case. The going mainspring keeps its job: feeding the timebase.",
+        "Release is a coincidence. An alarm disc or snail is set to the chosen hour. When the hour wheel's catch matches that disc, a lever frees the hammer train. The noise is that train running down, not the going train ringing.",
+        "Dumping the going barrel into a hammer would sag amplitude and pull the rate. Keep the strike on its own spring, or on a release that cannot empty the going barrel. The timebase should not notice the bell."
+      ],
+      "example": "A two-barrel alarm: you wind one crown for time, another for the hammer spring. At the set hour a lever drops, the hammer train runs, the case rings, and the going train's swing stays in its usual band.",
+      "whyItMatters": "An alarm is a second store and a second release. Share the going spring and you buy a rate error with the noise.",
+      "quiz": [
+        {
+          "id": "horo-alm10-1",
+          "stem": "Where should the work for an alarm hammer be stored in this lesson's machine?",
+          "correctAnswer": "In a second spring or a second release that does not empty the going barrel",
+          "distractors": [
+            { "text": "In the going mainspring, dumped into the hammer at the set hour", "kind": "reversed", "rationale": "Dumping the going barrel sags the timebase. That is the failure." },
+            { "text": "In the date jumper, which is already a spring that clicks once a day", "kind": "nearby", "rationale": "A date jumper parks a disc. It does not run a hammer train." },
+            { "text": "In the hairspring, whose extra coils are what make the case ring", "kind": "misapplied", "rationale": "The hairspring is the timebase. Noise is a hammer train." }
+          ],
+          "correctExplanation": "Second barrel or dedicated release. The going spring still feeds the oscillator.",
+          "objectiveIds": ["Store a second spring or a second release so a hammer can strike"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-alm10-2",
+          "stem": "If the alarm empties the going barrel into the hammer, the rate typically:",
+          "correctAnswer": "Sags because amplitude falls while the timebase is starved of torque",
+          "distractors": [
+            { "text": "Improves, because a ringing case is a more isochronous oscillator", "kind": "reversed", "rationale": "The case is not the oscillator. Starving the balance hurts the rate." },
+            { "text": "Holds, because hammers always take power from the cannon pinion only", "kind": "nearby", "rationale": "The cannon pinion is display. A shared barrel is the going train." },
+            { "text": "Gains exactly an hour, which is the alarm's natural compensation", "kind": "subtle", "rationale": "There is no hour of compensation. There is a missing torque." }
+          ],
+          "correctExplanation": "Strike load on the going spring steals swing. Keep the hammer off that barrel.",
+          "objectiveIds": ["Predict what the alarm must not do to the going train's rate"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-alm10-3",
+          "stem": "The watch rings and the seconds hand then crawls. The first suspect is:",
+          "correctAnswer": "The hammer train stole torque from the going barrel instead of a second spring",
+          "distractors": [
+            { "text": "A city disc that became the timebase when the alarm released", "kind": "misapplied", "rationale": "World time is a display. It does not ring or starve the barrel." },
+            { "text": "A date finger that always rings the case at midnight as designed", "kind": "nearby", "rationale": "A date finger pushes a disc. A crawling seconds hand is a starved train." },
+            { "text": "A 59-tooth moon disc, whose residual always shows up as a slow hand", "kind": "subtle", "rationale": "Moonphase error is a display offset, not a drop in amplitude." }
+          ],
+          "correctExplanation": "Noise plus a crawling train means the strike shared the going spring.",
+          "objectiveIds": ["Predict what the alarm must not do to the going train's rate"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-auto-winding-10",
+      "conceptId": "horo-auto-winding",
+      "title": "Rotor motion that must not overwind",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-winding"],
+      "goDeeper": "horo-rotor",
+      "explanation": [
+        "Oscillating mass on the wearer's motion turns a reduction into the ratchet wheel of the barrel. That is automatic winding: the crown is no longer the only path that stores work in the mainspring.",
+        "A reversing gear, a pair of pawls, or a wobble pinion decides whether both directions count. A click still stops the barrel from unwinding back through that train. Without the click, the rotor would become an unwind path.",
+        "Overwind is the other failure. A slipping bridle on the outer coil lets the fully wound spring slide on the barrel wall. Trace that bridle, or a stop-work if fitted, as the safety. The rotor may keep turning. The spring must not be forced past its set."
+      ],
+      "example": "Rotor left, reverser A drives the ratchet; rotor right, reverser B takes over. At full wind the bridle slips on the barrel wall with a faint click, and amplitude no longer climbs.",
+      "whyItMatters": "Automatic winding is a path from a mass to the ratchet, plus a bridle so that path cannot wreck the spring.",
+      "quiz": [
+        {
+          "id": "horo-aw10-1",
+          "stem": "Trace automatic winding from the wearer's motion to a charged mainspring. After the rotor comes:",
+          "correctAnswer": "A reduction into the ratchet, with a click so the barrel cannot unwind that way",
+          "distractors": [
+            { "text": "The escape wheel, which the rotor impulses instead of the pallet", "kind": "misapplied", "rationale": "The rotor winds the barrel. It does not replace the escapement." },
+            { "text": "The date finger, which stores work in the 31-tooth disc", "kind": "nearby", "rationale": "The date disc is display. Stored work is still the mainspring." },
+            { "text": "The cannon pinion, which the rotor turns to wind the hands", "kind": "reversed", "rationale": "Hands display a count. Winding charges the barrel, not the hands." }
+          ],
+          "correctExplanation": "Rotor, reduction, ratchet, barrel. Click against unwind. Bridle against overwind.",
+          "objectiveIds": ["Convert a rotor's motion into winding without letting the spring overwind"],
+          "prerequisiteConceptIds": ["horo-winding"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-aw10-2",
+          "stem": "The safety that stops an automatic from overwinding the mainspring is typically:",
+          "correctAnswer": "A slipping bridle on the outer coil, or a stop-work if the calibre uses one",
+          "distractors": [
+            { "text": "The hairspring, which locks the rotor once amplitude looks high enough", "kind": "misapplied", "rationale": "The hairspring meters the balance. It does not cap the barrel." },
+            { "text": "The date jumper, which slips so the rotor cannot turn at night", "kind": "nearby", "rationale": "A jumper parks a disc. Overwind safety sits in the barrel." },
+            { "text": "Removing the click so extra turns can dump back through the rotor", "kind": "reversed", "rationale": "Losing the click is an unwind path, not a bridle." }
+          ],
+          "correctExplanation": "Bridle slips on the barrel wall at full wind. The rotor may still turn.",
+          "objectiveIds": ["Trace a reversing gear or a slipping bridle as the safety"],
+          "prerequisiteConceptIds": ["horo-winding"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-aw10-3",
+          "stem": "If the bridle seizes on the barrel wall and the rotor keeps turning, predict the failure:",
+          "correctAnswer": "The spring is forced past its set, coils distort, and later torque becomes uneven",
+          "distractors": [
+            { "text": "The watch becomes a perpetual calendar, because extra turns store February", "kind": "subtle", "rationale": "Overwind does not add a month program. It stresses the spring." },
+            { "text": "Amplitude falls to zero at once, which is how bridles are supposed to protect", "kind": "reversed", "rationale": "A seized bridle fails to slip. Protection is the slip, not a stop of the oscillator." },
+            { "text": "The cannon pinion unscrews, which is the usual overwind fuse", "kind": "nearby", "rationale": "Overwind is a barrel problem. The cannon pinion is display." }
+          ],
+          "correctExplanation": "No slip, continued rotor, forced set. The bridle was the safety and it seized.",
+          "objectiveIds": ["Convert a rotor's motion into winding without letting the spring overwind"],
+          "prerequisiteConceptIds": ["horo-winding"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-rotor-10",
+      "conceptId": "horo-rotor",
+      "title": "The mass that turns with the wrist",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-auto-winding"],
+      "goDeeper": "horo-power-reserve-ind",
+      "explanation": [
+        "Wearer's motion is the input. The rotor is the mass that turns on a bearing — ball, jewel, or both — so that motion becomes a rotation the winding train can use. Without that mass, the reversing gears have nothing to rectify.",
+        "Unidirectional winding uses a pawl or a single reverser: one direction drives the ratchet, the other freewheels. Bidirectional winding uses two reversers, a pair of pawls, or a wobble pinion so both directions drive.",
+        "Read the reverser, not the advertisement. If only one path meshes, half the rotor's travel is discarded. If both paths mesh, both directions count. A seized reverser that never freewheels will drag and steal from the going train."
+      ],
+      "example": "A magic-lever or two-reverser stack: rotor clockwise drives wheel A, counterclockwise drives wheel B, both turn the ratchet the same way. A one-pawl rotor clicks on the return and adds no wind.",
+      "whyItMatters": "The rotor is a mass. Unidirectional versus bidirectional is a fact about the reverser, not about how heavy the weight looks.",
+      "quiz": [
+        {
+          "id": "horo-rot10-1",
+          "stem": "In this lesson, the rotor is which part of automatic winding?",
+          "correctAnswer": "The mass that turns with the wearer's motion so the winding train has an input",
+          "distractors": [
+            { "text": "The slipping bridle, renamed rotor because it lives in the barrel", "kind": "nearby", "rationale": "The bridle is overwind safety. The rotor is the oscillating mass." },
+            { "text": "The hairspring, whose coils are what the wrist is supposed to wind", "kind": "misapplied", "rationale": "The hairspring belongs to the timebase. The rotor winds the barrel." },
+            { "text": "The 24-hour GMT hand, which stores work as it turns with local hours", "kind": "subtle", "rationale": "A GMT hand is a display. It does not wind the mainspring." }
+          ],
+          "correctExplanation": "Mass on a bearing, turned by the wrist. That rotation is the winding input.",
+          "objectiveIds": ["Name the rotor as the mass that turns with the wearer's motion"],
+          "prerequisiteConceptIds": ["horo-auto-winding"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-rot10-2",
+          "stem": "You watch the rotor reverse and the ratchet still advances. That predicts:",
+          "correctAnswer": "Bidirectional winding: a reverser or second pawl is making the return count",
+          "distractors": [
+            { "text": "Unidirectional winding, because a ratchet that always turns means the return is freewheeling", "kind": "reversed", "rationale": "Freewheel means the ratchet does not advance on the return." },
+            { "text": "A seized bridle, which is how rotors are supposed to stop the going train", "kind": "misapplied", "rationale": "A bridle sits in the barrel. Reversers sit in the winding train." },
+            { "text": "A world-time disc, whose cities wind the spring as they rotate", "kind": "nearby", "rationale": "A city disc is a time-zone display. It does not wind." }
+          ],
+          "correctExplanation": "Both directions drive the ratchet. That is bidirectional, read from the reverser.",
+          "objectiveIds": ["Predict unidirectional versus bidirectional winding from the reverser"],
+          "prerequisiteConceptIds": ["horo-auto-winding"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-rot10-3",
+          "stem": "How does a unidirectional rotor differ from a bidirectional one at the reverser?",
+          "correctAnswer": "Unidirectional freewheels one way; bidirectional has a path that drives both ways",
+          "distractors": [
+            { "text": "Unidirectional is always a heavier mass; bidirectional is a lighter disc", "kind": "misconception", "rationale": "Mass is not the sequencer. The reverser is." },
+            { "text": "They are identical; only the date jumper decides which way counts", "kind": "nearby", "rationale": "The date jumper parks a disc. It does not rectify the rotor." },
+            { "text": "Bidirectional freewheels both ways, which is why it cannot overwind", "kind": "reversed", "rationale": "Freewheeling both ways would wind nothing. Overwind safety is the bridle." }
+          ],
+          "correctExplanation": "Count the driving paths. One path is unidirectional. Two is bidirectional.",
+          "objectiveIds": ["Predict unidirectional versus bidirectional winding from the reverser"],
+          "prerequisiteConceptIds": ["horo-auto-winding"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "horo-power-reserve-ind-10",
+      "conceptId": "horo-power-reserve-ind",
+      "title": "Reserve as a barrel reading",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-power-reserve"],
+      "goDeeper": "horo-chrono",
+      "explanation": [
+        "Barrel state is what the hand reports. Remaining turns of the spring are not a second, and they are not the timebase. A power-reserve indicator is a display of how far the barrel arbor and the barrel drum have moved relative to each other.",
+        "Two common converters: a differential that subtracts drum rotation from arbor rotation and sends the difference to a hand, or a cone or snail on the arbor whose feeler turns that height into an angle on the dial.",
+        "Keep that gearing off the escape. Steal from the timebase and you have bought a rate error in order to print a number. The indicator may drag a little torque from the barrel. It must not meter the unwind."
+      ],
+      "example": "Wind the crown: the reserve hand climbs as the arbor turns inside a still drum. Let the watch run: the drum unwinds, the differential walks the other way, and the hand falls, while the balance still owns the second.",
+      "whyItMatters": "Reserve is a barrel reading. Treat it as a second timebase and you will chase the indicator when the oscillator was never involved.",
+      "quiz": [
+        {
+          "id": "horo-pri10-1",
+          "stem": "A power-reserve hand is supposed to indicate remaining spring by:",
+          "correctAnswer": "Reading arbor-versus-drum motion, without becoming a second timebase",
+          "distractors": [
+            { "text": "Counting balance swings and printing that count as hours of reserve", "kind": "reversed", "rationale": "Swings are the timebase. Reserve is barrel state." },
+            { "text": "Coupling a chronograph runner until the spring looks empty", "kind": "misapplied", "rationale": "A chronograph is a stopwatch register, not a barrel reading." },
+            { "text": "Advancing the 31-tooth date disc once per remaining hour", "kind": "nearby", "rationale": "The date disc is a daily display. It does not track the barrel." }
+          ],
+          "correctExplanation": "Arbor and drum. Difference to a hand. The oscillator is not in that chain.",
+          "objectiveIds": ["Indicate remaining spring without stealing the timebase"],
+          "prerequisiteConceptIds": ["horo-power-reserve"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-pri10-2",
+          "stem": "Trace reserve from a wound barrel to a climbing hand. The converter is typically:",
+          "correctAnswer": "A differential of arbor versus drum, or a cone or snail a feeler follows",
+          "distractors": [
+            { "text": "The pallet fork, which prints reserve as it locks each escape tooth", "kind": "misapplied", "rationale": "The pallet belongs to the timebase. Reserve is a barrel display." },
+            { "text": "The city disc, rotated until the remaining hours match a town", "kind": "nearby", "rationale": "World time is a zone display. It does not read the spring." },
+            { "text": "The cannon pinion, which is already a count of remaining turns", "kind": "subtle", "rationale": "The cannon pinion carries the minute hand. It does not subtract drum from arbor." }
+          ],
+          "correctExplanation": "Differential or cone. Either turns remaining spring into an angle on the dial.",
+          "objectiveIds": ["Trace the differential or cone that turns reserve into a hand"],
+          "prerequisiteConceptIds": ["horo-power-reserve"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-pri10-3",
+          "stem": "How should a reserve indicator differ from the going train's timebase?",
+          "correctAnswer": "It reports barrel state; it must not meter the unwind or load the escape",
+          "distractors": [
+            { "text": "It is the timebase; the balance is only a spare if the hand stops", "kind": "reversed", "rationale": "The oscillator meters. The reserve hand is a barrel reading." },
+            { "text": "It must be geared to the fourth wheel so seconds and reserve stay locked", "kind": "misapplied", "rationale": "Locking reserve to the fourth wheel would steal from the timebase." },
+            { "text": "It replaces the slipping bridle, so a climbing hand is overwind safety", "kind": "nearby", "rationale": "The bridle is still the overwind safety. The hand only reports." }
+          ],
+          "correctExplanation": "Display of remaining turns. Keep it off the escape.",
+          "objectiveIds": ["Indicate remaining spring without stealing the timebase"],
+          "prerequisiteConceptIds": ["horo-power-reserve"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}

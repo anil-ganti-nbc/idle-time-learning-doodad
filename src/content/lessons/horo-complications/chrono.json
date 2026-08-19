@@ -1,0 +1,457 @@
+{
+  "courseId": "horo-complications",
+  "moduleId": "horo-c-chrono",
+  "lessons": [
+    {
+      "id": "horo-chrono-5",
+      "conceptId": "horo-chrono",
+      "title": "Couple a seconds register, then let go",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["horo-escape", "horo-setting"],
+      "goDeeper": "horo-column-wheel",
+      "diagram": "horo-chrono-couple",
+      "explanation": [
+        "Fourth-wheel motion is the usual takeoff. A clutch couples a seconds register to that going train so the chrono hand runs, then uncouples so the watch can keep time without dragging a stopped register.",
+        "While the clutch is closed the going train carries extra load. Amplitude falls. A dragging clutch that never fully opens keeps stealing swing even after you 'stop'. The timebase is still the balance; the chrono is a register you add and remove."
+      ],
+      "example": "Start: clutch meshes, chrono seconds leave 12. Stop: clutch opens, that hand freezes. The going seconds continue. Reset is a later hammer story; coupling is this lesson.",
+      "whyItMatters": "A chronograph is a clutched register, not a second oscillator. Name the couple or you will chase the balance for a clutch that is dragging.",
+      "quiz": [
+        {
+          "id": "horo-ch5-1",
+          "stem": "What does a chronograph add to a going watch in this lesson's sense?",
+          "correctAnswer": "A seconds register you couple to the going train and then uncouple",
+          "distractors": [
+            { "text": "A second balance that times events while the first keeps the hours", "kind": "misconception", "rationale": "There is still one timebase. The chrono is a clutched register." },
+            { "text": "A 31-tooth disc that jumps when you push the chrono button", "kind": "nearby", "rationale": "A date disc is a daily display. It is not a stopwatch register." },
+            { "text": "A rotor that winds only while the chrono seconds are running", "kind": "misapplied", "rationale": "Automatic winding is a different extra. Coupling is the chrono job." }
+          ],
+          "correctExplanation": "Couple, run, uncouple. One oscillator. The extra train is a register.",
+          "objectiveIds": ["Couple a seconds register to the going train, then uncouple it"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-ch5-2",
+          "stem": "You start the chrono and the clutch closes on the going train. The register should:",
+          "correctAnswer": "Run with that train until you uncouple; the balance remains the timebase",
+          "distractors": [
+            { "text": "Replace the balance, because a running chrono is now the oscillator", "kind": "reversed", "rationale": "The chrono does not meter. It copies a count from the going train." },
+            { "text": "Drive the date disc, which is how elapsed days are usually stored", "kind": "nearby", "rationale": "Elapsed seconds are a register. The date is a different extra." },
+            { "text": "Open the mainspring bridle, so a start is also a full wind", "kind": "misapplied", "rationale": "A bridle is overwind safety. Starting a chrono is a clutch, not a wind." }
+          ],
+          "correctExplanation": "Closed clutch, register copies the train. Open clutch, register freezes. Balance still meters.",
+          "objectiveIds": ["Couple a seconds register to the going train, then uncouple it"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-ch5-3",
+          "stem": "While the chronograph runs, a dragging clutch typically does what to amplitude?",
+          "correctAnswer": "Steals swing from the balance because the going train is carrying extra load",
+          "distractors": [
+            { "text": "Raises swing, because a running register is extra impulse to the pallet", "kind": "reversed", "rationale": "Extra load is friction, not impulse. Amplitude falls." },
+            { "text": "Leaves swing alone, because clutches cannot touch the going train", "kind": "misconception", "rationale": "The couple is on the going train. That is why amplitude moves." },
+            { "text": "Converts swing into a date jump, which is the usual chrono compensation", "kind": "subtle", "rationale": "There is no date compensation. There is extra load and lost amplitude." }
+          ],
+          "correctExplanation": "Closed clutch is extra work for the train. The balance feels it as lower amplitude.",
+          "objectiveIds": ["Predict what a dragging clutch does to amplitude while the chrono runs"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-chrono-10",
+      "conceptId": "horo-chrono",
+      "title": "Start, stop, and the load on the train",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-escape", "horo-setting"],
+      "goDeeper": "horo-column-wheel",
+      "diagram": "horo-chrono-couple",
+      "explanation": [
+        "Clutching is the whole job. Horizontal coupling slides a wheel into mesh with a chrono runner. Vertical coupling presses two discs together. Either way the going train — usually at the fourth wheel — now drives a seconds register it could otherwise ignore.",
+        "Uncouple and that register freezes. The going seconds keep stepping. Start and stop are those two clutch states. Reset is hammers on hearts, a later lesson; it must not happen while the clutch is still fighting the going train.",
+        "WOSTEP treats the chronograph as a later specialization. Extra load while the clutch is closed cuts amplitude. A dragging clutch that stays half-meshed keeps cutting after you stop. Time the watch with the chrono off and on; the difference is the couple."
+      ],
+      "example": "On a horizontal clutch, start drops a sliding pinion into the chrono wheel. The seconds hand leaves 12 and amplitude on the timing machine falls several degrees. Stop lifts the pinion; amplitude recovers.",
+      "whyItMatters": "If you cannot name the couple, a slow watch with the chrono running will look like an escapement fault.",
+      "quiz": [
+        {
+          "id": "horo-ch10-1",
+          "stem": "Trace a running chronograph from the going train to the chrono seconds. The missing piece is:",
+          "correctAnswer": "A clutch that couples a register to the fourth wheel, then can uncouple it",
+          "distractors": [
+            { "text": "A second hairspring that times the event while the first keeps hours", "kind": "misconception", "rationale": "One oscillator. The chrono copies the going train through a clutch." },
+            { "text": "A 24-hour GMT wheel, which is how elapsed time is usually stored", "kind": "nearby", "rationale": "GMT is a second hour. Chronograph seconds are a clutched register." },
+            { "text": "The date finger, tripped by the pusher so a day equals a second", "kind": "misapplied", "rationale": "The date path is daily. The chrono path is a couple on the going train." }
+          ],
+          "correctExplanation": "Fourth wheel, clutch, chrono runner. Open the clutch and the runner freezes.",
+          "objectiveIds": ["Couple a seconds register to the going train, then uncouple it"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-ch10-2",
+          "stem": "You time a calibre with the chrono off, then on. Amplitude drops several degrees. That predicts:",
+          "correctAnswer": "The closed clutch is loading the going train, so the balance has less swing",
+          "distractors": [
+            { "text": "The clutch is adding impulse, which always raises swing when the chrono runs", "kind": "reversed", "rationale": "Load is friction. Impulse comes from the pallet, not from the clutch." },
+            { "text": "The rotor has seized, which is the usual reading of a chrono start", "kind": "nearby", "rationale": "A rotor is winding. The change you made was coupling a register." },
+            { "text": "The hairspring magnetized only while the pusher was down", "kind": "subtle", "rationale": "Magnetism does not wait on a pusher. The load does." }
+          ],
+          "correctExplanation": "On versus off is the couple. Lost swing is the extra train the balance is now feeding.",
+          "objectiveIds": ["Predict what a dragging clutch does to amplitude while the chrono runs"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ch10-3",
+          "stem": "The chrono is 'stopped' but amplitude stays low and the runner still creeps. The first suspect is:",
+          "correctAnswer": "A dragging clutch that never fully opened, so the register still loads the train",
+          "distractors": [
+            { "text": "A healthy uncouple, because residual creep is how seconds registers rest", "kind": "reversed", "rationale": "A true uncouple freezes the runner and returns the swing." },
+            { "text": "A moon disc that always steals amplitude when painted moons pass the aperture", "kind": "misapplied", "rationale": "Moonphase is a daily reduction. It does not creep a chrono runner." },
+            { "text": "A power-reserve cone, which is what pushers actually drive", "kind": "nearby", "rationale": "A pusher drives clutch logic. A cone reads the barrel." }
+          ],
+          "correctExplanation": "Creep plus lost swing after 'stop' is a clutch still in mesh.",
+          "objectiveIds": ["Predict what a dragging clutch does to amplitude while the chrono runs"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-chrono-20",
+      "conceptId": "horo-chrono",
+      "title": "Horizontal clutch, vertical clutch, and amplitude",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["horo-escape", "horo-setting"],
+      "goDeeper": "horo-column-wheel",
+      "diagram": "horo-chrono-couple",
+      "explanation": [
+        "Drag is the cost of a closed couple. Horizontal clutch: a sliding pinion or clutch wheel moves into mesh. Start can land tooth-on-tooth and hesitate. Vertical clutch: two discs are pressed together, so start is a friction grab with less backlash and still a load.",
+        "Either architecture copies the going train. Neither is a second oscillator. WOSTEP's chronograph work starts here: identify the couple, then ask what it does to amplitude on the timing machine with the register running versus stopped.",
+        "A clutch that only half-opens is a dragging clutch. The runner creeps, the train stays loaded, and the rate you measure with the chrono 'off' is still the loaded rate. Inspect the sliding pinion's endshake, the disc spring, and the lever that is supposed to lift them clear.",
+        "Reset waits on hammers. Coupling still has to let go first, or the hammers fight a live train. Sequence is the discipline: couple to run, uncouple to freeze, then — later — drop hammers onto hearts. Mixing those states is how hands bend and jewels score."
+      ],
+      "example": "Horizontal: start, a 0.2s hesitation as teeth find mesh, amplitude down 40°. Vertical: start is immediate, amplitude still down 25°. Both recover when the clutch fully opens. A bent clutch lever leaves the horizontal pinion grazing; the 'stopped' hand creeps.",
+      "whyItMatters": "Architecture of the couple explains start error and lost swing. Without that, every chrono is just 'a stopwatch on a watch'.",
+      "quiz": [
+        {
+          "id": "horo-ch20-1",
+          "stem": "How does a horizontal clutch differ from a vertical clutch as a couple?",
+          "correctAnswer": "Horizontal slides a wheel into mesh; vertical presses two discs together",
+          "distractors": [
+            { "text": "Horizontal is a second balance; vertical is a second mainspring", "kind": "misconception", "rationale": "Both are clutches on one going train. Neither is a second oscillator." },
+            { "text": "They differ only by which pusher you press, not by the coupling parts", "kind": "nearby", "rationale": "The pusher is input. The couple is a sliding mesh or a disc pair." },
+            { "text": "Vertical always uncouples by dumping the going barrel into the hammer", "kind": "misapplied", "rationale": "Uncoupling lifts the load. It does not empty the barrel." }
+          ],
+          "correctExplanation": "Mesh versus pressed discs. Same job: copy the going train, then let go.",
+          "objectiveIds": ["Couple a seconds register to the going train, then uncouple it"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "horo-ch20-2",
+          "stem": "A 'stopped' chrono runner still creeps and amplitude never returns. Diagnose the couple:",
+          "correctAnswer": "The clutch is dragging — half-meshed or half-pressed — so the train stays loaded",
+          "distractors": [
+            { "text": "The clutch has opened fully, which is why residual creep is required", "kind": "reversed", "rationale": "A full open freezes the runner and returns swing." },
+            { "text": "The escape wheel has become the chrono register, as designed at stop", "kind": "misapplied", "rationale": "The escape wheel still meters. The register is the clutched runner." },
+            { "text": "The date jumper is the creep; midnight is when chronos are supposed to drift", "kind": "nearby", "rationale": "A date jumper parks a disc. Creep of a chrono hand is a clutch still in." }
+          ],
+          "correctExplanation": "Creep plus missing swing after stop is a couple that did not let go.",
+          "objectiveIds": ["Predict what a dragging clutch does to amplitude while the chrono runs"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "horo-ch20-3",
+          "stem": "You want a clean freeze and recovered amplitude, then a later zero. The order is:",
+          "correctAnswer": "Uncouple first so the train is free; hammers on hearts come after that freeze",
+          "distractors": [
+            { "text": "Drop hammers while the clutch is still closed, so the going train zeros itself", "kind": "reversed", "rationale": "Hammers against a live couple fight the train and bend hands." },
+            { "text": "Couple harder at reset, because extra mesh is how hearts find zero", "kind": "misapplied", "rationale": "Reset is hammers on hearts. Extra mesh is more load, not a zero." },
+            { "text": "Open the bridle, which is the chronograph's real uncouple", "kind": "subtle", "rationale": "A bridle is overwind safety in the barrel. Uncouple is the clutch." }
+          ],
+          "correctExplanation": "Couple to run, uncouple to freeze, then hammers. Mixing those states scores parts.",
+          "objectiveIds": ["Couple a seconds register to the going train, then uncouple it"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-setting"],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "horo-column-wheel-10",
+      "conceptId": "horo-column-wheel",
+      "title": "How the pusher's sequence is remembered",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-chrono"],
+      "goDeeper": "horo-chrono-reset",
+      "explanation": [
+        "Pillars on a small rotating castle are the column wheel. Each pusher click indexes that castle one step. Operating levers drop into the gaps between columns, or ride up onto a column, and that height is start, stop, or the path that will later drop the hammers.",
+        "Cam chronographs replace the castle with a shaped plate — a coulisse — whose edges a lever follows. Same three states. The memory is a contour instead of pillars. Wear shows up as rounded edges and a mushy pusher, not as a moral fact about the calibre.",
+        "Neither sequencer is the clutch. The column wheel or cam only decides when the clutch lever and the hammer lever may move. A sloppy cam still couples; it just does so late, twice, or not at all, which you feel in the pusher before you see it on the hands."
+      ],
+      "example": "A worn 7750-style cam: the start edge is rounded, the pusher goes soft, and the clutch lever sometimes misses the first click. A column wheel with intact pillars still indexes with a distinct step, even if its clutch is a cheap mesh.",
+      "whyItMatters": "Sequence memory is a castle or a cam. Confusing that with finishing grade is how a mushy pusher gets sold as a design choice.",
+      "quiz": [
+        {
+          "id": "horo-cw10-1",
+          "stem": "How does a column wheel differ from a cam as the start-stop-reset sequencer?",
+          "correctAnswer": "A column wheel is a stepped castle of pillars; a cam is a contoured plate a lever follows",
+          "distractors": [
+            { "text": "A column wheel is the clutch disc; a cam is the going barrel's bridle", "kind": "misapplied", "rationale": "Both are sequencers. The clutch and the bridle are other parts." },
+            { "text": "They are two names for the heart on the chrono seconds wheel", "kind": "nearby", "rationale": "A heart is a reset cam on a register. It is not the pusher sequencer." },
+            { "text": "A cam always has pillars; a column wheel is the smooth plate", "kind": "reversed", "rationale": "Pillars are the column wheel. The plate is the cam." }
+          ],
+          "correctExplanation": "Castle versus contour. Both remember the pusher's place in start, stop, reset.",
+          "objectiveIds": ["Contrast a column wheel with a cam as the sequencer of start, stop, reset"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-cw10-2",
+          "stem": "The cam's operating edges are worn round. Predict the pusher and the sequence:",
+          "correctAnswer": "A sloppy, late, or double click, because the lever no longer finds a sharp step",
+          "distractors": [
+            { "text": "A crisper click, because worn cams are how column wheels are supposed to feel", "kind": "reversed", "rationale": "Round edges lose the step. Crisp is the opposite of wear." },
+            { "text": "A higher amplitude, because a mushy cam unloads the going train", "kind": "misapplied", "rationale": "Sequencer wear is not a couple. Amplitude follows the clutch, not the mush." },
+            { "text": "A perpetual month, because a worn cam is extra calendar memory", "kind": "subtle", "rationale": "A chrono cam is start-stop-reset. It does not store February." }
+          ],
+          "correctExplanation": "Sharp edges index. Round edges miss. The pusher tells you before the hands do.",
+          "objectiveIds": ["Predict a sloppy pusher feel when the cam's edges are worn"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-cw10-3",
+          "stem": "A column-wheel chrono and a cam chrono can share a clutch type. What still differs?",
+          "correctAnswer": "How the pusher's start, stop, and reset order is remembered in the mechanism",
+          "distractors": [
+            { "text": "Which oscillator they use; cams require a second balance", "kind": "misconception", "rationale": "Sequencer is not a timebase. Both still have one going train." },
+            { "text": "Nothing; column wheel versus cam is only a finishing name", "kind": "nearby", "rationale": "The parts differ. Pillars versus a contoured plate is a real sequencer choice." },
+            { "text": "The date finger; cams always drive the 31-tooth disc from the pusher", "kind": "misapplied", "rationale": "Date is a daily extra. The sequencer talks to clutch and hammer levers." }
+          ],
+          "correctExplanation": "Same couple is possible. The memory of the three states is still castle or cam.",
+          "objectiveIds": ["Contrast a column wheel with a cam as the sequencer of start, stop, reset"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "horo-chrono-reset-10",
+      "conceptId": "horo-chrono-reset",
+      "title": "Hearts the hammers have to find",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-chrono"],
+      "goDeeper": "horo-flyback",
+      "explanation": [
+        "Dropping a hammer onto a heart-cam is how a register returns to zero. The heart is an eccentric on the chrono wheel. The hammer face slides down the rising side until the lowest point sits under the face, and that rotation is 12 o'clock on the hand.",
+        "Minute and hour counters have their own hearts and often share a hammer block. The clutch must already be open, or the hammers fight a live going train. A flyback will later break that rule on purpose; a standard reset does not.",
+        "A bent heart, a hammer face off true, or a hammer that does not drop far enough leaves the hand short of zero — or past it. Do not bend the hand to hide that. Dress the heart and the hammer, or replace the scored pair."
+      ],
+      "example": "Reset: hammers fall, seconds heart turns the runner to zero, minute heart does the same. A heart with a ding holds the hammer 8 degrees off, and the seconds hand parks at 2 instead of 12.",
+      "whyItMatters": "Zero is a geometry: hammer face on the lowest point of a heart. A hand that will not zero is that geometry, not a font on the dial.",
+      "quiz": [
+        {
+          "id": "horo-cr10-1",
+          "stem": "What returns a chronograph hand to zero in this mechanism?",
+          "correctAnswer": "A hammer dropping onto a heart-cam, whose lowest point is 12 o'clock",
+          "distractors": [
+            { "text": "The clutch closing harder, which winds the runner backward to 12", "kind": "reversed", "rationale": "Reset needs the clutch open. Closing it would fight the hammers." },
+            { "text": "The date jumper, which parks every register on a number at midnight", "kind": "nearby", "rationale": "A jumper parks a date disc. Chrono zero is a heart and a hammer." },
+            { "text": "The rotor, whose mass always falls to 12 when you press reset", "kind": "misapplied", "rationale": "The rotor winds the barrel. It does not zero a chrono hand." }
+          ],
+          "correctExplanation": "Heart on the wheel, hammer on the heart, lowest point under the face. That is zero.",
+          "objectiveIds": ["Drop hammers onto hearts so the hands return to zero"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-cr10-2",
+          "stem": "After reset the seconds hand sits at 2 instead of 12. Predict the usual fault:",
+          "correctAnswer": "A bent heart or a hammer face that no longer finds the heart's lowest point",
+          "distractors": [
+            { "text": "A healthy heart; parking at 2 is how column wheels remember stop", "kind": "reversed", "rationale": "Stop freezes wherever the hand was. Reset is supposed to find 12." },
+            { "text": "A magnetized hairspring, which always parks chrono hands at 2", "kind": "misapplied", "rationale": "Magnetism moves rate. A hand that will not zero is reset geometry." },
+            { "text": "A 59-tooth moon disc, whose residual is what 2 o'clock represents", "kind": "subtle", "rationale": "Moonphase error is a sky offset. It does not park a chrono hand." }
+          ],
+          "correctExplanation": "Zero is the heart's lowest point under the hammer. Miss that point and the hand misses 12.",
+          "objectiveIds": ["Predict a hand that does not zero if a heart or hammer is bent"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-cr10-3",
+          "stem": "You press reset and the seconds hand slams, then creeps off zero. The first suspect is:",
+          "correctAnswer": "The clutch still partly closed, so the live train fights the hammer on the heart",
+          "distractors": [
+            { "text": "A fully open clutch, which is why a hammer is supposed to leave the hand free to drift", "kind": "reversed", "rationale": "An open clutch lets the heart hold zero. Creep is a live couple." },
+            { "text": "The city disc, which always steals a second when hammers drop", "kind": "nearby", "rationale": "World time is a zone display. Creep off zero is clutch versus hammer." },
+            { "text": "The slipping bridle, dumping the barrel through the chrono runner", "kind": "misapplied", "rationale": "A bridle is overwind safety. Reset is hammers and a clutch state." }
+          ],
+          "correctExplanation": "Hammers against a still-coupled runner. Uncouple, then drop. Creep is the fight.",
+          "objectiveIds": ["Predict a hand that does not zero if a heart or hammer is bent"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-flyback-10",
+      "conceptId": "horo-flyback",
+      "title": "Zero and restart on one press",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-chrono-reset"],
+      "goDeeper": "horo-rattrapante",
+      "explanation": [
+        "While the chronograph is already running, one pusher drops the hammers, zeros the hands, lifts the hammers, and leaves the clutch closed so the register starts again. That is flyback: reset-and-restart without a separate stop.",
+        "Extra clutch work is the cost. The couple must let go for the instant the hammers are on the hearts, then recouple as the hammers lift. A standard reset only hammers after a full stop. Flyback does both in one motion.",
+        "A sluggish clutch lever, a hammer that stays down, or a column that does not index that extra state and you get a zero that does not restart — or a restart that fights a still-fallen hammer. Aviation timing of successive legs is why the extra state exists."
+      ],
+      "example": "Timing a leg: chrono running, you overfly a beacon, press flyback. Hands slam to 12 and leave again without a stop click. The clutch opened for the hammers and closed as they rose.",
+      "whyItMatters": "Flyback is not a prettier reset. It is an extra clutch open-and-close packed into the hammer drop.",
+      "quiz": [
+        {
+          "id": "horo-fb10-1",
+          "stem": "What does a flyback pusher do while the chronograph is already running?",
+          "correctAnswer": "Zeros the hands and recouples so the register restarts, without a separate stop",
+          "distractors": [
+            { "text": "Stops the going train so the whole watch waits on the next press", "kind": "reversed", "rationale": "The going train keeps running. Only the register zeros and restarts." },
+            { "text": "Splits a second hand so one freezes while the other continues", "kind": "nearby", "rationale": "That clamp is rattrapante. Flyback is reset-and-restart on one press." },
+            { "text": "Advances the date disc, which is how elapsed days are flyback-stored", "kind": "misapplied", "rationale": "Date is a daily extra. Flyback is hammers plus a clutch recouple." }
+          ],
+          "correctExplanation": "Hammers down, zero, hammers up, clutch still closed. One press, no stop.",
+          "objectiveIds": ["Reset and restart in one pusher action while the chrono is running"],
+          "prerequisiteConceptIds": ["horo-chrono-reset"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-fb10-2",
+          "stem": "The extra clutch work a flyback demands, compared with a standard reset, is:",
+          "correctAnswer": "A brief uncouple while hammers sit on the hearts, then an immediate recouple",
+          "distractors": [
+            { "text": "A permanently open clutch, because flyback never needs the going train", "kind": "reversed", "rationale": "Flyback restarts. It must recouple, not stay open." },
+            { "text": "Dumping the going barrel into the hammers so zero has enough torque", "kind": "misapplied", "rationale": "Hammers are sprung. They must not empty the going barrel." },
+            { "text": "Locking the rotor until the next hour, which is the flyback safety", "kind": "nearby", "rationale": "The rotor is winding. Flyback's extra work is at the clutch." }
+          ],
+          "correctExplanation": "Open for the hammer instant, close as the hammers lift. That packed couple is flyback.",
+          "objectiveIds": ["State the extra clutch work a flyback demands"],
+          "prerequisiteConceptIds": ["horo-chrono-reset"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-fb10-3",
+          "stem": "Flyback zeros the hands but they stay dead. Predict the missing extra work:",
+          "correctAnswer": "The clutch did not recouple after the hammers lifted, so the register never restarted",
+          "distractors": [
+            { "text": "The clutch recoupled too well, which is why a dead hand means success", "kind": "reversed", "rationale": "A recouple restarts the register. Dead hands mean it stayed open." },
+            { "text": "The moon disc blocked the fourth wheel, which is a flyback's usual park", "kind": "subtle", "rationale": "Moonphase is a daily reduction. It does not park a flyback." },
+            { "text": "The 24-hour GMT hand took the couple, as flyback is supposed to do", "kind": "nearby", "rationale": "GMT is a second hour. Flyback recouples the chrono register." }
+          ],
+          "correctExplanation": "Zero without restart is hammers without the recouple. That extra clutch step failed.",
+          "objectiveIds": ["State the extra clutch work a flyback demands"],
+          "prerequisiteConceptIds": ["horo-chrono-reset"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-rattrapante-10",
+      "conceptId": "horo-rattrapante",
+      "title": "A clamp that lets one hand wait",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-chrono"],
+      "goDeeper": "horo-tourbillon",
+      "explanation": [
+        "Two superimposed seconds hands share one axis. The lower hand is the running chrono seconds. The upper is the split. A pair of jaws — the clamp — can freeze the split arbor while the running hand continues underneath.",
+        "Press the split pusher and the clamp closes. The waiting hand holds an intermediate time. Press again and the jaws open; a heart or a spring on the split arbor lets that hand catch up to the still-running one. That catch-up is the rattrapante.",
+        "The clamp must hold without dragging the running arbor, and must let go cleanly. A tight clamp that pinches both arbors stops both hands. A loose clamp lets the split creep. Diagnose the jaws, not the oscillator, when one hand will not wait."
+      ],
+      "example": "Two runners on a 10 km split: start both, clamp at 5 km so the upper hand holds that time, read it, release, and the upper hand snaps onto the still-running lower hand for the finish.",
+      "whyItMatters": "Rattrapante is a clamp and a catch-up, not a second chronograph. If you cannot name the jaws, you will look for a second clutch that is not there.",
+      "quiz": [
+        {
+          "id": "horo-rat10-1",
+          "stem": "How does a rattrapante split a seconds hand so one can freeze while the other runs?",
+          "correctAnswer": "A clamp on the split arbor holds that hand; the running chrono arbor stays free",
+          "distractors": [
+            { "text": "A second going train and second balance time the split independently", "kind": "misconception", "rationale": "One chrono runner. The split is a clamped copy, not a second oscillator." },
+            { "text": "A flyback hammer that zeros the lower hand and leaves the upper running", "kind": "nearby", "rationale": "Flyback zeros and restarts. Split is a freeze-and-catch-up on a clamp." },
+            { "text": "A date jumper parked on the upper hand at each midnight", "kind": "misapplied", "rationale": "A jumper parks a date disc. The split clamp is a pair of jaws." }
+          ],
+          "correctExplanation": "Two hands, one axis. Jaws freeze the upper arbor. The lower keeps copying the train.",
+          "objectiveIds": ["Split a seconds hand so one can freeze while the other runs"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-rat10-2",
+          "stem": "You release the split pusher. Predict what lets the waiting hand catch the running one:",
+          "correctAnswer": "The clamp opens, and a heart or spring on the split arbor drives the catch-up",
+          "distractors": [
+            { "text": "The clamp tightens, which is how a waiting hand is supposed to accelerate", "kind": "reversed", "rationale": "Tight jaws hold. Catch-up needs the jaws open." },
+            { "text": "The going barrel dumps into the split, which is the rattrapante's second spring", "kind": "misapplied", "rationale": "Catch-up is a heart or a spring on the split arbor, not a dump of the going barrel." },
+            { "text": "The city disc indexes one hour, taken as the split catch-up", "kind": "nearby", "rationale": "World time is a zone display. Catch-up is the split hand joining the runner." }
+          ],
+          "correctExplanation": "Jaws open. Heart or spring on the split. The waiting hand rejoins the runner.",
+          "objectiveIds": ["Predict the clamp that holds the split hand and then lets it catch up"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-rat10-3",
+          "stem": "Trace a rattrapante split from a closed clamp to a catch-up. After the jaws open comes:",
+          "correctAnswer": "The split heart or spring, which turns the waiting arbor until it matches the runner",
+          "distractors": [
+            { "text": "The date finger, which is how split seconds are usually advanced", "kind": "nearby", "rationale": "A date finger is daily. Catch-up is on the split arbor." },
+            { "text": "The column wheel resetting the going train to zero as the split joins", "kind": "misapplied", "rationale": "The going train is not reset. Only the split hand catches up." },
+            { "text": "The rotor reversing, taken as the only legal catch-up path", "kind": "subtle", "rationale": "The rotor winds. Catch-up is a heart or spring on the split." }
+          ],
+          "correctExplanation": "Open jaws, then the split's own heart or spring. That is the catch-up path.",
+          "objectiveIds": ["Predict the clamp that holds the split hand and then lets it catch up"],
+          "prerequisiteConceptIds": ["horo-chrono"],
+          "difficultyTier": 5,
+          "cognitiveType": "trace"
+        }
+      ]
+    }
+  ]
+}

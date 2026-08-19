@@ -244,14 +244,14 @@
         },
         {
           "id": "mus-clf10-3",
-          "stem": "Why can a guitarist read a bass riff in treble without it becoming a new song?",
-          "correctAnswer": "The sounding pitches can match; only the map's assignment moved",
+          "stem": "You swap bass clef for treble on the same five lines and leave the noteheads. You should predict:",
+          "correctAnswer": "Those lines now name different pitches; the assignment changed",
           "distractors": [
-            { "text": "Treble ink raises every pitch by a fixed extra grade", "kind": "misapplied", "rationale": "The translator chooses pitches; the clef does not auto-raise them." },
-            { "text": "Bass clef deletes pitch and leaves only a duration grid", "kind": "reversed", "rationale": "Bass clef names pitches too. It assigns different letters to the lines." },
-            { "text": "The guitarist must invent letters the bassist never played", "kind": "nearby", "rationale": "The job is to show the same letters on a different map." }
+            { "text": "The sounding riff must stay identical, because lines never get new letters", "kind": "reversed", "rationale": "The clef is exactly the assignment of letters to lines." },
+            { "text": "Duration marks vanish, because only bass clef can hold time", "kind": "nearby", "rationale": "Duration stays on the map. The clef names pitch." },
+            { "text": "Loudness of each line is reset by the new clef's ink color", "kind": "misapplied", "rationale": "A clef does not set energy. It names which pitches sit on the lines." }
           ],
-          "correctExplanation": "If the sounding pitches match, the song is the same. The clef only relocated the map.",
+          "correctExplanation": "Same lines, new clef, new letters. That is the assignment decision.",
           "objectiveIds": ["Read a staff and clef as a decision about which pitches sit on the lines"],
           "prerequisiteConceptIds": ["mus-notation"],
           "difficultyTier": 0,

@@ -1,0 +1,646 @@
+{
+  "courseId": "mus-foundations",
+  "moduleId": "mus-f-rhythm",
+  "lessons": [
+    {
+      "id": "mus-rhythm-5",
+      "conceptId": "mus-rhythm",
+      "title": "Steady tick, then attacks",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["mus-sound"],
+      "goDeeper": "mus-rest",
+      "explanation": [
+        "Pulse is the steady tick you can tap. Rhythm is the pattern of attacks that sit on that tick — or between its ticks. Clap every pulse and you clapped the pulse, not a rhythm on top of it. Skip, double, or delay an attack and a rhythm appears.",
+        "Pitch can sit still while rhythm moves. A single E on a bass, attacked short-short-long, is a rhythm on one letter. MIT 21M.051 separates when events happen from which pitch they are. Mix the two and you will hear a new note and claim the groove changed."
+      ],
+      "example": "Tap a steady quarter with your foot. Clap on 1, skip 2, clap two shorts on 3 and 4. The foot is pulse. The hands are a rhythm that is not just the pulse.",
+      "whyItMatters": "Later meter, rest, and syncopation all sit on this cut. Name the tick before you name the pattern.",
+      "quiz": [
+        {
+          "id": "mus-rhy5-1",
+          "stem": "Pulse and the pattern of attacks that sit on it are best treated as:",
+          "correctAnswer": "Two layers: a steady tick, then a rhythm that occupies it",
+          "distractors": [
+            { "text": "One layer, because every attack must fall on a pulse", "kind": "reversed", "rationale": "Attacks can sit between ticks. That is already a rhythm." },
+            { "text": "Two pitch classes, because time is a kind of letter name", "kind": "misapplied", "rationale": "Pulse is when, not which pitch." },
+            { "text": "A clef assignment that names which lines are beats", "kind": "nearby", "rationale": "A clef names pitches on lines. It does not make the tick." }
+          ],
+          "correctExplanation": "Tick first. Pattern second. Clapping only the tick is not yet a rhythm on top.",
+          "objectiveIds": ["Separate pulse from the pattern of attacks that sit on it"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-rhy5-2",
+          "stem": "You keep one bass pitch and attack short-short-long. What moved?",
+          "correctAnswer": "The rhythm; the letter can stay put while the pattern changes",
+          "distractors": [
+            { "text": "The pitch class, because a new attack always names a new letter", "kind": "reversed", "rationale": "Attack timing is duration's partner, not a new pitch class." },
+            { "text": "The octave ratio, because longs must be a 2:1 frequency leap", "kind": "nearby", "rationale": "2:1 is octave. This move was when, not how high." },
+            { "text": "The key signature, because grooves rewrite the tonic", "kind": "misapplied", "rationale": "Key is a pitch-home claim. The letter sat still." }
+          ],
+          "correctExplanation": "Same E, new attack pattern. Rhythm moved. Pitch can sit.",
+          "objectiveIds": ["Separate pulse from the pattern of attacks that sit on it"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-rhy5-3",
+          "stem": "Tap a steady quarter and clap a figure that skips beat 2. You have:",
+          "correctAnswer": "Clapped a rhythm that is not just the pulse",
+          "distractors": [
+            { "text": "Only announced the pulse, because the foot still taps every tick", "kind": "nearby", "rationale": "The foot is the pulse. The skip in the hands is the rhythm." },
+            { "text": "Changed the pitch collection, because skipped beats rename letters", "kind": "misapplied", "rationale": "Skipping a tick is time, not a new scale." },
+            { "text": "Erased pulse, because a skip means no tick can exist", "kind": "reversed", "rationale": "The tick is still there to skip against." }
+          ],
+          "correctExplanation": "Foot = pulse. Hands skip a tick. That skip is a rhythm on the grid.",
+          "objectiveIds": ["Clap a rhythm that is not just the pulse"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-rhythm-10",
+      "conceptId": "mus-rhythm",
+      "title": "Pattern sitting on a pulse",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["mus-sound"],
+      "goDeeper": "mus-rest",
+      "explanation": [
+        "Events happen in time independent of which pitch they carry. Pulse is the isochronous grid — even ticks. Rhythm is the pattern of attacks, holds, and later rests that occupy that grid. You can clap the grid. You can also clap a pattern that is not the grid.",
+        "Separate them on purpose. Tap a steady quarter with your foot and clap a figure that skips the second tick, then fills the fourth. The foot is pulse. The hands are rhythm. If they match one-to-one you have not yet written a rhythm; you have only announced the tick.",
+        "A riff that repeats E eighths is a pitch choice plus a rhythm choice. Change only the attack pattern — palm the second, wait, then two shorts — and the letter can stay E. The groove moved. Later meter will group this pulse. First hear the tick and the pattern as two layers."
+      ],
+      "example": "Same open E: four even quarters, then short-short-wait-short. Pitch sat. Pulse can sit. The attack pattern is what changed, which is the rhythm.",
+      "whyItMatters": "If when and which pitch stay glued, every groove change will look like a new riff in a new key.",
+      "quiz": [
+        {
+          "id": "mus-rhy10-1",
+          "stem": "Clapping only the even ticks of a groove is doing which job?",
+          "correctAnswer": "Announcing the pulse, not yet a rhythm distinct from that pulse",
+          "distractors": [
+            { "text": "Writing a scale, because ticks are ordered pitch collections", "kind": "misapplied", "rationale": "A scale is tonic plus steps. This layer is time." },
+            { "text": "Erasing the grid, because clapping ticks destroys pulse", "kind": "reversed", "rationale": "Clapping the ticks is how you show the pulse." },
+            { "text": "Spelling a rest, because even ticks are silent by definition", "kind": "nearby", "rationale": "A rest is a later event. Here you are sounding the tick." }
+          ],
+          "correctExplanation": "Even ticks are the pulse. A rhythm on top has to differ from that one-to-one clap.",
+          "objectiveIds": ["Separate pulse from the pattern of attacks that sit on it"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-rhy10-2",
+          "stem": "Foot taps quarters; hands skip 2 and double 4. The honest report is:",
+          "correctAnswer": "You clapped a rhythm that is not just the pulse",
+          "distractors": [
+            { "text": "You only clapped the pulse, because the foot never stopped", "kind": "nearby", "rationale": "The foot held the pulse. The hands wrote a different pattern." },
+            { "text": "You changed pitch class, because skipped beats rename letters", "kind": "misapplied", "rationale": "No pitch had to move. This was when." },
+            { "text": "You wrote a key change, because new attacks imply a new tonic", "kind": "reversed", "rationale": "Tonic is a pitch-home claim. The grid did not retitle letters." }
+          ],
+          "correctExplanation": "Mismatch between foot and hands is the rhythm. Match would have been pulse alone.",
+          "objectiveIds": ["Clap a rhythm that is not just the pulse"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-rhy10-3",
+          "stem": "A bassist keeps one fret and only changes the attack pattern. You should predict:",
+          "correctAnswer": "Rhythm moved; pitch can stay the same letter",
+          "distractors": [
+            { "text": "Pitch class moved, because a new groove always names a new letter", "kind": "reversed", "rationale": "When and which pitch are independent knobs plus a time layer." },
+            { "text": "The octave doubled, because longs are a 2:1 frequency claim", "kind": "nearby", "rationale": "Hold time is not frequency doubling." },
+            { "text": "Meter vanished, because patterns cannot sit on a pulse", "kind": "misapplied", "rationale": "Meter is the later grouping. Pulse can still tick." }
+          ],
+          "correctExplanation": "Same fret, new when. That is the cut this lesson is for.",
+          "objectiveIds": ["Separate pulse from the pattern of attacks that sit on it"],
+          "prerequisiteConceptIds": ["mus-sound"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-rest-10",
+      "conceptId": "mus-rest",
+      "title": "Silence, not a leftover",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["mus-rhythm"],
+      "goDeeper": "mus-meter",
+      "explanation": [
+        "Silence occupies time. A rest is a rhythmic event with a duration, not a hole where the music forgot to write a note. Count it. A quarter rest lasts a quarter. Leaving it uncounted is how bars go crooked and how 'empty' bars get treated as mistakes.",
+        "Write a rest that is the point of the bar, not an empty leftover. A snare that hits on 3 after a rest on 1 and 2 makes those rests do work: they set up the hit. The silence is the figure. Fill it 'because something should be there' and you erased the figure.",
+        "On a bass, mute and hold still for two beats, then attack. That mute is a rest if no pitch is sounding. It still has a length. MIT 21M.051 wants that length on the map, same as a note. The ear already heard the gap; the page should admit it."
+      ],
+      "example": "Four-bar riff: two attacks, a bar of rest, two attacks. The empty bar is the hook. Replace it with a held chord and the hook is gone. The rest was the event.",
+      "whyItMatters": "Treat silence as leftover air and you will fill the one gap the riff was built around.",
+      "quiz": [
+        {
+          "id": "mus-rst10-1",
+          "stem": "A rest is most honestly treated as which of these objects?",
+          "correctAnswer": "A rhythmic event that occupies a counted duration",
+          "distractors": [
+            { "text": "A hole the page left when it forgot to write a pitch", "kind": "misconception", "rationale": "The rest is written on purpose. It has a length." },
+            { "text": "A pitch class named 'silence' on the chromatic collection", "kind": "nearby", "rationale": "Silence is time, not a twelfth letter." },
+            { "text": "A tempo mark that freezes the pulse until a note returns", "kind": "misapplied", "rationale": "The pulse can keep ticking through a rest." }
+          ],
+          "correctExplanation": "Counted duration with no attack. That is a rest, not a blank.",
+          "objectiveIds": ["Treat silence as a rhythmic event with a duration"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-rst10-2",
+          "stem": "A snare hits only on 3; beats 1 and 2 are silent on purpose. Those silences are:",
+          "correctAnswer": "Rests that are the point of the bar, setting up the hit",
+          "distractors": [
+            { "text": "Leftover air you should fill so the bar does not look empty", "kind": "reversed", "rationale": "Filling them erases the figure the rest was writing." },
+            { "text": "Proof that pulse stopped, so counting 1 and 2 is illegal", "kind": "nearby", "rationale": "The tick continues. The rest occupies it." },
+            { "text": "A new tonic, because silence always re-centers the key", "kind": "misapplied", "rationale": "A rest is when, not a pitch-home claim." }
+          ],
+          "correctExplanation": "The gap is the figure. Write it as rest, not as a mistake to fill.",
+          "objectiveIds": ["Write a rest that is the point of the bar, not an empty leftover"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-rst10-3",
+          "stem": "A bassist mutes for two beats, then attacks. The mute should be written as:",
+          "correctAnswer": "A rest with a two-beat duration, not a missing leftover",
+          "distractors": [
+            { "text": "Nothing, because silence cannot occupy time on a map", "kind": "reversed", "rationale": "The ear heard a length. The map should name it." },
+            { "text": "A tied pitch, because mutes are still sounding letters", "kind": "nearby", "rationale": "If no pitch is sounding, the event is a rest." },
+            { "text": "A key change, because two beats of mute reset the tonic", "kind": "misapplied", "rationale": "Tonic does not move just because the string is quiet." }
+          ],
+          "correctExplanation": "Two beats of no attack is two beats of rest. Count it like a note.",
+          "objectiveIds": ["Treat silence as a rhythmic event with a duration"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "mus-meter-10",
+      "conceptId": "mus-meter",
+      "title": "Repeating bar with a one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-rhythm"],
+      "goDeeper": "mus-beat-div",
+      "diagram": "mus-meter-grid",
+      "explanation": [
+        "Grouping pulse into a repeating bar with a downbeat is meter. 4/4 means four quarter-beats, accent on one. 3/4 means three. The barline is a claim about where 'one' returns, not a decoration. Count 1-2-3-4 and you are performing the grouping.",
+        "Simple meter divides the beat in two: 2/4, 3/4, 4/4, each beat a quarter that splits into eighths. Compound meter divides the beat in three: 6/8, 9/8, 12/8, each beat a dotted quarter that splits into three eighths. Same page of eighths can be either story.",
+        "Hear the difference as grouping, not as speed. Six eighths as 3+3 is compound duple (6/8). Six eighths as 2+2+2 is simple triple (3/4). The downbeat pattern changed. Tempo might not have. First hear two versus three inside the beat; later odd grids can wait."
+      ],
+      "example": "Hats on 1-2-3-4, kick on 1 and 3, snare on 2 and 4: simple quadruple. Switch the hats to 1-la-li 2-la-li and the beat is a dotted quarter in 6/8. The eighths did not have to speed up. The grouping did.",
+      "whyItMatters": "Without a repeating 'one' you cannot later displace an accent or stack a second grouping. Meter is the wall those fights need.",
+      "quiz": [
+        {
+          "id": "mus-mtr10-1",
+          "stem": "Meter in this course is the act of doing which grouping job?",
+          "correctAnswer": "Grouping pulse into a repeating bar that has a downbeat",
+          "distractors": [
+            { "text": "Naming a tonic plus a collection that treats it as home", "kind": "misapplied", "rationale": "That is key. Meter is a time grouping." },
+            { "text": "Choosing how fast the pulse is, independent of bars", "kind": "nearby", "rationale": "That is tempo. Meter is how ticks are grouped." },
+            { "text": "Listing attacks with no repeating accent pattern at all", "kind": "reversed", "rationale": "A rhythm without a repeating 'one' is not yet meter." }
+          ],
+          "correctExplanation": "Repeating bar, audible one. That grouping is meter.",
+          "objectiveIds": ["Group pulse into a repeating bar with a downbeat"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-mtr10-2",
+          "stem": "Simple 4/4 versus compound 6/8 differ by which division of the beat?",
+          "correctAnswer": "Simple splits the beat in two; compound splits it in three",
+          "distractors": [
+            { "text": "Simple is always faster; compound is a slower pulse by definition", "kind": "misconception", "rationale": "The cut is grouping, not speed." },
+            { "text": "Simple uses rests; compound forbids silence in the bar", "kind": "nearby", "rationale": "Rests can sit in either meter." },
+            { "text": "Simple has no downbeat; compound is the only meter with a one", "kind": "reversed", "rationale": "Both have a repeating one. They disagree about how the beat splits." }
+          ],
+          "correctExplanation": "Two versus three inside the beat. Same eighths can tell either story.",
+          "objectiveIds": ["Distinguish simple and compound division of the beat"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-mtr10-3",
+          "stem": "Six even eighths grouped 3+3 rather than 2+2+2 should be counted as:",
+          "correctAnswer": "Compound duple (6/8): two dotted-quarter beats, each split in three",
+          "distractors": [
+            { "text": "Simple triple (3/4): three quarter beats, each split in two", "kind": "nearby", "rationale": "That is the 2+2+2 grouping, not 3+3." },
+            { "text": "No meter, because six eighths cannot host a downbeat", "kind": "reversed", "rationale": "Six eighths are exactly one bar of 6/8 or of 3/4." },
+            { "text": "A pentatonic collection, because grouping is a pitch-set fact", "kind": "misapplied", "rationale": "This is a time grouping, not a five-tone set." }
+          ],
+          "correctExplanation": "3+3 is two beats of three. That is 6/8, not 3/4.",
+          "objectiveIds": ["Distinguish simple and compound division of the beat"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-beat-div-10",
+      "conceptId": "mus-beat-div",
+      "title": "Twos and threes inside the beat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-meter"],
+      "goDeeper": "mus-tempo",
+      "explanation": [
+        "Inside one beat you can split into two, three, or four without changing the bar. 4/4 still has four beats; each beat may now hold two eighths, a triplet, or four sixteenths. Subdivision is local. The downbeat pattern of the bar can sit still.",
+        "A triplet against a binary beat writes three in the time of two: three eighth-note triplets fill one quarter. The bar did not become 3/4. You borrowed a triple division for one beat (or more) while the meter still counts in two. Notate the '3' so the count stays honest.",
+        "Clap quarters with the foot and fill some beats with two, some with three, some with four. The foot is the bar's beat. The hands are subdivision. Mixing them is legal. Calling the whole piece a new meter because one beat triplet-ed is the usual overclaim."
+      ],
+      "example": "A 4/4 riff: beat 1 two eighths, beat 2 an eighth-triplet, beats 3–4 four sixteenths each. Still four downbeats. The triplet is three in the time of two on beat 2, not a new time signature.",
+      "whyItMatters": "Subdivision is how a riff gets busy without rewriting the bar. Name the beat first, then how you split it.",
+      "quiz": [
+        {
+          "id": "mus-bdv10-1",
+          "stem": "You fill beat 2 of a 4/4 bar with a triplet. What happened to the bar?",
+          "correctAnswer": "Still four beats; one beat borrowed a triple split",
+          "distractors": [
+            { "text": "The meter became 3/4, because any triplet rewrites the signature", "kind": "misconception", "rationale": "A local triple split is not a new grouping of the bar." },
+            { "text": "The bar lost its downbeat, because triplets forbid a one", "kind": "reversed", "rationale": "The one can sit still. Only beat 2's insides changed." },
+            { "text": "Pitch class changed, because triplets rename the tonic", "kind": "misapplied", "rationale": "Subdivision is time inside a beat, not a new home pitch." }
+          ],
+          "correctExplanation": "Four beats remain. Beat 2 held three in the time of two.",
+          "objectiveIds": ["Subdivide a beat into two, three, or four without changing the bar"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-bdv10-2",
+          "stem": "Three eighth-note triplets filling one quarter against 4/4 should be notated as:",
+          "correctAnswer": "A triplet: three in the time of two, with a 3 marked",
+          "distractors": [
+            { "text": "A new 3/4 bar dropped in, replacing the quarter with three beats", "kind": "nearby", "rationale": "That would change the meter. The triplet keeps the quarter as one beat." },
+            { "text": "Three unmarked eighths, hoping the player guesses the squeeze", "kind": "reversed", "rationale": "Without the 3, those eighths look like one-and-a-half beats." },
+            { "text": "A rest, because extra attacks cannot fit a binary beat", "kind": "misapplied", "rationale": "They fit. That is what the triplet notation is for." }
+          ],
+          "correctExplanation": "Mark the 3. Three attacks occupy one binary beat. The bar can stay 4/4.",
+          "objectiveIds": ["Notate a triplet against a binary beat"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-bdv10-3",
+          "stem": "Foot keeps quarters in 4/4; hands play 2, then 3, then 4, then 2. Predict:",
+          "correctAnswer": "The bar is unchanged; only the split inside each beat moved",
+          "distractors": [
+            { "text": "Each new split is a new time signature the foot must follow", "kind": "reversed", "rationale": "The foot is still four beats. Splits are local." },
+            { "text": "The pulse disappeared, because mixed splits cancel meter", "kind": "nearby", "rationale": "The pulse is what the foot is still tapping." },
+            { "text": "The riff changed key, because sixteenths imply a new tonic", "kind": "misapplied", "rationale": "Ink density is not a pitch-home claim." }
+          ],
+          "correctExplanation": "Two, three, or four inside a beat. The bar's four ones can sit still.",
+          "objectiveIds": ["Subdivide a beat into two, three, or four without changing the bar"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-tempo-10",
+      "conceptId": "mus-tempo",
+      "title": "Speed of the pulse, not the ink",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-meter"],
+      "goDeeper": "mus-tie-dot",
+      "explanation": [
+        "Tempo is the speed of the pulse, usually as beats per minute, independent of how busy the written subdivision looks. Eighths at 60 bpm and quarters at 120 bpm can move the same number of pulses past the ear. The ink density is not the tempo.",
+        "A figure written in sixteenths at a slow marking can feel busier than quarters at a fast one, because surface speed and pulse speed came apart. State the pulse first. Then say how it is subdivided. Mixing the two is how people claim a song 'got faster' when they only packed the bar.",
+        "Halve the marking and keep the notation: the same figure takes twice as long. Predict the feel: attacks spread out, words sit differently, a riff that was a rush becomes a stomp. Double it and the opposite happens. The letters on the staff did not have to change."
+      ],
+      "example": "A verse of eighth-note E's marked ♩=80. Copy the figure, mark ♩=40, and each attack lasts twice as long. Same ink. Different pulse speed. The busy look of the eighths did not save the old feel.",
+      "whyItMatters": "If tempo only means 'looks busy on the page,' half-time feels and double-time feels will be impossible to name.",
+      "quiz": [
+        {
+          "id": "mus-tmp10-1",
+          "stem": "Tempo is stated honestly as which speed, independent of the written subdivision?",
+          "correctAnswer": "The speed of the pulse, usually in beats per minute",
+          "distractors": [
+            { "text": "How many noteheads fill the staff, regardless of the marking", "kind": "misconception", "rationale": "Ink density is subdivision. Tempo is the tick rate." },
+            { "text": "The tonic's letter, because faster music must raise the home pitch", "kind": "misapplied", "rationale": "Pitch home is key. Tempo does not retitle it." },
+            { "text": "The number of rests in the bar, which is the only legal speed", "kind": "nearby", "rationale": "Rests occupy time. They are not the metronome mark." }
+          ],
+          "correctExplanation": "Pulse speed first. How you split the beat is a different fact.",
+          "objectiveIds": ["State tempo as the speed of the pulse, independent of the written subdivision"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-tmp10-2",
+          "stem": "Sixteenths at a slow marking versus quarters at a fast one can differ how?",
+          "correctAnswer": "Surface can feel busier while the pulse is actually slower",
+          "distractors": [
+            { "text": "They cannot differ; ink density is the definition of tempo", "kind": "reversed", "rationale": "That mash is the error this lesson unpicks." },
+            { "text": "The slow marking must raise the tonic so the riff stays major", "kind": "misapplied", "rationale": "Tempo does not spell a scale." },
+            { "text": "Quarters at a fast marking are legally rests, not attacks", "kind": "nearby", "rationale": "Quarters are still attacks. Speed is the pulse rate." }
+          ],
+          "correctExplanation": "Busy page, slow tick — or sparse page, fast tick. Name the pulse first.",
+          "objectiveIds": ["State tempo as the speed of the pulse, independent of the written subdivision"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-tmp10-3",
+          "stem": "You keep the same written figure and halve the metronome mark. Predict the feel:",
+          "correctAnswer": "The same attacks take twice as long; a rush can become a stomp",
+          "distractors": [
+            { "text": "Nothing changes, because notation already is the tempo", "kind": "reversed", "rationale": "The marking is the pulse speed. Halving it stretches the figure." },
+            { "text": "Pitch classes invert, because slow marks flip the collection", "kind": "misapplied", "rationale": "Letters can sit still. Time is what stretched." },
+            { "text": "The bar becomes 3/4, because half speed forbids simple quadruple", "kind": "nearby", "rationale": "Meter can stay. Tempo is not a new grouping." }
+          ],
+          "correctExplanation": "Same ink, half the tick rate, double the duration of each attack.",
+          "objectiveIds": ["Predict why the same figure feels different at half the marking"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-tie-dot-10",
+      "conceptId": "mus-tie-dot",
+      "title": "Long-short without a new attack",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-rhythm"],
+      "goDeeper": "mus-anacrusis",
+      "explanation": [
+        "Ties glue two noteheads into one duration so the attack is not repeated. A quarter tied to an eighth is a one-and-a-half-beat sound, one start. Dots add half the value of the note they sit on: a dotted quarter equals a quarter plus an eighth. Both write length without a new hit.",
+        "Read a dotted quarter plus eighth as a long-short pair. In 4/4 that pair fills two beats: hold through beat 1 and the first half of beat 2, then attack on the off-beat. The long note crossed a beat. The short note is the remainder. No third attack is implied.",
+        "Choose tie or dot by what you need to show. A duration that crosses a barline has to be tied. A duration that fills a dotted value inside the bar can be dotted. Either way you extended a sound instead of writing a new attack. Count the total hold, then play one start."
+      ],
+      "example": "Kick on 1, hold through 2 with a dotted half, then snare on 4. One attack, three beats of sound, then a new attack. Writing three separate quarters would have asked for two extra hits that were not there.",
+      "whyItMatters": "A new notehead is not automatically a new hit. Ties and dots are how you hold across a beat without lying about attacks.",
+      "quiz": [
+        {
+          "id": "mus-tie10-1",
+          "stem": "A quarter tied to an eighth should be performed as which of these?",
+          "correctAnswer": "One attack held for one and a half beats, no second hit",
+          "distractors": [
+            { "text": "Two attacks, one on each notehead, because ties double the hits", "kind": "reversed", "rationale": "A tie glues the heads. The attack is not repeated." },
+            { "text": "A rest plus a pitch, because ties cancel the first duration", "kind": "nearby", "rationale": "Both heads sound as one hold, not as silence plus a note." },
+            { "text": "A new tonic, because extra length re-centers the key", "kind": "misapplied", "rationale": "Duration spelling is not a pitch-home claim." }
+          ],
+          "correctExplanation": "One start, combined length. That is what the tie is for.",
+          "objectiveIds": ["Extend a duration with a tie or a dot instead of writing a new attack"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-tie10-2",
+          "stem": "A dotted quarter plus an eighth in 4/4 should be read as:",
+          "correctAnswer": "A long-short pair: hold 1.5 beats, then a short off-beat attack",
+          "distractors": [
+            { "text": "Two equal attacks, because a dot splits the note in half", "kind": "reversed", "rationale": "A dot lengthens the first note. The eighth is the short remainder." },
+            { "text": "Three attacks, counting the dot as its own hit on the page", "kind": "nearby", "rationale": "The dot is extra length, not an extra start." },
+            { "text": "A compound meter change, because dots always mean 6/8", "kind": "misapplied", "rationale": "A dotted value can sit inside 4/4. Meter did not have to move." }
+          ],
+          "correctExplanation": "Long then short. The pair fills two beats with two attacks, not three.",
+          "objectiveIds": ["Read a dotted quarter plus eighth as a long-short pair"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-tie10-3",
+          "stem": "A hold that must cross a barline is written with which tool, and why?",
+          "correctAnswer": "A tie, because a dot cannot carry the sound into the next bar",
+          "distractors": [
+            { "text": "A rest, because barlines legally stop every sounding pitch", "kind": "reversed", "rationale": "Sound can continue. The tie is how the map shows that." },
+            { "text": "A new attack on beat 1, because every bar must restart the note", "kind": "nearby", "rationale": "Restarting is a different figure. The tie refuses that extra hit." },
+            { "text": "A tempo drop, because crossing a barline halves the pulse", "kind": "misapplied", "rationale": "Barline crossing is a duration spelling, not a metronome change." }
+          ],
+          "correctExplanation": "Dots live inside a value. Barline crossing needs a tie: one attack, two heads.",
+          "objectiveIds": ["Extend a duration with a tie or a dot instead of writing a new attack"],
+          "prerequisiteConceptIds": ["mus-rhythm"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "mus-anacrusis-10",
+      "conceptId": "mus-anacrusis",
+      "title": "Pickup that still hears one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-meter"],
+      "goDeeper": "mus-syncopation",
+      "explanation": [
+        "Starting a phrase before the barline does not move the downbeat. An anacrusis (pickup) is those opening attacks that lean into 'one'. The barline still marks where the ear should hear the strong beat. The extra notes at the front are borrowed from the previous bar's count.",
+        "Write the pickup as a partial bar and complete the missing beats at the end of the piece, or just start mid-count. Either way the downbeat stays where the grouping put it. Sliding the barline so the first note becomes 'one' is a different claim: you relocated meter, not merely picked up.",
+        "Predict where the ear still hears 'one': on the accent the meter already promised, usually where the bass and kick land together after the pickup. A guitar that enters on the 'and' of 4 still delivers 1 a half-beat later. If that 1 never arrives, you no longer wrote a pickup; you wrote a new grouping."
+      ],
+      "example": "Three eighths into a 4/4 riff, then a crash on 1. The eighths are the pickup. Clap 1 on the crash, not on the first eighth. Move the barline to the first eighth and the crash becomes an off-beat — a different piece.",
+      "whyItMatters": "If the first note is always 'one,' every pickup will look like a barline error. The ear still wants the downbeat the meter named.",
+      "quiz": [
+        {
+          "id": "mus-ana10-1",
+          "stem": "Three pickup eighths into a 4/4 crash on 1 should be written so that:",
+          "correctAnswer": "The phrase starts before the barline; the downbeat stays on the crash",
+          "distractors": [
+            { "text": "The barline moves to the first eighth, making that attack the new one", "kind": "reversed", "rationale": "That relocates meter. A pickup leans into the old one." },
+            { "text": "The crash becomes a rest, because pickups forbid a downbeat", "kind": "nearby", "rationale": "The pickup needs that downbeat as its target." },
+            { "text": "The tonic changes on the first eighth, because pickups rewrite key", "kind": "misapplied", "rationale": "Anacrusis is a time placement, not a new home pitch." }
+          ],
+          "correctExplanation": "Start early. Keep 'one' where the meter put it. That is a pickup.",
+          "objectiveIds": ["Start a phrase before the downbeat without moving the barline"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-ana10-2",
+          "stem": "A guitar enters on the 'and' of 4 and the kick hits on the next 1. The ear should hear one on:",
+          "correctAnswer": "The kick: the downbeat the meter already promised, after the pickup",
+          "distractors": [
+            { "text": "The guitar's first note, because the earliest attack is always one", "kind": "reversed", "rationale": "Earliest is the pickup. One is still the grouped downbeat." },
+            { "text": "Neither, because a pickup erases meter until the next verse", "kind": "nearby", "rationale": "The pickup needs the wall of 'one' to lean on." },
+            { "text": "Beat 3, because pickups skip two beats by definition", "kind": "misapplied", "rationale": "The 'and' of 4 is a half-beat before 1, not a jump to 3." }
+          ],
+          "correctExplanation": "Pickup on the 'and' of 4. One arrives with the kick. The barline did not move.",
+          "objectiveIds": ["Predict where the ear still hears 'one'"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-ana10-3",
+          "stem": "Sliding the barline so the first pickup note becomes 'one' would mean you:",
+          "correctAnswer": "Relocated the meter rather than writing an anacrusis",
+          "distractors": [
+            { "text": "Wrote a normal pickup, because the first ink is always the downbeat", "kind": "reversed", "rationale": "That is the mash this lesson refuses." },
+            { "text": "Only changed tempo, because barline slides are metronome marks", "kind": "nearby", "rationale": "You moved grouping, not pulse speed." },
+            { "text": "Spelled a rest, because pickups cannot occupy counted time", "kind": "misapplied", "rationale": "Pickup notes occupy time. They just are not 'one'." }
+          ],
+          "correctExplanation": "Pickup keeps the old one. Moving the barline is a different grouping claim.",
+          "objectiveIds": ["Start a phrase before the downbeat without moving the barline"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "mus-syncopation-10",
+      "conceptId": "mus-syncopation",
+      "title": "Weak-slot accent against the bar",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-meter"],
+      "goDeeper": "mus-polyrhythm-intro",
+      "explanation": [
+        "Accent a weak part of the bar so the attack fights the meter, and you have syncopation. In 4/4, beats 2 and 4 are weaker than 1 and 3; off-beats are weaker still. Put a long note or a loud hit on an 'and' and tie it over the next downbeat, and the meter is still countable — it is just being argued with.",
+        "Write a syncopation that is still countable. Keep a hi-hat or a foot on the pulse so 'one' does not vanish. The fight needs a wall. If you destroy the grid, the ear stops hearing off-beats as off, and the figure becomes a new meter rather than a syncopation against the old one.",
+        "A bass that attacks on the 'and' of 1, holds through 2, and hits again on the 'and' of 3 is syncopating 4/4. Count 1-and-2-and out loud while you play it. If you cannot say the count, the figure is not yet a written syncopation; it is an uncounted rush."
+      ],
+      "example": "Snare on the 'and' of 2, tied into 3, while the kick still speaks on 1 and 3. The snare fights. The kick keeps 'one' audible. That is countable syncopation, not a bar of mystery.",
+      "whyItMatters": "A displaced accent only reads as syncopation if the original meter is still there to fight. Keep the count, then lean against it.",
+      "quiz": [
+        {
+          "id": "mus-syn10-1",
+          "stem": "A loud snare on the 'and' of 2, tied over 3, against a kick on 1 and 3, is:",
+          "correctAnswer": "A syncopation: accent on a weak slot while the meter stays countable",
+          "distractors": [
+            { "text": "A new meter, because any off-beat hit legally relocates the barline", "kind": "misconception", "rationale": "The kick still marks 1 and 3. The snare is arguing, not rewriting." },
+            { "text": "A rest, because ties over downbeats cancel the bar", "kind": "nearby", "rationale": "The snare is sounding. The tie extends it across 3." },
+            { "text": "A key change, because displaced accents retitle the tonic", "kind": "misapplied", "rationale": "Syncopation is a time fight, not a pitch-home claim." }
+          ],
+          "correctExplanation": "Weak-slot accent, grid still there. That is the definition in this course.",
+          "objectiveIds": ["Accent a weak part of the bar so the attack fights the meter"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-syn10-2",
+          "stem": "To write a syncopation that is still countable you should keep which layer?",
+          "correctAnswer": "A pulse or downbeat the ear can still name as 'one'",
+          "distractors": [
+            { "text": "No pulse at all, because a true syncopation must hide the meter", "kind": "reversed", "rationale": "Hide the grid and the off-beat stops being off." },
+            { "text": "A new tonic on every off-beat so the fight has pitch too", "kind": "misapplied", "rationale": "You can syncopate on one letter. Pitch is optional here." },
+            { "text": "Only rests on strong beats, with no sounding wall left", "kind": "nearby", "rationale": "Rests can be part of the figure, but something must keep the count." }
+          ],
+          "correctExplanation": "Hats, kick, or a foot on the tick. The fight needs a wall.",
+          "objectiveIds": ["Write a syncopation that is still countable"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-syn10-3",
+          "stem": "A figure cannot be counted 1-and-2-and, and 'one' has vanished. The likely error is:",
+          "correctAnswer": "The grid was destroyed, so the off-beats are no longer heard as off",
+          "distractors": [
+            { "text": "The figure is too syncopated to need a meter in the first place", "kind": "reversed", "rationale": "Without meter there is no weak slot to accent." },
+            { "text": "Ties are illegal in 4/4, so the count had to collapse", "kind": "nearby", "rationale": "Ties are how many syncopations cross a beat. They are legal." },
+            { "text": "Tempo doubled automatically, which erases downbeats by definition", "kind": "misapplied", "rationale": "Pulse speed did not have to move. The grouping wall was what vanished." }
+          ],
+          "correctExplanation": "Uncounted rush, not a written syncopation. Restore a countable 'one,' then displace.",
+          "objectiveIds": ["Write a syncopation that is still countable"],
+          "prerequisiteConceptIds": ["mus-meter"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-polyrhythm-intro-10",
+      "conceptId": "mus-polyrhythm-intro",
+      "title": "Three in the time of two",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-beat-div"],
+      "goDeeper": "mus-triad",
+      "explanation": [
+        "Two pulse groupings can share a longer coincidence and still both be running. That stack is a polyrhythm. 3:2 means three even attacks in the same span as two even attacks. They meet at the start of the span, drift apart, and meet again when 3 and 2 share a multiple.",
+        "Clap 3:2 as three in the time of two. One hand taps two even beats (say two quarters). The other taps three even beats in that same two-beat span. Neither hand changed the written pitch of a riff. Only the grouping stacked. The coincidence at the downbeat is how you check the stack.",
+        "Keep the fragment local. One bar of 3:2 against a 2-feel is enough to hear the coincidence. Do not yet promote the stack into a new time signature or a second independent meter. Hear the two groupings, find where they land together, and stop. That is the first look."
+      ],
+      "example": "Kick on 1 and 3 (the two). Hands play three even attacks across those two beats. They share 1, disagree in the middle, and share the next 1. Same E on the guitar the whole time. The stack was time, not pitch.",
+      "whyItMatters": "A second grouping is not automatically a new song or a later odd-grid trick. Hear 3:2 as a local stack that still meets.",
+      "quiz": [
+        {
+          "id": "mus-ply10-1",
+          "stem": "Clapping 3:2 as three in the time of two means which of these stacks?",
+          "correctAnswer": "Three even attacks in the same span as two even attacks",
+          "distractors": [
+            { "text": "Three bars of 4/4 followed by two bars of rest", "kind": "nearby", "rationale": "3:2 is a ratio inside a shared span, not a form count of bars." },
+            { "text": "A new key every three notes against a tonic that lasts two", "kind": "misapplied", "rationale": "This stack is time. Pitch can sit still." },
+            { "text": "Six even eighths grouped as 3/4, replacing the original two", "kind": "reversed", "rationale": "Both groupings keep running. One does not replace the other." }
+          ],
+          "correctExplanation": "Two hands, one span. Three against two, meeting at the ends.",
+          "objectiveIds": ["Clap 3:2 as three in the time of two"],
+          "prerequisiteConceptIds": ["mus-beat-div"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-ply10-2",
+          "stem": "Two pulse groupings that share a longer coincidence are, in this first look:",
+          "correctAnswer": "A polyrhythm: both run, and they meet at a shared point",
+          "distractors": [
+            { "text": "A pickup, because any extra grouping must start before the barline", "kind": "nearby", "rationale": "Anacrusis is early entrance into one meter, not two groupings at once." },
+            { "text": "A scale, because stacked pulses name a new tonic plus steps", "kind": "misapplied", "rationale": "No pitch collection is required. The stack is time." },
+            { "text": "Silence, because two groupings cancel until only a rest remains", "kind": "reversed", "rationale": "Both layers sound. The coincidence is a shared attack, not a mute." }
+          ],
+          "correctExplanation": "Two groupings, one shared meeting. That is the local polyrhythm.",
+          "objectiveIds": ["Stack two pulse groupings that share a longer coincidence"],
+          "prerequisiteConceptIds": ["mus-beat-div"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-ply10-3",
+          "stem": "Kick on 1 and 3, hands in three even attacks across those two beats. They should:",
+          "correctAnswer": "Share the downbeat, drift apart, and meet again at the next 1",
+          "distractors": [
+            { "text": "Never meet, because 3 and 2 cannot share a pulse by definition", "kind": "reversed", "rationale": "They share the span's start (and its next start). That is the coincidence." },
+            { "text": "Force a new time signature that deletes the original 2-feel", "kind": "misconception", "rationale": "First look keeps the fragment local. Do not promote it yet." },
+            { "text": "Change the guitar's letter, because stacked time retitles pitch", "kind": "misapplied", "rationale": "The example holds one E. The stack is independent of pitch." }
+          ],
+          "correctExplanation": "Meet, drift, meet. Same span, two groupings. Pitch can sit on E.",
+          "objectiveIds": ["Stack two pulse groupings that share a longer coincidence"],
+          "prerequisiteConceptIds": ["mus-beat-div"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        }
+      ]
+    }
+  ]
+}

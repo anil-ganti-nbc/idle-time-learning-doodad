@@ -214,7 +214,7 @@
       "quiz": [
         {
           "id": "ml-hy10-1",
-          "stem": "A hypothesis class is:",
+          "stem": "A hypothesis class is the thing you name before searching:",
           "correctAnswer": "The family of functions you are willing to search",
           "distractors": [
             { "text": "The single function the optimizer happened to return", "kind": "nearby", "rationale": "That is one member, not the family." },
@@ -278,7 +278,7 @@
       "quiz": [
         {
           "id": "ml-lo10-1",
-          "stem": "A loss is:",
+          "stem": "A loss is the number the search actually walks:",
           "correctAnswer": "A number that says how wrong a prediction is",
           "distractors": [
             { "text": "The family of functions you are willing to search", "kind": "nearby", "rationale": "That is the hypothesis class." },
@@ -357,7 +357,7 @@
         },
         {
           "id": "ml-la10-2",
-          "stem": "The score w·x is:",
+          "stem": "The score w·x is doing this geometric act:",
           "correctAnswer": "How far the point x sticks out along the direction w",
           "distractors": [
             { "text": "The probability that x is a training row", "kind": "nearby", "rationale": "An inner product is not that probability." },
@@ -470,7 +470,7 @@
       "quiz": [
         {
           "id": "ml-ba10-1",
-          "stem": "A baseline is:",
+          "stem": "A baseline is the dummy you must beat first:",
           "correctAnswer": "The dumb answer you must beat before claiming a model works",
           "distractors": [
             { "text": "The largest network you can afford", "kind": "misapplied", "rationale": "Size is not a baseline." },

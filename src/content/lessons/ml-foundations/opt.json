@@ -1,0 +1,134 @@
+{
+  "courseId": "ml-foundations",
+  "moduleId": "ml-f-opt",
+  "lessons": [
+    {
+      "id": "ml-gd-variants-10",
+      "conceptId": "ml-gd-variants",
+      "title": "Slope from a handful of rows",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-gd"],
+      "goDeeper": "ml-sgd-mom",
+      "explanation": [
+        "Full-batch gradient descent averages the slope over every training row. Honest, expensive, and smooth. A minibatch estimates that same slope from a handful of examples. One-row stochastic uses a single example. All three step opposite an estimate of ∇J.",
+        "Cost versus noise is the comparison. Full-batch is one accurate direction per pass and a full scan of the data. Stochastic is cheap and noisy: the path jitters, which can escape sharp holes and can also stall. Minibatch sits in between: less noisy than one row, cheaper than the whole set.",
+        "A batch of 32 is not a smaller test set. It is a noisier gradient. Shuffle so the handful is not a clump of yesterday's rows. If the batch is the whole dataset, you are back at full-batch. If it is one row, you are at SGD. Pick the noise you can afford."
+      ],
+      "example": "Ten thousand rows. Full-batch: one gradient from all ten thousand. Minibatch 32: about 312 noisy steps per pass. SGD: ten thousand tiny noisy steps. Same loss, three prices for the slope.",
+      "whyItMatters": "People call every walk 'gradient descent'. The handful versus the whole set is the cost and the noise, and they are not the same walk.",
+      "quiz": [
+        {
+          "id": "ml-gdv10-1",
+          "stem": "A minibatch gradient is best described as which of these objects?",
+          "correctAnswer": "An estimate of the slope from a handful of examples, not from the whole set",
+          "distractors": [
+            { "text": "The exact full-data gradient, just written with a smaller α", "kind": "reversed", "rationale": "A handful is an estimate. α is not the batch." },
+            { "text": "A locked test split you may report after each step", "kind": "misapplied", "rationale": "A batch is a training handful, not a test." },
+            { "text": "A probability squash applied to the residual", "kind": "nearby", "rationale": "This lesson is about how you estimate ∇J." }
+          ],
+          "correctExplanation": "Handful in, noisy slope out. That is the minibatch.",
+          "objectiveIds": ["Estimate the slope from a minibatch instead of the whole dataset"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-gdv10-2",
+          "stem": "Compare full-batch, one-row SGD, and a minibatch of 32 on cost and noise:",
+          "correctAnswer": "Full-batch is smooth and expensive; SGD is cheap and jittery; 32 sits between them",
+          "distractors": [
+            { "text": "Full-batch is the noisiest; SGD is the most expensive scan", "kind": "reversed", "rationale": "Those roles are swapped." },
+            { "text": "All three have identical noise and identical cost per step", "kind": "nearby", "rationale": "The whole point is the trade." },
+            { "text": "Only full-batch may step opposite the gradient", "kind": "misapplied", "rationale": "All three step opposite an estimate of ∇J." }
+          ],
+          "correctExplanation": "Cost up, noise down as the handful grows. 32 is the usual middle.",
+          "objectiveIds": ["Compare full-batch, stochastic, and mini-batch updates on cost and noise"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ml-gdv10-3",
+          "stem": "Why shuffle before you cut minibatches, rather than taking yesterday's rows as one clump?",
+          "correctAnswer": "A clump is a biased handful, so the slope estimate is not a draw from the training P",
+          "distractors": [
+            { "text": "Shuffling turns the batch into a legal test report", "kind": "reversed", "rationale": "A batch is still train." },
+            { "text": "Without a clump the gradient cannot be computed at all", "kind": "misconception", "rationale": "You can compute a bad gradient on a clump." },
+            { "text": "Clumps are required for the walk to be convex", "kind": "subtle", "rationale": "Convexity is the loss shape, not the batch order." }
+          ],
+          "correctExplanation": "Shuffle, then a handful. Otherwise the slope is yesterday, not the set.",
+          "objectiveIds": ["Estimate the slope from a minibatch instead of the whole dataset"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "ml-iid-10",
+      "conceptId": "ml-iid",
+      "title": "Independent until the data lies",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-generalization"],
+      "goDeeper": "ml-crossval",
+      "explanation": [
+        "Independent, identically distributed examples are the assumption: each row is a fresh draw from the same P, and knowing one row does not tell you the next. Splits, generalization numbers, and 'shuffle then cut' all lean on that claim.",
+        "Real data lies. Time series: tomorrow depends on today, so a random split puts the future in train. Users with many rows: the same person leaks across train and test. Hospitals, cameras, or days as clumps: identically distributed is false. The test number then estimates a P you will not see.",
+        "A common repair is to split on the clump, not the row: by user, by day, by patient. That keeps the dependence inside a split. It does not make the data i.i.d. It only stops the original sin of reporting a leak as generalization. Name the violation before you shuffle."
+      ],
+      "example": "A user with 40 sessions. Shuffle-and-cut puts 30 in train and 10 in test. The model has already met that user. A user-level split would have put all 40 on one side.",
+      "whyItMatters": "The most common 'great test score' in production data is a person, a day, or a future timestamp that snuck across the cut.",
+      "quiz": [
+        {
+          "id": "ml-iid10-1",
+          "stem": "The i.i.d. assumption, as this lesson states it, says examples are:",
+          "correctAnswer": "Independent and identically distributed: a fresh draw from one P, with no row telling the next",
+          "distractors": [
+            { "text": "Dependent on the previous row, and drawn from a new P each time", "kind": "reversed", "rationale": "That is the violation, not the assumption." },
+            { "text": "Required to have a convex loss before any split is legal", "kind": "misapplied", "rationale": "i.i.d. is about the rows, not the bowl." },
+            { "text": "Always shuffled into the test drawer after each epoch", "kind": "nearby", "rationale": "A ritual is not the assumption." }
+          ],
+          "correctExplanation": "Independent, identical, one P. That is the claim the split leans on.",
+          "objectiveIds": ["State the i.i.d. assumption: independent, identically distributed examples"],
+          "prerequisiteConceptIds": ["ml-generalization"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-iid10-2",
+          "stem": "A user with 40 sessions is randomly split 30/10 into train and test. The i.i.d. lie is that:",
+          "correctAnswer": "The same person leaked across the cut, so test is not a new draw from P",
+          "distractors": [
+            { "text": "Forty sessions prove the rows were independent", "kind": "reversed", "rationale": "Many rows from one person are dependence." },
+            { "text": "User-level splitting is illegal in supervised learning", "kind": "misconception", "rationale": "Splitting on the clump is the repair." },
+            { "text": "The logistic curve cannot run on repeated users", "kind": "misapplied", "rationale": "The crime is the split, not the squash." }
+          ],
+          "correctExplanation": "Same user, both sides. That is not a fresh draw. Split on the person.",
+          "objectiveIds": ["Name a common way real data violates it and what that does to the split"],
+          "prerequisiteConceptIds": ["ml-generalization"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-iid10-3",
+          "stem": "A random shuffle of a time series puts future rows in train and past rows in test. Diagnose the split:",
+          "correctAnswer": "Tomorrow depended on today, so the cut leaked the future and the test number is not tomorrow",
+          "distractors": [
+            { "text": "Shuffle-and-cut is always legal, because i.i.d. is a style preference", "kind": "reversed", "rationale": "Time is a dependence the shuffle ignores." },
+            { "text": "The series became i.i.d. once you locked a test drawer", "kind": "nearby", "rationale": "A lock does not undo time." },
+            { "text": "You must switch to squared error before a time split is defined", "kind": "misapplied", "rationale": "The loss is not the dependence." }
+          ],
+          "correctExplanation": "Time is dependence. A random cut puts the future in train. Split by time instead.",
+          "objectiveIds": ["Name a common way real data violates it and what that does to the split"],
+          "prerequisiteConceptIds": ["ml-generalization"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,650 @@
+{
+  "courseId": "mus-foundations",
+  "moduleId": "mus-f-pitch",
+  "lessons": [
+    {
+      "id": "mus-scale-5",
+      "conceptId": "mus-scale",
+      "title": "Tonic plus a step list",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["mus-interval"],
+      "goDeeper": "mus-major",
+      "diagram": "mus-scale-steps",
+      "explanation": [
+        "Pick a home pitch and a list of steps away from it. That pair is a scale: an ordered collection, not a mood and not a guitar box. C–D–E–F–G–A–B is one such list. Start the same letters on A and the set is unchanged while the home moves.",
+        "MIT 21M.051 treats the scale as a naming tool. The tonic is the pitch the rest of the list is measured from. Change only the tonic and you re-center the inventory. Change the steps and you built a different collection."
+      ],
+      "example": "On a bass, play A then the notes two, four, five, seven, nine, and eleven frets up. You chose a tonic and a step list. Start the same fret gaps on D and the home moved. The walk's shape stayed.",
+      "whyItMatters": "Later major, minor, and mode talk is this object with extra claims. Name the tonic and the steps first.",
+      "quiz": [
+        {
+          "id": "mus-scl5-1",
+          "stem": "A scale in this course is best built as which of these objects?",
+          "correctAnswer": "A tonic plus a chosen collection of ordered steps",
+          "distractors": [
+            { "text": "A guitar box whose shape is the scale itself", "kind": "misconception", "rationale": "A fingering is a way to play a collection, not the collection." },
+            { "text": "A mood label that ranks how happy a riff feels", "kind": "nearby", "rationale": "Mood is a later story. The object is tonic plus steps." },
+            { "text": "A pair of knobs, loudness and timbre, on one event", "kind": "misapplied", "rationale": "Those knobs belong to a sound event, not to a scale." }
+          ],
+          "correctExplanation": "Home pitch plus an ordered step list. That pair is the scale.",
+          "objectiveIds": ["Build a scale as a tonic plus a chosen collection of steps"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-scl5-2",
+          "stem": "You keep the same letters and start the list on a new tonic. What changed?",
+          "correctAnswer": "The home pitch; the pitch set can stay the same",
+          "distractors": [
+            { "text": "The step sizes; a new tonic always rewrites every gap", "kind": "reversed", "rationale": "Holding the set keeps the letters. Only home moved." },
+            { "text": "The octave ratio; tonic changes double the frequency", "kind": "nearby", "rationale": "Octave equivalence is a different fact. This move is re-centering." },
+            { "text": "The clef; letter lists cannot move without new ink", "kind": "misapplied", "rationale": "A clef assigns lines. It does not define a scale." }
+          ],
+          "correctExplanation": "Same inventory, new home. That is a tonic change, not a new alphabet.",
+          "objectiveIds": ["Write the same pitch set starting on a different tonic and say what changed"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-scl5-3",
+          "stem": "A player grabs a neck shape and calls the shape the scale. The honest report is:",
+          "correctAnswer": "The shape is a fingering of a tonic-plus-steps collection",
+          "distractors": [
+            { "text": "The shape is the scale; moving it cannot change the tonic", "kind": "reversed", "rationale": "Shift the shape and you often transpose the tonic." },
+            { "text": "Scales are duration grids, so the neck cannot hold one", "kind": "misapplied", "rationale": "A scale is a pitch collection. Time is a different layer." },
+            { "text": "Only staff notation can name a tonic, never a bass", "kind": "nearby", "rationale": "The tonic is a pitch you can play. The page is optional." }
+          ],
+          "correctExplanation": "Fingering is how you reach the list. The list is still tonic plus steps.",
+          "objectiveIds": ["Build a scale as a tonic plus a chosen collection of steps"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-scale-10",
+      "conceptId": "mus-scale",
+      "title": "Collection ordered from home",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-interval"],
+      "goDeeper": "mus-major",
+      "diagram": "mus-scale-steps",
+      "explanation": [
+        "A scale is an ordered pitch collection with a named tonic. Intervals already measured the gap between two pitches. A scale stacks chosen gaps from one home and then repeats at the octave. Shuffle the same set and you no longer have the same ordered scale.",
+        "Write the same letters starting on a different tonic and name what moved. Keep the set and move home: gravity moved, inventory did not. Keep the step pattern and move home: you transposed, so both the set and the tonic moved.",
+        "Guitar boxes hide this cut. A shape under the fingers is a fingering of a collection, not the collection. Shift the shape to a new fret and you transposed. Sit the same notes under a new home and you re-centered. Say which move you made."
+      ],
+      "example": "C–D–E–F–G–A–B started on A is A–B–C–D–E–F–G: same letters, new tonic. The same step walk started on A yields A–B–C♯–D–E–F♯–G♯: new letters because the walk, not the set, was held.",
+      "whyItMatters": "Fail to say whether the set or the walk moved and later mode talk will treat every new home as a new alphabet.",
+      "quiz": [
+        {
+          "id": "mus-scl10-1",
+          "stem": "Holding a pitch set and starting it on a new tonic is which move?",
+          "correctAnswer": "A re-centering: inventory stayed, home pitch moved",
+          "distractors": [
+            { "text": "A transposition: the step walk stayed, letters all moved", "kind": "nearby", "rationale": "That is the other move. Here the set was held." },
+            { "text": "A duration rewrite, because tonic is a hold-time mark", "kind": "misapplied", "rationale": "Tonic is a pitch. Hold time is a different knob." },
+            { "text": "A new chromatic collection of twelve equal steps", "kind": "misconception", "rationale": "The chromatic stack is already built. This is a scale start." }
+          ],
+          "correctExplanation": "Same letters, new home. Gravity moved. The set did not.",
+          "objectiveIds": ["Write the same pitch set starting on a different tonic and say what changed"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-scl10-2",
+          "stem": "To build a scale you must choose which pair of facts?",
+          "correctAnswer": "A tonic and an ordered collection of steps from that tonic",
+          "distractors": [
+            { "text": "A clef and a loudness curve the staff already encodes", "kind": "misapplied", "rationale": "Clef names lines. Loudness is another knob." },
+            { "text": "A tempo mark and a rest that replaces every pitch", "kind": "nearby", "rationale": "Those belong to time. A scale is a pitch object." },
+            { "text": "A random shuffle of twelve notes with no named home", "kind": "reversed", "rationale": "Without a tonic and an order you have a set, not a scale." }
+          ],
+          "correctExplanation": "Home plus ordered steps, repeating at the octave. That is the build.",
+          "objectiveIds": ["Build a scale as a tonic plus a chosen collection of steps"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-scl10-3",
+          "stem": "You keep WWHWWWH and start it on D instead of C. You should predict:",
+          "correctAnswer": "The tonic and the pitch set both moved; the walk was held",
+          "distractors": [
+            { "text": "Only the home moved; every letter must stay C D E F G A B", "kind": "reversed", "rationale": "Holding the walk transposes the letters." },
+            { "text": "Duration doubled, because a new tonic always lasts longer", "kind": "misapplied", "rationale": "Tonic is a pitch. Hold time did not have to follow." },
+            { "text": "The octave vanished, because D cannot host a collection", "kind": "nearby", "rationale": "Any pitch can be a tonic. The octave still repeats the class." }
+          ],
+          "correctExplanation": "Same walk, new start. Letters change. That is transposition of the collection.",
+          "objectiveIds": ["Write the same pitch set starting on a different tonic and say what changed"],
+          "prerequisiteConceptIds": ["mus-interval"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-major-10",
+      "conceptId": "mus-major",
+      "title": "Pattern, not a mood",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-scale"],
+      "goDeeper": "mus-minor",
+      "explanation": [
+        "Whole, whole, half, whole, whole, whole, half. That walk from a tonic spells a major scale. From C: C D E F G A B. From G: G A B C D E F♯. The F♯ is the accidental the walk demanded, not a decoration you sprinkle for color.",
+        "The color that flags major against minor is the third: four semitones from the tonic rather than three. Play C–E, then C–E♭. Same tonic, different third. Calling major 'happy' is a later story. The interval is the fact you can hear.",
+        "Spell by walking, not by grabbing a box. Each letter name appears once. G major needs F♯ rather than G♭ because the seventh degree of G is an F of some kind. Skip a letter and the spelling stopped being a scale."
+      ],
+      "example": "From D: D E F♯ G A B C♯ D. Two sharps, both forced by WWHWWWH. The third is F♯, four semitones above D, not F natural. That third is the major color against D–F.",
+      "whyItMatters": "If major only means a mood, you cannot spell the walk or hear why a riff's third is the switch.",
+      "quiz": [
+        {
+          "id": "mus-maj10-1",
+          "stem": "Spell a major scale from E using the WWHWWWH walk. The seventh is:",
+          "correctAnswer": "D♯, the letter D raised because the walk lands there",
+          "distractors": [
+            { "text": "E♭, because sevenths must be spelled as the tonic lowered", "kind": "reversed", "rationale": "The seventh of E is some D, not an E." },
+            { "text": "D natural, because E major uses no accidentals at all", "kind": "nearby", "rationale": "WWHWWWH from E forces F♯, C♯, D♯." },
+            { "text": "F♯, because the seventh is always a third above the tonic", "kind": "misapplied", "rationale": "F♯ is the second of E, not the seventh." }
+          ],
+          "correctExplanation": "E F♯ G♯ A B C♯ D♯. Each letter once. The walk raised D.",
+          "objectiveIds": ["Spell a major scale from WWHWWWH"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-maj10-2",
+          "stem": "C–E versus C–E♭ is the hearing test for which scale color?",
+          "correctAnswer": "Major third versus minor third above the same tonic",
+          "distractors": [
+            { "text": "Octave versus unison, because E and E♭ share a class", "kind": "reversed", "rationale": "They are different pitch classes a semitone apart." },
+            { "text": "Simple versus compound meter on an unchanged pitch", "kind": "misapplied", "rationale": "This is a pitch-interval color, not a grouping of pulse." },
+            { "text": "A clef change that retitles the same staff line as E", "kind": "nearby", "rationale": "The staff did not move. The third did." }
+          ],
+          "correctExplanation": "Four semitones versus three from the same home. That is the major/minor third.",
+          "objectiveIds": ["Hear the major third as the color that is not the minor third"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-maj10-3",
+          "stem": "G major's F♯ is there because WWHWWWH from G does which job?",
+          "correctAnswer": "It lands the seventh on an F that must be raised",
+          "distractors": [
+            { "text": "It paints a happy mood the accidental is required to name", "kind": "misconception", "rationale": "The accidental is a step in the walk, not a mood stamp." },
+            { "text": "It doubles the frequency so G and F♯ become one class", "kind": "nearby", "rationale": "Octave doubling is 2:1. F♯ is a different letter." },
+            { "text": "It replaces the tonic with F♯ as the new home pitch", "kind": "reversed", "rationale": "G remains the tonic. F♯ is degree seven." }
+          ],
+          "correctExplanation": "G A B C D E F♯. The walk asked for a raised F, not a new tonic.",
+          "objectiveIds": ["Spell a major scale from WWHWWWH"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "mus-minor-10",
+      "conceptId": "mus-minor",
+      "title": "Three answers, one tonic",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-major"],
+      "goDeeper": "mus-key",
+      "explanation": [
+        "Natural minor lowers the third, sixth, and seventh of the parallel major: A B C D E F G from A. Harmonic minor raises only the seventh: G♯ in A. Melodic minor, going up, raises sixth and seventh; coming down it often returns to the natural pair.",
+        "Hear the three by the sixth and seventh against a fixed tonic. Natural has ♭6 and ♭7. Harmonic has ♭6 and a raised 7, which opens an augmented second. Melodic ascending has raised 6 and 7, so the top of the walk matches major.",
+        "A cadence in minor usually wants the raised seventh so the leading tone can lean into the tonic. That is why harmonic (and ascending melodic) show up at phrase ends even when the rest of the riff sat in natural. Predict the raised degree: seven, not six."
+      ],
+      "example": "A riff in E minor sits on E–G–A–B–D. At the cadence the guitarist plays D♯ into E. Natural supplied D; the cadence borrowed the raised seventh. The sixth can stay C (harmonic) or rise to C♯ (melodic).",
+      "whyItMatters": "Calling every minor riff one scale hides why a D♯ appears only at the end. Name which sixth and seventh you are using.",
+      "quiz": [
+        {
+          "id": "mus-min10-1",
+          "stem": "Natural, harmonic, and melodic minor are distinguished mainly by:",
+          "correctAnswer": "How they treat the sixth and seventh above a shared tonic",
+          "distractors": [
+            { "text": "Which clef they require, because minor cannot sit in bass", "kind": "misapplied", "rationale": "Clef is a drawing choice. The three answers are scale degrees." },
+            { "text": "Whether the tonic is doubled at a 2:1 octave ratio", "kind": "nearby", "rationale": "Octaves still apply. The three forms differ at 6 and 7." },
+            { "text": "How loud the third is mixed, which renames the collection", "kind": "reversed", "rationale": "Loudness is another knob. The third is already lowered in all three." }
+          ],
+          "correctExplanation": "Same tonic. Three recipes for degrees six and seven.",
+          "objectiveIds": ["Distinguish natural, harmonic, and melodic minor by the sixth and seventh"],
+          "prerequisiteConceptIds": ["mus-major"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-min10-2",
+          "stem": "A minor riff cadences into E and needs a leading tone. Which degree is raised?",
+          "correctAnswer": "The seventh (D♯ into E), not the sixth",
+          "distractors": [
+            { "text": "The sixth (C♯), because cadences always raise the submediant", "kind": "nearby", "rationale": "Melodic may raise six too. The lean into tonic is seven." },
+            { "text": "The third (G♯), because major thirds are required at cadences", "kind": "misapplied", "rationale": "The third can stay minor. The leading tone is degree seven." },
+            { "text": "The tonic itself, spelled E♯ so the riff can rest", "kind": "reversed", "rationale": "The tonic is the target, not the raised approach." }
+          ],
+          "correctExplanation": "Leading tone is raised seven. Harmonic minor exists for that lean.",
+          "objectiveIds": ["Predict which raised degree a cadence in minor usually wants"],
+          "prerequisiteConceptIds": ["mus-major"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-min10-3",
+          "stem": "A minor with ♭6 and a raised 7, opening an augmented second, is which form?",
+          "correctAnswer": "Harmonic minor: natural sixth, leading-tone seventh",
+          "distractors": [
+            { "text": "Natural minor: both sixth and seventh stay lowered", "kind": "nearby", "rationale": "Natural would keep ♭7 as well." },
+            { "text": "Melodic minor ascending: sixth and seventh both raised", "kind": "reversed", "rationale": "That form raises six too, closing the augmented second." },
+            { "text": "Major: WWHWWWH from the same tonic with a major third", "kind": "misapplied", "rationale": "Major has a major third. This collection kept ♭3 and ♭6." }
+          ],
+          "correctExplanation": "♭6 plus raised 7 is the harmonic recipe. That gap is the tell.",
+          "objectiveIds": ["Distinguish natural, harmonic, and melodic minor by the sixth and seventh"],
+          "prerequisiteConceptIds": ["mus-major"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "mus-key-10",
+      "conceptId": "mus-key",
+      "title": "Home the rest is measured from",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-scale"],
+      "goDeeper": "mus-modes",
+      "explanation": [
+        "Key names a tonic plus a collection that treats that tonic as home. 'In E minor' claims both: E is the pitch everything else is measured from, and the collection is the one that makes E feel like rest. A pitch set without a home is not yet a key.",
+        "Keep the collection and move the tonic and the piece re-centered: same inventory, new home. That is a change of key even when almost every letter survived. Keep the tonic and swap the collection (E major to E minor) and home sat still while the color around it moved.",
+        "A riff that keeps returning to G, landing on G at phrase ends, is treating G as tonic. Listing the notes and calling the key 'whatever scale contains them' skips the gravity. MIT 21M.051 wants the home named first, then the collection."
+      ],
+      "example": "A verse uses G A B♭ C D E F, always cadencing on G. The set could be labeled B♭ major's letters. The tonic is still G, so the key is G minor, not B♭, until the home actually moves.",
+      "whyItMatters": "Inventory without gravity is a pitch set. Key is the claim that one pitch is home.",
+      "quiz": [
+        {
+          "id": "mus-key10-1",
+          "stem": "A key is named honestly as which pair of claims?",
+          "correctAnswer": "A tonic plus a collection that treats that tonic as home",
+          "distractors": [
+            { "text": "A list of notes with no pitch asked to act as rest", "kind": "reversed", "rationale": "A set without a home is not yet a key." },
+            { "text": "A tempo plus a subdivision that replaces the tonic", "kind": "misapplied", "rationale": "Time is a different layer. Key is a pitch claim." },
+            { "text": "A guitar box whose lowest fret is automatically tonic", "kind": "nearby", "rationale": "The lowest note in a shape need not be home." }
+          ],
+          "correctExplanation": "Home plus the collection that treats it as rest. That pair is the key.",
+          "objectiveIds": ["Name a key as a tonic plus a collection that treats that tonic as home"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-key10-2",
+          "stem": "The pitch set stays, but phrase endings now land on A instead of C. Predict:",
+          "correctAnswer": "The tonic moved; the piece re-centered on the same inventory",
+          "distractors": [
+            { "text": "Nothing about key changed, because letters are the whole claim", "kind": "reversed", "rationale": "Key includes which pitch is home, not only the set." },
+            { "text": "Duration collapsed, because a new home must be a shorter note", "kind": "misapplied", "rationale": "Tonic is a pitch. Hold time can stay." },
+            { "text": "The collection became chromatic twelve-tone by landing on A", "kind": "nearby", "rationale": "The set was held. Only gravity moved." }
+          ],
+          "correctExplanation": "Same letters, new rest pitch. That is a tonic move inside the set.",
+          "objectiveIds": ["Predict what a piece is doing if the collection stays and the tonic moves"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-key10-3",
+          "stem": "A riff uses B♭-major letters but always cadences on G. The key claim is:",
+          "correctAnswer": "G minor: G is home, and that collection treats G as rest",
+          "distractors": [
+            { "text": "B♭ major, because whichever scale contains the notes is the key", "kind": "misconception", "rationale": "Containment is inventory. Cadences name the home." },
+            { "text": "No key, because a riff is forbidden from having a tonic", "kind": "nearby", "rationale": "A riff can treat a pitch as rest. That is the key claim." },
+            { "text": "G major, because any landing on G spells WWHWWWH", "kind": "misapplied", "rationale": "The collection still has B♭ and F, the minor recipe from G." }
+          ],
+          "correctExplanation": "Home is G. The set around it is G minor's collection. Inventory was not the key.",
+          "objectiveIds": ["Name a key as a tonic plus a collection that treats that tonic as home"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-modes-10",
+      "conceptId": "mus-modes",
+      "title": "Gravity, not a shape",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-interval", "mus-scale"],
+      "goDeeper": "mus-circle",
+      "diagram": "mus-modes-tonic",
+      "explanation": [
+        "Dorian is not a guitar box and not 'the white keys from D'. A mode is a tonic plus a hierarchy: which pitch is home, which degrees sit still, which lean. The same pitch set with a different tonic is a different gravity well.",
+        "Treat the characteristic degree as a neighbor of the tonic, not as leftover from some other major scale. A Phrygian riff on E with a flattened second sits on E and treats F as a step beside home. Analyze it as C major and you invent cadences the riff never played.",
+        "Parallel mode change keeps the tonic and swaps the collection: C Ionian to C Aeolian. Relative mode change keeps the pitch set and moves home: C Ionian to A Aeolian. Those are different moves. One recolors the same house. The other walks next door."
+      ],
+      "example": "An E riff using E F G A B C D, always landing on E, is E Phrygian. The notes fit C major's set. The home is E. Calling the riff 'in C' because the inventory matches is a category error.",
+      "whyItMatters": "If you only list notes, every modal riff becomes a major scale with a missing cadence. Name the tonic and the characteristic degree.",
+      "quiz": [
+        {
+          "id": "mus-mod10-1",
+          "stem": "A mode is treated honestly as which of these, rather than a neck shape?",
+          "correctAnswer": "A tonic plus a hierarchy of stable and leaning degrees",
+          "distractors": [
+            { "text": "A guitar box whose lowest string is automatically the mode", "kind": "misconception", "rationale": "A fingering is not the hierarchy." },
+            { "text": "A duration grid that replaces pitch with rest marks", "kind": "misapplied", "rationale": "Mode is a pitch-gravity claim, not a time signature." },
+            { "text": "A list of white keys with no pitch asked to act as home", "kind": "reversed", "rationale": "Without a tonic you have a set, not a mode." }
+          ],
+          "correctExplanation": "Home plus ranking. The shape on a neck is only a fingering of that ranking.",
+          "objectiveIds": ["Treat a mode as a tonic and a hierarchy, not a scale shape"],
+          "prerequisiteConceptIds": ["mus-interval", "mus-scale"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-mod10-2",
+          "stem": "C Ionian to C Aeolian versus C Ionian to A Aeolian differ how?",
+          "correctAnswer": "Parallel keeps tonic and swaps color; relative keeps the set and moves home",
+          "distractors": [
+            { "text": "Both keep the tonic; only the tempo of the riff is allowed to move", "kind": "reversed", "rationale": "Relative move changes home. Tempo is a different layer." },
+            { "text": "Both keep every letter and only the clef drawing changes", "kind": "nearby", "rationale": "Parallel actually changes letters (the third, and more)." },
+            { "text": "One is a rest; the other is a dotted duration across a barline", "kind": "misapplied", "rationale": "These are pitch-gravity moves, not duration spellings." }
+          ],
+          "correctExplanation": "Same house, new color versus same letters, new house. Parallel versus relative.",
+          "objectiveIds": ["Contrast parallel and relative mode change"],
+          "prerequisiteConceptIds": ["mus-interval", "mus-scale"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "mus-mod10-3",
+          "stem": "An E riff uses E F G A B C D and always lands on E. You should call it:",
+          "correctAnswer": "E Phrygian: E is tonic, F is the characteristic neighbor",
+          "distractors": [
+            { "text": "C Ionian, because those letters are the C major collection", "kind": "misconception", "rationale": "Inventory is not gravity. The riff's home is E." },
+            { "text": "A pentatonic box, because seven notes cannot form a mode", "kind": "nearby", "rationale": "Seven-note diatonic sets are exactly where these modes live." },
+            { "text": "E major, because landing on E forces WWHWWWH from E", "kind": "misapplied", "rationale": "E major would need F♯ and G♯. This riff has F and G." }
+          ],
+          "correctExplanation": "Same set as C Ionian, different home. Hierarchy on E is Phrygian.",
+          "objectiveIds": ["Treat a mode as a tonic and a hierarchy, not a scale shape"],
+          "prerequisiteConceptIds": ["mus-interval", "mus-scale"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-modes-20",
+      "conceptId": "mus-modes",
+      "title": "Parallel color, relative recentering",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["mus-interval", "mus-scale"],
+      "goDeeper": "mus-circle",
+      "diagram": "mus-modes-tonic",
+      "explanation": [
+        "Hierarchy is the mode. Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian are seven ways to plant a tonic inside a diatonic set and rank the other degrees. The 'shape' on a neck is a fingering. Change only the home and the ranking changes even if no new pitch arrived.",
+        "Parallel change is a color shift around a fixed tonic. C Ionian to C Dorian keeps C as home and lowers the third and seventh. Riffs that drone on one pitch and then drop a third are often doing this. The inventory moved. The house number did not.",
+        "Relative change is a re-centering of an unchanged set. C Ionian's letters with A as home become A Aeolian. No new accidental is required. What changed is which pitch the ear is asked to treat as rest, heard in bass landings and phrase endings rather than in a new key signature.",
+        "A riff can sit on one pitch for bars and still be in a mode. Name the tonic and the characteristic degree — Dorian's raised sixth, Phrygian's flattened second, Mixolydian's flattened seventh — rather than hunting a cadence the figure never played. Mode is gravity you can point at."
+      ],
+      "example": "Parallel: an E Ionian verse to an E Aeolian chorus keeps E in the bass and changes the third from G♯ to G. Relative: those E Ionian letters re-centered on C♯ become C♯ Aeolian. One recolored E. The other moved home.",
+      "whyItMatters": "Heavy riffs often refuse a textbook cadence while still having a tonic. Parallel versus relative tells you whether the house or the furniture moved.",
+      "quiz": [
+        {
+          "id": "mus-mod20-1",
+          "stem": "E Ionian to E Dorian versus E Ionian to C♯ Aeolian: which contrast holds?",
+          "correctAnswer": "The first is parallel (same tonic); the second is relative (same set, new home)",
+          "distractors": [
+            { "text": "Both are parallel, because any mode change must keep E as tonic", "kind": "reversed", "rationale": "Relative change is allowed to move home." },
+            { "text": "Both are relative, because Dorian and Aeolian share every letter with Ionian", "kind": "nearby", "rationale": "E Dorian does not share E Ionian's letters; C♯ Aeolian does." },
+            { "text": "Neither is a mode change; only tempo can move between those labels", "kind": "misapplied", "rationale": "These are pitch-hierarchy moves, not pulse-speed moves." }
+          ],
+          "correctExplanation": "Same house, new color versus same letters, new house. Name which one you wrote.",
+          "objectiveIds": ["Contrast parallel and relative mode change"],
+          "prerequisiteConceptIds": ["mus-interval", "mus-scale"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "mus-mod20-2",
+          "stem": "A static E riff with a flattened second as neighbor is using mode as:",
+          "correctAnswer": "A tonic and a hierarchy, not a C-major shape that lost its cadence",
+          "distractors": [
+            { "text": "A neck diagram whose box is the mode regardless of home", "kind": "misconception", "rationale": "Without naming E as home you only have a fingering." },
+            { "text": "A rest pattern that replaces F with silence on every downbeat", "kind": "misapplied", "rationale": "The flattened second is a pitch neighbor, not a duration." },
+            { "text": "A major-scale walk from C that the riff is required to cadence in", "kind": "reversed", "rationale": "That analysis invents a home the riff is not using." }
+          ],
+          "correctExplanation": "E is home. F leans on it. That ranking is the mode, not a leftover C scale.",
+          "objectiveIds": ["Treat a mode as a tonic and a hierarchy, not a scale shape"],
+          "prerequisiteConceptIds": ["mus-interval", "mus-scale"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-mod20-3",
+          "stem": "You keep C Ionian's letters and start landing phrases on A. You should predict:",
+          "correctAnswer": "A relative re-centering: A Aeolian, same set, new gravity",
+          "distractors": [
+            { "text": "A parallel color shift that must lower C's third while C stays home", "kind": "nearby", "rationale": "Parallel would keep C. Here the landings moved to A." },
+            { "text": "A new chromatic collection, because A cannot host those letters", "kind": "misconception", "rationale": "Those letters already include A. Only home moved." },
+            { "text": "No mode change, because key signatures cannot move without ink", "kind": "reversed", "rationale": "Gravity can move with no new accidental. That is the relative move." }
+          ],
+          "correctExplanation": "Unchanged inventory, new rest pitch. Relative Aeolian on A.",
+          "objectiveIds": ["Contrast parallel and relative mode change"],
+          "prerequisiteConceptIds": ["mus-interval", "mus-scale"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-circle-10",
+      "conceptId": "mus-circle",
+      "title": "Adjacent keys share almost all",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-key"],
+      "goDeeper": "mus-enharmonic",
+      "explanation": [
+        "Each clockwise step on the circle of fifths raises the tonic by a fifth and adds one sharp (or drops one flat). C to G adds F♯. G to D adds C♯. Neighbor keys share six of seven pitch classes. Distance on the circle is how much inventory you still share.",
+        "Walk the other way and flats accumulate: C to F adds B♭. F to B♭ adds E♭. The circle is a map of adjacency, not a ranking of keys by virtue. Close relations are close because one accidental differs, so a riff can pivot with almost no new letters.",
+        "Predict the next key a fifth away and the accidental that appears. From D major (F♯, C♯) a fifth up is A major, which needs G♯ as the new sharp. A fifth down is G major, which drops C♯. The new sharp is the leading tone of the new tonic."
+      ],
+      "example": "E minor (one sharp, F♯) sits next to B minor (two sharps) and A minor (none). Moving the riff's home from E to B adds C♯. The other six letters can stay. That is adjacency, not a new alphabet.",
+      "whyItMatters": "Near keys share almost every pitch. Treat the circle as a neighbor map and modulation stops looking like a teleport.",
+      "quiz": [
+        {
+          "id": "mus-crc10-1",
+          "stem": "The circle of fifths is most honestly used as which kind of map?",
+          "correctAnswer": "A map of key signatures and which keys sit next to each other",
+          "distractors": [
+            { "text": "A ranking of keys from morally bright to morally dark", "kind": "misapplied", "rationale": "Adjacency is shared inventory, not a virtue grade." },
+            { "text": "A tempo spiral that doubles pulse speed each clockwise step", "kind": "nearby", "rationale": "The circle is a pitch-key map, not a metronome." },
+            { "text": "A list of guitar boxes that become the scale when shifted", "kind": "misconception", "rationale": "Fingering is not key adjacency." }
+          ],
+          "correctExplanation": "One fifth, one accidental. Neighbors share six of seven letters.",
+          "objectiveIds": ["Walk the circle of fifths as a map of key signatures and close relations"],
+          "prerequisiteConceptIds": ["mus-key"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-crc10-2",
+          "stem": "From G major, the next key a fifth up and the accidental that appears are:",
+          "correctAnswer": "D major, adding C♯ as the new sharp",
+          "distractors": [
+            { "text": "C major, adding B♭ as the new flat", "kind": "reversed", "rationale": "A fifth down from G is C. A fifth up is D." },
+            { "text": "A major, adding G♯ and dropping F♯", "kind": "nearby", "rationale": "A is two fifths up from G, not one." },
+            { "text": "D minor, adding B♭ because fifths always add flats", "kind": "misapplied", "rationale": "Clockwise fifths add sharps. D major takes C♯." }
+          ],
+          "correctExplanation": "G to D is one fifth. G already had F♯; D adds C♯.",
+          "objectiveIds": ["Predict the next key a fifth away and the accidental that appears"],
+          "prerequisiteConceptIds": ["mus-key"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-crc10-3",
+          "stem": "C major to F major is one step the flat way. What shared-inventory fact follows?",
+          "correctAnswer": "They share six pitch classes; only B becomes B♭",
+          "distractors": [
+            { "text": "They share no letters, because a new tonic erases the old set", "kind": "reversed", "rationale": "Neighbors share almost all their pitches." },
+            { "text": "They share only C, because fifths replace every other degree", "kind": "nearby", "rationale": "One accidental differs. Six letters stay." },
+            { "text": "They share a tempo mark that must halve when flats appear", "kind": "misapplied", "rationale": "The circle does not set pulse speed." }
+          ],
+          "correctExplanation": "One new flat, six survivors. That is what 'close relation' means here.",
+          "objectiveIds": ["Walk the circle of fifths as a map of key signatures and close relations"],
+          "prerequisiteConceptIds": ["mus-key"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-enharmonic-10",
+      "conceptId": "mus-enharmonic",
+      "title": "Same pitch, different claim",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-semitone"],
+      "goDeeper": "mus-pentatonic",
+      "explanation": [
+        "F♯ and G♭ share a key on the piano and a fret on the guitar. They do not share a job. Spelling is a claim about which letter the pitch is acting as: F raised, or G lowered. The sounding frequency can match while the grammar disagrees.",
+        "Spell the same pitch two ways when the job in the key is different. In G major the leading tone is F♯, an F that wants to rise to G. In a D♭ context the same fret may be G♭, a G that wants to fall to F. Write the wrong letter and you pointed the ear the wrong way.",
+        "G♯ leads up toward A. A♭ leads down toward G. That is why the two spellings are not interchangeable on the page even when a guitarist would grab the same fret. Predict direction from the letter: raised letters tend to rise, lowered letters tend to fall."
+      ],
+      "example": "A riff in E major needs D♯ as the leading tone into E, not E♭. Same fret on many guitars. D♯ claims 'I am a D that rises.' E♭ claims 'I am an E that falls.' The job, not the fret, picks the spelling.",
+      "whyItMatters": "Enharmonic twins are the same key and a different claim. Spell the job or the next pitch will look like a surprise.",
+      "quiz": [
+        {
+          "id": "mus-enh10-1",
+          "stem": "F♯ and G♭ match on a fret. You still spell them differently when:",
+          "correctAnswer": "The job in the key differs: raised F versus lowered G",
+          "distractors": [
+            { "text": "The sounding frequency differs by a full octave each time", "kind": "reversed", "rationale": "Enharmonic here means the same sounding pitch, two letters." },
+            { "text": "The tempo mark requires sharps at fast speeds and flats at slow", "kind": "misapplied", "rationale": "Spelling is a pitch-grammar claim, not a metronome rule." },
+            { "text": "A rest must replace one of them because two letters cannot share a beat", "kind": "nearby", "rationale": "Both spellings can occupy time. The letter names the job." }
+          ],
+          "correctExplanation": "Same key, different claim. Spell the letter that does the job.",
+          "objectiveIds": ["Spell the same pitch two ways when the job in the key is different"],
+          "prerequisiteConceptIds": ["mus-semitone"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-enh10-2",
+          "stem": "Why do G♯ and A♭ lead in different directions on the page?",
+          "correctAnswer": "G♯ tends to rise toward A; A♭ tends to fall toward G",
+          "distractors": [
+            { "text": "G♯ must fall toward G; A♭ must rise toward A by definition", "kind": "reversed", "rationale": "Raised letters tend to rise; lowered letters tend to fall." },
+            { "text": "They lead the same way, because one fret cannot point two directions", "kind": "misconception", "rationale": "The fret is the sound. The letter is the claim about direction." },
+            { "text": "They only lead after a clef change retitles every staff line", "kind": "misapplied", "rationale": "Direction is in the spelling, not in a new clef." }
+          ],
+          "correctExplanation": "Sharp of G looks up to A. Flat of A looks down to G. Same fret, two arrows.",
+          "objectiveIds": ["Predict why G♯ and A♭ lead in different directions"],
+          "prerequisiteConceptIds": ["mus-semitone"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-enh10-3",
+          "stem": "In E major the leading tone into E should be spelled as which letter?",
+          "correctAnswer": "D♯, a raised D whose job is to rise into E",
+          "distractors": [
+            { "text": "E♭, a lowered E whose job is to fall away from the tonic", "kind": "reversed", "rationale": "That spelling points down. The leading tone points up." },
+            { "text": "F♭, because the seventh of E must skip the letter D", "kind": "nearby", "rationale": "Each degree keeps its letter. Seven of E is some D." },
+            { "text": "E♯, because the tonic itself is what leans into rest", "kind": "misapplied", "rationale": "The tonic is the target. The leading tone is degree seven." }
+          ],
+          "correctExplanation": "Same fret as E♭ on many guitars. The job is 'rise into E,' so write D♯.",
+          "objectiveIds": ["Spell the same pitch two ways when the job in the key is different"],
+          "prerequisiteConceptIds": ["mus-semitone"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-pentatonic-10",
+      "conceptId": "mus-pentatonic",
+      "title": "Five tones, fewer leans",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-scale"],
+      "goDeeper": "mus-rhythm",
+      "explanation": [
+        "Drop the half-steps from a heptatonic scale and a pentatonic collection remains. Major pentatonic keeps 1, 2, 3, 5, 6 of major (C D E G A). Minor pentatonic keeps 1, ♭3, 4, 5, ♭7 (A C D E G). The missing degrees were the tightest tendency tones.",
+        "Fewer half-steps means fewer pitches that lean hard into a neighbor. The fourth and seventh of major, which pull toward three and one, are gone from major pentatonic. A pentatonic riff can sit on the collection for a long time without forcing a cadence, which is why guitarists live there.",
+        "The collection still implies a tonic. A C–D–E–G–A riff that lands on C is not the same as the same notes landing on A (A minor pentatonic). Inventory is five pitches. Gravity is which of them is home. Leave the half-steps out; do not leave the tonic out."
+      ],
+      "example": "E minor pentatonic: E G A B D. Natural minor's F♯ and C made the half-steps. Leave them out and the collection has no semitone. The riff can sit on E without a leading tone leaning in.",
+      "whyItMatters": "Pentatonic is a reduced set that still has a home. The missing half-steps are why the riff can drone without a cadence.",
+      "quiz": [
+        {
+          "id": "mus-pnt10-1",
+          "stem": "Build a minor pentatonic collection from a natural minor scale by:",
+          "correctAnswer": "Leaving out the half-step partners, keeping 1, ♭3, 4, 5, ♭7",
+          "distractors": [
+            { "text": "Stacking twelve equal semitones until the octave repeats", "kind": "nearby", "rationale": "That build is the chromatic collection, not a five-tone set." },
+            { "text": "Raising only the seventh so a cadence can lean into tonic", "kind": "misapplied", "rationale": "That is harmonic minor. Pentatonic removes leans, it does not add one." },
+            { "text": "Keeping every degree and repeating the tonic as a second home", "kind": "reversed", "rationale": "The point is to drop two degrees, not to duplicate home." }
+          ],
+          "correctExplanation": "Drop the half-steps. Five tones remain. That is the build.",
+          "objectiveIds": ["Build a pentatonic collection by leaving out the half-steps of a heptatonic scale"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-pnt10-2",
+          "stem": "A pentatonic riff can sit for a long time without cadencing mainly because:",
+          "correctAnswer": "The missing half-steps were the strongest tendency tones",
+          "distractors": [
+            { "text": "Five notes cannot imply a tonic, so nothing can lean", "kind": "reversed", "rationale": "The collection still implies a home. It just has fewer leans." },
+            { "text": "Tempo is required to freeze whenever a fifth tone is used", "kind": "misapplied", "rationale": "Pulse speed is independent. The fact is the missing semitones." },
+            { "text": "Guitar boxes erase gravity, so every landing is equally home", "kind": "nearby", "rationale": "A fingering is not why tendency tones vanished. The dropped degrees are." }
+          ],
+          "correctExplanation": "No tight half-step into home means fewer forced leans. The riff can drone.",
+          "objectiveIds": ["Predict why a pentatonic riff has fewer tendency tones"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-pnt10-3",
+          "stem": "C D E G A landing on C versus the same notes landing on A should be heard as:",
+          "correctAnswer": "Two pentatonic collections with different tonics, same five letters",
+          "distractors": [
+            { "text": "One collection only, because five letters cannot host two homes", "kind": "misconception", "rationale": "Gravity can sit on C or on A. That is the scale lesson again." },
+            { "text": "A major scale versus a harmonic minor scale with raised seven", "kind": "nearby", "rationale": "Both landings are pentatonic. Neither restored the missing half-steps." },
+            { "text": "A rest pattern, because pentatonic collections have no pitch", "kind": "misapplied", "rationale": "These are pitch collections. Silence is a later rhythmic event." }
+          ],
+          "correctExplanation": "Same inventory, two possible homes. Leave the half-steps out; keep the tonic named.",
+          "objectiveIds": ["Build a pentatonic collection by leaving out the half-steps of a heptatonic scale"],
+          "prerequisiteConceptIds": ["mus-scale"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

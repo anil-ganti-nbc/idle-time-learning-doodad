@@ -2,78 +2,9 @@ import type { Lesson } from "@/lib/learning/types";
 import { L, q } from "../lesson";
 
 export const SCIENCE_LESSONS: Lesson[] = [
-  L({
-    id: "ml-gd-5",
-    conceptId: "ml-gd",
-    title: "Gradient descent is walking downhill in the dark",
-    durationMin: 5,
-    effort: "light",
-    level: "intro",
-    prerequisites: [],
-    goDeeper: "ml-backprop",
-    diagram: "gd",
-    explanation: [
-      "A model is a function with knobs (parameters). A loss is a number that says how wrong the function is on some data. The gradient of the loss with respect to the knobs is the direction of steepest increase. Descend by stepping the other way.",
-      "You almost never use the true gradient on the whole dataset. Minibatches give a noisy estimate that is cheaper and, usefully, noisier — the noise helps escape sharp bad holes. The step size (learning rate) is the whole game: too big and you diverge; too small and you waste the afternoon.",
-    ],
-    example:
-      "Fit `y ≈ wx` on pairs (x, y). Loss = average (wx − y)². The gradient ∂L/∂w is an average of 2x(wx − y). One step: w ← w − η times that. After enough passes, w is the least-squares slope — if η behaved.",
-    whyItMatters:
-      "Every training graph you see in a paper is this loop. When someone says a model ‘learned’, they mean this number went down in a way that also went down on data the optimizer had not used to step.",
-    quiz: [
-      q("gd1", "The gradient points:", ["Toward lower loss", "Toward steeper increase of the loss", "At the nearest integer", "At the test set"], 1, "You step opposite it."),
-      q("gd2", "Minibatches are used because:", ["Full-batch is always more generalizable", "They are cheaper and the noise can help", "Gradients do not exist otherwise", "GPUs cannot add"], 1, "Cost and implicit regularization."),
-      q("gd3", "A learning rate that is too large typically:", ["Guarantees the global minimum", "Makes the loss explode or oscillate", "Removes the need for data", "Computes the Hessian"], 1, "You overshoot the bowl."),
-    ],
-  }),
-  L({
-    id: "ml-bp-10",
-    conceptId: "ml-backprop",
-    title: "Backprop is reverse-mode autodiff",
-    durationMin: 10,
-    effort: "normal",
-    level: "core",
-    prerequisites: ["ml-gd"],
-    goDeeper: "ml-attention",
-    explanation: [
-      "A neural net is a composition of simple ops. The chain rule says the derivative of the composition is a product of local Jacobians. Forward-mode autodiff pushes a derivative along with each value — cheap when you have one input and many outputs. Reverse-mode (backprop) seeds the loss with dL/dL = 1 and pushes adjoints backward — cheap when you have many inputs (parameters) and one output (the loss).",
-      "That is why we backprop. Not because of a special neural-net theorem. Because parameter count ≫ 1. Frameworks build a graph (or a tape) of the forward ops and then walk it in reverse, applying each op’s vector-Jacobian product.",
-      "The practical failures are not mystical: vanishing/exploding products through deep multiplies, disconnected graphs when someone called `.detach()` or used a non-differentiable index, and kernels whose VJP was never written.",
-    ],
-    example:
-      "`y = ReLU(Wx)`. Forward: multiply, then zero the negatives. Backward: dL/dW = (dL/dy, masked by the ReLU gate) · xᵀ. The mask is the local Jacobian of ReLU. No finite differences required.",
-    whyItMatters:
-      "If you cannot see backprop as bookkeeping for the chain rule, you will treat training bugs as folklore. Most of them are a broken tape.",
-    quiz: [
-      q("bp1", "Reverse-mode autodiff is preferred in deep learning because:", ["There is one loss and millions of parameters", "There is one parameter and millions of losses", "GPUs cannot multiply", "The chain rule fails forward"], 0, "One output, many inputs."),
-      q("bp2", "A vector-Jacobian product is:", ["A full Jacobian matrix always materialized", "The local backward of an op, applied to incoming adjoints", "A learning rate", "A type of attention"], 1, "You never need the whole Jacobian."),
-      q("bp3", "`.detach()` / `stop_gradient` breaks training because:", ["It deletes the weights", "It cuts the tape, so adjoints do not flow", "It changes the optimizer", "It turns off the GPU"], 1, "No path, no gradient."),
-    ],
-  }),
-  L({
-    id: "ml-attn-20",
-    conceptId: "ml-attention",
-    title: "Attention is a soft lookup",
-    durationMin: 20,
-    effort: "deep",
-    level: "journalist",
-    prerequisites: ["ml-backprop"],
-    diagram: "attention",
-    explanation: [
-      "For each query vector q, attention scores every key kᵢ with a dot product (usually scaled by 1/√d), softmaxes those scores, and uses them to mix the values vᵢ. It is a content-addressable read: ‘find things like this, average them.’ Multi-head just does that in several learned projections so different heads can specialize.",
-      "Self-attention sets Q, K, V as projections of the same token sequence. That gives you pairwise mixing at every layer, which is why a transformer can move information across a sentence in one layer — and why compute is O(n²) in sequence length for the naive algorithm. The last three years of ‘efficient attention’ papers are almost all about not paying n², or paying it in SRAM with tiling (FlashAttention).",
-      "Causal masks zero out future keys so a language model cannot read the answer while writing the question. That mask, not the softmax, is the autoregressive contract. KV cache exists because for generation the keys and values of past tokens do not change; you should not recompute them.",
-    ],
-    example:
-      "In ‘The trophy does not fit in the suitcase because it is too big’, a head on ‘it’ can put mass on ‘trophy’ rather than ‘suitcase’. Nothing in the mechanism knows linguistics; training found a key/query geometry that makes that mix useful for next-token loss.",
-    whyItMatters:
-      "Context-window marketing, MoE routing, and inference-price wars all reduce to: how many tokens do you score, where do you store KV, and how tiled is the matmul. ‘The model understands’ is not a mechanism.",
-    quiz: [
-      q("at1", "Softmax(QKᵀ/√d) V is:", ["A convolution", "A weighted average of values, weights from query-key similarity", "A hash table with hard addressing", "Gradient descent"], 1, "Soft lookup."),
-      q("at2", "Naive self-attention is O(n²) because:", ["Softmax is quadratic in d", "Every query scores every key", "The vocabulary is n²", "Layers are squared"], 1, "All pairs."),
-      q("at3", "A KV cache is valid at generate time because:", ["Queries never change", "Past keys/values do not depend on future tokens under a causal mask", "Attention is not differentiable", "Batch size is 1 always"], 1, "You append, you do not recompute history."),
-    ],
-  }),
+
+
+
 
   L({
     id: "ast-hr-5",

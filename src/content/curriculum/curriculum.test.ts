@@ -21,6 +21,18 @@ import { NET_INTERNET_LESSONS } from "../lessons/net-internet/index.ts";
 import { CMP_FRONTEND_LESSONS } from "../lessons/cmp-frontend/index.ts";
 import { CMP_IR_LESSONS } from "../lessons/cmp-ir/index.ts";
 import { CMP_BACKEND_LESSONS } from "../lessons/cmp-backend/index.ts";
+import { ML_FOUNDATIONS_LESSONS } from "../lessons/ml-foundations/index.ts";
+import { ML_NEURAL_LESSONS } from "../lessons/ml-neural/index.ts";
+import { ML_TRANSFORMERS_LESSONS } from "../lessons/ml-transformers/index.ts";
+import { HORO_FOUNDATIONS_LESSONS } from "../lessons/horo-foundations/index.ts";
+import { HORO_REGULATION_LESSONS } from "../lessons/horo-regulation/index.ts";
+import { HORO_COMPLICATIONS_LESSONS } from "../lessons/horo-complications/index.ts";
+import { MUS_FOUNDATIONS_LESSONS } from "../lessons/mus-foundations/index.ts";
+import { MUS_HARMONY_LESSONS } from "../lessons/mus-harmony/index.ts";
+import { MUS_HEAVY_LESSONS } from "../lessons/mus-heavy/index.ts";
+import { DM_HISTORY_LESSONS } from "../lessons/dm-history/index.ts";
+import { DM_CONSTRUCTION_LESSONS } from "../lessons/dm-construction/index.ts";
+import { DM_ADVANCED_LESSONS } from "../lessons/dm-advanced/index.ts";
 import { SCIENCE_LESSONS } from "../lessons/science.ts";
 import { SYSTEMS_LESSONS } from "../lessons/systems.ts";
 import { LONGFORM_LESSONS } from "../lessons/longform.ts";
@@ -53,6 +65,18 @@ const LESSONS = [
   ...CMP_FRONTEND_LESSONS,
   ...CMP_IR_LESSONS,
   ...CMP_BACKEND_LESSONS,
+  ...ML_FOUNDATIONS_LESSONS,
+  ...ML_NEURAL_LESSONS,
+  ...ML_TRANSFORMERS_LESSONS,
+  ...HORO_FOUNDATIONS_LESSONS,
+  ...HORO_REGULATION_LESSONS,
+  ...HORO_COMPLICATIONS_LESSONS,
+  ...MUS_FOUNDATIONS_LESSONS,
+  ...MUS_HARMONY_LESSONS,
+  ...MUS_HEAVY_LESSONS,
+  ...DM_HISTORY_LESSONS,
+  ...DM_CONSTRUCTION_LESSONS,
+  ...DM_ADVANCED_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
@@ -298,9 +322,9 @@ describe("course-specific progression", () => {
 describe("curriculum coverage metrics", () => {
   it("reports lessons versus skeleton and shallow modules", () => {
     const coverage = computeCoverage(catalog);
-    assert.ok(coverage.conceptsLackingLessons > 200);
-    assert.ok(coverage.conceptsWithLessons >= 140);
-    assert.ok(coverage.shallowModules.length > 4);
+    assert.equal(coverage.conceptsLackingLessons, 0);
+    assert.ok(coverage.conceptsWithLessons >= 500);
+    assert.deepEqual(coverage.shallowModules, []);
     const gpu = coverage.coursesCovered.find((c) => c.courseId === "arch-gpu");
     assert.ok(gpu);
     assert.ok(gpu.conceptCount >= 20);
@@ -312,16 +336,23 @@ describe("curriculum coverage metrics", () => {
       "cmp-frontend",
       "cmp-ir",
       "cmp-backend",
+      "ml-foundations",
+      "ml-neural",
+      "ml-transformers",
+      "horo-foundations",
+      "horo-regulation",
+      "horo-complications",
+      "mus-foundations",
+      "mus-harmony",
+      "mus-heavy",
+      "dm-history",
+      "dm-construction",
+      "dm-advanced",
     ]) {
       const row = coverage.coursesCovered.find((c) => c.courseId === id);
       assert.ok(row, id);
       assert.equal(row.coveragePct, 100, id);
       assert.equal(row.lackingLessons, 0, id);
-    }
-    for (const id of ["ml-foundations", "mus-foundations", "dm-history"]) {
-      const row = coverage.coursesCovered.find((c) => c.courseId === id);
-      assert.ok(row, id);
-      assert.ok(row.coveragePct < 100, `${id} should remain unpopulated`);
     }
   });
 
@@ -356,5 +387,24 @@ describe("curriculum coverage metrics", () => {
     assert.ok(LESSONS.some((l) => l.id === "cmp-front-10"));
     assert.ok(LESSONS.some((l) => l.id === "cmp-ssa-10"));
     assert.ok(LESSONS.some((l) => l.id === "cmp-alloc-10"));
+  });
+
+  it("retired leftover remaining-subject seeds instead of colliding with production lessons", () => {
+    const leftover = [...SCIENCE_LESSONS, ...CULTURE_LESSONS].filter(
+      (l) =>
+        ["ml-gd", "ml-backprop", "ml-attention", "mus-interval", "mus-modes", "horo-escape", "horo-tourbillon", "dm-blast", "dm-harmony", "dm-history"].includes(
+          l.conceptId,
+        ) ||
+        ["ml-gd-5", "ml-bp-10", "ml-attn-20", "mus-int-5", "mus-modes-10", "horo-esc-5", "horo-tour-10", "dm-blast-5", "dm-harm-10", "dm-hist-10"].includes(
+          l.id,
+        ),
+    );
+    assert.deepEqual(leftover.map((l) => l.id), []);
+    assert.ok(LESSONS.some((l) => l.id === "ml-gd-10"));
+    assert.ok(LESSONS.some((l) => l.id === "ml-attention-10"));
+    assert.ok(LESSONS.some((l) => l.id === "mus-modes-10"));
+    assert.ok(LESSONS.some((l) => l.id === "horo-escape-10"));
+    assert.ok(LESSONS.some((l) => l.id === "dm-blast-10"));
+    assert.ok(LESSONS.some((l) => l.id === "dm-harmony-10"));
   });
 });

@@ -1,0 +1,1039 @@
+{
+  "courseId": "mus-heavy",
+  "moduleId": "mus-x-nonfunc",
+  "lessons": [
+    {
+      "id": "mus-nonfunc-5",
+      "conceptId": "mus-nonfunc",
+      "title": "Progression that skips the dominant",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-planing",
+      "explanation": [
+        "Common-practice function reports to a dominant that wants to resolve. Non-functional writing does not. Roots may sit, slide, or loop without owing V a cadence. The chain is still harmony. It just never clocks in as V–I.",
+        "MIT 21M.350 asks what the piece actually does. If the guitar never plays a dominant, do not invent one on the page. Write a loop of cells. Analyze the loop. Leave the missing V out of the report."
+      ],
+      "example": "Power-chord loop E–C–Bb–C, four bars, no V of E. Calling it i–VI–bV–VI invents a key contract the riff never signed. Name the cells and the return.",
+      "whyItMatters": "Invent a missing dominant and you will hear a cadence that is not on the tape.",
+      "quiz": [
+        {
+          "id": "mus-nf5-1",
+          "stem": "Non-functional harmony is a progression that does which of these jobs?",
+          "correctAnswer": "Moves without reporting to a dominant that must resolve",
+          "distractors": [
+            {
+              "text": "Reports every root to a hidden V–I the page must invent",
+              "kind": "reversed",
+              "rationale": "Inventing V–I is the habit this lesson refuses."
+            },
+            {
+              "text": "Ranks chords by how stable a textbook says they feel",
+              "kind": "misapplied",
+              "rationale": "Stability ranks are not the job here."
+            },
+            {
+              "text": "Deletes pitch so only the kit can carry the form",
+              "kind": "nearby",
+              "rationale": "The letters still move. They just skip V."
+            }
+          ],
+          "correctExplanation": "The chain can still move. It does not clock in with V–I.",
+          "objectiveIds": [
+            "Write a progression that does not report to a dominant"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-nf5-2",
+          "stem": "A riff loops E5–C5–Bb5 and never plays a B chord. Honest analysis should:",
+          "correctAnswer": "Name the cells and the return without inventing a V–I",
+          "distractors": [
+            {
+              "text": "Insert a silent B7 so the loop can count as a cadence",
+              "kind": "reversed",
+              "rationale": "No B7 is on the tape. Do not invent one."
+            },
+            {
+              "text": "Call the loop unfinished until someone adds a leading tone",
+              "kind": "misconception",
+              "rationale": "The loop already closed by return."
+            },
+            {
+              "text": "Treat the letters as a drum fill with no harmonic claim",
+              "kind": "misapplied",
+              "rationale": "The cells are the harmony. Report them."
+            }
+          ],
+          "correctExplanation": "No dominant appears. Do not smuggle one in to finish a textbook sentence.",
+          "objectiveIds": [
+            "Analyze it without inventing a V–I that is not there"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-nf5-3",
+          "stem": "You need four bars that do not report to a dominant. Which loop keeps that contract?",
+          "correctAnswer": "E5–C5–G5–F5 returning to E5 with no B chord",
+          "distractors": [
+            {
+              "text": "E5–B7–E5–B7, because V–I is required for any loop",
+              "kind": "reversed",
+              "rationale": "That loop reports to a dominant on purpose."
+            },
+            {
+              "text": "E5 then a rest, because harmony is illegal without V",
+              "kind": "misapplied",
+              "rationale": "Harmony can move without V. Write the cells."
+            },
+            {
+              "text": "B7–E5 only, relabeled as non-functional because it is loud",
+              "kind": "nearby",
+              "rationale": "Loudness does not cancel a cadence."
+            }
+          ],
+          "correctExplanation": "Roots that return without a dominant still make a progression.",
+          "objectiveIds": [
+            "Write a progression that does not report to a dominant"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-nonfunc-10",
+      "conceptId": "mus-nonfunc",
+      "title": "Harmony that refuses a dominant",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-planing",
+      "explanation": [
+        "Functional labels assume a dominant that points home. Drop that assumption and the same letters can still move. Adjacent roots, modal oscillation, and color jumps are progressions. They are not failed V–I. They are a different job.",
+        "Analysis that invents a missing dominant is a chorale habit. MIT 21M.350 starts from what repeats and what contrasts. If no V appears, do not smuggle one in to complete a textbook sentence. Report the cells that are actually struck.",
+        "Write a four-bar loop whose roots never form a dominant of the home pitch. Then refuse the rescue: do not add a B7 at the end to make it resolve. The loop already closed by returning to the first cell."
+      ],
+      "example": "E5 for a bar, C5 for a bar, Bb5 for a bar, back to E5. No B7. The return is the close. A Roman-numeral rescue that inserts V is a paper cadence, not the riff.",
+      "whyItMatters": "Force V–I onto a riff that refused it and every later label will describe a piece nobody played.",
+      "quiz": [
+        {
+          "id": "mus-nf10-1",
+          "stem": "A loop of adjacent roots with no dominant is best named as which object?",
+          "correctAnswer": "A progression that does a different job than V–I",
+          "distractors": [
+            {
+              "text": "A broken cadence waiting for someone to add V",
+              "kind": "reversed",
+              "rationale": "The job is not a missing handshake."
+            },
+            {
+              "text": "A drum pattern that cannot carry pitch at all",
+              "kind": "misapplied",
+              "rationale": "The letters are still harmonic cells."
+            },
+            {
+              "text": "A key change that must pass through a pivot chord",
+              "kind": "nearby",
+              "rationale": "A loop of cells is not a pivot modulation."
+            }
+          ],
+          "correctExplanation": "Adjacent roots and color jumps are still progressions. They skip the dominant report.",
+          "objectiveIds": [
+            "Write a progression that does not report to a dominant"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-nf10-2",
+          "stem": "The tape never plays a dominant of E, but a chart writes V–I anyway. You should:",
+          "correctAnswer": "Drop the invented V–I and report the cells that sound",
+          "distractors": [
+            {
+              "text": "Keep V–I because every riff secretly cadences offstage",
+              "kind": "misconception",
+              "rationale": "Offstage cadences are the habit, not the tape."
+            },
+            {
+              "text": "Delete the pitch names so the chart has no harmony",
+              "kind": "misapplied",
+              "rationale": "The cells are the harmony. Keep their letters."
+            },
+            {
+              "text": "Move the riff into a new key until a dominant appears",
+              "kind": "nearby",
+              "rationale": "Changing key to find V is another invention."
+            }
+          ],
+          "correctExplanation": "MIT 21M.350 starts from what is there. Invented V–I is not there.",
+          "objectiveIds": [
+            "Analyze it without inventing a V–I that is not there"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-nf10-3",
+          "stem": "Write four bars on E that refuse a dominant. Which ending keeps the contract?",
+          "correctAnswer": "Return to the first E cell with no B chord added",
+          "distractors": [
+            {
+              "text": "Add B7 on the last beat so a textbook can call it a cadence",
+              "kind": "reversed",
+              "rationale": "That is the rescue this lesson refuses."
+            },
+            {
+              "text": "End on rest because a loop without V is not harmony",
+              "kind": "misapplied",
+              "rationale": "Return is already a close."
+            },
+            {
+              "text": "Jump to B major and stay there as a new tonic forever",
+              "kind": "nearby",
+              "rationale": "A new tonic is a different claim, not this loop."
+            }
+          ],
+          "correctExplanation": "The return closes the loop. A last-second B7 would hire V after the fact.",
+          "objectiveIds": [
+            "Write a progression that does not report to a dominant"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-planing-10",
+      "conceptId": "mus-planing",
+      "title": "Slide the shape, keep the intervals",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-nonfunc",
+        "mus-voice-lead"
+      ],
+      "goDeeper": "mus-chromatic-mediant",
+      "explanation": [
+        "Slide a voicing so every voice moves the same distance. The intervals inside the shape stay. Function does not, because the new bass is a new root, not a voice-leading correction. That parallel move is the harmony.",
+        "Species writing treats consecutive perfect fifths as an error to fix. Planing treats them as the event. Debussy's parallel stacks and a guitarist's sliding power-chord shape share the mechanism: a rigid interval set that travels.",
+        "Write E5–F5–G5 as one fingerboard shape moving by step. Do not fix the fifths by contrary motion. The parallel fifths are the riff. Calling them a voice-leading mistake names a rule the music did not hire."
+      ],
+      "example": "One finger bars E5, slides to F5, then Gb5. Each attack is a perfect fifth. Nothing contrary-motions the fifths apart. The slide is the progression.",
+      "whyItMatters": "Correct the fifths and you erase the piece. Name the parallel move as the harmony, then decide whether you wanted that piece.",
+      "quiz": [
+        {
+          "id": "mus-pl10-1",
+          "stem": "Planing is the move where a chord shape does which of these things?",
+          "correctAnswer": "Slides so inner intervals stay while function does not",
+          "distractors": [
+            {
+              "text": "Holds one common tone while neighbors step in contrary motion",
+              "kind": "nearby",
+              "rationale": "That is ordinary voice leading, not planing."
+            },
+            {
+              "text": "Fixes consecutive fifths by rewriting them as thirds",
+              "kind": "reversed",
+              "rationale": "Planing keeps the fifths. It does not fix them."
+            },
+            {
+              "text": "Deletes the bass so only an inner voice can move",
+              "kind": "misapplied",
+              "rationale": "The whole shape travels, bass included."
+            }
+          ],
+          "correctExplanation": "Rigid intervals, new root. Function is not the cargo.",
+          "objectiveIds": [
+            "Slide a shape so the intervals stay and the function does not"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc",
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-pl10-2",
+          "stem": "A guitar slides a power-chord shape up two frets. The honest harmonic claim is:",
+          "correctAnswer": "A parallel move that is the harmony, not a voice-leading error",
+          "distractors": [
+            {
+              "text": "A species mistake that must be rewritten in contrary motion",
+              "kind": "reversed",
+              "rationale": "The parallel fifths are the event."
+            },
+            {
+              "text": "A modulation that secretly hired a dominant of the new fret",
+              "kind": "nearby",
+              "rationale": "A slide is not a cadence into a new key."
+            },
+            {
+              "text": "A loudness swell that only looks like pitch motion",
+              "kind": "misapplied",
+              "rationale": "The frets moved. Pitch moved."
+            }
+          ],
+          "correctExplanation": "The shape traveled. That travel is the progression.",
+          "objectiveIds": [
+            "Write a parallel move that is the harmony, not a voice-leading error"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc",
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-pl10-3",
+          "stem": "Someone 'corrects' sliding E5–F5–G5 into contrary fifths. What did they erase?",
+          "correctAnswer": "The parallel shape whose intervals were the riff",
+          "distractors": [
+            {
+              "text": "A missing V–I that the slide had been hiding all along",
+              "kind": "misconception",
+              "rationale": "The slide was not a hidden cadence."
+            },
+            {
+              "text": "Only the timbre, because parallel motion cannot carry pitch",
+              "kind": "misapplied",
+              "rationale": "The letters moved with the shape."
+            },
+            {
+              "text": "The barline, which is the only thing a slide can change",
+              "kind": "nearby",
+              "rationale": "The slide changed pitch, not the meter grid."
+            }
+          ],
+          "correctExplanation": "Fixing the fifths deletes the mechanism. The parallel stack was the harmony.",
+          "objectiveIds": [
+            "Write a parallel move that is the harmony, not a voice-leading error"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc",
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "mus-chromatic-mediant-10",
+      "conceptId": "mus-chromatic-mediant",
+      "title": "Roots a third apart, few shared tones",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-nonfunc"
+      ],
+      "goDeeper": "mus-tritone",
+      "explanation": [
+        "Chromatic mediants put roots a third apart with few common tones and a sudden color change. C major to E major shares one pitch class. C major to A-flat major shares one. The ear hears a jump, not a pivot chord earning the new key.",
+        "Common-practice modulation often borrows a chord that belongs to both keys. This jump skips that paperwork. MIT 21M.302 still names the third-relation; a riff uses it as a cut: E minor to C major, or C5 to E5, without a German sixth doing the work.",
+        "Connect E5 to C5, or E major to C major, and sit on the new color. Do not add a pivot ii–V to explain the arrival. The color is the third-relation itself. Hear the few shared tones, then the new root."
+      ],
+      "example": "Bar of E major, bar of C major, back. One shared pitch class. No A minor pivot, no B7. The jump is the event. The few common tones are the seam.",
+      "whyItMatters": "Force a pivot and you will miss the cut. The color is the third, not the paperwork you wished had been there.",
+      "quiz": [
+        {
+          "id": "mus-cm10-1",
+          "stem": "Chromatic mediants connect which pair of roots, and with what kind of overlap?",
+          "correctAnswer": "Roots a third apart, with few common tones and a color jump",
+          "distractors": [
+            {
+              "text": "Roots a fifth apart, with a dominant that must resolve",
+              "kind": "nearby",
+              "rationale": "A fifth with V is ordinary function, not this jump."
+            },
+            {
+              "text": "The same root twice, with every tone held in common",
+              "kind": "reversed",
+              "rationale": "Few common tones are the point, not a freeze."
+            },
+            {
+              "text": "Any two power chords, because loudness is the mediant",
+              "kind": "misapplied",
+              "rationale": "The relation is a third between roots."
+            }
+          ],
+          "correctExplanation": "A third between roots, a thin seam of shared tones, a color cut.",
+          "objectiveIds": [
+            "Connect roots a third apart with few common tones"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-cm10-2",
+          "stem": "E major cuts to C major with no pivot. The honest hearing of that jump is:",
+          "correctAnswer": "A color change from the third-relation, not a earned modulation",
+          "distractors": [
+            {
+              "text": "A failed cadence that still owes the listener a B7",
+              "kind": "reversed",
+              "rationale": "The jump did not hire V. Do not collect the debt."
+            },
+            {
+              "text": "A secret pivot through A minor that the tape omitted",
+              "kind": "misconception",
+              "rationale": "An omitted pivot is an invented one."
+            },
+            {
+              "text": "A meter change, because color jumps can only be rhythmic",
+              "kind": "misapplied",
+              "rationale": "The letters changed. Meter can sit still."
+            }
+          ],
+          "correctExplanation": "Hear the few shared tones and the new root. That is the color.",
+          "objectiveIds": [
+            "Hear the color of that jump without forcing a pivot"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-cm10-3",
+          "stem": "You want the mediant color without forcing a pivot. Which move keeps the contract?",
+          "correctAnswer": "Strike E5 then C5 and sit, with no ii–V into C",
+          "distractors": [
+            {
+              "text": "Strike E5, then ii–V of C, then C, so a textbook can explain it",
+              "kind": "reversed",
+              "rationale": "The ii–V is the paperwork this lesson skips."
+            },
+            {
+              "text": "Strike E5 then F5, calling any step a chromatic mediant",
+              "kind": "nearby",
+              "rationale": "A step is not a third between roots."
+            },
+            {
+              "text": "Mute both chords so the color exists only as a rest",
+              "kind": "misapplied",
+              "rationale": "The jump needs the two roots sounding."
+            }
+          ],
+          "correctExplanation": "Two roots a third apart, thin overlap, no pivot hired.",
+          "objectiveIds": [
+            "Connect roots a third apart with few common tones"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-nonfunc"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-tritone-10",
+      "conceptId": "mus-tritone",
+      "title": "Six semitones as a relation",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval",
+        "mus-nonfunc"
+      ],
+      "goDeeper": "mus-locrian",
+      "explanation": [
+        "Six semitones split the octave in half. That interval is a relation you can aim: E against B-flat, A against E-flat. Treat it as a cell, a substitution, or a polarity, not as a wrong fifth that slipped into the take.",
+        "Tritone substitution in common-practice craft replaces V with a dominant a tritone away, because they share the third and seventh. A riff can skip that story and grind the two pitches as a two-note cell. Both uses are on purpose.",
+        "Write E–Bb as a repeating cell, or swap a B7 for an F7 before E. Name the relation. Do not call the tritone an accident of distortion or a mood. It is six frets, a geometric fact, and a harmonic choice."
+      ],
+      "example": "Palm-muted E and Bb on one string, two-bar cell. Or last bar of a phrase: F7 instead of B7 into E. Same six-semitone relation, two jobs: cell versus substitution.",
+      "whyItMatters": "Call the tritone an accident and you will not be able to write it twice on purpose. Name the split octave, then choose the job.",
+      "quiz": [
+        {
+          "id": "mus-tt10-1",
+          "stem": "The tritone is best treated as which of these harmonic facts?",
+          "correctAnswer": "The interval that bisects the octave, aimed as a relation",
+          "distractors": [
+            {
+              "text": "A wrong fifth that distortion always inserts by accident",
+              "kind": "reversed",
+              "rationale": "Six frets is a choice, not a glitch."
+            },
+            {
+              "text": "A duration mark that splits a whole note into two halves",
+              "kind": "misapplied",
+              "rationale": "The split is pitch, not note length."
+            },
+            {
+              "text": "A loudness pair that must be played at the same forte",
+              "kind": "nearby",
+              "rationale": "The relation is interval size, not energy."
+            }
+          ],
+          "correctExplanation": "Six semitones. Half the octave. A relation you can write.",
+          "objectiveIds": [
+            "Use the interval that bisects the octave as a relation, not an accident"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-nonfunc"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-tt10-2",
+          "stem": "You want the tritone on purpose in a riff. Which writing keeps that contract?",
+          "correctAnswer": "Repeat E against Bb as a cell, or swap F7 for B7 into E",
+          "distractors": [
+            {
+              "text": "Avoid E and Bb because the interval is illegal in any riff",
+              "kind": "reversed",
+              "rationale": "The point is to write it, not ban it."
+            },
+            {
+              "text": "Raise the mix fader until a fifth starts to sound like six semitones",
+              "kind": "misapplied",
+              "rationale": "Loudness does not retune the interval."
+            },
+            {
+              "text": "Write only E5 power chords so no other interval can appear",
+              "kind": "nearby",
+              "rationale": "A stack of fifths is a different cell."
+            }
+          ],
+          "correctExplanation": "Cell or substitution. Either way the six-semitone relation is aimed.",
+          "objectiveIds": [
+            "Write a tritone substitution or a tritone riff cell on purpose"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-nonfunc"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-tt10-3",
+          "stem": "A chart labels E–Bb as a slipped fifth from distortion. The better name is:",
+          "correctAnswer": "A tritone relation written as a cell, not an accident",
+          "distractors": [
+            {
+              "text": "A dominant of E that is hiding inside the two notes",
+              "kind": "nearby",
+              "rationale": "E and Bb are not automatically V of E."
+            },
+            {
+              "text": "A rest, because tritones cannot be harmonic material",
+              "kind": "misapplied",
+              "rationale": "They are material. The cell is the harmony."
+            },
+            {
+              "text": "A pivot chord that modulates by splitting the barline",
+              "kind": "misconception",
+              "rationale": "The interval is a pitch relation, not a meter trick."
+            }
+          ],
+          "correctExplanation": "Name the split octave. Then you can repeat it on purpose.",
+          "objectiveIds": [
+            "Use the interval that bisects the octave as a relation, not an accident"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-nonfunc"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "mus-locrian-10",
+      "conceptId": "mus-locrian",
+      "title": "Home on a diminished triad",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-modes"
+      ],
+      "goDeeper": "mus-phrygian",
+      "explanation": [
+        "Locrian builds a tonic triad that is already diminished: root, minor third, diminished fifth. Sitting on that tonic means home is unstable by construction. The mode is useful as color because the home chord contains a tritone from the first stack.",
+        "Predict the itch: the ear wants to hear that diminished tonic as vii° of somewhere else, usually the relative major. If you keep returning to the pitch as 1, you are in Locrian. If you cadence in the relative, you left the mode.",
+        "Write a figure that keeps B as 1 with C, D, and F in the collection. Do not raise F to F-sharp to fix the tonic into minor. The diminished fifth is the home color. Leave it standing while the figure repeats."
+      ],
+      "example": "B–C–D–F ostinato, bass on B every bar. The triad B–D–F is diminished and still the tonic. Resolve to C major and you have left Locrian for its relative.",
+      "whyItMatters": "Fix the diminished tonic and you leave the mode. Sit on it and the instability is the color you came for.",
+      "quiz": [
+        {
+          "id": "mus-lc10-1",
+          "stem": "Locrian as a tonic hierarchy asks you to sit on which kind of home triad?",
+          "correctAnswer": "A diminished tonic already containing a tritone",
+          "distractors": [
+            {
+              "text": "A major tonic that must cadence through a raised leading tone",
+              "kind": "reversed",
+              "rationale": "Locrian's home is diminished, not major."
+            },
+            {
+              "text": "A power chord with no third, treated as automatically major",
+              "kind": "nearby",
+              "rationale": "A fifth stack is not the Locrian tonic triad."
+            },
+            {
+              "text": "No tonic at all, because modes are forbidden to have a 1",
+              "kind": "misapplied",
+              "rationale": "Locrian has a 1. That 1 is unstable."
+            }
+          ],
+          "correctExplanation": "Home is already a diminished triad. That is the hierarchy.",
+          "objectiveIds": [
+            "Sit on a tonic whose triad is already diminished"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-lc10-2",
+          "stem": "Why is Locrian unstable as a home and still useful as a color?",
+          "correctAnswer": "The tonic triad is diminished, so home itself carries a tritone",
+          "distractors": [
+            {
+              "text": "The mode has no fifth at all, so nothing can ever sound",
+              "kind": "misconception",
+              "rationale": "It has a diminished fifth. That is the itch."
+            },
+            {
+              "text": "The relative major is legally banned, so color cannot leak",
+              "kind": "reversed",
+              "rationale": "The leak into the relative is the usual trap."
+            },
+            {
+              "text": "Unstable means the kit cannot keep a pulse under it",
+              "kind": "misapplied",
+              "rationale": "The instability is harmonic, not metric."
+            }
+          ],
+          "correctExplanation": "A tritone inside tonic is why it will not sit still, and why the color bites.",
+          "objectiveIds": [
+            "Predict why Locrian is unstable as a home and useful as a color"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-lc10-3",
+          "stem": "A B Locrian riff starts resolving to C major with a G before it. What happened?",
+          "correctAnswer": "The figure left Locrian and cadenced in the relative major",
+          "distractors": [
+            {
+              "text": "The diminished tonic became more Locrian by landing on C",
+              "kind": "reversed",
+              "rationale": "Landing on C is leaving, not doubling down."
+            },
+            {
+              "text": "Raising F would have been the only way to leave the mode",
+              "kind": "nearby",
+              "rationale": "Cadencing in C already left, F-sharp or not."
+            },
+            {
+              "text": "The mode cannot leave because B is printed on the page",
+              "kind": "misapplied",
+              "rationale": "Tonic is what the ear treats as 1, not the header."
+            }
+          ],
+          "correctExplanation": "If C becomes home, B is no longer 1. The diminished tonic lost the job.",
+          "objectiveIds": [
+            "Predict why Locrian is unstable as a home and useful as a color"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-phrygian-10",
+      "conceptId": "mus-phrygian",
+      "title": "Half-step above the tonic as signature",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-modes"
+      ],
+      "goDeeper": "mus-harmonic-minor",
+      "explanation": [
+        "Phrygian's signature is the flat second: a half-step above the tonic. E against F, or A against B-flat. That clash is the mode's face, not a wrong leading tone of the relative major. Keep 1 in the bass and let b2 grind against it.",
+        "The trap is a secret cadence in the relative major. E Phrygian shares letters with C major. If the riff starts landing on C with a G before it, you left Phrygian. A Phrygian cell stays oriented to E, with F as neighbor rather than as scale-degree 4 of C.",
+        "Write E–F–E or E5 against F5 as the cell, then return to E. Do not close on C major. The half-step is the signature only if the tonic still answers as 1 after the grind. Keep the bass honest."
+      ],
+      "example": "Palm-muted E, then F, then E, open low string as pedal. The half-step is the cell. A last-bar C major triad would steal the tonic and turn F into a neighbor of C.",
+      "whyItMatters": "Lose the tonic to the relative major and you wrote a C riff with a flat-2 costume. Keep 1 and the half-step is the signature.",
+      "quiz": [
+        {
+          "id": "mus-ph10-1",
+          "stem": "Phrygian's signature interval against the tonic is which of these?",
+          "correctAnswer": "The flat second, a half-step above 1, kept as a grind",
+          "distractors": [
+            {
+              "text": "The raised seventh, used to build a dominant of the tonic",
+              "kind": "nearby",
+              "rationale": "That is harmonic minor's leading tone, not Phrygian's face."
+            },
+            {
+              "text": "The perfect fifth only, with b2 legally banned from riffs",
+              "kind": "reversed",
+              "rationale": "b2 is the signature, not a ban."
+            },
+            {
+              "text": "A rest on beat two, because Phrygian is a meter not a mode",
+              "kind": "misapplied",
+              "rationale": "The signature is pitch: 1 against b2."
+            }
+          ],
+          "correctExplanation": "1 against b2. The half-step is the face of the mode.",
+          "objectiveIds": [
+            "Use the flat second against the tonic as a signature"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-ph10-2",
+          "stem": "An E Phrygian cell that secretly cadences in C major has done which of these?",
+          "correctAnswer": "Left the tonic; F is now a neighbor of C, not a signature against E",
+          "distractors": [
+            {
+              "text": "Become more Phrygian, because C is the relative and therefore home",
+              "kind": "reversed",
+              "rationale": "Relative major as home is leaving, not doubling down."
+            },
+            {
+              "text": "Proved that Phrygian cannot use F at all without leaving",
+              "kind": "nearby",
+              "rationale": "F is the signature against E. C as tonic is the leave."
+            },
+            {
+              "text": "Changed only loudness, because cadences are mix-fader events",
+              "kind": "misapplied",
+              "rationale": "The tonic moved. That is a pitch-hierarchy change."
+            }
+          ],
+          "correctExplanation": "Keep E as 1 after the grind. Cadencing in C steals the signature.",
+          "objectiveIds": [
+            "Write a Phrygian cell that does not secretly cadence in the relative major"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-ph10-3",
+          "stem": "Write a two-bar Phrygian cell that does not cadence in the relative. Which keeps E as 1?",
+          "correctAnswer": "E–F–E over an E pedal, returning to E without a C close",
+          "distractors": [
+            {
+              "text": "E–F then C–G–C, so the relative major can finish the phrase",
+              "kind": "reversed",
+              "rationale": "That close is the secret cadence this lesson refuses."
+            },
+            {
+              "text": "C–G–C only, labeled Phrygian because E is in the key signature",
+              "kind": "misapplied",
+              "rationale": "A C cadence is not an E tonic hierarchy."
+            },
+            {
+              "text": "E–F#–G# so the half-step is replaced by a major tetrachord",
+              "kind": "nearby",
+              "rationale": "F-sharp erases b2, which was the signature."
+            }
+          ],
+          "correctExplanation": "b2 grinds, 1 answers. No C major handshake at the barline.",
+          "objectiveIds": [
+            "Write a Phrygian cell that does not secretly cadence in the relative major"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-harmonic-minor-10",
+      "conceptId": "mus-harmonic-minor",
+      "title": "Raised seventh without the classical contract",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-minor"
+      ],
+      "goDeeper": "mus-octatonic",
+      "explanation": [
+        "Raise the seventh in minor and you get a leading tone plus a minor third: E harmonic minor has D-sharp and G. Common-practice writing uses that D-sharp to build V and cadence. Metal often wants the two colors without hiring the rest of the V–i contract.",
+        "The augmented second between the sixth and the raised seventh is a color, not a mistake. Harmonic minor as a default scale is a palette: tonic minor, leading tone, that gap. It is not a promise that every phrase will cadence through a dominant seventh.",
+        "Write an E-minor riff that uses D-sharp as a neighbor or a color tone, then returns to E without a B7–Em handshake. Keep the minor third. You took the leading tone. You did not sign the classical cadence clause that usually comes with it."
+      ],
+      "example": "E–F#–G–D#–E cell over an E pedal. D-sharp bites. No B7. The minor third G stays. The leading tone is a color, not a ticket to a cadence.",
+      "whyItMatters": "Take the raised seventh and the whole classical handshake, and you will write cadences the riff did not ask for. Take the color. Leave the contract.",
+      "quiz": [
+        {
+          "id": "mus-hm10-1",
+          "stem": "Raising the seventh in minor without the classical contract means which of these?",
+          "correctAnswer": "Keep the leading tone and the minor third without hiring V–i",
+          "distractors": [
+            {
+              "text": "Build B7–Em every two bars, because a raised seventh is a cadence",
+              "kind": "reversed",
+              "rationale": "The leading tone can be color without the handshake."
+            },
+            {
+              "text": "Lower the third to nothing so only the seventh can sound",
+              "kind": "misapplied",
+              "rationale": "The minor third is half of the default palette."
+            },
+            {
+              "text": "Switch to major, because a leading tone cancels minor",
+              "kind": "nearby",
+              "rationale": "The third can stay minor. That is the point."
+            }
+          ],
+          "correctExplanation": "Leading tone plus minor third. Cadence optional, not included.",
+          "objectiveIds": [
+            "Raise the seventh in minor without taking on the rest of the classical contract"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-minor"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-hm10-2",
+          "stem": "A metal default that wants the leading tone and the minor third should do which job?",
+          "correctAnswer": "Write D-sharp against G over E, without requiring a B7 close",
+          "distractors": [
+            {
+              "text": "Replace G with G-sharp so the riff becomes E major and cadences",
+              "kind": "reversed",
+              "rationale": "That drops the minor third the default wanted."
+            },
+            {
+              "text": "Avoid D-sharp entirely, because color tones are not material",
+              "kind": "nearby",
+              "rationale": "The raised seventh is the material here."
+            },
+            {
+              "text": "Mute the tonic so only V can be heard as the home pitch",
+              "kind": "misapplied",
+              "rationale": "Home is still the minor tonic."
+            }
+          ],
+          "correctExplanation": "G stays minor. D-sharp bites. B7 is not owed.",
+          "objectiveIds": [
+            "Write a metal default that wants the leading tone and the minor third"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-minor"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "mus-hm10-3",
+          "stem": "Someone hears D-sharp in E minor and writes a B7–Em cadence the riff never plays. Predict the error:",
+          "correctAnswer": "They took the classical contract with the leading tone, not just the color",
+          "distractors": [
+            {
+              "text": "They forgot that D-sharp is illegal in any E collection",
+              "kind": "reversed",
+              "rationale": "D-sharp is the raised seventh. It is legal as color."
+            },
+            {
+              "text": "They mixed up loudness with the minor third and muted G",
+              "kind": "misapplied",
+              "rationale": "The error is a hired cadence, not a mute."
+            },
+            {
+              "text": "They turned the riff into Locrian by adding a diminished tonic",
+              "kind": "nearby",
+              "rationale": "Inventing V–i is a function rescue, not Locrian."
+            }
+          ],
+          "correctExplanation": "The raised seventh arrived. The cadence was extra paperwork.",
+          "objectiveIds": [
+            "Raise the seventh in minor without taking on the rest of the classical contract"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-minor"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-octatonic-10",
+      "conceptId": "mus-octatonic",
+      "title": "Eight notes from alternating steps",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-semitone"
+      ],
+      "goDeeper": "mus-odd-meter",
+      "explanation": [
+        "Alternate whole tones and semitones and you get eight pitch classes per octave, not seven. Two flavors: tone-semitone and semitone-tone. Each flavor has few transpositions, because the pattern repeats every minor third and closes on itself.",
+        "A diminished-seventh cell lives inside both flavors: four notes stacked in minor thirds. Octatonic collections are symmetrical, so they do not point to one tonic the way a major scale does. Use the set as a closed collection, not as a broken key that needs rescuing.",
+        "Build WH starting on E: E, F-sharp, G, A, B-flat, C, D-flat, E-flat. The other flavor starts E, F, G, A-flat, B-flat, B, C-sharp, D. Predict a diminished cell such as E–G–Bb–Db sitting in the first set. Sequence it. Do not correct it into E minor."
+      ],
+      "example": "WH on E yields E–G–Bb–Db as a ready diminished cell. Cycle it. The collection supplies the other four notes as neighbors. No one tone is the major-scale tonic.",
+      "whyItMatters": "Force a major tonic onto a symmetrical set and you will hear a key that the eight notes refused to elect.",
+      "quiz": [
+        {
+          "id": "mus-oc10-1",
+          "stem": "An octatonic collection is built by which interval recipe, and how many pitch classes result?",
+          "correctAnswer": "Alternating tones and semitones, eight classes per octave",
+          "distractors": [
+            {
+              "text": "Seven diatonic steps, then a repeated tonic to fake an eighth note",
+              "kind": "reversed",
+              "rationale": "Eight classes, not a doubled seventh scale."
+            },
+            {
+              "text": "Only perfect fifths stacked until the octave returns",
+              "kind": "nearby",
+              "rationale": "Fifths build a different collection."
+            },
+            {
+              "text": "Random chromatic notes until distortion fills the gaps",
+              "kind": "misapplied",
+              "rationale": "The recipe is strict: W then H, or H then W."
+            }
+          ],
+          "correctExplanation": "WHWHWHWH or HWHWHWHW. Eight classes. Closed set.",
+          "objectiveIds": [
+            "Build an octatonic collection from alternating tones and semitones"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-semitone"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-oc10-2",
+          "stem": "The two octatonic flavors and a diminished cell inside them are which of these?",
+          "correctAnswer": "Tone-semitone or semitone-tone, with a minor-third stack living in both",
+          "distractors": [
+            {
+              "text": "Major and minor only, with a tonic triad required in each flavor",
+              "kind": "reversed",
+              "rationale": "Symmetry does not elect a major tonic."
+            },
+            {
+              "text": "Pentatonic and blues, with a dominant seventh as the inner cell",
+              "kind": "nearby",
+              "rationale": "Those are other collections."
+            },
+            {
+              "text": "One flavor only, because alternating steps cannot reverse",
+              "kind": "misconception",
+              "rationale": "WH and HW are the two flavors named here."
+            }
+          ],
+          "correctExplanation": "Two start-intervals. A diminished tetrachord sits in each.",
+          "objectiveIds": [
+            "Predict the two flavors and a diminished cell that lives inside them"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-semitone"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-oc10-3",
+          "stem": "You sequence E–G–Bb–Db from a WH collection on E. Integrating the set means you should:",
+          "correctAnswer": "Keep the diminished cell and the other four neighbors, without electing E minor",
+          "distractors": [
+            {
+              "text": "Raise Bb to B so the cell becomes an E minor triad plus a leading tone",
+              "kind": "reversed",
+              "rationale": "That rescue turns the set back into a key."
+            },
+            {
+              "text": "Drop to five notes so the collection can count as pentatonic",
+              "kind": "nearby",
+              "rationale": "Octatonic is eight. Do not shrink it to fit a nickname."
+            },
+            {
+              "text": "Add a B7–Em cadence because symmetrical sets still owe V–I",
+              "kind": "misapplied",
+              "rationale": "The set does not hire a dominant."
+            }
+          ],
+          "correctExplanation": "The cell is the material. E minor would be a different collection.",
+          "objectiveIds": [
+            "Predict the two flavors and a diminished cell that lives inside them"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-semitone"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,585 @@
+{
+  "courseId": "ml-foundations",
+  "moduleId": "ml-f-linear",
+  "lessons": [
+    {
+      "id": "ml-linear-reg-5",
+      "conceptId": "ml-linear-reg",
+      "title": "Weighted sum plus a bias",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["ml-loss", "ml-lin-alg-lite"],
+      "goDeeper": "ml-logistic",
+      "explanation": [
+        "Write a prediction as w·x + b. Each feature gets a weight. The bias is a constant shift so the line need not go through the origin. That is the whole model. Search those numbers until squared error on the example set is small.",
+        "A second feature that is twice the first does not add a new direction. The two weights can trade off and still draw the same line. The fit on the span is unchanged. The individual weights are no longer a story you can trust."
+      ],
+      "example": "Price ≈ 3·size + 2·rooms + 10. If rooms is always size/200, you can move weight from size onto rooms and the predicted prices barely change.",
+      "whyItMatters": "Every later 'the weight on size means' claim assumes the columns pointed different ways. Check that before you narrate a coefficient.",
+      "quiz": [
+        {
+          "id": "ml-lr5-1",
+          "stem": "Linear regression writes a prediction as which of these objects?",
+          "correctAnswer": "A weighted sum of features plus a bias, fit by reducing squared error",
+          "distractors": [
+            { "text": "A lookup table that recites each training price exactly", "kind": "nearby", "rationale": "That is storage. The model is a line, not an index." },
+            { "text": "A probability squeezed through a logistic curve", "kind": "misapplied", "rationale": "That is logistic regression, a later map." },
+            { "text": "A majority-class guess with no weights at all", "kind": "reversed", "rationale": "That is a baseline, not the linear model." }
+          ],
+          "correctExplanation": "w·x + b, then make squared error small. That is the model.",
+          "objectiveIds": ["Write a linear regression as a weighted sum plus a bias fit by reducing squared error"],
+          "prerequisiteConceptIds": ["ml-loss", "ml-lin-alg-lite"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-lr5-2",
+          "stem": "The bias term in a linear regression is there so that:",
+          "correctAnswer": "The line is not forced to pass through the origin",
+          "distractors": [
+            { "text": "Squared error can be replaced by accuracy", "kind": "misapplied", "rationale": "Bias is a shift, not a change of loss." },
+            { "text": "One feature may legally copy another", "kind": "nearby", "rationale": "A copy is a geometry problem, not what bias solves." },
+            { "text": "The weights are guaranteed to be unique", "kind": "reversed", "rationale": "Bias does not identify collinear columns." }
+          ],
+          "correctExplanation": "b is a shift of the intercept. Origin-through is the model without it.",
+          "objectiveIds": ["Write a linear regression as a weighted sum plus a bias fit by reducing squared error"],
+          "prerequisiteConceptIds": ["ml-loss", "ml-lin-alg-lite"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-lr5-3",
+          "stem": "If rooms is always a scaled copy of size, the two weights typically:",
+          "correctAnswer": "Trade off along one direction and still make the same predictions",
+          "distractors": [
+            { "text": "Become two independent causal effects you can quote", "kind": "reversed", "rationale": "They are not separately identified." },
+            { "text": "Force squared error to become undefined", "kind": "misconception", "rationale": "The loss is still defined. The split of credit is not." },
+            { "text": "Turn the model into a logistic probability", "kind": "misapplied", "rationale": "Collinearity is not a class map." }
+          ],
+          "correctExplanation": "Same span, many weight splits. The line is the same; the story is not.",
+          "objectiveIds": ["Predict the fit when one feature is a scaled copy of another"],
+          "prerequisiteConceptIds": ["ml-loss", "ml-lin-alg-lite"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-linear-reg-10",
+      "conceptId": "ml-linear-reg",
+      "title": "Squared error picks the line",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-loss", "ml-lin-alg-lite"],
+      "goDeeper": "ml-logistic",
+      "explanation": [
+        "Ordinary linear regression predicts a real number as a weighted sum of features plus a bias. Squared error is the usual loss: miss by two, pay four. CS229 fits those weights by making that sum small, either with a closed form or by walking downhill.",
+        "When one column is a scaled copy of another, the two weights are not separately identified. Any split of the shared direction gives the same predictions. The optimizer may pick an arbitrary split. Do not read those two numbers as two independent effects.",
+        "The closed form (XᵀX)⁻¹Xᵀy exists when the columns are independent enough. A scaled copy makes XᵀX singular or nearly so. Gradient descent still runs. It just has a whole line of equally good stopping points."
+      ],
+      "example": "Houses with size and with size measured again in mm. The two size columns point the same way. Least squares can dump all the weight on either column. Predicted prices match; the two coefficients do not mean two effects.",
+      "whyItMatters": "People quote a coefficient as a story. The story is only legal if the column was a real direction, not a second copy of the first.",
+      "quiz": [
+        {
+          "id": "ml-lr10-1",
+          "stem": "Squared error as the loss for a linear real-valued target means:",
+          "correctAnswer": "A miss twice as large costs four times as much, and that number is what you shrink",
+          "distractors": [
+            { "text": "The model outputs a class probability instead of a number", "kind": "misapplied", "rationale": "That is a later classification map." },
+            { "text": "Every miss of any size costs exactly one", "kind": "reversed", "rationale": "That would be a 0-1 count, not squared error." },
+            { "text": "The intercept is forbidden, so the line must hit the origin", "kind": "nearby", "rationale": "Bias is still allowed. The loss does not ban it." }
+          ],
+          "correctExplanation": "Squared residual is the job. Weights plus bias are the knobs.",
+          "objectiveIds": ["Write a linear regression as a weighted sum plus a bias fit by reducing squared error"],
+          "prerequisiteConceptIds": ["ml-loss", "ml-lin-alg-lite"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-lr10-2",
+          "stem": "A house table includes size in meters and the same size in millimeters. Least squares will typically:",
+          "correctAnswer": "Fit the same prices while splitting the shared direction arbitrarily between the two weights",
+          "distractors": [
+            { "text": "Refuse to run until you delete the bias term", "kind": "misapplied", "rationale": "The crime is collinear columns, not the intercept." },
+            { "text": "Recover two causal effects, one per unit system", "kind": "reversed", "rationale": "Units copies are one direction, not two effects." },
+            { "text": "Convert both columns into class probabilities", "kind": "subtle", "rationale": "This is still a real-valued line." }
+          ],
+          "correctExplanation": "One direction, many splits. Predictions match; the pair of weights is not a story.",
+          "objectiveIds": ["Predict the fit when one feature is a scaled copy of another"],
+          "prerequisiteConceptIds": ["ml-loss", "ml-lin-alg-lite"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-lr10-3",
+          "stem": "XᵀX is singular, or nearly so, when a column is a scaled copy. Gradient descent then:",
+          "correctAnswer": "Can still walk; it just has a line of equally good stopping points",
+          "distractors": [
+            { "text": "Becomes illegal, because only the closed form may fit a line", "kind": "misconception", "rationale": "Descent does not need the inverse." },
+            { "text": "Always diverges, no matter how small the step", "kind": "nearby", "rationale": "The loss is still a trough, not a cliff." },
+            { "text": "Turns the target into a 0-1 label automatically", "kind": "misapplied", "rationale": "Collinearity does not change the job." }
+          ],
+          "correctExplanation": "No unique inverse, still a defined loss. Many equally good w's on that ridge.",
+          "objectiveIds": ["Predict the fit when one feature is a scaled copy of another"],
+          "prerequisiteConceptIds": ["ml-loss", "ml-lin-alg-lite"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-logistic-10",
+      "conceptId": "ml-logistic",
+      "title": "Score through a logistic curve",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-linear-reg"],
+      "goDeeper": "ml-prob-model",
+      "diagram": "ml-decision-boundary",
+      "explanation": [
+        "Logistic regression keeps the linear score z = w·x + b and pushes it through σ(z) = 1/(1+e^{-z}). The curve squashes any real number into (0, 1). Large positive z approaches 1. Large negative z approaches 0. The weights still define a hyperplane.",
+        "z itself is not a probability. It can be 7.4 or −12. Those numbers do not lie in [0, 1] and they do not add to one across classes. The logistic curve is the map that turns a score into a claim you can compare with a frequency.",
+        "The usual loss is log loss on that probability, not squared error on z. Squared error on a 0/1 label would treat a confident miss too kindly and would not match the probability story. Calling class 1 is still a later threshold on the curve."
+      ],
+      "example": "z = 2.2 on a mail. σ(2.2) ≈ 0.90. That 0.90 is the model's frequency claim. 2.2 is only the score. Deleting the mail is a threshold you still have to pick.",
+      "whyItMatters": "People treat a raw score as 'the probability'. Then they cannot hear calibration, log loss, or a decision that needs a cost.",
+      "quiz": [
+        {
+          "id": "ml-log10-1",
+          "stem": "Logistic regression turns a linear score into a number in (0, 1) by:",
+          "correctAnswer": "Pushing z = w·x + b through the curve 1/(1+e^{-z})",
+          "distractors": [
+            { "text": "Reporting z itself, which already lies in [0, 1]", "kind": "reversed", "rationale": "z is an unbounded score." },
+            { "text": "Squaring the residual of a house price", "kind": "misapplied", "rationale": "That is the linear-regression loss, not the map." },
+            { "text": "Counting how many training labels equal one", "kind": "nearby", "rationale": "A base rate is not the logistic curve." }
+          ],
+          "correctExplanation": "Same linear score, then a squash. That squash is the probability map.",
+          "objectiveIds": ["Turn a linear score into a probability with a logistic curve"],
+          "prerequisiteConceptIds": ["ml-linear-reg"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-log10-2",
+          "stem": "A linear score of z = 7.4 is not a valid class probability because:",
+          "correctAnswer": "It is not in [0, 1] and is not a frequency claim until the logistic curve maps it",
+          "distractors": [
+            { "text": "Scores above 1 are already probabilities of class 1", "kind": "reversed", "rationale": "7.4 is not a probability." },
+            { "text": "Only neural nets are allowed to output a number in (0, 1)", "kind": "misapplied", "rationale": "Logistic regression does this with a curve." },
+            { "text": "Squared error requires z to stay above 7", "kind": "nearby", "rationale": "The issue is the range of a probability, not a price loss." }
+          ],
+          "correctExplanation": "7.4 is a score. A probability lives in [0, 1] after the curve.",
+          "objectiveIds": ["Predict why a linear score alone is not a valid class probability"],
+          "prerequisiteConceptIds": ["ml-linear-reg"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-log10-3",
+          "stem": "On a mail with z = 2.2, the object you may treat as a probability is:",
+          "correctAnswer": "σ(2.2), the logistic curve of the score, not 2.2 itself",
+          "distractors": [
+            { "text": "2.2, because any positive score already means 'yes'", "kind": "reversed", "rationale": "Positive is not a frequency." },
+            { "text": "The bias term alone, ignoring w·x", "kind": "nearby", "rationale": "The score uses both." },
+            { "text": "The training accuracy of the last epoch", "kind": "misapplied", "rationale": "A metric is not this row's probability." }
+          ],
+          "correctExplanation": "Curve first, then a claim. The raw score stays a score.",
+          "objectiveIds": ["Turn a linear score into a probability with a logistic curve"],
+          "prerequisiteConceptIds": ["ml-linear-reg"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-prob-model-10",
+      "conceptId": "ml-prob-model",
+      "title": "Frequency you can check tomorrow",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-logistic", "ml-prob-lite"],
+      "goDeeper": "ml-metrics-class",
+      "explanation": [
+        "Treat a number in (0, 1) as a calibrated claim: among days the model said 0.8, about eight in ten should happen. That is a frequency you can audit. It is not a promise that this particular row is settled.",
+        "A confident 0.99 that is wrong nine times in ten is miscalibrated. The model is loud and the frequencies do not match. Reliability diagrams catch this: bucket the scores, plot the hit rate. If the curve sits below the diagonal, the model is overconfident.",
+        "A decision still needs a cost. Shipping a 0.6 spam score as 'delete' is a threshold plus a cost, not a property of 0.6. Calibration asks whether 0.6 happened six times in ten. The click is a different object."
+      ],
+      "example": "A loan model says 0.95 on a hundred applications and forty default. The 0.95 was loud. The frequency was 0.40. That gap is a calibration failure, not a rounding error.",
+      "whyItMatters": "Dashboards love a confident 0.99. If the hits do not match, you shipped a volume knob, not a probability.",
+      "quiz": [
+        {
+          "id": "ml-pm10-1",
+          "stem": "A number between 0 and 1 from a classifier should be treated as:",
+          "correctAnswer": "A calibrated frequency claim you can audit, not a promise this row is settled",
+          "distractors": [
+            { "text": "A guarantee the event will happen on this row", "kind": "reversed", "rationale": "0.8 is not certainty." },
+            { "text": "The learning rate the optimizer used last epoch", "kind": "misapplied", "rationale": "A step size is not a probability." },
+            { "text": "Proof that accuracy is already 80 percent", "kind": "nearby", "rationale": "One score is not an accuracy report." }
+          ],
+          "correctExplanation": "Audit the frequency. Do not confuse a claim with a promise.",
+          "objectiveIds": ["Treat a number between 0 and 1 as a calibrated claim, not a promise"],
+          "prerequisiteConceptIds": ["ml-logistic", "ml-prob-lite"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-pm10-2",
+          "stem": "A model says 0.95 on a hundred rows and the event happens forty times. That pattern is:",
+          "correctAnswer": "Overconfidence: the scores are loud and the observed frequency does not match",
+          "distractors": [
+            { "text": "Perfect calibration, because 0.95 is close to one", "kind": "reversed", "rationale": "Close to one is loud, not matched." },
+            { "text": "Proof the logistic curve was never applied", "kind": "nearby", "rationale": "You can squash and still miscalibrate." },
+            { "text": "A reason to replace squared error with the score z", "kind": "misapplied", "rationale": "The diagnosis is frequency, not a return to z." }
+          ],
+          "correctExplanation": "Claimed 0.95, observed 0.40. Loud and wrong. That is miscalibration.",
+          "objectiveIds": ["Diagnose a confident probability that does not match observed frequency"],
+          "prerequisiteConceptIds": ["ml-logistic", "ml-prob-lite"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-pm10-3",
+          "stem": "Deleting a mail because the spam score was 0.6 is a decision, not a calibration check, because:",
+          "correctAnswer": "Calibration asks whether 0.6 happened six times in ten; deleting also needs a cost",
+          "distractors": [
+            { "text": "Any score above 0.5 is already the delete action by definition", "kind": "reversed", "rationale": "A threshold is a choice, not a definition." },
+            { "text": "0.6 cannot be a probability, so no check is possible", "kind": "misconception", "rationale": "0.6 is in (0, 1). You can still audit it." },
+            { "text": "The bias term is what you delete, not the mail", "kind": "subtle", "rationale": "Bias is a parameter, not an action." }
+          ],
+          "correctExplanation": "Frequency first, cost second. The click is not the claim.",
+          "objectiveIds": ["Treat a number between 0 and 1 as a calibrated claim, not a promise"],
+          "prerequisiteConceptIds": ["ml-logistic", "ml-prob-lite"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-gd-10",
+      "conceptId": "ml-gd",
+      "title": "Step opposite the gradient",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-loss"],
+      "goDeeper": "ml-feature-scale",
+      "diagram": "ml-gd-steps",
+      "explanation": [
+        "The gradient of a loss with respect to the parameters points toward steepest increase. Gradient descent steps the other way: θ ← θ − α ∇J(θ). You need a loss you can actually differentiate. You do not need a closed-form inverse.",
+        "A step that is too large overshoots the bowl. The loss jumps, oscillates, or explodes. A step that is too small crawls. You spend the afternoon making progress that a slightly larger α would have finished. α is a hyperparameter, not a moral.",
+        "On squared error for a linear model the gradient is an average of residual times feature. One honest step uses that average. Repeat until the number stops dropping, then ask the held-out set whether the walk was useful."
+      ],
+      "example": "Fit y ≈ wx. Loss is average (wx − y)². The gradient wrt w is an average of 2x(wx − y). One step: w ← w − α times that. If α is huge, w flies off and the loss explodes.",
+      "whyItMatters": "Every training curve is this loop. If you cannot name the step, 'the model learned' is a slogan.",
+      "quiz": [
+        {
+          "id": "ml-gd10-1",
+          "stem": "Gradient descent updates parameters by which of these rules?",
+          "correctAnswer": "Subtract a step size times the gradient of a loss you can compute",
+          "distractors": [
+            { "text": "Add the gradient so you climb toward higher loss", "kind": "reversed", "rationale": "The gradient is uphill. You walk the other way." },
+            { "text": "Invert XᵀX even when the loss has no closed form", "kind": "nearby", "rationale": "Descent exists so you do not need that inverse." },
+            { "text": "Replace the loss with accuracy before each step", "kind": "misapplied", "rationale": "Accuracy is often not the slope you follow." }
+          ],
+          "correctExplanation": "θ ← θ − α ∇J. Opposite the gradient of a computable loss.",
+          "objectiveIds": ["Step parameters opposite the gradient of a loss you can compute"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-gd10-2",
+          "stem": "On y ≈ wx with squared error, one honest step uses:",
+          "correctAnswer": "The average of residual times x, then subtract α times that from w",
+          "distractors": [
+            { "text": "The sign of y only, ignoring x and the residual", "kind": "nearby", "rationale": "The slope needs the residual and the feature." },
+            { "text": "A random label flip instead of a derivative", "kind": "misapplied", "rationale": "You need a gradient of the loss." },
+            { "text": "Adding α ∇J so w grows with the residual", "kind": "reversed", "rationale": "That climbs the loss." }
+          ],
+          "correctExplanation": "Derivative, then a downhill step. Residual times feature is that derivative.",
+          "objectiveIds": ["Step parameters opposite the gradient of a loss you can compute"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-gd10-3",
+          "stem": "If the step size α is far too large, the training loss typically:",
+          "correctAnswer": "Jumps, oscillates, or explodes as steps overshoot the bowl",
+          "distractors": [
+            { "text": "Crawls smoothly to the minimum and stays there", "kind": "reversed", "rationale": "That is the too-small story." },
+            { "text": "Becomes a valid class probability automatically", "kind": "misapplied", "rationale": "Step size is not a squash." },
+            { "text": "Deletes the need for a held-out set", "kind": "subtle", "rationale": "A wild walk is not a report." }
+          ],
+          "correctExplanation": "Overshoot. The bowl is still there; the footwork is not.",
+          "objectiveIds": ["Predict what a step that is too large or too small does to the loss"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-gd-20",
+      "conceptId": "ml-gd",
+      "title": "Learning rate is the whole walk",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["ml-loss"],
+      "goDeeper": "ml-feature-scale",
+      "diagram": "ml-gd-steps",
+      "explanation": [
+        "Each step needs three objects: the current parameters, the gradient of a computable loss, and a step size α. Subtract α times the gradient. That is the entire algorithm CS229 starts with. Architecture is not in the update.",
+        "Compute the gradient from the loss you chose. For squared error, the partial of the average residual squared wrt w_j is an average of residual times x_j. For a bias term the feature is 1. If you cannot write that derivative, you are not yet doing this walk.",
+        "Too large an α and a step jumps over the bottom, often to a higher loss, then farther out. Too small and the path is a crawl along a direction you already knew. Plot the training loss. Explosion or a flat line is α, not a mysterious model.",
+        "The geometry of the walk is the geometry of the loss. An elongated bowl makes a fixed α too big on the steep axis and too small on the flat one. That picture is why the next lesson rescales features. The update itself does not fix the units."
+      ],
+      "example": "Two weights, a long thin valley. α that looks fine on the long axis overshoots the short axis every time. Loss spikes. Halve α and the walk crawls along the valley instead of finishing. The fix is not a new architecture. It is α, or later, the units.",
+      "whyItMatters": "People replace a model when the step was the fault. Name the three objects in the update before you name a net.",
+      "quiz": [
+        {
+          "id": "ml-gd20-1",
+          "stem": "Trace one gradient-descent step on a linear squared-error fit. After you compute ∇J you:",
+          "correctAnswer": "Subtract α times that gradient from the current parameters",
+          "distractors": [
+            { "text": "Add α times the gradient so the loss can only increase", "kind": "reversed", "rationale": "Adding the gradient climbs." },
+            { "text": "Replace ∇J with accuracy, then invert it", "kind": "misapplied", "rationale": "Accuracy is not the slope of this walk." },
+            { "text": "Store the training sheet as the deployed rule", "kind": "nearby", "rationale": "The step updates parameters, not a table." }
+          ],
+          "correctExplanation": "Compute, then subtract. That is the whole step.",
+          "objectiveIds": ["Step parameters opposite the gradient of a loss you can compute"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-gd20-2",
+          "stem": "A training-loss plot that explodes after one huge jump most likely means:",
+          "correctAnswer": "α was too large, so the step overshot the bowl",
+          "distractors": [
+            { "text": "α was too small, so the walk could not move", "kind": "reversed", "rationale": "A crawl does not explode." },
+            { "text": "The loss was never differentiable, so no step occurred", "kind": "nearby", "rationale": "A jump is a step that happened, badly." },
+            { "text": "The held-out set leaked into the gradient", "kind": "subtle", "rationale": "Leakage is a split crime. Explosion is α." }
+          ],
+          "correctExplanation": "One huge overshoot. Look at α before you rewrite the model.",
+          "objectiveIds": ["Predict what a step that is too large or too small does to the loss"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-gd20-3",
+          "stem": "Compare a tiny α with a huge α on the same bowl. The tiny α typically:",
+          "correctAnswer": "Crawls along a known direction; the huge α overshoots and the loss jumps",
+          "distractors": [
+            { "text": "Explodes immediately; the huge α crawls to the floor", "kind": "reversed", "rationale": "Those roles are swapped." },
+            { "text": "Removes the need to compute a gradient at all", "kind": "misapplied", "rationale": "Both walks still need ∇J." },
+            { "text": "Turns squared error into a class probability", "kind": "nearby", "rationale": "Step size is not a logistic curve." }
+          ],
+          "correctExplanation": "Small crawls. Large leaps past the bottom. α is the walk.",
+          "objectiveIds": ["Predict what a step that is too large or too small does to the loss"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "ml-feature-scale-10",
+      "conceptId": "ml-feature-scale",
+      "title": "Unscaled axes crook the path",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-gd"],
+      "goDeeper": "ml-convex",
+      "explanation": [
+        "Unscaled features stretch one axis of the loss bowl. Square meters next to a binary flag make the gradient huge in one direction and tiny in the other. Gradient descent then zig-zags: each step is too aggressive on the stretched axis and too shy on the rest.",
+        "Rescale so columns live on comparable ranges: subtract a mean, divide by a spread, or map to [0, 1]. The bowl becomes rounder. The same α can make progress on every weight. The slope you follow is no longer a unit accident.",
+        "A scaled copy of another feature is a different crime: those two columns point the same way, so the weights trade off. Scaling does not create a new direction. It only stops one column's units from dominating the gradient you actually compute."
+      ],
+      "example": "Income in dollars, age in years. The income gradient dwarfs the age gradient. Steps fly along income and crawl along age. Subtract means and divide by standard deviations and the same α can move both weights.",
+      "whyItMatters": "A crooked path looks like a bad learning rate. Often the units were the lie.",
+      "quiz": [
+        {
+          "id": "ml-fs10-1",
+          "stem": "You rescale features before gradient descent so that:",
+          "correctAnswer": "One column's units do not dominate the slope you follow",
+          "distractors": [
+            { "text": "The loss becomes a probability in [0, 1]", "kind": "misapplied", "rationale": "Scaling is geometry, not a squash." },
+            { "text": "Collinear copies become two independent effects", "kind": "nearby", "rationale": "A copy is still one direction after you scale it." },
+            { "text": "You can skip the held-out set", "kind": "subtle", "rationale": "Honest units still need unseen rows." }
+          ],
+          "correctExplanation": "Comparable ranges, comparable slopes. That is the point of the rescale.",
+          "objectiveIds": ["Rescale features so one column does not dominate the slope"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-fs10-2",
+          "stem": "On income in dollars next to age in years, unscaled gradient descent typically:",
+          "correctAnswer": "Zig-zags: too aggressive on the stretched axis, too shy on the other",
+          "distractors": [
+            { "text": "Takes a straight path because α already knows the units", "kind": "reversed", "rationale": "α is a scalar. It does not know dollars versus years." },
+            { "text": "Refuses to compute a gradient until you drop age", "kind": "misconception", "rationale": "The gradient exists. It is just crooked." },
+            { "text": "Outputs a calibrated 0.99 on every row", "kind": "misapplied", "rationale": "Scaling is not calibration." }
+          ],
+          "correctExplanation": "Elongated bowl, crooked walk. That is the unscaled path.",
+          "objectiveIds": ["Predict the crooked path gradient descent takes on unscaled inputs"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-fs10-3",
+          "stem": "Mean-centering and dividing by spread is a rescale. After that, a fixed α is more usable because:",
+          "correctAnswer": "The bowl is rounder, so one step size can move every weight",
+          "distractors": [
+            { "text": "The target column is replaced by the gradient", "kind": "nearby", "rationale": "You scaled inputs, not the job." },
+            { "text": "XᵀX becomes a probability matrix", "kind": "misapplied", "rationale": "This is still geometry of the walk." },
+            { "text": "Zig-zag is required for a global minimum", "kind": "reversed", "rationale": "Zig-zag was the symptom you removed." }
+          ],
+          "correctExplanation": "Rounder bowl, honest α. Units no longer pick the path.",
+          "objectiveIds": ["Rescale features so one column does not dominate the slope"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "ml-convex-10",
+      "conceptId": "ml-convex",
+      "title": "One bowl or many basins",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-gd"],
+      "goDeeper": "ml-gd-variants",
+      "explanation": [
+        "Squared error for a linear model is a convex bowl: any line between two points on the surface lies above the surface. One minimum. A local step that goes downhill is enough. You cannot be trapped in a second, worse hole, because there is not one.",
+        "Non-convex losses have many basins. A local step can reach a nearby floor that is not the global one. Starting point, step size, and later noise then matter in a way they did not on the bowl. The same update rule is no longer a global guarantee.",
+        "Convexity is why CS229 can treat linear and logistic losses as honest walks. Logistic loss in the weights is convex. That does not make the probability a promise. It only means local search is globally justified on that loss."
+      ],
+      "example": "Linear least squares: start anywhere, walk downhill, meet the same floor. A later deep net: start somewhere else, meet a different floor. The update did not change. The landscape did.",
+      "whyItMatters": "People blame the optimizer for a landscape that has many floors. Name the bowl before you name the walk.",
+      "quiz": [
+        {
+          "id": "ml-cvx10-1",
+          "stem": "A convex loss bowl differs from a many-basin landscape because:",
+          "correctAnswer": "The bowl has one minimum; the landscape can hide worse floors nearby",
+          "distractors": [
+            { "text": "The bowl has many minima; basins have exactly one", "kind": "reversed", "rationale": "Those roles are swapped." },
+            { "text": "Only basins can be differentiated, so only they have a gradient", "kind": "misapplied", "rationale": "Both landscapes can have slopes." },
+            { "text": "Convexity means the test set has leaked into train", "kind": "subtle", "rationale": "Convexity is shape, not a split crime." }
+          ],
+          "correctExplanation": "One floor versus many. That is the geometric distinction.",
+          "objectiveIds": ["Distinguish a bowl with one minimum from a landscape with many basins"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-cvx10-2",
+          "stem": "A local downhill step is enough to justify the walk on a convex loss because:",
+          "correctAnswer": "Any local minimum is global, so downhill cannot hide a better floor",
+          "distractors": [
+            { "text": "Local minima are worse than random on a bowl", "kind": "reversed", "rationale": "On a bowl the local min is the one you want." },
+            { "text": "Convexity replaces the need to compute a gradient", "kind": "misapplied", "rationale": "You still step on a slope." },
+            { "text": "The step size α becomes a probability", "kind": "nearby", "rationale": "α is still a length, not a frequency." }
+          ],
+          "correctExplanation": "One floor. Local downhill is global. That is the convex gift.",
+          "objectiveIds": ["Predict why a local step is enough on a convex loss and not otherwise"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-cvx10-3",
+          "stem": "On a loss with many basins, the same local step can fail to find the global floor because:",
+          "correctAnswer": "Downhill can enter a nearby hole that is not the lowest one",
+          "distractors": [
+            { "text": "Gradients are illegal once a basin exists", "kind": "misconception", "rationale": "The slope still exists. It is local." },
+            { "text": "The bowl identity still holds, so every hole is global", "kind": "reversed", "rationale": "Many basins means that identity is gone." },
+            { "text": "You must first convert the loss into accuracy", "kind": "misapplied", "rationale": "Accuracy is not the shape of J." }
+          ],
+          "correctExplanation": "Local is no longer global. Start and noise start to matter.",
+          "objectiveIds": ["Predict why a local step is enough on a convex loss and not otherwise"],
+          "prerequisiteConceptIds": ["ml-gd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-metrics-class-10",
+      "conceptId": "ml-metrics-class",
+      "title": "Precision after accuracy lies",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-logistic"],
+      "goDeeper": "ml-train-val-test",
+      "explanation": [
+        "Accuracy is correct labels over all labels. On a rare class it lies: always guess negative and you look brilliant. Precision is true positives over predicted positives. Recall is true positives over actual positives. Those two numbers tell the story accuracy hid.",
+        "A detector that flags nothing has vacuous precision and zero recall. A detector that flags everything has recall 1 and precision equal to the base rate. Neither is a win. You have to say which error costs more before you pick a threshold.",
+        "Diagnose a 99% accuracy that still misses every fraud row: the majority dummy already had 99%. Compute recall on the class you care about. If it is near zero, the model did not find the class. It found the base rate."
+      ],
+      "example": "Fraud is 0.3% of rows. A model at 99.7% accuracy that flags no fraud has recall 0 on the class that mattered. Precision is undefined or empty. The dummy already had 99.7%.",
+      "whyItMatters": "A launch email with '99% accurate' can be a majority dummy. Ask for precision and recall on the class you actually pay for.",
+      "quiz": [
+        {
+          "id": "ml-mc10-1",
+          "stem": "On a label that is 0.3% positive, precision and recall beat raw accuracy because:",
+          "correctAnswer": "They are computed on predicted or actual positives, so the rare class cannot hide",
+          "distractors": [
+            { "text": "They ignore the rare class and only score the majority", "kind": "reversed", "rationale": "Accuracy is the one that hides in the majority." },
+            { "text": "They replace the logistic curve with squared error", "kind": "misapplied", "rationale": "These are report metrics, not a new loss." },
+            { "text": "They equal accuracy whenever the dummy is strong", "kind": "nearby", "rationale": "That is when they disagree most." }
+          ],
+          "correctExplanation": "Precision and recall look at the class you care about. Accuracy can look away.",
+          "objectiveIds": ["Compute precision and recall instead of trusting accuracy on a skewed set"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-mc10-2",
+          "stem": "A model is 99.7% accurate on 0.3% fraud and catches none of the fraud rows. The diagnosis is:",
+          "correctAnswer": "It found the base rate; recall on the class you care about is zero",
+          "distractors": [
+            { "text": "It beat the majority dummy, so the job is done", "kind": "reversed", "rationale": "The dummy already had 99.7%." },
+            { "text": "Precision must be 1, because accuracy is high", "kind": "nearby", "rationale": "High accuracy did not catch a positive." },
+            { "text": "The logistic score z is illegal on rare classes", "kind": "misapplied", "rationale": "The crime is the metric, not the score." }
+          ],
+          "correctExplanation": "99.7% with zero fraud caught is the dummy. Recall tells on it.",
+          "objectiveIds": ["Diagnose a high accuracy that still misses the class you care about"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-mc10-3",
+          "stem": "Precision is true positives over predicted positives; recall is true positives over:",
+          "correctAnswer": "Actual positives, so missing the class you care about drives recall down",
+          "distractors": [
+            { "text": "Actual negatives, so the majority class is the recall story", "kind": "reversed", "rationale": "Recall is about the positives that exist." },
+            { "text": "The learning rate α used in the last step", "kind": "misapplied", "rationale": "A step size is not a count of labels." },
+            { "text": "All labels, which is why recall equals accuracy", "kind": "nearby", "rationale": "All labels is accuracy's denominator." }
+          ],
+          "correctExplanation": "Recall's denominator is the real positives. Miss them and recall falls.",
+          "objectiveIds": ["Compute precision and recall instead of trusting accuracy on a skewed set"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}

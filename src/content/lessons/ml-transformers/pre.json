@@ -1,0 +1,390 @@
+{
+  "courseId": "ml-transformers",
+  "moduleId": "ml-t-pre",
+  "lessons": [
+    {
+      "id": "ml-pretrain-10",
+      "conceptId": "ml-pretrain",
+      "title": "One objective on a lot of unlabeled text",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-lm-obj"],
+      "goDeeper": "ml-scale",
+      "explanation": [
+        "Unlabeled text is cheap compared with a labeled job. Pretraining runs one next-token (or similar) objective on a lot of that text so the stack learns a reusable representation. You are not yet asking for a customer-support tone or a medical label. You are paying to make continuations likely on a broad distribution.",
+        "The representation is the hidden states and the weights that produce them. A later, narrower job can start from those weights instead of from random. That is the contrast: pretrain wide and unlabeled; fine-tune on the distribution you actually serve. Throwing the pretrained stack away is how you pay twice.",
+        "Nothing in this step is a promise that the model 'knows' a fact. It is a promise that the next-token geometry is a useful initialization. If the unlabeled corpus never contained your domain, the initialization is still a language machine, not a specialist."
+      ],
+      "example": "A decoder trained on web text can continue 'The meeting starts at'. A later support fine-tune still uses those states, but now the targets are tickets and replies, not the original web continuation.",
+      "whyItMatters": "Scale, adapters, and prompts all assume you already paid for this representation. If you skip it, every later lesson is just training a transformer from scratch on a small file.",
+      "quiz": [
+        {
+          "id": "ml-pt10-1",
+          "stem": "Pretraining, as this course uses it, is which of these procedures?",
+          "correctAnswer": "Run one objective on a lot of unlabeled text to get a reusable representation",
+          "distractors": [
+            { "text": "Label every token by hand so the first job is already the product", "kind": "reversed", "rationale": "Hand labels are the narrow later job. Pretraining avoids needing them first." },
+            { "text": "Throw the stack away after next-token loss hits zero", "kind": "nearby", "rationale": "The point is reuse, not a discarded run." },
+            { "text": "Replace the causal mask with a database lookup of facts", "kind": "misapplied", "rationale": "The mask stays. Pretraining is still next-token on text." }
+          ],
+          "correctExplanation": "Wide unlabeled objective, states you will reuse. That is the pretrain.",
+          "objectiveIds": ["Run one objective on a lot of unlabeled text to get a reusable representation"],
+          "prerequisiteConceptIds": ["ml-lm-obj"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-pt10-2",
+          "stem": "Contrast pretraining with the narrower job you will later fine-tune for:",
+          "correctAnswer": "Pretrain is a broad unlabeled continuation game; the later job is a smaller target distribution",
+          "distractors": [
+            { "text": "Pretrain is the product you serve; fine-tune is only a tokenizer rebuild", "kind": "reversed", "rationale": "The product is usually the adapted model. Pretrain is the initialization." },
+            { "text": "Both jobs must use identical labels or the residual path dies", "kind": "nearby", "rationale": "The later job is allowed to be different. That is the contrast." },
+            { "text": "Fine-tune must start from random weights or the pretrain is illegal", "kind": "misapplied", "rationale": "Starting from random would throw the representation away." }
+          ],
+          "correctExplanation": "Wide unlabeled first, narrow labeled later. Reuse the states in between.",
+          "objectiveIds": ["Contrast pretraining with the narrower job you will later fine-tune for"],
+          "prerequisiteConceptIds": ["ml-lm-obj"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-pt10-3",
+          "stem": "A corpus that never contained your domain still leaves you with which honest object?",
+          "correctAnswer": "A language machine you can adapt, not a specialist in a job it never saw",
+          "distractors": [
+            { "text": "A guaranteed database of every fact your users will ask", "kind": "misconception", "rationale": "Next-token on other text is not a domain database." },
+            { "text": "Weights that must be discarded before any later head can attach", "kind": "reversed", "rationale": "Those weights are the initialization. Discarding them is paying twice." },
+            { "text": "A bidirectional encoder that can legally leak the next token", "kind": "nearby", "rationale": "Layout is a separate choice. Domain gap is about the corpus." }
+          ],
+          "correctExplanation": "Useful initialization, not a specialist. Adaptation is still the next bill.",
+          "objectiveIds": ["Contrast pretraining with the narrower job you will later fine-tune for"],
+          "prerequisiteConceptIds": ["ml-lm-obj"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "ml-scale-10",
+      "conceptId": "ml-scale",
+      "title": "Parameters, data, and compute as coupled knobs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-pretrain"],
+      "goDeeper": "ml-finetune",
+      "explanation": [
+        "Growing a language model is not a single boast. Parameter count, data, and compute are coupled knobs: more weights want more tokens and more steps, or they undertrain. More tokens want enough steps to see them, or you paid for a corpus you never used. Compute is the budget that buys those steps on those weights.",
+        "Starve data and grow parameters, and the extra capacity memorizes the small set. Starve compute and grow data, and most tokens are never trained on. Starve parameters and pour tokens through a tiny stack, and the mixer cannot spend the extra evidence. None of those failures is 'the model refused to understand'.",
+        "Scale is a design choice under a budget, not a magic that appears at a headline size. The honest report is what you grew, what you starved, and what the loss did on held-out text. Later adaptation cannot repair a pretrain that never saw enough of its own data."
+      ],
+      "example": "A 10× larger stack trained for the same number of tokens as a small one can still be undertrained: the extra weights did not get extra steps. A small stack on 10× the tokens can still be too narrow to use them. The knobs moved separately; the result is not a surprise.",
+      "whyItMatters": "People narrate size as quality. Size without data and steps is a larger underfit or a larger memorizer. Name all three knobs.",
+      "quiz": [
+        {
+          "id": "ml-sc10-1",
+          "stem": "Parameters, data, and compute should be treated as which of these?",
+          "correctAnswer": "Coupled knobs, not independent bragging rights you can grow one at a time",
+          "distractors": [
+            { "text": "Three names for the same scalar, so growing one grows all", "kind": "nearby", "rationale": "They are coupled, not identical. You can starve one on purpose." },
+            { "text": "A ranking of virtue, with more parameters always the honest choice", "kind": "misconception", "rationale": "A larger starved run is not a better pretrain." },
+            { "text": "Optional scenery; only the tokenizer width matters at scale", "kind": "misapplied", "rationale": "The tokenizer is not the compute budget." }
+          ],
+          "correctExplanation": "Grow one, budget the others. A solo boast is how you undertrain.",
+          "objectiveIds": ["Treat parameters, data, and compute as coupled knobs, not independent bragging rights"],
+          "prerequisiteConceptIds": ["ml-pretrain"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-sc10-2",
+          "stem": "If you grow parameter count and starve data, the likely outcome is:",
+          "correctAnswer": "Extra capacity that memorizes a small set instead of using a broader distribution",
+          "distractors": [
+            { "text": "A guaranteed better held-out loss because the stack is larger", "kind": "reversed", "rationale": "Size without data is not a held-out promise." },
+            { "text": "The residual path disappearing, so depth can no longer train", "kind": "nearby", "rationale": "The skip is still there. The failure is data versus capacity." },
+            { "text": "Compute becoming free because unused weights skip the matmul", "kind": "misapplied", "rationale": "Unused capacity still costs if you run it. The starve is data." }
+          ],
+          "correctExplanation": "More weights, few tokens: a memorizer. The other knobs did not move.",
+          "objectiveIds": ["Predict what happens if you grow one knob and starve the others"],
+          "prerequisiteConceptIds": ["ml-pretrain"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-sc10-3",
+          "stem": "Growing the corpus while starving compute typically wastes the extra text because:",
+          "correctAnswer": "Most new tokens never get a training step, so the extra evidence is unread",
+          "distractors": [
+            { "text": "The tokenizer cannot emit IDs once the corpus is larger than the model", "kind": "misconception", "rationale": "The map still runs. The budget of steps is what ran out." },
+            { "text": "Next-token loss is undefined on a corpus you have not finished", "kind": "nearby", "rationale": "The loss is defined per batch. You just never batched the rest." },
+            { "text": "Parameters shrink automatically until they match the old compute", "kind": "reversed", "rationale": "Weights do not shrink as a courtesy. You starved steps." }
+          ],
+          "correctExplanation": "Unread tokens are not training data. Compute is the knob that reads them.",
+          "objectiveIds": ["Predict what happens if you grow one knob and starve the others"],
+          "prerequisiteConceptIds": ["ml-pretrain"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "ml-finetune-10",
+      "conceptId": "ml-finetune",
+      "title": "Continue training on a narrower distribution",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-pretrain", "ml-transfer"],
+      "goDeeper": "ml-peft",
+      "explanation": [
+        "Continuing training on a narrower distribution is fine-tuning: same stack, new targets, smaller corpus, usually a smaller learning rate. You are not throwing the pretrained representation away. You are steering it toward the job you serve — tickets, code, a style — while hoping the general continuation skill survives.",
+        "The failure mode has a name: the narrow steps overwrite features the pretrain paid for. Too large a rate, too many epochs on a tiny set, and the model becomes a parrot of the fine-tune file. Held-out general text gets worse. That is forgetting, not a mysterious personality change.",
+        "Transfer already told you reused features can help or hurt. Fine-tuning is that reuse with gradient steps on the new distribution. Freeze early layers if you want to keep more of the old geometry. Update everything if the new job is far. Measure both the new job and a slice of the old one, or you will not see the overwrite."
+      ],
+      "example": "A pretrained decoder fine-tuned for ten epochs on 400 support tickets starts answering only in that template and loses ordinary next-token fluency on news. Cut the rate, early-stop on a mixed validation set, and the general skill can still be there.",
+      "whyItMatters": "A fine-tune that looks perfect on its own file can have burned the representation you paid to pretrain. Diagnose that before you celebrate the new loss.",
+      "quiz": [
+        {
+          "id": "ml-ft10-1",
+          "stem": "Fine-tuning continues training on a narrower distribution in order to:",
+          "correctAnswer": "Steer the pretrained representation toward a job without throwing the weights away",
+          "distractors": [
+            { "text": "Rebuild the tokenizer so the old IDs cannot be reused", "kind": "nearby", "rationale": "The map usually stays. Fine-tune is a weight update, not a new alphabet." },
+            { "text": "Reset every weight to random so the pretrain cannot leak", "kind": "reversed", "rationale": "Resetting is throwing the representation away." },
+            { "text": "Replace next-token loss with a ranking of model vendors", "kind": "misapplied", "rationale": "The later job still has a loss. Vendor names are not it." }
+          ],
+          "correctExplanation": "Same stack, new distribution, keep the initialization. That is the continue.",
+          "objectiveIds": ["Continue training on a narrower distribution without throwing the representation away"],
+          "prerequisiteConceptIds": ["ml-pretrain", "ml-transfer"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-ft10-2",
+          "stem": "A fine-tune that forgets the general skill you paid to pretrain typically looks like:",
+          "correctAnswer": "New-job loss down, held-out general continuation worse after aggressive narrow steps",
+          "distractors": [
+            { "text": "New-job loss up, because forgetting always improves the target file", "kind": "reversed", "rationale": "Forgetting hurts the old skill. The new file can still look great." },
+            { "text": "The causal mask flipping so future tokens become legal", "kind": "nearby", "rationale": "Layout did not change. The overwrite is in the weights." },
+            { "text": "The embedding table shrinking until rare IDs vanish", "kind": "misapplied", "rationale": "Vocabulary size is not the diagnosis. Overwriting features is." }
+          ],
+          "correctExplanation": "Parrot of the small file, worse on the old distribution. That is the overwrite.",
+          "objectiveIds": ["Diagnose a fine-tune that forgets the general skill you paid to pretrain"],
+          "prerequisiteConceptIds": ["ml-pretrain", "ml-transfer"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-ft10-3",
+          "stem": "If you only watch training loss on the fine-tune file, you will miss forgetting because:",
+          "correctAnswer": "The narrow file can improve while the old general skill is being overwritten",
+          "distractors": [
+            { "text": "Training loss is illegal after pretraining, so the number cannot move", "kind": "misconception", "rationale": "The number still moves. It just does not report the old job." },
+            { "text": "The old skill is stored in the tokenizer and cannot be overwritten", "kind": "reversed", "rationale": "The skill is in the weights. The tokenizer is a map." },
+            { "text": "Residual connections freeze all early layers automatically", "kind": "nearby", "rationale": "Skips do not freeze. You freeze if you choose to." }
+          ],
+          "correctExplanation": "Measure the old job too. The new loss is not a report on what you burned.",
+          "objectiveIds": ["Diagnose a fine-tune that forgets the general skill you paid to pretrain"],
+          "prerequisiteConceptIds": ["ml-pretrain", "ml-transfer"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-peft-10",
+      "conceptId": "ml-peft",
+      "title": "Change a small adapter instead of every weight",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-finetune"],
+      "goDeeper": "ml-prompt",
+      "explanation": [
+        "Full fine-tuning writes a gradient into every weight. Parameter-efficient adaptation freezes most of the stack and trains a small add-on: a low-rank pair on a projection, a prefix of learned tokens, a thin adapter MLP. The pretrained weights stay put. The adapter is what the new job is allowed to move.",
+        "Cost drops because you store and step far fewer tensors, and you can keep one frozen base with many small adapters. Flexibility drops because the update lives in a low-dimensional subspace. A job that needs to rewrite early features may not fit. Full fine-tuning can still be the honest tool when the distribution shift is large.",
+        "Compare the two on the same file: wall-clock, memory, how many tasks you can host, and whether the old skill survived. An adapter that matches full fine-tune on the new job and leaves the base intact is the usual win. An adapter that cannot move enough is not a moral failure. It is a rank that was too small."
+      ],
+      "example": "A low-rank pair on each Wq and Wv, rank 8, on a frozen decoder: you serve the same base to many tenants, each with a small file of weights. A medical-coding job that needs new token-level features may still want a larger rank, or a full pass.",
+      "whyItMatters": "People treat adapters as a free full fine-tune. They are a smaller write. Name the leftover capacity you did not buy.",
+      "quiz": [
+        {
+          "id": "ml-peft10-1",
+          "stem": "Parameter-efficient adaptation changes which of these, by design?",
+          "correctAnswer": "A small adapter, while the pretrained weights stay frozen",
+          "distractors": [
+            { "text": "Every weight in the stack, plus a rebuilt tokenizer", "kind": "reversed", "rationale": "That is full fine-tuning, the thing this method is not." },
+            { "text": "Only the causal mask, leaving every matrix untouched", "kind": "nearby", "rationale": "The mask is layout. Adapters are extra tensors you train." },
+            { "text": "The loss function into a ranking of vendors, with no new tensors", "kind": "misapplied", "rationale": "You still train something. The something is the adapter." }
+          ],
+          "correctExplanation": "Freeze the base, train a small add-on. That is the efficient write.",
+          "objectiveIds": ["Change a small adapter instead of every weight"],
+          "prerequisiteConceptIds": ["ml-finetune"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-peft10-2",
+          "stem": "Compared with full fine-tuning, an adapter is usually:",
+          "correctAnswer": "Cheaper to store and step, and less free to rewrite early features",
+          "distractors": [
+            { "text": "Always stronger on every shift, because fewer weights cannot overfit", "kind": "misconception", "rationale": "Fewer weights can underfit a large shift. That is the flexibility cost." },
+            { "text": "Illegal unless you also unfreeze every layer of the base", "kind": "reversed", "rationale": "Unfreezing everything is full fine-tune again." },
+            { "text": "Identical in memory, because the base is copied per tenant anyway", "kind": "nearby", "rationale": "The point is one frozen base plus small files, not a copy per tenant." }
+          ],
+          "correctExplanation": "You buy cost savings and give up some rewrite capacity. That is the comparison.",
+          "objectiveIds": ["Compare the cost and flexibility of an adapter with full fine-tuning"],
+          "prerequisiteConceptIds": ["ml-finetune"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ml-peft10-3",
+          "stem": "A large distribution shift that an adapter cannot fit is a reason to:",
+          "correctAnswer": "Raise rank or fall back to full fine-tuning, not to pretend the base already moved",
+          "distractors": [
+            { "text": "Delete the pretrained representation so the adapter has more room", "kind": "reversed", "rationale": "Deleting the base throws away the thing the adapter sits on." },
+            { "text": "Treat the mismatch as proof that next-token pretraining never works", "kind": "nearby", "rationale": "The pretrain can still be useful. The adapter was too small." },
+            { "text": "Freeze the adapter and unfreeze nothing, then train longer", "kind": "misapplied", "rationale": "Nothing moving is not a larger write." }
+          ],
+          "correctExplanation": "Rank too small, or shift too large: buy more write, or write everything.",
+          "objectiveIds": ["Compare the cost and flexibility of an adapter with full fine-tuning"],
+          "prerequisiteConceptIds": ["ml-finetune"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "ml-prompt-10",
+      "conceptId": "ml-prompt",
+      "title": "Inference-time control written in tokens",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-lm-obj"],
+      "goDeeper": "ml-align",
+      "explanation": [
+        "A prompt is extra tokens in the model's own language that condition the continuation: instructions, a few examples, a schema. No weight is updated. The causal mix reads those tokens as the past, and the next-token head continues. Control at inference is just a prefix you chose.",
+        "What a prompt can change is the local continuation given the weights you already have: format, a reminder of a constraint, a worked example that sits in context. What it cannot change is a skill that is not in the weights. A prefix cannot install a new feature the pretrain and fine-tune never learned, and it vanishes when the window moves on.",
+        "A weight update, by contrast, rewrites the geometry. That is why a prompt is cheap to try and weak as a substitute for fine-tuning. Few-shot examples in the prefix are still inference-time conditioning. They are not a small adapter, even when they look like training."
+      ],
+      "example": "Prefix: 'Reply as JSON with keys name and date.' The continuation often respects the schema if the model already learned JSON-ish text. Prefix: 'Perform long division in base 7 on 20-digit numbers' does not install that algorithm if the weights never had it.",
+      "whyItMatters": "People treat a clever prefix as a new model. It is a condition. When the condition is not in the weights, you need a write, not a longer instruction.",
+      "quiz": [
+        {
+          "id": "ml-pr10-1",
+          "stem": "Prompting controls a model at inference time by:",
+          "correctAnswer": "Writing extra tokens in its own language that the causal mix treats as the past",
+          "distractors": [
+            { "text": "Stepping every weight on those tokens before the first generated ID", "kind": "reversed", "rationale": "That would be a fine-tune. A prompt does not step weights." },
+            { "text": "Replacing the tokenizer with a new alphabet for the instruction", "kind": "nearby", "rationale": "The same map tokenizes the prefix. Control is in the past, not a new alphabet." },
+            { "text": "Deleting the next-token head so the prefix is the output", "kind": "misapplied", "rationale": "The head still continues. The prefix is context, not the product." }
+          ],
+          "correctExplanation": "Prefix in, continuation out. No write to the weights.",
+          "objectiveIds": ["Control the model at inference time in its own language"],
+          "prerequisiteConceptIds": ["ml-lm-obj"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-pr10-2",
+          "stem": "A prompt can usually change format of the continuation; it cannot usually:",
+          "correctAnswer": "Install a skill the weights never learned, the way a gradient update can",
+          "distractors": [
+            { "text": "Sit in the window as tokens the mix is allowed to read", "kind": "nearby", "rationale": "That is exactly what a prompt can do." },
+            { "text": "Remind the model of a constraint that is already in the weights", "kind": "subtle", "rationale": "A reminder is in-scope for a prefix. A missing skill is not." },
+            { "text": "Condition the next-token head without touching Wq or Wv", "kind": "reversed", "rationale": "Not touching the weights is the definition of prompting." }
+          ],
+          "correctExplanation": "Conditioning is not a write. Missing skills need a write.",
+          "objectiveIds": ["Predict what a prompt can and cannot change that a weight update can"],
+          "prerequisiteConceptIds": ["ml-lm-obj"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-pr10-3",
+          "stem": "Few-shot examples placed in the prefix differ from an adapter because:",
+          "correctAnswer": "They condition one forward pass and disappear with the window; an adapter rewrites weights",
+          "distractors": [
+            { "text": "They update every layer with a gradient before decoding starts", "kind": "reversed", "rationale": "No gradient. That would be training." },
+            { "text": "They freeze the base and store a low-rank pair on disk", "kind": "nearby", "rationale": "That is the adapter. The prefix is not stored as weights." },
+            { "text": "They replace cross-entropy with a preference between two completions", "kind": "misapplied", "rationale": "Preference is a later objective. A prefix is still next-token conditioning." }
+          ],
+          "correctExplanation": "Examples in context are still a prompt. An adapter is a write.",
+          "objectiveIds": ["Predict what a prompt can and cannot change that a weight update can"],
+          "prerequisiteConceptIds": ["ml-lm-obj"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "ml-align-10",
+      "conceptId": "ml-align",
+      "title": "Preference after likelihood, then the fight about reward",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-finetune"],
+      "goDeeper": "ml-inference",
+      "explanation": [
+        "Supervised fine-tune on demonstrations is still next-token likelihood on a chosen distribution of replies. Preference tuning comes after: humans (or a proxy) pick which of two completions is better, and you update so the winner becomes more likely than the loser. That is a different objective from 'the true next ID in this file'.",
+        "A reward model, or a direct preference loss, is the thing you argue about. If the proxy likes verbosity, you will get verbosity. If it likes sycophancy, you will get agreement. The fight is whether the scalar you optimized is the job you wanted, not whether the decoder can still do next-token.",
+        "Likelihood and preference can fight. A completion can be a high-likelihood continuation of the pretrain and still lose a preference pair. Alignment is that later objective, stacked on SFT, not a claim that the base model was already 'helpful'. Name the signal, then name how it can be gamed."
+      ],
+      "example": "Two replies to 'Is this code safe?': a hedged correct no, and a fluent yes that matches the user's hope. A preference rater that rewards agreeableness will push mass onto the yes. Next-token on the pretrain corpus would not have had that rater.",
+      "whyItMatters": "People collapse 'aligned' into 'smarter'. It is a second loss on a preference. If the preference is a bad proxy, the continuation will follow the proxy.",
+      "quiz": [
+        {
+          "id": "ml-al10-1",
+          "stem": "The usual stack this lesson names is which of these sequences?",
+          "correctAnswer": "Supervised fine-tune on demonstrations, then a preference signal, then an argument about that reward",
+          "distractors": [
+            { "text": "Preference first on random weights, then a next-token pretrain to clean up", "kind": "reversed", "rationale": "You need a language machine and SFT before a preference is cheap to use." },
+            { "text": "Tokenizer rebuild, then a leaderboard, with no change to completions", "kind": "nearby", "rationale": "Preference is about which completion wins, not a new alphabet." },
+            { "text": "A single next-token pass that already includes every human preference", "kind": "misapplied", "rationale": "That is the confusion this lesson exists to break." }
+          ],
+          "correctExplanation": "SFT, then preference, then the fight about the proxy. That is the stack.",
+          "objectiveIds": ["Follow supervised fine-tune with a preference signal, then argue about the reward"],
+          "prerequisiteConceptIds": ["ml-finetune"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-al10-2",
+          "stem": "Next-token likelihood differs from a preference that prefers one completion because:",
+          "correctAnswer": "Likelihood scores the true next ID; preference ranks two whole replies against a rater",
+          "distractors": [
+            { "text": "Likelihood already ranks two replies; preference only copies the tokenizer", "kind": "reversed", "rationale": "Likelihood is on a token. Preference is a comparison of completions." },
+            { "text": "Both objectives are identical once the residual path is in place", "kind": "nearby", "rationale": "The skip does not turn a token loss into a pairwise preference." },
+            { "text": "Preference deletes the causal mask so the rater can see the future", "kind": "misapplied", "rationale": "The mask stays. The new object is the comparison, not a leak." }
+          ],
+          "correctExplanation": "One ID versus a pairwise ranking. Those are different losses.",
+          "objectiveIds": ["Distinguish next-token likelihood from a preference that prefers one completion"],
+          "prerequisiteConceptIds": ["ml-finetune"],
+          "difficultyTier": 5,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-al10-3",
+          "stem": "A preference proxy that rewards agreeableness will typically:",
+          "correctAnswer": "Push mass onto replies the rater likes, even when they lose as honest answers",
+          "distractors": [
+            { "text": "Restore next-token loss as the only signal, undoing the preference", "kind": "reversed", "rationale": "The proxy is still in charge. That is the problem." },
+            { "text": "Freeze the SFT weights so no completion can change", "kind": "nearby", "rationale": "Preference is an update. Freezing would skip it." },
+            { "text": "Delete the reward and fall back to unlabeled pretraining automatically", "kind": "misapplied", "rationale": "Nothing automatic undoes a bad proxy." }
+          ],
+          "correctExplanation": "You get what the rater scores. A bad proxy is a different job, not a smarter model.",
+          "objectiveIds": ["Follow supervised fine-tune with a preference signal, then argue about the reward"],
+          "prerequisiteConceptIds": ["ml-finetune"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

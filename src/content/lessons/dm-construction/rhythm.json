@@ -1,0 +1,1061 @@
+{
+  "courseId": "dm-construction",
+  "moduleId": "dm-c-rhythm",
+  "lessons": [
+    {
+      "id": "dm-blast-10",
+      "conceptId": "dm-blast",
+      "title": "Roll that demotes the backbeat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-listening",
+        "mus-meter"
+      ],
+      "goDeeper": "dm-blast-types",
+      "explanation": [
+        "Blast is a grid: kick, snare, and often a cymbal interlock so the ear hears a continuous roll instead of a rock 2-and-4. The backbeat is no longer the only accent. Density is the grammar, not a tempo setting you could have reached with a faster d-beat.",
+        "Contrast that with a thrash d-beat. D-beat still sketches a rock accent you can nod on. A blast turns the kit into a roll under the guitar cell. Same drums, two phrase types. Speeding a d-beat up does not automatically hire the roll.",
+        "Use the blast as a section type the guitar can sit on. Tremolo and choked cells hold still while the kit occupies the bar. If you still need a swinging snare to make the point, you are in the older grammar, even at a high metronome mark."
+      ],
+      "example": "A verse that still answers snare on 2 and 4, then a stretch where kick and snare become a continuous roll under a repeated cell. That stretch is the grammar change. The metronome may barely have moved.",
+      "whyItMatters": "If you only hear 'faster,' you will miss the formal cut. The kit changed jobs. BPM is optional evidence.",
+      "quiz": [
+        {
+          "id": "dm-bls10-1",
+          "stem": "A blast is used as a grid in this lesson when it:",
+          "correctAnswer": "Removes the rock backbeat as the only accent by turning the kit into a roll",
+          "distractors": [
+            {
+              "text": "Keeps 2-and-4 as the only legal accent, just at a higher metronome mark",
+              "kind": "reversed",
+              "rationale": "Keeping 2-and-4 is the older grammar, not the blast grid."
+            },
+            {
+              "text": "Deletes the kick so the snare can be the entire remaining kit",
+              "kind": "nearby",
+              "rationale": "The kick is part of the interlocking, not a deletion."
+            },
+            {
+              "text": "Requires a sung chorus before the roll is allowed to occupy a bar",
+              "kind": "misapplied",
+              "rationale": "A pop chorus is not the ticket to a kit grid."
+            }
+          ],
+          "correctExplanation": "Roll instead of 2-and-4 as the only grid. That is the blast's job.",
+          "objectiveIds": [
+            "Use a blast as a grid that removes the rock backbeat as the only accent"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-listening",
+            "mus-meter"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-bls10-2",
+          "stem": "A thrash d-beat section and a death-metal blast differ as grammars because:",
+          "correctAnswer": "D-beat still sketches a rock accent; a blast turns the kit into a roll",
+          "distractors": [
+            {
+              "text": "A blast keeps 2-and-4 as the only accent; d-beat removes that grid",
+              "kind": "reversed",
+              "rationale": "That swaps the two grammars."
+            },
+            {
+              "text": "They are the same grammar measured at two settings on a metronome",
+              "kind": "nearby",
+              "rationale": "The split is accent pattern, not a tempo knob."
+            },
+            {
+              "text": "D-beat always uses more cymbals than a blast is allowed to touch",
+              "kind": "subtle",
+              "rationale": "Cymbal count is not the grammar split."
+            }
+          ],
+          "correctExplanation": "Nod on 2-and-4 versus a roll that demotes that nod. Two phrase types.",
+          "objectiveIds": [
+            "Contrast a blast section with a thrash d-beat as grammars"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-listening",
+            "mus-meter"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "dm-bls10-3",
+          "stem": "You hear kick and snare as a continuous roll under a held guitar cell. That stretch is:",
+          "correctAnswer": "Blast grammar, where the rock backbeat is no longer the only grid",
+          "distractors": [
+            {
+              "text": "D-beat grammar, because any fast kit still counts as a backbeat",
+              "kind": "nearby",
+              "rationale": "Speed alone does not make a d-beat. Accent pattern does."
+            },
+            {
+              "text": "Proof that speed, rather than grammar, is the only thing that changed",
+              "kind": "reversed",
+              "rationale": "The roll is a grammar change. The metronome may not have moved."
+            },
+            {
+              "text": "A mix argument about smear that does not involve the kit at all",
+              "kind": "misapplied",
+              "rationale": "This is kit grammar, not a desk choice."
+            }
+          ],
+          "correctExplanation": "Continuous roll under a cell is blast grammar. D-beat would still nod on 2 and 4.",
+          "objectiveIds": [
+            "Use a blast as a grid that removes the rock backbeat as the only accent",
+            "Contrast a blast section with a thrash d-beat as grammars"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-listening",
+            "mus-meter"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-blast-20",
+      "conceptId": "dm-blast",
+      "title": "Grid that lets the guitar sit",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": [
+        "dm-listening",
+        "mus-meter"
+      ],
+      "goDeeper": "dm-blast-types",
+      "explanation": [
+        "Once the backbeat is demoted, the blast is a writable grid rather than a burst. Kick, snare, and cymbal interlock at a subdivision the bar can host. You can transcribe it. Calling it noise is a refusal to count, not a description of the kit.",
+        "Thrash's d-beat still argues with a rock accent: the snare on a nod you could have used at half the tempo. Death metal's blast occupies the same drums as a roll so the guitar does not have to swing against a backbeat. The formal cut is that job change, not a BPM contest between two scenes.",
+        "Guitar cells hold still on that grid. Tremolo surfaces and choked ostinatos sit because the kit is already filling the bar. A swinging snare under the same cell would pull the figure back toward a d-beat argument. Choose the grid that matches the cell's job, then write the section pair: blast, then a drop that is still the same cell.",
+        "Half-time after a blast is contrast inside the grammar, not an apology for speed. The cell can stay. The kit changes occupation. If you need a new riff every time the roll stops, the blast was a burst you could not write in, and the grid never became a section type."
+      ],
+      "example": "Blast under a two-bar chromatic cell; half-time under the same cell; blast again. Three occupations of one figure. A d-beat verse in the same minutes would still have nodded on 2 and 4.",
+      "whyItMatters": "The blast is how this style sustains a cell without a rock backbeat arguing. If it stays a burst, you cannot write a section. If it is a grid, you can.",
+      "quiz": [
+        {
+          "id": "dm-bls20-1",
+          "stem": "Using a blast as a writable grid rather than a burst means you:",
+          "correctAnswer": "Treat kick, snare, and cymbal as a transcribable roll the guitar can sit on",
+          "distractors": [
+            {
+              "text": "Treat the kit as undescribable noise so no cell has to be counted",
+              "kind": "reversed",
+              "rationale": "Noise-talk is the refusal this lesson drops."
+            },
+            {
+              "text": "Keep 2-and-4 as the only accent and call the result a blast anyway",
+              "kind": "nearby",
+              "rationale": "Keeping the backbeat is d-beat grammar under a new name."
+            },
+            {
+              "text": "Require a pop chorus between every roll or the grid is not a section",
+              "kind": "misapplied",
+              "rationale": "A chorus is optional. The grid is already a section type."
+            }
+          ],
+          "correctExplanation": "A counted roll the cell can occupy. That is a grid, not a burst.",
+          "objectiveIds": [
+            "Use a blast as a grid that removes the rock backbeat as the only accent"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-listening",
+            "mus-meter"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-bls20-2",
+          "stem": "The formal cut from a thrash d-beat to a blast is best marked by:",
+          "correctAnswer": "A new kit grammar that demotes the rock accent, not by a BPM contest",
+          "distractors": [
+            {
+              "text": "A mandatory tempo jump, because grammar cannot change without BPM",
+              "kind": "reversed",
+              "rationale": "The metronome may barely move. The accent pattern did."
+            },
+            {
+              "text": "A new celebrity on the kit, treated as the entire grammar change",
+              "kind": "nearby",
+              "rationale": "A surname is not a phrase type."
+            },
+            {
+              "text": "A ban on guitar cells so the drums can be the only remaining part",
+              "kind": "subtle",
+              "rationale": "The guitar sits on the grid. It is not fired."
+            }
+          ],
+          "correctExplanation": "Accent pattern moved. Speed is optional evidence, not the cut.",
+          "objectiveIds": [
+            "Contrast a blast section with a thrash d-beat as grammars"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-listening",
+            "mus-meter"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-bls20-3",
+          "stem": "If every time the roll stops you must invent a new riff, that usually means:",
+          "correctAnswer": "The blast stayed a burst, so the grid never became a section the cell could occupy",
+          "distractors": [
+            {
+              "text": "The blast succeeded, because a grid always requires a new song at the drop",
+              "kind": "reversed",
+              "rationale": "A grid lets the same cell sit through a kit change."
+            },
+            {
+              "text": "The guitar was too quiet, and only a louder mix can host a repeated cell",
+              "kind": "nearby",
+              "rationale": "Loudness is playback. The missing object is a section type."
+            },
+            {
+              "text": "Odd meter is required before any blast may be repeated under one cell",
+              "kind": "misapplied",
+              "rationale": "Meter class is not the missing job. Occupying the grid is."
+            }
+          ],
+          "correctExplanation": "Same cell, new kit occupation. If you cannot do that, you did not yet write in the grid.",
+          "objectiveIds": [
+            "Use a blast as a grid that removes the rock backbeat as the only accent"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-listening",
+            "mus-meter"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-blast-types-10",
+      "conceptId": "dm-blast-types",
+      "title": "Texture, not a speed contest",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-blast"
+      ],
+      "goDeeper": "dm-double-kick",
+      "explanation": [
+        "Traditional, bomb, and hammer occupy the kit differently. Traditional alternates kick and snare so the roll is articulated. Bomb puts snare on the pulse with doubled kick underneath. Hammer locks snare and kick together on the pulse. Those are three textures, not three trophies.",
+        "Choose a type for what the guitar needs. An articulated traditional roll leaves space for a chromatic cell to be heard. A bomb thickens the floor under a tremolo surface. A hammer unifies the hits so the bar feels like one machine. Speed ranking among the three is the wrong contest.",
+        "Name what the feet, the snare, and the cymbal are doing before you name a scene. Two recordings at the same metronome mark can still be different types. If you cannot say which occupation is in the bar, you are hearing density as weather."
+      ],
+      "example": "Same guitar cell at the same BPM: traditional alternation, then bomb with doubled kick under the snare pulse. The floor changes. The metronome did not. That is a texture choice.",
+      "whyItMatters": "Blast vocabulary is how you arrange the kit against a cell. A speed contest will pick the wrong type for the bar you are actually writing.",
+      "quiz": [
+        {
+          "id": "dm-blt10-1",
+          "stem": "Traditional, bomb, and hammer blasts are distinguished here by:",
+          "correctAnswer": "What kick, snare, and pulse are doing, not by which one wins a tempo ranking",
+          "distractors": [
+            {
+              "text": "Which type is fastest, treated as the only legal difference among them",
+              "kind": "reversed",
+              "rationale": "A ranking is the contest this lesson refuses."
+            },
+            {
+              "text": "Which famous drummer owns the trademark on each name",
+              "kind": "nearby",
+              "rationale": "A surname is not an occupation of the kit."
+            },
+            {
+              "text": "Whether the guitar is allowed to play during the roll at all",
+              "kind": "misapplied",
+              "rationale": "The guitar sits on all three. The split is the kit."
+            }
+          ],
+          "correctExplanation": "Alternation, snare-plus-doubled-kick, or locked unison hits. Those are jobs.",
+          "objectiveIds": [
+            "Distinguish traditional, bomb, and hammer blasts by what the kit is doing"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-blt10-2",
+          "stem": "Choosing a blast type for a texture rather than a speed contest means you:",
+          "correctAnswer": "Pick the occupation that the guitar cell needs, even if another type could go faster",
+          "distractors": [
+            {
+              "text": "Always pick the fastest type, because texture is just a nickname for speed",
+              "kind": "reversed",
+              "rationale": "Texture is occupation. Speed is a different knob."
+            },
+            {
+              "text": "Ban the guitar so the kit can be ranked without a cell in the way",
+              "kind": "nearby",
+              "rationale": "The cell is why you are choosing a type."
+            },
+            {
+              "text": "Wait for a verse-chorus map before any type is allowed to occupy a bar",
+              "kind": "misapplied",
+              "rationale": "A pop map is not the ticket to a kit texture."
+            }
+          ],
+          "correctExplanation": "The cell hires the type. A trophy does not.",
+          "objectiveIds": [
+            "Choose a blast type for a texture, not for a speed contest"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-blt10-3",
+          "stem": "A snare on the pulse with doubled kick underneath, at the same BPM as an alternating roll, is:",
+          "correctAnswer": "A bomb texture, a different occupation of the kit rather than a faster grammar",
+          "distractors": [
+            {
+              "text": "Proof that BPM moved, because two types cannot share a metronome mark",
+              "kind": "reversed",
+              "rationale": "The metronome can sit still while the occupation changes."
+            },
+            {
+              "text": "A hammer blast, because any doubled kick is already a locked unison hit",
+              "kind": "nearby",
+              "rationale": "Hammer locks snare and kick together. Bomb stacks kick under a snare pulse."
+            },
+            {
+              "text": "Not a blast at all, because only alternation is allowed to use that name",
+              "kind": "subtle",
+              "rationale": "Bomb is a named occupation of the same grammar family."
+            }
+          ],
+          "correctExplanation": "Same BPM, new floor. That is bomb versus traditional, not a race.",
+          "objectiveIds": [
+            "Distinguish traditional, bomb, and hammer blasts by what the kit is doing",
+            "Choose a blast type for a texture, not for a speed contest"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-double-kick-10",
+      "conceptId": "dm-double-kick",
+      "title": "Feet as a subdivision engine",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-blast"
+      ],
+      "goDeeper": "dm-dm-displacement",
+      "explanation": [
+        "Two feet become a subdivision engine: sixteenths, triplets, or a figure that locks the guitar cell. The second pedal is not an automatic fill. It is a way to place kick attacks the bar actually needs, including inside a blast and outside one.",
+        "Write a kick figure that locks the guitar instead of filling space. If the cell is a four-attack chromatic shape, the feet can mark those four, or the off-beats between them. Constant sixteenths that ignore the cell are a leftover engine running with no riff on it.",
+        "Leave air. A lock that never rests buries the guitar's mute and the snare's place in the grammar. The engine is a tool for the cell. Rest is how the next accent can be heard as an accent."
+      ],
+      "example": "A guitar cell of four choked attacks; kicks on those four, then a bar of sixteenths that ignore the cell. The first bar is a lock. The second is a fill occupying the same feet.",
+      "whyItMatters": "Double-kick is how the floor phrases with the riff. If the feet only fill, the guitar cell has no partner, only weather underneath.",
+      "quiz": [
+        {
+          "id": "dm-dkv10-1",
+          "stem": "Two feet used as a subdivision engine are doing which job?",
+          "correctAnswer": "Placing kick attacks the bar needs, as sixteenths, triplets, or a lock to the cell",
+          "distractors": [
+            {
+              "text": "Filling every leftover sixteenth because a second pedal must never rest",
+              "kind": "reversed",
+              "rationale": "The engine is not an automatic fill."
+            },
+            {
+              "text": "Replacing the guitar cell so the feet can be the only remaining riff",
+              "kind": "nearby",
+              "rationale": "The feet partner the cell. They do not fire it."
+            },
+            {
+              "text": "Proving a speed contest the snare is not allowed to join",
+              "kind": "misapplied",
+              "rationale": "A contest is sport. Subdivision is writing."
+            }
+          ],
+          "correctExplanation": "Needed attacks, including rest. That is an engine, not a leftover motor.",
+          "objectiveIds": [
+            "Use two feet as a subdivision engine"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-dkv10-2",
+          "stem": "A kick figure that locks a guitar cell instead of filling space is one that:",
+          "correctAnswer": "Marks the cell's attacks or the off-beats between them, rather than ignoring the riff",
+          "distractors": [
+            {
+              "text": "Runs constant sixteenths that never look at the guitar figure",
+              "kind": "reversed",
+              "rationale": "Ignoring the cell is the fill this lesson refuses."
+            },
+            {
+              "text": "Stops whenever the guitar is muted, because kicks cannot partner a choke",
+              "kind": "nearby",
+              "rationale": "Mute is exactly a shape the feet can lock."
+            },
+            {
+              "text": "Is illegal until a chorale cadence has licensed the next kick",
+              "kind": "misapplied",
+              "rationale": "A cadence is not the ticket to a lock."
+            }
+          ],
+          "correctExplanation": "Lock to the figure. Constant leftover sixteenths are weather.",
+          "objectiveIds": [
+            "Write a kick figure that locks a guitar cell instead of filling space"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-dkv10-3",
+          "stem": "If the feet never rest under a choked cell, the likely cost is:",
+          "correctAnswer": "The guitar's mute and the snare's place get buried, so the next accent cannot read",
+          "distractors": [
+            {
+              "text": "A clearer lock, because more kicks always articulate the cell more honestly",
+              "kind": "reversed",
+              "rationale": "More leftover kicks bury the figure they were meant to lock."
+            },
+            {
+              "text": "That the blast type must change, because rest is forbidden inside any roll",
+              "kind": "nearby",
+              "rationale": "Rest is still a writing choice inside or outside a blast."
+            },
+            {
+              "text": "That drop tuning is required before any kick is allowed to lock a mute",
+              "kind": "subtle",
+              "rationale": "Tuning does not hire rest. The figure does."
+            }
+          ],
+          "correctExplanation": "Air is how an accent stays an accent. An endless engine is fill.",
+          "objectiveIds": [
+            "Use two feet as a subdivision engine",
+            "Write a kick figure that locks a guitar cell instead of filling space"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-dm-displacement-10",
+      "conceptId": "dm-dm-displacement",
+      "title": "Same cell, a later beat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-displacement"
+      ],
+      "goDeeper": "dm-odd-meter",
+      "diagram": "dm-displace",
+      "explanation": [
+        "Start the same cell on a different beat of the bar. The pitches and the internal rhythm stay. Only the downbeat relationship changes. That is displacement: a new section without a new riff, because the grid now hits different attacks of the old figure.",
+        "Predict how a blast grid reaccents the move. A roll that used to land a snare on the cell's first note will, after a shift, land that snare on what used to be the third. The guitar did not rewrite pitches. The kit rewrote which note feels like a downbeat.",
+        "Keep the cell short enough that the shift is audible. A figure that already fills the bar has no later beat to start on. Two to four beats of cell, then the same cell begun on an off-beat, is the working size."
+      ],
+      "example": "A four-attack cell starting on beat one under a blast; then the same four attacks starting on the and of two. The roll now punches a different member of the cell. Same pitches, new downbeat.",
+      "whyItMatters": "Displacement is how riff-as-form gets a next section without a new song. If you only write new pitches, you will miss the cheaper move.",
+      "quiz": [
+        {
+          "id": "dm-dsp10-1",
+          "stem": "Starting the same cell on a different beat of the bar is a move that:",
+          "correctAnswer": "Keeps pitches and internal rhythm, and only changes the downbeat relationship",
+          "distractors": [
+            {
+              "text": "Rewrites the pitches, because a new beat always requires a new riff",
+              "kind": "reversed",
+              "rationale": "New pitches would be a mutation. This move is relocation."
+            },
+            {
+              "text": "Deletes the kit, because displacement is a guitar-only exam with no grid",
+              "kind": "nearby",
+              "rationale": "The grid is what makes the new downbeat audible."
+            },
+            {
+              "text": "Is illegal unless a pop chorus has already returned to beat one",
+              "kind": "misapplied",
+              "rationale": "A chorus is not the ticket to a shifted cell."
+            }
+          ],
+          "correctExplanation": "Same figure, new place in the bar. That is displacement.",
+          "objectiveIds": [
+            "Start the same cell on a different beat of the bar"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-displacement"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-dsp10-2",
+          "stem": "When a blast grid reaccents a displaced cell, you should expect:",
+          "correctAnswer": "The roll to punch a different member of the cell as if it were the downbeat",
+          "distractors": [
+            {
+              "text": "The kit to ignore the shift, because a blast cannot reaccent a guitar figure",
+              "kind": "reversed",
+              "rationale": "The roll is exactly what reaccents the figure."
+            },
+            {
+              "text": "The pitches to change automatically so the old downbeat can be restored",
+              "kind": "nearby",
+              "rationale": "Pitches stay. The downbeat relationship is what moved."
+            },
+            {
+              "text": "A breakdown chug from another genre as the only legal response",
+              "kind": "misapplied",
+              "rationale": "A genre swap is not the reaccent."
+            }
+          ],
+          "correctExplanation": "Same notes, new punch from the roll. That is the prediction.",
+          "objectiveIds": [
+            "Predict how the blast grid reaccents that move"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-displacement"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-dsp10-3",
+          "stem": "A cell that already fills the whole bar is a poor candidate for displacement because:",
+          "correctAnswer": "There is no later beat left to start on, so the shift has nowhere to go",
+          "distractors": [
+            {
+              "text": "Long figures displace more easily, because more notes mean more later beats",
+              "kind": "reversed",
+              "rationale": "A full-bar figure has no leftover start time."
+            },
+            {
+              "text": "Blast grids refuse short cells, so only eight-bar licks may be shifted",
+              "kind": "nearby",
+              "rationale": "Short cells are the working size. Long ones are the problem."
+            },
+            {
+              "text": "Tuning must drop first, or a short cell is not allowed to move in the bar",
+              "kind": "subtle",
+              "rationale": "Tuning is not the missing leftover beat."
+            }
+          ],
+          "correctExplanation": "Leave room in the bar. A figure that already occupies it cannot start later.",
+          "objectiveIds": [
+            "Start the same cell on a different beat of the bar"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-displacement"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-odd-meter-10",
+      "conceptId": "dm-odd-meter",
+      "title": "Five and seven as felt groups",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-odd-meter"
+      ],
+      "goDeeper": "dm-polymeter-dm",
+      "explanation": [
+        "Group five or seven so the bar is felt, not counted out loud. Additive cells — 2+3, 3+2, 2+2+3 — are how a kit and a guitar share an odd bar without reciting numbers. The performance is the grouping. The count is homework.",
+        "Write 5 or 7 as cells a kit can phrase. A snare or cymbal on the long group, kicks on the short ones, guitar matching that additive shape: that is a bar you can nod in pieces. A stream of seven equal attacks with no grouping is a count you will have to say.",
+        "Keep the grouping stable long enough to be a section, then mutate it on purpose. Flipping 2+3 into 3+2 is a felt change. Random leftover beats that do not group are not odd meter. They are a figure that lost its bar."
+      ],
+      "example": "A guitar cell of two choked attacks plus three, snare on the three, repeated. That is 5 as 2+3. Counting 1-2-3-4-5 out loud in the take would have been the homework version.",
+      "whyItMatters": "Odd meter in this style is a felt additive cell. If you only count, the kit has no phrase, and the bar will sound like a stumble rather than a grouping.",
+      "quiz": [
+        {
+          "id": "dm-odm10-1",
+          "stem": "Grouping an odd bar so it is felt rather than counted out loud means you:",
+          "correctAnswer": "Phrase additive cells such as 2+3 that a kit and guitar can nod in pieces",
+          "distractors": [
+            {
+              "text": "Recite 1-2-3-4-5-6-7 in the take as the only honest way to perform the bar",
+              "kind": "reversed",
+              "rationale": "The count is homework. The grouping is the performance."
+            },
+            {
+              "text": "Ban the snare, because odd bars are not allowed to have a kit phrase",
+              "kind": "nearby",
+              "rationale": "The snare is how the long group is often marked."
+            },
+            {
+              "text": "Wait for a major-key cadence before any five-beat bar may begin",
+              "kind": "misapplied",
+              "rationale": "A cadence is not the ticket to an additive cell."
+            }
+          ],
+          "correctExplanation": "Felt groups, not spoken numbers. That is the odd bar as writing.",
+          "objectiveIds": [
+            "Group an odd bar so it is felt, not counted out loud"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-odd-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-odm10-2",
+          "stem": "Writing 5 or 7 as additive cells a kit can phrase looks like:",
+          "correctAnswer": "Short-plus-long groups marked by snare or cymbal, with the guitar matching the shape",
+          "distractors": [
+            {
+              "text": "Seven equal attacks with no grouping, so the bar can only be recited",
+              "kind": "reversed",
+              "rationale": "Ungrouped equals are a count, not a phrase."
+            },
+            {
+              "text": "A required blast type, because odd bars may not use any other kit grammar",
+              "kind": "nearby",
+              "rationale": "The grouping is the meter job. Blast type is a different lever."
+            },
+            {
+              "text": "A pop chorus in 4 that forgives the odd bar after the fact",
+              "kind": "misapplied",
+              "rationale": "A chorus in 4 is not an additive cell in 5 or 7."
+            }
+          ],
+          "correctExplanation": "2+3, 3+2, 2+2+3: the kit marks the groups. The guitar matches.",
+          "objectiveIds": [
+            "Write 5 or 7 as additive cells a kit can phrase"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-odd-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-odm10-3",
+          "stem": "Flipping a stable 2+3 cell into 3+2 as a later section is best read as:",
+          "correctAnswer": "A felt mutation of the grouping, still odd meter, not a lost bar",
+          "distractors": [
+            {
+              "text": "Proof the meter failed, because a grouping may never be mutated on purpose",
+              "kind": "reversed",
+              "rationale": "A stable group, then a flip, is writing. Random leftover beats would be a lost bar."
+            },
+            {
+              "text": "A new song in 4, because any change of group erases the odd bar",
+              "kind": "nearby",
+              "rationale": "The bar is still five. The groups swapped."
+            },
+            {
+              "text": "A breakdown from another genre that must replace the additive cell",
+              "kind": "subtle",
+              "rationale": "A genre swap is not required. The grouping flip is the mutation."
+            }
+          ],
+          "correctExplanation": "Same five, new grouping. That is a section. Ungrouped leftovers would have been a stumble.",
+          "objectiveIds": [
+            "Group an odd bar so it is felt, not counted out loud",
+            "Write 5 or 7 as additive cells a kit can phrase"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell",
+            "mus-odd-meter"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-polymeter-dm-10",
+      "conceptId": "dm-polymeter-dm",
+      "title": "Guitar in three, kit in four",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "dm-odd-meter",
+        "mus-polymeter"
+      ],
+      "goDeeper": "dm-song-form",
+      "explanation": [
+        "Put the guitar in one meter and the kit in another, with a coincidence later. A three-beat cell against a four-beat blast grid is the working picture: two cycles that refuse to agree every bar, then meet. The meeting is the form, not a mistake in the count.",
+        "Mark the bar where the two grids meet. Three against four coincides every twelve beats: four guitar cells, three kit bars, one downbeat they share. Write toward that downbeat. If you cannot point at the meeting, you have two parts that never phrase, only drift.",
+        "Keep each part's meter honest. The guitar cell stays in three; the kit stays in four. Collapsing both into a mumbled 4/4 so the coincidence is easier is a different piece. The tension is the disagreement. The release is the shared downbeat you marked."
+      ],
+      "example": "Guitar repeats a three-beat chromatic cell; kit stays in 4 with a blast. After four guitar cycles the downbeats land together. That bar is the coincidence. The bars before it were the disagreement.",
+      "whyItMatters": "Polymeter is how two parts can argue without leaving the song. If you never mark the meeting, the argument has no cadence of its own.",
+      "quiz": [
+        {
+          "id": "dm-pmt10-1",
+          "stem": "Putting guitar in one meter and kit in another, with a coincidence later, means you:",
+          "correctAnswer": "Let the two grids disagree each bar and write toward a downbeat they will share",
+          "distractors": [
+            {
+              "text": "Force both parts into the same meter immediately so disagreement cannot exist",
+              "kind": "reversed",
+              "rationale": "Collapsing the meters erases the polymeter."
+            },
+            {
+              "text": "Delete the kit whenever the guitar cell is not in 4",
+              "kind": "nearby",
+              "rationale": "The kit staying in 4 is half of the writing."
+            },
+            {
+              "text": "Require a Phrygian lecture before two meters are allowed to share a room",
+              "kind": "misapplied",
+              "rationale": "Meter disagreement is not a mode exam."
+            }
+          ],
+          "correctExplanation": "Disagreement, then a shared downbeat. That is the construction.",
+          "objectiveIds": [
+            "Put guitar in one meter and kit in another, with a coincidence later"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-odd-meter",
+            "mus-polymeter"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-pmt10-2",
+          "stem": "A three-beat guitar cell against a four-beat kit grid typically meets after:",
+          "correctAnswer": "Twelve beats: four guitar cells and three kit bars sharing one downbeat",
+          "distractors": [
+            {
+              "text": "One beat, because two meters are required to agree on every attack",
+              "kind": "reversed",
+              "rationale": "Agreement on every attack would not be two meters."
+            },
+            {
+              "text": "Thirty-two bars, because coincidence is only allowed at a song's end",
+              "kind": "nearby",
+              "rationale": "The lcm of 3 and 4 is twelve beats, not a finale rule."
+            },
+            {
+              "text": "Never, because a blast grid cannot share a downbeat with a guitar cell",
+              "kind": "subtle",
+              "rationale": "The shared downbeat is exactly the meeting this lesson marks."
+            }
+          ],
+          "correctExplanation": "Twelve beats. Point at that bar. That is the coincidence.",
+          "objectiveIds": [
+            "Mark the bar where the two grids meet"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-odd-meter",
+            "mus-polymeter"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "dm-pmt10-3",
+          "stem": "If you cannot point at the bar where guitar-in-3 and kit-in-4 meet, the honest diagnosis is:",
+          "correctAnswer": "The parts are drifting, so the polymeter has no cadence of its own",
+          "distractors": [
+            {
+              "text": "The polymeter succeeded, because a meeting would have ruined the disagreement",
+              "kind": "reversed",
+              "rationale": "The meeting is the form. Endless drift has no cadence."
+            },
+            {
+              "text": "The guitar must be retuned before any coincidence is legal to mark",
+              "kind": "nearby",
+              "rationale": "Tuning is not the missing shared downbeat."
+            },
+            {
+              "text": "A breakdown from another genre is the only remaining way to make them meet",
+              "kind": "misapplied",
+              "rationale": "A genre swap is not the lcm of the two grids."
+            }
+          ],
+          "correctExplanation": "No marked meeting, no cadence. Drift is not the writing.",
+          "objectiveIds": [
+            "Put guitar in one meter and kit in another, with a coincidence later",
+            "Mark the bar where the two grids meet"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-odd-meter",
+            "mus-polymeter"
+          ],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-string-skip-10",
+      "conceptId": "dm-string-skip",
+      "title": "Leaps that refuse the scale",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "goDeeper": "dm-sweep-function",
+      "explanation": [
+        "Leap so the line refuses stepwise comfort. Skipping a string, or taking a sixth or a seventh instead of the next fret, is how a cell stops sounding like a scale leftover. The ear has to jump. That jump is the figure.",
+        "Give the wide interval a harmonic job, not a gym job. The landed pitch should be a clash against the pedal, a chord tone of the cell, or a target the next mutation will use. A leap that only proves the left hand can stretch is sport occupying a bar.",
+        "Keep a rhythm the kit can phrase. A leap on a choked downbeat against a kick is a riff. A leap buried in unaccented sixteenths is a drill. The skip is still an interval with a place in the bar."
+      ],
+      "example": "Low E, skip to a Bb two strings up on the and of two, then back. The tritone leap is the cell. Running the leftover scale between those pitches would have been the gym version.",
+      "whyItMatters": "Wide intervals are how a riff gets profile without adding notes. If the leap has no harmonic job, you spent a stretch and wrote no cell.",
+      "quiz": [
+        {
+          "id": "dm-ssk10-1",
+          "stem": "Leaping so the line refuses stepwise comfort is a claim that:",
+          "correctAnswer": "A skip or a wide interval is the figure, rather than the next-fret leftover of a scale",
+          "distractors": [
+            {
+              "text": "Every line must walk semitones, because leaps are forbidden in this style",
+              "kind": "reversed",
+              "rationale": "The leap is the refusal of that walk."
+            },
+            {
+              "text": "The kit must stop, because a guitar leap cannot share a bar with a grid",
+              "kind": "nearby",
+              "rationale": "The leap still has a place in the bar against the kit."
+            },
+            {
+              "text": "A mode workbook must be finished before any string may be skipped",
+              "kind": "misapplied",
+              "rationale": "A skip is a local interval, not a course gate."
+            }
+          ],
+          "correctExplanation": "The jump is the cell. Stepwise leftover is the comfort this move refuses.",
+          "objectiveIds": [
+            "Leap so the line refuses stepwise comfort"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-ssk10-2",
+          "stem": "A wide interval has a harmonic job rather than a gym job when the landed pitch:",
+          "correctAnswer": "Clashes a pedal, belongs to the cell, or is a target the next mutation will use",
+          "distractors": [
+            {
+              "text": "Only proves the left hand can stretch, with no job in the harmony of the bar",
+              "kind": "reversed",
+              "rationale": "A stretch with no job is the gym this lesson refuses."
+            },
+            {
+              "text": "Must be a sung hook, or a leap is not allowed to count as harmony",
+              "kind": "nearby",
+              "rationale": "The job is pitch against the cell, not a pop hook."
+            },
+            {
+              "text": "Requires a new celebrity to have already made that stretch on a record",
+              "kind": "misapplied",
+              "rationale": "A roster is not a harmonic job."
+            }
+          ],
+          "correctExplanation": "Landed pitch with a job. Stretch-as-proof is sport.",
+          "objectiveIds": [
+            "Give a wide interval a harmonic job, not a gym job"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-ssk10-3",
+          "stem": "A leap buried in unaccented sixteenths, with no kick or mute to mark it, will typically:",
+          "correctAnswer": "Read as a drill rather than a riff, because the interval has no place in the bar",
+          "distractors": [
+            {
+              "text": "Read as a stronger cell, because hiding the leap always increases its job",
+              "kind": "reversed",
+              "rationale": "Hiding the leap is how it becomes a gym run."
+            },
+            {
+              "text": "Force a blast type change before the leap is allowed to have a job",
+              "kind": "nearby",
+              "rationale": "The missing object is an accent, not a catalog of rolls."
+            },
+            {
+              "text": "Retune the guitar automatically so the leap becomes a stepwise walk",
+              "kind": "subtle",
+              "rationale": "Tuning does not place the leap in the bar."
+            }
+          ],
+          "correctExplanation": "Give the skip a downbeat or a kick. Unaccented leftover is a drill.",
+          "objectiveIds": [
+            "Leap so the line refuses stepwise comfort",
+            "Give a wide interval a harmonic job, not a gym job"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-sweep-function-10",
+      "conceptId": "dm-sweep-function",
+      "title": "Function, not a sport",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-harmony"
+      ],
+      "goDeeper": "dm-harmony-two-gtr",
+      "explanation": [
+        "A sweep is an arpeggio with a harmonic job: it outlines a diminished stack, a minor shape, or a target chord tone the cell is about to hit. The right-hand rake is how those pitches are spoken in one gesture. The destination is the writing.",
+        "Refuse a sweep that only proves the right hand. If the arpeggio's pitches are not the harmony of the bar — not the cell, not the pedal clash, not the next section's wall — the gesture is sport. Speed on a shape the song does not use is a drill in the middle of a track.",
+        "Place the landing. An arpeggio that arrives on a kick, an open mute-lift, or a held tremolo surface has a function. An arpeggio that dumps into leftover sixteenths with no arrival is the sport version with a fade instead of an end."
+      ],
+      "example": "A diminished arpeggio swept into the open-string pedal the next cell will grind, landing on a kick. The rake spoke the stack. The landing hired the next bar. A faster rake into nowhere would have been the contest.",
+      "whyItMatters": "Sweeps show up in this repertoire as harmony spoken fast. If you only hear sport, you will write gestures the cell cannot use.",
+      "quiz": [
+        {
+          "id": "dm-swp10-1",
+          "stem": "A sweep used as an arpeggio with a harmonic job is a gesture that:",
+          "correctAnswer": "Outlines a stack or target tone the cell actually uses, spoken in one rake",
+          "distractors": [
+            {
+              "text": "Proves the right hand on a shape the bar's harmony does not employ",
+              "kind": "reversed",
+              "rationale": "A proof on unused pitches is sport, not a job."
+            },
+            {
+              "text": "Deletes the cell so the rake can be the only remaining guitar part",
+              "kind": "nearby",
+              "rationale": "The sweep speaks the harmony. It does not fire the cell."
+            },
+            {
+              "text": "Requires a pop chorus to explain why an arpeggio was allowed to exist",
+              "kind": "misapplied",
+              "rationale": "A chorus is not the license for a harmonic outline."
+            }
+          ],
+          "correctExplanation": "Outline the bar's harmony. The rake is the speaking, not the point.",
+          "objectiveIds": [
+            "Use a sweep as an arpeggio that has a harmonic job"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-swp10-2",
+          "stem": "Refusing a sweep that only proves the right hand means you drop a rake when:",
+          "correctAnswer": "Its pitches are not the cell, the pedal clash, or the next section's wall",
+          "distractors": [
+            {
+              "text": "It is fast, because any speed on guitar is already illegal in this style",
+              "kind": "reversed",
+              "rationale": "Speed is allowed. Unused harmony is the refusal."
+            },
+            {
+              "text": "The kit is blasting, because arpeggios may not share a bar with a roll",
+              "kind": "nearby",
+              "rationale": "A landing on a kick inside a blast can still be a job."
+            },
+            {
+              "text": "A theory course has not yet named every interval in the rake",
+              "kind": "misapplied",
+              "rationale": "Local harmonic job is enough. A course is not the gate."
+            }
+          ],
+          "correctExplanation": "No job in the bar, no sweep. Fast is not the crime. Unused is.",
+          "objectiveIds": [
+            "Refuse a sweep that only proves the right hand"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dm-swp10-3",
+          "stem": "A diminished rake that lands on a kick into the next cell's pedal is best read as:",
+          "correctAnswer": "Function: the arpeggio spoke the stack and hired the following bar",
+          "distractors": [
+            {
+              "text": "Sport: any rake is only a right-hand contest, including this landing",
+              "kind": "reversed",
+              "rationale": "The landing is the job. A contest would dump into nowhere."
+            },
+            {
+              "text": "A new song, because an arpeggio cannot belong to the cell it outlines",
+              "kind": "nearby",
+              "rationale": "Outlining the cell is how the sweep belongs."
+            },
+            {
+              "text": "A breakdown from another genre that must replace the cell after the rake",
+              "kind": "subtle",
+              "rationale": "A genre swap is not required. The pedal is the next wall."
+            }
+          ],
+          "correctExplanation": "Spoke the stack, hired the next bar. That is function, not a trophy.",
+          "objectiveIds": [
+            "Use a sweep as an arpeggio that has a harmonic job",
+            "Refuse a sweep that only proves the right hand"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    }
+  ]
+}

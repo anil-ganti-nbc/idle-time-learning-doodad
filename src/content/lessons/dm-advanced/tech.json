@@ -1,0 +1,455 @@
+{
+  "courseId": "dm-advanced",
+  "moduleId": "dm-a-tech",
+  "lessons": [
+    {
+      "id": "dm-tech-vs-func-5",
+      "conceptId": "dm-tech-vs-func",
+      "title": "Hard is not the job",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["dm-harmony", "dm-riff-cell"],
+      "goDeeper": "dm-virtuosity",
+      "explanation": [
+        "A hard bar is not automatically a better bar. Technicality is density, speed, or awkward fingering. Function is what that bar does to the cell or the form: it states, mutates, contrasts, or cadences. If the bar only proves the hands, it is sport sitting in a song slot.",
+        "A riff cell is a short figure you can repeat, displace, or mutate. Harmony here is often a diminished cell, chromatic planing, or the riff itself as the progression. Rewrite any hard bar that leaves those jobs exactly where they were."
+      ],
+      "example": "A sixteen-note diminished flurry that lands on the same pitch the last bar already owned, then a four-note version of that contour that actually turns the cell. Keep the second. Cut the first.",
+      "whyItMatters": "Later virtuosity and contrast lessons only work if hardness is a cost, not a grade. Judge the job first.",
+      "quiz": [
+        {
+          "id": "dm-tvf5-1",
+          "stem": "A hard part should be judged first by which standard?",
+          "correctAnswer": "The job it does to the cell or the form",
+          "distractors": [
+            { "text": "How many notes it packs into one bar", "kind": "nearby", "rationale": "Note-count is technicality, not the job." },
+            { "text": "Whether it is the hardest bar on the record", "kind": "reversed", "rationale": "Hardest is a contest, not a function test." },
+            { "text": "Whether a famous player could not play it", "kind": "misapplied", "rationale": "A roster is not a musical job." }
+          ],
+          "correctExplanation": "Function is the job. Density is only the cost of doing that job.",
+          "objectiveIds": ["Judge a hard part by the job it does"],
+          "prerequisiteConceptIds": ["dm-harmony", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-tvf5-2",
+          "stem": "A hard bar that does not change the cell or the form should be:",
+          "correctAnswer": "Rewritten until the cell or the form actually moves",
+          "distractors": [
+            { "text": "Kept, because unused hardness is still a job", "kind": "reversed", "rationale": "Unused hardness is the thing this lesson cuts." },
+            { "text": "Moved to a faster metronome so the job appears", "kind": "nearby", "rationale": "Tempo is not a substitute for a formal job." },
+            { "text": "Justified by naming a more famous guitarist", "kind": "misapplied", "rationale": "A name does not rewrite the bar." }
+          ],
+          "correctExplanation": "If the cell and the form sit still, the hard bar is a demonstration. Rewrite it.",
+          "objectiveIds": ["Rewrite a hard bar that does not change the cell or the form"],
+          "prerequisiteConceptIds": ["dm-harmony", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-tvf5-3",
+          "stem": "A sixteen-note flurry that lands where the last bar already sat is:",
+          "correctAnswer": "Technicality without a job; the four-note turn is the rewrite",
+          "distractors": [
+            { "text": "Automatically better because more notes always do more work", "kind": "misconception", "rationale": "More notes are a cost, not a job." },
+            { "text": "Proof that the cell mutated, since speed is a mutation", "kind": "nearby", "rationale": "Speed is not a mutation of the cell." },
+            { "text": "Required so death-metal harmony can count as real", "kind": "misapplied", "rationale": "Harmony here is cell and planing, not a note quota." }
+          ],
+          "correctExplanation": "Same landing, extra notes: no job. The shorter turn actually moves the cell.",
+          "objectiveIds": ["Judge a hard part by the job it does"],
+          "prerequisiteConceptIds": ["dm-harmony", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-tech-vs-func-10",
+      "conceptId": "dm-tech-vs-func",
+      "title": "Judge the bar by what it changes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-harmony", "dm-riff-cell"],
+      "goDeeper": "dm-virtuosity",
+      "explanation": [
+        "Technicality is a cost you spend on density, leaps, or odd grouping. Function is the job that spending does: state the cell, mutate it, contrast a section, or land a cadence. Harmony here is often a diminished cell, chromatic planing, or the riff standing in for a progression. Spend only if one of those jobs moves.",
+        "A riff cell is a short figure you can repeat, displace, or mutate. When a hard bar leaves that figure and the form exactly where they were, the bar is a demonstration. Rewrite it: drop a flourish, keep the contour, or give the flourish a job such as a pickup into the next cell.",
+        "Berklee-style technique still answers to the phrase. MIT analysis questions stay the same on this repertoire: what repeats, what contrasts, what is the cell. A hard part that cannot answer those three is noise with a high note-count. Judge it by the job, then keep or cut."
+      ],
+      "example": "Keep a chromatic pickup that aims the next downbeat. Cut a sweep that restates the same landing the last bar already owned. The first changes the cell's approach. The second is unused hardness.",
+      "whyItMatters": "If hardness is a grade, every later lesson about blur, breath, and contrast will sound like taste. It is a rewrite rule.",
+      "quiz": [
+        {
+          "id": "dm-tvf10-1",
+          "stem": "Technicality and function split on a hard bar when you ask:",
+          "correctAnswer": "Whether the spending changes the cell, the contrast, or the cadence",
+          "distractors": [
+            { "text": "Whether the bar is faster than the last record by this player", "kind": "nearby", "rationale": "A speed contest is not the function test." },
+            { "text": "Whether unused hardness is already a complete musical job", "kind": "reversed", "rationale": "Unused hardness is the failure this lesson names." },
+            { "text": "Whether a V–I chart can be invented under the riff", "kind": "misapplied", "rationale": "This harmony is cell and planing, not a forced chorale." }
+          ],
+          "correctExplanation": "Spend on density only if the cell, the contrast, or the cadence moves.",
+          "objectiveIds": ["Judge a hard part by the job it does"],
+          "prerequisiteConceptIds": ["dm-harmony", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-tvf10-2",
+          "stem": "The honest rewrite of a hard bar that does not move the cell is:",
+          "correctAnswer": "Drop the flourish, keep the contour, or give the flourish a pickup job",
+          "distractors": [
+            { "text": "Add a second flourish so the unused hardness looks intentional", "kind": "reversed", "rationale": "Another flourish doubles the unused cost." },
+            { "text": "Raise the metronome until the same landing feels like a change", "kind": "nearby", "rationale": "Tempo does not rewrite the cell." },
+            { "text": "Replace the riff cell with a celebrity name in the chart", "kind": "misapplied", "rationale": "A name is not a formal rewrite." }
+          ],
+          "correctExplanation": "Rewrite means a job: contour, pickup, or cut. Not more unused notes.",
+          "objectiveIds": ["Rewrite a hard bar that does not change the cell or the form"],
+          "prerequisiteConceptIds": ["dm-harmony", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-tvf10-3",
+          "stem": "A sweep that restates the last bar's landing fails the job test because:",
+          "correctAnswer": "The cell and the form sit still; only the note-count rose",
+          "distractors": [
+            { "text": "Sweeps are banned once a riff cell has been stated once", "kind": "nearby", "rationale": "A sweep can have a job. This one does not." },
+            { "text": "The landing change is already enough even if the cell never moves", "kind": "reversed", "rationale": "Same landing means the cell did not move." },
+            { "text": "Death-metal harmony requires a sweep before any cell can count", "kind": "misapplied", "rationale": "Harmony is cell and planing, not a sweep quota." }
+          ],
+          "correctExplanation": "Same landing, higher note-count: demonstration. The job did not move.",
+          "objectiveIds": ["Judge a hard part by the job it does"],
+          "prerequisiteConceptIds": ["dm-harmony", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-virtuosity-10",
+      "conceptId": "dm-virtuosity",
+      "title": "Speed that erases the cell",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-tech-vs-func"],
+      "goDeeper": "dm-riffs-as-breath",
+      "explanation": [
+        "Speed can erase the cell you were supposed to hear. Virtuosity is a risk, not a compliment: the right hand can outrun the contour until the ear only has a smear. If a slower statement of the same figure still carries the job, the blur is unused cost. Choose the statement the ear can keep.",
+        "A cell is a short figure. Once the attacks fuse, you cannot tell repeat from mutation from fill. That is the risk. Technicality versus function already asked whether the bar does a job. This lesson asks whether the job is still audible after the spending.",
+        "Keep a slower take when the contour, the accent, and the landing stay checkable. Use speed only where it is the surface the cell needs, such as a tremolo that turns a pitch into a plane. Blur that hides the plane is a cover-up, not a harder piece."
+      ],
+      "example": "Play the cell at a tempo where every accent is nameable, then double it until the accents fuse. If a listener can no longer hum the contour, the faster take erased the job. Keep the slower statement.",
+      "whyItMatters": "Breath and odd phrasing need a cell the ear can hold. A blur leaves those lessons nothing to turn.",
+      "quiz": [
+        {
+          "id": "dm-vir10-1",
+          "stem": "Virtuosity becomes a risk in this lesson when speed:",
+          "correctAnswer": "Erases the cell you were supposed to hear as a contour",
+          "distractors": [
+            { "text": "Proves the piece is finished because blur is the whole job", "kind": "reversed", "rationale": "Blur that hides the cell is the failure, not the finish." },
+            { "text": "Is slower than the last take, which always means a weaker cell", "kind": "nearby", "rationale": "Slower can be the audible statement." },
+            { "text": "Requires a biography of the player before the cell can count", "kind": "misapplied", "rationale": "A biography does not restore a lost contour." }
+          ],
+          "correctExplanation": "The risk is an inaudible cell. Speed is only the cost that produced the smear.",
+          "objectiveIds": ["Name speed that erases the cell you were supposed to hear"],
+          "prerequisiteConceptIds": ["dm-tech-vs-func"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-vir10-2",
+          "stem": "When a slower statement still carries the job, the honest choice is:",
+          "correctAnswer": "Keep the slower statement so the contour stays checkable",
+          "distractors": [
+            { "text": "Keep the blur, because unused speed is already the piece", "kind": "reversed", "rationale": "Unused speed is the risk this lesson refuses." },
+            { "text": "Add a second smear so the lost cell looks intentional", "kind": "nearby", "rationale": "Another smear does not restore the contour." },
+            { "text": "Replace the cell with a famous soloist's name in the chart", "kind": "misapplied", "rationale": "A name is not a statement of the cell." }
+          ],
+          "correctExplanation": "If the slow take still does the job, the blur is unused cost. Keep the statement.",
+          "objectiveIds": ["Choose a slower statement of the cell over a blur"],
+          "prerequisiteConceptIds": ["dm-tech-vs-func"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-vir10-3",
+          "stem": "A doubled take where accents fuse and the contour cannot be hummed means:",
+          "correctAnswer": "Speed erased the cell; the slower take is the one that still works",
+          "distractors": [
+            { "text": "The cell improved, because fusion is a more advanced mutation", "kind": "nearby", "rationale": "Fusion that hides the contour is loss, not mutation." },
+            { "text": "The slower take failed, because only blur can state a cell", "kind": "reversed", "rationale": "The slower take is the audible statement." },
+            { "text": "Harmony now requires a V–I under the smear to count as music", "kind": "misapplied", "rationale": "A forced chorale will not recover the contour." }
+          ],
+          "correctExplanation": "If you cannot hum it, the job is gone. Choose the slower statement.",
+          "objectiveIds": ["Name speed that erases the cell you were supposed to hear"],
+          "prerequisiteConceptIds": ["dm-tech-vs-func"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-riffs-as-breath-10",
+      "conceptId": "dm-riffs-as-breath",
+      "title": "Where a player would inhale",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-riff-cell"],
+      "goDeeper": "dm-odd-phrasing",
+      "explanation": [
+        "Breath is a formal hinge. Where a player would inhale is usually where the riff cell turns: a rest, a held note, a mute, or a pickup into the next statement. The cell is still a short figure you can repeat or mutate. The inhale marks the group the ear can hold.",
+        "A riff that never breathes becomes a wall. Attacks stack until repeat, mutation, and fill are the same smear. The ear loses the figure not because the pitches were wrong, but because no hinge told it when one statement ended and the next began.",
+        "Write the turn on purpose. Leave air, choke a chord, or land a longer note where lungs would reset. Odd phrasing later will hang phrases across the kit's bar; it still needs those hinges or the crossing will read as more wall."
+      ],
+      "example": "A four-attack cell, then a choked eighth where a singer would breathe, then the cell again. Remove the choke and loop the attacks for sixteen bars. The second version is the riff the ear loses.",
+      "whyItMatters": "Phrasing across barlines needs a cell with hinges. Without breath, later odd groups are only more density.",
+      "quiz": [
+        {
+          "id": "dm-brth10-1",
+          "stem": "The cell should usually turn at which kind of place?",
+          "correctAnswer": "Where a player would breathe: rest, mute, hold, or pickup",
+          "distractors": [
+            { "text": "Wherever the metronome is highest on that page", "kind": "nearby", "rationale": "Tempo is not a hinge." },
+            { "text": "Only after the riff has run with no air for a full page", "kind": "reversed", "rationale": "No air is the riff the ear loses." },
+            { "text": "Wherever a celebrity soloist is named in the liner notes", "kind": "misapplied", "rationale": "A name is not a formal hinge." }
+          ],
+          "correctExplanation": "Inhale, mute, hold, pickup. Those are the turns the ear can keep.",
+          "objectiveIds": ["Turn the cell where a player would breathe"],
+          "prerequisiteConceptIds": ["dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-brth10-2",
+          "stem": "A riff that never breathes typically fails because:",
+          "correctAnswer": "The ear loses the figure once repeat, mutation, and fill fuse",
+          "distractors": [
+            { "text": "The pitches become illegal unless a V–I is written under them", "kind": "misapplied", "rationale": "The loss is grouping, not a missing chorale." },
+            { "text": "The ear prefers walls, so a hinge would erase the cell", "kind": "reversed", "rationale": "The hinge is what lets the cell be heard." },
+            { "text": "The kit must stop playing or the riff cannot have a cell", "kind": "nearby", "rationale": "The kit can keep a grid. The riff still needs a hinge." }
+          ],
+          "correctExplanation": "No hinge, no group. Repeat and fill become the same smear.",
+          "objectiveIds": ["Predict a riff that never breathes and why the ear loses it"],
+          "prerequisiteConceptIds": ["dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-brth10-3",
+          "stem": "Removing the choked eighth between two statements of a four-attack cell will:",
+          "correctAnswer": "Turn a hinged loop into a wall the ear cannot group",
+          "distractors": [
+            { "text": "Improve the cell, because hinges are unused technicality", "kind": "reversed", "rationale": "The hinge is the turn, not unused cost." },
+            { "text": "Create a twelve-tone row the kit is required to follow", "kind": "misapplied", "rationale": "A mute is grouping, not a serial system." },
+            { "text": "Force the next section to be a verse-chorus return", "kind": "nearby", "rationale": "Breath is local grouping, not a pop map." }
+          ],
+          "correctExplanation": "The choke was the inhale. Without it the loop becomes a wall.",
+          "objectiveIds": ["Predict a riff that never breathes and why the ear loses it"],
+          "prerequisiteConceptIds": ["dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-odd-phrasing-10",
+      "conceptId": "dm-odd-phrasing",
+      "title": "Phrase against the kit's bar",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-odd-meter", "dm-riffs-as-breath"],
+      "goDeeper": "dm-polyrhythm-dm",
+      "diagram": "dm-phrase-group",
+      "explanation": [
+        "Phrases do not have to respect the bar the kit is in. Odd meter in this style is a grouping you feel — additive fives and sevens a kit can phrase — not a count said out loud. The guitar phrase can be a different length, hanging across those barlines, as long as breath still marks the guitar's own hinge.",
+        "Write the crossing on purpose. A five-attack guitar cell over a 4/4 blast, or a seven-note shape over a 3+3+2 kit, will disagree for a stretch. That disagreement is the phrasing. It is not a mistake unless nobody can say where the two grids next land together.",
+        "Mark the agreement. After two, three, or four cycles the phrase downbeat and the kit barline coincide again. Circle that bar. If they never meet, you wrote two pieces glued at the mix, not a phrase against a bar. The diagram is that meeting, not a roster of odd time signatures."
+      ],
+      "example": "Guitar states a five-attack cell with a mute on the fifth. Kit stays in 4. After four guitar cells and five kit bars they share a downbeat. Circle that attack. That is the next agreement.",
+      "whyItMatters": "Polyrhythm in the kit is a different split: hands versus feet. This split is phrase versus bar. Name which one you wrote.",
+      "quiz": [
+        {
+          "id": "dm-odph10-1",
+          "stem": "Phrasing across barlines means you write a guitar phrase that:",
+          "correctAnswer": "Does not respect the bar the kit is in, yet still has a hinge",
+          "distractors": [
+            { "text": "Always matches the kit bar so the phrase cannot cross", "kind": "reversed", "rationale": "Matching the bar is ordinary alignment, not this phrasing." },
+            { "text": "Must be counted out loud or the odd meter does not count", "kind": "nearby", "rationale": "Odd meter here is felt grouping, not a spoken count." },
+            { "text": "Replaces the riff cell with a celebrity time-signature list", "kind": "misapplied", "rationale": "A list of meters is not a phrase." }
+          ],
+          "correctExplanation": "The phrase ignores the kit's bar. Breath still marks the guitar's own group.",
+          "objectiveIds": ["Write a phrase that does not respect the bar the kit is in"],
+          "prerequisiteConceptIds": ["dm-odd-meter", "dm-riffs-as-breath"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-odph10-2",
+          "stem": "After a five-attack guitar cell loops over a 4/4 kit, you should mark:",
+          "correctAnswer": "The attack where phrase downbeat and kit barline next agree",
+          "distractors": [
+            { "text": "Only the first downbeat, because later meetings do not count", "kind": "nearby", "rationale": "The next agreement is the formal fact." },
+            { "text": "Nothing, because the two grids are forbidden to meet again", "kind": "reversed", "rationale": "If they never meet you glued two pieces, not a phrase." },
+            { "text": "The singer's name as a substitute for the meeting point", "kind": "misapplied", "rationale": "A name is not a coincidence of grids." }
+          ],
+          "correctExplanation": "Circle the shared downbeat. That is where phrase and barline agree again.",
+          "objectiveIds": ["Mark where the phrase and the barline next agree"],
+          "prerequisiteConceptIds": ["dm-odd-meter", "dm-riffs-as-breath"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-odph10-3",
+          "stem": "If the guitar phrase and the kit barline never coincide again, you wrote:",
+          "correctAnswer": "Two pieces glued at the mix, not a phrase against a bar",
+          "distractors": [
+            { "text": "A successful crossing, because agreement would cancel the phrase", "kind": "reversed", "rationale": "Agreement is how the crossing reads as one piece." },
+            { "text": "A hemiola in the feet that does not involve the guitar at all", "kind": "nearby", "rationale": "This lesson is phrase versus bar, not hands versus feet." },
+            { "text": "A twelve-tone row that forbids any shared downbeat", "kind": "misapplied", "rationale": "Serial rules are not this phrasing problem." }
+          ],
+          "correctExplanation": "No later meeting means two musics stacked. Mark a shared downbeat or rewrite.",
+          "objectiveIds": ["Mark where the phrase and the barline next agree"],
+          "prerequisiteConceptIds": ["dm-odd-meter", "dm-riffs-as-breath"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-polyrhythm-dm-10",
+      "conceptId": "dm-polyrhythm-dm",
+      "title": "Hands and feet on two clocks",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-blast-types", "mus-hemiola"],
+      "goDeeper": "dm-contrast",
+      "diagram": "dm-poly-riff",
+      "explanation": [
+        "Hands and feet can run different subdivisions on the same kit. A hemiola is three pulses in the time of two, or the reverse. In this grammar that can mean hands in three against feet in two, or a 4:3 figure, while a pulse you can still nod to survives under both clocks.",
+        "Blast vocabulary is already a set of occupations: traditional blast as a kick-and-snare roll, bomb blast with the kick on a different job, hammer leaning on the hands. Polyrhythm is a further split inside one of those textures. It is not a faster blast. It is two groupings sharing a pulse.",
+        "Write a 3:2 or 4:3 the kit can actually play. State the pulse on a cymbal or a repeating kick so the ear has a home. If neither grouping can be tapped, you wrote density without a ratio. The diagram is the two clocks and the shared nod, not a sport ranking of the fill."
+      ],
+      "example": "Feet in even eights, hands in a three-grouping that cycles against them, ride stating the quarter. After three hand groups and two foot groups they meet. That meeting is the pulse you kept.",
+      "whyItMatters": "Contrast later will need a texture you can leave. A ratio with a pulse is a texture. A smear of extra notes is not.",
+      "quiz": [
+        {
+          "id": "dm-poly10-1",
+          "stem": "Polyrhythm in this kit grammar means you put:",
+          "correctAnswer": "Hands and feet in different subdivisions that still share a pulse",
+          "distractors": [
+            { "text": "Hands and feet in the same subdivision, only louder", "kind": "reversed", "rationale": "Same subdivision is unison, not two clocks." },
+            { "text": "A faster blast type so speed can replace the ratio", "kind": "nearby", "rationale": "Blast type is occupation. Polyrhythm is a ratio." },
+            { "text": "A spoken count of every attack instead of a felt pulse", "kind": "misapplied", "rationale": "The pulse has to be playable, not recited." }
+          ],
+          "correctExplanation": "Two subdivisions, one nod. That is the kit split this lesson writes.",
+          "objectiveIds": ["Put hands and feet in different subdivisions"],
+          "prerequisiteConceptIds": ["dm-blast-types", "mus-hemiola"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-poly10-2",
+          "stem": "A 3:2 or 4:3 kit figure still has to do which extra job?",
+          "correctAnswer": "State a pulse a listener can nod to under both groupings",
+          "distractors": [
+            { "text": "Erase the pulse so the ratio can count as more advanced", "kind": "reversed", "rationale": "No pulse means density without a ratio." },
+            { "text": "Name a blast type as a speed rank instead of an occupation", "kind": "nearby", "rationale": "Blast types are textures, not ranks." },
+            { "text": "Replace the kit with a twelve-tone row in the feet", "kind": "misapplied", "rationale": "A serial row is not a 3:2 figure." }
+          ],
+          "correctExplanation": "The ratio is only audible if a pulse survives. Write that pulse.",
+          "objectiveIds": ["Write a 3:2 or 4:3 kit figure that still states a pulse"],
+          "prerequisiteConceptIds": ["dm-blast-types", "mus-hemiola"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-poly10-3",
+          "stem": "Feet in eights against hands in three, with a ride on the quarter, is honest when:",
+          "correctAnswer": "The two groupings meet on a shared pulse you can still tap",
+          "distractors": [
+            { "text": "The ride is removed so neither grouping can be found", "kind": "reversed", "rationale": "Removing the pulse hides the ratio." },
+            { "text": "The figure is only a traditional blast played slightly faster", "kind": "nearby", "rationale": "A faster blast is not two subdivisions." },
+            { "text": "The meeting is replaced by a brand name on the snare drum", "kind": "misapplied", "rationale": "A brand is not a coincidence of clocks." }
+          ],
+          "correctExplanation": "Three against two is a meeting on a pulse. The ride is one way to state it.",
+          "objectiveIds": ["Write a 3:2 or 4:3 kit figure that still states a pulse"],
+          "prerequisiteConceptIds": ["dm-blast-types", "mus-hemiola"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-contrast-10",
+      "conceptId": "dm-contrast",
+      "title": "The slow riff after the blast",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-song-form"],
+      "goDeeper": "dm-prog-form",
+      "explanation": [
+        "Another blast is the easy next bar. A slow riff after a blast is the harder writing problem, because song form here is an order of cells and textures — intro, riff A, riff B, return, or a refusal of return — not a pile of the same density. Contrast is the technical move.",
+        "Plan the drop. Half-time, a held cell, a dry kit, a vocal that suddenly occupies more of the bar: those are section changes even when the pitch set barely moves. Adding another layer of notes is not contrast. It is the same weather with more rain.",
+        "Density is a choice you can leave. If every section is a packed blast, there is no form to hear, only duration. The slow riff has to be a cell you can sing, or the drop will feel like the song stopped rather than a section arriving. Write the arrival."
+      ],
+      "example": "A blast under a chromatic cell, then the same cell at half speed over a dry kit with the vocal on the downbeats. The second stretch is the section. A third blast with extra picks is not.",
+      "whyItMatters": "Progressive long form develops sections. If you cannot write a contrast, you will only be able to stack.",
+      "quiz": [
+        {
+          "id": "dm-ctr10-1",
+          "stem": "The harder writing problem after a blast is usually:",
+          "correctAnswer": "A slow riff that arrives as a section, not another packed blast",
+          "distractors": [
+            { "text": "Another blast with more notes so density can replace form", "kind": "reversed", "rationale": "More density is the easy bar this lesson refuses." },
+            { "text": "A celebrity guest so the section change can be a cameo", "kind": "nearby", "rationale": "A cameo is not a formal contrast." },
+            { "text": "A verse-chorus map copied from a pop chart before any cell", "kind": "misapplied", "rationale": "Song form here is an order of cells and textures." }
+          ],
+          "correctExplanation": "The slow riff is the section. Another blast is the same weather.",
+          "objectiveIds": ["Treat a slow riff after a blast as the harder writing problem"],
+          "prerequisiteConceptIds": ["dm-song-form"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-ctr10-2",
+          "stem": "Contrast as the technical move means you plan:",
+          "correctAnswer": "A drop in density or texture, not another layer of notes",
+          "distractors": [
+            { "text": "A thicker blast so contrast can be measured in note-count", "kind": "reversed", "rationale": "Note-count is the layer this lesson drops." },
+            { "text": "A louder mix of the same blast so volume stands in for form", "kind": "nearby", "rationale": "Loudness is playback, not a section." },
+            { "text": "A biography paragraph that explains why the blast continues", "kind": "misapplied", "rationale": "Gossip is not a texture change." }
+          ],
+          "correctExplanation": "Plan the drop. Another layer is not contrast.",
+          "objectiveIds": ["Plan contrast as the technical move, not another layer of density"],
+          "prerequisiteConceptIds": ["dm-song-form"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-ctr10-3",
+          "stem": "If every section is a packed blast, the form problem you should expect is:",
+          "correctAnswer": "Duration without sections, because no texture ever arrives",
+          "distractors": [
+            { "text": "Automatic long form, because density is already development", "kind": "reversed", "rationale": "Density is not development and not contrast." },
+            { "text": "A clearer riff cell, because walls always reveal contour", "kind": "nearby", "rationale": "Walls hide contour; they do not write sections." },
+            { "text": "A required V–I so the blasts can count as a chorale", "kind": "misapplied", "rationale": "A forced chorale is not this form problem." }
+          ],
+          "correctExplanation": "Same weather, more minutes. That is duration, not form.",
+          "objectiveIds": ["Plan contrast as the technical move, not another layer of density"],
+          "prerequisiteConceptIds": ["dm-song-form"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

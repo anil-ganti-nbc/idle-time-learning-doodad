@@ -1,0 +1,330 @@
+{
+  "courseId": "ml-transformers",
+  "moduleId": "ml-t-arch",
+  "lessons": [
+    {
+      "id": "ml-positional-10",
+      "conceptId": "ml-positional",
+      "title": "Order has to be supplied to the mixer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-self-attn"],
+      "goDeeper": "ml-transformer",
+      "explanation": [
+        "Permutation of the tokens does not change an unpositioned self-attention mix: every query still scores every key by content alone. 'Dog bites man' and 'man bites dog' are the same bag of vectors. The mixer has no order of its own. You have to add one.",
+        "The usual add is a positional vector combined with the token embedding before the first block: a learned table of positions, a fixed sinusoid, or a rotation of the query and key that encodes relative offset. Each recipe is a way to make 'left of' and 'right of' visible to the scores.",
+        "If you shuffle the positions independently of the tokens, the mixer will treat the shuffle as the order. If you omit positions entirely, no later residual can invent a sequence axis the scores never saw. Order is an input, not an emergent courtesy of depth."
+      ],
+      "example": "Unpositioned, the keys for 'not' and 'happy' score the same regardless of which came first. A negation that must bind to the next adjective has nothing in the mix that says 'next'. A relative offset on the query-key product can put that nextness back.",
+      "whyItMatters": "People talk as if transformers 'know word order'. They know whatever positional recipe you fed the scores. Change the recipe and the same weights read a different sequence.",
+      "quiz": [
+        {
+          "id": "ml-pos10-1",
+          "stem": "Self-attention has no order of its own, so a sequence model must:",
+          "correctAnswer": "Add positional information so the scores can see left-of and right-of",
+          "distractors": [
+            { "text": "Delete the keys so only the values remember the original order", "kind": "reversed", "rationale": "Values do not secretly store order the scores never saw." },
+            { "text": "Rely on softmax to restore the order of the embedding table", "kind": "nearby", "rationale": "Softmax normalizes scores. It does not invent positions." },
+            { "text": "Train longer until the residual path invents a time axis", "kind": "misapplied", "rationale": "Depth does not create an axis the mixer was never given." }
+          ],
+          "correctExplanation": "Order is an input to the scores. The mixer will not grow one.",
+          "objectiveIds": ["Add order because attention has none of its own"],
+          "prerequisiteConceptIds": ["ml-self-attn"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-pos10-2",
+          "stem": "A permutation of tokens in an unpositioned mixer does which of these?",
+          "correctAnswer": "Leaves the content scores unchanged, because they never used position",
+          "distractors": [
+            { "text": "Reverses the residual path so gradients walk backward in time", "kind": "nearby", "rationale": "Residuals are not a time axis. Positions are." },
+            { "text": "Forces every query to score only its original left neighbor", "kind": "reversed", "rationale": "Without positions, neighbors are not marked as left." },
+            { "text": "Squares the sequence length a second time as a penalty", "kind": "misapplied", "rationale": "Permutation is not a cost. It is a missing axis." }
+          ],
+          "correctExplanation": "Same bag of vectors, same scores. Order was never in the mix.",
+          "objectiveIds": ["Predict what a permutation of tokens does to an unpositioned mixer"],
+          "prerequisiteConceptIds": ["ml-self-attn"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-pos10-3",
+          "stem": "A learned position table, a sinusoid, or a rotation of Q and K are all recipes for:",
+          "correctAnswer": "Making offset visible to the scores so the mixer is not permutation-invariant",
+          "distractors": [
+            { "text": "Replacing values with the position index so content is discarded", "kind": "reversed", "rationale": "Content stays. Position is added, not a replacement of values." },
+            { "text": "Skipping self-attention whenever the sequence is longer than eight", "kind": "nearby", "rationale": "Positions do not delete the mixer." },
+            { "text": "Storing the tokenizer merge table inside each residual branch", "kind": "misapplied", "rationale": "The tokenizer is a different map. Positions are order." }
+          ],
+          "correctExplanation": "Each recipe injects order into the lookup. That is the whole job.",
+          "objectiveIds": ["Add order because attention has none of its own"],
+          "prerequisiteConceptIds": ["ml-self-attn"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "ml-transformer-10",
+      "conceptId": "ml-transformer",
+      "title": "Attention, skip, norm, then a feed-forward",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-multihead", "ml-positional"],
+      "goDeeper": "ml-encoder-decoder",
+      "diagram": "ml-transformer-block",
+      "explanation": [
+        "Stack one block: a multi-head mix, a residual add of the input, a normalization, a position-wise feed-forward, another residual, another norm. That sandwich is the transformer block. Depth is more sandwiches, not a new primitive. The mixer moves information across positions; the feed-forward rewrites each position alone.",
+        "The residual path is the identity the mix and the feed-forward sit on. A bare stack of mixers would have to keep a usable signal through every multiply. The skip lets a token still be itself if a layer's mix is unhelpful, and it is the path a gradient can take without vanishing in the mix.",
+        "Normalization rescales activations so the next layer sees a stable cloud. Pre-norm and post-norm are two places to put that rescale. Either way the block is still mix, skip, rewrite, skip. Positions entered before the first block. They ride the residuals with the tokens."
+      ],
+      "example": "Token 'not' enters a block. Attention can mix in 'happy'. The residual still has the original 'not' vector. The feed-forward can then write a combined 'negated-adjective' direction at that position, without having to store the whole sentence in one mix.",
+      "whyItMatters": "If you cannot name what the skip preserves, depth looks like a superstition. It is an identity path plus a mixer plus a per-position rewrite.",
+      "quiz": [
+        {
+          "id": "ml-tf10-1",
+          "stem": "One transformer block, stacked, is which of these sandwiches?",
+          "correctAnswer": "Attention, residual, normalization, feed-forward, residual, normalization",
+          "distractors": [
+            { "text": "A recurrent walk, then a convolution, with no residual at all", "kind": "nearby", "rationale": "Those are other sequence models. This block is mix plus skip." },
+            { "text": "A tokenizer merge, then a loss, then a vocabulary lookup", "kind": "misapplied", "rationale": "The block sits after tokens exist. It is not the tokenizer." },
+            { "text": "Softmax over the vocabulary at every layer, with no mix", "kind": "reversed", "rationale": "The vocabulary softmax is the final head, not each block." }
+          ],
+          "correctExplanation": "Mix, skip, rewrite, skip. That is the block you stack.",
+          "objectiveIds": ["Stack attention, residual, normalization, and feed-forward as one block"],
+          "prerequisiteConceptIds": ["ml-multihead", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-tf10-2",
+          "stem": "The residual path around attention and the feed-forward is there to:",
+          "correctAnswer": "Keep an identity the mix can sit on, so a token and a gradient are not forced through every multiply",
+          "distractors": [
+            { "text": "Delete the feed-forward whenever the mix already looks fluent", "kind": "nearby", "rationale": "The skip adds; it does not delete the rewrite." },
+            { "text": "Replace keys with values so the lookup has only one role", "kind": "misapplied", "rationale": "QKV is unchanged. The skip is around the whole mix." },
+            { "text": "Force every layer to overwrite the input with a new random vector", "kind": "reversed", "rationale": "That would be the opposite of an identity path." }
+          ],
+          "correctExplanation": "Identity plus a residual update. That is what a bare stack would lose.",
+          "objectiveIds": ["Name what the residual path preserves that a bare stack would lose"],
+          "prerequisiteConceptIds": ["ml-multihead", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-tf10-3",
+          "stem": "If you stacked mixers with no residual, a later diagnosis of a dead signal would start at:",
+          "correctAnswer": "Every layer having to keep a usable token and gradient only through its own multiplies",
+          "distractors": [
+            { "text": "The tokenizer refusing to emit IDs without a skip connection", "kind": "misapplied", "rationale": "The tokenizer does not need the block's residual." },
+            { "text": "Softmax over keys becoming a hard address automatically", "kind": "nearby", "rationale": "The mix is still soft. The missing object is the identity path." },
+            { "text": "Positions being invented for free by the depth of the stack", "kind": "reversed", "rationale": "Depth does not invent order, and it does not invent a skip." }
+          ],
+          "correctExplanation": "No skip, no identity. The mix has to carry everything, including the gradient.",
+          "objectiveIds": ["Name what the residual path preserves that a bare stack would lose"],
+          "prerequisiteConceptIds": ["ml-multihead", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-transformer-20",
+      "conceptId": "ml-transformer",
+      "title": "The skip is the path that keeps a gradient",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["ml-multihead", "ml-positional"],
+      "goDeeper": "ml-encoder-decoder",
+      "diagram": "ml-transformer-block",
+      "explanation": [
+        "Bare stacks of mixers fail the way deep multiplies fail: a token has to survive every layer's map, and a gradient has to survive every layer's Jacobian. The residual add is an identity term in both directions. x + F(x) still contains x if F is small, and ∂/∂x still contains 1. That 1 is the path this course means by 'the skip keeps a gradient'.",
+        "Inside F, two jobs are split on purpose. Multi-head attention mixes across positions. The feed-forward is the same MLP applied at each position, usually a widen then a nonlinearity then a narrow, with no communication between tokens. Depth is then 'mix, rewrite, mix, rewrite', not a single blob that does both at once.",
+        "Normalization is bookkeeping for the next layer's scale, not a third mixer. Pre-norm puts it before F so the residual stays a clean identity. Post-norm puts it after the add, which can make the skip itself a moving target. Either recipe is still the same four verbs: mix, skip, rewrite, skip.",
+        "Positions ride those skips. They are not re-injected as a separate memory at every layer unless you choose a relative recipe that lives inside the scores. Stacking more blocks does not create order, and it does not create an identity path you forgot to draw. It repeats the sandwich."
+      ],
+      "example": "A 12-block stack on a 512-wide model: each block mixes with 8 heads, adds the input, widens to 2048, narrows back, adds again. Ablate the residual around attention and training often dies even if the feed-forward residual stays. The mix needed an identity; the rewrite did too, but the mix is the first place the signal had to travel.",
+      "whyItMatters": "Papers that 'remove attention' or 'remove the FFN' are arguing about which branch of F does the work. The skip is not optional scenery. It is why the stack trains.",
+      "quiz": [
+        {
+          "id": "ml-tf20-1",
+          "stem": "In x + F(x), the residual term is the path that keeps a gradient because:",
+          "correctAnswer": "The derivative with respect to x still contains an identity, even when F is a deep mix",
+          "distractors": [
+            { "text": "Softmax over keys always includes a +1 that replaces backprop", "kind": "nearby", "rationale": "Softmax is inside F. The identity is the skip around F." },
+            { "text": "The feed-forward deletes x so only F remains in the forward pass", "kind": "reversed", "rationale": "The add keeps x. Deleting it is the bare stack." },
+            { "text": "Positions are stored in the skip and nowhere else, so order is free", "kind": "misapplied", "rationale": "Positions ride the skip if you added them. The skip is not order." }
+          ],
+          "correctExplanation": "∂(x+F)/∂x includes 1. That 1 is what a bare stack would lose.",
+          "objectiveIds": ["Name what the residual path preserves that a bare stack would lose"],
+          "prerequisiteConceptIds": ["ml-multihead", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ml-tf20-2",
+          "stem": "Trace one token through a block: after the mix and its residual, the feed-forward's job is to:",
+          "correctAnswer": "Rewrite that position alone, with no mix across other tokens",
+          "distractors": [
+            { "text": "Score every key again so the block contains two full n² lookups", "kind": "nearby", "rationale": "The FFN is position-wise. A second mixer would still be attention." },
+            { "text": "Delete the residual so the token cannot remain itself", "kind": "reversed", "rationale": "The second skip is still there around the rewrite." },
+            { "text": "Emit a vocabulary token at every layer as a running guess", "kind": "misapplied", "rationale": "The unembed is the final head, not each FFN." }
+          ],
+          "correctExplanation": "Mix across positions, then rewrite each position. That is the split inside F.",
+          "objectiveIds": ["Stack attention, residual, normalization, and feed-forward as one block"],
+          "prerequisiteConceptIds": ["ml-multihead", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-tf20-3",
+          "stem": "Pre-norm versus post-norm is a choice about where to rescale, not a choice that:",
+          "correctAnswer": "Creates a new mixer or removes the need for the residual identity",
+          "distractors": [
+            { "text": "Can put the rescale before F so the skip stays a cleaner identity", "kind": "subtle", "rationale": "That is what pre-norm does — and it still needs the skip." },
+            { "text": "Still leaves mix, skip, rewrite, skip as the four verbs of the block", "kind": "nearby", "rationale": "That is the sandwich. The question is what the choice does not do." },
+            { "text": "Changes only the bookkeeping of scale into the next layer", "kind": "misapplied", "rationale": "That is what it does. It does not replace the skip." }
+          ],
+          "correctExplanation": "Norm is scale bookkeeping. The identity path is still the skip.",
+          "objectiveIds": ["Name what the residual path preserves that a bare stack would lose"],
+          "prerequisiteConceptIds": ["ml-multihead", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-encoder-decoder-10",
+      "conceptId": "ml-encoder-decoder",
+      "title": "Three layouts for three jobs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-transformer"],
+      "goDeeper": "ml-lm-obj",
+      "diagram": "ml-causal-mask",
+      "explanation": [
+        "Encoder stacks are bidirectional: every input position may mix every other input position. That layout fits a job where the whole source is available — a sentence to encode, a document to condition on. It must not be used as a language model that is still writing its own output.",
+        "Decoder stacks that emit a target add a causal mask on self-attention so position t cannot read t+1 of the output. In the original encoder-decoder, those decoder blocks also cross-attend: queries from the output side, keys and values from the encoder memory. The future of the output stays hidden. The source does not.",
+        "Decoder-only drops the encoder and the cross-attention. One causal stack reads a prefix and writes the next token. It is the layout you want when the 'source' is just more tokens in the same stream. Pick encoder when you may look at the whole input; pick causal decoder when you must not look at the future of what you are writing."
+      ],
+      "example": "Translation: encode the French sentence bidirectionally, then decode English with a causal mask and cross-attention into that memory. A chat model: one causal stack on 'user … assistant …', no second net, no license to read the token it has not written yet.",
+      "whyItMatters": "People call everything a transformer. The mask, and whether keys come from another stack, are the layout. The job decides which future is legal.",
+      "quiz": [
+        {
+          "id": "ml-ed10-1",
+          "stem": "Choose a layout: a job that may look at the entire source, then write a target without seeing future target tokens, is:",
+          "correctAnswer": "An encoder on the source plus a causal decoder with cross-attention into that memory",
+          "distractors": [
+            { "text": "A decoder-only stack with no mask, so the target can read itself", "kind": "reversed", "rationale": "No mask on the output is exactly the leak this job forbids." },
+            { "text": "An encoder-only stack that also emits the target from the same unmasked mix", "kind": "nearby", "rationale": "The encoder may see the whole source, not the unwritten target." },
+            { "text": "A feed-forward applied once per token with no attention at all", "kind": "misapplied", "rationale": "That is not one of the three layouts." }
+          ],
+          "correctExplanation": "Bidirectional source, causal target, cross-attend. That is the original split.",
+          "objectiveIds": ["Choose encoder, decoder, or decoder-only for the job"],
+          "prerequisiteConceptIds": ["ml-transformer"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-ed10-2",
+          "stem": "Which layout may see the future of the output, and which must not?",
+          "correctAnswer": "An unmasked encoder mix on the output would see the future; a causal decoder must not",
+          "distractors": [
+            { "text": "A causal decoder is allowed to read later output tokens; the encoder is not", "kind": "reversed", "rationale": "Causal means the future of the output is hidden." },
+            { "text": "Decoder-only stacks always see the whole output because they have no encoder", "kind": "nearby", "rationale": "Missing an encoder does not lift the causal mask." },
+            { "text": "Cross-attention is what hides the future of the output from the decoder", "kind": "subtle", "rationale": "Cross-attention reads the source. The mask hides future output." }
+          ],
+          "correctExplanation": "Causal self-attention is what hides unwritten output. Encoder mixes are for the source.",
+          "objectiveIds": ["Predict which layout can see the future of the output and which must not"],
+          "prerequisiteConceptIds": ["ml-transformer"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-ed10-3",
+          "stem": "Decoder-only is the honest layout when the job is:",
+          "correctAnswer": "The source is just more tokens in the same causal stream you are writing",
+          "distractors": [
+            { "text": "You must mix the entire source bidirectionally and never mask the target", "kind": "reversed", "rationale": "That wants an encoder, and still a mask on the target." },
+            { "text": "Keys and values have to come from a second stack with no shared tokens", "kind": "nearby", "rationale": "That is cross-attention into an encoder memory." },
+            { "text": "The residual path is illegal, so only one block may exist", "kind": "misapplied", "rationale": "Layout is about masks and stacks, not about deleting residuals." }
+          ],
+          "correctExplanation": "One stream, causal mix, next token. That is decoder-only.",
+          "objectiveIds": ["Choose encoder, decoder, or decoder-only for the job"],
+          "prerequisiteConceptIds": ["ml-transformer"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "ml-lm-obj-10",
+      "conceptId": "ml-lm-obj",
+      "title": "Predict the next token from the past",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-encoder-decoder", "ml-ce-loss"],
+      "goDeeper": "ml-pretrain",
+      "explanation": [
+        "Next-token training is a causal decoder plus cross-entropy on the vocabulary: at position t, mix the past, unembed, and score the true token t+1. The loss is the same classification loss you already know, now applied at every position. Teacher forcing feeds the true past, not the model's last guess.",
+        "That objective is greedy about local continuation, and it still produces a representation you can later adapt. To guess the next token you have to carry syntax, entities, and a lot of world-ish regularities in the hidden states. The states were not trained to be a database. They were trained to make the next ID likely.",
+        "Masked-token and encoder jobs are different games: they may look at both sides of a hole. A language-model head on a bidirectional mix would be leaking the answer. Causal next-token is the pretraining game this course means when it says 'the model was trained to continue'."
+      ],
+      "example": "Prefix 'The capital of France is'. The head puts a distribution on the vocabulary. Cross-entropy wants mass on 'Paris' if that is the next ID. A later chat fine-tune still starts from the states that made that kind of guess cheap.",
+      "whyItMatters": "Adaptation, prompting, and later preference tuning all sit on this game. If you think the pretraining loss was 'be helpful', the later stages will look like manners instead of a second objective.",
+      "quiz": [
+        {
+          "id": "ml-lm10-1",
+          "stem": "The next-token language-model objective trains by:",
+          "correctAnswer": "Predicting the next vocabulary ID from a causal mix of the past",
+          "distractors": [
+            { "text": "Reconstructing a masked token using both left and right context", "kind": "nearby", "rationale": "That is a masked encoder game, not causal next-token." },
+            { "text": "Scoring a whole document as a single yes-or-no class", "kind": "misapplied", "rationale": "That is a classifier on a pooled vector, not a token head." },
+            { "text": "Copying the tokenizer merge table as the output sequence", "kind": "reversed", "rationale": "The target is the next ID, not the merge rules." }
+          ],
+          "correctExplanation": "Causal mix, then cross-entropy on the next ID. That is the game.",
+          "objectiveIds": ["Train by predicting the next token from the past"],
+          "prerequisiteConceptIds": ["ml-encoder-decoder", "ml-ce-loss"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-lm10-2",
+          "stem": "Why does next-token training produce a representation you can later adapt?",
+          "correctAnswer": "Guessing the next ID forces the states to carry structure that other jobs can reuse",
+          "distractors": [
+            { "text": "The loss secretly stores a database of facts in the tokenizer", "kind": "misconception", "rationale": "The tokenizer is a map. The states are the representation." },
+            { "text": "Cross-entropy cannot be reused, so you must throw the net away", "kind": "reversed", "rationale": "Reuse is the point of pretraining. The objective is why the states are useful." },
+            { "text": "Bidirectional mixing is required before any later head can attach", "kind": "nearby", "rationale": "Causal states are already a representation. Masked jobs are a different game." }
+          ],
+          "correctExplanation": "A useful continuation needs structure. Later jobs inherit those states.",
+          "objectiveIds": ["State why that objective produces a useful representation you can later adapt"],
+          "prerequisiteConceptIds": ["ml-encoder-decoder", "ml-ce-loss"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-lm10-3",
+          "stem": "Putting a next-token head on an unmasked bidirectional mix would leak because:",
+          "correctAnswer": "Position t could read token t+1 while pretending to guess it from the past",
+          "distractors": [
+            { "text": "Cross-entropy is undefined unless the mix is causal", "kind": "nearby", "rationale": "The loss is defined. The contract of 'from the past' is what leaked." },
+            { "text": "The residual path cannot carry a token without a mask", "kind": "misapplied", "rationale": "Residuals are not the leak. Future keys are." },
+            { "text": "The vocabulary softmax can only run on encoder stacks", "kind": "reversed", "rationale": "The head can run anywhere. The mask is the honesty." }
+          ],
+          "correctExplanation": "If the future is in the mix, next-token is not a prediction from the past.",
+          "objectiveIds": ["Train by predicting the next token from the past"],
+          "prerequisiteConceptIds": ["ml-encoder-decoder", "ml-ce-loss"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

@@ -24,9 +24,17 @@ import { NET_FOUNDATIONS_LESSONS } from "./net-foundations";
 import { NET_INTERNET_LESSONS } from "./net-internet";
 import { NET_TRANSPORT_LESSONS } from "./net-transport";
 import { ML_FOUNDATIONS_LESSONS } from "./ml-foundations";
+import { ML_NEURAL_LESSONS } from "./ml-neural";
+import { ML_TRANSFORMERS_LESSONS } from "./ml-transformers";
 import { HORO_FOUNDATIONS_LESSONS } from "./horo-foundations";
+import { HORO_REGULATION_LESSONS } from "./horo-regulation";
+import { HORO_COMPLICATIONS_LESSONS } from "./horo-complications";
 import { MUS_FOUNDATIONS_LESSONS } from "./mus-foundations";
+import { MUS_HARMONY_LESSONS } from "./mus-harmony";
+import { MUS_HEAVY_LESSONS } from "./mus-heavy";
 import { DM_HISTORY_LESSONS } from "./dm-history";
+import { DM_CONSTRUCTION_LESSONS } from "./dm-construction";
+import { DM_ADVANCED_LESSONS } from "./dm-advanced";
 
 const externalFiles = import.meta.glob("../external/*.json", {
   eager: true,
@@ -68,9 +76,17 @@ export const LESSONS: Lesson[] = [
   ...CMP_IR_LESSONS,
   ...CMP_BACKEND_LESSONS,
   ...ML_FOUNDATIONS_LESSONS,
+  ...ML_NEURAL_LESSONS,
+  ...ML_TRANSFORMERS_LESSONS,
   ...HORO_FOUNDATIONS_LESSONS,
+  ...HORO_REGULATION_LESSONS,
+  ...HORO_COMPLICATIONS_LESSONS,
   ...MUS_FOUNDATIONS_LESSONS,
+  ...MUS_HARMONY_LESSONS,
+  ...MUS_HEAVY_LESSONS,
   ...DM_HISTORY_LESSONS,
+  ...DM_CONSTRUCTION_LESSONS,
+  ...DM_ADVANCED_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,
