@@ -13,6 +13,20 @@ export interface CacheKeyInput {
   promptVersion: string;
 }
 
+export interface CachedLessonLike {
+  id: string;
+  conceptId: string;
+  durationMin: number;
+  effort: string;
+  level?: string;
+  source: {
+    type: string;
+    promptVersion?: string;
+    cacheKey?: string;
+    sourceExcerpt?: string;
+  };
+}
+
 export function cacheKey(input: CacheKeyInput): string {
   return [
     input.kind,
@@ -37,19 +51,31 @@ export function hashText(text: string): string {
   return (h >>> 0).toString(16);
 }
 
-export function findCachedLesson(
-  lessons: { id: string; conceptId: string; durationMin: number; effort: string; source: { type: string; promptVersion?: string } }[],
-  conceptId: string,
-  durationMin: number,
-  effort: string,
-  promptVersion: string,
-) {
-  return lessons.find(
-    (l) =>
-      l.conceptId === conceptId &&
-      l.durationMin === durationMin &&
-      l.effort === effort &&
-      l.source.type === "ai" &&
-      (l.source.promptVersion ?? promptVersion) === promptVersion,
-  );
+/**
+ * Reuse an AI lesson only when the full generation context matches.
+ * A journalist-depth or source-grounded unit must not satisfy a generic request.
+ */
+export function findCachedLesson(lessons: CachedLessonLike[], query: CacheKeyInput): CachedLessonLike | undefined {
+  const key = cacheKey(query);
+  const exact = lessons.find((l) => l.source.type === "ai" && l.source.cacheKey === key);
+  if (exact) return exact;
+
+  return lessons.find((l) => {
+    if (l.source.type !== "ai") return false;
+    if (l.source.cacheKey) return false;
+    if (l.conceptId !== query.conceptId) return false;
+    if (l.durationMin !== query.durationMin) return false;
+    if (query.effort && l.effort !== query.effort) return false;
+    if ((l.source.promptVersion ?? query.promptVersion) !== query.promptVersion) return false;
+    if (query.level && l.level && l.level !== query.level) return false;
+    if (query.journalist === true && l.level !== "journalist") return false;
+    if (query.journalist === false && l.level === "journalist") return false;
+    if (query.sourceHash) {
+      const stored = l.source.sourceExcerpt ? hashText(l.source.sourceExcerpt) : "";
+      if (stored !== query.sourceHash) return false;
+    }
+    if (query.adapt) return false;
+    if (query.style) return false;
+    return true;
+  });
 }

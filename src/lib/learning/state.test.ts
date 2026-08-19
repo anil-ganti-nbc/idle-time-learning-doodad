@@ -18,7 +18,9 @@ describe("conceptState", () => {
       ...emptyProgress("x"),
       encountered: true,
       understanding: "got_it" as const,
-      lastQuizScore: 3,
+      lastQuizScore: 1,
+      lastQuizCorrect: 3,
+      lastQuizTotal: 3,
       timesStudied: 4,
       intervalDays: 20,
       nextReviewAt: "2020-01-01T00:00:00.000Z",
@@ -26,22 +28,38 @@ describe("conceptState", () => {
     assert.equal(conceptState(p, false, new Date("2026-08-19")), "due");
   });
 
-  it("detects shaky vs strong", () => {
+  it("detects shaky vs strong using a 0–1 quiz ratio", () => {
     const shaky = {
       ...emptyProgress("x"),
       encountered: true,
       understanding: "didnt_get_it" as const,
       lastQuizScore: 0,
+      lastQuizCorrect: 0,
+      lastQuizTotal: 3,
       timesStudied: 2,
       nextReviewAt: "2099-01-01T00:00:00.000Z",
     };
     assert.equal(conceptState(shaky, false, new Date("2026-08-19")), "shaky");
 
+    const oneThird = {
+      ...emptyProgress("x"),
+      encountered: true,
+      understanding: "mostly" as const,
+      lastQuizScore: 1 / 3,
+      lastQuizCorrect: 1,
+      lastQuizTotal: 3,
+      timesStudied: 2,
+      nextReviewAt: "2099-01-01T00:00:00.000Z",
+    };
+    assert.equal(conceptState(oneThird, false, new Date("2026-08-19")), "shaky");
+
     const strong = {
       ...emptyProgress("x"),
       encountered: true,
       understanding: "got_it" as const,
-      lastQuizScore: 3,
+      lastQuizScore: 1,
+      lastQuizCorrect: 3,
+      lastQuizTotal: 3,
       timesStudied: 4,
       intervalDays: 21,
       nextReviewAt: "2099-01-01T00:00:00.000Z",

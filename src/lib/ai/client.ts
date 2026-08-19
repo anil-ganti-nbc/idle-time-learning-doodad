@@ -1,6 +1,6 @@
 import { PROMPT_VERSION } from "@/lib/learning/types";
 import type { AiSecrets, AiSettings, Lesson } from "@/lib/learning/types";
-import { findCachedLesson } from "./cache";
+import { cacheKey, findCachedLesson, hashText } from "./cache";
 import { assertAiAllowed, assertMissingOnly } from "./guard";
 import {
   defaultAiProvenance,
@@ -70,6 +70,21 @@ async function completeText(settings: AiSettings, secrets: AiSecrets, system: st
   });
 }
 
+function lessonCacheQuery(input: LessonPromptInput) {
+  return {
+    kind: input.adapt === "harder" || input.journalist ? ("deeper" as const) : ("lesson" as const),
+    conceptId: input.concept.id,
+    durationMin: input.durationMin,
+    effort: input.effort,
+    level: input.concept.level,
+    journalist: input.journalist,
+    adapt: input.adapt,
+    style: input.style,
+    sourceHash: input.sourceText ? hashText(input.sourceText) : undefined,
+    promptVersion: PROMPT_VERSION,
+  };
+}
+
 export async function generateLesson(
   ctx: GenerateContext,
   input: LessonPromptInput,
@@ -80,13 +95,8 @@ export async function generateLesson(
   const missing = assertMissingOnly(ctx.settings.policy, Boolean(opts?.hasLocalMatch));
   if (!missing.ok) return missing;
 
-  const cached = findCachedLesson(
-    ctx.existingLessons,
-    input.concept.id,
-    input.durationMin,
-    input.effort,
-    PROMPT_VERSION,
-  );
+  const query = lessonCacheQuery(input);
+  const cached = findCachedLesson(ctx.existingLessons, query);
   if (cached) {
     const full = ctx.existingLessons.find((l) => l.id === cached.id);
     if (full) {
@@ -114,6 +124,7 @@ export async function generateLesson(
       provider: completion.provider,
       model: completion.model,
       sourceExcerpt: input.sourceText?.slice(0, 400),
+      cacheKey: cacheKey(query),
     }),
   });
   return {

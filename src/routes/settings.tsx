@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { getAiStatus } from "@/lib/ai/client";
 import { PROVIDER_META } from "@/lib/ai/providers";
 import { buildExport } from "@/lib/learning/export";
+import { survives } from "@/lib/learning/persistence";
 import { generationsToday, useProgress } from "@/lib/learning/progress";
-import { loadSecrets, saveSecrets } from "@/lib/learning/secrets";
+import { loadSecrets, saveSecrets, secretFor, secretPatch } from "@/lib/learning/secrets";
 import type { AiProviderId, AiSecrets, Effort, TimeBudget } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 
@@ -32,11 +33,15 @@ function SettingsReady() {
   const [mode, setMode] = useState<"merge" | "replace">("merge");
   const [secrets, setSecrets] = useState<AiSecrets>({});
   const [xaiEnv, setXaiEnv] = useState(false);
+  const [keySources, setKeySources] = useState<Record<string, string>>({});
   const [interest, setInterest] = useState("");
 
   useEffect(() => {
     setSecrets(loadSecrets());
-    void getAiStatus().then((s) => setXaiEnv(s.xaiEnv));
+    void getAiStatus().then((s) => {
+      setXaiEnv(s.xaiEnv);
+      setKeySources(s.sources ?? {});
+    });
   }, []);
 
   function persistSecrets(next: AiSecrets) {
@@ -100,7 +105,7 @@ function SettingsReady() {
       <h1 className="mt-2 font-display text-3xl tracking-tight">Settings</h1>
       <p className="mt-2 text-sm text-muted">
         Optional profile and AI. Nothing here is required before a session. Progress stays on this
-        device unless you export it.
+        device unless you export it. The server never holds your graph.
       </p>
 
       <section className="mt-8 space-y-4">
@@ -326,10 +331,13 @@ function SettingsReady() {
         </div>
         <p className="text-xs text-subtle">
           Used today: {used}/{state.ai.maxPerDay}
-          {xaiEnv ? " · environment xAI key present" : " · no environment xAI key"}
+          {" · "}
+          {describeKeySource(state.ai.provider, keySources[state.ai.provider], xaiEnv)}
         </p>
         <label className="block text-xs text-muted">
-          {state.ai.provider === "local" ? "Local base URL" : `${PROVIDER_META[state.ai.provider].label} API key`}
+          {state.ai.provider === "local"
+            ? "Browser fallback — local base URL"
+            : `Browser fallback key for ${PROVIDER_META[state.ai.provider].label}`}
           {state.ai.provider === "local" ? (
             <Input
               className="mt-1 font-mono"
@@ -344,10 +352,34 @@ function SettingsReady() {
               autoComplete="off"
               value={secretFor(state.ai.provider, secrets)}
               onChange={(e) => persistSecrets({ ...secrets, ...secretPatch(state.ai.provider, e.target.value) })}
-              placeholder={state.ai.provider === "xai" && xaiEnv ? "Optional override of env key" : "Stored only on this device"}
+              placeholder={
+                keySources[state.ai.provider] === "env" || keySources[state.ai.provider] === "file"
+                  ? "Ignored while an environment or server-file key is present"
+                  : "Plaintext on this device only — last resort"
+              }
             />
           )}
         </label>
+        <p className="text-xs leading-relaxed text-subtle">
+          Key lookup order: environment variable, then a local <span className="font-mono">.dau-secrets.json</span>{" "}
+          next to the app, then this browser field. Environment and file keys never leave the server. This field is
+          a labelled convenience fallback, not a vault.
+        </p>
+      </section>
+
+      <section className="mt-10 space-y-3">
+        <h2 className="font-display text-xl tracking-tight">Where this lives</h2>
+        <p className="text-sm leading-relaxed text-muted">
+          Progress, the knowledge graph, reviews, and custom lessons are stored in this browser.
+          Refresh and restart keep them. Switching device or browser profile does not — export a
+          JSON archive first. An unfinished lesson lives only in this tab.
+        </p>
+        <ul className="space-y-1.5 text-sm text-muted">
+          <PersistLine event="refresh" />
+          <PersistLine event="browserRestart" />
+          <PersistLine event="serverRestart" />
+          <PersistLine event="deviceChange" />
+        </ul>
       </section>
 
       <section className="mt-10 space-y-3">
@@ -413,18 +445,27 @@ function SettingsReady() {
   );
 }
 
-function secretFor(provider: AiProviderId, secrets: AiSecrets): string {
-  if (provider === "xai") return secrets.xai ?? "";
-  if (provider === "openai") return secrets.openai ?? "";
-  if (provider === "anthropic") return secrets.anthropic ?? "";
-  if (provider === "gemini") return secrets.gemini ?? "";
-  return secrets.localApiKey ?? "";
+function PersistLine({ event }: { event: "refresh" | "browserRestart" | "serverRestart" | "deviceChange" }) {
+  const row = survives(event);
+  const label =
+    event === "refresh"
+      ? "Browser refresh"
+      : event === "browserRestart"
+        ? "Browser restart"
+        : event === "serverRestart"
+          ? "App / server restart"
+          : "Another device";
+  return (
+    <li>
+      <span className="text-fg">{label}.</span> {row.note}
+    </li>
+  );
 }
 
-function secretPatch(provider: AiProviderId, value: string): Partial<AiSecrets> {
-  if (provider === "xai") return { xai: value };
-  if (provider === "openai") return { openai: value };
-  if (provider === "anthropic") return { anthropic: value };
-  if (provider === "gemini") return { gemini: value };
-  return { localApiKey: value };
+function describeKeySource(provider: AiProviderId, source: string | undefined, xaiEnv: boolean): string {
+  if (source === "env" || (provider === "xai" && xaiEnv)) return "using environment key";
+  if (source === "file") return "using local server secrets file";
+  if (source === "none") return "no server key — browser fallback only";
+  return "key source unknown";
 }
+

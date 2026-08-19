@@ -25,25 +25,67 @@ function session(id: string, conceptId: string): SessionRecord {
 }
 
 describe("export/import", () => {
-  it("round-trips v2 state", () => {
+  it("round-trips v2 state including quiz ratio and lapses", () => {
     const state = defaultState();
     state.profile.displayName = "Anil";
     state.concepts["cpu-pipeline"] = {
       ...emptyProgress("cpu-pipeline"),
       encountered: true,
       understanding: "got_it",
+      lastQuizScore: 1,
+      lastQuizCorrect: 3,
+      lastQuizTotal: 3,
       lastStudiedAt: "2026-08-18T00:00:00.000Z",
       updatedAt: "2026-08-18T00:00:00.000Z",
       timesStudied: 1,
+      lapseCount: 2,
     };
     state.sessions = [session("s1", "cpu-pipeline")];
+    state.customCategories = [{ id: "custom", name: "Custom", blurb: "mine", custom: true }];
     const bundle = buildExport(state);
     assert.equal(bundle.format, "dead-air-university-export");
     assert.equal(bundle.schema_version, 2);
+    assert.equal("secrets" in bundle, false);
     const imported = importExport(defaultState(), bundle, "replace");
     assert.equal(imported.state.profile.displayName, "Anil");
     assert.equal(imported.state.sessions[0].id, "s1");
     assert.equal(imported.state.concepts["cpu-pipeline"].timesStudied, 1);
+    assert.equal(imported.state.concepts["cpu-pipeline"].lastQuizScore, 1);
+    assert.equal(imported.state.concepts["cpu-pipeline"].lastQuizCorrect, 3);
+    assert.equal(imported.state.concepts["cpu-pipeline"].lapseCount, 2);
+    assert.equal(imported.state.customCategories[0].id, "custom");
+  });
+
+  it("omits secrets unless asked, and includes them when asked", () => {
+    const bare = buildExport(defaultState());
+    assert.equal(bare.secrets, undefined);
+    const withKeys = buildExport(defaultState(), { openai: "sk-test" }, true);
+    assert.equal(withKeys.secrets?.openai, "sk-test");
+  });
+
+  it("migrates a legacy integer quiz score on import", () => {
+    const incoming = defaultState();
+    incoming.concepts.a = {
+      ...emptyProgress("a"),
+      lastQuizScore: 1,
+      lastQuizCorrect: null as unknown as number,
+      lastQuizTotal: 0,
+      lastStudiedAt: "2026-08-18T00:00:00.000Z",
+      updatedAt: "2026-08-18T00:00:00.000Z",
+      encountered: true,
+    };
+    delete (incoming.concepts.a as { lastQuizCorrect?: number | null }).lastQuizCorrect;
+    incoming.concepts.a.lastQuizTotal = undefined as unknown as number;
+    const bundle = buildExport(incoming);
+    bundle.progress.concepts.a = {
+      ...bundle.progress.concepts.a,
+      lastQuizScore: 1,
+      lastQuizCorrect: undefined as unknown as number,
+      lastQuizTotal: undefined as unknown as number,
+    };
+    const result = importExport(defaultState(), bundle, "replace");
+    assert.ok(Math.abs((result.state.concepts.a.lastQuizScore ?? 0) - 1 / 3) < 1e-9);
+    assert.equal(result.state.concepts.a.lastQuizCorrect, 1);
   });
 
   it("merge keeps newer local progress", () => {

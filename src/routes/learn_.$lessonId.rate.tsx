@@ -96,7 +96,7 @@ function RatePage() {
       concept: {
         ...concept,
         level: "journalist",
-        summary: `Deeper follow-up after “${unit.title}”. Quiz ${stored?.lastQuizScore ?? quizCorrect}/3.`,
+        summary: `Deeper follow-up after “${unit.title}”. Quiz ${stored?.lastQuizCorrect ?? quizCorrect}/${stored?.lastQuizTotal || 3}.`,
       },
       durationMin: unit.durationMin,
       effort: "deep",
@@ -104,7 +104,7 @@ function RatePage() {
       known,
       weak: [],
       recent: [{ title: unit.title, conceptId: unit.conceptId }],
-      adapt: stored && (stored.lastQuizScore ?? 0) >= 2 ? "harder" : "simpler",
+      adapt: stored && (stored.lastQuizScore ?? 0) >= 0.67 ? "harder" : "simpler",
     });
     setBusy(false);
     if (!result.ok) {
@@ -143,7 +143,10 @@ function RatePage() {
         <p className="text-xs tracking-[0.18em] text-muted uppercase">Logged</p>
         <h1 className="mt-2 font-display text-3xl tracking-tight">Gap converted.</h1>
         <dl className="mt-8 grid grid-cols-2 gap-3">
-          <Stat label="Quiz" value={`${stored.lastQuizScore ?? 0}/3`} />
+          <Stat
+            label="Quiz"
+            value={`${stored.lastQuizCorrect ?? 0}/${stored.lastQuizTotal || 3}`}
+          />
           <Stat label="Time" value={`${stored.actualMinutes}m`} hint={`est. ${unit.durationMin}m`} />
           <Stat label="Next review" value={until === null ? "—" : until <= 0 ? "now" : `${until}d`} />
           <Stat label="Times seen" value={String(stored.timesStudied)} />

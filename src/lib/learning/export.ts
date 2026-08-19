@@ -1,3 +1,4 @@
+import { normalizeProgressRow } from "./srs";
 import { EXPORT_SCHEMA_VERSION } from "./types";
 import type { AiSecrets, ConceptProgress, Lesson, ProgressState, SessionRecord } from "./types";
 
@@ -89,6 +90,14 @@ export function isNewer(incoming?: string | null, local?: string | null): boolea
   return new Date(incoming).getTime() > new Date(local).getTime();
 }
 
+function normalizeConceptMap(rows: Record<string, ConceptProgress> | undefined): Record<string, ConceptProgress> {
+  const out: Record<string, ConceptProgress> = {};
+  for (const [id, row] of Object.entries(rows ?? {})) {
+    out[id] = normalizeProgressRow({ ...row, conceptId: id });
+  }
+  return out;
+}
+
 export function importExport(
   current: ProgressState,
   incoming: unknown,
@@ -101,13 +110,14 @@ export function importExport(
 
   if ("format" in parsed.data && parsed.data.format === "dead-air-university-export") {
     const data = parsed.data;
+    const concepts = normalizeConceptMap(data.progress.concepts);
     if (mode === "replace") {
       return {
         state: {
           profile: data.profile,
           settings: { ...current.settings, ...data.preferences },
           ai: data.ai,
-          concepts: data.progress.concepts,
+          concepts,
           sessions: data.progress.sessions,
           recentCategoryIds: data.progress.recentCategoryIds,
           customCategories: data.catalog.categories,
@@ -121,7 +131,7 @@ export function importExport(
       };
     }
     return {
-      state: mergeStates(current, data, warnings),
+      state: mergeStates(current, { ...data, progress: { ...data.progress, concepts } }, warnings),
       warnings,
       backup,
     };
@@ -129,15 +139,12 @@ export function importExport(
 
   const v1 = parsed.data as V1Export;
   warnings.push("Imported a v1 progress file. Custom catalog and AI settings were left as they are.");
+  const incomingConcepts = normalizeConceptMap(v1.concepts);
   const concepts = { ...current.concepts };
-  for (const [id, row] of Object.entries(v1.concepts ?? {})) {
+  for (const [id, row] of Object.entries(incomingConcepts)) {
     const local = concepts[id];
     if (!local || isNewer(row.lastStudiedAt, local.lastStudiedAt)) {
-      concepts[id] = {
-        ...row,
-        reviewHistory: row.reviewHistory ?? [],
-        updatedAt: row.updatedAt ?? row.lastStudiedAt ?? null,
-      };
+      concepts[id] = row;
     } else {
       warnings.push(`Kept newer local progress for ${id}.`);
     }
@@ -163,11 +170,7 @@ function mergeStates(current: ProgressState, data: ExportBundleV2, warnings: str
     const incomingStamp = row.updatedAt ?? row.lastStudiedAt;
     const localStamp = local?.updatedAt ?? local?.lastStudiedAt;
     if (!local || isNewer(incomingStamp, localStamp)) {
-      concepts[id] = {
-        ...row,
-        reviewHistory: row.reviewHistory ?? [],
-        updatedAt: incomingStamp ?? null,
-      };
+      concepts[id] = normalizeProgressRow({ ...row, conceptId: id });
     } else {
       warnings.push(`Kept newer local progress for ${id}.`);
     }

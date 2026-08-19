@@ -8,13 +8,24 @@ import { makeId } from "@/lib/learning/catalog";
 import { normalizeLesson } from "@/lib/learning/normalize";
 import { PROMPT_VERSION } from "@/lib/learning/types";
 import type { Concept, Effort, Lesson, Level, Provenance, TimeBudget } from "@/lib/learning/types";
+import { assertNoProgressFields } from "./guard";
 import { extractJson } from "./json";
 
 export { extractJson };
 export type ParseFailure = { ok: false; error: string; issues?: string[] };
 export type ParseSuccess<T> = { ok: true; value: T };
 
+function rejectProgressLeak(raw: unknown): ParseFailure | null {
+  const leak = assertNoProgressFields(raw);
+  if (!leak.ok) {
+    return { ok: false, error: leak.error };
+  }
+  return null;
+}
+
 export function parseGeneratedLesson(raw: unknown): ParseSuccess<ReturnType<typeof generatedLessonSchema.parse>> | ParseFailure {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedLessonSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -23,16 +34,12 @@ export function parseGeneratedLesson(raw: unknown): ParseSuccess<ReturnType<type
       issues: parsed.error.issues.map((i) => `${i.path.join(".") || "root"}: ${i.message}`),
     };
   }
-  if (raw && typeof raw === "object") {
-    const obj = raw as Record<string, unknown>;
-    if ("mastery" in obj || "progress" in obj || "ease" in obj) {
-      return { ok: false, error: "Generated lesson tried to write mastery state and was rejected." };
-    }
-  }
   return { ok: true, value: parsed.data };
 }
 
 export function parseGeneratedExplain(raw: unknown) {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedExplainSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -45,6 +52,8 @@ export function parseGeneratedExplain(raw: unknown) {
 }
 
 export function parseGeneratedQuiz(raw: unknown) {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedQuizSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -57,6 +66,8 @@ export function parseGeneratedQuiz(raw: unknown) {
 }
 
 export function parseGeneratedPath(raw: unknown) {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedPathSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -125,6 +136,7 @@ export function defaultAiProvenance(input: {
   model: string;
   sourceExcerpt?: string;
   links?: string[];
+  cacheKey?: string;
 }): Provenance {
   return {
     type: "ai",
@@ -135,5 +147,6 @@ export function defaultAiProvenance(input: {
     schemaVersion: 1,
     sourceExcerpt: input.sourceExcerpt,
     links: input.links,
+    cacheKey: input.cacheKey,
   };
 }

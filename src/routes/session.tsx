@@ -97,6 +97,7 @@ function SessionReady() {
       missingConceptForGeneration(
         { minutes, category, effort, mode, journalistDepth: settings.journalistDepth },
         progress,
+        recent,
         catalog,
         profile,
       ),

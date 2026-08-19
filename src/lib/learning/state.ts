@@ -21,8 +21,7 @@ export function conceptState(
   }
   if (isDue(progress, now)) return "due";
 
-  const quizWeak =
-    progress.lastQuizScore !== null && progress.quizTotal > 0 && progress.lastQuizScore / 3 < 0.67;
+  const quizWeak = progress.lastQuizScore !== null && progress.lastQuizScore < 0.67;
   const failed = progress.understanding === "didnt_get_it";
   const lingering =
     progress.understanding === "mostly" && progress.timesStudied >= 2 && quizWeak;
@@ -34,7 +33,8 @@ export function conceptState(
   const strong =
     progress.timesStudied >= 3 &&
     progress.understanding === "got_it" &&
-    progress.lastQuizScore === 3 &&
+    progress.lastQuizScore !== null &&
+    progress.lastQuizScore >= 1 &&
     progress.intervalDays >= 14;
 
   if (strong) return "strong";

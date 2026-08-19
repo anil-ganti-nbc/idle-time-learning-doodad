@@ -98,6 +98,8 @@ export interface Provenance {
   links?: string[];
   sourceExcerpt?: string;
   notes?: string;
+  /** Full generation cache key. Present on AI lessons so reuse cannot cross contexts. */
+  cacheKey?: string;
 }
 
 /** @deprecated v1 seed shape — still accepted on import and normalized. */
@@ -166,7 +168,15 @@ export interface ConceptProgress {
   understanding: Understanding | null;
   quizCorrect: number;
   quizTotal: number;
+  /**
+   * Last-session quiz ratio in [0, 1].
+   * Legacy v1/v2 stores wrote the raw correct-count (0–3) here; migrate on read.
+   */
   lastQuizScore: number | null;
+  /** Raw correct answers from the last session. Display only — ranking uses lastQuizScore. */
+  lastQuizCorrect: number | null;
+  /** Question count of the last session (usually 3). */
+  lastQuizTotal: number;
   estimatedMinutes: number;
   actualMinutes: number;
   lastStudiedAt: string | null;
@@ -174,6 +184,8 @@ export interface ConceptProgress {
   timesStudied: number;
   ease: number;
   intervalDays: number;
+  /** Lifetime count of failing reviews (quality ≤ 1). Distinguishes a one-off miss from a pattern. */
+  lapseCount: number;
   reviewHistory: ReviewEvent[];
   updatedAt: string | null;
 }
@@ -295,6 +307,12 @@ export interface SelectionResult {
   reason: string;
   blockedBy?: string[];
   generatedCandidate?: boolean;
+}
+
+export interface SelectOptions {
+  now?: Date;
+  /** Injected for tests. Production uses Math.random. */
+  rng?: () => number;
 }
 
 export interface Catalog {

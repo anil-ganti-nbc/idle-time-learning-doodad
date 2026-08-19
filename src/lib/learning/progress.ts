@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { defaultAi, defaultProfile, defaultSettings, defaultState } from "./defaults";
 import { importExport, type ImportMode } from "./export";
-import { emptyProgress, scheduleReview } from "./srs";
+import { PROGRESS_PERSIST_VERSION, PROGRESS_STORAGE_KEY } from "./persistence";
+import { emptyProgress, normalizeProgressRow, quizRatio, reviewQuality, scheduleReviewFull } from "./srs";
 import type {
   AiSettings,
   Category,
@@ -62,7 +63,7 @@ interface ProgressStore extends ProgressState {
   resetAll: () => void;
 }
 
-function migrateV1(persisted: unknown): ProgressState {
+function migratePersisted(persisted: unknown): ProgressState {
   const p = (persisted ?? {}) as Partial<ProgressState> & {
     settings?: Partial<Preferences>;
     concepts?: Record<string, ConceptProgress>;
@@ -71,12 +72,7 @@ function migrateV1(persisted: unknown): ProgressState {
   };
   const concepts: Record<string, ConceptProgress> = {};
   for (const [id, row] of Object.entries(p.concepts ?? {})) {
-    concepts[id] = {
-      ...emptyProgress(id),
-      ...row,
-      reviewHistory: row.reviewHistory ?? [],
-      updatedAt: row.updatedAt ?? row.lastStudiedAt ?? null,
-    };
+    concepts[id] = normalizeProgressRow({ ...row, conceptId: id });
   }
   return {
     ...defaultState(),
@@ -109,8 +105,16 @@ export const useProgress = create<ProgressStore>()(
       updateSettings: (partial) => set((s) => ({ settings: { ...s.settings, ...partial } })),
       updateAi: (partial) => set((s) => ({ ai: { ...s.ai, ...partial } })),
       recordSession: (input) => {
-        const prev = get().concepts[input.conceptId] ?? emptyProgress(input.conceptId);
-        const schedule = scheduleReview(prev, input.understanding, input.quizCorrect, input.quizTotal);
+        const prev = normalizeProgressRow(get().concepts[input.conceptId] ?? emptyProgress(input.conceptId));
+        const quality = reviewQuality(input.understanding, input.quizCorrect, input.quizTotal);
+        const lapseCount = prev.lapseCount + (quality <= 1 ? 1 : 0);
+        const schedule = scheduleReviewFull({
+          prev,
+          understanding: input.understanding,
+          quizCorrect: input.quizCorrect,
+          quizTotal: input.quizTotal,
+          lapseCount,
+        });
         const completedAt = new Date().toISOString();
         const next: ConceptProgress = {
           ...prev,
@@ -118,11 +122,14 @@ export const useProgress = create<ProgressStore>()(
           understanding: input.understanding,
           quizCorrect: prev.quizCorrect + input.quizCorrect,
           quizTotal: prev.quizTotal + input.quizTotal,
-          lastQuizScore: input.quizCorrect,
+          lastQuizCorrect: input.quizCorrect,
+          lastQuizTotal: input.quizTotal,
+          lastQuizScore: quizRatio(input.quizCorrect, input.quizTotal),
           estimatedMinutes: prev.estimatedMinutes + input.estimatedMinutes,
           actualMinutes: prev.actualMinutes + input.actualMinutes,
           lastStudiedAt: completedAt,
           timesStudied: prev.timesStudied + 1,
+          lapseCount,
           ...schedule,
           reviewHistory: [
             ...prev.reviewHistory,
@@ -261,9 +268,9 @@ export const useProgress = create<ProgressStore>()(
       resetAll: () => set(defaultState()),
     }),
     {
-      name: "dau-progress-v1",
-      version: 2,
-      migrate: (persisted) => migrateV1(persisted),
+      name: PROGRESS_STORAGE_KEY,
+      version: PROGRESS_PERSIST_VERSION,
+      migrate: (persisted) => migratePersisted(persisted),
       partialize: (s) => ({
         profile: s.profile,
         settings: s.settings,
