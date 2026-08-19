@@ -1,0 +1,1 @@
+    assert.equal(next.nextReviewAt?.slice(0, 10), "2026-08-20");

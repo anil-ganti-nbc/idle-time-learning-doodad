@@ -1,0 +1,1 @@
+import{i as e,o as t}from"./utils-BFmSEvC8.js";import{t as n}from"./useRouter-aVNGoVA_.js";var r=t(e(),1);function i(e){let t=n();return r.useCallback(n=>t.navigate({...n,from:n.from??e?.from}),[e?.from,t])}export{i as t};

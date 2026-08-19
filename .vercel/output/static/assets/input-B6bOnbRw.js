@@ -1,0 +1,1 @@
+import{r as e,t}from"./utils-BFmSEvC8.js";var n=e();function r({className:e,...r}){return(0,n.jsx)(`input`,{className:t(`h-11 w-full rounded-md bg-raised px-3 text-sm text-fg shadow-[0_0_0_1px_rgba(255,255,255,0.08)] placeholder:text-subtle focus-visible:shadow-[0_0_0_1px_rgba(200,204,212,0.5)]`,e),...r})}export{r as t};

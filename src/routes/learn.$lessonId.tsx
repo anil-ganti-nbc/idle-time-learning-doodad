@@ -1,0 +1,280 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+import { LessonDiagram } from "@/components/diagrams";
+import { HydrateGate } from "@/components/hydrate";
+import { ProvenanceLine, SourceBadge } from "@/components/provenance";
+import { Button } from "@/components/ui/button";
+import { generateExplain, generateQuiz } from "@/lib/ai/client";
+import { useAiContext } from "@/lib/ai/use-ai";
+import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
+import { useProgress } from "@/lib/learning/progress";
+import type { LessonFeedbackVerdict } from "@/lib/learning/types";
+import { useCatalog } from "@/lib/learning/use-catalog";
+
+export const Route = createFileRoute("/learn/$lessonId")({
+  component: LessonPage,
+});
+
+function LessonPage() {
+  return (
+    <HydrateGate>
+      <LessonReady />
+    </HydrateGate>
+  );
+}
+
+function LessonReady() {
+  const { lessonId } = Route.useParams();
+  const navigate = useNavigate();
+  const catalog = useCatalog();
+  const lesson = catalog.lessonMap[lessonId];
+  const lastMode = useProgress((s) => s.settings.lastMode);
+  const lastTime = useProgress((s) => s.settings.lastTime);
+  const applyVersion = useProgress((s) => s.applyLessonVersion);
+  const addFeedback = useProgress((s) => s.addFeedback);
+  const logGeneration = useProgress((s) => s.logGeneration);
+  const archiveLesson = useProgress((s) => s.archiveLesson);
+  const ai = useProgress((s) => s.ai);
+  const aiCtx = useAiContext(getLive()?.generations ?? 0);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [styleOpen, setStyleOpen] = useState(false);
+
+  if (!lesson) {
+    return (
+      <div className="mx-auto max-w-xl">
+        <h1 className="font-display text-3xl">Unit not found</h1>
+        <Link to="/session" className="mt-4 inline-block text-sm text-muted hover:text-fg">
+          Back to the router
+        </Link>
+      </div>
+    );
+  }
+
+  const unit = lesson;
+  const concept = catalog.conceptMap[unit.conceptId];
+  const categoryName = concept ? catalog.categoryMap[concept.category]?.name : "";
+  const prereqNames = unit.prerequisites
+    .map((id) => catalog.conceptMap[id]?.name ?? id)
+    .filter(Boolean);
+
+  function beginQuiz() {
+    const live = getLive();
+    if (!live || live.lessonId !== unit.id) {
+      startLive({
+        lessonId: unit.id,
+        startedAt: new Date().toISOString(),
+        mode: lastMode,
+        timeBudget: lastTime,
+      });
+    }
+    void navigate({ to: "/learn/$lessonId/quiz", params: { lessonId: unit.id } });
+  }
+
+  async function explain(style: "analogy" | "technical" | "simpler" | "example") {
+    setBusy("explain");
+    const result = await generateExplain(aiCtx, unit, style);
+    setBusy(null);
+    setStyleOpen(false);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    applyVersion(
+      unit.id,
+      {
+        id: `v-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        kind: "explain-differently",
+        explanation: result.value.explanation,
+        example: result.value.example,
+        provenance: {
+          type: "ai",
+          provider: result.provider,
+          model: result.model,
+          generatedAt: new Date().toISOString(),
+          promptVersion: "dau-lesson-v1",
+          schemaVersion: 1,
+          notes: `explain:${style}`,
+        },
+      },
+      {
+        ...unit,
+        explanation: result.value.explanation,
+        example: result.value.example,
+        custom: true,
+      },
+    );
+    bumpLiveGeneration();
+    logGeneration({
+      id: `gen-${Date.now()}`,
+      at: new Date().toISOString(),
+      kind: "explain",
+      provider: result.provider,
+      model: result.model,
+      promptVersion: "dau-lesson-v1",
+      ok: true,
+      lessonId: unit.id,
+      conceptId: unit.conceptId,
+    });
+    toast("Explanation rewritten.");
+  }
+
+  async function regenQuiz() {
+    setBusy("quiz");
+    const result = await generateQuiz(aiCtx, unit);
+    setBusy(null);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    applyVersion(
+      unit.id,
+      {
+        id: `v-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        kind: "quiz-regen",
+        quiz: [...result.value],
+        provenance: {
+          type: "ai",
+          provider: result.provider,
+          model: result.model,
+          generatedAt: new Date().toISOString(),
+          promptVersion: "dau-lesson-v1",
+          schemaVersion: 1,
+        },
+      },
+      { ...unit, quiz: result.value, custom: true },
+    );
+    bumpLiveGeneration();
+    logGeneration({
+      id: `gen-${Date.now()}`,
+      at: new Date().toISOString(),
+      kind: "quiz",
+      provider: result.provider,
+      model: result.model,
+      promptVersion: "dau-lesson-v1",
+      ok: true,
+      lessonId: unit.id,
+      conceptId: unit.conceptId,
+    });
+    toast("Quiz replaced.");
+  }
+
+  function feedback(verdict: LessonFeedbackVerdict) {
+    addFeedback(unit.id, verdict);
+    toast(`Marked ${verdict}.`);
+  }
+
+  return (
+    <article className="mx-auto max-w-xl">
+      <p className="text-xs tracking-[0.18em] text-muted uppercase">
+        {categoryName} · {unit.durationMin} min · {unit.effort}
+        {unit.level === "journalist" ? " · journalist" : ""}
+      </p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <h1 className="font-display text-3xl leading-tight tracking-tight sm:text-4xl">{unit.title}</h1>
+        <SourceBadge lesson={unit} />
+      </div>
+      {prereqNames.length > 0 && (
+        <p className="mt-3 text-sm text-muted">Assumes: {prereqNames.join(" · ")}</p>
+      )}
+      <div className="mt-3">
+        <ProvenanceLine lesson={unit} />
+      </div>
+
+      <div className="mt-8 space-y-5 text-[17px] leading-[1.6] text-fg">
+        {unit.explanation.map((p) => (
+          <p key={p.slice(0, 24)}>{p}</p>
+        ))}
+      </div>
+
+      <LessonDiagram name={unit.diagram} />
+
+      <section className="mt-8 rounded-lg bg-surface px-5 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+        <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Example</h2>
+        <p className="mt-2 text-[15px] leading-relaxed text-fg">{unit.example}</p>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Why it matters</h2>
+        <p className="mt-2 text-[15px] leading-relaxed text-muted">{unit.whyItMatters}</p>
+      </section>
+
+      {unit.source.sourceExcerpt && (
+        <section className="mt-6">
+          <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Grounded in source</h2>
+          <p className="mt-2 text-sm leading-relaxed text-subtle">{unit.source.sourceExcerpt}</p>
+        </section>
+      )}
+
+      <div className="mt-10 flex flex-wrap items-center gap-3">
+        <Button type="button" size="lg" onClick={beginQuiz}>
+          Three questions
+        </Button>
+        <Link to="/session" className="text-sm text-muted no-underline hover:text-fg">
+          Abort this gap
+        </Link>
+      </div>
+
+      {ai.enabled && ai.policy !== "off" && (
+        <div className="mt-8 border-t border-border/70 pt-6">
+          <p className="text-xs tracking-wide text-muted uppercase">Rewrite this unit</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button type="button" size="sm" variant="secondary" onClick={() => setStyleOpen((v) => !v)} disabled={busy !== null}>
+              {busy === "explain" ? "Rewriting…" : "Explain differently"}
+            </Button>
+            <Button type="button" size="sm" variant="secondary" onClick={() => void regenQuiz()} disabled={busy !== null}>
+              {busy === "quiz" ? "Writing questions…" : "Regenerate quiz"}
+            </Button>
+          </div>
+          {styleOpen && (
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {(
+                [
+                  ["analogy", "Different analogy"],
+                  ["technical", "More technical"],
+                  ["simpler", "Simpler"],
+                  ["example", "Another example"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => void explain(id)}
+                  className="min-h-11 rounded-md bg-raised px-3 text-sm text-fg shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {(unit.source.type === "ai" || unit.custom) && (
+        <div className="mt-8 flex flex-wrap items-center gap-2 text-xs text-muted">
+          <span>This unit:</span>
+          {(["accurate", "unclear", "suspect"] as const).map((v) => (
+            <button key={v} type="button" onClick={() => feedback(v)} className="rounded-full bg-raised px-3 py-1.5 hover:text-fg">
+              {v}
+            </button>
+          ))}
+          {unit.custom && (
+            <button
+              type="button"
+              className="ml-auto text-bad"
+              onClick={() => {
+                archiveLesson(unit.id);
+                toast("Archived.");
+                void navigate({ to: "/library" });
+              }}
+            >
+              Archive
+            </button>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
