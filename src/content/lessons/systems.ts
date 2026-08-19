@@ -3,54 +3,6 @@ import { L, q } from "../lesson";
 
 export const SYSTEMS_LESSONS: Lesson[] = [
   L({
-    id: "os-vm-10",
-    conceptId: "os-vm",
-    title: "Virtual memory is a translation cache problem",
-    durationMin: 10,
-    effort: "normal",
-    level: "core",
-    prerequisites: ["os-process"],
-    goDeeper: "os-sched",
-    explanation: [
-      "Every user address is a name. The MMU walks page tables to turn it into a frame (or a fault). Multi-level tables exist so the mapping can be sparse: you do not store a row for every possible page. The TLB caches recent walks. A TLB miss is a walk; a walk miss is a page fault.",
-      "A page fault is not always swapping. It is also first touch, copy-on-write after fork, memory-mapped file fill, guard pages, and soft faults that just install a mapping the kernel already knew. The interesting production number is often minor faults and TLB shootdowns, not disk.",
-      "Large pages (2 MB / 1 GB) exist to make the TLB cover more memory with the same entries. They also create internal fragmentation and make the kernel’s compaction life worse. That trade is why databases beg for huge pages and why some runtimes refuse them.",
-    ],
-    example:
-      "`fork()` marks pages copy-on-write. Parent and child share frames until a write. The first store faults, the kernel copies the page, and each side gets a private frame. That is why fork of a 40 GB process is cheap until someone writes.",
-    whyItMatters:
-      "Latency cliffs labelled ‘mysterious’ are often TLB or fault storms. If you cannot tell a TLB miss from a major fault, you will tune the wrong thing.",
-    quiz: [
-      q("vm1", "The TLB caches:", ["File contents", "Virtual-to-physical translations", "Branch targets", "Inodes"], 1, "It is a cache of page-table results."),
-      q("vm2", "A page fault always means:", ["Disk I/O", "The MMU could not complete the translation and trapped to the kernel — reason varies", "The process dies", "The TLB is infinite"], 1, "Major, minor, COW, first-touch…"),
-      q("vm3", "Huge pages help when:", ["The TLB is the limit and the working set is large and contiguous enough", "You want more faults", "Disk is fast", "You have one page of RAM"], 0, "Same TLB entries, more coverage."),
-    ],
-  }),
-  L({
-    id: "os-sched-10",
-    conceptId: "os-sched",
-    title: "Schedulers trade fairness for latency",
-    durationMin: 10,
-    effort: "normal",
-    level: "core",
-    prerequisites: ["os-process"],
-    explanation: [
-      "A general-purpose scheduler decides which runnable thread owns a core next. Linux CFS (and EEVDF after it) tries to give each task a fair share of CPU, weighted by niceness, while keeping wakeup latency tolerable. It is not trying to meet a deadline. If you needed a deadline, you wanted a real-time class or a different OS.",
-      "The visible knobs — nice, cgroup cpu.max, SCHED_FIFO — change who starves. They do not create cycles. A machine at 100% has already spent the resource; the scheduler only picks the victim. Latency-sensitive work (audio, UI, packet loops) dies when a batch job is equally nice and cache-hot.",
-      "Migration and load balancing are the other half. A task bouncing across cores throws away its cache and its branch history. Pinning is sometimes the whole optimization.",
-    ],
-    example:
-      "A 4-core laptop compiles (`-j8`) and plays audio. Without a reservation, the audio thread’s wakeups sit behind fat compiler tasks. PulseAudio crackles. `nice +10` on the compile, or a cgroup cap, is a political act about whose latency matters.",
-    whyItMatters:
-      "Cloud ‘noisy neighbor’ writing is scheduler plus cgroup plus cache. If the piece only mentions cores, it missed the policy layer.",
-    quiz: [
-      q("sc1", "CFS/EEVDF are designed to:", ["Meet hard deadlines", "Share CPU fairly among nice-weighted tasks", "Replace paging", "Pin every thread"], 1, "Fair share, not RT."),
-      q("sc2", "At 100% utilization the scheduler:", ["Creates extra cycles", "Only chooses who waits", "Turns off caches", "Disables interrupts"], 1, "Policy, not supply."),
-      q("sc3", "Cross-core migration is costly because:", ["PIDs change", "You lose warm caches and predictor state", "Virtual memory turns off", "Disk must remount"], 1, "The working set is not in the new private caches."),
-    ],
-  }),
-
-  L({
     id: "net-stack-5",
     conceptId: "net-stack",
     title: "Layers are contracts",

@@ -1108,6 +1108,274 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "virt-translate": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A virtual address walks a table to a frame">
+      <rect x="28" y="40" width="110" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="83" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        virtual
+      </text>
+      <path d="M138 66 H200" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="200" y="28" width="150" height="76" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="275" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        page table
+      </text>
+      <text x="275" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        walk
+      </text>
+      <path d="M350 66 H412" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="412" y="40" width="120" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="472" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        frame
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the program names a page · the machine finds a frame
+      </text>
+    </svg>
+  ),
+  "tlb-shootdown": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="One core changes a map; the others must drop the old translation">
+      <rect x="36" y="28" width="140" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="106" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        core A
+      </text>
+      <text x="106" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        mapping changed
+      </text>
+      <path d="M176 64 H240" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="208" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        shoot
+      </text>
+      <rect x="240" y="28" width="120" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="300" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        core B TLB
+      </text>
+      <rect x="400" y="28" width="120" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="460" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        core C TLB
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        stale translations must die on every core
+      </text>
+    </svg>
+  ),
+  "page-fault-path": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A missing translation traps into the kernel">
+      <rect x="28" y="36" width="120" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="88" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        load / store
+      </text>
+      <path d="M148 64 H210" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="210" y="28" width="130" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="275" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        no translation
+      </text>
+      <text x="275" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        trap
+      </text>
+      <path d="M340 64 H400" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="400" y="28" width="132" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="466" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        kernel
+      </text>
+      <text x="466" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        fill or kill
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a miss is a request · not always a crash
+      </text>
+    </svg>
+  ),
+  "cow-fork": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Parent and child share a frame until a write">
+      <rect x="36" y="28" width="130" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="101" y="66" textAnchor="middle" fill="currentColor" fontSize="13">
+        parent
+      </text>
+      <rect x="214" y="44" width="132" height="48" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="74" textAnchor="middle" fill="currentColor" fontSize="13">
+        shared frame
+      </text>
+      <rect x="394" y="28" width="130" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="459" y="66" textAnchor="middle" fill="currentColor" fontSize="13">
+        child
+      </text>
+      <path d="M166 60 H214" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M346 60 H394" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a write copies · the other side keeps the old frame
+      </text>
+    </svg>
+  ),
+  "sched-queues": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="The scheduler picks from the runnable set">
+      <rect x="32" y="36" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="112" y="36" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="192" y="36" width="70" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="151" y="62" textAnchor="middle" fill="currentColor" fontSize="12">
+        runnable
+      </text>
+      <path d="M262 58 H318" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="318" y="32" width="88" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="362" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        pick
+      </text>
+      <rect x="430" y="36" width="98" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="479" y="62" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        waiting
+      </text>
+      <text x="280" y="126" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        policy chooses the next owner · it does not invent cores
+      </text>
+    </svg>
+  ),
+  "race-interleave": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Two threads read the same word and both write">
+      <rect x="36" y="28" width="150" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread A
+      </text>
+      <text x="111" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        read 7 · write 8
+      </text>
+      <rect x="374" y="28" width="150" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="449" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread B
+      </text>
+      <text x="449" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        read 7 · write 8
+      </text>
+      <rect x="210" y="40" width="140" height="48" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        word = 7
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        two increments · one is lost
+      </text>
+    </svg>
+  ),
+  "lock-sleep": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Spin burns the core; sleep gives it away">
+      <rect x="40" y="32" width="200" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="140" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        spin
+      </text>
+      <text x="140" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        core stays busy waiting
+      </text>
+      <rect x="320" y="32" width="200" height="72" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="420" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        sleep
+      </text>
+      <text x="420" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        core runs someone else
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        long holds belong on the sleep path
+      </text>
+    </svg>
+  ),
+  "inode-dir-fd": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A handle names an open file; a directory name names an inode">
+      <rect x="24" y="40" width="80" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="64" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        fd
+      </text>
+      <path d="M104 64 H150" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="150" y="36" width="100" height="56" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="200" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        open file
+      </text>
+      <path d="M250 64 H296" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="296" y="36" width="90" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="341" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        inode
+      </text>
+      <path d="M386 64 H430" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <rect x="430" y="36" width="106" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="483" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        name
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the name is not the object · the inode is
+      </text>
+    </svg>
+  ),
+  "fs-layout": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Disk image: superblock, free map, inodes, data">
+      <rect x="28" y="40" width="100" height="48" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="78" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        super
+      </text>
+      <rect x="136" y="40" width="100" height="48" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="186" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        free map
+      </text>
+      <rect x="244" y="40" width="120" height="48" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="304" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        inodes
+      </text>
+      <rect x="372" y="40" width="160" height="48" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="452" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        data
+      </text>
+      <text x="280" y="124" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a linear disk wearing a filesystem
+      </text>
+    </svg>
+  ),
+  "journal-commit": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Write the intent, then the home location">
+      <rect x="36" y="36" width="150" height="64" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="111" y="64" textAnchor="middle" fill="currentColor" fontSize="13">
+        journal
+      </text>
+      <text x="111" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        intent first
+      </text>
+      <path d="M186 68 H250" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="218" y="60" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        then
+      </text>
+      <rect x="250" y="36" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="325" y="64" textAnchor="middle" fill="currentColor" fontSize="13">
+        home
+      </text>
+      <text x="325" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        metadata / data
+      </text>
+      <rect x="430" y="44" width="96" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="478" y="74" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        durable
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the log must land before the damage
+      </text>
+    </svg>
+  ),
+  "buffer-path": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A write hits RAM first, then the device">
+      <rect x="28" y="40" width="110" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="83" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        write()
+      </text>
+      <path d="M138 66 H196" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="196" y="32" width="150" height="68" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="271" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        buffer cache
+      </text>
+      <text x="271" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        RAM
+      </text>
+      <path d="M346 66 H408" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="408" y="40" width="124" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="470" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        device
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        cached is not durable
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

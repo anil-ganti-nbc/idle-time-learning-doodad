@@ -1,0 +1,715 @@
+{
+  "courseId": "os-storage",
+  "moduleId": "os-s-fs",
+  "lessons": [
+    {
+      "id": "os-block-dev-5",
+      "conceptId": "os-block-dev",
+      "title": "Equal sectors, numbered from zero",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["os-device-intro"],
+      "goDeeper": "os-inode",
+      "explanation": [
+        "A block device is the kernel's picture of a disk: a linear array of fixed-size sectors, numbered from zero. Sector 0 is not 'the start of a file'. It is the first address on that array. Every later sector has the same size. The device does not know names, sizes, or which bytes belong together.",
+        "A user program writes bytes to a handle. It does not pass a sector number. The filesystem — kernel code sitting on this array — chooses which sector receives the bytes. Placement is not the program's problem. The device only reads or writes the sector it is told."
+      ],
+      "example": "An editor saves twenty lines through a file descriptor. The filesystem chooses sectors 94, 95, and 96 and asks the block device to write them. The editor never saw those numbers. The device never saw the filename.",
+      "whyItMatters": "Names and allocation all sit on this numbered array. The device does not choose what a file is.",
+      "quiz": [
+        {
+          "id": "bd5-1",
+          "stem": "A block device, in this module, is:",
+          "correctAnswer": "A linear array of fixed-size sectors, numbered from zero",
+          "distractors": [
+            { "text": "A named tree of files the program walks by itself", "kind": "nearby", "rationale": "Names and trees are the filesystem's job, not the device's." },
+            { "text": "A bag of variable-length records the disk invents per write", "kind": "reversed", "rationale": "Sectors are equal and numbered. Length is not invented per write." },
+            { "text": "A handle table the compiler builds at link time", "kind": "misapplied", "rationale": "A block device is hardware addressing, not a link record." }
+          ],
+          "correctExplanation": "Equal sectors, addresses from zero. That is the whole picture here.",
+          "objectiveIds": ["Describe a block device as a linear array of fixed-size sectors"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "bd5-2",
+          "stem": "A program that writes a file typically:",
+          "correctAnswer": "Hands bytes to a handle; the filesystem chooses the sector",
+          "distractors": [
+            { "text": "Passes a sector number it computed from the filename", "kind": "reversed", "rationale": "The program named a file, not a location on the array." },
+            { "text": "Pokes the disk's bus registers with a sector list", "kind": "nearby", "rationale": "Register traffic is privileged. The program saw a handle." },
+            { "text": "Stores the bytes in the compiler's object file header", "kind": "misapplied", "rationale": "A save is runtime I/O, not a compile step." }
+          ],
+          "correctExplanation": "Handle in, sector choice in the filesystem. The program never numbered the array.",
+          "objectiveIds": ["Predict why the filesystem, not the program, chooses which sector to write"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "bd5-3",
+          "stem": "The filesystem, not the program, chooses the sector because:",
+          "correctAnswer": "The program named a file; allocation on the array is the filesystem's job",
+          "distractors": [
+            { "text": "Each filename is permanently wired to sector zero", "kind": "misconception", "rationale": "Many files share one device. Sector 0 is not 'every file'." },
+            { "text": "User programs must pick free sectors or the device will not spin", "kind": "reversed", "rationale": "The device does not demand a user-chosen number." },
+            { "text": "The handle number is already the sector number", "kind": "nearby", "rationale": "A handle is a kernel name for an open file, not an address on disk." }
+          ],
+          "correctExplanation": "A file is not a sector. Someone has to place it. That someone is the filesystem.",
+          "objectiveIds": ["Predict why the filesystem, not the program, chooses which sector to write"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-block-dev-10",
+      "conceptId": "os-block-dev",
+      "title": "The write names a file, not a sector",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-device-intro"],
+      "goDeeper": "os-inode",
+      "explanation": [
+        "The five-minute unit named the array: equal sectors, addressed from zero. This one is why the program is kept off those numbers. A file is an abstraction over many sectors. Two files share one device. The filesystem's own tables live on the same array. None of that is visible in a write to a handle.",
+        "If each program picked a sector, two saves would smash each other, and a save could smash the tables that say what is free. The filesystem groups sectors into blocks, tracks which are used, and spreads a file across as many as its size needs. The program still only named a file.",
+        "The handle from the device-intro unit is the other half of this split. User code talks to an integer. The kernel talks to numbered sectors. The filesystem is the translation: this file's next bytes go here. Later units name the on-disk objects that make that translation stick across reboot. Here the fact is the addressing model, and who is allowed to use it."
+      ],
+      "example": "Two editors save two files on the same disk. If each wrote sector 0, the second save would destroy the first and could destroy the filesystem's own first blocks. The filesystem places them in different free sectors. Each editor only ever passed a handle and a buffer.",
+      "whyItMatters": "A write that names a sector is a different API. The file API exists because placement, sharing, and reuse are not the program's problem.",
+      "quiz": [
+        {
+          "id": "bd10-1",
+          "stem": "Sectors on a block device are:",
+          "correctAnswer": "Equal-sized, addressed by number, and unaware of files",
+          "distractors": [
+            { "text": "Variable-sized so each file fits in one sector", "kind": "reversed", "rationale": "Sectors are fixed. Files span as many as they need." },
+            { "text": "Named by the same strings the user types", "kind": "nearby", "rationale": "Strings are names. Sectors are numbers." },
+            { "text": "Allocated by the compiler for each source file", "kind": "misapplied", "rationale": "Sector numbers are a runtime disk address, not a build artifact." }
+          ],
+          "correctExplanation": "One size, a linear index, no filenames. That is the device.",
+          "objectiveIds": ["Describe a block device as a linear array of fixed-size sectors"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "bd10-2",
+          "stem": "Two programs saving two files on the same disk:",
+          "correctAnswer": "Must not each pick sectors; the filesystem places both",
+          "distractors": [
+            { "text": "Should each write sector 0 so the latest save wins", "kind": "reversed", "rationale": "That smash is exactly what placement exists to prevent." },
+            { "text": "Bypass the kernel and split the bus by agreement", "kind": "nearby", "rationale": "User code still sees handles. The kernel still mediates the device." },
+            { "text": "Must rebuild the kernel between the two writes", "kind": "misapplied", "rationale": "Placement is runtime bookkeeping, not a rebuild." }
+          ],
+          "correctExplanation": "Shared array, private files. The filesystem is the one that knows both.",
+          "objectiveIds": ["Predict why the filesystem, not the program, chooses which sector to write"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "bd10-3",
+          "stem": "A program that wrote its own chosen sector numbers would typically:",
+          "correctAnswer": "Collide with other files and with the filesystem's own tables",
+          "distractors": [
+            { "text": "Always be faster, because the device prefers user numbers", "kind": "misconception", "rationale": "The device does not prefer a user-chosen index. Collisions are the cost." },
+            { "text": "Be required, because filesystems cannot choose sectors", "kind": "reversed", "rationale": "Choosing sectors is the filesystem's job." },
+            { "text": "Only affect that process's memory, not the disk", "kind": "nearby", "rationale": "A sector write lands on the shared array. Everyone lives there." }
+          ],
+          "correctExplanation": "The array is shared. User-chosen numbers have nowhere safe to go.",
+          "objectiveIds": ["Predict why the filesystem, not the program, chooses which sector to write"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-inode-10",
+      "conceptId": "os-inode",
+      "title": "What a filename will eventually name",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-block-dev"],
+      "goDeeper": "os-dir",
+      "diagram": "inode-dir-fd",
+      "explanation": [
+        "An inode is the on-disk object a filename eventually names. It is a numbered record: type (file or directory or device), size, and the block numbers where the bytes live. The string the user typed is not a field of that record. A name will point here later. The inode is what it will point at.",
+        "Metadata and data blocks travel with the inode, not with the name. Size is in the inode. The list of data blocks is in the inode. Rewrite the name and those fields do not move. Copy the name's letters onto a new inode and you have a different object, with different blocks, even if the letters match.",
+        "The block device still only sees sector numbers. The inode is how the filesystem remembers which of those sectors belong to this object after reboot. Open will, in a later unit, turn a name into this number and then into those blocks. This unit stops at the object itself."
+      ],
+      "example": "Inode 23 holds type file, size 60, data in block 80. The name notes will point at 23. Renaming notes to old-notes does not copy block 80. Inode 23 is unchanged. The string moved. The object did not.",
+      "whyItMatters": "Rename, size, and 'the bytes are still there' only make sense if the name is not the object. The next unit is the list that points here.",
+      "quiz": [
+        {
+          "id": "ino10-1",
+          "stem": "An inode is:",
+          "correctAnswer": "The on-disk object a filename eventually names",
+          "distractors": [
+            { "text": "The string the user typed, stored on disk as text", "kind": "nearby", "rationale": "The string is a name that will point here. It is not the inode." },
+            { "text": "A sector the program numbered in its write call", "kind": "reversed", "rationale": "The program still does not pick sectors. The inode records which blocks were chosen." },
+            { "text": "A compiler record of which functions were inlined", "kind": "misapplied", "rationale": "An inode is a filesystem object, not a build artifact." }
+          ],
+          "correctExplanation": "A numbered on-disk record. A name will point at it. The name is not it.",
+          "objectiveIds": ["Describe an inode as the on-disk object a filename eventually names"],
+          "prerequisiteConceptIds": ["os-block-dev"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ino10-2",
+          "stem": "Renaming a file usually changes:",
+          "correctAnswer": "The name that points at the inode, not the inode's data blocks",
+          "distractors": [
+            { "text": "Every data block, which must be copied under the new name", "kind": "reversed", "rationale": "The blocks belong to the inode. The name is not the blocks." },
+            { "text": "The sector size of the block device", "kind": "nearby", "rationale": "Sector size is a device fact, not a rename." },
+            { "text": "The inode number, which is recomputed from the new string", "kind": "misconception", "rationale": "The number names the record. The string does not hash into a new inode." }
+          ],
+          "correctExplanation": "The string moved. Type, size, and block list stayed with the inode.",
+          "objectiveIds": ["Distinguish the inode's metadata and data blocks from the name that points at it"],
+          "prerequisiteConceptIds": ["os-block-dev"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ino10-3",
+          "stem": "A file's size is read from the inode rather than from its name because:",
+          "correctAnswer": "Size is metadata stored in the inode, not in the filename",
+          "distractors": [
+            { "text": "The filename is required to begin with the size in decimal", "kind": "reversed", "rationale": "Names are strings. They do not encode size." },
+            { "text": "The block device reports size in the sector number", "kind": "nearby", "rationale": "A sector number is an address, not a length." },
+            { "text": "The compiler writes the size into the executable's title", "kind": "misapplied", "rationale": "On-disk size is filesystem metadata, not a compile title." }
+          ],
+          "correctExplanation": "The inode holds type, size, and block numbers. The name only points.",
+          "objectiveIds": ["Distinguish the inode's metadata and data blocks from the name that points at it"],
+          "prerequisiteConceptIds": ["os-block-dev"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-dir-10",
+      "conceptId": "os-dir",
+      "title": "The list that turns a string into a number",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-inode"],
+      "goDeeper": "os-fs-layout",
+      "diagram": "inode-dir-fd",
+      "explanation": [
+        "A directory is a list of names to inode numbers. It is itself a file: an inode whose data blocks hold pairs (string, number). Looking up readme means reading those pairs until the string matches, then taking the number. That number is the inode the previous unit named.",
+        "Two names for one inode means two pairs with the same number. One object, one copy of the metadata and data, two strings that find it. A write through either name changes the same blocks. That is a hard link, not a second file.",
+        "Removing a name deletes a pair. The inode remains if another pair still points at it. Only when the last name is gone does the filesystem free the inode and its data blocks. The name was never the object. The list was only a way to find it."
+      ],
+      "example": "notes and backup/notes both store inode 23. One write of a line is visible under both names. Unlink notes. backup/notes still names inode 23, so the line is still there. The directory backup still has a pair; the directory that held notes no longer does.",
+      "whyItMatters": "Unlink, link, and 'the file is still there' are this table. They are not a second copy of the bytes.",
+      "quiz": [
+        {
+          "id": "dir10-1",
+          "stem": "Looking up the name readme in a directory means:",
+          "correctAnswer": "Scanning a list of names for a matching inode number",
+          "distractors": [
+            { "text": "Reading the inode named readme, which stores its own filename", "kind": "nearby", "rationale": "The inode does not hold the name. The directory list does." },
+            { "text": "Asking the block device for the sector titled readme", "kind": "reversed", "rationale": "Sectors have numbers, not titles. The list is in a file." },
+            { "text": "Asking the compiler which object file used that string", "kind": "misapplied", "rationale": "Lookup is a runtime walk of directory data, not a build step." }
+          ],
+          "correctExplanation": "String in, inode number out. The directory is that table.",
+          "objectiveIds": ["Describe a directory as a list of names to inode numbers"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dir10-2",
+          "stem": "Two directory entries that hold the same inode number mean:",
+          "correctAnswer": "Two names for one inode: one copy of the metadata and data",
+          "distractors": [
+            { "text": "Two independent files that will diverge on the next write", "kind": "misconception", "rationale": "Same inode, same blocks. A write is visible under both names." },
+            { "text": "The inode has been deleted and both names are invalid", "kind": "reversed", "rationale": "Two live names are why the inode is still reachable." },
+            { "text": "The superblock has been duplicated under both names", "kind": "nearby", "rationale": "The superblock is not a file name. This is one inode, two strings." }
+          ],
+          "correctExplanation": "A hard link: two strings, one object. Not two copies.",
+          "objectiveIds": ["Predict what two names for one inode means"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dir10-3",
+          "stem": "Removing one of two names for the same inode:",
+          "correctAnswer": "Drops that name; the inode remains if another name still points at it",
+          "distractors": [
+            { "text": "Always deletes the data blocks, because a name is the file", "kind": "reversed", "rationale": "The name was a pointer. The other pointer still holds the object." },
+            { "text": "Converts the remaining name into a sector address", "kind": "nearby", "rationale": "The remaining name still maps to the same inode number." },
+            { "text": "Rewrites the block device's sector size", "kind": "misapplied", "rationale": "Unlink is a directory update, not a device geometry change." }
+          ],
+          "correctExplanation": "One pair gone. The object lives on until the last pair is gone.",
+          "objectiveIds": ["Predict what two names for one inode means"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-fs-layout-10",
+      "conceptId": "os-fs-layout",
+      "title": "Superblock first, then the map, then the rest",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-inode"],
+      "goDeeper": "os-journal",
+      "diagram": "fs-layout",
+      "explanation": [
+        "A disk image is not a heap of files. It is a few regions the filesystem knows how to find. The superblock says how large the filesystem is, how many inodes it has, and where the other regions begin. After reboot you read that block first. Without it the rest is unlabelled sectors.",
+        "The free-space map — a bitmap on a small image — marks which data blocks are free. The inode table is a packed array of the records the last units named. The data region holds file contents, and the directory lists that point at inodes. Those four — superblock, map, inodes, data — are the layout this unit can hold.",
+        "If the free-space map is wrong after a crash, the allocator no longer matches the inodes. A live block can be handed to a new file and overwritten. A free block can be marked used forever and leaked. The bytes in the data region are not magically erased. The map that says who may use them is what was lost."
+      ],
+      "example": "A thousand-block image: superblock in an early block, then a bitmap, then inodes 1 through N, then data. After reboot the kernel reads the superblock, finds the bitmap and the inode table from its fields, and only then walks a path by reading inodes and data. Smash the bitmap and a later create can be given a block inode 23 still lists.",
+      "whyItMatters": "A disk that is 'full' while files are small, or a file that contains another file's bytes, starts as a map that no longer matches the inodes.",
+      "quiz": [
+        {
+          "id": "lay10-1",
+          "stem": "To interpret a disk image after reboot, the kernel must find:",
+          "correctAnswer": "The superblock, then the free-space map, inodes, and data from its fields",
+          "distractors": [
+            { "text": "Only the data region, because names live in sector titles", "kind": "reversed", "rationale": "Without the superblock and inodes, data blocks are unlabelled sectors." },
+            { "text": "A separate disk for each inode, with no superblock", "kind": "nearby", "rationale": "One image holds the tables and the data. The superblock locates them." },
+            { "text": "Compiler sections: text, data, then the symbol table", "kind": "misapplied", "rationale": "This is an on-disk filesystem layout, not an object-file layout." }
+          ],
+          "correctExplanation": "Superblock first. It names the map, the inode table, and the data.",
+          "objectiveIds": ["Locate superblock, free-space map, inodes, and data on a disk image"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "lay10-2",
+          "stem": "The superblock's job on that image is:",
+          "correctAnswer": "To describe where the free-space map, inodes, and data live, and how large they are",
+          "distractors": [
+            { "text": "To store the bytes of every user file", "kind": "nearby", "rationale": "File bytes live in the data region. The superblock is a small description." },
+            { "text": "To list filenames, which inodes never do", "kind": "reversed", "rationale": "Names live in directory data. The superblock does not replace the inode." },
+            { "text": "To hold the assembler listing across reboots", "kind": "misapplied", "rationale": "The superblock is filesystem geometry, not a build artifact." }
+          ],
+          "correctExplanation": "Sizes and offsets. That is how the other three regions are found.",
+          "objectiveIds": ["Locate superblock, free-space map, inodes, and data on a disk image"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "lay10-3",
+          "stem": "A free-space map that no longer matches the inodes after a crash typically:",
+          "correctAnswer": "Hands out a live block or never reuses a free one",
+          "distractors": [
+            { "text": "Erases the superblock as a recovery step", "kind": "misconception", "rationale": "A wrong map does not repair itself by destroying the superblock." },
+            { "text": "Is harmless, because inodes do not use blocks", "kind": "reversed", "rationale": "Inodes name data blocks. The map is how new names get unused ones." },
+            { "text": "Converts every filename into a sector number", "kind": "nearby", "rationale": "The failure is allocation, not a rename of every string." }
+          ],
+          "correctExplanation": "What is lost is safe allocation. Live data can be overwritten, or space leaks.",
+          "objectiveIds": ["Predict what is lost if the free-space map is wrong after a crash"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-journal-10",
+      "conceptId": "os-journal",
+      "title": "Write the intent before the house changes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-fs-layout"],
+      "goDeeper": "os-crash-consist",
+      "diagram": "journal-commit",
+      "explanation": [
+        "A metadata update has a home location: an inode slot, a bitmap bit, a directory block. Journaling writes the intended change to a reserved log first, and only then applies it at that home. The log is the intent. The home is the structure the rest of the filesystem will read on the next lookup.",
+        "The journal must hit disk before the metadata it describes. If a home write lands first and the machine dies mid-update, the home is torn and the log has no complete intent to finish or undo. A durable intent can be replayed into the home after reboot. A durable home fragment cannot invent the rest of the plan.",
+        "This unit is that ordering constraint, not the full crash case analysis. Creating a file touches a bitmap and an inode at least. Those are two home locations. The log records both before either is the new truth. What a power cut may legally leave is the next unit."
+      ],
+      "example": "Allocate inode 45 and mark a data block used. The filesystem writes that pair of changes into the log and waits until the log is on disk. Only then does it dirty the inode table and the bitmap. A crash before the log is durable leaves the old home. A crash after can replay.",
+      "whyItMatters": "A crash in the next unit is only diagnosable if intent was required to hit disk first. 'We have a log' is empty without that order.",
+      "quiz": [
+        {
+          "id": "jnl10-1",
+          "stem": "Journaling a metadata update means:",
+          "correctAnswer": "Writing the intended change to a log before applying it at the home location",
+          "distractors": [
+            { "text": "Writing the home location first, then copying it into a log for luck", "kind": "reversed", "rationale": "Home-first is the order journaling exists to forbid." },
+            { "text": "Keeping a second copy of every data block forever", "kind": "nearby", "rationale": "The log holds intent for a transaction, not a permanent mirror of all files." },
+            { "text": "Printing the intended change on the operator's terminal", "kind": "misapplied", "rationale": "The intent has to be on the disk, not on a screen." }
+          ],
+          "correctExplanation": "Log first, home second. That is the mechanism.",
+          "objectiveIds": ["Describe journaling as writing the intent before applying it to the home location"],
+          "prerequisiteConceptIds": ["os-fs-layout"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "jnl10-2",
+          "stem": "The journal must be on disk before the home metadata because:",
+          "correctAnswer": "A crash mid-home-write would have no durable intent to finish or undo",
+          "distractors": [
+            { "text": "Home writes are illegal until the machine reboots", "kind": "reversed", "rationale": "Home writes are legal after the intent is durable, not after reboot." },
+            { "text": "The block device can only write the first sector of the disk", "kind": "nearby", "rationale": "The device writes whichever sector it is told. Order is the filesystem's rule." },
+            { "text": "The journal is where user file bytes permanently live", "kind": "misconception", "rationale": "The journal is intent. File bytes still live in the data region." }
+          ],
+          "correctExplanation": "Without a durable plan, a torn home cannot be completed. That is why the log goes first.",
+          "objectiveIds": ["Predict why the journal must hit disk before the metadata it describes"],
+          "prerequisiteConceptIds": ["os-fs-layout"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "jnl10-3",
+          "stem": "In this mechanism the home location is:",
+          "correctAnswer": "The inode, bitmap, or directory block the update is meant to change",
+          "distractors": [
+            { "text": "The journal slot that holds the intent", "kind": "nearby", "rationale": "The journal is the intent, not the home. Home is where lookup will read." },
+            { "text": "The user program's memory, which is the real disk", "kind": "reversed", "rationale": "Home is on the disk image, in the layout's tables and data." },
+            { "text": "The compiler's listing of object files", "kind": "misapplied", "rationale": "Home locations are filesystem blocks, not a build listing." }
+          ],
+          "correctExplanation": "Home is the real inode, map, or directory block. The log is only the plan.",
+          "objectiveIds": ["Describe journaling as writing the intent before applying it to the home location"],
+          "prerequisiteConceptIds": ["os-fs-layout"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-journal-20",
+      "conceptId": "os-journal",
+      "title": "Commit, then the home write, then checkpoint",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["os-fs-layout"],
+      "goDeeper": "os-crash-consist",
+      "diagram": "journal-commit",
+      "explanation": [
+        "The ten-minute unit demanded intent before home. This one is the inventory of records that make that demand real. A transaction's body is copied into the log: the inode, bitmap, or directory blocks as they will be. Those log blocks are not yet a promise. They can be leftover garbage from a crash mid-write.",
+        "The commit record is the line you cannot cross. Once it is durable, the body is a complete intent and must be treated as such after reboot. Until it is durable, replay must ignore that body. Writing a commit before the body is on disk would certify a plan that is not there. Writing home before a commit would change the house without a certified plan.",
+        "Home writes come after the commit. They install the logged blocks at their real offsets in the inode table, bitmap, and data. A crash in this window leaves the home maybe torn, but the commit is on disk, so replay can install again. Install must be idempotent: doing it twice is the same as doing it once.",
+        "Checkpoint is last. It marks the log free so the next transaction can reuse the space. Checkpoint before home would drop the only copy of a committed intent. The legal order is body, commit, home, checkpoint. Reverse any adjacent pair and a crash has either a false commit or a torn home with nothing to replay."
+      ],
+      "example": "Create a file: write the new inode and bitmap bits into the log, write a commit record, wait until that record is on disk, write those blocks into the inode table and bitmap, then mark the log empty. Power dies after commit and before the bitmap home write. On reboot the log still has the commit, so the bitmap bit is installed from the log.",
+      "whyItMatters": "Calling a filesystem journaled is empty until you can name which record must be durable before which write.",
+      "quiz": [
+        {
+          "id": "jnl20-1",
+          "stem": "A journaled update hits disk in this order:",
+          "correctAnswer": "Log body, then commit record, then home write, then checkpoint",
+          "distractors": [
+            { "text": "Home write, then commit record, then the log body", "kind": "reversed", "rationale": "Home-before-commit is the torn case with no certified intent." },
+            { "text": "Checkpoint, then home write, with no commit record", "kind": "nearby", "rationale": "Checkpoint last frees the log. Without a commit there is nothing to honour." },
+            { "text": "Superblock, then the compiler's symbol table", "kind": "misapplied", "rationale": "This is transaction order, not an object-file layout." }
+          ],
+          "correctExplanation": "Body, commit, home, checkpoint. That is the inventory in time.",
+          "objectiveIds": ["Describe journaling as writing the intent before applying it to the home location"],
+          "prerequisiteConceptIds": ["os-fs-layout"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "jnl20-2",
+          "stem": "A crash after the commit record is on disk, but before the home write:",
+          "correctAnswer": "Can be repaired by replaying the log into the home location",
+          "distractors": [
+            { "text": "Must be abandoned, because a commit without a home write is illegal to replay", "kind": "reversed", "rationale": "That window is exactly why the commit exists: so replay can finish the home write." },
+            { "text": "Requires rewriting every user file from backup tapes", "kind": "nearby", "rationale": "Replay installs the logged metadata. It does not resilver the whole disk." },
+            { "text": "Leaves the log empty, because checkpoint already ran", "kind": "misconception", "rationale": "Checkpoint is last. It has not run if home has not." }
+          ],
+          "correctExplanation": "Commit is the promise. Replay keeps it by installing home.",
+          "objectiveIds": ["Predict why the journal must hit disk before the metadata it describes"],
+          "prerequisiteConceptIds": ["os-fs-layout"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "jnl20-3",
+          "stem": "Writing the home location before a durable commit differs from commit-then-home because:",
+          "correctAnswer": "A crash can tear the home update with no committed intent to replay",
+          "distractors": [
+            { "text": "The two orders are identical after any crash", "kind": "nearby", "rationale": "Order is the whole mechanism. They are not identical." },
+            { "text": "Home-first is safer, because the log is then optional", "kind": "reversed", "rationale": "Home-first is the case the log cannot repair." },
+            { "text": "Home-first is required so the compiler can link", "kind": "misapplied", "rationale": "Linking is not a disk-commit order." }
+          ],
+          "correctExplanation": "Home-first can tear with no plan. Commit-then-home can replay.",
+          "objectiveIds": ["Predict why the journal must hit disk before the metadata it describes"],
+          "prerequisiteConceptIds": ["os-fs-layout"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-crash-consist-10",
+      "conceptId": "os-crash-consist",
+      "title": "The power dies between two name writes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-journal"],
+      "diagram": "journal-commit",
+      "explanation": [
+        "Rename of a to b is two home writes: a directory block gains the name b pointing at the inode, and a directory block loses the name a. A power cut can land between them. Diagnosis is which names still point at the inode, and whether a journal commit for those writes is on disk.",
+        "After replay, a journaled rename may legally show the old name, the new name, or both. Old name only: the transaction that added b never committed, so replay leaves a. Both: the add of b committed and the drop of a did not, so two names remain and the inode is still reachable. New name only: both committed, replay finished the drop. Those are prefixes of committed work.",
+        "Neither name, and a torn half-string in a directory block, are not legal after replay of this journal. The point of commit-then-home was that a certified intent can be installed completely. A missing file after rename is the diagnosis that the intent never made it, or that there was no journal."
+      ],
+      "example": "rename notes to old-notes, power dies. If no commit landed, notes is still there. If a commit added old-notes and the unlink of notes had not committed, both names work. If both committed, replay leaves old-notes. The inode's data blocks were not the question. The names were.",
+      "whyItMatters": "The first question after a power cut is which names remained. That is this diagnosis, not a vendor slogan.",
+      "quiz": [
+        {
+          "id": "crs10-1",
+          "stem": "A machine that lost power during rename of a to b is diagnosed by:",
+          "correctAnswer": "Which directory names still point at the inode, and whether a journal commit landed",
+          "distractors": [
+            { "text": "Whether the block device changed its sector size", "kind": "nearby", "rationale": "Geometry did not change. The names and the log did." },
+            { "text": "Whether the filename is stored inside the inode", "kind": "reversed", "rationale": "The inode still does not hold the name. The directory blocks do." },
+            { "text": "Whether the compiler emitted a rename instruction", "kind": "misapplied", "rationale": "Rename is two directory updates, not a compile step." }
+          ],
+          "correctExplanation": "Names remaining, plus commit or no commit. That is the post-crash picture.",
+          "objectiveIds": ["Diagnose a filesystem after a power cut in the middle of rename"],
+          "prerequisiteConceptIds": ["os-journal"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "crs10-2",
+          "stem": "After replay, a journaled rename may legally show:",
+          "correctAnswer": "The old name, the new name, or both — not a missing file, not a torn name",
+          "distractors": [
+            { "text": "Neither name, which is how a journal reports a successful rename", "kind": "reversed", "rationale": "Neither is the lost-file leftover. Replay of a journal is not supposed to produce it." },
+            { "text": "A half-written filename as the usual committed result", "kind": "nearby", "rationale": "A torn string is the unjournaled tear. Commit-then-home forbids it." },
+            { "text": "A new superblock and an empty inode table", "kind": "misapplied", "rationale": "Rename does not reformat the layout." }
+          ],
+          "correctExplanation": "Prefixes of committed work: old, both, or new. Never neither, never garbage.",
+          "objectiveIds": ["Predict which states a journaled rename may legally show after replay"],
+          "prerequisiteConceptIds": ["os-journal"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "crs10-3",
+          "stem": "Replay of a committed rename transaction:",
+          "correctAnswer": "Installs the logged directory updates at their home locations",
+          "distractors": [
+            { "text": "Deletes both names so the file cannot be confused with a torn write", "kind": "reversed", "rationale": "Replay finishes the plan. It does not hide the file." },
+            { "text": "Formats the block device to restore the superblock", "kind": "nearby", "rationale": "Replay writes home locations from the log. It does not reformat." },
+            { "text": "Asks the program to repeat the rename from a log of source code", "kind": "misapplied", "rationale": "The log holds disk blocks, not a program to rerun." }
+          ],
+          "correctExplanation": "The commit certified the intent. Replay is the home write, done late.",
+          "objectiveIds": ["Diagnose a filesystem after a power cut in the middle of rename"],
+          "prerequisiteConceptIds": ["os-journal"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-crash-consist-20",
+      "conceptId": "os-crash-consist",
+      "title": "Old, new, or both — never neither",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["os-journal"],
+      "diagram": "journal-commit",
+      "explanation": [
+        "Unjournaled rename is two directory writes with no certified order. Drop a first, crash, b never written: neither name, inode maybe still allocated, file unreachable. Write a torn dirent: a garbage string, lookup walks off a half record. Add b first without dropping a, crash: both names, which happens to be reachable — but the next crash can still take the other tear. The illegal leftovers are neither and garbage.",
+        "A journaled rename that adds b before it drops a, each step a transaction or both in one, cannot produce those leftovers after replay. No commit: old name only. Commit of the add, not of the drop: both names, one inode, consistent. Commit of both: new name only. Replay installs whole logged directory blocks, so it does not leave a half-string.",
+        "Both names after replay is legal because it is still a prefix of committed work: the inode has a name, lookup works, the bytes are where the inode said. It looks like two strings for one object. It is not a lost file. Operators who treat 'both' as corruption are misreading a reachable state.",
+        "Compare the two disks after the same power cut. Unjournaled: old, new, both, neither, or torn. Journaled after replay: old, both, or new. The journal did not make rename free. It forbade the states in which the object has no name, and the states in which a directory block is not a list of names."
+      ],
+      "example": "Unjournaled: unlink a, crash before creating b. Neither name remains; the inode may still sit in the table with no pair pointing at it. Journaled add-b-then-drop-a: crash after the add's commit shows a and b. Crash after both commits shows b. Checking the journaled image after replay is not looking for a vanished file from this rename.",
+      "whyItMatters": "Lost files and torn names are the unjournaled leftover. A journal that can replay is the reason those are not legal.",
+      "quiz": [
+        {
+          "id": "crs20-1",
+          "stem": "An unjournaled rename that removed the old name and had not yet written the new one leaves:",
+          "correctAnswer": "Neither name: the file is unreachable even if its inode still exists",
+          "distractors": [
+            { "text": "Both names, which is the only unjournaled outcome", "kind": "nearby", "rationale": "Both is one possible tear. Neither is the lost-file tear this order produces." },
+            { "text": "A guaranteed new name, because directory writes cannot tear", "kind": "reversed", "rationale": "Without a journal, directory writes can tear and can land in either order." },
+            { "text": "A journal commit, invented by the block device after the crash", "kind": "misconception", "rationale": "The device does not invent a log. Unjournaled means there was none." }
+          ],
+          "correctExplanation": "Old gone, new never written. That is the lost-file leftover.",
+          "objectiveIds": ["Diagnose a filesystem after a power cut in the middle of rename"],
+          "prerequisiteConceptIds": ["os-journal"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "crs20-2",
+          "stem": "After replay of a journaled rename that adds the new name before dropping the old, legal states are:",
+          "correctAnswer": "Old name only, both names, or new name only",
+          "distractors": [
+            { "text": "Neither name, which is how journals report failure", "kind": "reversed", "rationale": "Neither is what the journal is there to forbid." },
+            { "text": "A half-written directory filename, as the usual success case", "kind": "nearby", "rationale": "Replay installs whole logged blocks. A torn string is the unjournaled case." },
+            { "text": "A new superblock and an empty inode table", "kind": "misapplied", "rationale": "Rename does not rebuild the layout." }
+          ],
+          "correctExplanation": "Prefixes of committed work. The inode keeps a name through all three.",
+          "objectiveIds": ["Predict which states a journaled rename may legally show after replay"],
+          "prerequisiteConceptIds": ["os-journal"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "crs20-3",
+          "stem": "The torn unjournaled case differs from journaled replay because:",
+          "correctAnswer": "Unjournaled rename can lose both names or leave garbage; replay of a journal does not",
+          "distractors": [
+            { "text": "Both always produce neither name", "kind": "nearby", "rationale": "Journaled replay is the set that excludes neither." },
+            { "text": "Journaled replay is the one that leaves torn filenames", "kind": "reversed", "rationale": "Whole-block install after commit is why names are not torn." },
+            { "text": "Only unjournaled disks have directories", "kind": "misapplied", "rationale": "Both have directory blocks. They differ in whether intent was certified." }
+          ],
+          "correctExplanation": "The journal's legal set is old, both, new. The tear's extras are neither and garbage.",
+          "objectiveIds": ["Predict which states a journaled rename may legally show after replay"],
+          "prerequisiteConceptIds": ["os-journal"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-vfs-10",
+      "conceptId": "os-vfs",
+      "title": "The same three calls over every type",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-inode"],
+      "goDeeper": "os-mount",
+      "explanation": [
+        "User programs do not get a different syscall per filesystem type. open, read, write, close, stat are one API. The virtual filesystem is that API, plus a table of functions each type fills in. A disk-backed type reads data blocks named by an inode. Another type may build the bytes from kernel state that is not on a block device at all.",
+        "The inode from earlier in this module is one kind of object behind that API, not the API. Two types can both present a file descriptor and still do different work on read: copy from a data block, or copy from a kernel buffer. The program wrote the same three calls. The type supplied the implementation.",
+        "When two filesystems are attached — mounted — they can therefore make the same open/read/write do different work, because each fills the VFS operations with its own functions. How a type is grafted onto a directory is the next unit. This one is only the single API and the per-type table behind it."
+      ],
+      "example": "read of a disk file copies from data blocks listed in an inode. read of a pipe-like type copies from a kernel buffer that was never a sector. Both used the same read call on a file descriptor. The VFS dispatched to two different functions.",
+      "whyItMatters": "Adding a filesystem type should not add a syscall. The VFS is why open still means open.",
+      "quiz": [
+        {
+          "id": "vfs10-1",
+          "stem": "The VFS is:",
+          "correctAnswer": "One open/read/write API sitting over many filesystem types",
+          "distractors": [
+            { "text": "A fifth on-disk layout used instead of inodes", "kind": "nearby", "rationale": "The VFS is an API and a dispatch table, not another disk format." },
+            { "text": "A separate syscall for every filesystem brand", "kind": "reversed", "rationale": "One API is the point. Brands fill in the functions." },
+            { "text": "The compiler's switch between static and dynamic linking", "kind": "misapplied", "rationale": "This is a kernel dispatch, not a link mode." }
+          ],
+          "correctExplanation": "One call set, many implementations. That is the VFS.",
+          "objectiveIds": ["Describe the VFS as one API over many filesystem types"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "vfs10-2",
+          "stem": "A disk file and another filesystem type can share the same read call because:",
+          "correctAnswer": "Each type supplies its own implementation behind the one API",
+          "distractors": [
+            { "text": "The VFS copies every file onto the same block device first", "kind": "reversed", "rationale": "Some types never touch a block device. That is allowed." },
+            { "text": "Both types store filenames inside the inode", "kind": "nearby", "rationale": "The inode still does not hold the name. Dispatch is not a filename field." },
+            { "text": "read is implemented by the program, not the kernel", "kind": "misapplied", "rationale": "read is a syscall. The type's function runs in the kernel." }
+          ],
+          "correctExplanation": "Same call, different function pointer. The type fills the table.",
+          "objectiveIds": ["Describe the VFS as one API over many filesystem types"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "vfs10-3",
+          "stem": "Two mounts can make the same open/read/write do different work because:",
+          "correctAnswer": "Each mounted type fills the VFS operations with its own functions",
+          "distractors": [
+            { "text": "The CPU issues different syscalls based on letters in the path", "kind": "misconception", "rationale": "The syscall is the same. Dispatch is by type, not by spelling." },
+            { "text": "Mounts are required to share a single implementation or they are illegal", "kind": "reversed", "rationale": "Different types are why there is a table of operations." },
+            { "text": "The inode number is unique across every disk ever made", "kind": "nearby", "rationale": "Uniqueness of numbers is not why two types differ on read." }
+          ],
+          "correctExplanation": "Two types, two implementations, one API. Mount is how they get attached; next unit.",
+          "objectiveIds": ["Predict why two mounts can implement the same open/read/write differently"],
+          "prerequisiteConceptIds": ["os-inode"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-mount-10",
+      "conceptId": "os-mount",
+      "title": "Graft a tree onto a directory",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-vfs"],
+      "explanation": [
+        "A mount grafts another filesystem's tree onto an existing directory. That directory becomes the root of the grafted tree for path lookup. The directory's previous contents are hidden for as long as the mount covers it. Nothing is copied. The graft is a lookup rule.",
+        "After the graft, a path that walks into the covered directory continues in the new tree, served by that filesystem's VFS operations. A path that never enters the covered directory is served by whoever owned those names before. Two mounts can therefore implement the same open/read/write differently on two prefixes, which the last unit already allowed; this unit is which prefix belongs to whom.",
+        "Unmount removes the graft. The covered directory's old names come back. The grafted tree is not deleted by unmount; it is only no longer reachable through that directory. A path is not a string with a disk inside it. After a mount, the same string names a different tree."
+      ],
+      "example": "A disk filesystem is mounted on /data. /data/a.txt is served by that disk: open/read go to its inodes and blocks. A file that used to live at /data/old is hidden until unmount. /etc/passwd never entered /data, so it is still served by the tree that owned /etc.",
+      "whyItMatters": "Which filesystem answers a path is a graft, not a property of the string. Cover a directory and the old names are not the ones that will open.",
+      "quiz": [
+        {
+          "id": "mnt10-1",
+          "stem": "A mount does which of these to the directory it covers:",
+          "correctAnswer": "Grafts another filesystem's tree there, hiding the directory's previous contents",
+          "distractors": [
+            { "text": "Copies every file from that directory onto a new disk", "kind": "reversed", "rationale": "A mount is a lookup graft, not a copy." },
+            { "text": "Renames the directory's inode to a new number", "kind": "nearby", "rationale": "The inode number of the cover point is not the mechanism. The graft is." },
+            { "text": "Rebuilds the kernel with that directory as the only path", "kind": "misapplied", "rationale": "Mount is runtime bookkeeping, not a rebuild." }
+          ],
+          "correctExplanation": "Another tree, attached at a directory. The old contents are covered, not copied.",
+          "objectiveIds": ["Describe a mount as grafting another tree onto a directory"],
+          "prerequisiteConceptIds": ["os-vfs"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mnt10-2",
+          "stem": "After a filesystem is mounted on /data, the path /data/a.txt is served by:",
+          "correctAnswer": "The grafted filesystem, not the directory that /data used to name",
+          "distractors": [
+            { "text": "Always the original directory, because mounts cannot hide names", "kind": "reversed", "rationale": "Hiding the old names is what the cover is for." },
+            { "text": "The block device's sector 0, regardless of any tree", "kind": "nearby", "rationale": "A path is walked through trees, not nailed to sector 0." },
+            { "text": "Both filesystems at once, byte by byte interleaved", "kind": "misconception", "rationale": "One cover point, one tree from there down." }
+          ],
+          "correctExplanation": "The graft owns that prefix. The old directory is not on the walk.",
+          "objectiveIds": ["Predict which filesystem serves a path after a mount covers that directory"],
+          "prerequisiteConceptIds": ["os-vfs"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mnt10-3",
+          "stem": "A path is looked up after a mount by:",
+          "correctAnswer": "Walking until a covered directory, then continuing in the grafted tree",
+          "distractors": [
+            { "text": "Ignoring all directories and opening the superblock as a file", "kind": "reversed", "rationale": "Lookup still walks names. The graft changes which tree those names belong to." },
+            { "text": "Asking the inode for its filename, which it does not store", "kind": "nearby", "rationale": "Names still live in directories. Mount does not put them in the inode." },
+            { "text": "Sending the whole path to the compiler's linker", "kind": "misapplied", "rationale": "Path walk is kernel lookup, not a link step." }
+          ],
+          "correctExplanation": "Walk, hit a cover, switch trees. That is which filesystem serves the rest.",
+          "objectiveIds": ["Predict which filesystem serves a path after a mount covers that directory"],
+          "prerequisiteConceptIds": ["os-vfs"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

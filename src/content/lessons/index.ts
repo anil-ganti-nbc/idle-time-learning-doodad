@@ -14,6 +14,8 @@ import { SEMI_PROCESS_LESSONS } from "./semi-process";
 import { SEMI_LITHO_LESSONS } from "./semi-litho";
 import { SEMI_LEADING_LESSONS } from "./semi-leading";
 import { OS_FOUNDATIONS_LESSONS } from "./os-foundations";
+import { OS_CONCURRENCY_LESSONS } from "./os-concurrency";
+import { OS_STORAGE_LESSONS } from "./os-storage";
 import { LONGFORM_LESSONS } from "./longform";
 
 const externalFiles = import.meta.glob("../external/*.json", {
@@ -47,6 +49,8 @@ export const LESSONS: Lesson[] = [
   ...SEMI_LITHO_LESSONS,
   ...SEMI_LEADING_LESSONS,
   ...OS_FOUNDATIONS_LESSONS,
+  ...OS_CONCURRENCY_LESSONS,
+  ...OS_STORAGE_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,

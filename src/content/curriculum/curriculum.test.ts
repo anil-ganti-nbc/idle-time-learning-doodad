@@ -13,6 +13,8 @@ import { SEMI_PROCESS_LESSONS } from "../lessons/semi-process/index.ts";
 import { SEMI_LITHO_LESSONS } from "../lessons/semi-litho/index.ts";
 import { SEMI_LEADING_LESSONS } from "../lessons/semi-leading/index.ts";
 import { OS_FOUNDATIONS_LESSONS } from "../lessons/os-foundations/index.ts";
+import { OS_CONCURRENCY_LESSONS } from "../lessons/os-concurrency/index.ts";
+import { OS_STORAGE_LESSONS } from "../lessons/os-storage/index.ts";
 import { SCIENCE_LESSONS } from "../lessons/science.ts";
 import { SYSTEMS_LESSONS } from "../lessons/systems.ts";
 import { LONGFORM_LESSONS } from "../lessons/longform.ts";
@@ -37,6 +39,8 @@ const LESSONS = [
   ...SEMI_LITHO_LESSONS,
   ...SEMI_LEADING_LESSONS,
   ...OS_FOUNDATIONS_LESSONS,
+  ...OS_CONCURRENCY_LESSONS,
+  ...OS_STORAGE_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
@@ -142,6 +146,8 @@ describe("curriculum integrity", () => {
     assert.ok(catalog.conceptMap["semi-euv"].prerequisites.includes("semi-duv"));
     assert.ok(catalog.conceptMap["semi-high-na"].prerequisites.includes("semi-na"));
     assert.ok(catalog.conceptMap["os-trap"].prerequisites.includes("os-syscall"));
+    assert.ok(catalog.conceptMap["os-page-cache"].prerequisites.includes("os-mmap"));
+    assert.ok(catalog.conceptMap["os-cgroup"].prerequisites.includes("os-sched"));
     assert.ok(catalog.conceptMap["os-tlb-os"].prerequisites.includes("cpu-tlb"));
     assert.ok(catalog.conceptMap["ml-attention"].prerequisites.includes("ml-backprop"));
   });
@@ -280,7 +286,7 @@ describe("course-specific progression", () => {
 describe("curriculum coverage metrics", () => {
   it("reports lessons versus skeleton and shallow modules", () => {
     const coverage = computeCoverage(catalog);
-    assert.ok(coverage.conceptsLackingLessons > 400);
+    assert.ok(coverage.conceptsLackingLessons > 350);
     assert.ok(coverage.conceptsWithLessons >= 20);
     assert.ok(coverage.shallowModules.length > 10);
     const gpu = coverage.coursesCovered.find((c) => c.courseId === "arch-gpu");

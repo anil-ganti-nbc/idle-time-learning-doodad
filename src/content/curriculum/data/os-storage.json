@@ -39,6 +39,10 @@
       "spineIds": [
         "os-inode",
         "os-journal"
+      ],
+      "learningObjectives": [
+        "Treat a filename as a pointer to an inode",
+        "Write intent before applying it to the home location"
       ]
     },
     {
@@ -52,6 +56,10 @@
       "spineIds": [
         "os-buffer-cache",
         "os-driver"
+      ],
+      "learningObjectives": [
+        "Keep recently used blocks in RAM",
+        "Let a device move bytes while the CPU does other work"
       ]
     },
     {
@@ -65,6 +73,10 @@
       "spineIds": [
         "os-namespace",
         "os-container"
+      ],
+      "learningObjectives": [
+        "Restrict what a process can see of the machine",
+        "Compose namespaces and limits without inventing a new kernel"
       ]
     }
   ],
@@ -78,7 +90,15 @@
         "os-device-intro"
       ],
       "summary": "Fixed-size sectors and the fiction of a linear disk.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a block device as a linear array of fixed-size sectors",
+        "Predict why the filesystem, not the program, chooses which sector to write"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-inode",
@@ -89,7 +109,16 @@
         "os-block-dev"
       ],
       "summary": "The on-disk object a filename eventually names.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an inode as the on-disk object a filename eventually names",
+        "Distinguish the inode's metadata and data blocks from the name that points at it"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-block-dev"
     },
     {
       "id": "os-dir",
@@ -100,7 +129,16 @@
         "os-inode"
       ],
       "summary": "A list of names to inode numbers.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a directory as a list of names to inode numbers",
+        "Predict what two names for one inode means"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-inode"
     },
     {
       "id": "os-fs-layout",
@@ -111,7 +149,16 @@
         "os-inode"
       ],
       "summary": "Superblock, bitmaps, and where the data lives.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Locate superblock, free-space map, inodes, and data on a disk image",
+        "Predict what is lost if the free-space map is wrong after a crash"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-inode"
     },
     {
       "id": "os-journal",
@@ -122,7 +169,16 @@
         "os-fs-layout"
       ],
       "summary": "Write the intent before the damage.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe journaling as writing the intent before applying it to the home location",
+        "Predict why the journal must hit disk before the metadata it describes"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-fs-layout"
     },
     {
       "id": "os-crash-consist",
@@ -133,7 +189,16 @@
         "os-journal"
       ],
       "summary": "A power cut in the middle of rename.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Diagnose a filesystem after a power cut in the middle of rename",
+        "Predict which states a journaled rename may legally show after replay"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-journal"
     },
     {
       "id": "os-vfs",
@@ -144,7 +209,16 @@
         "os-inode"
       ],
       "summary": "One API over many filesystem types.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the VFS as one API over many filesystem types",
+        "Predict why two mounts can implement the same open/read/write differently"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-inode"
     },
     {
       "id": "os-mount",
@@ -155,7 +229,16 @@
         "os-vfs"
       ],
       "summary": "Grafting a tree onto a directory.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a mount as grafting another tree onto a directory",
+        "Predict which filesystem serves a path after a mount covers that directory"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-vfs"
     },
     {
       "id": "os-buffer-cache",
@@ -166,7 +249,16 @@
         "os-block-dev"
       ],
       "summary": "Recently used blocks kept in RAM.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the buffer cache as recently used blocks kept in RAM",
+        "Predict why a write that hits the cache is not yet durable"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-block-dev"
     },
     {
       "id": "os-page-cache",
@@ -178,7 +270,16 @@
         "os-buffer-cache"
       ],
       "summary": "File contents as pages, not just blocks.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the page cache as file contents kept as pages, not just device blocks",
+        "Contrast a page-cache hit on a mapped file with a block read from the device"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-buffer-cache"
     },
     {
       "id": "os-dma",
@@ -189,7 +290,15 @@
         "os-device-intro"
       ],
       "summary": "The device writes memory while the CPU does something else.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe DMA as the device writing memory while the CPU does other work",
+        "Predict why the CPU must not use a buffer until the device says the transfer is done"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-driver",
@@ -201,7 +310,16 @@
         "os-dma"
       ],
       "summary": "The kernel code that speaks a particular device's dialect.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a driver as kernel code that speaks one device's dialect",
+        "Predict what the rest of the kernel sees after the driver hides the device registers"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-dma"
     },
     {
       "id": "os-virtio",
@@ -212,7 +330,16 @@
         "os-driver"
       ],
       "summary": "A device model designed to be virtualized.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe virtio as a device model designed to be emulated or paravirtualized",
+        "Predict why a guest driver talking virtio is cheaper than emulating a real NIC"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-driver"
     },
     {
       "id": "os-init",
@@ -223,7 +350,15 @@
         "os-exec"
       ],
       "summary": "The first process and everything it starts.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe init as the first user process that starts everything else",
+        "Predict what happens to the machine if init exits"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-namespace",
@@ -234,7 +369,15 @@
         "os-isolation"
       ],
       "summary": "A process that cannot see the whole machine.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a namespace as a process that cannot see the whole machine",
+        "Predict what a process in a PID namespace believes is process 1"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-namespace-linux",
@@ -245,7 +388,16 @@
         "os-namespace"
       ],
       "summary": "PID, mount, net, user — different lies.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish PID, mount, net, and user namespaces as different restricted views",
+        "Predict which namespace hides the host's network interfaces"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-namespace"
     },
     {
       "id": "os-cgroup",
@@ -256,7 +408,15 @@
         "os-sched"
       ],
       "summary": "Accounting and limits on CPU, memory, I/O.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a cgroup as accounting and limits on CPU, memory, and I/O",
+        "Predict what happens when a group hits its memory limit"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-capability",
@@ -267,7 +427,15 @@
         "os-privilege"
       ],
       "summary": "Splitting root into bits you can drop.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe capabilities as splitting root into bits you can drop",
+        "Predict a denial when a process has dropped the bit a privileged operation needs"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-seccomp",
@@ -278,7 +446,15 @@
         "os-syscall"
       ],
       "summary": "A filter on which syscalls remain legal.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe seccomp as a filter on which syscalls remain legal",
+        "Predict why an allowed open can still be a sandbox hole"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-syscall-filter",
@@ -289,7 +465,16 @@
         "os-seccomp"
       ],
       "summary": "Why a sandboxed process still needs open(2).",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain why a sandboxed process still needs a few syscalls to do useful work",
+        "Predict the tradeoff between a tiny syscall surface and a working program"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-seccomp"
     },
     {
       "id": "os-kvm-intro",
@@ -301,7 +486,15 @@
         "cpu-virtual-addr"
       ],
       "summary": "The kernel as a hypervisor for other kernels.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe KVM as the host kernel running other kernels in a less-privileged mode",
+        "Predict what a privileged instruction in the guest causes on the host"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
     },
     {
       "id": "os-container",
@@ -313,7 +506,16 @@
         "os-cgroup"
       ],
       "summary": "Namespaces plus cgroups plus a filesystem view — not a VM.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a container as namespaces plus cgroups plus a filesystem view",
+        "Contrast a container with a virtual machine that has its own kernel"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-namespace"
     }
   ]
 }
