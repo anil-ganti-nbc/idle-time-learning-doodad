@@ -35,6 +35,10 @@
       "prerequisites": [],
       "spineIds": [
         "semi-wafer"
+      ],
+      "learningObjectives": [
+        "Start from a single-crystal wafer",
+        "Treat cleanliness as yield before any pattern"
       ]
     },
     {
@@ -48,6 +52,10 @@
       "spineIds": [
         "semi-oxide",
         "semi-implant"
+      ],
+      "learningObjectives": [
+        "Grow oxide from the wafer",
+        "Place and activate dopants"
       ]
     },
     {
@@ -61,6 +69,10 @@
       "spineIds": [
         "semi-cvd",
         "semi-etch-plasma"
+      ],
+      "learningObjectives": [
+        "Distinguish growth, deposition, and etch",
+        "Leave a surface flat enough for the next layer"
       ]
     },
     {
@@ -74,6 +86,10 @@
       "spineIds": [
         "semi-integration",
         "semi-yield-intro"
+      ],
+      "learningObjectives": [
+        "Treat sequence as the device",
+        "Read yield as a process property"
       ]
     }
   ],
@@ -85,7 +101,15 @@
       "tier": 0,
       "prerequisites": [],
       "summary": "Why a chip starts as an ordered lattice, not a metal lump.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain why a chip starts as an ordered silicon lattice rather than a metal lump",
+        "Name what a grain boundary would do to a transistor that crosses it"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-wafer",
@@ -96,7 +120,16 @@
         "semi-crystal"
       ],
       "summary": "Slicing, polishing, and the surface everything else will inherit.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-crystal",
+      "objectives": [
+        "Trace slicing, lapping, and polish as the surface later films inherit",
+        "Say why the starting surface, not later magic, sets the first defect budget"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-clean",
@@ -107,7 +140,16 @@
         "semi-wafer"
       ],
       "summary": "Particles and metals as yield before any pattern exists.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-wafer",
+      "objectives": [
+        "Distinguish particles from metallic contamination",
+        "Explain why a clean happens before any pattern exists"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-oxide",
@@ -118,7 +160,16 @@
         "semi-wafer"
       ],
       "summary": "Growing SiO2 from the wafer itself.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-wafer",
+      "objectives": [
+        "Contrast growing SiO2 from the wafer with depositing a film onto it",
+        "Predict how dry versus wet oxidation changes rate and film quality"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-diffusion",
@@ -129,7 +180,16 @@
         "semi-wafer"
       ],
       "summary": "Concentration profiles as a function of time and temperature.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-wafer",
+      "objectives": [
+        "Describe a dopant profile as a function of time and temperature",
+        "Contrast a driven-in profile with a deposited surface source"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-implant",
@@ -140,7 +200,16 @@
         "semi-diffusion"
       ],
       "summary": "Placing dopants with an accelerator, then repairing the damage.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-diffusion",
+      "objectives": [
+        "Explain placing dopants with an accelerator rather than a furnace",
+        "Predict what lattice damage does if it is not later annealed"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-anneal",
@@ -151,7 +220,16 @@
         "semi-implant"
       ],
       "summary": "Healing the lattice so the dopant actually dopes.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-implant",
+      "objectives": [
+        "Explain why implanted dopant is not electrically active until the lattice heals",
+        "Name the thermal-budget trade-off an anneal spends"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-cvd",
@@ -162,7 +240,16 @@
         "semi-oxide"
       ],
       "summary": "Growing a film from a gas that reacts on the surface.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-oxide",
+      "objectives": [
+        "Describe a film grown from a gas that reacts on the surface",
+        "Contrast conformal CVD coverage with line-of-sight arrival"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-pvd",
@@ -173,7 +260,16 @@
         "semi-cvd"
       ],
       "summary": "Throwing atoms at the wafer — sputtering and evaporation.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-cvd",
+      "objectives": [
+        "Describe sputtering or evaporation as throwing atoms at the wafer",
+        "Predict where a PVD film thins on a high-aspect sidewall"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-epitaxy",
@@ -185,7 +281,16 @@
         "semi-crystal"
       ],
       "summary": "A film that continues the crystal underneath.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-cvd",
+      "objectives": [
+        "Define epitaxy as a film that continues the crystal underneath",
+        "Diagnose what a dirty or amorphous surface does to an epi layer"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-etch-wet",
@@ -196,7 +301,16 @@
         "semi-oxide"
       ],
       "summary": "Isotropic chemistry that undercuts.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-oxide",
+      "objectives": [
+        "Explain why wet chemistry undercuts a mask isotropically",
+        "Predict the remaining profile after a long wet etch"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-etch-plasma",
@@ -207,7 +321,16 @@
         "semi-etch-wet"
       ],
       "summary": "Anisotropic removal so sidewalls can be vertical.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-etch-wet",
+      "objectives": [
+        "Contrast anisotropic plasma etch with isotropic wet etch",
+        "Explain how ions and neutrals together make a vertical sidewall"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-cmp",
@@ -218,7 +341,16 @@
         "semi-cvd"
       ],
       "summary": "Making the wafer flat enough for the next lithography.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-cvd",
+      "objectives": [
+        "Describe CMP as chemical plus mechanical removal that flattens",
+        "Predict what leftover topography does to the next exposure"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-metals",
@@ -229,7 +361,16 @@
         "semi-pvd"
       ],
       "summary": "Wires on the chip, and the barriers that keep them from wandering.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-pvd",
+      "objectives": [
+        "Explain why a barrier sits between a conductor and the dielectric",
+        "Name what happens if copper or aluminum wanders into silicon"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-dielectric",
@@ -240,7 +381,16 @@
         "semi-cvd"
       ],
       "summary": "The insulators between metal layers.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-cvd",
+      "objectives": [
+        "State the job of the insulator between metal layers",
+        "Contrast a deposited interlevel dielectric with a thermal gate oxide"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-isolation",
@@ -252,7 +402,15 @@
         "semi-etch-plasma"
       ],
       "summary": "Keeping neighboring transistors from sharing a channel.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain how neighboring transistors are kept from sharing a channel",
+        "Contrast a field oxide or trench with just leaving more space"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-well",
@@ -263,7 +421,16 @@
         "semi-implant"
       ],
       "summary": "The doped tubs a MOSFET lives in.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-implant",
+      "objectives": [
+        "Describe a well as the doped tub a MOSFET sits in",
+        "Predict what a misplaced well dose does to threshold"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-gate-stack",
@@ -275,7 +442,16 @@
         "semi-cvd"
       ],
       "summary": "Dielectric plus electrode as the MOSFET's control surface.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-oxide",
+      "objectives": [
+        "Name the gate stack as dielectric plus electrode on the channel",
+        "Contrast a grown gate oxide with a deposited electrode"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-silicide",
@@ -286,7 +462,16 @@
         "semi-metals"
       ],
       "summary": "Low-resistance meetings of silicon and metal.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-metals",
+      "objectives": [
+        "Explain a silicide as a low-resistance meeting of silicon and metal",
+        "Diagnose an open or leaky contact from a dirty interface or an overgrown spike"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-integration",
@@ -298,7 +483,15 @@
         "semi-isolation"
       ],
       "summary": "The sequence is the device. Order is not decorative.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State that the sequence of unit processes is the device",
+        "Predict a failure when a later high-temperature step wrecks an earlier profile"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-yield-intro",
@@ -310,7 +503,16 @@
         "semi-integration"
       ],
       "summary": "Good die per wafer, owned by defectivity and process window.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-integration",
+      "objectives": [
+        "Treat yield as good die per wafer, owned by defects and process window",
+        "Separate a killer defect from a parametric miss"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-defect-class",
@@ -321,7 +523,16 @@
         "semi-yield-intro"
       ],
       "summary": "Particles, pattern defects, and parametric misses.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-yield-intro",
+      "objectives": [
+        "Distinguish particles, pattern defects, and parametric misses",
+        "Map a defect class onto the unit process that usually owns it"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-metrology",
@@ -332,7 +543,16 @@
         "semi-integration"
       ],
       "summary": "Measuring thickness, CD, and overlay before the lot is lost.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-integration",
+      "objectives": [
+        "Explain measuring thickness, CD, or overlay before the lot is lost",
+        "Contrast in-line metrology with waiting for end-of-line test"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-moscap",
@@ -343,7 +563,16 @@
         "semi-oxide"
       ],
       "summary": "The simplest device that still teaches the stack.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-oxide",
+      "objectives": [
+        "Describe the MOS capacitor as oxide plus electrode on silicon",
+        "Say what C-V on that stack teaches before a transistor exists"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-planarity",
@@ -354,7 +583,16 @@
         "semi-cmp"
       ],
       "summary": "Depth of focus does not forgive topography.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-cmp",
+      "objectives": [
+        "Explain why depth of focus cannot forgive leftover topography",
+        "Treat CMP flatness as an input to later lithography, not a cosmetic"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     },
     {
       "id": "semi-contamination",
@@ -365,7 +603,16 @@
         "semi-clean"
       ],
       "summary": "A metal that is fine in one module poisons another.",
-      "estimatedMinutes": 10
+      "estimatedMinutes": 10,
+      "parentId": "semi-clean",
+      "objectives": [
+        "Explain why a metal allowed in one module poisons another",
+        "Name a reason tools are segregated by material"
+      ],
+      "sourceIds": [
+        "mit-6152j",
+        "mit-6774"
+      ]
     }
   ]
 }

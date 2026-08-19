@@ -497,6 +497,163 @@ const DIAGRAMS: Record<string, ReactNode> = {
       <text x="28" y="24" fill="currentColor" fillOpacity="0.5" fontSize="11">dB</text>
     </svg>
   ),
+  "wafer-cross": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Boule sliced into a polished wafer">
+      <ellipse cx="90" cy="78" rx="36" ry="52" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="90" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        boule
+      </text>
+      <path d="M130 78 H190" stroke="currentColor" strokeOpacity="0.4" />
+      {[0, 1, 2].map((i) => (
+        <rect key={i} x={200 + i * 14} y="46" width="8" height="64" rx="1" fill="currentColor" fillOpacity={0.1 + i * 0.08} stroke="currentColor" strokeOpacity="0.35" />
+      ))}
+      <text x="222" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        slices
+      </text>
+      <path d="M268 78 H318" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="330" y="58" width="190" height="40" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="330" y="58" width="190" height="8" rx="2" fill="currentColor" fillOpacity="0.18" />
+      <text x="425" y="84" textAnchor="middle" fill="currentColor" fontSize="12">
+        polished surface
+      </text>
+      <text x="425" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        every later film inherits this face
+      </text>
+    </svg>
+  ),
+  "oxide-growth": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Thermal oxide consumes silicon and grows both ways">
+      <rect x="40" y="70" width="220" height="60" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="150" y="106" textAnchor="middle" fill="currentColor" fontSize="13">
+        Si
+      </text>
+      <rect x="300" y="48" width="220" height="36" rx="3" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="410" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        SiO2 grown
+      </text>
+      <rect x="300" y="84" width="220" height="46" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="410" y="112" textAnchor="middle" fill="currentColor" fontSize="13">
+        remaining Si
+      </text>
+      <path d="M268 100 H292" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="28" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        O2 or H2O + heat
+      </text>
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        about 44% of the oxide thickness was silicon
+      </text>
+    </svg>
+  ),
+  "dopant-profiles": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Implant peak versus a diffusion tail from the surface">
+      <path d="M40 140 H520" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M60 20 V150" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M60 36 C 90 36 110 50 140 90 C 180 148 240 148 320 148" fill="none" stroke="currentColor" strokeOpacity="0.75" />
+      <path d="M160 140 C 200 40 260 28 320 70 C 380 112 430 140 500 148" fill="none" stroke="currentColor" strokeOpacity="0.45" strokeDasharray="5 4" />
+      <text x="150" y="28" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        surface source
+      </text>
+      <text x="360" y="48" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        implant peak
+      </text>
+      <text x="540" y="136" textAnchor="end" fill="currentColor" fontSize="11" fillOpacity="0.5">
+        depth
+      </text>
+      <text x="48" y="18" fill="currentColor" fontSize="11" fillOpacity="0.5">
+        conc.
+      </text>
+    </svg>
+  ),
+  "dep-vs-etch": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Deposition adds a film, etch removes one">
+      <rect x="36" y="88" width="200" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="36" y="56" width="200" height="32" rx="3" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="136" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        added film
+      </text>
+      <text x="136" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        deposit / grow
+      </text>
+      <rect x="324" y="72" width="200" height="52" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M380 72 V124" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M468 72 V124" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="424" y="104" textAnchor="middle" fill="currentColor" fontSize="12">
+        opening
+      </text>
+      <text x="424" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        etch
+      </text>
+    </svg>
+  ),
+  "etch-profile": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Isotropic undercut versus anisotropic vertical etch">
+      <rect x="48" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="160" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <path d="M48 52 Q 120 120 160 52" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <text x="140" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        wet · undercut
+      </text>
+      <rect x="328" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="440" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <path d="M400 52 V124 H440 V52" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <text x="420" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        plasma · vertical
+      </text>
+    </svg>
+  ),
+  "cmp-flat": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="CMP flattens topography">
+      <path d="M40 90 L90 90 L110 50 L170 50 L190 90 L250 90" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <path d="M40 110 H250" stroke="currentColor" strokeOpacity="0.25" />
+      <text x="145" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        before
+      </text>
+      <path d="M310 70 H520" stroke="currentColor" strokeOpacity="0.7" />
+      <path d="M310 110 H520" stroke="currentColor" strokeOpacity="0.25" />
+      <text x="415" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        after CMP
+      </text>
+    </svg>
+  ),
+  "contact-stack": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Silicide contact under a barrier and metal">
+      <rect x="80" y="24" width="400" height="28" rx="3" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12">
+        metal
+      </text>
+      <rect x="80" y="52" width="400" height="20" rx="2" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="66" textAnchor="middle" fill="currentColor" fontSize="11">
+        barrier
+      </text>
+      <rect x="200" y="72" width="160" height="22" rx="2" fill="currentColor" fillOpacity="0.28" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="87" textAnchor="middle" fill="currentColor" fontSize="11">
+        silicide
+      </text>
+      <rect x="80" y="94" width="400" height="40" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12">
+        silicon
+      </text>
+      <text x="280" y="156" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        low resistance only if the meeting is clean
+      </text>
+    </svg>
+  ),
+  "process-flow": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A simple front-end sequence">
+      {["oxide", "dope", "gate", "contact"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 134}, 36)`}>
+          <rect width="118" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="32" textAnchor="middle" fill="currentColor" fontSize="14">
+            {label}
+          </text>
+          {i < 3 && <path d="M122 26 H132" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        later heat cannot undo an earlier profile
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {
