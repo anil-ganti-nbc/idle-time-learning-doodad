@@ -1,0 +1,527 @@
+{
+  "courseId": "semi-litho",
+  "moduleId": "semi-l-duv",
+  "lessons": [
+    {
+      "id": "semi-duv-10",
+      "conceptId": "semi-duv",
+      "title": "248 and 193 still print most layers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-rayleigh"],
+      "goDeeper": "semi-immersion",
+      "diagram": "duv-vs-euv",
+      "explanation": [
+        "Deep ultraviolet lithography is the workhorse: 248 nm (KrF) and 193 nm (ArF) light, sent through refractive lenses, onto a resist, on a wafer that is already a plane. Most layers on a modern wafer are still these wavelengths. EUV, later, is a later light source for the layers Rayleigh can no longer give you at 193. It is not the first word, and it is not every word.",
+        "DUV uses glass. Fused silica and a short list of fluorides still transmit 193 nm well enough to build a lens. That is why the column is a stack of refractive elements and why the mask can be chrome on glass — light goes through the clear parts. Below that band, practical glasses start to absorb. There is a wavelength floor for this architecture. You cannot just 'turn the lamp to 100 nm' and keep the same lenses.",
+        "The Rayleigh story you already have is why 193 stayed so long. After λ stopped moving, the industry spent NA (immersion) and k1 (OPC, illumination, multipatterning) because the next lamp was late and expensive. A foundry node is a mix of 193 layers and, later, a few EUV layers. Treat 'we use DUV' as the default, not as a vintage."
+      ],
+      "example": "A 5 nm-class wafer still prints implant blocks, many metals, and most vias with 193 nm immersion. A handful of tight front-end layers may later move to 13.5 nm. The scanner bay is mostly DUV tools. The brochure is mostly the other one.",
+      "whyItMatters": "If DUV is a historical footnote, EUV will look like it replaced lithography. It replaced a few exposures. The lenses are still running.",
+      "quiz": [
+        {
+          "id": "dv10-1",
+          "stem": "The DUV workhorse wavelengths in this course are:",
+          "correctAnswer": "248 nm and 193 nm",
+          "distractors": [
+            { "text": "13.5 nm and 0.55 NA only", "kind": "nearby", "rationale": "13.5 nm is the later EUV source." },
+            { "text": "365 cm and 10 m", "kind": "subtle", "rationale": "Wrong units and the wrong era as a workhorse claim." },
+            { "text": "The Czochralski pull rate in mm/min", "kind": "misapplied", "rationale": "That is crystal growth." }
+          ],
+          "correctExplanation": "KrF 248 and ArF 193. Those lamps still print most layers.",
+          "objectiveIds": ["Identify 248 nm and 193 nm as the workhorse wavelengths that still print most layers"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dv10-2",
+          "stem": "DUV tools use refractive lenses because:",
+          "correctAnswer": "Practical glasses still transmit 248 and 193 nm well enough to build an optic",
+          "distractors": [
+            { "text": "Air and glass are already opaque at 193 nm", "kind": "reversed", "rationale": "That sentence becomes true at 13.5 nm." },
+            { "text": "Chrome cannot be written on glass at any wavelength", "kind": "nearby", "rationale": "Chrome-on-glass is the usual DUV reticle." },
+            { "text": "Lenses exist to heat the wafer into an oxide", "kind": "misapplied", "rationale": "The lens images. It does not oxidize." }
+          ],
+          "correctExplanation": "Glass works here. That is why the column is a lens, not a mirror chain.",
+          "objectiveIds": ["Explain why DUV uses refractive lenses and why that path has a wavelength floor"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dv10-3",
+          "stem": "You cannot keep the same DUV lenses and just 'turn the lamp to 100 nm' because:",
+          "correctAnswer": "Practical refractive materials start to absorb below the DUV band",
+          "distractors": [
+            { "text": "Shorter wavelengths cannot carry a mask image in principle", "kind": "reversed", "rationale": "They can — with a different optic." },
+            { "text": "Resists refuse to coat at any λ below 248 nm", "kind": "nearby", "rationale": "193 nm resists exist. The floor is the glass." },
+            { "text": "The wafer diameter would have to become negative", "kind": "subtle", "rationale": "Diameter is not the floor." }
+          ],
+          "correctExplanation": "The architecture has a wavelength floor. Below it you change the optic, not the slogan.",
+          "objectiveIds": ["Explain why DUV uses refractive lenses and why that path has a wavelength floor"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-immersion-10",
+      "conceptId": "semi-immersion",
+      "title": "Water between lens and wafer raises NA",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-duv"],
+      "goDeeper": "semi-opc",
+      "diagram": "dof-trade",
+      "explanation": [
+        "Numerical aperture is n · sin(θ). In air, n ≈ 1, so NA cannot exceed 1. Put a fluid with n > 1 between the last lens element and the wafer and you raise n without inventing a new lamp. Water at 193 nm has n around 1.44. That is how 193 nm immersion tools quote NA values like 1.35 — not because someone broke trigonometry, but because the medium changed.",
+        "Resolution improves as 1/NA. Depth of focus still falls as 1/NA². Immersion is the NA term of Rayleigh, purchased with a puddle. The scanner maintains a small water film under the lens as the stage flies. Bubbles, droplets left on the resist, leaching from the film into the water, and watermark defects are the new process risks. You bought pitch. You bought a wet interface.",
+        "This is still DUV. The lamp is 193 nm. The lenses are still glass. The mask is still transmissive. Immersion is not a new wavelength and it is not EUV. It is how the industry spent NA after λ had stopped moving."
+      ],
+      "example": "Dry 193 nm at NA 0.93 and k1 0.31 prints about 64 nm. The same λ and k1 at NA 1.35 prints about 44 nm. The lot that leaves water marks on the resist prints those 44 nm with extra killer defects the dry tool never had.",
+      "whyItMatters": "A slide that says 'we raised NA' without saying 'with water' hides the puddle. The puddle is the process.",
+      "quiz": [
+        {
+          "id": "im10-1",
+          "stem": "Immersion lithography raises NA by:",
+          "correctAnswer": "Putting water between the last lens element and the wafer so n > 1",
+          "distractors": [
+            { "text": "Switching the lamp to 13.5 nm and keeping the same glass", "kind": "nearby", "rationale": "That is a different light source, and glass would not survive it." },
+            { "text": "Sawing the wafer thinner on the wire saw", "kind": "misapplied", "rationale": "Thickness is not n." },
+            { "text": "Deleting sin(θ) from the definition of NA", "kind": "reversed", "rationale": "NA is still n sinθ. You changed n." }
+          ],
+          "correctExplanation": "n went up. The cone the optic can use went up with it.",
+          "objectiveIds": ["Explain putting water between lens and wafer as a way to raise NA"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "im10-2",
+          "stem": "The resolution gain from immersion is paid for by:",
+          "correctAnswer": "A thinner focus slice plus a wet interface that can bubble or mark the resist",
+          "distractors": [
+            { "text": "An infinitely thick focus slice and a dry wafer always", "kind": "reversed", "rationale": "Higher NA thins DoF, and the interface is wet." },
+            { "text": "Turning the resist into a thermal oxide", "kind": "misapplied", "rationale": "Water is an optical medium, not an oxidant recipe." },
+            { "text": "Removing the reticle from the tool", "kind": "nearby", "rationale": "The original is still there." }
+          ],
+          "correctExplanation": "1/NA for pitch, 1/NA² for height, plus the puddle’s defects.",
+          "objectiveIds": ["Predict the resolution gain and the new process risks water introduces"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "im10-3",
+          "stem": "A 193 nm immersion exposure is still DUV, not a new wavelength, because:",
+          "correctAnswer": "The lamp is still 193 nm; only the medium in the last gap changed",
+          "distractors": [
+            { "text": "Water converts 193 nm into 13.5 nm in the puddle", "kind": "reversed", "rationale": "Water changes n, not λ." },
+            { "text": "The crystal puller now grows water wafers", "kind": "subtle", "rationale": "The wafer is still silicon." },
+            { "text": "Chrome-on-glass masks stop working in any fluid", "kind": "nearby", "rationale": "Immersion DUV still uses transmissive reticles." }
+          ],
+          "correctExplanation": "Same λ, higher n, higher NA. That is the trick.",
+          "objectiveIds": ["Predict the resolution gain and the new process risks water introduces"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-opc-10",
+      "conceptId": "semi-opc",
+      "title": "Distort the mask so the wafer looks like the drawing",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-duv"],
+      "goDeeper": "semi-pec",
+      "diagram": "litho",
+      "explanation": [
+        "The image on the wafer is not a miniature of the chrome. Dense lines print differently from isolated ones. Line ends pull back. Corners round. A drawn 1:1 layout at low k1 comes out as a smeared cousin of itself. Optical proximity correction (OPC) is the practice of distorting the reticle — serifs, hammerheads, jogs, bias — so that after the optic and the resist, the wafer looks like the drawing you wanted.",
+        "That means the mask no longer looks like the layout. A visitor to the mask shop who expects to 'see the chip' will see a cartoon of extra tabs and chopped edges. That is success. An uncorrected dense feature typically prints thinner or with less contrast than the same-width isolated line next to it, because neighbors steal and add light. OPC is the systematic lie that cancels that.",
+        "OPC is a k1 program. It does not change λ or NA. It spends mask complexity and model risk: a bad model writes the wrong cartoon and you print the wrong wafer with great confidence. The next unit is the physics the model is trying to cancel — proximity and flare."
+      ],
+      "example": "A drawn 60 nm isolated line and a 60 nm line in a dense array print 8 nm apart in CD with no OPC. After correction the isolated chrome is biased thinner and the dense chrome is biased fatter, plus a serif on each line end. The wafer CDs match. The reticle looks wrong on purpose.",
+      "whyItMatters": "If the mask 'is the drawing', every later sentence about model error and hotspots is noise. The mask is a pre-distorted original.",
+      "quiz": [
+        {
+          "id": "op10-1",
+          "stem": "Optical proximity correction is:",
+          "correctAnswer": "Distorting the mask so the wafer, after imaging, looks like the drawing",
+          "distractors": [
+            { "text": "Raising the lamp wavelength until neighbors vanish", "kind": "nearby", "rationale": "OPC does not change λ." },
+            { "text": "Polishing the wafer flatter than CMP already did", "kind": "misapplied", "rationale": "OPC is a mask job." },
+            { "text": "Deleting the resist so light etches silicon directly", "kind": "reversed", "rationale": "You still have a stencil." }
+          ],
+          "correctExplanation": "The original is a cartoon. The wafer is supposed to be the drawing.",
+          "objectiveIds": ["Describe OPC as distorting the mask so the wafer looks like the drawing"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "op10-2",
+          "stem": "An uncorrected dense line next to an isolated line of the same drawn width typically:",
+          "correctAnswer": "Prints a different CD because neighbors change the local image",
+          "distractors": [
+            { "text": "Always prints identically because drawings are sacred", "kind": "reversed", "rationale": "Proximity is why OPC exists." },
+            { "text": "Grows a gate oxide only on the dense side", "kind": "misapplied", "rationale": "No oxidation step ran." },
+            { "text": "Aligns itself to the previous metal automatically", "kind": "nearby", "rationale": "Density is not a mark." }
+          ],
+          "correctExplanation": "Neighbors add and steal light. Same drawing, different wafer.",
+          "objectiveIds": ["Predict what an uncorrected dense feature does compared with an isolated one"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "op10-3",
+          "stem": "A reticle covered in serifs and jogs that does not look like the layout usually means:",
+          "correctAnswer": "OPC did its job: the original is pre-distorted on purpose",
+          "distractors": [
+            { "text": "The mask shop failed and the plate must be scrapped", "kind": "reversed", "rationale": "Ugly chrome can be correct chrome." },
+            { "text": "The scanner has switched to a contact print", "kind": "subtle", "rationale": "You still project a reduced image." },
+            { "text": "k1 has been deleted from Rayleigh", "kind": "nearby", "rationale": "OPC is how you spend k1, not how you repeal it." }
+          ],
+          "correctExplanation": "If the mask looks like the chip, you probably have not corrected it.",
+          "objectiveIds": ["Describe OPC as distorting the mask so the wafer looks like the drawing"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-pec-10",
+      "conceptId": "semi-pec",
+      "title": "Neighbors and stray light rewrite the dose",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-opc"],
+      "goDeeper": "semi-multi-pattern",
+      "diagram": "litho",
+      "explanation": [
+        "You set a dose at the scanner. The resist does not see that number uniformly. Proximity is the local version: nearby chrome and nearby openings add or steal light over a few pitches, so a line in a dense array collects a different aerial image than a lonely line. Flare is the long-range version: stray light scattered from lenses, the mask, and the chamber adds a background that tracks the open-area density of a whole field.",
+        "Both change the dose you thought you set. A CD miss that follows pattern density — fat in open field, thin in a dark forest, or the reverse depending on tone — is often this, not a bad lamp. OPC tries to cancel the local piece. Flare maps and background-dose corrections try to cancel the long-range piece. Neither is free, and both can be wrong.",
+        "Diagnosis starts with the map. If the recipe is stable and CD walks with the neighbor count or with the bright fraction of the field, you are not looking for a new wavelength. You are looking at light that arrived from somewhere the layout did not intend."
+      ],
+      "example": "A via CD is legal in a dense array and 6 nm fat in a sparse corner of the same field at the same scanner dose. A flare map shows the sparse corner is a bright neighborhood. Adding a background-dose offset on that field region, not a new λ, brings the corner back.",
+      "whyItMatters": "A CD miss is not automatically 'the process window'. Sometimes the window was fine and the dose the resist saw was not the dose you typed.",
+      "quiz": [
+        {
+          "id": "pc10-1",
+          "stem": "Proximity and flare are:",
+          "correctAnswer": "Neighbors and stray light changing the dose you thought you set",
+          "distractors": [
+            { "text": "Two names for the Czochralski seed", "kind": "nearby", "rationale": "Wrong object." },
+            { "text": "The two tones of photoresist", "kind": "misapplied", "rationale": "Tone is solubility, not stray light." },
+            { "text": "The dry and wet oxidation ambients", "kind": "subtle", "rationale": "Different unit process." }
+          ],
+          "correctExplanation": "Local neighbors, long-range scatter. Both rewrite dose.",
+          "objectiveIds": ["Explain proximity and flare as neighbors and stray light changing the dose you thought you set"],
+          "prerequisiteConceptIds": ["semi-opc"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pc10-2",
+          "stem": "A CD miss that tracks nearby pattern density rather than the scanner recipe usually points to:",
+          "correctAnswer": "Proximity or flare rewriting the local dose",
+          "distractors": [
+            { "text": "A lamp that physically cannot turn on", "kind": "reversed", "rationale": "The lamp is on. The background is uneven." },
+            { "text": "A missing CMP step on a different wafer", "kind": "nearby", "rationale": "Density-tracking CD is an optical neighborhood story." },
+            { "text": "The implant well being annealed twice", "kind": "misapplied", "rationale": "No dopant step is required for this miss." }
+          ],
+          "correctExplanation": "Same recipe, different neighbors, different light at the film.",
+          "objectiveIds": ["Diagnose a CD miss that tracks nearby pattern density rather than the scanner recipe"],
+          "prerequisiteConceptIds": ["semi-opc"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pc10-3",
+          "stem": "OPC and flare corrections exist because:",
+          "correctAnswer": "The typed dose is not the dose every feature actually collects",
+          "distractors": [
+            { "text": "Rayleigh has only one knob and it is flare", "kind": "reversed", "rationale": "Rayleigh still has three knobs. This is extra light." },
+            { "text": "Masks cannot be reduced by an optic", "kind": "nearby", "rationale": "They can. The image is just not a miniature." },
+            { "text": "Water immersion repeals stray light", "kind": "subtle", "rationale": "Immersion raises NA. Scatter still exists." }
+          ],
+          "correctExplanation": "You set one number. The layout writes many local numbers.",
+          "objectiveIds": ["Diagnose a CD miss that tracks nearby pattern density rather than the scanner recipe"],
+          "prerequisiteConceptIds": ["semi-opc"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-multi-pattern-10",
+      "conceptId": "semi-multi-pattern",
+      "title": "Split one drawing across several litho-etch passes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-duv", "semi-etch-plasma"],
+      "goDeeper": "semi-pitch-split",
+      "diagram": "multi-pattern",
+      "explanation": [
+        "When a single 193 nm exposure cannot print the drawn pitch — k1 has hit the floor, NA is already immersed — you stop asking one image to do it. Multiple patterning splits one drawn layer across several lithography-and-etch passes. Each pass prints a sparser subset the optic can actually resolve. A plasma etch freezes that subset into a hard film. The next pass prints the remaining lines into the gaps. The union is the drawing.",
+        "Etch is not optional decoration here. If you only expose twice and develop twice on the same resist, you do not have two frozen patterns; you have a mess. The anisotropic etch you already own from process foundations is what turns pass 1 into a hard stencil that pass 2 can sit beside. That is why this concept requires plasma etch as well as DUV.",
+        "The cost is extra masks, extra overlays between the passes, extra etches, and extra time. The gain is a pitch Rayleigh forbade to one exposure. EUV, later, is another way to buy that pitch. Multipatterning is the way DUV bought it while EUV was late."
+      ],
+      "example": "A 40 nm pitch metal cannot be a single 193 nm immersion exposure at a legal k1. Two litho-etch passes each print an 80 nm pitch, interleaved. After the second etch the wafer has the 40 nm pitch. One mask did not do that. Two stencils and two etches did.",
+      "whyItMatters": "A node slide that says '20 nm pitch' without saying how many 193 nm passes made it is hiding the factory. The drawing is not the exposure count.",
+      "quiz": [
+        {
+          "id": "mp10-1",
+          "stem": "Multiple patterning means:",
+          "correctAnswer": "Splitting one drawn layer across several litho-etch passes",
+          "distractors": [
+            { "text": "Coating three resists and never etching", "kind": "nearby", "rationale": "Without etch, pass 1 is not frozen." },
+            { "text": "Raising λ until one exposure is enough", "kind": "reversed", "rationale": "You split because λ is already spent." },
+            { "text": "Pulling a second crystal in the same melt", "kind": "misapplied", "rationale": "Wrong factory." }
+          ],
+          "correctExplanation": "Several sparse images, each frozen by etch, unioned into the drawing.",
+          "objectiveIds": ["Explain multiple patterning as splitting one drawn layer across several litho-etch passes"],
+          "prerequisiteConceptIds": ["semi-duv", "semi-etch-plasma"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mp10-2",
+          "stem": "A single 193 nm exposure cannot print a pitch the Rayleigh limit forbids because:",
+          "correctAnswer": "k1, λ, and NA already set a floor; a second pass is how you go below it",
+          "distractors": [
+            { "text": "Photoresist cannot be coated twice in a factory", "kind": "nearby", "rationale": "Coat is not the limit. Imaging is." },
+            { "text": "Plasma etch repeals the Rayleigh relation", "kind": "reversed", "rationale": "Etch freezes a pass. It does not change λ." },
+            { "text": "The reticle shop cannot write chrome at all", "kind": "subtle", "rationale": "The shop can write. The optic cannot pass the pitch." }
+          ],
+          "correctExplanation": "The equation said no. Splitting the drawing is the workaround.",
+          "objectiveIds": ["Predict why a single 193 nm exposure cannot print a pitch the Rayleigh limit forbids"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mp10-3",
+          "stem": "Plasma etch sits in this flow because:",
+          "correctAnswer": "It freezes pass 1 into a hard pattern so pass 2 can sit beside it",
+          "distractors": [
+            { "text": "It grows the incoming wafer crystal", "kind": "misapplied", "rationale": "The crystal already exists." },
+            { "text": "It replaces the scanner lamp with ions", "kind": "nearby", "rationale": "The lamp still prints. Etch transfers." },
+            { "text": "It raises n in the immersion puddle", "kind": "subtle", "rationale": "That was water, not plasma." }
+          ],
+          "correctExplanation": "Litho writes a stencil. Etch makes it a feature the next litho can neighbor.",
+          "objectiveIds": ["Explain multiple patterning as splitting one drawn layer across several litho-etch passes"],
+          "prerequisiteConceptIds": ["semi-etch-plasma", "semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-multi-pattern-20",
+      "conceptId": "semi-multi-pattern",
+      "title": "Why the second pass exists",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["semi-duv", "semi-etch-plasma"],
+      "goDeeper": "semi-pitch-split",
+      "diagram": "multi-pattern",
+      "explanation": [
+        "The ten-minute unit said you split a drawing. This one is why the factory accepts the extra masks. Take 193 nm, NA 1.35, and a single-exposure k1 floor near 0.25. CD ≈ 0.25 × 193 / 1.35 ≈ 36 nm. A drawn 20 nm half-pitch is not that number. No amount of shouting 'immersion' at the wafer invents the missing spatial frequencies. You either change λ or you print every other line on a different pass.",
+        "Litho-etch-litho-etch (LELE) is the honest sequence. Pass 1 coats, exposes a sparse subset, develops, and a plasma etch transfers those lines into a hard mask or directly into the film. Resist is stripped. Pass 2 coats again, aligns to what etch just froze, exposes the interleaved subset, and etches again. Self-aligned spacers are a sibling idea: print a sparse mandrel, grow a sidewall, etch the mandrel, and keep the spacers at half the mandrel pitch. Both are multiple patterning. Both spend etch.",
+        "The new villain is overlay between the passes of one drawn layer. Pass 2 must sit in the gaps of pass 1. A shift that would have been a mild layer-to-layer error on a single exposure is now a short or an open inside one metal. Alignment marks and an overlay budget are no longer only about via-on-metal. They are about the two halves of one drawing.",
+        "EUV will later buy some of these pitches back as a single exposure. It does not delete the idea. A layer that still fits 193 nm multipatterning will often stay there, because the other lamp is the scarce resource. Multipatterning is not a failed EUV. It is DUV spending etch after Rayleigh said no."
+      ],
+      "example": "A 28 nm pitch metal as LELE: each pass is a 56 nm pitch the 193 nm tool can print. A 6 nm overlay between the two passes closes the gap on one side and opens a short on the other. The CD of each pass was in spec. The union was not a metal. It was a yield meeting.",
+      "whyItMatters": "Reading a pitch off a slide without asking 'how many 193 nm passes?' is how you confuse a drawing with a factory.",
+      "quiz": [
+        {
+          "id": "mp20-1",
+          "stem": "A 20 nm half-pitch at 193 nm / NA 1.35 is not a single exposure because:",
+          "correctAnswer": "The Rayleigh floor for one image sits well above that pitch",
+          "distractors": [
+            { "text": "Water immersion raises λ until 20 nm is easy", "kind": "reversed", "rationale": "Immersion raises n, not λ, and still has a floor." },
+            { "text": "Plasma etch cannot transfer any 193 nm stencil", "kind": "nearby", "rationale": "Etch is what makes the split work." },
+            { "text": "Reticles cannot be written coarser than 20 nm", "kind": "subtle", "rationale": "The reticle is 4× larger. The optic is the limit." }
+          ],
+          "correctExplanation": "Do the division. The single-exposure floor is not 20 nm.",
+          "objectiveIds": ["Predict why a single 193 nm exposure cannot print a pitch the Rayleigh limit forbids"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mp20-2",
+          "stem": "A lot whose two LELE passes each meet CD but still shorts typically:",
+          "correctAnswer": "Has an overlay miss between the two halves of one drawing",
+          "distractors": [
+            { "text": "Has proved that etch is unnecessary", "kind": "reversed", "rationale": "Etch froze each pass. Placement between them failed." },
+            { "text": "Needs a wet-etch undercut to merge the lines on purpose", "kind": "nearby", "rationale": "A short is the failure, not the process intent." },
+            { "text": "Should raise the Czochralski pull speed", "kind": "misapplied", "rationale": "The crystal is not the overlay." }
+          ],
+          "correctExplanation": "Each stencil was legal. Their relative placement was not.",
+          "objectiveIds": ["Explain multiple patterning as splitting one drawn layer across several litho-etch passes"],
+          "prerequisiteConceptIds": ["semi-duv", "semi-etch-plasma"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mp20-3",
+          "stem": "Spacer-based pitch halving is still multiple patterning because:",
+          "correctAnswer": "A sparse printed mandrel plus etch-defined sidewalls make the tight pitch",
+          "distractors": [
+            { "text": "The scanner secretly switched to 13.5 nm for the spacer", "kind": "nearby", "rationale": "The print is still the sparse mandrel." },
+            { "text": "Spacers repeal the need for any lithography", "kind": "reversed", "rationale": "You still print the mandrel." },
+            { "text": "NA becomes infinite inside a sidewall", "kind": "subtle", "rationale": "The optic did not change." }
+          ],
+          "correctExplanation": "Print sparse, let deposition and etch make the dense. That is still a split.",
+          "objectiveIds": ["Explain multiple patterning as splitting one drawn layer across several litho-etch passes"],
+          "prerequisiteConceptIds": ["semi-etch-plasma", "semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-pitch-split-10",
+      "conceptId": "semi-pitch-split",
+      "title": "A 20 nm pitch is not a 20 nm exposure",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-multi-pattern"],
+      "goDeeper": "semi-euv",
+      "diagram": "multi-pattern",
+      "explanation": [
+        "Pitch splitting is the concrete version of multiple patterning. The drawn pitch — the center-to-center of neighboring lines — is not the pitch any one exposure printed. Two exposures at twice the pitch, interleaved, union to the drawn pitch. Three or four passes, same idea. The newspaper number is the union. The scanner number is the sparse subset.",
+        "Walk it. Drawn pitch 40 nm. Pass A prints lines at 80 nm pitch. Etch freezes them. Pass B prints the other set, also at 80 nm pitch, aimed at the midpoints. The wafer now has a 40 nm pitch. Nobody exposed a 40 nm pitch. That sentence is the whole concept.",
+        "This is why a node name and a pitch are not a wavelength. A '20 nm' metal can be two 193 nm exposures, or a spacer flow, or later a single EUV exposure. Asking 'what λ printed this pitch?' is the wrong question until you ask 'what pitch did each exposure see?'"
+      ],
+      "example": "A briefing says a metal is 20 nm pitch at 193 nm. The tool log shows two exposures per wafer for that layer, each with an 80 nm-class mask pitch after 4× reduction math. The 20 nm is the union. The exposure was never 20 nm.",
+      "whyItMatters": "Journalist-grade lithography is counting exposures, not repeating the pitch on the slide. The next course can argue High-NA. This one owns the split.",
+      "quiz": [
+        {
+          "id": "ps10-1",
+          "stem": "A 20 nm drawn pitch is not a 20 nm exposure when:",
+          "correctAnswer": "Each pass printed a sparser subset whose union is the 20 nm pitch",
+          "distractors": [
+            { "text": "The scanner lamp was physically 20 nm light", "kind": "nearby", "rationale": "193 nm is still 193 nm." },
+            { "text": "The reticle shop wrote features at 5 nm and enlarged them", "kind": "reversed", "rationale": "The optic reduces, and the split is at the wafer." },
+            { "text": "CMP invented the pitch after polish", "kind": "misapplied", "rationale": "Polish flattens. It does not print a metal pitch." }
+          ],
+          "correctExplanation": "The drawing is the union. Each exposure was coarser.",
+          "objectiveIds": ["State why a 20 nm pitch is not a 20 nm exposure"],
+          "prerequisiteConceptIds": ["semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ps10-2",
+          "stem": "A two-pass pitch split of a 40 nm drawn pitch is typically:",
+          "correctAnswer": "Two interleaved ~80 nm-pitch exposures whose union is 40 nm",
+          "distractors": [
+            { "text": "One 40 nm exposure plus a dummy coat that does nothing", "kind": "reversed", "rationale": "If one 40 nm exposure worked, you would not split." },
+            { "text": "Four 10 nm exposures stacked in the same resist", "kind": "nearby", "rationale": "The usual split is sparser, not finer, per pass." },
+            { "text": "A single implant that dopes every other line", "kind": "misapplied", "rationale": "This is a patterning split, not a well." }
+          ],
+          "correctExplanation": "Double the pitch per pass, interleave, etch, union.",
+          "objectiveIds": ["Trace a pitch-split sequence as two or more sparser exposures whose union is the drawn pitch"],
+          "prerequisiteConceptIds": ["semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ps10-3",
+          "stem": "Asking which wavelength printed a pitch is the wrong first question until you ask:",
+          "correctAnswer": "What pitch each exposure actually saw, and how many passes made the union",
+          "distractors": [
+            { "text": "What logo is on the scanner brochure", "kind": "subtle", "rationale": "The brochure is not the exposure count." },
+            { "text": "Whether the boule was notched (100) or (111)", "kind": "nearby", "rationale": "Orientation is not the split." },
+            { "text": "Whether the resist was called positive in marketing", "kind": "misapplied", "rationale": "Tone does not replace the pass count." }
+          ],
+          "correctExplanation": "Count the exposures. Then name the lamp.",
+          "objectiveIds": ["Trace a pitch-split sequence as two or more sparser exposures whose union is the drawn pitch"],
+          "prerequisiteConceptIds": ["semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-overlay-basics-10",
+      "conceptId": "semi-overlay-basics",
+      "title": "Overlay is a budget before anyone says EUV",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-alignment", "semi-litho"],
+      "goDeeper": "semi-overlay",
+      "diagram": "overlay-marks",
+      "explanation": [
+        "Alignment was the act of finding the last layer. Overlay is the leftover error after that act: how far layer N actually sits from layer N−1, in nanometres, on a particular pair of layers. It is a budget before anyone says EUV. A via that misses metal, a contact that misses gate, a cut that misses a fin — those are overlay, and they happen on 193 nm tools.",
+        "The error has systematic pieces (stage, lens distortion, mask writing, wafer warpage after the last anneal) and a random piece. Yield dies in the tail. You do not 'have good overlay'. You have a 3σ number on a layer pair, after correction, on wafers that may have bowed since the last marks were etched.",
+        "Multipatterning made this louder: the two halves of one drawing have an overlay budget with each other. But the idea does not require that. A single-exposure contact on a single-exposure gate already has a landing pad that overlay can eat. The later EUV overlay unit is the same budget when the pads are smaller. This unit is the budget existing at all."
+      ],
+      "example": "A contact landing is 60 nm wide. Overlay of 25 nm on one side leaves 35 nm of landing — still closed. Overlay of 40 nm on the same side is an open. The scanner printed a beautiful contact. It printed it on oxide.",
+      "whyItMatters": "A CD-perfect layer that sits in the wrong place is a dead layer. If overlay is an EUV-only word, you will miss the usual villain on DUV lots.",
+      "quiz": [
+        {
+          "id": "ob10-1",
+          "stem": "Overlay, before anyone says EUV, is:",
+          "correctAnswer": "Layer-to-layer placement error after alignment has already tried",
+          "distractors": [
+            { "text": "The roughness of a single resist wall", "kind": "nearby", "rationale": "That is LER." },
+            { "text": "The k1 factor in the Rayleigh relation", "kind": "subtle", "rationale": "k1 is resolution cleverness, not placement." },
+            { "text": "The Czochralski seed rotation", "kind": "misapplied", "rationale": "Wrong factory." }
+          ],
+          "correctExplanation": "Did this layer land on the last one. That question is older than EUV.",
+          "objectiveIds": ["Define overlay as layer-to-layer placement error before anyone says EUV"],
+          "prerequisiteConceptIds": ["semi-alignment", "semi-litho"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ob10-2",
+          "stem": "A via whose CD is in spec but sits off the metal typically:",
+          "correctAnswer": "Fails as an open or a misland because overlay ate the landing pad",
+          "distractors": [
+            { "text": "Is a success because CD was the only budget", "kind": "reversed", "rationale": "Placement is a budget too." },
+            { "text": "Automatically silos into a new well implant", "kind": "misapplied", "rationale": "A miss is not a dopant." },
+            { "text": "Proves the resist tone flipped mid-scan", "kind": "nearby", "rationale": "Tone does not slide a via sideways." }
+          ],
+          "correctExplanation": "Pretty hole, wrong place. That is overlay, not dose.",
+          "objectiveIds": ["Predict a via or contact fail when overlay eats the landing pad"],
+          "prerequisiteConceptIds": ["semi-alignment"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ob10-3",
+          "stem": "Alignment and overlay differ because:",
+          "correctAnswer": "Alignment is the find; overlay is the leftover error after the find",
+          "distractors": [
+            { "text": "They are two names for dose", "kind": "reversed", "rationale": "Neither is mJ/cm²." },
+            { "text": "Overlay only exists inside an EUV vacuum", "kind": "nearby", "rationale": "DUV vias miss metal too." },
+            { "text": "Alignment is a wet etch and overlay is a dry etch", "kind": "misapplied", "rationale": "Both are placement, not etch chemistry." }
+          ],
+          "correctExplanation": "The act, then the residual. You need both words.",
+          "objectiveIds": ["Define overlay as layer-to-layer placement error before anyone says EUV"],
+          "prerequisiteConceptIds": ["semi-alignment", "semi-litho"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

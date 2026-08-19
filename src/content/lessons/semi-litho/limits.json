@@ -1,0 +1,397 @@
+{
+  "courseId": "semi-litho",
+  "moduleId": "semi-l-limits",
+  "lessons": [
+    {
+      "id": "semi-rayleigh-10",
+      "conceptId": "semi-rayleigh",
+      "title": "Resolution is three knobs, not one slogan",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-litho"],
+      "goDeeper": "semi-k1",
+      "diagram": "rayleigh-knobs",
+      "explanation": [
+        "The smallest half-pitch a tool can print is not 'the wavelength'. It is the Rayleigh relation: CD ≈ k1 · λ / NA. Three symbols. λ is the wavelength of the light. NA is the numerical aperture of the projection optic — how wide a cone of rays it can collect. k1 is a dimensionless process factor that packs resist, illumination, and later tricks into one number. Shrink CD by shrinking λ, raising NA, or lowering k1. There is no fourth magic word on this slide.",
+        "Directionality is the lesson. Cut λ in half and, other terms fixed, you can print about twice as tight. Raise NA and the same thing happens. Lower k1 and you are spending process cleverness, not buying a new lamp. The industry rode λ for decades (365 → 248 → 193 nm), then spent NA and k1 because the next wavelength was late. 'Smaller light, smaller transistors' is the λ term with the other two erased.",
+        "A working number: 193 nm light, NA 0.93, k1 of 0.31 gives CD ≈ 0.31 × 193 / 0.93 ≈ 64 nm. That is a half-pitch scale, not a marketing node. Change one knob, the number moves. The twenty-minute unit will add the cost: raising NA also thins the slice of height that stays in focus."
+      ],
+      "example": "Two otherwise identical 193 nm processes: one at NA 0.75, one at NA 0.93, same k1. The second prints a tighter pitch. A third process that keeps NA 0.75 and pretends k1 can fall to 0.15 without changing illumination or resist will miss CD — the equation is not a slogan you shout at the wafer.",
+      "whyItMatters": "Every later DUV trick and the EUV jump is a sentence about these three knobs. If you cannot name them, '3 nm' will look like a length.",
+      "quiz": [
+        {
+          "id": "ra10-1",
+          "stem": "In CD ≈ k1 · λ / NA, the three symbols are:",
+          "correctAnswer": "A process factor, the wavelength, and the numerical aperture",
+          "distractors": [
+            { "text": "Dose, develop time, and chrome thickness only", "kind": "nearby", "rationale": "Those are real knobs. They are not this equation." },
+            { "text": "Wafer diameter, boule length, and polish haze", "kind": "misapplied", "rationale": "Those belong to wafer prep." },
+            { "text": "Clock speed, IPC, and cache size", "kind": "subtle", "rationale": "Wrong course." }
+          ],
+          "correctExplanation": "k1, lambda, NA. Resolution is a product of all three.",
+          "objectiveIds": ["State resolution as k1 · λ / NA and name what each symbol is"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ra10-2",
+          "stem": "Holding k1 and NA fixed, cutting wavelength in half typically:",
+          "correctAnswer": "Lets you print about twice as tight a pitch",
+          "distractors": [
+            { "text": "Doubles the printable pitch (features get coarser)", "kind": "reversed", "rationale": "CD scales with λ. Smaller λ, smaller CD." },
+            { "text": "Removes the need for a mask", "kind": "nearby", "rationale": "The original is still required." },
+            { "text": "Turns the resist into a grown oxide", "kind": "misapplied", "rationale": "Wavelength is light, not a film reaction." }
+          ],
+          "correctExplanation": "CD tracks λ when the other terms hold. Half the wavelength, about half the CD.",
+          "objectiveIds": ["Predict the direction resolution moves when wavelength or NA changes"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ra10-3",
+          "stem": "Raising NA while holding λ and k1 fixed typically:",
+          "correctAnswer": "Improves resolution because CD falls as 1/NA",
+          "distractors": [
+            { "text": "Worsens resolution because CD grows with NA", "kind": "reversed", "rationale": "NA is in the denominator." },
+            { "text": "Changes only the wafer diameter", "kind": "subtle", "rationale": "NA is an optic, not a saw." },
+            { "text": "Sets the resist tone from positive to negative", "kind": "nearby", "rationale": "Tone is chemistry." }
+          ],
+          "correctExplanation": "Bigger cone, smaller printable pitch. That is the NA term.",
+          "objectiveIds": ["Predict the direction resolution moves when wavelength or NA changes"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-rayleigh-20",
+      "conceptId": "semi-rayleigh",
+      "title": "The same knobs spend depth of focus",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["semi-litho"],
+      "goDeeper": "semi-k1",
+      "diagram": "dof-trade",
+      "explanation": [
+        "The ten-minute unit named CD ≈ k1 · λ / NA. This one is the bill. Depth of focus — the slice of height where the image stays sharp — shrinks as roughly λ / NA². Raise NA to buy resolution and you spend the focus budget as the square. Cut λ and you buy both a tighter pitch and, other things equal, a thinner slice. There is no knob that only helps.",
+        "That is why the last course treated CMP as a lithography input. A 200 nm local step next to a 150 nm depth of focus is not a 'rough wafer'. It is two planes, and the lens has one. Dose cannot invent a second slice. The incoming flatness is part of the Rayleigh story even though it does not appear in the CD equation.",
+        "Work a pair of numbers. 193 nm at NA 0.93 has CD ≈ 0.31 × 193 / 0.93 ≈ 64 nm and a depth of focus on the order of 193 / 0.93² ≈ 220 nm. Push NA to 1.35 (the immersion unit will say how) and CD drops to about 44 nm while depth of focus falls toward 193 / 1.35² ≈ 110 nm. You bought pitch. You spent height.",
+        "k1 is the remaining escape hatch, and it is not free either — the next unit. For now: any briefing that names a tighter pitch and never names depth of focus has shown you one half of Rayleigh."
+      ],
+      "example": "A metal layer moves from NA 0.93 to a higher-NA recipe to hit pitch. The same incoming 80 nm of leftover topography that used to sit inside the focus slice now straddles it. One side of each die prints; the other side's CD walks. The wavelength did not change. The slice got thinner than the hill.",
+      "whyItMatters": "High-NA, later, is this same trade at a new wavelength. If you learn it here as physics, the later platform is a number. If you skip it, High-NA will look like a product name.",
+      "quiz": [
+        {
+          "id": "ra20-1",
+          "stem": "Depth of focus shrinks roughly as λ / NA², so raising NA:",
+          "correctAnswer": "Buys resolution and spends the height that still prints sharp",
+          "distractors": [
+            { "text": "Buys resolution and also thickens the focus slice", "kind": "reversed", "rationale": "NA² is in the denominator of DoF." },
+            { "text": "Only changes the chrome thickness on the reticle", "kind": "nearby", "rationale": "NA is the optic, not the plate." },
+            { "text": "Removes the need for a planar incoming wafer", "kind": "misapplied", "rationale": "A thinner slice makes flatness more, not less, mandatory." }
+          ],
+          "correctExplanation": "Resolution ~ 1/NA. Focus slice ~ 1/NA². That is the trade.",
+          "objectiveIds": ["Predict the direction resolution moves when wavelength or NA changes"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ra20-2",
+          "stem": "A leftover hill taller than the depth of focus typically:",
+          "correctAnswer": "Puts part of the die outside the sharp slice even if dose is perfect",
+          "distractors": [
+            { "text": "Automatically tracks the lens so both heights print", "kind": "reversed", "rationale": "The lens has one slice." },
+            { "text": "Converts the exposure into a wet etch", "kind": "misapplied", "rationale": "Height is not a transfer chemistry." },
+            { "text": "Raises k1 enough to cancel Rayleigh", "kind": "subtle", "rationale": "k1 does not repeal topography." }
+          ],
+          "correctExplanation": "Two heights, one slice. Dose does not invent a second plane.",
+          "objectiveIds": ["State resolution as k1 · λ / NA and name what each symbol is"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ra20-3",
+          "stem": "Cutting wavelength, other terms fixed, moves resolution and depth of focus:",
+          "correctAnswer": "Tighter pitch and, roughly, a thinner focus slice",
+          "distractors": [
+            { "text": "Coarser pitch and an infinitely thick focus slice", "kind": "reversed", "rationale": "Both CD and DoF scale with λ." },
+            { "text": "Only the reticle reduction ratio", "kind": "nearby", "rationale": "Reduction is a tool geometry, not λ." },
+            { "text": "Only the Czochralski pull rate", "kind": "misapplied", "rationale": "The crystal is already cut." }
+          ],
+          "correctExplanation": "Smaller λ helps CD and still costs height. There is no free knob.",
+          "objectiveIds": ["Predict the direction resolution moves when wavelength or NA changes"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-k1-10",
+      "conceptId": "semi-k1",
+      "title": "k1 is cleverness packed into a number",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-rayleigh"],
+      "goDeeper": "semi-process-window",
+      "diagram": "rayleigh-knobs",
+      "explanation": [
+        "k1 is the leftover in CD = k1 · λ / NA after you have named the lamp and the lens. It is not a material. It is a score for how much of the theoretical resolution your process actually uses. Off-axis illumination, a contrasty resist, optical proximity correction, and later multipatterning all push k1 down. A naive, on-axis, uncorrected process sits at a high k1 and wastes the optic you paid for.",
+        "There is a floor. Imaging theory will not let k1 fall much below about 0.25 for a single exposure — you cannot pass spatial frequencies the optic does not collect. Pushing from 0.40 toward 0.30 is real process work. Pretending k1 is 0.15 on a single 193 nm exposure is pretending the equation has a fourth knob. That is usually when someone invents a second exposure instead.",
+        "So shrinking k1 is not a free substitute for a shorter wavelength. It spends illumination complexity, mask complexity, and process window. A briefing that says 'we improved k1' and never names what got harder has hidden the bill. Wavelength and NA are hardware. k1 is everything else you did to the image."
+      ],
+      "example": "A 193 nm, NA 0.93 layer at k1 = 0.40 prints about 83 nm. The same hardware at k1 = 0.30 prints about 62 nm — because the team paid in off-axis illumination and OPC, not because λ changed. Asking the same tool for k1 = 0.18 as a single exposure is how a multipatterning program starts.",
+      "whyItMatters": "DUV 'tricks' later in this course are k1 programs with names. If k1 is a mystery coefficient, immersion and OPC will look like folklore.",
+      "quiz": [
+        {
+          "id": "k110-1",
+          "stem": "The k1 factor is best treated as:",
+          "correctAnswer": "Process and illumination cleverness packed into a dimensionless number",
+          "distractors": [
+            { "text": "The wavelength of the scanner lamp in nanometers", "kind": "nearby", "rationale": "That is λ." },
+            { "text": "The sine of the half-angle the lens can accept", "kind": "misapplied", "rationale": "That is NA." },
+            { "text": "The thickness of the incoming wafer after CMP", "kind": "subtle", "rationale": "Flatness is an input, not k1." }
+          ],
+          "correctExplanation": "k1 scores how much of the optic you actually use.",
+          "objectiveIds": ["Treat k1 as process and illumination cleverness packed into a dimensionless number"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "k110-2",
+          "stem": "A single-exposure k1 well below ~0.25 usually means:",
+          "correctAnswer": "Someone is asking the optic for spatial frequencies it cannot pass",
+          "distractors": [
+            { "text": "The Rayleigh equation has been repealed", "kind": "reversed", "rationale": "The floor is the equation, not a suggestion." },
+            { "text": "The wafer has become polycrystalline", "kind": "nearby", "rationale": "k1 is imaging, not the crystal." },
+            { "text": "Dose is now measured in metres", "kind": "subtle", "rationale": "Units did not change." }
+          ],
+          "correctExplanation": "There is an imaging floor. Below it you split the exposure or change λ.",
+          "objectiveIds": ["Predict why shrinking k1 is not a free substitute for a shorter wavelength"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "k110-3",
+          "stem": "Pushing k1 down instead of buying a shorter λ typically:",
+          "correctAnswer": "Spends illumination, mask, and process-window complexity for the same hardware",
+          "distractors": [
+            { "text": "Is free because k1 is only a label on a slide", "kind": "reversed", "rationale": "The number is a score for real work." },
+            { "text": "Automatically lengthens depth of focus as NA²", "kind": "nearby", "rationale": "DoF is a λ/NA story, not a k1 gift." },
+            { "text": "Replaces the reticle with a Czochralski seed", "kind": "misapplied", "rationale": "Wrong object." }
+          ],
+          "correctExplanation": "k1 is the bill for tricks. Wavelength is a different purchase.",
+          "objectiveIds": ["Predict why shrinking k1 is not a free substitute for a shorter wavelength"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-process-window-10",
+      "conceptId": "semi-process-window",
+      "title": "The legal band of focus and dose",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-exposure", "semi-rayleigh"],
+      "goDeeper": "semi-focus-expose",
+      "diagram": "dof-trade",
+      "explanation": [
+        "A feature has a legal critical dimension — a CD spec. The process window is the set of focus values and dose values that still land inside that spec. It is a region on a plot, not a vibe. Outside the region, the line is too thin, the hole is scummed, or the wall has fallen over. Inside, the stencil is legal enough to transfer.",
+        "Focus and dose trade. A little extra dose can sometimes hold CD when focus walks, and a little extra focus latitude can forgive a dose miss — until they cannot. The window shrinks as you ask Rayleigh for more: smaller k1, higher NA, thinner depth of focus. A process that 'prints' at one sweet-spot field and dies at the edge of the die is a window problem, not a mystery defect.",
+        "You already know both axes. Dose is the number you can miss both ways. Focus is the slice Rayleigh just priced. The window is those two, together, against a CD bar. The next unit is how a lab measures that region — a focus-exposure matrix, read as a Bossung plot."
+      ],
+      "example": "A gate CD spec is 48 ± 2 nm. At best focus the legal dose band is 28–34 mJ/cm². Walk 80 nm out of focus and the band collapses to a point, then vanishes. Dies at the wafer edge, where the chuck is a little high, fail CD even though the scanner 'used the same recipe'.",
+      "whyItMatters": "Yield lectures that say 'process window' without a focus axis and a dose axis are using a slogan. This is the object those lectures owe you.",
+      "quiz": [
+        {
+          "id": "pw10-1",
+          "stem": "A lithography process window is:",
+          "correctAnswer": "The focus and dose ranges that still print a legal CD",
+          "distractors": [
+            { "text": "The Czochralski pull rate that still grows one crystal", "kind": "nearby", "rationale": "Wrong course object." },
+            { "text": "The chrome area of the reticle shop", "kind": "subtle", "rationale": "The window is at the wafer, not the mask shop." },
+            { "text": "The clock period of the scanner stage", "kind": "misapplied", "rationale": "A stage tick is not a CD band." }
+          ],
+          "correctExplanation": "Two axes, one CD bar. That region is the window.",
+          "objectiveIds": ["Define the process window as the focus and dose ranges that still print a legal CD"],
+          "prerequisiteConceptIds": ["semi-exposure", "semi-rayleigh"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pw10-2",
+          "stem": "Walking out of the window in focus, with dose held at the old target, typically:",
+          "correctAnswer": "Pushes CD off spec even though the recipe number did not change",
+          "distractors": [
+            { "text": "Automatically recenters CD because dose is sacred", "kind": "reversed", "rationale": "Dose cannot invent a second focus slice." },
+            { "text": "Grows a thermal oxide in the resist", "kind": "misapplied", "rationale": "No oxidant step ran." },
+            { "text": "Converts the layer into an implant well", "kind": "nearby", "rationale": "Focus is imaging, not doping." }
+          ],
+          "correctExplanation": "The legal band is two-dimensional. Leave it on one axis and CD goes.",
+          "objectiveIds": ["Predict a CD miss when you leave the window in focus or in dose"],
+          "prerequisiteConceptIds": ["semi-exposure", "semi-rayleigh"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pw10-3",
+          "stem": "Raising NA enough to shrink depth of focus usually:",
+          "correctAnswer": "Shrinks the process window because the focus axis got shorter",
+          "distractors": [
+            { "text": "Widens the window because higher NA forgives every hill", "kind": "reversed", "rationale": "Higher NA thins the slice." },
+            { "text": "Deletes the dose axis from the plot", "kind": "subtle", "rationale": "Dose is still a knob." },
+            { "text": "Replaces resist with a silicide", "kind": "misapplied", "rationale": "NA is an optic." }
+          ],
+          "correctExplanation": "Rayleigh priced the height. The window is that price plus dose.",
+          "objectiveIds": ["Predict a CD miss when you leave the window in focus or in dose"],
+          "prerequisiteConceptIds": ["semi-rayleigh"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-focus-expose-10",
+      "conceptId": "semi-focus-expose",
+      "title": "The Bossung plot is a lab object",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-process-window"],
+      "goDeeper": "semi-duv",
+      "diagram": "dof-trade",
+      "explanation": [
+        "A focus-exposure matrix (FEM) is how you measure the window instead of asserting it. You print a grid: columns of focus, rows of dose, or the other way around. Each site gets a CD measurement. The plot of CD versus focus at several doses is a Bossung plot. It is not a brand. It is a family of curves that smile or frown as you walk through focus.",
+        "Read it like a map. A dose whose curve stays inside the CD spec across a wide focus range is a wide window. A dose whose curve only kisses the spec at one focus is a point, not a process. The isofocal dose is the one whose CD barely moves with focus — often the dose you want, if it also sits in spec. When every curve is a steep V, you do not have a window. You have a prayer.",
+        "The FEM is also how you catch a lie. A scanner recipe that 'always prints' may print at the FEM center and die at ±50 nm of focus, which is a real chuck and a real wafer bow. The process-window unit named the region. This unit is the experiment that draws it."
+      ],
+      "example": "A metal FEM shows 30 mJ/cm² staying inside 64 ± 3 nm from −60 to +60 nm of focus. 24 mJ/cm² is legal only at best focus. The team picks 30, not because it is a lucky integer, but because the Bossung curve is the flatter one inside spec.",
+      "whyItMatters": "Without this plot, 'we have a process window' is a sentence anyone can say. With it, you can point at a curve and a spec bar.",
+      "quiz": [
+        {
+          "id": "fe10-1",
+          "stem": "A focus-exposure matrix is:",
+          "correctAnswer": "A printed grid of focus and dose that maps the process window",
+          "distractors": [
+            { "text": "A Czochralski seed rotation table", "kind": "nearby", "rationale": "Wrong lab." },
+            { "text": "A list of chrome vendors", "kind": "subtle", "rationale": "The FEM is at the wafer." },
+            { "text": "A wet-etch undercut recipe", "kind": "misapplied", "rationale": "This is an imaging experiment." }
+          ],
+          "correctExplanation": "Print the grid, measure CD, draw the window.",
+          "objectiveIds": ["Describe a focus-exposure matrix as the lab object that maps the process window"],
+          "prerequisiteConceptIds": ["semi-process-window"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "fe10-2",
+          "stem": "A Bossung plot is read as:",
+          "correctAnswer": "CD versus focus at several doses",
+          "distractors": [
+            { "text": "Wafer diameter versus pull rate", "kind": "nearby", "rationale": "Wrong axes." },
+            { "text": "NA versus k1 with no CD on the page", "kind": "subtle", "rationale": "Bossung is a CD-versus-focus family." },
+            { "text": "Implant energy versus anneal time", "kind": "misapplied", "rationale": "Different unit process." }
+          ],
+          "correctExplanation": "Each curve is one dose. The x-axis is focus. The y-axis is CD.",
+          "objectiveIds": ["Read a Bossung plot as CD versus focus at several doses"],
+          "prerequisiteConceptIds": ["semi-process-window"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "fe10-3",
+          "stem": "A dose whose Bossung curve only kisses the CD spec at one focus:",
+          "correctAnswer": "Is a point, not a window you can run a lot on",
+          "distractors": [
+            { "text": "Is the most robust process you can buy", "kind": "reversed", "rationale": "A kiss is the opposite of latitude." },
+            { "text": "Automatically flattens incoming topography", "kind": "nearby", "rationale": "A plot does not polish." },
+            { "text": "Sets the reticle reduction from 4× to 1×", "kind": "misapplied", "rationale": "The optic did not change." }
+          ],
+          "correctExplanation": "You want a curve that stays legal across real focus noise.",
+          "objectiveIds": ["Read a Bossung plot as CD versus focus at several doses"],
+          "prerequisiteConceptIds": ["semi-process-window"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-ler-10",
+      "conceptId": "semi-ler",
+      "title": "The wall is not a straight line",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-resist"],
+      "goDeeper": "semi-process-window",
+      "diagram": "resist-tone",
+      "explanation": [
+        "A drawn line is a pair of perfectly straight edges. The developed resist wall is not. Line-edge roughness (LER) is the wiggle of that wall along its length. Line-width roughness is the same wiggle read as a changing CD. Both come from a film that is molecular, a develop that is statistical, and an image whose edge is a gradient, not a cliff.",
+        "On a wide line the wiggle is a cosmetic. On a 40 nm line the same nanometres of wiggle are the CD. A locally thin spot becomes a fuse. A locally wide spot eats the space to the neighbor. After etch, the roughness often transfers into the hard film, so the device sees it, not just the stencil.",
+        "You do not need EUV photon counting yet to own this. Any resist edge is rough. Dose, bake, and developer can move the number; they cannot draw a Euclidean line. The later stochastics unit is what happens when the photon count itself is a small integer. This unit is the wall you already have at DUV."
+      ],
+      "example": "Two gates drawn at the same CD: one with 2 nm LER, one with 6 nm. The second population has a fat tail of locally thin gates that fail voltage. The mean CD on the metrology bar was in spec. The wall was not a line.",
+      "whyItMatters": "CD is an average. Devices die on the local minimum. If the wall is 'the drawing', you will not understand a spec that names roughness.",
+      "quiz": [
+        {
+          "id": "lr10-1",
+          "stem": "Line-edge roughness means:",
+          "correctAnswer": "The developed wall wiggles instead of being a straight line",
+          "distractors": [
+            { "text": "The wafer is not a single crystal", "kind": "nearby", "rationale": "LER is a resist edge, not a grain." },
+            { "text": "The reticle reduction is no longer 4×", "kind": "subtle", "rationale": "Reduction is tool geometry." },
+            { "text": "The scanner has no numerical aperture", "kind": "misapplied", "rationale": "NA still exists. The wall is still wiggly." }
+          ],
+          "correctExplanation": "The drawing is straight. The film is not.",
+          "objectiveIds": ["Define line-edge roughness as the wall not being a straight line"],
+          "prerequisiteConceptIds": ["semi-resist"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "lr10-2",
+          "stem": "As features shrink, the same nanometres of edge wiggle typically:",
+          "correctAnswer": "Become a larger fraction of CD and a local open or short risk",
+          "distractors": [
+            { "text": "Matter less because small lines ignore their walls", "kind": "reversed", "rationale": "Small lines are made of their walls." },
+            { "text": "Grow a cleaner thermal oxide", "kind": "nearby", "rationale": "Roughness is not oxidation." },
+            { "text": "Align the next layer automatically", "kind": "misapplied", "rationale": "LER is not a mark." }
+          ],
+          "correctExplanation": "Fixed wiggle, shrinking CD. The tail becomes the device.",
+          "objectiveIds": ["Predict why a rough edge becomes a CD or device problem as features shrink"],
+          "prerequisiteConceptIds": ["semi-resist"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "lr10-3",
+          "stem": "A lot whose mean CD is in spec can still die from LER because:",
+          "correctAnswer": "Devices see local thin or fat spots, not only the average bar",
+          "distractors": [
+            { "text": "Metrology averages are the only thing a transistor feels", "kind": "reversed", "rationale": "The local wall is the device." },
+            { "text": "Roughness raises the Czochralski melt temperature", "kind": "subtle", "rationale": "The boule is already sliced." },
+            { "text": "LER sets the lamp wavelength", "kind": "misapplied", "rationale": "λ is a source choice." }
+          ],
+          "correctExplanation": "The spec bar is a mean. The fuse is a local minimum.",
+          "objectiveIds": ["Predict why a rough edge becomes a CD or device problem as features shrink"],
+          "prerequisiteConceptIds": ["semi-resist"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

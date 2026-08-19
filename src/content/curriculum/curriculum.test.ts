@@ -10,6 +10,7 @@ import { CULTURE_LESSONS } from "../lessons/culture.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
 import { ARCH_GPU_LESSONS } from "../lessons/arch-gpu/index.ts";
 import { SEMI_PROCESS_LESSONS } from "../lessons/semi-process/index.ts";
+import { SEMI_LITHO_LESSONS } from "../lessons/semi-litho/index.ts";
 import { SCIENCE_LESSONS } from "../lessons/science.ts";
 import { SYSTEMS_LESSONS } from "../lessons/systems.ts";
 import { LONGFORM_LESSONS } from "../lessons/longform.ts";
@@ -31,6 +32,7 @@ const LESSONS = [
   ...CPU_MICROARCH_LESSONS,
   ...ARCH_GPU_LESSONS,
   ...SEMI_PROCESS_LESSONS,
+  ...SEMI_LITHO_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
@@ -132,6 +134,8 @@ describe("curriculum integrity", () => {
     assert.ok(catalog.conceptMap["dm-harmony"].prerequisites.includes("mus-interval"));
     assert.ok(catalog.conceptMap["dm-harmony"].prerequisites.includes("mus-modes"));
     assert.ok(catalog.conceptMap["semi-litho"].prerequisites.includes("semi-wafer"));
+    assert.ok(catalog.conceptMap["semi-litho"].prerequisites.includes("semi-planarity"));
+    assert.ok(catalog.conceptMap["semi-euv"].prerequisites.includes("semi-duv"));
     assert.ok(catalog.conceptMap["os-tlb-os"].prerequisites.includes("cpu-tlb"));
     assert.ok(catalog.conceptMap["ml-attention"].prerequisites.includes("ml-backprop"));
   });

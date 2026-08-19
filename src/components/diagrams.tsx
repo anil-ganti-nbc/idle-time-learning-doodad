@@ -654,6 +654,157 @@ const DIAGRAMS: Record<string, ReactNode> = {
       </text>
     </svg>
   ),
+  "litho-sequence": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Coat, expose, develop, then transfer">
+      {["coat", "expose", "develop", "transfer"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 134}, 36)`}>
+          <rect width="118" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="32" textAnchor="middle" fill="currentColor" fontSize="14">
+            {label}
+          </text>
+          {i < 3 && <path d="M122 26 H132" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        the resist is a stencil · etch or implant is the device
+      </text>
+    </svg>
+  ),
+  "resist-tone": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Positive resist leaves where exposed; negative stays">
+      <rect x="40" y="28" width="200" height="18" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <text x="140" y="20" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        light
+      </text>
+      <rect x="40" y="52" width="70" height="22" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="170" y="52" width="70" height="22" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="40" y="80" width="200" height="28" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="140" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        positive · exposed leaves
+      </text>
+      <rect x="320" y="28" width="200" height="18" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <text x="420" y="20" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        light
+      </text>
+      <rect x="390" y="52" width="60" height="22" rx="2" fill="currentColor" fillOpacity="0.28" />
+      <rect x="320" y="80" width="200" height="28" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="420" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        negative · exposed stays
+      </text>
+    </svg>
+  ),
+  "rayleigh-knobs": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Resolution as k1 times lambda over NA">
+      <rect x="36" y="40" width="100" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="86" y="64" textAnchor="middle" fill="currentColor" fontSize="16">
+        k1
+      </text>
+      <text x="86" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        process
+      </text>
+      <text x="154" y="70" fill="currentColor" fontSize="18" fillOpacity="0.45">
+        ·
+      </text>
+      <rect x="176" y="40" width="100" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="226" y="64" textAnchor="middle" fill="currentColor" fontSize="16">
+        λ
+      </text>
+      <text x="226" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        wavelength
+      </text>
+      <text x="292" y="72" fill="currentColor" fontSize="20" fillOpacity="0.45">
+        /
+      </text>
+      <rect x="316" y="40" width="100" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="366" y="64" textAnchor="middle" fill="currentColor" fontSize="16">
+        NA
+      </text>
+      <text x="366" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        aperture
+      </text>
+      <text x="440" y="72" fill="currentColor" fontSize="18" fillOpacity="0.5">
+        =
+      </text>
+      <text x="500" y="74" textAnchor="middle" fill="currentColor" fontSize="14">
+        CD
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        three knobs · not a slogan
+      </text>
+    </svg>
+  ),
+  "dof-trade": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Raising NA tightens pitch and thins the focus slice">
+      <rect x="40" y="36" width="200" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M60 88 H220" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M70 56 H90 M110 56 H130 M150 56 H170 M190 56 H210" stroke="currentColor" strokeOpacity="0.7" strokeWidth="3" />
+      <text x="140" y="124" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        lower NA · thicker focus
+      </text>
+      <rect x="320" y="28" width="200" height="86" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M340 80 H500" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M348 68 H360 M376 68 H388 M404 68 H416 M432 68 H444 M460 68 H472 M488 68 H500" stroke="currentColor" strokeOpacity="0.7" strokeWidth="2" />
+      <path d="M330 52 H510" stroke="currentColor" strokeOpacity="0.2" strokeDasharray="4 3" />
+      <path d="M330 108 H510" stroke="currentColor" strokeOpacity="0.2" strokeDasharray="4 3" />
+      <text x="420" y="140" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        higher NA · thinner slice
+      </text>
+    </svg>
+  ),
+  "overlay-marks": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="This layer must sit on the last layer's marks">
+      <rect x="48" y="36" width="200" height="70" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <rect x="88" y="52" width="48" height="38" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <rect x="160" y="52" width="48" height="38" rx="2" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="148" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        aligned
+      </text>
+      <rect x="312" y="36" width="200" height="70" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <rect x="352" y="52" width="48" height="38" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <rect x="432" y="44" width="48" height="38" rx="2" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="412" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        overlay miss
+      </text>
+    </svg>
+  ),
+  "multi-pattern": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="One drawn pitch split across two litho-etch passes">
+      <path d="M48 48 H88 M112 48 H152 M176 48 H216 M240 48 H280" stroke="currentColor" strokeOpacity="0.25" strokeWidth="10" />
+      <text x="164" y="84" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        drawn pitch
+      </text>
+      <path d="M336 36 H376 M464 36 H504" stroke="currentColor" strokeOpacity="0.75" strokeWidth="10" />
+      <path d="M400 64 H440" stroke="currentColor" strokeOpacity="0.4" strokeWidth="10" />
+      <text x="420" y="100" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        pass A · pass B
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        etch freezes each pass · union is the drawing
+      </text>
+    </svg>
+  ),
+  "duv-vs-euv": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="DUV refractive path versus EUV reflective path">
+      <circle cx="56" cy="48" r="10" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M66 48 H130" stroke="currentColor" strokeOpacity="0.45" />
+      <ellipse cx="154" cy="48" rx="16" ry="22" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <path d="M170 48 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="230" y="36" width="36" height="24" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="154" y="92" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        DUV · lenses
+      </text>
+      <circle cx="320" cy="52" r="10" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M330 48 L380 28 L440 56 L500 32" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="362" y="22" width="36" height="10" rx="1" fill="currentColor" fillOpacity="0.3" />
+      <rect x="422" y="56" width="36" height="10" rx="1" fill="currentColor" fillOpacity="0.3" />
+      <text x="420" y="92" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        EUV · mirrors
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        glass works at 193 nm · air and glass eat 13.5 nm
+      </text>
+    </svg>
+  ),
 };
 
 export function DiagramCaption({ children, className }: { children: ReactNode; className?: string }) {

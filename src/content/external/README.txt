@@ -14,5 +14,5 @@ Quiz must be exactly three questions with four choices and an explicit answerInd
 The app never treats AI output as canonical. Generated units are cached locally
 and can be edited, regenerated, archived, or marked accurate / unclear / suspect.
 
-Example shape is in example-euv-resist.json.
+Production lithography lessons live in src/content/lessons/semi-litho/.
 The catalog merges these files with the seeded TypeScript lessons at import time.

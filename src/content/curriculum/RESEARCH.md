@@ -48,4 +48,6 @@ Where they disagree, prerequisite logic wins.
 - Compiler scheduling/vectorization depend on pipelines and SIMD.
 - Death-metal harmony depends on intervals and modes, not on blast beats.
 - Lithography depends on a wafer and on planarity.
+- EUV depends on DUV (and therefore Rayleigh): it is a later light source,
+  and "why refractive optics die" is only a sentence after lenses exist.
 - Transformers depend on backprop and sequence models.
