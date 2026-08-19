@@ -17,6 +17,12 @@
       "url": "https://web.stanford.edu/class/cs143/",
       "kind": "syllabus",
       "notes": "Lex, parse, semantic analysis as the first project phases. Optimization waits."
+    },
+    {
+      "id": "dragon-book",
+      "title": "Compilers: Principles, Techniques, and Tools",
+      "kind": "textbook",
+      "notes": "Regular lexers, CFGs, and the source-to-tree pipeline. Mechanism, not theorem lists."
     }
   ],
   "modules": [
@@ -28,6 +34,10 @@
       "prerequisites": [],
       "spineIds": [
         "cmp-front"
+      ],
+      "learningObjectives": [
+        "Recover words from characters",
+        "Keep a span so a diagnostic can point"
       ]
     },
     {
@@ -41,6 +51,10 @@
       "spineIds": [
         "cmp-cfg",
         "cmp-ast"
+      ],
+      "learningObjectives": [
+        "Recover nested structure from a token stream",
+        "Drop punctuation into the tree typechecking will walk"
       ]
     },
     {
@@ -53,6 +67,10 @@
       ],
       "spineIds": [
         "cmp-typecheck"
+      ],
+      "learningObjectives": [
+        "Bind each use to a declaration",
+        "Reject a tree whose operators cannot agree"
       ]
     }
   ],
@@ -64,7 +82,15 @@
       "tier": 0,
       "prerequisites": [],
       "summary": "Turning characters into a tree the rest of the compiler can hate.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Trace source text through lexing and parsing into a tree later stages can consume",
+        "Name what errors the front end can report before any IR exists"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-token",
@@ -75,7 +101,16 @@
         "cmp-front"
       ],
       "summary": "The words of a programming language.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-front",
+      "objectives": [
+        "Describe a token as a classified lexeme plus the payload later stages need",
+        "Split a short source fragment into the tokens a parser would see"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-regex-lex",
@@ -85,8 +120,17 @@
       "prerequisites": [
         "cmp-token"
       ],
-      "summary": "Why identifiers are regular and expressions are not.",
-      "estimatedMinutes": 10
+      "summary": "Why identifiers and numbers are regular while nested expressions are not.",
+      "parentId": "cmp-token",
+      "objectives": [
+        "Explain why identifiers and numbers are regular while nested expressions are not",
+        "Predict which lexeme a maximal-munch lexer accepts at a given position"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-source-loc",
@@ -97,7 +141,15 @@
         "cmp-token"
       ],
       "summary": "Every diagnostic needs a span.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-token",
+      "objectives": [
+        "Attach a source span to a token so a diagnostic can point at the original text",
+        "Predict what a diagnostic loses if tokens forget where they came from"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-preproc",
@@ -108,7 +160,15 @@
         "cmp-token"
       ],
       "summary": "A language before the language.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-token",
+      "objectives": [
+        "Describe preprocessing as a rewrite of the token stream before the language parser runs",
+        "Name an error that appears only after expansion, not in the raw source"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-macro",
@@ -119,7 +179,15 @@
         "cmp-preproc"
       ],
       "summary": "Expansion that later phases must still explain.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-preproc",
+      "objectives": [
+        "Trace a macro expansion and the token stream the parser actually sees",
+        "Explain why a later diagnostic must still mention the use site, not only the expansion"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-cfg",
@@ -130,7 +198,15 @@
         "cmp-front"
       ],
       "summary": "Recursive structure you can write down.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Write a small context-free grammar that generates nested expressions",
+        "Distinguish a regular token language from a context-free phrase structure"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-parse-tree",
@@ -141,7 +217,16 @@
         "cmp-cfg"
       ],
       "summary": "The derivation, including the punctuation.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-cfg",
+      "objectives": [
+        "Build the concrete parse tree for a short derivation, including punctuation",
+        "Name what the parse tree still contains that later stages do not need"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-ast",
@@ -152,7 +237,16 @@
         "cmp-parse-tree"
       ],
       "summary": "The tree you actually want to typecheck.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-parse-tree",
+      "objectives": [
+        "Drop concrete punctuation from a parse tree to obtain the AST typechecking will walk",
+        "Distinguish a parse tree from an AST on the same source fragment"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-recursive-descent",
@@ -163,7 +257,16 @@
         "cmp-cfg"
       ],
       "summary": "One function per nonterminal.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-cfg",
+      "objectives": [
+        "Trace one function-per-nonterminal parse of a short token stream",
+        "Predict where a recursive-descent parser fails on left recursion"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-lr",
@@ -174,7 +277,16 @@
         "cmp-cfg"
       ],
       "summary": "Shift and reduce, and the tables that drive them.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-cfg",
+      "objectives": [
+        "Trace a short shift/reduce sequence on a tiny grammar",
+        "Diagnose a shift/reduce conflict as two legal actions on the same lookahead"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-ambiguity",
@@ -185,7 +297,16 @@
         "cmp-cfg"
       ],
       "summary": "Two trees for one string.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-cfg",
+      "objectives": [
+        "Exhibit two different trees for one string under an ambiguous grammar",
+        "Resolve a classic ambiguity with precedence or a rewritten production"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-grammar-class",
@@ -197,7 +318,15 @@
         "cmp-lr"
       ],
       "summary": "What each algorithm will not swallow.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Predict a construct LL cannot swallow that LR still can",
+        "Compare what left recursion and left factoring do to each algorithm"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-semantic-action",
@@ -208,7 +337,15 @@
         "cmp-ast"
       ],
       "summary": "Building values while you parse.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-ast",
+      "objectives": [
+        "Describe a semantic action as a value built while a production is recognized",
+        "Predict the AST node a reduction or a descent return constructs"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-error-recovery",
@@ -219,7 +356,15 @@
         "cmp-recursive-descent"
       ],
       "summary": "Reporting more than the first mistake.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-recursive-descent",
+      "objectives": [
+        "Explain how panic-mode recovery reports more than the first bad token",
+        "Predict where a recursive-descent parser resynchronizes after a missing semicolon"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-symbol-table",
@@ -230,7 +375,16 @@
         "cmp-ast"
       ],
       "summary": "A map from names to meanings, stacked by scope.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-ast",
+      "objectives": [
+        "Describe a symbol table as a stacked map from names to declarations",
+        "Predict what a lookup returns after a new scope is pushed"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-scope",
@@ -241,7 +395,16 @@
         "cmp-symbol-table"
       ],
       "summary": "Where a name is visible.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-symbol-table",
+      "objectives": [
+        "State where a name is visible and where a hole or shadow hides it",
+        "Predict which declaration an inner use sees when an outer name is shadowed"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-name-resolve",
@@ -252,7 +415,15 @@
         "cmp-scope"
       ],
       "summary": "Which declaration this use refers to.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-scope",
+      "objectives": [
+        "Bind a use to exactly one declaration using the active scope stack",
+        "Diagnose an unbound name as a resolution failure, not a parse failure"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-typecheck",
@@ -263,7 +434,16 @@
         "cmp-name-resolve"
       ],
       "summary": "Rejecting trees that cannot mean anything.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-name-resolve",
+      "objectives": [
+        "Reject a well-parsed tree whose operators and operands cannot agree",
+        "Predict the type of a small expression after names have been resolved"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "dragon-book"
+      ]
     },
     {
       "id": "cmp-overload",
@@ -274,7 +454,15 @@
         "cmp-typecheck"
       ],
       "summary": "Picking which f this f is.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-typecheck",
+      "objectives": [
+        "Pick the unique viable candidate for a call given argument types",
+        "Diagnose an ambiguous call as more than one equally good candidate"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-visitor",
@@ -285,7 +473,15 @@
         "cmp-ast"
       ],
       "summary": "Visitors and the passes that share them.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-ast",
+      "objectives": [
+        "Walk an AST with a visitor so several passes share one traversal shape",
+        "Name what a later pass may assume after an earlier walk has finished"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-ir-lower-intro",
@@ -296,7 +492,16 @@
         "cmp-typecheck"
       ],
       "summary": "The typed tree is not yet something you can allocate registers for.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-typecheck",
+      "objectives": [
+        "Explain why a typed tree is still not a form you can allocate registers for",
+        "Name what lowering must make explicit before three-address code exists"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411"
+      ]
     }
   ]
 }

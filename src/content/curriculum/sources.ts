@@ -216,6 +216,65 @@ export const CURRICULUM_SOURCES: CurriculumSourceRecord[] = [
       "IR, dataflow, and instruction selection as the intellectual center. Backend and runtime are not an afterthought once the tree exists.",
   },
   {
+    id: "dragon-book",
+    title: "Compilers: Principles, Techniques, and Tools",
+    institution: "Aho, Lam, Sethi, Ullman",
+    kind: "textbook",
+    informed: ["cmp-frontend", "cmp-ir"],
+    notes:
+      "Lexers as regular languages, parsers as CFGs, then semantic analysis and intermediate code. Used for mechanism names and the source→tokens→tree pipeline, not theorem lists.",
+  },
+  {
+    id: "llvm-langref",
+    title: "LLVM Language Reference Manual",
+    url: "https://llvm.org/docs/LangRef.html",
+    institution: "LLVM Project",
+    kind: "vendor",
+    informed: ["cmp-ir", "cmp-backend"],
+    notes:
+      "SSA values, φ-nodes, types, and well-formedness as a real IR contract. Used for representation facts, not opcode trivia.",
+  },
+  {
+    id: "gcc-internals",
+    title: "GNU Compiler Collection Internals",
+    url: "https://gcc.gnu.org/onlinedocs/gccint/",
+    institution: "GCC",
+    kind: "vendor",
+    informed: ["cmp-ir", "cmp-backend"],
+    notes:
+      "Gimple/RTL as another industrial IR family, plus instruction selection and RTL-level local rewrites. Mechanisms, not flag lists.",
+  },
+  {
+    id: "sysv-abi",
+    title: "System V Application Binary Interface AMD64",
+    url: "https://gitlab.com/x86-psABIs/x86-64-ABI",
+    institution: "x86-64 psABI",
+    kind: "notes",
+    informed: ["cmp-backend"],
+    notes:
+      "Argument registers, caller/callee-saved, and the stack frame a call leaves. Used as one concrete ABI, not the only possible one.",
+  },
+  {
+    id: "itanium-cxx-abi",
+    title: "Itanium C++ ABI",
+    url: "https://itanium-cxx-abi.github.io/cxx-abi/",
+    institution: "Itanium C++ ABI",
+    kind: "notes",
+    informed: ["cmp-backend"],
+    notes:
+      "Exception personality, unwind tables, and landing pads as the zero-cost model. Tables, not a setjmp in every frame.",
+  },
+  {
+    id: "jvm-spec",
+    title: "The Java Virtual Machine Specification",
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/index.html",
+    institution: "Oracle / JCP",
+    kind: "notes",
+    informed: ["cmp-backend"],
+    notes:
+      "Runtime representation, garbage collection roots, and the idea of compiling while the program already runs. Used for runtime/JIT mechanisms, not Java trivia.",
+  },
+  {
     id: "stanford-cs229",
     title: "Machine Learning",
     url: "https://cs229.stanford.edu/syllabus-new.html",

@@ -27,6 +27,20 @@
       "url": "https://csd.cs.cmu.edu/15411611-compiler-design",
       "kind": "syllabus",
       "notes": "Instruction selection and the backend as first-class work."
+    },
+    {
+      "id": "sysv-abi",
+      "title": "System V AMD64 ABI",
+      "url": "https://gitlab.com/x86-psABIs/x86-64-ABI",
+      "kind": "notes",
+      "notes": "One concrete calling convention and frame layout."
+    },
+    {
+      "id": "jvm-spec",
+      "title": "Java Virtual Machine Specification",
+      "url": "https://docs.oracle.com/javase/specs/jvms/se21/html/index.html",
+      "kind": "notes",
+      "notes": "Runtime, GC roots, and compiling while the program already runs."
     }
   ],
   "modules": [
@@ -39,6 +53,10 @@
       "spineIds": [
         "cmp-alloc",
         "cmp-isel"
+      ],
+      "learningObjectives": [
+        "Turn an IR operator into target opcodes",
+        "Pack live values into the real register file"
       ]
     },
     {
@@ -51,6 +69,10 @@
       ],
       "spineIds": [
         "cmp-abi-call"
+      ],
+      "learningObjectives": [
+        "Place arguments where the platform requires",
+        "Leave a frame the callee and the unwinder can both read"
       ]
     },
     {
@@ -64,6 +86,10 @@
       "spineIds": [
         "cmp-gc",
         "cmp-jit"
+      ],
+      "learningObjectives": [
+        "Find live objects without a matching free()",
+        "Compile a hot fragment while the program is already running"
       ]
     }
   ],
@@ -77,7 +103,15 @@
         "cmp-three-addr"
       ],
       "summary": "IR operators become real opcodes.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Replace an IR operator with one or more target opcodes that implement it",
+        "Compare two legal selections and say what makes one cheaper"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "gcc-internals"
+      ]
     },
     {
       "id": "cmp-alloc",
@@ -88,7 +122,15 @@
         "cmp-ssa"
       ],
       "summary": "Graph coloring, spilling, and the real cost of an extra live range.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Assign interfering live ranges to different registers or to memory",
+        "Predict when the interference graph forces a spill"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411"
+      ]
     },
     {
       "id": "cmp-spill",
@@ -100,7 +142,14 @@
         "cmp-liveness"
       ],
       "summary": "A value that did not fit, living on the stack.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Insert a store and later reload because no register is free",
+        "Predict the extra memory traffic a spill adds to a hot loop"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
     },
     {
       "id": "cmp-scheduling",
@@ -112,7 +161,14 @@
         "cpu-pipeline"
       ],
       "summary": "Reordering to hide latency without breaking dependences.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Reorder independent instructions to hide latency without breaking dependences",
+        "Diagnose a schedule that moves a load before the store it depends on"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
     },
     {
       "id": "cmp-peephole",
@@ -123,7 +179,15 @@
         "cmp-isel"
       ],
       "summary": "Tiny local rewrites on the real ISA.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-isel",
+      "objectives": [
+        "Rewrite a short window of target instructions into a cheaper equivalent",
+        "State why a peephole must preserve the window's observable effect"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "gcc-internals"
+      ]
     },
     {
       "id": "cmp-abi-call",
@@ -135,7 +199,15 @@
         "cpu-isa"
       ],
       "summary": "Which arguments live in which registers.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Place arguments and the return value where the platform's convention requires",
+        "Predict which registers a caller must save across a call"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "sysv-abi",
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-frame",
@@ -146,7 +218,16 @@
         "cmp-abi-call"
       ],
       "summary": "The record a call leaves behind.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-abi-call",
+      "objectives": [
+        "Describe the stack frame a prologue builds and an epilogue tears down",
+        "Trace where a spilled value and a return address sit in the frame"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "sysv-abi",
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-object",
@@ -157,7 +238,15 @@
         "cmp-isel"
       ],
       "summary": "Sections, symbols, and what the linker will see.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-isel",
+      "objectives": [
+        "Name the sections and symbols an object file shows the linker",
+        "Predict what is still unknown inside a .o that the linker must finish"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-reloc",
@@ -168,7 +257,15 @@
         "cmp-object"
       ],
       "summary": "Addresses the linker still has to fill in.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-object",
+      "objectives": [
+        "Describe a relocation as a hole the linker fills with a final address",
+        "Predict what breaks if a relocation is applied at the wrong width or place"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-linker",
@@ -179,7 +276,15 @@
         "cmp-reloc"
       ],
       "summary": "Many objects, one address space.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-reloc",
+      "objectives": [
+        "Combine object files by resolving symbols and applying relocations",
+        "Diagnose an undefined reference as a symbol no object provided"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-pic",
@@ -190,7 +295,15 @@
         "cmp-reloc"
       ],
       "summary": "Code that does not assume where it was loaded.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-reloc",
+      "objectives": [
+        "Generate an address using a relative load so the code can sit anywhere",
+        "Predict why an absolute immediate is illegal in a shared library"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "sysv-abi"
+      ]
     },
     {
       "id": "cmp-tls",
@@ -202,7 +315,14 @@
         "os-thread-vs-proc"
       ],
       "summary": "A global that is not shared.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Describe thread-local storage as a global name with one cell per thread",
+        "Predict what goes wrong if two threads share an ordinary global instead"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "sysv-abi"
+      ]
     },
     {
       "id": "cmp-debug-info",
@@ -213,7 +333,15 @@
         "cmp-source-loc"
       ],
       "summary": "DWARF as a map back to the source the optimizer scrambled.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-source-loc",
+      "objectives": [
+        "Map an optimized location back to a source span the human still recognizes",
+        "Predict why a dead store's variable may have no current location"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-runtime",
@@ -224,7 +352,16 @@
         "cmp-abi-call"
       ],
       "summary": "The support code every compiled program still links.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-abi-call",
+      "objectives": [
+        "Name support the compiled program still links after the compiler finishes",
+        "Distinguish a language runtime from the OS kernel"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "jvm-spec"
+      ]
     },
     {
       "id": "cmp-gc",
@@ -235,7 +372,16 @@
         "cmp-runtime"
       ],
       "summary": "Finding the live objects without a free().",
-      "estimatedMinutes": 10
+      "parentId": "cmp-runtime",
+      "objectives": [
+        "Find live objects from roots without a matching free()",
+        "Compare a conservative scan with a precise one that needs stack maps"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "jvm-spec"
+      ]
     },
     {
       "id": "cmp-exception",
@@ -246,7 +392,16 @@
         "cmp-frame"
       ],
       "summary": "Unwinding until someone catches.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-frame",
+      "objectives": [
+        "Unwind frames until a matching handler is found",
+        "Predict which destructors or cleanups run on the way out"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "itanium-cxx-abi",
+        "stanford-cs143"
+      ]
     },
     {
       "id": "cmp-unwinding",
@@ -257,7 +412,15 @@
         "cmp-exception"
       ],
       "summary": "Tables instead of a setjmp in every frame.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-exception",
+      "objectives": [
+        "Use unwind tables instead of a setjmp in every frame",
+        "Explain why tables stay off the hot path until an exception is thrown"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "itanium-cxx-abi"
+      ]
     },
     {
       "id": "cmp-stackmap",
@@ -269,7 +432,15 @@
         "cmp-jit"
       ],
       "summary": "Where the GC roots are at this safepoint.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Record where GC roots live at a safepoint",
+        "Predict what the collector gets wrong if a root is missing from the map"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "jvm-spec",
+        "llvm-langref"
+      ]
     },
     {
       "id": "cmp-jit",
@@ -280,7 +451,16 @@
         "cmp-isel"
       ],
       "summary": "Compiling while the program runs.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-isel",
+      "objectives": [
+        "Compile a hot fragment while the program is already running",
+        "Compare JIT compile-time cost with the speed the new code must repay"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "jvm-spec"
+      ]
     },
     {
       "id": "cmp-deopt",
@@ -291,7 +471,15 @@
         "cmp-jit"
       ],
       "summary": "Falling back when a speculative type was a lie.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-jit",
+      "objectives": [
+        "Fall back to a safer version when a speculative assumption is false",
+        "Predict the state the interpreter or baseline compiler must reconstruct"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "jvm-spec"
+      ]
     },
     {
       "id": "cmp-lto",
@@ -303,7 +491,15 @@
         "cmp-linker"
       ],
       "summary": "Seeing the whole program after the .o files exist.",
-      "estimatedMinutes": 10
+      "objectives": [
+        "Optimize across object-file boundaries after the linker can see the whole program",
+        "Compare LTO with a compile-time IPO that never saw the other .o"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "llvm-langref",
+        "gcc-internals"
+      ]
     },
     {
       "id": "cmp-pgo",
@@ -314,7 +510,15 @@
         "cmp-inlining"
       ],
       "summary": "Letting yesterday's run tell today's inliner the truth.",
-      "estimatedMinutes": 10
+      "parentId": "cmp-inlining",
+      "objectives": [
+        "Use yesterday's profile to decide today's inlining and layout",
+        "Predict a mis-optimization when the profile does not match this run"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "gcc-internals"
+      ]
     }
   ]
 }
