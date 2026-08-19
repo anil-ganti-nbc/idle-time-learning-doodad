@@ -205,6 +205,31 @@ export const generatedPathSchema = z.object({
   sequence: z.array(z.string()).min(2),
 });
 
+export const draftLessonFileSchema = z.object({
+  id: z.string().min(1),
+  conceptId: z.string().min(1),
+  title: z.string().min(4),
+  durationMin: z.union([z.literal(5), z.literal(10), z.literal(20), z.literal(30)]),
+  effort: z.enum(["light", "normal", "deep"]),
+  level: z.enum(["intro", "core", "journalist"]),
+  prerequisites: z.array(z.string()),
+  goDeeper: z.string().optional(),
+  diagram: z.string().nullable().optional(),
+  explanation: z.array(z.string().min(20)).min(1),
+  example: z.string().min(20),
+  whyItMatters: z.string().min(20),
+  quiz: z.tuple([generatedQuizItemSchema, generatedQuizItemSchema, generatedQuizItemSchema]),
+  source: z.union([provenanceSchema, legacySourceSchema]).optional(),
+});
+
+export const lessonModuleFileSchema = z.object({
+  courseId: z.string().min(1),
+  moduleId: z.string().min(1),
+  lessons: z.array(draftLessonFileSchema).min(1),
+});
+
+export type DraftLessonFile = z.infer<typeof draftLessonFileSchema>;
+export type LessonModuleFile = z.infer<typeof lessonModuleFileSchema>;
 export type GeneratedLesson = z.infer<typeof generatedLessonSchema>;
 export type GeneratedExplain = z.infer<typeof generatedExplainSchema>;
 export type GeneratedQuiz = z.infer<typeof generatedQuizSchema>;

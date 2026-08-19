@@ -1,0 +1,712 @@
+{
+  "courseId": "cpu-foundations",
+  "moduleId": "cpu-f-isa",
+  "lessons": [
+    {
+      "id": "cpu-isa-5",
+      "conceptId": "cpu-isa",
+      "title": "The contract, not the core",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-fetch-decode",
+      "explanation": [
+        "An instruction set architecture is the programmer-visible contract: the operations, the registers you can name, how memory is addressed, and what happens on an exception. Two chips that implement the same ISA can run the same binary. They do not have to be built the same way.",
+        "Microarchitecture is how this particular core keeps that contract — pipelines, caches, predictors. Those are allowed to change every year. The ISA is what you are not allowed to break if you still want last year's software."
+      ],
+      "example": "An ARM64 laptop and an ARM64 phone execute the same `add x0, x1, x2`. One may rename, speculate, and retire six-wide. The other may be a short in-order line. The binary does not say which.",
+      "whyItMatters": "Reviews that treat a brand name as a speed are mixing the contract with one implementation. If the binary still runs, the ISA held. Everything else is a different story.",
+      "quiz": [
+        {
+          "id": "isa5-1",
+          "stem": "An ISA is primarily:",
+          "correctAnswer": "The programmer-visible contract a binary depends on",
+          "distractors": [
+            { "text": "The pipeline diagram of one core", "kind": "nearby", "rationale": "That is microarchitecture." },
+            { "text": "The brand stamped on the heat spreader", "kind": "misconception", "rationale": "Brands sell implementations, not contracts." },
+            { "text": "The clock frequency", "kind": "misapplied", "rationale": "Frequency is a performance knob, not the contract." }
+          ],
+          "correctExplanation": "Operations, names, memory, exceptions. That is what a program is allowed to assume.",
+          "objectiveIds": ["Separate ISA from a particular microarchitecture"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "isa5-2",
+          "stem": "Two chips can run the same binary when:",
+          "correctAnswer": "They implement the same ISA, even if their pipelines differ",
+          "distractors": [
+            { "text": "They share a clock", "kind": "nearby", "rationale": "A shared tick is not a shared contract." },
+            { "text": "They have the same cache size", "kind": "misapplied", "rationale": "Caches are an implementation." },
+            { "text": "They were soldered in the same year", "kind": "subtle", "rationale": "Date codes are not compatibility." }
+          ],
+          "correctExplanation": "Compatibility lives in the contract. The core behind it may be redesigned.",
+          "objectiveIds": ["Separate ISA from a particular microarchitecture"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isa5-3",
+          "stem": "A portable program needs the ISA to specify at least:",
+          "correctAnswer": "Operations, namable state, memory, and exception behavior",
+          "distractors": [
+            { "text": "The exact pipeline depth", "kind": "reversed", "rationale": "Depth is an implementation choice." },
+            { "text": "The brand of DRAM", "kind": "subtle", "rationale": "Parts on the board are not the programmer contract." },
+            { "text": "The factory that cut the mask", "kind": "misapplied", "rationale": "Manufacturing is not the ISA." }
+          ],
+          "correctExplanation": "If those are stable, a binary can move. Pipeline trivia must not be in the contract.",
+          "objectiveIds": ["Name what the ISA must specify for a program to be portable"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-isa-10",
+      "conceptId": "cpu-isa",
+      "title": "What a binary is allowed to assume",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-von-neumann",
+      "explanation": [
+        "An instruction set architecture is the interface between software and a family of machines. It names the operations, the architectural registers, the address size, the meaning of loads and stores, and the architected result of a fault. A compiler targets that interface. It does not target this year's pipeline.",
+        "Microarchitecture is one legal way to keep the contract. Two x86 cores from different decades retire the same `add` with wildly different guts. The binary is not a description of those guts. When a vendor adds a predictor or a wider issue path, they have not changed the ISA. When they add an opcode, they have.",
+        "Compatibility is expensive because the contract accumulates. Unused flags, odd addressing modes, and historical exceptions stay because old binaries still hit them. A 'clean' ISA is a bet that you can afford to leave that history behind. A dense legacy ISA is a bet that you cannot."
+      ],
+      "example": "RISC-V's user integer ISA is a small contract: 32 registers, a handful of op classes, well-specified faults. An out-of-order RISC-V and a three-stage microcontroller both honour it. The microcontroller does not have to pretend to be wide. The wide core does not get to invent new user-visible registers without an extension.",
+      "whyItMatters": "If you cannot separate the contract from the core, you will treat every microarchitectural change as a software change, and every brand name as a speed.",
+      "quiz": [
+        {
+          "id": "isa10-1",
+          "stem": "A compiler targets an ISA rather than a pipeline because:",
+          "correctAnswer": "The binary must remain valid when the implementation changes",
+          "distractors": [
+            { "text": "Pipelines cannot execute compiled code", "kind": "reversed", "rationale": "Pipelines execute the contract; they are not the target." },
+            { "text": "ISAs include the cache sizes", "kind": "nearby", "rationale": "Cache sizes are not usually architected that way." },
+            { "text": "Clocks are part of the opcode", "kind": "subtle", "rationale": "Frequency is not an instruction field." }
+          ],
+          "correctExplanation": "Software is written against the interface. The core behind it is allowed to move.",
+          "objectiveIds": ["Separate ISA from a particular microarchitecture"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "isa10-2",
+          "stem": "Adding a branch predictor to a core is usually:",
+          "correctAnswer": "A microarchitectural change that should not break existing binaries",
+          "distractors": [
+            { "text": "A new ISA that requires recompilation", "kind": "reversed", "rationale": "Predictors are not new opcodes." },
+            { "text": "A change to endianness", "kind": "nearby", "rationale": "Byte order is a different contract clause." },
+            { "text": "A new address size", "kind": "misapplied", "rationale": "Address size is architected; a predictor is not." }
+          ],
+          "correctExplanation": "The contract did not gain an opcode. The core got better at keeping the old one fed.",
+          "objectiveIds": ["Separate ISA from a particular microarchitecture"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isa10-3",
+          "stem": "For a program to be portable across implementations, the ISA must pin down:",
+          "correctAnswer": "Operations, visible state, memory, and exception semantics",
+          "distractors": [
+            { "text": "Issue width and predictor tables", "kind": "reversed", "rationale": "Those are implementation machinery." },
+            { "text": "The foundry node", "kind": "subtle", "rationale": "Silicon process is not the programmer contract." },
+            { "text": "The colour of the heat spreader", "kind": "misapplied", "rationale": "Packaging is not an ISA clause." }
+          ],
+          "correctExplanation": "Portability needs a stable meaning for instructions and faults, not a stable pipeline drawing.",
+          "objectiveIds": ["Name what the ISA must specify for a program to be portable"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-isa-20",
+      "conceptId": "cpu-isa",
+      "title": "Extensions, privilege, and the cost of a contract",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-interrupts-lite",
+      "explanation": [
+        "A living ISA is a stack of contracts. User code sees a register file, memory, and faults. Supervisor code sees extra state: page-table roots, interrupt enables, a way to return from a trap. Hypervisor and machine layers add more. The same opcode encoding can be legal at one privilege and illegal at another. That is still the ISA. It is not a driver.",
+        "Extensions are how a contract grows without a new brand. Vector units, atomics, bit manipulation, a compressed 16-bit encoding — each is a named add-on with discovery rules. Software that does not probe will either refuse to run or fall back. Hardware that advertises an extension has to implement its corner cases, not just the happy path in a slide.",
+        "The hard part of an old ISA is not the common add. It is the accumulated obligation: self-modifying code rules, exact exception priority, memory-ordering promises, forgotten condition codes. A microarchitecture can decode a complex op into several internal operations. That does not remove the architected result. Compatibility testing is the tax on that choice.",
+        "When someone says two machines are 'the same architecture', ask which layer they mean. Same user integer ISA? Same vector extension? Same privileged interrupt model? Those are different promises, and they fail independently."
+      ],
+      "example": "x86 keeps a 1910s-looking condition-code add next to a 512-bit vector extension. A core may crack the first into micro-ops and run the second on a dedicated pipe. User code still sees both as architected instructions. A new implementation that gets the flags wrong on the add is not 'almost compatible'. It is broken.",
+      "whyItMatters": "Privilege, extensions, and leftover flags are why ISA debates are never only about opcode taste. They are about who still has to be right in twenty years.",
+      "quiz": [
+        {
+          "id": "isa20-1",
+          "stem": "A privilege level in an ISA is:",
+          "correctAnswer": "Part of the contract: which state and ops are legal in this mode",
+          "distractors": [
+            { "text": "A heat-sink rating", "kind": "subtle", "rationale": "Privilege is software-visible, not a thermal spec." },
+            { "text": "The number of pipeline stages", "kind": "nearby", "rationale": "Stages are microarchitecture." },
+            { "text": "The DRAM vendor", "kind": "misapplied", "rationale": "Parts on the board are not privilege rings." }
+          ],
+          "correctExplanation": "User versus supervisor is architected. A trap that leaks extra state has broken the contract.",
+          "objectiveIds": ["Name what the ISA must specify for a program to be portable"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "isa20-2",
+          "stem": "Advertising a vector extension means the implementation must:",
+          "correctAnswer": "Honour the extension's ops and corner cases, not just a demo kernel",
+          "distractors": [
+            { "text": "Raise the clock until the demo passes", "kind": "misapplied", "rationale": "Frequency is not the contract." },
+            { "text": "Delete the integer ISA", "kind": "reversed", "rationale": "Extensions add; they do not usually erase the base." },
+            { "text": "Ship the same pipeline as last year", "kind": "nearby", "rationale": "The pipeline may change; the new ops may not lie." }
+          ],
+          "correctExplanation": "An extension is a named clause. Partial implementation is a broken clause.",
+          "objectiveIds": ["Separate ISA from a particular microarchitecture"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isa20-3",
+          "stem": "Cracking a complex opcode into internal operations is allowed because:",
+          "correctAnswer": "The architected result stays the same; the guts are not the contract",
+          "distractors": [
+            { "text": "Internal operations become new user opcodes", "kind": "reversed", "rationale": "If they became user-visible, you just changed the ISA." },
+            { "text": "Exception priority no longer matters", "kind": "nearby", "rationale": "Priority is architected and still binds." },
+            { "text": "Old binaries must be recompiled", "kind": "misconception", "rationale": "The point of cracking is that they must not." }
+          ],
+          "correctExplanation": "Micro-ops are an implementation tactic. Flags, faults, and visible state still have to match the manual.",
+          "objectiveIds": ["Separate ISA from a particular microarchitecture"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-von-neumann-10",
+      "conceptId": "cpu-von-neumann",
+      "title": "Instructions live in the same memory",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-fetch-decode",
+      "explanation": [
+        "A stored-program machine keeps instructions in the same addressable memory as data. The next instruction is just another fetch from an address held in a program counter. You can compute that address. You can overwrite the bytes that will be fetched later. That flexibility is the whole idea, and it is the whole problem.",
+        "Because instruction fetch and data access share a memory system, they also share its bandwidth and its latency. A loop that streams data still has to fetch its own code. Caches later paper over this; they do not repeal it. Harvard-style split caches are a common implementation trick that keeps the programmer-visible address space unified.",
+        "Self-modifying code, just-in-time compilers, and 'execute from this buffer' are all consequences. So are instruction-cache coherency headaches when stores hit a line the fetcher still believes is code. The ISA has to say when a store becomes visible to later fetches. That sentence exists because instructions are data."
+      ],
+      "example": "A JIT writes machine bytes into a heap page, then jumps there. Architecturally that is a store followed by a fetch of the same addresses. If the instruction cache still holds the old line, you execute yesterday's bytes. The contract needs a rule — often an explicit instruction-cache synchronize — because the machine is stored-program.",
+      "whyItMatters": "Every later story about caches, interrupts, and 'why can't I just patch this opcode' starts here. Instructions are not a separate mystical tape. They are memory with a program counter pointed at them.",
+      "quiz": [
+        {
+          "id": "vn10-1",
+          "stem": "In a stored-program machine, instructions are:",
+          "correctAnswer": "Bytes in the same addressable memory as data",
+          "distractors": [
+            { "text": "Hard-wired into the ALU and unchangeable", "kind": "reversed", "rationale": "That would not be a stored program." },
+            { "text": "Stored only on the compiler's disk", "kind": "nearby", "rationale": "The running machine fetches them from memory." },
+            { "text": "The same thing as the clock", "kind": "subtle", "rationale": "A tick is not an instruction." }
+          ],
+          "correctExplanation": "The program counter is an address. What lives there is an instruction because we chose to fetch it.",
+          "objectiveIds": ["Explain why instructions and data sharing one memory matters"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "vn10-2",
+          "stem": "Instruction fetch and data access contend because:",
+          "correctAnswer": "They share a memory system with finite bandwidth and latency",
+          "distractors": [
+            { "text": "ISAs forbid data in RAM", "kind": "reversed", "rationale": "Data in RAM is the point." },
+            { "text": "The ALU cannot add", "kind": "subtle", "rationale": "Arithmetic is not the shared-memory bottleneck." },
+            { "text": "Clocks only tick on stores", "kind": "misapplied", "rationale": "The tick is not reserved for stores." }
+          ],
+          "correctExplanation": "Two streams, one memory. Caches can hide it; they do not make the streams independent in principle.",
+          "objectiveIds": ["Name the bottleneck that shared instruction/data memory creates"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "vn10-3",
+          "stem": "A JIT that stores new code and then jumps to it depends on:",
+          "correctAnswer": "The ISA rule for when stores become visible to later fetches",
+          "distractors": [
+            { "text": "The heat spreader material", "kind": "subtle", "rationale": "Packaging does not order fetches." },
+            { "text": "There being no program counter", "kind": "reversed", "rationale": "The jump is a write to the program counter." },
+            { "text": "A slower clock automatically flushing memory", "kind": "misapplied", "rationale": "Frequency is not a publish rule." }
+          ],
+          "correctExplanation": "Instructions are data. Visibility from store to fetch is a contract clause, not a wish.",
+          "objectiveIds": ["Explain why instructions and data sharing one memory matters"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-fetch-decode-10",
+      "conceptId": "cpu-fetch-decode",
+      "title": "One instruction, in order, by hand",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-alu-vs-control",
+      "diagram": "fetch-decode",
+      "explanation": [
+        "Before anyone overlaps anything, a core is a loop. Fetch the bytes at the program counter. Decode them into an operation and its operand names. Execute: read registers or memory, do the work, write the result, choose the next PC. Then repeat. That loop is the sequential machine the ISA describes.",
+        "Decode is where encodings become actions. A fixed-length encoding makes the next fetch address obvious. A variable-length encoding means you cannot even know where instruction n+1 starts until you have decoded n. Neither is morally superior. They change what the front end must do.",
+        "This loop is not a pipeline. A pipeline will later run fetch of n+2 while execute of n is still in flight. The meaning of the program is still this loop. If you cannot walk one instruction through fetch, decode, and execute on paper, the overlapped version will look like magic instead of bookkeeping."
+      ],
+      "example": "`lw x1, 0(x2)` on a 32-bit RISC: fetch four bytes at PC, decode as a load with dest x1 and address x2+0, execute the memory read, write x1, PC becomes PC+4. A taken branch replaces that PC+4 with a target. Same loop, different next-PC rule.",
+      "whyItMatters": "Pipelines, interrupts, and 'why is decode hard' all assume this loop. If you skip it, later units become vocabulary.",
+      "quiz": [
+        {
+          "id": "fd10-1",
+          "stem": "The sequential instruction loop is:",
+          "correctAnswer": "Fetch bytes, decode them, execute, then choose the next PC",
+          "distractors": [
+            { "text": "Only execute; fetch is optional", "kind": "reversed", "rationale": "You cannot execute what you have not fetched." },
+            { "text": "Compile the program on every tick", "kind": "nearby", "rationale": "Compilation already happened." },
+            { "text": "Raise the clock until decode vanishes", "kind": "misapplied", "rationale": "Frequency does not delete decode." }
+          ],
+          "correctExplanation": "Fetch, decode, execute, next PC. That is the sequential machine.",
+          "objectiveIds": ["Walk one instruction through fetch, decode, and execute"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "fd10-2",
+          "stem": "A variable-length encoding makes the front end harder because:",
+          "correctAnswer": "You may not know where the next instruction starts until this one decodes",
+          "distractors": [
+            { "text": "ALU addition becomes illegal", "kind": "subtle", "rationale": "The ALU still adds." },
+            { "text": "Memory can no longer hold data", "kind": "reversed", "rationale": "Encoding length is not a data ban." },
+            { "text": "The program counter disappears", "kind": "misapplied", "rationale": "You still need a PC; you just compute the next one later." }
+          ],
+          "correctExplanation": "Fixed-length fetch can speculate the next address. Variable-length fetch must parse first.",
+          "objectiveIds": ["Walk one instruction through fetch, decode, and execute"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "fd10-3",
+          "stem": "A pipeline is different from this loop because:",
+          "correctAnswer": "It overlaps stages of different instructions; the meaning is still the loop",
+          "distractors": [
+            { "text": "It deletes decode forever", "kind": "reversed", "rationale": "Decode still happens; it just happens beside someone else's execute." },
+            { "text": "It removes the program counter", "kind": "nearby", "rationale": "There are more PCs in flight, not none." },
+            { "text": "It changes the ISA opcodes", "kind": "subtle", "rationale": "Overlap is an implementation, not a new contract." }
+          ],
+          "correctExplanation": "The sequential loop is the spec. Overlap is how one implementation keeps that spec busy.",
+          "objectiveIds": ["Distinguish this sequential loop from a later pipeline"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-alu-vs-control-10",
+      "conceptId": "cpu-alu-vs-control",
+      "title": "The path that computes, the logic that decides",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cpu-fetch-decode"],
+      "goDeeper": "cpu-pipeline",
+      "diagram": "datapath",
+      "explanation": [
+        "Datapath is where values move and change: register file, ALU, address adder, the wires to memory. Control is who decides the next transform: which registers are read, whether the ALU adds or subtracts, whether the next PC is sequential or a branch target, whether a result writes back.",
+        "An instruction is a bundle of control decisions plus the values those decisions act on. Decode's job is to turn bits into those decisions. If you mix the two, every new opcode looks like you need a new ALU. Usually you need a new combination of existing datapath pieces and a new line in the control table.",
+        "Later, 'control hazard' will mean the next decision is not ready. 'Data hazard' will mean the next value is not ready. Those sentences only parse if you already separate the decision from the value."
+      ],
+      "example": "A branch and an add may share the same adder. The add writes a register. The branch uses the adder for a compare or a target and then writes the PC — or does not. Same datapath box. Different control. The box did not become a new ISA.",
+      "whyItMatters": "When a write-up says a core 'has a weak front end' or 'is ALU-bound', they are pointing at control or at datapath. If you cannot tell which, you cannot tell what a wider issue path would buy.",
+      "quiz": [
+        {
+          "id": "ac10-1",
+          "stem": "The datapath is the part that:",
+          "correctAnswer": "Holds and transforms values — registers, ALU, memory ports",
+          "distractors": [
+            { "text": "Chooses which transform happens next", "kind": "reversed", "rationale": "That is control." },
+            { "text": "Prints the datasheet", "kind": "subtle", "rationale": "Marketing is not a pipeline stage." },
+            { "text": "Sets the clock crystal", "kind": "misapplied", "rationale": "A crystal is not the value path." }
+          ],
+          "correctExplanation": "Values live in the datapath. Decisions about what to do with them are control.",
+          "objectiveIds": ["Separate the datapath that transforms values from the control that sequences it"],
+          "prerequisiteConceptIds": ["cpu-fetch-decode"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ac10-2",
+          "stem": "Decode's main product is:",
+          "correctAnswer": "Control decisions for this instruction's use of the datapath",
+          "distractors": [
+            { "text": "A new clock frequency", "kind": "misapplied", "rationale": "Decode does not retune the crystal." },
+            { "text": "The DRAM contents", "kind": "nearby", "rationale": "Memory contents are data, not decode output." },
+            { "text": "A second ISA", "kind": "subtle", "rationale": "Decode interprets this ISA; it does not invent another." }
+          ],
+          "correctExplanation": "Bits in, steer signals out. The ALU was already there.",
+          "objectiveIds": ["Say which part decides the next operation"],
+          "prerequisiteConceptIds": ["cpu-fetch-decode"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ac10-3",
+          "stem": "A branch and an add sharing one adder is possible because:",
+          "correctAnswer": "Control can steer the same datapath box to different jobs",
+          "distractors": [
+            { "text": "Branches are not instructions", "kind": "reversed", "rationale": "Branches are instructions with a different writeback." },
+            { "text": "Adders can only exist in pairs", "kind": "nearby", "rationale": "You may add another adder later; you need not." },
+            { "text": "The ISA forbids reuse", "kind": "subtle", "rationale": "The ISA names ops, not how many adders you pour." }
+          ],
+          "correctExplanation": "Same box, different steer. That is the datapath/control split paying rent.",
+          "objectiveIds": ["Separate the datapath that transforms values from the control that sequences it"],
+          "prerequisiteConceptIds": ["cpu-fetch-decode"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-addressing-10",
+      "conceptId": "cpu-addressing",
+      "title": "How an instruction names its data",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-risc-cisc",
+      "explanation": [
+        "An instruction has to name the values it uses. The common names are simple. Register: the operand is already in a named slot. Immediate: the operand is sitting in the instruction bits themselves. Memory: the operand lives at an address the instruction must compute.",
+        "Memory names come in flavours because programs need them. Base plus offset (`x2 + 8`) is the workhorse for locals and fields. PC-relative names let you address near the instruction itself. Scaled index and double-base modes pack common address arithmetic into one instruction so the compiler does not emit a separate add.",
+        "Each mode is a bet about encoding space versus extra instructions. A small RISC may only offer register, immediate, and base+offset. A dense CISC may offer a menu. The menu does not make memory faster. It changes how many instructions you emit to compute an address, and how hard decode becomes."
+      ],
+      "example": "`add x1, x2, x3` names three registers. `addi x1, x2, 4` names two registers and an immediate 4. `lw x1, 8(x2)` names a register dest and a memory operand at x2+8. Same family of instructions; three different ways to point at a value.",
+      "whyItMatters": "Addressing modes are how an ISA spends encoding bits. If you cannot see what was named, you cannot see why one binary is three times longer than another for the same arithmetic.",
+      "quiz": [
+        {
+          "id": "ad10-1",
+          "stem": "An immediate operand is:",
+          "correctAnswer": "A value encoded in the instruction bits themselves",
+          "distractors": [
+            { "text": "A value that must be fetched from DRAM first", "kind": "reversed", "rationale": "That would be a memory operand." },
+            { "text": "A second clock domain", "kind": "subtle", "rationale": "Immediates are encodings, not clocks." },
+            { "text": "The name of a cache level", "kind": "misapplied", "rationale": "Hierarchy comes later and is not an operand kind." }
+          ],
+          "correctExplanation": "The number is in the instruction. No extra register, no extra load.",
+          "objectiveIds": ["Identify how an instruction names its operands"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ad10-2",
+          "stem": "`lw x1, 8(x2)` names its memory operand by:",
+          "correctAnswer": "Base register plus an offset",
+          "distractors": [
+            { "text": "An immediate 8 with no register", "kind": "nearby", "rationale": "8 is the offset; x2 is the base." },
+            { "text": "A PC-relative jump target", "kind": "misapplied", "rationale": "This is a load, not a branch." },
+            { "text": "The clock period", "kind": "subtle", "rationale": "A tick is not an address." }
+          ],
+          "correctExplanation": "x2 holds a base. 8 is added. That address is the operand.",
+          "objectiveIds": ["Contrast register, immediate, and memory addressing"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ad10-3",
+          "stem": "A richer set of memory addressing modes mainly buys:",
+          "correctAnswer": "Fewer extra instructions to compute an address, at the cost of harder decode",
+          "distractors": [
+            { "text": "Lower DRAM latency by itself", "kind": "reversed", "rationale": "Naming is not a faster wire to DRAM." },
+            { "text": "A new privilege ring", "kind": "nearby", "rationale": "Privilege is a different clause." },
+            { "text": "Automatic data-parallel maps", "kind": "misapplied", "rationale": "Addressing modes do not invent independence." }
+          ],
+          "correctExplanation": "The menu spends encoding space so the compiler emits fewer setup adds. Memory is still memory.",
+          "objectiveIds": ["Contrast register, immediate, and memory addressing"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-risc-cisc-10",
+      "conceptId": "cpu-risc-cisc",
+      "title": "Dense encodings versus regular pipelines",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-endian",
+      "explanation": [
+        "RISC and CISC started as bets about where complexity should live. A RISC-style contract prefers a small, regular set of operations, fixed-length encodings, and explicit loads and stores. The pipeline is easier to keep full. The compiler emits more instructions.",
+        "A CISC-style contract prefers dense encodings and operations that do more work per instruction, often including memory in the arithmetic. The binary is smaller. Decode is harder, and the implementation may crack one architected instruction into several internal steps. That cracking is allowed. The architected result is not optional.",
+        "The moral ranking is fake. Modern 'RISC' cores are wide and speculative. Modern 'CISC' cores look internally like RISC pipelines with a thick decoder. The useful question is which costs you are paying: fetch bandwidth, decode complexity, or extra instruction count. Brand names do not answer it."
+      ],
+      "example": "x86 `add eax, [ebx+8]` is one instruction that loads, adds, and writes. A RISC sequence is `lw`, `add`, maybe a store. Same programmer-visible arithmetic. Different instruction count, different decode, same need for a memory system that can deliver `[ebx+8]`.",
+      "whyItMatters": "If you treat RISC/CISC as a quality score, you will misread both a microcontroller and a fat out-of-order x86. Look at the encoding bet and the pipeline bet separately.",
+      "quiz": [
+        {
+          "id": "rc10-1",
+          "stem": "A RISC-style ISA typically bets on:",
+          "correctAnswer": "Regular encodings and explicit loads/stores, so the pipeline stays simple",
+          "distractors": [
+            { "text": "The densest possible variable-length encodings", "kind": "reversed", "rationale": "Density is the usual CISC bet." },
+            { "text": "No registers at all", "kind": "subtle", "rationale": "RISC ISAs are register-rich." },
+            { "text": "A slower clock as a virtue", "kind": "misapplied", "rationale": "Frequency is not the encoding bet." }
+          ],
+          "correctExplanation": "Regularity is the point. More instructions, easier overlap.",
+          "objectiveIds": ["Treat RISC and CISC as encoding and pipeline bets, not brands"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "rc10-2",
+          "stem": "A CISC instruction that includes a memory operand usually costs the implementation:",
+          "correctAnswer": "Harder decode, and often a crack into several internal steps",
+          "distractors": [
+            { "text": "The deletion of caches", "kind": "reversed", "rationale": "Memory operands make caches more important, not less." },
+            { "text": "A mandatory new ISA for every add", "kind": "nearby", "rationale": "It is still one architected opcode." },
+            { "text": "A guarantee of lower CPI", "kind": "misconception", "rationale": "Doing more per instruction can raise or lower CPI; it is not free." }
+          ],
+          "correctExplanation": "One architected op, several internal moves. The contract stayed dense; the core did the work.",
+          "objectiveIds": ["Explain why dense encodings and regular pipelines trade"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "rc10-3",
+          "stem": "A modern 'CISC' core that looks internally like a RISC pipeline is evidence that:",
+          "correctAnswer": "The contract and the implementation can diverge",
+          "distractors": [
+            { "text": "CISC encodings have been deleted from software", "kind": "reversed", "rationale": "The encodings are still what software emits." },
+            { "text": "RISC as an idea never existed at all", "kind": "subtle", "rationale": "The internal regularity is the RISC bet, reused." },
+            { "text": "Pipelines are illegal on any x86 core", "kind": "misapplied", "rationale": "x86 is built of pipelines." }
+          ],
+          "correctExplanation": "Software still speaks the dense contract. Hardware keeps a regular engine behind a decoder.",
+          "objectiveIds": ["Treat RISC and CISC as encoding and pipeline bets, not brands"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-endian-10",
+      "conceptId": "cpu-endian",
+      "title": "Byte order is a convention with teeth",
+      "durationMin": 10,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-mmio",
+      "explanation": [
+        "A 32-bit integer is four bytes. Endianness is the rule for which byte sits at the lowest address. Little-endian stores the least-significant byte first. Big-endian stores the most-significant byte first. Neither is more natural. Both are complete descriptions of the same integer.",
+        "The bug is disagreement. A file, a socket, or a device register written in one order and read in the other silently permutes the value. `0x01020304` becomes `0x04030201`. Alignment and sizes can be right. The number is still wrong. Checksums and magic numbers exist partly because this happens constantly.",
+        "The ISA picks a native order for ordinary loads and stores. Networking historically picked big-endian as a transfer order, which is why you still see conversion helpers. MMIO adds a third party: the device's idea of order. If you do not name all three, you will debug the ALU for a wiring convention."
+      ],
+      "example": "A little-endian host writes 32-bit `0x11223344` to a file as bytes `44 33 22 11`. A big-endian reader loads those bytes as `0x44332211`. The writer and reader both 'did the obvious thing'. They did not share a convention.",
+      "whyItMatters": "Endian bugs look like off-by-one arithmetic and waste days. They are almost never the ALU. They are two sides naming the same integer in opposite byte orders.",
+      "quiz": [
+        {
+          "id": "en10-1",
+          "stem": "Endianness is:",
+          "correctAnswer": "The byte order of a multi-byte value in memory",
+          "distractors": [
+            { "text": "The number of registers", "kind": "nearby", "rationale": "Register count is a different ISA clause." },
+            { "text": "The clock duty cycle", "kind": "subtle", "rationale": "A waveform is not a byte order." },
+            { "text": "The cache line size", "kind": "misapplied", "rationale": "Line size is a hierarchy parameter." }
+          ],
+          "correctExplanation": "Same integer, two legal layouts. The layout is the convention.",
+          "objectiveIds": ["Define endianness as the byte order of a multi-byte value"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "en10-2",
+          "stem": "A little-endian store of 0x01020304 followed by a big-endian load of those bytes yields:",
+          "correctAnswer": "0x04030201",
+          "distractors": [
+            { "text": "0x01020304, always", "kind": "reversed", "rationale": "That would require agreeing on order." },
+            { "text": "0x00000000", "kind": "nearby", "rationale": "The bytes are not erased." },
+            { "text": "0x010203040", "kind": "subtle", "rationale": "That is not a 32-bit value." }
+          ],
+          "correctExplanation": "The least-significant byte was at the low address. The other side treated it as most-significant.",
+          "objectiveIds": ["Predict a bug when two sides disagree on endianness"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "en10-3",
+          "stem": "A device register that does not match the CPU's native order is a bug in:",
+          "correctAnswer": "The convention between those two sides, not in the adder",
+          "distractors": [
+            { "text": "The speed of light", "kind": "subtle", "rationale": "Latency is not byte order." },
+            { "text": "The ISA having no loads", "kind": "reversed", "rationale": "The load happened; it used the wrong layout." },
+            { "text": "CPI being undefined", "kind": "misapplied", "rationale": "Performance identities are not the failure." }
+          ],
+          "correctExplanation": "Name the three orders — CPU, wire/file, device — or you will debug the wrong unit.",
+          "objectiveIds": ["Predict a bug when two sides disagree on endianness"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-interrupts-lite-10",
+      "conceptId": "cpu-interrupts-lite",
+      "title": "Leaving the stream on purpose",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-fetch-decode"],
+      "goDeeper": "cpu-mmio",
+      "explanation": [
+        "The sequential loop is allowed to break. An exception is synchronous: this instruction cannot complete as written — a faulting load, an illegal opcode, a system call that is defined as a trap. An interrupt is asynchronous: the world rang, usually a device or a timer, and the current instruction is not the cause.",
+        "Either way the machine must save enough architected state to resume or to explain the fault: PC, privilege, a reason code. Then it fetches from a known handler address. That is still the ISA. The handler is ordinary code. What is special is the transfer into it and the rule for returning.",
+        "Precise exceptions mean the handler sees a world in which instructions before the faulting one have finished and later ones have not. That promise is cheap on a one-at-a-time loop and expensive once you overlap. This unit only needs the promise. Later cores will pay for it with queues."
+      ],
+      "example": "A load to an unmapped address raises a page fault: synchronous, tied to that load. A network card asserts a line while you are in the middle of an add: asynchronous. Both end up in a handler with a saved PC. Only the fault has a guilty instruction.",
+      "whyItMatters": "Without a precise way to leave the stream, you cannot have virtual memory, devices, or a kernel. The later pipeline drama is the cost of keeping this promise while overlapping work.",
+      "quiz": [
+        {
+          "id": "int10-1",
+          "stem": "A synchronous exception is raised because:",
+          "correctAnswer": "This instruction cannot complete as written",
+          "distractors": [
+            { "text": "A device rang independently of this instruction", "kind": "nearby", "rationale": "That is an interrupt." },
+            { "text": "The clock stopped", "kind": "subtle", "rationale": "A stopped clock is not the usual architected case." },
+            { "text": "The ISA has no program counter", "kind": "reversed", "rationale": "You save the PC; you do not delete it." }
+          ],
+          "correctExplanation": "Fault, illegal op, defined trap: the instruction is the cause.",
+          "objectiveIds": ["Distinguish a synchronous exception from an asynchronous interrupt"],
+          "prerequisiteConceptIds": ["cpu-fetch-decode"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "int10-2",
+          "stem": "An interrupt from a device is asynchronous because:",
+          "correctAnswer": "It is not caused by the instruction that happens to be in execute",
+          "distractors": [
+            { "text": "It cannot be handled in software", "kind": "reversed", "rationale": "The handler is software." },
+            { "text": "It changes the ISA encodings", "kind": "nearby", "rationale": "The contract stays; the PC is redirected." },
+            { "text": "It always means the ALU overflowed", "kind": "misapplied", "rationale": "Overflow is a synchronous exception on the add." }
+          ],
+          "correctExplanation": "The world rang. The current add is innocent. Save it and go handle the device.",
+          "objectiveIds": ["Distinguish a synchronous exception from an asynchronous interrupt"],
+          "prerequisiteConceptIds": ["cpu-fetch-decode"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "int10-3",
+          "stem": "The machine saves PC and privilege on a trap so that:",
+          "correctAnswer": "The handler can resume or report a coherent architected state",
+          "distractors": [
+            { "text": "The clock can be thrown away", "kind": "subtle", "rationale": "You still need a timed machine after the trap." },
+            { "text": "Decode can be skipped forever", "kind": "nearby", "rationale": "The handler is fetched and decoded like any code." },
+            { "text": "Memory stops holding instructions", "kind": "reversed", "rationale": "The handler lives in memory." }
+          ],
+          "correctExplanation": "Resume needs a PC and a mode. A handler that cannot restore them has lost the program.",
+          "objectiveIds": ["Explain why the machine must save enough state to resume"],
+          "prerequisiteConceptIds": ["cpu-fetch-decode"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-mmio-10",
+      "conceptId": "cpu-mmio",
+      "title": "Devices that look like addresses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-virtual-addr",
+      "explanation": [
+        "Memory-mapped I/O puts device registers in the ordinary address space. A load from that address is not a cache-line fill from DRAM. It is a read of a live register on a device: a status bit, a data port, a doorbell. A store may start a transfer, ack an interrupt, or be ignored.",
+        "That is convenient because the ISA already has loads and stores. It is dangerous because the usual memory assumptions fail. Two reads of the same address can return different values. A write may have side effects. Caching those addresses is usually wrong. The architecture or the platform must mark them uncacheable or device-ordered.",
+        "Some ISAs also have a separate I/O instruction space (`in`/`out`). That is a second way to name devices, not a moral opposite. MMIO won on most modern machines because one address space is easier for compilers and for kernels that already manage maps. The device is still not memory."
+      ],
+      "example": "A serial port's status register at `0x1000_0000` returns 'transmit empty' on one load and 'busy' on the next. A data register at `+4` pops a byte from a hardware FIFO. Treat those as ordinary cached variables and you will see stale empties and lost bytes.",
+      "whyItMatters": "Drivers are not a different ISA. They are software that must not treat live device registers as DRAM. If you skip this, every later virtual-memory map of a device will look like a cache bug.",
+      "quiz": [
+        {
+          "id": "mm10-1",
+          "stem": "Memory-mapped I/O means a device register is:",
+          "correctAnswer": "Reached with an ordinary load or store to a special address",
+          "distractors": [
+            { "text": "Only reachable by changing the clock", "kind": "subtle", "rationale": "Frequency does not name a device." },
+            { "text": "Stored in the ALU", "kind": "nearby", "rationale": "The register lives on the device." },
+            { "text": "A new opcode for every pin", "kind": "misapplied", "rationale": "MMIO reuses loads and stores." }
+          ],
+          "correctExplanation": "Same instructions, different destination. The address decoder sends the access to a device.",
+          "objectiveIds": ["Explain how a device register can be an ordinary address"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mm10-2",
+          "stem": "Caching an MMIO status register is usually wrong because:",
+          "correctAnswer": "Two reads can return different live values; a cache would lie",
+          "distractors": [
+            { "text": "Devices cannot use addresses", "kind": "reversed", "rationale": "Addresses are the whole mechanism." },
+            { "text": "Loads are illegal in the ISA", "kind": "nearby", "rationale": "The load is how you talk to the device." },
+            { "text": "CPI becomes negative", "kind": "subtle", "rationale": "Performance identities do not go negative." }
+          ],
+          "correctExplanation": "A cache assumes a location is storage. A status register is a window onto changing hardware.",
+          "objectiveIds": ["Explain how a device register can be an ordinary address"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mm10-3",
+          "stem": "A separate `in`/`out` instruction space differs from MMIO mainly in:",
+          "correctAnswer": "How the ISA names the device, not in whether the device is memory",
+          "distractors": [
+            { "text": "Making the device into DRAM", "kind": "reversed", "rationale": "Neither mechanism turns a FIFO into storage." },
+            { "text": "Deleting interrupts", "kind": "nearby", "rationale": "Naming and interruption are separate clauses." },
+            { "text": "Forcing little-endian only", "kind": "misapplied", "rationale": "Byte order is a different convention." }
+          ],
+          "correctExplanation": "Two naming schemes. The device is still live hardware with side effects.",
+          "objectiveIds": ["Contrast MMIO with a separate I/O instruction space"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

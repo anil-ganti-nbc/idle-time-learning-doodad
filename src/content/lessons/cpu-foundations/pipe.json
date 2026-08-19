@@ -1,0 +1,395 @@
+{
+  "courseId": "cpu-foundations",
+  "moduleId": "cpu-f-pipe",
+  "lessons": [
+    {
+      "id": "cpu-pipeline-10",
+      "conceptId": "cpu-pipeline",
+      "title": "Overlap is not a shorter instruction",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-hazards",
+      "diagram": "pipeline",
+      "explanation": [
+        "An instruction is a sequence of different jobs: fetch bytes, decode them, do the arithmetic or the address math, maybe touch memory, write a result. Those jobs use different hardware. If you run them one instruction at a time, most of the silicon sits idle while one box works.",
+        "A pipeline keeps every box busy on a different instruction. While instruction N is executing, N+1 can be decoding and N+2 can be fetching. Completions per cycle rise. The time one instruction spends in the machine does not shrink — it still walks every stage. That is throughput without a latency miracle.",
+        "A bubble is an empty stage. It appears when a later instruction has nothing legal to do: the value it needs is not ready, the next address is unknown, or two instructions want the same unit. The factory did not get faster. A station had no part. Ideal overlap is a claim about independent work, not a law."
+      ],
+      "example": "A five-stage line (fetch, decode, execute, memory, writeback) can hold five instructions. If they are independent and hit in cache, one can retire each cycle. `r1 = load [r2]; r3 = r1 + 4` cannot do that. The add's execute has no r1 yet, so execute goes empty until the load data exists. Five stages of latency remain. Throughput dropped because a stage had nothing to do.",
+      "whyItMatters": "Every later stall story — hazards, caches, 'why didn't the clock help' — is a story about an empty stage. If you think pipelining made each instruction shorter, you will misread the rest of the course.",
+      "quiz": [
+        {
+          "id": "pp10-1",
+          "stem": "Pipelining primarily raises which quantity?",
+          "correctAnswer": "Throughput: how often instructions complete",
+          "distractors": [
+            { "text": "The latency of one instruction through every stage", "kind": "reversed", "rationale": "Each instruction still walks the whole line." },
+            { "text": "The number of opcodes in the ISA", "kind": "nearby", "rationale": "Overlap is an implementation, not a new contract." },
+            { "text": "The size of DRAM", "kind": "misapplied", "rationale": "Capacity is not what overlap buys." }
+          ],
+          "correctExplanation": "More instructions finish per unit time. Each one still takes several stages.",
+          "objectiveIds": ["Explain how overlap raises throughput without shrinking per-instruction latency"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pp10-2",
+          "stem": "A bubble appears in a pipeline when:",
+          "correctAnswer": "A stage has no legal work and must sit empty",
+          "distractors": [
+            { "text": "The clock is running", "kind": "subtle", "rationale": "A running clock is the normal case." },
+            { "text": "Every stage has an independent instruction", "kind": "reversed", "rationale": "That is the ideal full line, not a bubble." },
+            { "text": "The ISA gained a new opcode", "kind": "nearby", "rationale": "A new op is not an empty stage." }
+          ],
+          "correctExplanation": "Empty is the definition. The usual causes are a missing value, an unknown next PC, or a busy unit.",
+          "objectiveIds": ["Name why a bubble exists"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pp10-3",
+          "stem": "Five overlapped stages with one completion per cycle still means:",
+          "correctAnswer": "Each instruction spent five stages in the machine",
+          "distractors": [
+            { "text": "Each instruction now takes one stage total", "kind": "misconception", "rationale": "Overlap hides idle silicon; it does not delete stages." },
+            { "text": "Latency has become zero", "kind": "reversed", "rationale": "A completed instruction still paid the whole walk." },
+            { "text": "The clock is no longer needed", "kind": "subtle", "rationale": "Stages still tick." }
+          ],
+          "correctExplanation": "Throughput of one per cycle, latency of five stages. Those are different numbers.",
+          "objectiveIds": ["Explain how overlap raises throughput without shrinking per-instruction latency"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-pipeline-20",
+      "conceptId": "cpu-pipeline",
+      "title": "Depth, frequency, and what a flush costs",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-hazards",
+      "diagram": "pipeline",
+      "explanation": [
+        "A pipeline is a bet that the next instructions are independent enough to keep every stage fed. The textbook five-stage line is one encoding of that bet. Real cores split those jobs further — a long fetch, a multi-cycle decode, an execute that is itself several stages — because a shorter stage can tick faster. Frequency is a story about stage delay. Depth is how many such stages one instruction occupies.",
+        "That trade is not free. Instruction latency in cycles grows with depth. A result produced in execute is farther from the instruction that wants it. A wrong guess about the next PC wastes more in-flight work. You bought a hotter clock and a more expensive interruption. Throughput only wins if the line stays full.",
+        "Filling the line is a software and a hardware problem. Independent nearby instructions give the hardware something to overlap. A long dependent chain, or a miss that produces no value, leaves stages empty no matter how fast they tick. Clock-only comparisons hide this. A deeper, faster line that bubbles every other cycle can lose to a shorter one that stays busy.",
+        "When a write-up says a core 'lengthened the pipeline', ask two questions. What frequency did they buy? What did a bubble or a flush start to cost? Those are the two numbers the depth bet moved."
+      ],
+      "example": "A 5-stage 1 GHz core and a 15-stage 3 GHz core can have the same stage delay in nanoseconds. The deep one retires more per second only while it is full. A miss that stalls execute for 20 ns is 20 cycles on the first machine and 60 on the second. Same wall-clock wait; a much emptier-looking deep pipe. The load did not get slower. The accounting unit shrank.",
+      "whyItMatters": "Pipeline depth is how vendors turn silicon delay into a clock number. If you cannot separate frequency from fullness, every 'higher GHz' claim will look like a shorter instruction.",
+      "quiz": [
+        {
+          "id": "pp20-1",
+          "stem": "A deeper pipeline is usually trying to buy:",
+          "correctAnswer": "A higher clock, by making each stage a smaller piece of work",
+          "distractors": [
+            { "text": "A shorter walk for every instruction", "kind": "reversed", "rationale": "Depth lengthens the walk in cycles." },
+            { "text": "A new ISA", "kind": "nearby", "rationale": "Stage count is not a contract change." },
+            { "text": "A guarantee that misses disappear", "kind": "misapplied", "rationale": "Depth does not delete memory latency." }
+          ],
+          "correctExplanation": "Shorter stages tick faster. The instruction still occupies more of them.",
+          "objectiveIds": ["Explain how overlap raises throughput without shrinking per-instruction latency"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pp20-2",
+          "stem": "The same 20 ns miss looks worse in cycle counters on a deeper, faster pipe because:",
+          "correctAnswer": "The wait is more ticks, so more stages sit empty",
+          "distractors": [
+            { "text": "The miss became longer in wall time by law", "kind": "reversed", "rationale": "Wall time can be the same; the tick shrank." },
+            { "text": "The ISA forbids misses on deep pipes", "kind": "subtle", "rationale": "Misses are not an encoding rule." },
+            { "text": "Frequency and latency are the same number", "kind": "misapplied", "rationale": "They share a unit of time and they are not the same number." }
+          ],
+          "correctExplanation": "A smaller tick turns a fixed wait into more empty stages. That is a bubble story.",
+          "objectiveIds": ["Name why a bubble exists"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pp20-3",
+          "stem": "A deeper, hotter pipe can still lose throughput when:",
+          "correctAnswer": "Interruptions empty many in-flight stages, so useful completions fall",
+          "distractors": [
+            { "text": "A full line of independent work is present", "kind": "reversed", "rationale": "That is when depth-plus-frequency wins." },
+            { "text": "The clock is defined", "kind": "subtle", "rationale": "Having a clock is not the failure." },
+            { "text": "The binary uses ordinary adds", "kind": "nearby", "rationale": "Ordinary adds are not the problem; emptiness is." }
+          ],
+          "correctExplanation": "You paid for more stages in flight. A flush or a long wait spends them as bubbles.",
+          "objectiveIds": ["Explain how overlap raises throughput without shrinking per-instruction latency"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-hazards-5",
+      "conceptId": "cpu-hazards",
+      "title": "Three reasons the line goes empty",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["cpu-pipeline"],
+      "goDeeper": "cpu-forwarding",
+      "diagram": "hazards",
+      "explanation": [
+        "Ideal overlap assumes every stage has independent work. Three classes of hazard break that. Structural: two instructions want the same unit at once. Data: an instruction needs a result that does not exist yet. Control: you do not know which instruction is next.",
+        "Forwarding can ship a result from one stage to another without waiting for writeback. That fixes many data hazards. It cannot invent a value still in flight from memory. Control hazards are why the next fetch is a guess. This unit only needs the three names and that limit."
+      ],
+      "example": "`div` and `div` on one divider is structural. `r1 = load [r2]; r3 = r1 + 4` is data. `beq r1, r2, target` is control until the compare finishes. Same empty stage, three different reasons.",
+      "whyItMatters": "If you cannot name which class emptied the line, you will apply the wrong fix — another ALU, a bypass wire, or a guess about the next PC.",
+      "quiz": [
+        {
+          "id": "hz5-1",
+          "stem": "The three hazard classes are:",
+          "correctAnswer": "Structural, data, and control",
+          "distractors": [
+            { "text": "Fetch, decode, and clock", "kind": "nearby", "rationale": "Those are stages and a tick, not hazard classes." },
+            { "text": "Read, write, and idle", "kind": "subtle", "rationale": "Access types are not the three classes." },
+            { "text": "Latency, throughput, and width", "kind": "misapplied", "rationale": "Those are performance quantities." }
+          ],
+          "correctExplanation": "Busy unit, missing value, unknown next instruction. That is the set.",
+          "objectiveIds": ["Name the three hazard classes"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "hz5-2",
+          "stem": "Two divides that need the only divider at once are:",
+          "correctAnswer": "A structural hazard",
+          "distractors": [
+            { "text": "A control hazard", "kind": "nearby", "rationale": "The next PC is not the problem." },
+            { "text": "Not a hazard, because divides are independent", "kind": "reversed", "rationale": "Independence of values does not create a second divider." },
+            { "text": "A missing clock", "kind": "subtle", "rationale": "The tick is not what they are waiting on." }
+          ],
+          "correctExplanation": "One unit, two claimants. That is structural.",
+          "objectiveIds": ["Name the three hazard classes"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "hz5-3",
+          "stem": "Forwarding cannot fix a load that has not returned because:",
+          "correctAnswer": "There is not yet a value in the pipe to ship",
+          "distractors": [
+            { "text": "Loads are not instructions", "kind": "reversed", "rationale": "Loads are ordinary instructions with a late result." },
+            { "text": "The ISA forbids bypass wires", "kind": "nearby", "rationale": "Bypass is an implementation, not a banned opcode." },
+            { "text": "Dividers cannot add", "kind": "subtle", "rationale": "The limiter is a missing value, not the ALU menu." }
+          ],
+          "correctExplanation": "Bypass moves a result that exists. A pending miss has not produced one.",
+          "objectiveIds": ["Say what forwarding can and cannot fix"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-forwarding-10",
+      "conceptId": "cpu-forwarding",
+      "title": "Ship the result before writeback",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-hazards"],
+      "goDeeper": "cpu-control-hazard",
+      "diagram": "hazards",
+      "explanation": [
+        "A data hazard is often just a schedule problem. The producer has already computed the value, but the value is sitting in a pipeline register on its way to the register file. The consumer is in execute and would otherwise wait for writeback. Forwarding, or bypass, is a mux: take the value from the later stage and feed it back to the earlier one.",
+        "That bypasses the register file. It does not bypass physics. If the producer is a load and the cache has not answered, there is no bits to mux. The consumer must stall — a load-use bubble. Forwarding also does not create a second ALU. Two instructions that only conflict on a unit still have a structural problem.",
+        "The useful question is always 'does the value exist in the pipe yet?' If yes, a wire can save a stall. If no, you are waiting on the producer, and no amount of muxing invents it."
+      ],
+      "example": "`add r1, r2, r3; sub r4, r1, r5` — the add's ALU output can feed the sub's ALU input on the next cycle. `lw r1, 0(r2); add r3, r1, r4` — if the load data is not back from the memory stage, the add has nothing to receive. Same looking dependence; only the first is a forwarding win.",
+      "whyItMatters": "People treat forwarding as a general stall-remover. It is a way to skip writeback when the bits already exist. Misses, long multiplies, and unknown next PCs are different machines.",
+      "quiz": [
+        {
+          "id": "fw10-1",
+          "stem": "Forwarding bypasses:",
+          "correctAnswer": "The wait for a result to land in the register file",
+          "distractors": [
+            { "text": "The need for a producer instruction", "kind": "reversed", "rationale": "The producer still has to compute the value." },
+            { "text": "The clock", "kind": "subtle", "rationale": "Bypass muxes still sit in a timed pipe." },
+            { "text": "The ISA's register names", "kind": "nearby", "rationale": "The names stay; the path to the value changes." }
+          ],
+          "correctExplanation": "The value is already in a pipeline register. The consumer reads it from there instead of from the file.",
+          "objectiveIds": ["Say what forwarding bypasses"],
+          "prerequisiteConceptIds": ["cpu-hazards"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "fw10-2",
+          "stem": "`lw r1, 0(r2); add r3, r1, r4` still stalls when the load misses because:",
+          "correctAnswer": "Forwarding has no value to ship until the load produces one",
+          "distractors": [
+            { "text": "Adds cannot use r1", "kind": "reversed", "rationale": "The add is legal; the data is late." },
+            { "text": "The ISA requires a trip through the register file", "kind": "nearby", "rationale": "Bypass is allowed; the bits are simply not there." },
+            { "text": "The clock stops on every load", "kind": "subtle", "rationale": "The line ticks; execute is empty." }
+          ],
+          "correctExplanation": "A miss is a missing result. Muxes move existing bits.",
+          "objectiveIds": ["Predict when forwarding cannot help"],
+          "prerequisiteConceptIds": ["cpu-hazards"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "fw10-3",
+          "stem": "Forwarding will not clear a structural hazard because:",
+          "correctAnswer": "The conflict is a busy unit, not a value sitting one stage downstream",
+          "distractors": [
+            { "text": "Structural hazards are imaginary", "kind": "reversed", "rationale": "Two claimants of one divider are real." },
+            { "text": "Bypass wires delete ALUs", "kind": "nearby", "rationale": "Bypass moves results; it does not add units." },
+            { "text": "The next PC is always known", "kind": "misapplied", "rationale": "That is a control story, not a unit-conflict story." }
+          ],
+          "correctExplanation": "Know which class you are in. Bypass is a data-hazard tool.",
+          "objectiveIds": ["Predict when forwarding cannot help"],
+          "prerequisiteConceptIds": ["cpu-hazards"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-control-hazard-10",
+      "conceptId": "cpu-control-hazard",
+      "title": "The next PC is not known yet",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-hazards"],
+      "goDeeper": "cpu-ilp-idea",
+      "diagram": "branch",
+      "explanation": [
+        "Fetch needs an address. After a normal instruction the next address is PC+length. After a branch it is either sequential or a target, and which one depends on a compare that has not finished. That is a control hazard: the next instruction is not known, so the fetch stage cannot honestly proceed.",
+        "Hardware has three unattractive honest options: stall fetch until the branch resolves; fetch both sides if you have the bandwidth; or guess and be prepared to throw the guess away. Guessing is what later predictors do. This unit only needs the cost of being wrong: every younger instruction in the pipe is not the program. They must be discarded. That is a flush. The work they did is a bubble with a resume at the correct PC.",
+        "The deeper and wider the line, the more work a wrong guess discards. A short microcontroller can stall a cycle and move on. A long line that guessed ten instructions ahead pays those ten as emptiness. Control hazards scale with the overlap you bought."
+      ],
+      "example": "`beq r1, r2, skip` sits in decode. Fetch already grabbed the bytes after the branch. If the compare later says taken, those bytes were the wrong path. Invalidate them, fetch from `skip`. If you had already executed an add from the wrong path, its result must not become architected. The flush is how you keep the sequential meaning.",
+      "whyItMatters": "Every later predictor is a bet against this stall. If you do not see why the next PC is unknown, prediction looks like decoration instead of a way to keep fetch honest-enough.",
+      "quiz": [
+        {
+          "id": "ch10-1",
+          "stem": "A branch creates a control hazard because:",
+          "correctAnswer": "The next fetch address depends on a compare that has not resolved",
+          "distractors": [
+            { "text": "Branches cannot be encoded", "kind": "reversed", "rationale": "Branches are ordinary instructions with a difficult next PC." },
+            { "text": "The ALU cannot add after a branch", "kind": "nearby", "rationale": "The limiter is the unknown address, not addition." },
+            { "text": "The clock only ticks on taken branches", "kind": "subtle", "rationale": "The tick is not reserved for taken paths." }
+          ],
+          "correctExplanation": "Fetch is an address problem. The address is the branch outcome.",
+          "objectiveIds": ["Explain why a branch makes the next PC unknown"],
+          "prerequisiteConceptIds": ["cpu-hazards"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ch10-2",
+          "stem": "Guessing the path and later discovering you were wrong costs:",
+          "correctAnswer": "A flush: younger work is discarded and fetch resumes at the real PC",
+          "distractors": [
+            { "text": "Nothing, because guesses are already architected", "kind": "reversed", "rationale": "Wrong-path work must not become the program." },
+            { "text": "A brand-new ISA opcode for every miss", "kind": "nearby", "rationale": "A flush is an implementation recovery, not a new contract." },
+            { "text": "A permanent halt of the whole machine", "kind": "subtle", "rationale": "You redirect fetch; you do not power off." }
+          ],
+          "correctExplanation": "The sequential meaning is restored by throwing away the guess and fetching the real target.",
+          "objectiveIds": ["Name the cost of guessing wrong"],
+          "prerequisiteConceptIds": ["cpu-hazards"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ch10-3",
+          "stem": "A deeper pipeline makes a wrong branch guess more expensive because:",
+          "correctAnswer": "More instructions are already in flight and must be discarded",
+          "distractors": [
+            { "text": "Deeper pipes cannot encode branches", "kind": "reversed", "rationale": "They encode them; they just have more to flush." },
+            { "text": "The compare becomes slower in wall time by law", "kind": "nearby", "rationale": "The compare may be a similar delay; the window grew." },
+            { "text": "Forwarding stops working after a branch", "kind": "misapplied", "rationale": "Bypass is a data-hazard tool; the issue here is the next PC." }
+          ],
+          "correctExplanation": "You bought overlap. A wrong next-PC spends that overlap as emptiness.",
+          "objectiveIds": ["Name the cost of guessing wrong"],
+          "prerequisiteConceptIds": ["cpu-hazards"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-ilp-idea-10",
+      "conceptId": "cpu-ilp-idea",
+      "title": "Independent instructions in one thread",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-pipeline", "arch-data-parallel"],
+      "goDeeper": "cpu-locality",
+      "explanation": [
+        "Instruction-level parallelism is slack inside one thread: nearby instructions that do not wait on each other. `r1 = r2 + r3; r4 = r5 + r6` can occupy execute together, or one can fill a hole while the other waits. That independence is what a pipeline spends. It is also what later out-of-order machines will hunt more aggressively. The raw material is the same.",
+        "Data-parallel work is a different axis. There the independence is across elements: the same operation on index 7 and index 3. ILP is across instructions of one sequential program. You can have both, one, or neither. A tight `x = f(x)` loop has almost no ILP. A loop that loads, adds an independent accumulator, and stores can have some. A map over a million pixels is data-parallel even if each pixel's own instruction stream is a short chain.",
+        "The common confusion is to treat 'the machine is wide' as 'the program is a map'. A four-issue core is a bet that one thread has four independent instructions nearby. A wide data-parallel machine is a bet that many elements do not wait on each other. Mixing the words is how people expect a GPU to digest a dependent chain, or a fat core to digest a map it was not fed."
+      ],
+      "example": "`a = x + 1; b = y + 2; c = a + b` — the first two adds are ILP; the third is a dependent reduce. `out[i] = in[i] * 2` over a million i is data-parallel: many elements, same tiny chain. Hardware that looks for nearby independent instructions is hunting the first shape. Hardware that launches many elements is hunting the second.",
+      "whyItMatters": "Later cores that issue out of order are not a new kind of parallelism. They are machines for finding ILP that a simple pipeline leaves on the table. If you cannot point at independent instructions in this thread, that machine has nothing to eat.",
+      "quiz": [
+        {
+          "id": "ilp10-1",
+          "stem": "Instruction-level parallelism is:",
+          "correctAnswer": "Independent instructions nearby in one thread",
+          "distractors": [
+            { "text": "The same operation on many independent elements", "kind": "nearby", "rationale": "That is data-parallel work." },
+            { "text": "A higher clock by itself", "kind": "misapplied", "rationale": "Frequency is not independence." },
+            { "text": "The number of opcodes in the ISA", "kind": "subtle", "rationale": "A large manual is not slack in this binary." }
+          ],
+          "correctExplanation": "One program counter, several instructions that do not wait on each other.",
+          "objectiveIds": ["Define ILP as independent instructions in one thread"],
+          "prerequisiteConceptIds": ["cpu-pipeline", "arch-data-parallel"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ilp10-2",
+          "stem": "`out[i] = 2 * in[i]` over a million indices is mainly:",
+          "correctAnswer": "Data-parallel work across elements, not ILP in one tiny chain",
+          "distractors": [
+            { "text": "A long dependent ILP goldmine in one thread", "kind": "reversed", "rationale": "Each index is a short chain; the width is across indices." },
+            { "text": "A control hazard on the next program counter", "kind": "nearby", "rationale": "A map is not an unknown PC." },
+            { "text": "Proof that clocks do not exist on the machine", "kind": "subtle", "rationale": "The machine still ticks." }
+          ],
+          "correctExplanation": "Many independent elements. That is the other axis.",
+          "objectiveIds": ["Contrast ILP with data-parallel work across elements"],
+          "prerequisiteConceptIds": ["cpu-pipeline", "arch-data-parallel"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ilp10-3",
+          "stem": "A loop that is only `x = f(x)` has little ILP because:",
+          "correctAnswer": "Each instruction waits on the previous result in the same thread",
+          "distractors": [
+            { "text": "Functions are illegal", "kind": "reversed", "rationale": "The ISA is happy to express the update." },
+            { "text": "There are too many independent elements", "kind": "nearby", "rationale": "The problem is a chain, not a surplus of maps." },
+            { "text": "Forwarding deletes the function", "kind": "misapplied", "rationale": "Bypass can ship x; it cannot make the next f start before x exists." }
+          ],
+          "correctExplanation": "A carried dependence is a chain. Extra issue slots have nothing independent to do.",
+          "objectiveIds": ["Define ILP as independent instructions in one thread"],
+          "prerequisiteConceptIds": ["cpu-pipeline", "arch-data-parallel"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

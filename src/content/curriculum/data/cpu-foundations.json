@@ -135,6 +135,10 @@
       ],
       "summary": "Speedup is owned by the part you cannot parallelize.",
       "parentId": "arch-data-parallel",
+      "objectives": [
+        "State Amdahl's bound as the serial fraction that remains",
+        "Predict why speeding only the parallel part stops helping"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -146,6 +150,10 @@
         "arch-latency-throughput"
       ],
       "summary": "Performance as work per time, factored into frequency and useful work per cycle.",
+      "objectives": [
+        "Factor time into instruction count, CPI, and clock period",
+        "Explain why a higher clock can still lose performance"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -158,7 +166,8 @@
       ],
       "summary": "The programmer-visible contract: operations, registers, memory, and exceptions.",
       "objectives": [
-        "Separate ISA from a particular microarchitecture"
+        "Separate ISA from a particular microarchitecture",
+        "Name what the ISA must specify for a program to be portable"
       ],
       "estimatedMinutes": 10
     },
@@ -171,6 +180,10 @@
         "cpu-isa"
       ],
       "summary": "Instructions live in the same memory as data, with all the consequences.",
+      "objectives": [
+        "Explain why instructions and data sharing one memory matters",
+        "Name the bottleneck that shared instruction/data memory creates"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -182,6 +195,10 @@
         "cpu-isa"
       ],
       "summary": "The sequential loop a pipeline will later overlap.",
+      "objectives": [
+        "Walk one instruction through fetch, decode, and execute",
+        "Distinguish this sequential loop from a later pipeline"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -193,6 +210,10 @@
         "cpu-fetch-decode"
       ],
       "summary": "Where the bits are transformed versus who decides the next transform.",
+      "objectives": [
+        "Separate the datapath that transforms values from the control that sequences it",
+        "Say which part decides the next operation"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -204,6 +225,10 @@
         "cpu-isa"
       ],
       "summary": "How an instruction names the data it wants.",
+      "objectives": [
+        "Identify how an instruction names its operands",
+        "Contrast register, immediate, and memory addressing"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -215,6 +240,10 @@
         "cpu-isa"
       ],
       "summary": "Dense encodings versus regular pipelines — not a moral ranking.",
+      "objectives": [
+        "Treat RISC and CISC as encoding and pipeline bets, not brands",
+        "Explain why dense encodings and regular pipelines trade"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -226,6 +255,10 @@
         "cpu-isa"
       ],
       "summary": "Byte order as a convention that becomes a bug when ignored.",
+      "objectives": [
+        "Define endianness as the byte order of a multi-byte value",
+        "Predict a bug when two sides disagree on endianness"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -237,6 +270,10 @@
         "cpu-fetch-decode"
       ],
       "summary": "Leaving the instruction stream because the world, or the program, demanded it.",
+      "objectives": [
+        "Distinguish a synchronous exception from an asynchronous interrupt",
+        "Explain why the machine must save enough state to resume"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -248,6 +285,10 @@
         "cpu-isa"
       ],
       "summary": "Devices that look like addresses.",
+      "objectives": [
+        "Explain how a device register can be an ordinary address",
+        "Contrast MMIO with a separate I/O instruction space"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -292,6 +333,10 @@
       ],
       "summary": "Bypassing the register file so a dependent instruction need not wait for writeback.",
       "parentId": "cpu-hazards",
+      "objectives": [
+        "Say what forwarding bypasses",
+        "Predict when forwarding cannot help"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -304,6 +349,10 @@
       ],
       "summary": "Not knowing the next PC until the branch resolves.",
       "parentId": "cpu-hazards",
+      "objectives": [
+        "Explain why a branch makes the next PC unknown",
+        "Name the cost of guessing wrong"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -316,6 +365,10 @@
         "arch-data-parallel"
       ],
       "summary": "Independent instructions nearby in one thread — the raw material of later OOO.",
+      "objectives": [
+        "Define ILP as independent instructions in one thread",
+        "Contrast ILP with data-parallel work across elements"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -327,6 +380,10 @@
         "arch-latency-throughput"
       ],
       "summary": "Why the next access is often near, or the same as, the last one.",
+      "objectives": [
+        "Distinguish temporal from spatial locality",
+        "Use locality to explain why a small fast memory helps"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -339,6 +396,10 @@
       ],
       "summary": "L1/L2/L3 as a latency-capacity trade, not three unrelated boxes.",
       "parentId": "cpu-locality",
+      "objectives": [
+        "Explain L1/L2/L3 as a latency-capacity trade",
+        "Say why the closest cache is smallest"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -351,6 +412,10 @@
       ],
       "summary": "Compulsory, capacity, and conflict — different failures, different fixes.",
       "parentId": "cpu-cache-levels",
+      "objectives": [
+        "Name compulsory, capacity, and conflict misses",
+        "Match a miss type to a plausible fix"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -362,6 +427,10 @@
         "cpu-cache-levels"
       ],
       "summary": "When a store dirties a line versus when it updates memory.",
+      "objectives": [
+        "Contrast write-through with write-back",
+        "Explain dirty bits and write-allocate as consequences"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -373,6 +442,10 @@
         "cpu-isa"
       ],
       "summary": "The names a process uses, mapped later onto physical lines.",
+      "objectives": [
+        "Separate a process virtual address from a physical line",
+        "Explain why two processes can use the same virtual address"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -385,6 +458,10 @@
         "cpu-cache-levels"
       ],
       "summary": "A miss here is not a cache miss.",
+      "objectives": [
+        "Describe the TLB as a cache of translations, not data",
+        "Distinguish a TLB miss from a data-cache miss"
+      ],
       "estimatedMinutes": 10
     },
     {
@@ -397,6 +474,10 @@
         "cpu-perf-metrics"
       ],
       "summary": "Why processors started hiding latency instead of waiting honestly.",
+      "objectives": [
+        "State the memory wall as processors outrunning DRAM latency",
+        "Explain why caches hide latency rather than deleting it"
+      ],
       "estimatedMinutes": 10
     }
   ]

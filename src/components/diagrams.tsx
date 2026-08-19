@@ -13,6 +13,115 @@ export function LessonDiagram({ name }: { name?: string }) {
 const svg = "h-auto w-full text-fg";
 
 const DIAGRAMS: Record<string, ReactNode> = {
+  "latency-throughput": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Latency versus throughput">
+      <rect x="24" y="28" width="150" height="44" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="99" y="55" textAnchor="middle" fill="currentColor" fontSize="13">
+        one item
+      </text>
+      <path d="M174 50 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="268" y="46" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        40 min
+      </text>
+      <text x="268" y="64" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.5">
+        latency
+      </text>
+      <rect x="320" y="20" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="378" y="20" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="436" y="20" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="320" y="56" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="378" y="56" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="436" y="56" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <text x="404" y="112" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        many finish / hour — throughput
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        overlap does not shorten one item
+      </text>
+    </svg>
+  ),
+  "fetch-decode": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Fetch decode execute loop">
+      {["fetch", "decode", "execute", "next PC"].map((label, i) => (
+        <g key={label} transform={`translate(${20 + i * 135}, 36)`}>
+          <rect width="118" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="32" textAnchor="middle" fill="currentColor" fontSize="14">
+            {label}
+          </text>
+          {i < 3 && <path d="M122 26 H132" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        the sequential loop a pipeline later overlaps
+      </text>
+    </svg>
+  ),
+  datapath: (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Datapath versus control">
+      <rect x="40" y="24" width="220" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="150" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        datapath
+      </text>
+      <text x="150" y="76" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        regs · ALU · mem ports
+      </text>
+      <rect x="300" y="24" width="220" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="410" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        control
+      </text>
+      <text x="410" y="76" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        which transform, next PC
+      </text>
+      <path d="M260 68 H300" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="138" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        values move left · decisions come from the right
+      </text>
+    </svg>
+  ),
+  locality: (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Temporal and spatial locality">
+      {Array.from({ length: 12 }, (_, i) => (
+        <rect
+          key={i}
+          x={36 + i * 42}
+          y="40"
+          width="34"
+          height="34"
+          rx="4"
+          fill={i === 4 || i === 5 || i === 6 ? "currentColor" : "none"}
+          fillOpacity={i === 4 ? 0.28 : i === 5 || i === 6 ? 0.12 : 0}
+          stroke="currentColor"
+          strokeOpacity="0.35"
+        />
+      ))}
+      <text x="221" y="96" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        same cell again — temporal
+      </text>
+      <text x="347" y="96" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        neighbours — spatial
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        a small fast memory only wins if the next access is here
+      </text>
+    </svg>
+  ),
+  hierarchy: (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Cache hierarchy">
+      {[
+        { y: 16, w: 120, label: "L1 · small · few cycles" },
+        { y: 52, w: 220, label: "L2 · larger · slower" },
+        { y: 88, w: 340, label: "L3 · larger still" },
+        { y: 124, w: 480, label: "DRAM · capacity · long wait" },
+      ].map((row) => (
+        <g key={row.label} transform={`translate(${280 - row.w / 2}, ${row.y})`}>
+          <rect width={row.w} height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x={row.w / 2} y="19" textAnchor="middle" fill="currentColor" fontSize="12">
+            {row.label}
+          </text>
+        </g>
+      ))}
+    </svg>
+  ),
   pipeline: (
     <svg viewBox="0 0 560 140" className={svg} aria-label="Five-stage pipeline">
       {["IF", "ID", "EX", "MEM", "WB"].map((label, i) => (

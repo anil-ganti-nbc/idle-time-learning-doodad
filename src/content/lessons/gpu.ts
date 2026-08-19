@@ -27,8 +27,8 @@ export const GPU_LESSONS: Lesson[] = [
         correct: "Latency",
         distractors: [
           d("Throughput", "nearby", "Throughput is completion rate, not per-item time."),
-          d("Occupancy", "misapplied", "Occupancy is a later GPU resource idea, not this quantity."),
-          d("Coherence", "subtle", "Coherence is about agreeing copies, not speed."),
+          d("Instruction count", "misapplied", "How many instructions exist is not how long one takes."),
+          d("Byte order", "subtle", "Endianness is a naming convention, not a speed."),
         ],
         explanation: "Latency is per-item time. Throughput is completion rate.",
         cognitiveType: "recognize",
@@ -41,8 +41,8 @@ export const GPU_LESSONS: Lesson[] = [
         correct: "High throughput despite high latency",
         distractors: [
           d("Eliminating latency", "reversed", "Each loaf still takes 40 minutes."),
-          d("A structural hazard", "misapplied", "Hazards are pipeline conflicts, not oven overlap."),
-          d("Register renaming", "nearby", "Renaming is a later name-dependency trick."),
+          d("That clock frequency is the only knob", "misapplied", "Overlap, not frequency, is doing the work here."),
+          d("That the oven has no capacity limit", "nearby", "The oven size is exactly the capacity that creates throughput."),
         ],
         explanation: "Each loaf still takes 40 minutes; many finish each hour.",
         cognitiveType: "apply",
@@ -119,8 +119,8 @@ export const GPU_LESSONS: Lesson[] = [
         correct: "Creating independence the original loop did not have",
         distractors: [
           d("Raising DRAM latency", "reversed", "The rewrite is about dependence, not making memory slower."),
-          d("Register renaming", "nearby", "Renaming kills false name conflicts, not loop-carried edges."),
-          d("Cache coherency", "subtle", "Coherence does not manufacture parallelism."),
+          d("Changing the byte order", "nearby", "Endianness does not manufacture parallelism."),
+          d("Deleting the need for a clock", "subtle", "The algorithm still runs on a timed machine."),
         ],
         explanation: "The algorithm manufactures parallelism. Hardware cannot invent it.",
         cognitiveType: "identify",
