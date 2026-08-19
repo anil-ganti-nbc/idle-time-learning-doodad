@@ -18,11 +18,13 @@ export interface ExportBundleV2 {
     concepts: Record<string, ConceptProgress>;
     sessions: SessionRecord[];
     recentCategoryIds: string[];
+    courses?: ProgressState["courses"];
   };
   catalog: {
     categories: ProgressState["customCategories"];
     concepts: ProgressState["customConcepts"];
     lessons: Lesson[];
+    courses?: ProgressState["customCourses"];
   };
   generation_log: ProgressState["generationLog"];
   pending_path: ProgressState["pendingPath"];
@@ -53,11 +55,13 @@ export function buildExport(
       concepts: state.concepts,
       sessions: state.sessions,
       recentCategoryIds: state.recentCategoryIds,
+      courses: state.courses,
     },
     catalog: {
       categories: state.customCategories,
       concepts: state.customConcepts,
       lessons: state.customLessons,
+      courses: state.customCourses,
     },
     generation_log: state.generationLog,
     pending_path: state.pendingPath,
@@ -134,6 +138,8 @@ export function importExport(
           customLessons: data.catalog.lessons as Lesson[],
           generationLog: data.generation_log ?? [],
           pendingPath: data.pending_path ?? null,
+          courses: data.progress.courses ?? {},
+          customCourses: data.catalog.courses ?? [],
         },
         warnings,
         backup,
@@ -209,6 +215,14 @@ function mergeStates(current: ProgressState, data: ExportBundleV2, warnings: str
     customLessons: mergeLessons(current.customLessons, (data.catalog.lessons ?? []) as Lesson[], warnings),
     generationLog: uniqueById([...(data.generation_log ?? []), ...current.generationLog]).slice(0, 400),
     pendingPath: current.pendingPath ?? data.pending_path ?? null,
+    courses: mergeCourseProgress(current.courses, data.progress.courses ?? {}),
+    customCourses: mergeDefinitions(
+      current.customCourses,
+      data.catalog.courses ?? [],
+      "course",
+      ["title", "description", "curriculumVersion"],
+      warnings,
+    ),
   };
 }
 
@@ -243,6 +257,29 @@ export function mergeDefinitions<T extends { id: string; updatedAt?: string; cre
     }
   }
   return [...map.values()];
+}
+
+function mergeCourseProgress(
+  local: ProgressState["courses"],
+  incoming: ProgressState["courses"],
+): ProgressState["courses"] {
+  const out = { ...local };
+  for (const [id, row] of Object.entries(incoming)) {
+    const cur = out[id];
+    if (!cur) {
+      out[id] = row;
+      continue;
+    }
+    out[id] = {
+      ...cur,
+      ...row,
+      waivedConceptIds: unique([...(cur.waivedConceptIds ?? []), ...(row.waivedConceptIds ?? [])]),
+      startedAt: cur.startedAt ?? row.startedAt,
+      lastStudiedAt: isNewer(row.lastStudiedAt, cur.lastStudiedAt) ? row.lastStudiedAt : cur.lastStudiedAt,
+      placement: isNewer(row.placement?.at, cur.placement?.at) ? row.placement : cur.placement,
+    };
+  }
+  return out;
 }
 
 function mergeSessions(local: SessionRecord[], incoming: SessionRecord[]): SessionRecord[] {

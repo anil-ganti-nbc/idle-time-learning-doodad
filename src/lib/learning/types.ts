@@ -54,9 +54,34 @@ export type AiProviderId = (typeof AI_PROVIDERS)[number];
 export const AI_POLICIES = ["off", "manual", "missing-only"] as const;
 export type AiPolicy = (typeof AI_POLICIES)[number];
 
+export const TIERS = [0, 1, 2, 3, 4, 5] as const;
+export type Tier = (typeof TIERS)[number];
+
+/** Internal only — never shown as "Level N". */
+export const TIER_LABELS: Record<Tier, string> = {
+  0: "Foundation",
+  1: "Introductory",
+  2: "Core",
+  3: "Intermediate",
+  4: "Advanced",
+  5: "Specialist",
+};
+
+export const DISTRACTOR_KINDS = [
+  "misconception",
+  "nearby",
+  "reversed",
+  "misapplied",
+  "subtle",
+] as const;
+export type DistractorKind = (typeof DISTRACTOR_KINDS)[number];
+
+export const CURRICULUM_SOURCE_KINDS = ["syllabus", "ocw", "textbook", "vendor", "notes"] as const;
+export type CurriculumSourceKind = (typeof CURRICULUM_SOURCE_KINDS)[number];
+
 export const LESSON_SCHEMA_VERSION = 1;
 export const EXPORT_SCHEMA_VERSION = 2;
-export const PROMPT_VERSION = "dau-lesson-v1";
+export const PROMPT_VERSION = "dau-lesson-v2";
 
 export interface Category {
   id: CategoryId;
@@ -65,6 +90,38 @@ export interface Category {
   custom?: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface CurriculumSourceRef {
+  title: string;
+  url?: string;
+  kind: CurriculumSourceKind;
+  notes: string;
+}
+
+export interface CourseModule {
+  id: string;
+  title: string;
+  blurb?: string;
+  order: number;
+  /** Other module ids that should be cleared first. */
+  prerequisites: string[];
+  conceptIds: string[];
+  /** Concepts that must be demonstrated to leave the module. */
+  spineIds: string[];
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  categoryId: CategoryId;
+  description: string;
+  curriculumVersion: number;
+  sourceReferences: CurriculumSourceRef[];
+  /** Concept ids that may come from other courses. */
+  entryRequirements: string[];
+  modules: CourseModule[];
+  custom?: boolean;
 }
 
 export interface Concept {
@@ -78,6 +135,17 @@ export interface Concept {
   custom?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  courseId?: string;
+  moduleId?: string;
+  curriculumOrder?: number;
+  tier?: Tier;
+  objectives?: string[];
+}
+
+export interface QuizDistractor {
+  text: string;
+  kind: DistractorKind;
+  rationale: string;
 }
 
 export interface QuizQuestion {
@@ -86,6 +154,7 @@ export interface QuizQuestion {
   choices: [string, string, string, string];
   answerIndex: 0 | 1 | 2 | 3;
   explanation: string;
+  distractors?: QuizDistractor[];
 }
 
 export interface Provenance {
@@ -275,6 +344,22 @@ export interface PendingPath {
   sequence: string[];
 }
 
+export interface CoursePlacement {
+  at: string;
+  recommendedTier: Tier;
+  waivedConceptIds: string[];
+  evidence: string[];
+  kind: "quiz" | "declaration" | "inferred";
+}
+
+export interface CourseProgress {
+  courseId: string;
+  startedAt: string | null;
+  lastStudiedAt: string | null;
+  waivedConceptIds: string[];
+  placement?: CoursePlacement;
+}
+
 export interface Settings {
   journalistDepth: boolean;
   lastTime: TimeBudget;
@@ -295,6 +380,8 @@ export interface ProgressState {
   customLessons: Lesson[];
   generationLog: GenerationLogEntry[];
   pendingPath: PendingPath | null;
+  courses: Record<string, CourseProgress>;
+  customCourses: Course[];
 }
 
 export interface SessionRequest {
@@ -316,13 +403,16 @@ export interface SelectOptions {
   now?: Date;
   /** Injected for tests. Production uses Math.random. */
   rng?: () => number;
+  courses?: Record<string, CourseProgress>;
 }
 
 export interface Catalog {
   categories: Category[];
   concepts: Concept[];
   lessons: Lesson[];
+  courses: Course[];
   categoryMap: Record<string, Category>;
   conceptMap: Record<string, Concept>;
   lessonMap: Record<string, Lesson>;
+  courseMap: Record<string, Course>;
 }

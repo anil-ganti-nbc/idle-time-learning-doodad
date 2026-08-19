@@ -16,6 +16,12 @@ const BANNED_PROGRESS_KEYS = new Set([
   "lapse_count",
   "lastQuizScore",
   "last_quiz_score",
+  "readiness",
+  "courseProgress",
+  "waivedConceptIds",
+  "waived_concept_ids",
+  "placement",
+  "recommendedTier",
 ]);
 
 export function assertAiAllowed(

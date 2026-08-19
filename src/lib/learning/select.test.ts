@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { CATEGORIES } from "../../content/categories.ts";
+import { CONCEPTS } from "../../content/concepts.ts";
+import { COURSES } from "../../content/courses/index.ts";
+import { CPU_SEMI_LESSONS } from "../../content/lessons/cpu-semi.ts";
+import { GPU_LESSONS } from "../../content/lessons/gpu.ts";
 import { buildCatalog } from "./catalog.ts";
 import { testCatalog, lesson } from "./fixtures.ts";
 import {
@@ -13,6 +18,7 @@ import { emptyProgress } from "./srs.ts";
 import type { ConceptProgress, SessionRequest } from "./types.ts";
 
 const catalog = testCatalog();
+const real = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 function req(partial: Partial<SessionRequest> = {}): SessionRequest {
   return {
@@ -203,3 +209,89 @@ describe("missingConceptForGeneration", () => {
     assert.ok(ooo > sched);
   });
 });
+
+describe("curriculum-aware selection", () => {
+  it("will not surface an advanced GPU lesson to a new cpu learner", () => {
+    const picked = selectLesson(req({ minutes: 10, category: "cpu", mode: "explore" }), {}, [], real, undefined, {
+      rng: () => 0,
+    });
+    assert.ok(picked);
+    assert.equal(picked.lesson.conceptId, "arch-latency-throughput");
+  });
+
+  it("Surprise Me stays at the course frontier even when advanced units exist", () => {
+    const picked = selectLesson(req({ minutes: 10, category: "cpu", mode: "surprise" }), {}, ["os"], real, undefined, {
+      rng: () => 0,
+    });
+    assert.ok(picked);
+    assert.ok(
+      ["arch-latency-throughput", "arch-data-parallel"].includes(picked.lesson.conceptId),
+      picked.lesson.conceptId,
+    );
+    assert.ok(!picked.lesson.conceptId.startsWith("gpu-occup"));
+    assert.ok(!picked.lesson.conceptId.startsWith("gpu-sched"));
+  });
+
+  it("journalist depth does not unlock a SIMT lesson without the spine", () => {
+    const picked = selectLesson(
+      req({ minutes: 10, category: "cpu", mode: "explore", journalistDepth: true }),
+      {},
+      [],
+      real,
+      undefined,
+      { rng: () => 0 },
+    );
+    assert.ok(picked);
+    assert.notEqual(picked.lesson.conceptId, "gpu-simt");
+    assert.notEqual(picked.lesson.conceptId, "gpu-warps");
+    assert.equal(picked.lesson.conceptId, "arch-latency-throughput");
+  });
+
+  it("keeps independent course progress when another topic is selected", () => {
+    const courses = {
+      "arch-gpu": {
+        courseId: "arch-gpu",
+        startedAt: "2026-08-01T00:00:00.000Z",
+        lastStudiedAt: "2026-08-01T00:00:00.000Z",
+        waivedConceptIds: ["arch-latency-throughput"],
+      },
+      "other-course": {
+        courseId: "other-course",
+        startedAt: "2026-07-01T00:00:00.000Z",
+        lastStudiedAt: "2026-07-01T00:00:00.000Z",
+        waivedConceptIds: ["something-else"],
+      },
+    };
+    const picked = selectLesson(
+      req({ minutes: 5, category: "os", mode: "explore" }),
+      {},
+      [],
+      catalog,
+      undefined,
+      { courses, rng: () => 0 },
+    );
+    assert.ok(picked);
+    assert.equal(picked.lesson.conceptId, "os-process");
+    assert.deepEqual(courses["arch-gpu"].waivedConceptIds, ["arch-latency-throughput"]);
+    assert.deepEqual(courses["other-course"].waivedConceptIds, ["something-else"]);
+  });
+
+  it("will not generate an advanced GPU gap while the frontier is still foundation", () => {
+    const missing = missingConceptForGeneration(
+      req({ minutes: 10, category: "cpu", journalistDepth: true }),
+      {},
+      [],
+      real,
+      undefined,
+      { rng: () => 0 },
+    );
+    if (missing) {
+      const concept = real.conceptMap[missing.conceptId];
+      assert.ok((concept.tier ?? 1) <= 2, missing.conceptId);
+      assert.notEqual(missing.conceptId, "gpu-scheduler");
+      assert.notEqual(missing.conceptId, "gpu-occupancy");
+    }
+  });
+});
+
+

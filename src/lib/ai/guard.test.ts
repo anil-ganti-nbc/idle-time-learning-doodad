@@ -98,4 +98,17 @@ describe("AI guards", () => {
     assert.equal(parsed.ok, false);
     if (!parsed.ok) assert.match(parsed.error, /mastery|ease|forbidden/i);
   });
+
+  it("rejects readiness, placement, and waiver fields from the model", () => {
+    for (const leak of [
+      { readiness: 0.9 },
+      { courseProgress: { waived: true } },
+      { waivedConceptIds: ["gpu-scheduler"] },
+      { placement: { recommendedTier: 5 } },
+      { recommendedTier: 4 },
+    ]) {
+      const result = assertNoProgressFields(leak);
+      assert.equal(result.ok, false, JSON.stringify(leak));
+    }
+  });
 });

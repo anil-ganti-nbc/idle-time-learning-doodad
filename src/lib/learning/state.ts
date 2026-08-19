@@ -62,13 +62,12 @@ export function stateLabel(state: ConceptState): string {
 export function isReady(
   conceptId: string,
   progress: Record<string, ConceptProgress>,
-  journalist: boolean,
+  _journalist: boolean,
   knownIds: string[],
-  introIds: Set<string>,
+  _introIds: Set<string>,
 ): boolean {
   if (knownIds.includes(conceptId)) return true;
   const p = progress[conceptId];
   if (p && (p.understanding === "got_it" || p.understanding === "mostly")) return true;
-  if (journalist && introIds.has(conceptId)) return true;
   return false;
 }

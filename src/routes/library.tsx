@@ -63,6 +63,18 @@ function LibraryReady() {
         <Link to="/session" className="text-sm text-muted no-underline hover:text-fg">
           Time router
         </Link>
+        {catalog.courses.map((course) => (
+          <span key={course.id} className="contents">
+            <span className="text-subtle">·</span>
+            <Link
+              to="/course/$courseId"
+              params={{ courseId: course.id }}
+              className="text-sm text-muted no-underline hover:text-fg"
+            >
+              {course.title}
+            </Link>
+          </span>
+        ))}
       </div>
 
       <div className="mt-6">

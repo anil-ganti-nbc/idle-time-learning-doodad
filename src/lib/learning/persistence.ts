@@ -10,7 +10,7 @@ export const PROGRESS_STORAGE_KEY = "dau-progress-v1";
 export const SECRETS_STORAGE_KEY = "dau-secrets";
 export const LIVE_SESSION_KEY = "dau-live-session";
 export const ROLLBACK_STORAGE_KEY = "dau-import-rollback";
-export const PROGRESS_PERSIST_VERSION = 3;
+export const PROGRESS_PERSIST_VERSION = 4;
 
 export const PERSISTENCE = {
   progress: {
@@ -26,6 +26,7 @@ export const PERSISTENCE = {
       "custom catalog",
       "generation log",
       "pending learning path",
+      "course progress / placement waivers",
     ],
   },
   rollback: {

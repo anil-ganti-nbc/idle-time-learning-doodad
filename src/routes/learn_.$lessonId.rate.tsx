@@ -6,8 +6,10 @@ import { generateLesson } from "@/lib/ai/client";
 import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { lessonsForConceptFrom } from "@/lib/learning/catalog";
+import { courseForConcept } from "@/lib/learning/curriculum";
 import { clearLive, elapsedMinutes, getLive, startLive, generationsAfterStart } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
+import { isConceptUnlocked, isLessonUnlocked, makeReadinessContext } from "@/lib/learning/readiness";
 import { daysUntil } from "@/lib/learning/srs";
 import { conceptState } from "@/lib/learning/state";
 import type { Understanding } from "@/lib/learning/types";
@@ -32,6 +34,8 @@ function RatePage() {
   const lastMode = useProgress((s) => s.settings.lastMode);
   const lastTime = useProgress((s) => s.settings.lastTime);
   const progress = useProgress((s) => s.concepts);
+  const profile = useProgress((s) => s.profile);
+  const courseRows = useProgress((s) => s.courses);
   const upsertLesson = useProgress((s) => s.upsertLesson);
   const logGeneration = useProgress((s) => s.logGeneration);
   const ai = useProgress((s) => s.ai);
@@ -56,7 +60,19 @@ function RatePage() {
 
   const unit = lesson;
   const concept = catalog.conceptMap[unit.conceptId];
+  const course = courseForConcept(catalog, unit.conceptId);
+  const readiness = makeReadinessContext(catalog, progress, profile, courseRows);
   const quizCorrect = snapshot?.quizCorrect ?? 0;
+  const deeperSeed = unit.goDeeper
+    ? lessonsForConceptFrom(catalog, unit.goDeeper).sort((a, b) => a.durationMin - b.durationMin)[0]
+    : undefined;
+  const deeperConcept = unit.goDeeper ? catalog.conceptMap[unit.goDeeper] : undefined;
+  const deeperReady = Boolean(
+    deeperSeed &&
+      deeperConcept &&
+      isConceptUnlocked(deeperConcept, readiness) &&
+      isLessonUnlocked(deeperSeed, readiness),
+  );
 
   function rate(understanding: Understanding) {
     let live = getLive();
@@ -82,6 +98,7 @@ function RatePage() {
       timeBudget: live.timeBudget,
       sourceType: unit.source.type,
       sourceProvider: unit.source.provider,
+      courseId: course?.id,
     });
     clearLive();
     setDoneId(session.id);
@@ -89,6 +106,10 @@ function RatePage() {
 
   async function generateDeeper() {
     if (!concept) return;
+    if (!isConceptUnlocked(concept, readiness)) {
+      toast.error("This concept is not open yet. Finish its prerequisites first.");
+      return;
+    }
     setBusy(true);
     const known = Object.values(progress)
       .filter((p) => conceptState(p) === "strong" || conceptState(p) === "understood")
@@ -130,9 +151,6 @@ function RatePage() {
   }
 
   if (doneId && stored) {
-    const deeperSeed = unit.goDeeper
-      ? lessonsForConceptFrom(catalog, unit.goDeeper).sort((a, b) => a.durationMin - b.durationMin)[0]
-      : undefined;
     const until = daysUntil(stored.nextReviewAt);
     return (
       <div className="mx-auto max-w-xl">
@@ -149,7 +167,7 @@ function RatePage() {
         </dl>
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          {deeperSeed && (
+          {deeperReady && deeperSeed && (
             <Button
               type="button"
               onClick={() => {
@@ -165,7 +183,7 @@ function RatePage() {
               Go deeper: {catalog.conceptMap[unit.goDeeper!]?.name}
             </Button>
           )}
-          {!deeperSeed && ai.enabled && ai.policy !== "off" && (
+          {!deeperReady && !deeperSeed && ai.enabled && ai.policy !== "off" && isConceptUnlocked(concept!, readiness) && (
             <Button type="button" onClick={() => void generateDeeper()} disabled={busy}>
               {busy ? "Writing follow-up…" : "Go deeper (generate)"}
             </Button>

@@ -66,6 +66,45 @@ describe("export/import", () => {
     assert.equal(imported.state.customCategories[0].id, "custom");
   });
 
+  it("round-trips course progress independently of other courses", () => {
+    const state = defaultState();
+    state.courses = {
+      "arch-gpu": {
+        courseId: "arch-gpu",
+        startedAt: "2026-08-01T00:00:00.000Z",
+        lastStudiedAt: "2026-08-10T00:00:00.000Z",
+        waivedConceptIds: ["arch-latency-throughput"],
+        placement: {
+          at: "2026-08-01T00:00:00.000Z",
+          recommendedTier: 1,
+          waivedConceptIds: ["arch-latency-throughput"],
+          evidence: ["arch-latency-throughput:ok"],
+          kind: "quiz",
+        },
+      },
+      "other": {
+        courseId: "other",
+        startedAt: "2026-07-01T00:00:00.000Z",
+        lastStudiedAt: "2026-07-02T00:00:00.000Z",
+        waivedConceptIds: ["keep-me"],
+      },
+    };
+    const incoming = defaultState();
+    incoming.courses = {
+      "arch-gpu": {
+        courseId: "arch-gpu",
+        startedAt: "2026-08-01T00:00:00.000Z",
+        lastStudiedAt: "2026-08-12T00:00:00.000Z",
+        waivedConceptIds: ["cpu-pipeline"],
+      },
+    };
+    const merged = importExport(state, buildExport(incoming), "merge");
+    assert.ok(merged.state.courses["arch-gpu"].waivedConceptIds.includes("arch-latency-throughput"));
+    assert.ok(merged.state.courses["arch-gpu"].waivedConceptIds.includes("cpu-pipeline"));
+    assert.equal(merged.state.courses["arch-gpu"].lastStudiedAt, "2026-08-12T00:00:00.000Z");
+    assert.deepEqual(merged.state.courses.other.waivedConceptIds, ["keep-me"]);
+  });
+
   it("omits secrets unless asked, and includes them when asked", () => {
     const bare = buildExport(defaultState());
     assert.equal(bare.secrets, undefined);

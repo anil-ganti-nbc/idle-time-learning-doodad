@@ -9,6 +9,7 @@ const timeBudget = z.union([z.literal(5), z.literal(10), z.literal(20), z.litera
 const sourceType = z.enum(["seed", "human", "imported", "ai"]);
 const aiProvider = z.enum(["xai", "openai", "anthropic", "gemini", "local"]);
 const aiPolicy = z.enum(["off", "manual", "missing-only"]);
+const tier = z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]);
 
 const profileSchema = z.object({
   displayName: z.string(),
@@ -105,9 +106,13 @@ const conceptSchema = z.object({
   custom: z.boolean().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
+  courseId: z.string().optional(),
+  moduleId: z.string().optional(),
+  curriculumOrder: z.number().optional(),
+  tier: tier.optional(),
+  objectives: z.array(z.string()).optional(),
 });
 
-/** Stored lessons are camelCase application objects; file imports also accept snake_case. */
 const storedLessonSchema = z.union([
   lessonFileSchema,
   z.object({
@@ -177,6 +182,51 @@ const secretsSchema = z
   })
   .optional();
 
+const courseProgressSchema = z.object({
+  courseId: z.string().min(1),
+  startedAt: z.string().nullable(),
+  lastStudiedAt: z.string().nullable(),
+  waivedConceptIds: z.array(z.string()),
+  placement: z
+    .object({
+      at: z.string(),
+      recommendedTier: tier,
+      waivedConceptIds: z.array(z.string()),
+      evidence: z.array(z.string()),
+      kind: z.enum(["quiz", "declaration", "inferred"]),
+    })
+    .optional(),
+});
+
+const courseSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  categoryId: z.string().min(1),
+  description: z.string(),
+  curriculumVersion: z.number(),
+  sourceReferences: z.array(
+    z.object({
+      title: z.string(),
+      url: z.string().optional(),
+      kind: z.enum(["syllabus", "ocw", "textbook", "vendor", "notes"]),
+      notes: z.string(),
+    }),
+  ),
+  entryRequirements: z.array(z.string()),
+  modules: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      blurb: z.string().optional(),
+      order: z.number(),
+      prerequisites: z.array(z.string()),
+      conceptIds: z.array(z.string()),
+      spineIds: z.array(z.string()),
+    }),
+  ),
+  custom: z.boolean().optional(),
+});
+
 export const exportBundleV2Schema = z.object({
   format: z.literal("dead-air-university-export"),
   schema_version: z.literal(2),
@@ -189,11 +239,13 @@ export const exportBundleV2Schema = z.object({
     concepts: z.record(z.string(), conceptProgressSchema),
     sessions: z.array(sessionRecordSchema),
     recentCategoryIds: z.array(z.string()),
+    courses: z.record(z.string(), courseProgressSchema).optional(),
   }),
   catalog: z.object({
     categories: z.array(categorySchema),
     concepts: z.array(conceptSchema),
     lessons: z.array(storedLessonSchema),
+    courses: z.array(courseSchema).optional(),
   }),
   generation_log: z.array(generationLogSchema),
   pending_path: pendingPathSchema,

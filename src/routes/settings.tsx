@@ -95,6 +95,8 @@ function SettingsReady() {
       customLessons: s.customLessons,
       generationLog: s.generationLog,
       pendingPath: s.pendingPath,
+      courses: s.courses,
+      customCourses: s.customCourses,
     };
   }
 

@@ -6,6 +6,7 @@ import { CPU_SEMI_LESSONS } from "./cpu-semi";
 import { SYSTEMS_LESSONS } from "./systems";
 import { SCIENCE_LESSONS } from "./science";
 import { CULTURE_LESSONS } from "./culture";
+import { GPU_LESSONS } from "./gpu";
 import { LONGFORM_LESSONS } from "./longform";
 
 const externalFiles = import.meta.glob("../external/*.json", {
@@ -32,6 +33,7 @@ function loadExternal(): Lesson[] {
 
 export const LESSONS: Lesson[] = [
   ...CPU_SEMI_LESSONS,
+  ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
   ...SCIENCE_LESSONS,
   ...CULTURE_LESSONS,

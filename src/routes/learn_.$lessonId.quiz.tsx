@@ -1,10 +1,28 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getLive, patchLive, startLive } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
 import { useCatalog } from "@/lib/learning/use-catalog";
+import { presentQuiz, recordPositions } from "@/lib/quiz/shuffle";
 import { cn } from "@/lib/utils";
+
+const RECENT_KEY = "dau-quiz-positions";
+
+function loadRecent(): number[] {
+  if (typeof sessionStorage === "undefined") return [];
+  try {
+    const raw = sessionStorage.getItem(RECENT_KEY);
+    return raw ? (JSON.parse(raw) as number[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveRecent(positions: number[]) {
+  if (typeof sessionStorage === "undefined") return;
+  sessionStorage.setItem(RECENT_KEY, JSON.stringify(positions));
+}
 
 export const Route = createFileRoute("/learn_/$lessonId/quiz")({
   component: QuizPage,
@@ -20,8 +38,15 @@ function QuizPage() {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
+  const quiz = useMemo(() => {
+    if (!lesson) return [];
+    const recent = loadRecent();
+    const presented = presentQuiz(lesson.quiz, Math.random, recent);
+    saveRecent(recordPositions(presented, recent));
+    return presented;
+  }, [lesson]);
 
-  if (!lesson) {
+  if (!lesson || quiz.length < 3) {
     return (
       <div className="mx-auto max-w-xl">
         <h1 className="font-display text-3xl">Unit not found</h1>
@@ -30,7 +55,7 @@ function QuizPage() {
   }
 
   const unit = lesson;
-  const question = unit.quiz[index];
+  const question = quiz[index];
   const locked = picked !== null;
 
   function choose(i: number) {
@@ -71,7 +96,7 @@ function QuizPage() {
           const right = i === question.answerIndex;
           const mine = i === picked;
           return (
-            <li key={choice}>
+            <li key={`${question.id}-${choice}`}>
               <button
                 type="button"
                 onClick={() => choose(i)}

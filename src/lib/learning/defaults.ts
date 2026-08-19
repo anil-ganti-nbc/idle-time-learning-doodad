@@ -42,4 +42,6 @@ export const defaultState = (): Omit<
   customLessons: [],
   generationLog: [],
   pendingPath: null,
+  courses: {},
+  customCourses: [],
 });

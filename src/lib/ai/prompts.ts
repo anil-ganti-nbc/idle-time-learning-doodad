@@ -1,7 +1,19 @@
+import { quizGuidanceForTier } from "@/lib/quiz/kinds";
+import { inferTier } from "@/lib/learning/curriculum";
 import { PROMPT_VERSION } from "@/lib/learning/types";
 import type { Concept, Effort, Lesson, Level, TimeBudget } from "@/lib/learning/types";
 
 export { PROMPT_VERSION };
+
+export interface QuizPromptContext {
+  courseTitle?: string;
+  moduleTitle?: string;
+  tier: number;
+  currentConcept: string;
+  prerequisites: { id: string; name: string }[];
+  demonstrated: { id: string; name: string }[];
+  weak: { id: string; name: string }[];
+}
 
 export interface LessonPromptInput {
   concept: Concept;
@@ -14,6 +26,7 @@ export interface LessonPromptInput {
   sourceText?: string;
   adapt?: "skip-known" | "harder" | "simpler";
   style?: "analogy" | "technical" | "simpler" | "example";
+  quizContext?: QuizPromptContext;
 }
 
 const SCHEMA_HINT = `Return ONLY a JSON object. No markdown. No commentary.
@@ -22,9 +35,16 @@ schema_version: 1
 concept_id, title, category, estimated_minutes (5|10|20|30), effort (light|normal|deep),
 prerequisites (string[]), explanation (string[] of 2–5 short paragraphs),
 example (string), why_it_matters (string),
-quiz: exactly 3 objects {id, prompt, choices[4], answerIndex 0-3, explanation}
+quiz: exactly 3 objects {
+  id, prompt,
+  correct (canonical right answer),
+  distractors: exactly 3 {text, kind, rationale},
+  explanation
+}
+kind must be one of: misconception | nearby | reversed | misapplied | subtle
+Do not set answerIndex. Do not joke. Distractors must be plausible.
 Optional: diagram (null), go_deeper (string[] of concept ids)
-Do not include mastery, progress, ease, or review fields.`;
+Do not include mastery, progress, ease, readiness, placement, or review fields.`;
 
 export function lessonSystemPrompt() {
   return `You write micro-lessons for Dead Air University.
@@ -42,6 +62,9 @@ export function lessonUserPrompt(input: LessonPromptInput) {
     `Category: ${input.concept.category}`,
     `Summary: ${input.concept.summary}`,
     `Level: ${input.concept.level}`,
+    `Curriculum tier (internal): ${inferTier(input.concept)}`,
+    input.quizContext?.courseTitle ? `Course: ${input.quizContext.courseTitle}` : "",
+    input.quizContext?.moduleTitle ? `Module: ${input.quizContext.moduleTitle}` : "",
     `Prerequisites: ${input.concept.prerequisites.join(", ") || "none"}`,
     `Duration: ${input.durationMin} minutes`,
     `Effort: ${input.effort}`,
@@ -76,14 +99,37 @@ export function explainUserPrompt(lesson: Lesson, style: NonNullable<LessonPromp
 
 export function quizSystemPrompt() {
   return `Write exactly three multiple-choice questions that test understanding of THIS lesson.
-Each has 4 choices and one correct answerIndex.
-Avoid trivia and outside knowledge.
-Return JSON: { "quiz": [ {id, prompt, choices, answerIndex, explanation}, x3 ] }
+Do not trust yourself with final answer order. Return a canonical correct string plus three distractors.
+Each distractor needs a kind (misconception|nearby|reversed|misapplied|subtle) and a short rationale.
+No jokes, no nonsense, no option that is obviously shorter or longer than the others.
+Do not require material that has not been taught or waived.
+Return JSON: { "quiz": [ {id, prompt, correct, distractors[3], explanation}, x3 ] }
+Do not include readiness, mastery, or placement fields.
 Prompt version ${PROMPT_VERSION}.`;
 }
 
-export function quizUserPrompt(lesson: Lesson) {
-  return `Title: ${lesson.title}\n${lesson.explanation.join("\n\n")}\nExample: ${lesson.example}\nWhy: ${lesson.whyItMatters}`;
+export function quizUserPrompt(lesson: Lesson, ctx?: QuizPromptContext) {
+  const concept = ctx?.currentConcept ?? lesson.conceptId;
+  const lines = [
+    ctx?.courseTitle ? `Course: ${ctx.courseTitle}` : "",
+    ctx?.moduleTitle ? `Module: ${ctx.moduleTitle}` : "",
+    `Current concept: ${concept}`,
+    ctx ? `Curriculum tier (internal): ${ctx.tier}` : "",
+    ctx ? quizGuidanceForTier(ctx.tier as 0 | 1 | 2 | 3 | 4 | 5) : "",
+    ctx?.prerequisites.length
+      ? `Prerequisites already established: ${ctx.prerequisites.map((p) => p.name).join(", ")}`
+      : "Prerequisites: none listed.",
+    ctx?.demonstrated.length
+      ? `Already demonstrated (questions may use these): ${ctx.demonstrated.map((p) => p.name).join(", ")}`
+      : "",
+    ctx?.weak.length ? `Previously weak: ${ctx.weak.map((p) => p.name).join(", ")}` : "",
+    `Title: ${lesson.title}`,
+    lesson.explanation.join("\n\n"),
+    `Example: ${lesson.example}`,
+    `Why: ${lesson.whyItMatters}`,
+    "Do not ask about material that is not in this lesson or the established list.",
+  ];
+  return lines.filter(Boolean).join("\n");
 }
 
 export function pathSystemPrompt() {

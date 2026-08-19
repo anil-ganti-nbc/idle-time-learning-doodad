@@ -8,8 +8,11 @@ import { Button } from "@/components/ui/button";
 import { generateExplain, generateQuiz } from "@/lib/ai/client";
 import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
+import { courseForConcept } from "@/lib/learning/curriculum";
 import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
+import { quizContextFor } from "@/lib/learning/quiz-context";
+import { makeReadinessContext } from "@/lib/learning/readiness";
 import type { LessonFeedbackVerdict } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 
@@ -37,6 +40,9 @@ function LessonReady() {
   const logGeneration = useProgress((s) => s.logGeneration);
   const archiveLesson = useProgress((s) => s.archiveLesson);
   const ai = useProgress((s) => s.ai);
+  const progress = useProgress((s) => s.concepts);
+  const profile = useProgress((s) => s.profile);
+  const courseProgress = useProgress((s) => s.courses);
   const aiCtx = useAiContext(getLive()?.generations ?? 0);
   const [busy, setBusy] = useState<string | null>(null);
   const [styleOpen, setStyleOpen] = useState(false);
@@ -53,6 +59,7 @@ function LessonReady() {
   }
 
   const unit = lesson;
+  const course = courseForConcept(catalog, unit.conceptId);
   const concept = catalog.conceptMap[unit.conceptId];
   const categoryName = concept ? catalog.categoryMap[concept.category]?.name : "";
   const prereqNames = unit.prerequisites
@@ -113,7 +120,11 @@ function LessonReady() {
 
   async function regenQuiz() {
     setBusy("quiz");
-    const result = await generateQuiz(aiCtx, unit);
+    const result = await generateQuiz(
+      aiCtx,
+      unit,
+      quizContextFor(unit, makeReadinessContext(catalog, progress, profile, courseProgress), catalog),
+    );
     setBusy(null);
     if (result.billable) bumpLiveGeneration();
     logGeneration(toGenerationLog("quiz", result, { lessonId: unit.id, conceptId: unit.conceptId }));
@@ -150,7 +161,7 @@ function LessonReady() {
   return (
     <article className="mx-auto max-w-xl">
       <p className="text-xs tracking-[0.18em] text-muted uppercase">
-        {categoryName} · {unit.durationMin} min · {unit.effort}
+        {course ? course.title : categoryName} · {unit.durationMin} min · {unit.effort}
         {unit.level === "journalist" ? " · journalist" : ""}
       </p>
       <div className="mt-2 flex flex-wrap items-center gap-2">

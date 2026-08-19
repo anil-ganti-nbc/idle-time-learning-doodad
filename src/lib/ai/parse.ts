@@ -7,7 +7,8 @@ import {
 import { makeId } from "@/lib/learning/catalog";
 import { normalizeLesson } from "@/lib/learning/normalize";
 import { PROMPT_VERSION } from "@/lib/learning/types";
-import type { Concept, Effort, Lesson, Level, Provenance, TimeBudget } from "@/lib/learning/types";
+import type { Concept, Effort, Lesson, Level, Provenance, QuizQuestion, TimeBudget } from "@/lib/learning/types";
+import { assembleQuiz } from "@/lib/quiz/assemble";
 import { assertNoProgressFields } from "./guard";
 import { extractJson } from "./json";
 
@@ -79,6 +80,16 @@ export function parseGeneratedPath(raw: unknown) {
   return { ok: true as const, value: parsed.data };
 }
 
+function finalizedQuiz(
+  raw: ReturnType<typeof generatedLessonSchema.parse>["quiz"],
+): [QuizQuestion, QuizQuestion, QuizQuestion] {
+  const assembled = assembleQuiz(raw);
+  if (!assembled.ok) {
+    throw new Error(assembled.error);
+  }
+  return assembled.quiz;
+}
+
 export function lessonFromGenerated(
   data: ReturnType<typeof generatedLessonSchema.parse>,
   meta: {
@@ -109,7 +120,7 @@ export function lessonFromGenerated(
       example: data.example,
       whyItMatters: data.why_it_matters,
       diagram: data.diagram ?? undefined,
-      quiz: data.quiz,
+      quiz: finalizedQuiz(data.quiz),
       custom: true,
       createdAt: meta.provenance.generatedAt,
       updatedAt: meta.provenance.generatedAt,

@@ -1,5 +1,5 @@
 import { applyActiveVersion, normalizeLesson } from "./normalize";
-import type { Catalog, Category, Concept, Lesson } from "./types";
+import type { Catalog, Category, Concept, Course, Lesson } from "./types";
 
 export function buildCatalog(
   seededCategories: Category[],
@@ -8,9 +8,12 @@ export function buildCatalog(
   customCategories: Category[] = [],
   customConcepts: Concept[] = [],
   customLessons: Lesson[] = [],
+  seededCourses: Course[] = [],
+  customCourses: Course[] = [],
 ): Catalog {
   const categories = mergeById(seededCategories, customCategories);
   const concepts = mergeById(seededConcepts, customConcepts);
+  const courses = mergeById(seededCourses, customCourses);
   const overlay = new Map(customLessons.filter((l) => !l.archived).map((l) => [l.id, l]));
   const lessons: Lesson[] = [];
   const seen = new Set<string>();
@@ -31,9 +34,11 @@ export function buildCatalog(
     categories,
     concepts,
     lessons,
+    courses,
     categoryMap: Object.fromEntries(categories.map((c) => [c.id, c])),
     conceptMap: Object.fromEntries(concepts.map((c) => [c.id, c])),
     lessonMap: Object.fromEntries(lessons.map((l) => [l.id, l])),
+    courseMap: Object.fromEntries(courses.map((c) => [c.id, c])),
   };
 }
 

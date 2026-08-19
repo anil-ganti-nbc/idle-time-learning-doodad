@@ -9,7 +9,7 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     durationMin: 5,
     effort: "light",
     level: "intro",
-    prerequisites: [],
+    prerequisites: ["arch-latency-throughput"],
     goDeeper: "cpu-hazards",
     diagram: "pipeline",
     explanation: [

@@ -76,6 +76,33 @@ export const conceptFileSchema = z.object({
   summary: z.string().min(1),
 });
 
+export const generatedQuizItemSchema = z.union([
+  quizQuestionSchema,
+  z.object({
+    id: z.string().min(1),
+    prompt: z.string().min(8),
+    correct: z.string().min(1),
+    distractors: z.tuple([
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+    ]),
+    explanation: z.string().min(8),
+  }),
+]);
+
 export const generatedLessonSchema = z.object({
   schema_version: z.literal(1).optional(),
   concept_id: z.string().min(1),
@@ -89,7 +116,7 @@ export const generatedLessonSchema = z.object({
   example: z.string().min(20),
   why_it_matters: z.string().min(20),
   diagram: z.string().nullable().optional(),
-  quiz: z.tuple([quizQuestionSchema, quizQuestionSchema, quizQuestionSchema]),
+  quiz: z.tuple([generatedQuizItemSchema, generatedQuizItemSchema, generatedQuizItemSchema]),
   go_deeper: z.array(z.string()).optional(),
 });
 
@@ -99,7 +126,7 @@ export const generatedExplainSchema = z.object({
 });
 
 export const generatedQuizSchema = z.object({
-  quiz: z.tuple([quizQuestionSchema, quizQuestionSchema, quizQuestionSchema]),
+  quiz: z.tuple([generatedQuizItemSchema, generatedQuizItemSchema, generatedQuizItemSchema]),
 });
 
 export const generatedPathSchema = z.object({

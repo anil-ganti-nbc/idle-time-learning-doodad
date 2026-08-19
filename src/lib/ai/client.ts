@@ -1,3 +1,4 @@
+import { assembleQuiz } from "@/lib/quiz/assemble";
 import { PROMPT_VERSION } from "@/lib/learning/types";
 import type { AiSecrets, AiSettings, Lesson, PendingPath } from "@/lib/learning/types";
 import { cacheKey, findCachedLesson, hashText } from "./cache";
@@ -22,6 +23,7 @@ import {
   quizSystemPrompt,
   quizUserPrompt,
   type LessonPromptInput,
+  type QuizPromptContext,
 } from "./prompts";
 import { estimateTokens } from "./providers";
 import { bindGeneratedLesson } from "./semantics";
@@ -164,21 +166,33 @@ export async function generateLesson(
   const notes = bound.value.discrepancies.length
     ? `curriculum bound: ${bound.value.discrepancies.join("; ")}`
     : undefined;
-  const lesson = lessonFromGenerated(parsed.value, {
-    conceptId: bound.value.conceptId,
-    level: bound.value.level,
-    durationMin: bound.value.durationMin,
-    effort: bound.value.effort,
-    prerequisites: bound.value.prerequisites,
-    goDeeper: bound.value.goDeeper,
-    provenance: defaultAiProvenance({
+  let lesson: Lesson;
+  try {
+    lesson = lessonFromGenerated(parsed.value, {
+      conceptId: bound.value.conceptId,
+      level: bound.value.level,
+      durationMin: bound.value.durationMin,
+      effort: bound.value.effort,
+      prerequisites: bound.value.prerequisites,
+      goDeeper: bound.value.goDeeper,
+      provenance: defaultAiProvenance({
+        provider: completion.provider,
+        model: completion.model,
+        sourceExcerpt: input.sourceText?.slice(0, 400),
+        cacheKey: cacheKey(query),
+        notes,
+      }),
+    });
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Generated quiz failed validation.",
+      billable,
       provider: completion.provider,
       model: completion.model,
-      sourceExcerpt: input.sourceText?.slice(0, 400),
-      cacheKey: cacheKey(query),
-      notes,
-    }),
-  });
+      ...usage,
+    };
+  }
   return {
     ok: true,
     value: lesson,
@@ -222,11 +236,12 @@ export async function generateExplain(
 export async function generateQuiz(
   ctx: GenerateContext,
   lesson: Lesson,
+  quizCtx?: QuizPromptContext,
 ): Promise<ClientResult<Lesson["quiz"]>> {
   const meta = { provider: ctx.settings.provider, model: ctx.settings.model };
   const guard = assertAiAllowed(ctx.settings, ctx.logCountToday, ctx.sessionGenerations);
   if (!guard.ok) return { ...guard, billable: false, ...meta };
-  const user = quizUserPrompt(lesson);
+  const user = quizUserPrompt(lesson, quizCtx);
   const completion = await completeText(ctx.settings, ctx.secrets, quizSystemPrompt(), user);
   const billable = billed(completion);
   const usage = usageFrom(completion, user);
@@ -235,9 +250,21 @@ export async function generateQuiz(
   if (!json.ok) return { ...json, billable, provider: completion.provider, model: completion.model, ...usage };
   const parsed = parseGeneratedQuiz(json.value);
   if (!parsed.ok) return { ...parsed, billable, provider: completion.provider, model: completion.model, ...usage };
+  const assembled = assembleQuiz(parsed.value.quiz);
+  if (!assembled.ok) {
+    return {
+      ok: false,
+      error: assembled.error,
+      issues: assembled.issues,
+      billable,
+      provider: completion.provider,
+      model: completion.model,
+      ...usage,
+    };
+  }
   return {
     ok: true as const,
-    value: parsed.value.quiz,
+    value: assembled.quiz,
     billable: true,
     model: completion.model,
     provider: completion.provider,
