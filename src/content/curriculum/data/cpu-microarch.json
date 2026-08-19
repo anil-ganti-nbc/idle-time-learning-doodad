@@ -1,0 +1,425 @@
+{
+  "id": "cpu-microarch",
+  "title": "Modern CPU Microarchitecture",
+  "categoryId": "cpu",
+  "description": "How a core finds independent work: prediction, renaming, out-of-order issue, and the memory system that has to stay honest across cores.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    5
+  ],
+  "entryRequirements": [
+    "cpu-pipeline",
+    "cpu-hazards"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-6823",
+      "title": "MIT 6.823 Computer System Architecture",
+      "url": "https://ocw.mit.edu/courses/6-823-computer-system-architecture-fall-2005/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Superscalar/VLIW/vector/threads after ISA and caches. Multiprocessors and memory models last."
+    },
+    {
+      "id": "stanford-cs149",
+      "title": "Stanford CS149",
+      "url": "https://gfxcourses.stanford.edu/cs149/fall25/",
+      "kind": "syllabus",
+      "notes": "Coherence and consistency after the core is thinkable, not as GPU week-one."
+    }
+  ],
+  "modules": [
+    {
+      "id": "cpu-m-pred",
+      "title": "Speculating control",
+      "blurb": "Prediction so the pipeline stays full.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "cpu-branch-prediction"
+      ],
+      "learningObjectives": [
+        "Separate direction from target",
+        "Say what a mispredict costs"
+      ]
+    },
+    {
+      "id": "cpu-m-ooo",
+      "title": "Renaming and out-of-order",
+      "blurb": "Names, the ROB, and retiring in program order.",
+      "order": 1,
+      "prerequisites": [
+        "cpu-m-pred"
+      ],
+      "spineIds": [
+        "cpu-renaming",
+        "cpu-rob"
+      ],
+      "learningObjectives": [
+        "Explain why architectural names are too few",
+        "Retire in order after executing out of order"
+      ]
+    },
+    {
+      "id": "cpu-m-memsys",
+      "title": "The core's memory system",
+      "blurb": "Stores, loads, and the buffers between them.",
+      "order": 2,
+      "prerequisites": [
+        "cpu-m-ooo"
+      ],
+      "spineIds": [
+        "cpu-load-store-queue"
+      ],
+      "learningObjectives": [
+        "Say why a store buffer exists",
+        "Name what memory disambiguation is for"
+      ]
+    },
+    {
+      "id": "cpu-m-mp",
+      "title": "Sharing and ordering",
+      "blurb": "Coherence, consistency, and speculation's dark side.",
+      "order": 3,
+      "prerequisites": [
+        "cpu-m-memsys"
+      ],
+      "spineIds": [
+        "cpu-coherency",
+        "cpu-consistency"
+      ],
+      "learningObjectives": [
+        "Separate coherence from consistency",
+        "See why speculation creates security surface"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "cpu-branch-prediction",
+      "name": "Branch prediction",
+      "moduleId": "cpu-m-pred",
+      "tier": 2,
+      "prerequisites": [
+        "cpu-pipeline"
+      ],
+      "summary": "Guessing control flow so the pipeline stays full.",
+      "parentId": "cpu-pipeline",
+      "objectives": [
+        "Separate direction prediction from target prediction"
+      ],
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-btb",
+      "name": "Branch target buffers",
+      "moduleId": "cpu-m-pred",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-branch-prediction"
+      ],
+      "summary": "Caching where a branch went last time, not just taken/not-taken.",
+      "parentId": "cpu-branch-prediction",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-predictors",
+      "name": "Predictor types",
+      "moduleId": "cpu-m-pred",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-branch-prediction"
+      ],
+      "summary": "Local, global, and TAGE-style predictors and why they exist.",
+      "parentId": "cpu-branch-prediction",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-ras",
+      "name": "Return address stacks",
+      "moduleId": "cpu-m-pred",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-branch-prediction"
+      ],
+      "summary": "Special-casing CALL/RET so returns do not pollute the BTB.",
+      "parentId": "cpu-branch-prediction",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-issue-width",
+      "name": "Issue width",
+      "moduleId": "cpu-m-pred",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-pipeline",
+        "cpu-ilp-idea"
+      ],
+      "summary": "How many operations a cycle can start if they are ready.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-renaming",
+      "name": "Register renaming",
+      "moduleId": "cpu-m-ooo",
+      "tier": 2,
+      "prerequisites": [
+        "cpu-pipeline"
+      ],
+      "summary": "Mapping architectural names onto a larger physical file.",
+      "parentId": "cpu-pipeline",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-rob",
+      "name": "Reorder buffers",
+      "moduleId": "cpu-m-ooo",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-renaming"
+      ],
+      "summary": "Retiring out-of-order work in program order.",
+      "parentId": "cpu-renaming",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-ooo-schedule",
+      "name": "Out-of-order scheduling",
+      "moduleId": "cpu-m-ooo",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-renaming",
+        "cpu-ilp-idea"
+      ],
+      "summary": "Issuing ready work, not the next instruction in program order.",
+      "parentId": "cpu-renaming",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-wakeup-select",
+      "name": "Wakeup and select",
+      "moduleId": "cpu-m-ooo",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-ooo-schedule"
+      ],
+      "summary": "Broadcasting completions and picking the next ready ops.",
+      "parentId": "cpu-ooo-schedule",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-precise-exceptions",
+      "name": "Precise exceptions",
+      "moduleId": "cpu-m-ooo",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-rob"
+      ],
+      "summary": "The illusion that nothing after the faulting instruction happened.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-smt",
+      "name": "Simultaneous multithreading",
+      "moduleId": "cpu-m-ooo",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-ooo-schedule"
+      ],
+      "summary": "Filling issue slots from another thread when this one cannot.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-load-store-queue",
+      "name": "Load/store queues",
+      "moduleId": "cpu-m-memsys",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-ooo-schedule"
+      ],
+      "summary": "Tracking memory ops so they can complete without lying about order.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-memory-disambig",
+      "name": "Memory disambiguation",
+      "moduleId": "cpu-m-memsys",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-load-store-queue"
+      ],
+      "summary": "Guessing that a load does not overlap an earlier store.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-speculative-load",
+      "name": "Speculative loads",
+      "moduleId": "cpu-m-memsys",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-memory-disambig",
+        "cpu-branch-prediction"
+      ],
+      "summary": "Starting a load before you know you should.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-store-buffer",
+      "name": "Store buffers",
+      "moduleId": "cpu-m-memsys",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-write-policy"
+      ],
+      "summary": "Letting the core retire a store before memory has it.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-mshr",
+      "name": "Miss-status holding registers",
+      "moduleId": "cpu-m-memsys",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-cache-miss"
+      ],
+      "summary": "Outstanding misses as first-class state.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-prefetch",
+      "name": "Hardware prefetch",
+      "moduleId": "cpu-m-memsys",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-cache-miss"
+      ],
+      "summary": "Starting the next line because the past looked sequential.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-inclusive-cache",
+      "name": "Inclusion and exclusivity",
+      "moduleId": "cpu-m-memsys",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-cache-levels"
+      ],
+      "summary": "Whether a line in L1 must also live in L2.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-coherency",
+      "name": "Cache coherency",
+      "moduleId": "cpu-m-mp",
+      "tier": 2,
+      "prerequisites": [
+        "cpu-pipeline"
+      ],
+      "summary": "Keeping private caches honest across cores.",
+      "parentId": "cpu-pipeline",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-mesi",
+      "name": "MESI-style protocols",
+      "moduleId": "cpu-m-mp",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-coherency"
+      ],
+      "summary": "Invalidation as the way two writers do not invent two truths.",
+      "parentId": "cpu-coherency",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-snoop-vs-dir",
+      "name": "Snooping versus directories",
+      "moduleId": "cpu-m-mp",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-mesi"
+      ],
+      "summary": "Broadcast versus asking a known owner.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-consistency",
+      "name": "Memory consistency",
+      "moduleId": "cpu-m-mp",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-coherency"
+      ],
+      "summary": "What stores another core is allowed to see, and when.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-tso-vs-relaxed",
+      "name": "TSO and relaxed models",
+      "moduleId": "cpu-m-mp",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-consistency"
+      ],
+      "summary": "Why x86 feels stronger than a phone core.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-vector-simd",
+      "name": "SIMD and vectors",
+      "moduleId": "cpu-m-mp",
+      "tier": 3,
+      "prerequisites": [
+        "arch-data-parallel"
+      ],
+      "summary": "One instruction, many packed elements, no implicit divergence.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-vliw",
+      "name": "VLIW as compile-time ILP",
+      "moduleId": "cpu-m-mp",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-ilp-idea"
+      ],
+      "summary": "The compiler packs the issue group so the hardware does not have to.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-power-wall",
+      "name": "The power wall",
+      "moduleId": "cpu-m-mp",
+      "tier": 3,
+      "prerequisites": [
+        "cpu-perf-metrics"
+      ],
+      "summary": "Why frequency stopped being the scaling story.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-security-spec",
+      "name": "Speculation and side channels",
+      "moduleId": "cpu-m-mp",
+      "tier": 5,
+      "prerequisites": [
+        "cpu-speculative-load",
+        "cpu-predictors"
+      ],
+      "summary": "Transient state that microarchitecture can observe even when architecture cannot.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cpu-microcode",
+      "name": "Microcode assists",
+      "moduleId": "cpu-m-mp",
+      "tier": 4,
+      "prerequisites": [
+        "cpu-isa"
+      ],
+      "summary": "Complex ops that become little programs inside the core.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

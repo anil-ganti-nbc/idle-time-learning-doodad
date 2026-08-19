@@ -1,4 +1,7 @@
+import { RETIRED_SEEDED_CATEGORY_IDS } from "@/lib/learning/types";
 import type { Category, CategoryId } from "@/lib/learning/types";
+
+const RETIRED = new Set<string>(RETIRED_SEEDED_CATEGORY_IDS);
 
 export const CATEGORIES: Category[] = [
   { id: "cpu", name: "CPU / GPU architecture", blurb: "Pipelines, prediction, caches, and out-of-order guts." },
@@ -16,8 +19,10 @@ export const CATEGORIES: Category[] = [
   { id: "music-theory", name: "Music theory", blurb: "Intervals, modes, and why some clashes work." },
   { id: "death-metal", name: "Death metal", blurb: "History, technique, and how the music is built." },
   { id: "history", name: "General history", blurb: "Events as mechanisms, not trivia." },
-];
+].map((c) => ({ ...c, status: RETIRED.has(c.id) ? ("retired" as const) : ("active" as const) }));
 
 export const CATEGORY_MAP: Record<CategoryId, Category> = Object.fromEntries(
   CATEGORIES.map((c) => [c.id, c]),
 );
+
+export const ACTIVE_CATEGORIES = CATEGORIES.filter((c) => c.status !== "retired");

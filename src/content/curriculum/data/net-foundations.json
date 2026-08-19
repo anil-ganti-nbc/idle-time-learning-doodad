@@ -1,0 +1,315 @@
+{
+  "id": "net-foundations",
+  "title": "Networking Foundations",
+  "categoryId": "networking",
+  "description": "Packets, layers as contracts, Ethernet, IP, and the socket a program actually sees. Routing politics wait.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs144",
+      "title": "Stanford CS144",
+      "url": "https://web.stanford.edu/class/cs144/",
+      "kind": "syllabus",
+      "notes": "Packets and a reliable byte stream before BGP. Layers as implementation contracts."
+    }
+  ],
+  "modules": [
+    {
+      "id": "net-f-pack",
+      "title": "Packets and layers",
+      "blurb": "Why we slice the problem.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "net-stack",
+        "net-packet"
+      ]
+    },
+    {
+      "id": "net-f-link",
+      "title": "Link and local delivery",
+      "blurb": "MAC, switching, ARP.",
+      "order": 1,
+      "prerequisites": [
+        "net-f-pack"
+      ],
+      "spineIds": [
+        "net-ethernet"
+      ]
+    },
+    {
+      "id": "net-f-ip",
+      "title": "Internet Protocol",
+      "blurb": "Addresses, CIDR, ICMP.",
+      "order": 2,
+      "prerequisites": [
+        "net-f-link"
+      ],
+      "spineIds": [
+        "net-ip"
+      ]
+    },
+    {
+      "id": "net-f-host",
+      "title": "The host interface",
+      "blurb": "Sockets, UDP, names.",
+      "order": 3,
+      "prerequisites": [
+        "net-f-ip"
+      ],
+      "spineIds": [
+        "net-socket-api"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "net-stack",
+      "name": "The network stack",
+      "moduleId": "net-f-pack",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Layers as contracts, not a morality play.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-packet",
+      "name": "Packets",
+      "moduleId": "net-f-pack",
+      "tier": 0,
+      "prerequisites": [
+        "net-stack"
+      ],
+      "summary": "A header plus a payload, lost independently of its neighbors.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-layering",
+      "name": "Why layering",
+      "moduleId": "net-f-pack",
+      "tier": 1,
+      "prerequisites": [
+        "net-stack"
+      ],
+      "summary": "Each layer offers a service and hides a mechanism.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-end-to-end",
+      "name": "The end-to-end argument",
+      "moduleId": "net-f-pack",
+      "tier": 2,
+      "prerequisites": [
+        "net-layering"
+      ],
+      "summary": "Functions that only the endpoints can implement correctly.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-bandwidth-delay",
+      "name": "Bandwidth-delay product",
+      "moduleId": "net-f-pack",
+      "tier": 2,
+      "prerequisites": [
+        "net-packet",
+        "arch-latency-throughput"
+      ],
+      "summary": "How much data fits in the pipe.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-ethernet",
+      "name": "Ethernet frames",
+      "moduleId": "net-f-link",
+      "tier": 1,
+      "prerequisites": [
+        "net-packet"
+      ],
+      "summary": "A local delivery envelope with a MAC address.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-mac",
+      "name": "MAC addresses",
+      "moduleId": "net-f-link",
+      "tier": 1,
+      "prerequisites": [
+        "net-ethernet"
+      ],
+      "summary": "A burned-in name that is not an Internet name.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-switching",
+      "name": "Switching",
+      "moduleId": "net-f-link",
+      "tier": 2,
+      "prerequisites": [
+        "net-ethernet"
+      ],
+      "summary": "Learning which port a MAC last spoke from.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-arp",
+      "name": "ARP",
+      "moduleId": "net-f-link",
+      "tier": 2,
+      "prerequisites": [
+        "net-mac"
+      ],
+      "summary": "Who has this IP? Tell this MAC.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-wifi-vs-wired",
+      "name": "Shared versus switched media",
+      "moduleId": "net-f-link",
+      "tier": 2,
+      "prerequisites": [
+        "net-ethernet"
+      ],
+      "summary": "Collision domains did not vanish; they moved.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-ip",
+      "name": "IPv4 addressing",
+      "moduleId": "net-f-ip",
+      "tier": 1,
+      "prerequisites": [
+        "net-packet"
+      ],
+      "summary": "A hierarchical name the routers understand.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-cidr",
+      "name": "CIDR and prefixes",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "A length, not a class.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-icmp",
+      "name": "ICMP",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Control messages: unreachable, too big, echo.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-mtu",
+      "name": "MTU",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "The largest packet this hop will accept.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-fragment",
+      "name": "Fragmentation",
+      "moduleId": "net-f-ip",
+      "tier": 3,
+      "prerequisites": [
+        "net-mtu"
+      ],
+      "summary": "Splitting a packet the next link will not take — and why we try not to.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-nat-intro",
+      "name": "NAT, first look",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Many private addresses sharing one public one.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-endian-wire",
+      "name": "Network byte order",
+      "moduleId": "net-f-ip",
+      "tier": 1,
+      "prerequisites": [
+        "net-packet",
+        "cpu-endian"
+      ],
+      "summary": "Big-endian on the wire, whatever you are at home.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-checksum",
+      "name": "Checksums",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-packet"
+      ],
+      "summary": "A cheap detector, not a cryptographic proof.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-udp",
+      "name": "UDP",
+      "moduleId": "net-f-host",
+      "tier": 1,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "A port number and a hope.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-socket-api",
+      "name": "The socket API",
+      "moduleId": "net-f-host",
+      "tier": 1,
+      "prerequisites": [
+        "net-udp"
+      ],
+      "summary": "How a process binds a port and exchanges bytes.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-dns-intro",
+      "name": "DNS, first look",
+      "moduleId": "net-f-host",
+      "tier": 2,
+      "prerequisites": [
+        "net-udp"
+      ],
+      "summary": "Names that resolve to addresses.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-dhcp",
+      "name": "DHCP",
+      "moduleId": "net-f-host",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Borrowing an address for a while.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

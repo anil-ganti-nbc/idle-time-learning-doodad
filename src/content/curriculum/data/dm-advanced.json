@@ -1,0 +1,346 @@
+{
+  "id": "dm-advanced",
+  "title": "Technical, Progressive, and Stylistic Analysis",
+  "categoryId": "death-metal",
+  "description": "Technicality versus function, progressive and dissonant composition, and a method for analyzing tracks and scenes without collapsing into trivia.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    3,
+    5
+  ],
+  "entryRequirements": [
+    "dm-harmony",
+    "dm-riff-cell",
+    "dm-blast",
+    "mus-analysis-method"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-21m350",
+      "title": "MIT 21M.350 Musical Analysis",
+      "url": "https://ocw.mit.edu/courses/21m-350-musical-analysis-spring-2008/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Reuse the analysis method on this repertoire. The questions stay: what repeats, what contrasts, what is the cell."
+    },
+    {
+      "id": "mit-metal101",
+      "title": "MIT Heavy Metal 101",
+      "url": "https://ocw.mit.edu/courses/res-21m-001-heavy-metal-101-january-iap-2025/",
+      "kind": "ocw",
+      "notes": "Culture and listening as analysis inputs, not a substitute for construction."
+    },
+    {
+      "id": "berklee-metal",
+      "title": "Berklee Metal Guitar",
+      "url": "https://online.berklee.edu/courses/metal-guitar",
+      "kind": "syllabus",
+      "notes": "Technique remains a means. This course asks when technique is the piece and when it is noise."
+    }
+  ],
+  "modules": [
+    {
+      "id": "dm-a-tech",
+      "title": "Technicality",
+      "blurb": "When density is a choice.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "dm-tech-vs-func"
+      ]
+    },
+    {
+      "id": "dm-a-prog",
+      "title": "Progressive and dissonant",
+      "blurb": "Long form, cold harmony.",
+      "order": 1,
+      "prerequisites": [
+        "dm-a-tech"
+      ],
+      "spineIds": [
+        "dm-prog-form",
+        "dm-dissonant-comp"
+      ]
+    },
+    {
+      "id": "dm-a-style",
+      "title": "Stylistic analysis",
+      "blurb": "A method for a track, a scene, a mix.",
+      "order": 2,
+      "prerequisites": [
+        "dm-a-prog"
+      ],
+      "spineIds": [
+        "dm-analysis-riff",
+        "dm-analysis-tune"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "dm-tech-vs-func",
+      "name": "Technicality versus musical function",
+      "moduleId": "dm-a-tech",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony",
+        "dm-riff-cell"
+      ],
+      "summary": "A hard part that does a job versus a hard part that is the point.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-virtuosity",
+      "name": "Virtuosity as a risk",
+      "moduleId": "dm-a-tech",
+      "tier": 3,
+      "prerequisites": [
+        "dm-tech-vs-func"
+      ],
+      "summary": "Speed that erases the cell you were supposed to hear.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-odd-phrasing",
+      "name": "Phrasing across barlines",
+      "moduleId": "dm-a-tech",
+      "tier": 4,
+      "prerequisites": [
+        "dm-odd-meter",
+        "dm-riffs-as-breath"
+      ],
+      "summary": "A phrase that does not respect the bar the kit is in.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-riffs-as-breath",
+      "name": "Breath and the riff",
+      "moduleId": "dm-a-tech",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Where a player would breathe is where the cell usually turns.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-polyrhythm-dm",
+      "name": "Polyrhythm in the kit",
+      "moduleId": "dm-a-tech",
+      "tier": 4,
+      "prerequisites": [
+        "dm-blast-types",
+        "mus-hemiola"
+      ],
+      "summary": "Hands and feet in different subdivisions.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-contrast",
+      "name": "Contrast as the real technical move",
+      "moduleId": "dm-a-tech",
+      "tier": 3,
+      "prerequisites": [
+        "dm-song-form"
+      ],
+      "summary": "A slow riff after a blast is harder to write than another blast.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-prog-form",
+      "name": "Progressive long form",
+      "moduleId": "dm-a-prog",
+      "tier": 4,
+      "prerequisites": [
+        "dm-riff-form",
+        "dm-prog-hist"
+      ],
+      "summary": "Sections that develop instead of returning on schedule.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-dissonant-comp",
+      "name": "Dissonant composition",
+      "moduleId": "dm-a-prog",
+      "tier": 4,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-dissonant-voicing",
+        "dm-dissonant-hist"
+      ],
+      "summary": "Clash as the material, not the spice.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-atonal-gesture",
+      "name": "Atonal gesture versus atonal system",
+      "moduleId": "dm-a-prog",
+      "tier": 4,
+      "prerequisites": [
+        "dm-dissonant-comp"
+      ],
+      "summary": "A lick that avoids a tonic is not twelve-tone technique.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-metric-mod",
+      "name": "Metric modulation",
+      "moduleId": "dm-a-prog",
+      "tier": 4,
+      "prerequisites": [
+        "dm-odd-meter"
+      ],
+      "summary": "The old subdivision becomes the new pulse.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-motif",
+      "name": "Motivic development in extreme music",
+      "moduleId": "dm-a-prog",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-analysis-method"
+      ],
+      "summary": "The cell comes back altered. That is the piece.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-cliche",
+      "name": "Cliché versus vocabulary",
+      "moduleId": "dm-a-prog",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony"
+      ],
+      "summary": "A diminished run that means something versus one that fills a bar.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-analysis-riff",
+      "name": "Analyzing a riff",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "mus-analysis-method",
+        "dm-riff-cell"
+      ],
+      "summary": "Pitch collection, cell, meter, where it sits in the form.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-analysis-tune",
+      "name": "Analyzing a track",
+      "moduleId": "dm-a-style",
+      "tier": 4,
+      "prerequisites": [
+        "dm-analysis-riff",
+        "dm-song-form"
+      ],
+      "summary": "The whole cut: contrast, density, production, vocal as rhythm.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-compare-scenes",
+      "name": "Comparative scene analysis",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-production-doctrine",
+        "dm-analysis-tune"
+      ],
+      "summary": "Same year, two cities, two answers to the same problem.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-production-listen",
+      "name": "Hearing the production doctrine",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-production-doctrine"
+      ],
+      "summary": "Gate, room, guitar width, kick click — as compositional choices.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-drum-comp",
+      "name": "Drum composition, not drum sport",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-blast-types"
+      ],
+      "summary": "The kit writes form with texture changes.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-bass-role",
+      "name": "Bass as lock, pick, or smear",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony-two-gtr"
+      ],
+      "summary": "Unison with the guitar, a picked counter-line, or a distorted bed.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-arrangement",
+      "name": "Arrangement in a dense mix",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-analysis-tune"
+      ],
+      "summary": "Who drops out so the next riff can be heard.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-influence-map",
+      "name": "Influence as construction",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-compare-scenes"
+      ],
+      "summary": "A borrowed cell, not a borrowed biography.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-live-vs-record",
+      "name": "Live density versus record density",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-production-listen"
+      ],
+      "summary": "What a three-piece can actually play.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-modern-prod",
+      "name": "Modern trigger and edit production",
+      "moduleId": "dm-a-style",
+      "tier": 4,
+      "prerequisites": [
+        "dm-production-listen",
+        "dm-modern-wave"
+      ],
+      "summary": "A grid that can erase the performance or reveal it.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-notation-limit",
+      "name": "Why tablature lies about this music",
+      "moduleId": "dm-a-style",
+      "tier": 3,
+      "prerequisites": [
+        "dm-analysis-riff",
+        "mus-notation"
+      ],
+      "summary": "Tab shows frets. It hides meter, cell, and function.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

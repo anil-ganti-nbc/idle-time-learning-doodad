@@ -1,0 +1,378 @@
+{
+  "id": "semi-litho",
+  "title": "Lithography and Patterning",
+  "categoryId": "semiconductors",
+  "description": "How a pattern becomes a feature: resists, exposure, Rayleigh, DUV, multiple patterning, then EUV as a later light source — not the first word.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    1,
+    5
+  ],
+  "entryRequirements": [
+    "semi-wafer",
+    "semi-planarity"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-6152j",
+      "title": "MIT 6.152J",
+      "url": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Photolithography as a unit process after the wafer exists."
+    },
+    {
+      "id": "asml-optics",
+      "title": "ASML lenses and mirrors",
+      "url": "https://www.asml.com/en/technology/lithography-principles/lenses-and-mirrors",
+      "kind": "vendor",
+      "notes": "Rayleigh, NA, refractive DUV vs reflective EUV."
+    },
+    {
+      "id": "asml-euv",
+      "title": "ASML EUV systems",
+      "url": "https://www.asml.com/en/products/euv-lithography-systems",
+      "kind": "vendor",
+      "notes": "Source, mirrors, vacuum. High-NA is a later platform."
+    }
+  ],
+  "modules": [
+    {
+      "id": "semi-l-basics",
+      "title": "Printing a layer",
+      "blurb": "Mask, resist, exposure, develop.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "semi-litho",
+        "semi-resist"
+      ]
+    },
+    {
+      "id": "semi-l-limits",
+      "title": "What sets resolution",
+      "blurb": "Rayleigh, k1, process window.",
+      "order": 1,
+      "prerequisites": [
+        "semi-l-basics"
+      ],
+      "spineIds": [
+        "semi-rayleigh"
+      ]
+    },
+    {
+      "id": "semi-l-duv",
+      "title": "DUV and tricks that extend it",
+      "blurb": "Immersion, OPC, multiple patterning.",
+      "order": 2,
+      "prerequisites": [
+        "semi-l-limits"
+      ],
+      "spineIds": [
+        "semi-duv",
+        "semi-multi-pattern"
+      ]
+    },
+    {
+      "id": "semi-l-euv",
+      "title": "EUV as a light source",
+      "blurb": "13.5 nm, mirrors, stochastics.",
+      "order": 3,
+      "prerequisites": [
+        "semi-l-duv"
+      ],
+      "spineIds": [
+        "semi-euv",
+        "semi-stochastics"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "semi-litho",
+      "name": "Photolithography",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-wafer"
+      ],
+      "summary": "Projecting patterns into resist to define features.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-resist",
+      "name": "Photoresists",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "A film that changes solubility where the light hit.",
+      "parentId": "semi-litho",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-mask",
+      "name": "Masks and reticles",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "The chrome (or multilayer) original the stepper reduces.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-exposure",
+      "name": "Exposure and develop",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-resist"
+      ],
+      "summary": "Dose as the thing you can miss in either direction.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-alignment",
+      "name": "Alignment marks",
+      "moduleId": "semi-l-basics",
+      "tier": 2,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "How this layer finds the last one.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-rayleigh",
+      "name": "The Rayleigh criterion",
+      "moduleId": "semi-l-limits",
+      "tier": 2,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "Resolution as k1 · λ / NA — three knobs, not one slogan.",
+      "parentId": "semi-litho",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-k1",
+      "name": "The k1 factor",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-rayleigh"
+      ],
+      "summary": "Process and illumination cleverness packed into a dimensionless number.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-process-window",
+      "name": "The process window",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-exposure",
+        "semi-rayleigh"
+      ],
+      "summary": "Focus and dose ranges that still print a legal CD.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-focus-expose",
+      "name": "Focus-exposure matrices",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-process-window"
+      ],
+      "summary": "The bossung plot as a lab object.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-ler",
+      "name": "Line-edge roughness",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-resist"
+      ],
+      "summary": "The wall is not a straight line.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-duv",
+      "name": "Deep ultraviolet lithography",
+      "moduleId": "semi-l-duv",
+      "tier": 2,
+      "prerequisites": [
+        "semi-rayleigh"
+      ],
+      "summary": "248 and 193 nm as the workhorses that still print most layers.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-immersion",
+      "name": "Immersion lithography",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-duv"
+      ],
+      "summary": "Water between lens and wafer to raise NA.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-opc",
+      "name": "Optical proximity correction",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-duv"
+      ],
+      "summary": "Distorting the mask so the wafer looks like the drawing.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-pec",
+      "name": "Proximity and flare",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-opc"
+      ],
+      "summary": "Neighbors and stray light changing the dose you thought you set.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-multi-pattern",
+      "name": "Multiple patterning",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-duv",
+        "semi-etch-plasma"
+      ],
+      "summary": "Splitting one drawn layer across several litho-etch passes.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-pitch-split",
+      "name": "Pitch splitting",
+      "moduleId": "semi-l-duv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-multi-pattern"
+      ],
+      "summary": "Why a 20 nm pitch is not a 20 nm exposure.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-overlay-basics",
+      "name": "Overlay as a lithography budget",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-alignment",
+        "semi-litho"
+      ],
+      "summary": "Layer-to-layer error before anyone says EUV.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-euv",
+      "name": "EUV lithography",
+      "moduleId": "semi-l-euv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "13.5 nm light, mirrors, and why refractive optics die.",
+      "parentId": "semi-litho",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-euv-source",
+      "name": "The EUV source",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "A CO2 laser on tin droplets, tens of thousands of times a second.",
+      "parentId": "semi-euv",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-euv-mirrors",
+      "name": "Multilayer mirrors",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Bragg reflectors because nothing is a lens at 13.5 nm.",
+      "parentId": "semi-euv",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-euv-vacuum",
+      "name": "Vacuum beam path",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Air eats EUV. The whole column is a chamber.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-pellicle",
+      "name": "EUV pellicles",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "A membrane that must protect the mask without eating the photons.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-stochastics",
+      "name": "Stochastic defects",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Photon and photoacid shot noise at EUV doses.",
+      "parentId": "semi-euv",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-na",
+      "name": "Numerical aperture",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "How High-NA EUV buys resolution and spends depth of focus.",
+      "parentId": "semi-euv",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-overlay",
+      "name": "Overlay",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Layer-to-layer alignment as a yield budget, not a slogan.",
+      "parentId": "semi-euv",
+      "estimatedMinutes": 10
+    }
+  ]
+}

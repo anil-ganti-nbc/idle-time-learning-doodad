@@ -18,7 +18,8 @@ import { emptyProgress } from "./srs.ts";
 import type { ConceptProgress } from "./types.ts";
 
 const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
-const course = catalog.courseMap["arch-gpu"];
+const gpuCourse = catalog.courseMap["arch-gpu"];
+const foundations = catalog.courseMap["cpu-foundations"];
 
 function held(id: string, extra: Partial<ConceptProgress> = {}): ConceptProgress {
   return {
@@ -59,9 +60,10 @@ describe("readiness", () => {
     assert.equal(isConceptUnlocked(catalog.conceptMap["gpu-warps"], ctx), false);
     assert.equal(isConceptUnlocked(catalog.conceptMap["gpu-scheduler"], ctx), false);
     assert.equal(isConceptUnlocked(catalog.conceptMap["gpu-occupancy"], ctx), false);
-    const next = frontierConcepts(course, ctx).map((c) => c.id);
+    const next = frontierConcepts(foundations, ctx).map((c) => c.id);
     assert.deepEqual(next.slice(0, 1), ["arch-latency-throughput"]);
-    assert.ok(!next.includes("gpu-scheduler"));
+    assert.ok(!frontierConcepts(gpuCourse, ctx).some((c) => c.id === "gpu-scheduler"));
+    assert.equal(frontierConcepts(gpuCourse, ctx).length, 0);
   });
 
   it("does not let journalist depth bypass conceptual prerequisites", () => {

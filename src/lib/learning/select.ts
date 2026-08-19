@@ -1,10 +1,11 @@
-import { courseForCategory, courseForConcept, courseForRequest, inferTier, lessonsInCourse } from "./curriculum";
+import { courseForCategory, courseForConcept, isCategoryOpenForSelection } from "./curriculum";
 import {
   frontierConcepts,
   isConceptUnlocked,
   isDemonstrated,
   isLessonUnlocked,
   makeReadinessContext,
+  pickCourseForLearner,
   type ReadinessContext,
 } from "./readiness";
 import { isDue } from "./srs";
@@ -79,12 +80,19 @@ export function scoreLesson(
       const frontier = frontierConcepts(course, ctx).map((c) => c.id);
       if (frontier[0] === concept.id) score += 8;
       else if (frontier.includes(concept.id)) score += 5;
-      const tier = inferTier(concept);
+      const tier = inferTierSafe(concept);
       if (req.journalistDepth) score += Math.min(tier, 3);
       else score -= Math.max(0, tier - 2);
     }
   }
   return score;
+}
+
+function inferTierSafe(concept: Concept): import("./types").Tier {
+  if (typeof concept.tier === "number") return concept.tier;
+  if (concept.level === "intro") return 1;
+  if (concept.level === "core") return 2;
+  return 4;
 }
 
 export function pickFromScored<T>(
@@ -151,6 +159,15 @@ function notAvoided(lesson: { conceptId: string }, catalog: Catalog, profile?: L
   return !cat || !profile.avoidTopics.includes(cat);
 }
 
+function allowedByRetirement(
+  lesson: { conceptId: string },
+  catalog: Catalog,
+  req: SessionRequest,
+): boolean {
+  const cat = catalog.conceptMap[lesson.conceptId]?.category;
+  return isCategoryOpenForSelection(catalog, cat, req.category);
+}
+
 function restrictToFrontier(
   pool: import("./types").Lesson[],
   course: Course | undefined,
@@ -168,18 +185,24 @@ function pickSurpriseCourse(
   recentCategories: CategoryId[],
   catalog: Catalog,
   rng: () => number,
+  ctx: ReadinessContext,
 ): { course?: Course; categoryId?: string } {
-  const categories = new Set(
-    ready.map((l) => catalog.conceptMap[l.conceptId]?.category).filter((id): id is string => Boolean(id)),
-  );
-  const buckets: { key: string; categoryId: string; course?: Course; away: boolean }[] = [];
-  for (const categoryId of categories) {
-    const course = courseForCategory(catalog, categoryId);
-    const away = !recentCategories.includes(categoryId);
-    buckets.push({ key: course?.id ?? categoryId, categoryId, course, away });
+  const buckets = new Map<string, { categoryId: string; course?: Course; away: boolean }>();
+  for (const lesson of ready) {
+    const categoryId = catalog.conceptMap[lesson.conceptId]?.category;
+    if (!categoryId) continue;
+    const course = courseForConcept(catalog, lesson.conceptId) ?? pickCourseForLearner(catalog, categoryId, ctx);
+    const key = course?.id ?? categoryId;
+    if (buckets.has(key)) continue;
+    buckets.set(key, {
+      categoryId,
+      course,
+      away: !recentCategories.includes(categoryId),
+    });
   }
-  const preferred = buckets.filter((b) => b.away);
-  const pool = preferred.length ? preferred : buckets;
+  const all = [...buckets.values()];
+  const preferred = all.filter((b) => b.away);
+  const pool = preferred.length ? preferred : all;
   if (pool.length === 0) return {};
   const pick = pool[Math.floor(rng() * pool.length)];
   return { course: pick.course, categoryId: pick.categoryId };
@@ -195,7 +218,11 @@ export function selectLesson(
 ): SelectionResult | null {
   const ctx = ctxOf(catalog, progress, profile, options);
   const fitting = catalog.lessons.filter(
-    (l) => durationFits(l, req.minutes) && inCategory(l, req.category, catalog) && notAvoided(l, catalog, profile),
+    (l) =>
+      durationFits(l, req.minutes) &&
+      inCategory(l, req.category, catalog) &&
+      notAvoided(l, catalog, profile) &&
+      allowedByRetirement(l, catalog, req),
   );
   const ready = fitting.filter((l) => isLessonUnlocked(l, ctx));
   const rng = options.rng ?? Math.random;
@@ -217,10 +244,10 @@ export function selectLesson(
   }
 
   if (req.mode === "surprise") {
-    const targeted = courseForRequest(req, catalog);
+    const targeted = req.category && req.category !== "random" ? pickCourseForLearner(catalog, req.category, ctx) : undefined;
     const bucket = targeted
       ? { course: targeted, categoryId: targeted.categoryId }
-      : pickSurpriseCourse(ready, recentCategories, catalog, rng);
+      : pickSurpriseCourse(ready, recentCategories, catalog, rng, ctx);
     const inBucket = ready.filter((l) => {
       if (bucket.course) return courseForConcept(catalog, l.conceptId)?.id === bucket.course.id;
       if (bucket.categoryId) return catalog.conceptMap[l.conceptId]?.category === bucket.categoryId;
@@ -243,9 +270,13 @@ export function selectLesson(
     };
   }
 
-  const course = courseForRequest(req, catalog);
-  const unseen = ready.filter((l) => !progress[l.conceptId]?.encountered);
-  const positioned = restrictToFrontier(unseen.length ? unseen : ready, course, ctx);
+  const course = pickCourseForLearner(catalog, req.category, ctx) ?? courseForCategory(catalog, req.category);
+  const inCourse = course
+    ? ready.filter((l) => courseForConcept(catalog, l.conceptId)?.id === course.id)
+    : ready;
+  const pool = inCourse.length ? inCourse : ready;
+  const unseen = pool.filter((l) => !progress[l.conceptId]?.encountered);
+  const positioned = restrictToFrontier(unseen.length ? unseen : pool, course, ctx);
   const pick = pickBest(positioned, req, progress, catalog, profile, options, ctx);
   if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile, options, ctx);
   return {
@@ -291,7 +322,7 @@ function fallbackUnready(
   }
   const concept = catalog.conceptMap[blocked.conceptId];
   const missing = (concept?.prerequisites ?? blocked.prerequisites).filter(
-    (id) => !isDemonstrated(id, ctx, inferTier(concept)),
+    (id) => !isDemonstrated(id, ctx, inferTierSafe(concept ?? { id: "", name: "", category: "", prerequisites: [], level: "intro", summary: "" })),
   );
   const candidates = missing.flatMap((id) =>
     lessonsForConcept(catalog, id).filter((l) => durationFits(l, req.minutes) && isLessonUnlocked(l, ctx)),
@@ -319,7 +350,7 @@ export function scoreMissingConcept(
 ): number {
   const ctx = ctxOf(catalog, progress, profile, options);
   let score = 0;
-  const readyPrereqs = concept.prerequisites.filter((id) => isDemonstrated(id, ctx, inferTier(concept)));
+  const readyPrereqs = concept.prerequisites.filter((id) => isDemonstrated(id, ctx, inferTierSafe(concept)));
   score += readyPrereqs.length * 2;
   if (concept.prerequisites.length === 0) score += 1;
 
@@ -336,7 +367,7 @@ export function scoreMissingConcept(
   if (!progress[concept.id]?.encountered) score += 4;
   if (recentCategories.includes(concept.category)) score -= 3;
 
-  const tier = inferTier(concept);
+  const tier = inferTierSafe(concept);
   if (tier <= 1) score += 2;
   if (tier === 2) score += 2;
   if (req.journalistDepth) score += Math.min(tier, 3);
@@ -346,7 +377,7 @@ export function scoreMissingConcept(
   if (course) {
     const frontier = frontierConcepts(course, ctx).map((c) => c.id);
     if (frontier.includes(concept.id)) score += 6;
-    if (tier >= 4 && frontier.every((id) => inferTier(catalog.conceptMap[id]) <= 1)) score -= 20;
+    if (tier >= 4 && frontier.every((id) => inferTierSafe(catalog.conceptMap[id] ?? concept) <= 1)) score -= 20;
   }
 
   const siblings = catalog.concepts.filter(
@@ -378,6 +409,7 @@ export function missingConceptForGeneration(
   const concepts = catalog.concepts.filter((c) => {
     if (req.category && req.category !== "random" && c.category !== req.category) return false;
     if (profile?.avoidTopics.includes(c.category)) return false;
+    if (!isCategoryOpenForSelection(catalog, c.category, req.category)) return false;
     return isConceptUnlocked(c, ctx);
   });
   const withoutFit = concepts.filter((c) => {
@@ -413,8 +445,9 @@ export function nextConcepts(
   const ctx = makeReadinessContext(catalog, progress, profile, courses);
   return catalog.concepts.filter((c) => {
     if (progress[c.id]?.encountered) return false;
+    if (!isCategoryOpenForSelection(catalog, c.category, null)) return false;
     return isConceptUnlocked(c, ctx);
   });
 }
 
-export { lessonsInCourse };
+export { lessonsInCourse } from "./curriculum";

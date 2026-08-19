@@ -1,0 +1,339 @@
+{
+  "id": "horo-foundations",
+  "title": "Mechanical Watch Foundations",
+  "categoryId": "horology",
+  "description": "The whole movement first: power, train, winding, setting. Escapements and complications wait until the simple calibre is thinkable.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "hsny-edu",
+      "title": "HSNY Horology 101–103",
+      "url": "https://hs-ny.org/nyc-education",
+      "kind": "syllabus",
+      "notes": "101 movement mechanics before 102 gear train before 103 winding/setting. Escapement is 104. Complications are not in the beginner ladder."
+    },
+    {
+      "id": "wostep-training",
+      "title": "WOSTEP training and education",
+      "url": "https://www.wostep.ch/index.php/en/training-and-education",
+      "kind": "syllabus",
+      "notes": "Theory and component work before chronometry and chronograph as later specializations."
+    }
+  ],
+  "modules": [
+    {
+      "id": "horo-f-move",
+      "title": "The whole movement",
+      "blurb": "A machine that counts the unwind of a spring.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "horo-movement",
+        "horo-nomenclature"
+      ],
+      "sourceIds": [
+        "hsny-edu"
+      ]
+    },
+    {
+      "id": "horo-f-train",
+      "title": "Power and the going train",
+      "blurb": "Barrel, wheels, ratios.",
+      "order": 1,
+      "prerequisites": [
+        "horo-f-move"
+      ],
+      "spineIds": [
+        "horo-gear-train",
+        "horo-mainspring"
+      ]
+    },
+    {
+      "id": "horo-f-set",
+      "title": "Winding and setting",
+      "blurb": "How energy gets in and how the hands get moved.",
+      "order": 2,
+      "prerequisites": [
+        "horo-f-train"
+      ],
+      "spineIds": [
+        "horo-winding",
+        "horo-setting"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "horo-movement",
+      "name": "A mechanical watch as a machine",
+      "moduleId": "horo-f-move",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Stored work, a train, an escapement, a display.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-nomenclature",
+      "name": "Naming the parts",
+      "moduleId": "horo-f-move",
+      "tier": 0,
+      "prerequisites": [
+        "horo-movement"
+      ],
+      "summary": "Plate, bridge, wheel, pinion, jewel — the words the rest of the course uses.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-tools-intro",
+      "name": "The bench",
+      "moduleId": "horo-f-move",
+      "tier": 0,
+      "prerequisites": [
+        "horo-movement"
+      ],
+      "summary": "A movement holder and the discipline of not losing a screw.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-bridges",
+      "name": "Plates and bridges",
+      "moduleId": "horo-f-move",
+      "tier": 1,
+      "prerequisites": [
+        "horo-nomenclature"
+      ],
+      "summary": "The frame everything else is located in.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-jewels",
+      "name": "Jewels as bearings",
+      "moduleId": "horo-f-move",
+      "tier": 1,
+      "prerequisites": [
+        "horo-nomenclature"
+      ],
+      "summary": "Hard, polished holes that reduce friction.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-disassembly",
+      "name": "Taking down a simple movement",
+      "moduleId": "horo-f-move",
+      "tier": 1,
+      "prerequisites": [
+        "horo-tools-intro",
+        "horo-bridges"
+      ],
+      "summary": "Order matters. So does putting it back.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-hands",
+      "name": "Hands as a display",
+      "moduleId": "horo-f-move",
+      "tier": 1,
+      "prerequisites": [
+        "horo-movement"
+      ],
+      "summary": "The hands are not the timebase.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-mainspring",
+      "name": "The mainspring",
+      "moduleId": "horo-f-train",
+      "tier": 0,
+      "prerequisites": [
+        "horo-movement"
+      ],
+      "summary": "A spiral of steel that stores work.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-barrel",
+      "name": "The barrel",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-mainspring"
+      ],
+      "summary": "The drum that holds the spring and drives the first wheel.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-gear-train",
+      "name": "The going train",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-barrel"
+      ],
+      "summary": "A reduction from the barrel to the escape wheel.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-wheel-pinion",
+      "name": "Wheels and pinions",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-gear-train"
+      ],
+      "summary": "A large wheel driving a small pinion, over and over.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-ratio",
+      "name": "Gear ratios and beat",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-wheel-pinion"
+      ],
+      "summary": "Tooth counts decide how often the escapement ticks.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-train-math",
+      "name": "Tooth counts as a calculation",
+      "moduleId": "horo-f-train",
+      "tier": 2,
+      "prerequisites": [
+        "horo-ratio"
+      ],
+      "summary": "Why 18,000 and 28,800 are not slogans.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-beat-rate",
+      "name": "Beat rate",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-ratio"
+      ],
+      "summary": "Beats per hour as the movement's clock.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-power-reserve",
+      "name": "Power reserve",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-mainspring"
+      ],
+      "summary": "How long the spring can run the train.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-click",
+      "name": "Click and ratchet",
+      "moduleId": "horo-f-train",
+      "tier": 1,
+      "prerequisites": [
+        "horo-barrel"
+      ],
+      "summary": "The one-way that keeps the spring from unwinding through the crown.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-winding",
+      "name": "Winding",
+      "moduleId": "horo-f-set",
+      "tier": 1,
+      "prerequisites": [
+        "horo-click"
+      ],
+      "summary": "Putting work back into the spring.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-stem",
+      "name": "Stem and crown",
+      "moduleId": "horo-f-set",
+      "tier": 1,
+      "prerequisites": [
+        "horo-winding"
+      ],
+      "summary": "The shaft the wearer actually turns.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-setting",
+      "name": "Setting the hands",
+      "moduleId": "horo-f-set",
+      "tier": 1,
+      "prerequisites": [
+        "horo-hands",
+        "horo-stem"
+      ],
+      "summary": "Decoupling the display from the timebase.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-keyless",
+      "name": "Keyless works",
+      "moduleId": "horo-f-set",
+      "tier": 2,
+      "prerequisites": [
+        "horo-setting",
+        "horo-winding"
+      ],
+      "summary": "The clutch that chooses wind versus set.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-cannon",
+      "name": "Cannon pinion and motion works",
+      "moduleId": "horo-f-set",
+      "tier": 1,
+      "prerequisites": [
+        "horo-setting"
+      ],
+      "summary": "Hour and minute as a 12:1 reduction.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-dial-train",
+      "name": "Motion works versus going train",
+      "moduleId": "horo-f-set",
+      "tier": 1,
+      "prerequisites": [
+        "horo-cannon",
+        "horo-gear-train"
+      ],
+      "summary": "Two trains, two jobs.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-lubrication",
+      "name": "Lubrication",
+      "moduleId": "horo-f-set",
+      "tier": 2,
+      "prerequisites": [
+        "horo-jewels"
+      ],
+      "summary": "The right oil in the right place, and nowhere else.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-endshake",
+      "name": "Endshake and freedom",
+      "moduleId": "horo-f-set",
+      "tier": 2,
+      "prerequisites": [
+        "horo-jewels"
+      ],
+      "summary": "A pivot that must move, but not rattle.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

@@ -1,0 +1,363 @@
+{
+  "id": "ml-transformers",
+  "title": "Transformers, LLMs, and Modern AI Systems",
+  "categoryId": "ml",
+  "description": "Attention, the transformer, pretraining, and the systems around a large model. LLMs are a destination, not lesson one.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    3,
+    5
+  ],
+  "entryRequirements": [
+    "ml-backprop",
+    "ml-emb-intro",
+    "ml-seq-rnn"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs224n",
+      "title": "Stanford CS224N Natural Language Processing with Deep Learning",
+      "url": "https://web.stanford.edu/class/cs224n/",
+      "kind": "syllabus",
+      "notes": "Even when the calendar compresses RNNs, attention is taught as a solution to sequence-model limits. Pretraining, then adaptation, then RAG/tools/evaluation. Assumes CS229-level foundations."
+    }
+  ],
+  "modules": [
+    {
+      "id": "ml-t-attn",
+      "title": "Attention",
+      "blurb": "Content-addressable lookup over a sequence.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "ml-attention",
+        "ml-self-attn"
+      ]
+    },
+    {
+      "id": "ml-t-arch",
+      "title": "The transformer",
+      "blurb": "Blocks, positions, and decoder-only language models.",
+      "order": 1,
+      "prerequisites": [
+        "ml-t-attn"
+      ],
+      "spineIds": [
+        "ml-transformer"
+      ]
+    },
+    {
+      "id": "ml-t-pre",
+      "title": "Pretraining and adaptation",
+      "blurb": "Scale, objectives, fine-tuning, prompts.",
+      "order": 2,
+      "prerequisites": [
+        "ml-t-arch"
+      ],
+      "spineIds": [
+        "ml-pretrain",
+        "ml-finetune"
+      ]
+    },
+    {
+      "id": "ml-t-sys",
+      "title": "Systems around the model",
+      "blurb": "Inference, context, retrieval, tools, failure.",
+      "order": 3,
+      "prerequisites": [
+        "ml-t-pre"
+      ],
+      "spineIds": [
+        "ml-inference",
+        "ml-rag",
+        "ml-failure"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "ml-seq-problem",
+      "name": "Sequence transduction",
+      "moduleId": "ml-t-attn",
+      "tier": 3,
+      "prerequisites": [
+        "ml-seq-rnn"
+      ],
+      "summary": "Map one sequence onto another without a fixed window.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-tokenizer",
+      "name": "Tokenization",
+      "moduleId": "ml-t-attn",
+      "tier": 3,
+      "prerequisites": [
+        "ml-emb-intro"
+      ],
+      "summary": "The discrete units a model actually sees.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-attention",
+      "name": "Attention",
+      "moduleId": "ml-t-attn",
+      "tier": 3,
+      "prerequisites": [
+        "ml-backprop",
+        "ml-seq-problem"
+      ],
+      "summary": "QKV as a content-addressable lookup, and why it scales.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-qkv",
+      "name": "Queries, keys, and values",
+      "moduleId": "ml-t-attn",
+      "tier": 3,
+      "prerequisites": [
+        "ml-attention"
+      ],
+      "summary": "Three roles for the same tokens.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-self-attn",
+      "name": "Self-attention",
+      "moduleId": "ml-t-attn",
+      "tier": 3,
+      "prerequisites": [
+        "ml-qkv"
+      ],
+      "summary": "Every position looking at every other position in the same sequence.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-multihead",
+      "name": "Multi-head attention",
+      "moduleId": "ml-t-attn",
+      "tier": 4,
+      "prerequisites": [
+        "ml-self-attn"
+      ],
+      "summary": "Several lookups in parallel, each free to specialize.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-positional",
+      "name": "Positional information",
+      "moduleId": "ml-t-arch",
+      "tier": 3,
+      "prerequisites": [
+        "ml-self-attn"
+      ],
+      "summary": "Attention has no order unless you give it one.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-transformer",
+      "name": "The transformer block",
+      "moduleId": "ml-t-arch",
+      "tier": 4,
+      "prerequisites": [
+        "ml-multihead",
+        "ml-positional"
+      ],
+      "summary": "Attention, residual, normalization, feed-forward — stacked.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-encoder-decoder",
+      "name": "Encoder, decoder, decoder-only",
+      "moduleId": "ml-t-arch",
+      "tier": 4,
+      "prerequisites": [
+        "ml-transformer"
+      ],
+      "summary": "Three layouts for three jobs.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-lm-obj",
+      "name": "Language-model objectives",
+      "moduleId": "ml-t-arch",
+      "tier": 4,
+      "prerequisites": [
+        "ml-encoder-decoder",
+        "ml-ce-loss"
+      ],
+      "summary": "Next-token prediction as the pretraining game.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-pretrain",
+      "name": "Pretraining",
+      "moduleId": "ml-t-pre",
+      "tier": 4,
+      "prerequisites": [
+        "ml-lm-obj"
+      ],
+      "summary": "A lot of unlabeled text, one objective, a representation you will reuse.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-scale",
+      "name": "Scale as a design choice",
+      "moduleId": "ml-t-pre",
+      "tier": 4,
+      "prerequisites": [
+        "ml-pretrain"
+      ],
+      "summary": "Parameters, data, and compute as coupled knobs.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-finetune",
+      "name": "Fine-tuning",
+      "moduleId": "ml-t-pre",
+      "tier": 4,
+      "prerequisites": [
+        "ml-pretrain",
+        "ml-transfer"
+      ],
+      "summary": "Continuing training on a narrower distribution.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-peft",
+      "name": "Parameter-efficient adaptation",
+      "moduleId": "ml-t-pre",
+      "tier": 4,
+      "prerequisites": [
+        "ml-finetune"
+      ],
+      "summary": "Changing a small adapter instead of every weight.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-prompt",
+      "name": "Prompting",
+      "moduleId": "ml-t-pre",
+      "tier": 4,
+      "prerequisites": [
+        "ml-lm-obj"
+      ],
+      "summary": "Inference-time control written in the model's own language.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-align",
+      "name": "Preference tuning",
+      "moduleId": "ml-t-pre",
+      "tier": 5,
+      "prerequisites": [
+        "ml-finetune"
+      ],
+      "summary": "SFT, then a preference signal, then the arguments about reward.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-inference",
+      "name": "Inference versus training",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-transformer"
+      ],
+      "summary": "The forward pass you serve, without the backward pass you trained.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-context",
+      "name": "Context windows",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-inference",
+        "ml-positional"
+      ],
+      "summary": "How much past the model can attend to, and what that costs.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-kv-cache",
+      "name": "The KV cache",
+      "moduleId": "ml-t-sys",
+      "tier": 5,
+      "prerequisites": [
+        "ml-context",
+        "ml-inference"
+      ],
+      "summary": "Remembering keys and values so you do not recompute the past.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-rag",
+      "name": "Retrieval-augmented generation",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-prompt",
+        "ml-emb-intro"
+      ],
+      "summary": "Looking something up instead of hoping the weights remember.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-tools",
+      "name": "Tool use and agents",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-prompt"
+      ],
+      "summary": "A model that calls a tool, reads the result, and continues.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-eval-llm",
+      "name": "Evaluating generative models",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-inference"
+      ],
+      "summary": "Benchmarks, contamination, and the thing a leaderboard cannot see.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-failure",
+      "name": "Failure modes",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-eval-llm"
+      ],
+      "summary": "What breaks: reasoning, attribution, calibration, incentives.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-hallucination",
+      "name": "Hallucination as calibration",
+      "moduleId": "ml-t-sys",
+      "tier": 4,
+      "prerequisites": [
+        "ml-failure"
+      ],
+      "summary": "A fluent continuation that is not a retrieved fact.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-sparsity-attn",
+      "name": "Sparse and linear attention bets",
+      "moduleId": "ml-t-sys",
+      "tier": 5,
+      "prerequisites": [
+        "ml-self-attn",
+        "ml-context"
+      ],
+      "summary": "Not every pair of tokens has to meet.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

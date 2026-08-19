@@ -1,0 +1,340 @@
+{
+  "id": "semi-leading",
+  "title": "Modern Leading-Edge Manufacturing",
+  "categoryId": "semiconductors",
+  "description": "After the unit processes and EUV exist: High-NA, stochastics as a limiter, advanced devices, packaging, and the scaling constraints a reporter actually meets.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    3,
+    5
+  ],
+  "entryRequirements": [
+    "semi-euv",
+    "semi-integration",
+    "semi-na"
+  ],
+  "sourceReferences": [
+    {
+      "id": "asml-euv",
+      "title": "ASML EUV lithography systems",
+      "url": "https://www.asml.com/en/products/euv-lithography-systems",
+      "kind": "vendor",
+      "notes": "NXE 0.33 vs EXE 0.55. High-NA after EUV is already thinkable."
+    },
+    {
+      "id": "asml-optics",
+      "title": "ASML lithography principles",
+      "url": "https://www.asml.com/en/technology/lithography-principles/lenses-and-mirrors",
+      "kind": "vendor",
+      "notes": "NA is not a score. Wavelength travels with it."
+    }
+  ],
+  "modules": [
+    {
+      "id": "semi-a-highna",
+      "title": "High-NA as a platform",
+      "blurb": "0.55, anamorphic optics, new masks.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "semi-high-na"
+      ]
+    },
+    {
+      "id": "semi-a-limit",
+      "title": "What still kills yield",
+      "blurb": "Stochastics, overlay budgets, defectivity.",
+      "order": 1,
+      "prerequisites": [
+        "semi-a-highna"
+      ],
+      "spineIds": [
+        "semi-stochastic-limit",
+        "semi-defectivity"
+      ]
+    },
+    {
+      "id": "semi-a-device",
+      "title": "Devices after planar",
+      "blurb": "Fins, gates-all-around, backside power.",
+      "order": 2,
+      "prerequisites": [
+        "semi-a-limit"
+      ],
+      "spineIds": [
+        "semi-finfet"
+      ]
+    },
+    {
+      "id": "semi-a-pack",
+      "title": "When the die is not the product",
+      "blurb": "Chiplets, HBM, advanced packaging.",
+      "order": 3,
+      "prerequisites": [
+        "semi-a-device"
+      ],
+      "spineIds": [
+        "semi-chiplets",
+        "semi-scaling-wall"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "semi-high-na",
+      "name": "High-NA EUV",
+      "moduleId": "semi-a-highna",
+      "tier": 5,
+      "prerequisites": [
+        "semi-na"
+      ],
+      "summary": "0.55 NA as a new scanner family, not a bigger number on the same tool.",
+      "parentId": "semi-na",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-high-na-optics",
+      "name": "Anamorphic High-NA optics",
+      "moduleId": "semi-a-highna",
+      "tier": 5,
+      "prerequisites": [
+        "semi-high-na",
+        "semi-euv-mirrors"
+      ],
+      "summary": "Different demagnification in X and Y so the mask stays printable.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-high-na-mask",
+      "name": "High-NA mask 3D effects",
+      "moduleId": "semi-a-highna",
+      "tier": 5,
+      "prerequisites": [
+        "semi-high-na",
+        "semi-mask"
+      ],
+      "summary": "The absorber has thickness. At these angles that matters.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-high-na-process",
+      "name": "High-NA process implications",
+      "moduleId": "semi-a-highna",
+      "tier": 5,
+      "prerequisites": [
+        "semi-high-na",
+        "semi-process-window"
+      ],
+      "summary": "Smaller depth of focus, new resists, new inspection.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-mask-3d",
+      "name": "Mask 3D effects",
+      "moduleId": "semi-a-highna",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv-mirrors",
+        "semi-mask"
+      ],
+      "summary": "A '2D' pattern sitting on a multilayer is not 2D to the light.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-anamorphic",
+      "name": "Anamorphic imaging",
+      "moduleId": "semi-a-highna",
+      "tier": 5,
+      "prerequisites": [
+        "semi-high-na-optics"
+      ],
+      "summary": "Why the reticle field is no longer a simple 4× shrink in both axes.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-stochastic-limit",
+      "name": "Stochastics as a scaling wall",
+      "moduleId": "semi-a-limit",
+      "tier": 5,
+      "prerequisites": [
+        "semi-stochastics",
+        "semi-na"
+      ],
+      "summary": "More NA does not buy you photons.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-defectivity",
+      "name": "Leading-edge defectivity",
+      "moduleId": "semi-a-limit",
+      "tier": 4,
+      "prerequisites": [
+        "semi-defect-class",
+        "semi-euv"
+      ],
+      "summary": "What a killer defect looks like when the CD is a handful of nanometers.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-overlay-budget",
+      "name": "Overlay at the leading edge",
+      "moduleId": "semi-a-limit",
+      "tier": 4,
+      "prerequisites": [
+        "semi-overlay",
+        "semi-multi-pattern"
+      ],
+      "summary": "Error budgets measured in fractions of a nanometer.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-euv-throughput",
+      "name": "EUV throughput and dose",
+      "moduleId": "semi-a-limit",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv-source",
+        "semi-stochastics"
+      ],
+      "summary": "Source power versus the dose stochastics demand.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-yield-model",
+      "name": "Yield models",
+      "moduleId": "semi-a-limit",
+      "tier": 4,
+      "prerequisites": [
+        "semi-yield-intro"
+      ],
+      "summary": "Poisson and beyond: why die size and defect density fight.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-finfet",
+      "name": "FinFETs",
+      "moduleId": "semi-a-device",
+      "tier": 4,
+      "prerequisites": [
+        "semi-gate-stack",
+        "semi-integration"
+      ],
+      "summary": "A channel you wrap, not a plane you sit on.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-gag",
+      "name": "Gate-all-around",
+      "moduleId": "semi-a-device",
+      "tier": 5,
+      "prerequisites": [
+        "semi-finfet"
+      ],
+      "summary": "Nanosheets as the fin's successor.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-cfet",
+      "name": "CFETs",
+      "moduleId": "semi-a-device",
+      "tier": 5,
+      "prerequisites": [
+        "semi-gag"
+      ],
+      "summary": "Stacking n and p to keep scaling the inverter.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-backside-power",
+      "name": "Backside power delivery",
+      "moduleId": "semi-a-device",
+      "tier": 5,
+      "prerequisites": [
+        "semi-metals",
+        "semi-integration"
+      ],
+      "summary": "Power vias from the other face so signal wiring can breathe.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-dtco",
+      "name": "Design-technology co-optimization",
+      "moduleId": "semi-a-device",
+      "tier": 4,
+      "prerequisites": [
+        "semi-integration"
+      ],
+      "summary": "The standard cell and the process invent each other.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-chiplets",
+      "name": "Chiplets",
+      "moduleId": "semi-a-pack",
+      "tier": 4,
+      "prerequisites": [
+        "semi-yield-model"
+      ],
+      "summary": "Yielding small die and assembling the product.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-hbm-stack",
+      "name": "HBM stacking",
+      "moduleId": "semi-a-pack",
+      "tier": 4,
+      "prerequisites": [
+        "semi-chiplets"
+      ],
+      "summary": "Memory cubes next to compute, with a thermal bill.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-advanced-packaging",
+      "name": "Advanced packaging",
+      "moduleId": "semi-a-pack",
+      "tier": 4,
+      "prerequisites": [
+        "semi-chiplets"
+      ],
+      "summary": "Interposers, bridges, and the factory after the fab.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-multi-beam",
+      "name": "Multi-beam inspection and write",
+      "moduleId": "semi-a-pack",
+      "tier": 5,
+      "prerequisites": [
+        "semi-metrology"
+      ],
+      "summary": "When a single beam cannot visit every feature in time.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-cost-per-wafer",
+      "name": "Cost per wafer",
+      "moduleId": "semi-a-pack",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv-throughput",
+        "semi-yield-model"
+      ],
+      "summary": "A scanner is a factory. Depreciation shows up in the die.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "semi-scaling-wall",
+      "name": "Scaling constraints",
+      "moduleId": "semi-a-pack",
+      "tier": 5,
+      "prerequisites": [
+        "semi-stochastic-limit",
+        "semi-cost-per-wafer"
+      ],
+      "summary": "Cost, heat, stochastics, and the fact that λ already jumped.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

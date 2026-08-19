@@ -1,0 +1,321 @@
+{
+  "id": "ml-neural",
+  "title": "Neural Networks",
+  "categoryId": "ml",
+  "description": "From a neuron to a trained net: nonlinearities, backpropagation, representations, and why sequence models forget. Attention is the next course.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "ml-gd",
+    "ml-loss",
+    "ml-overfit"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs229",
+      "title": "Stanford CS229",
+      "url": "https://cs229.stanford.edu/syllabus-new.html",
+      "kind": "syllabus",
+      "notes": "Neural nets after linear models and generalization. Training is a separate lecture from the architecture."
+    },
+    {
+      "id": "stanford-cs224n",
+      "title": "Stanford CS224N",
+      "url": "https://web.stanford.edu/class/cs224n/",
+      "kind": "syllabus",
+      "notes": "Embeddings and RNNs before attention, even in years that compress the calendar. Assumes ML foundations."
+    }
+  ],
+  "modules": [
+    {
+      "id": "ml-n-net",
+      "title": "Networks",
+      "blurb": "Neurons, depth, and a nonlinearity.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "ml-mlp",
+        "ml-activation"
+      ]
+    },
+    {
+      "id": "ml-n-train",
+      "title": "Training nets",
+      "blurb": "Backprop, initialization, and the ways training dies.",
+      "order": 1,
+      "prerequisites": [
+        "ml-n-net"
+      ],
+      "spineIds": [
+        "ml-backprop"
+      ]
+    },
+    {
+      "id": "ml-n-rep",
+      "title": "Representations",
+      "blurb": "Embeddings, convolutions, and sequences before attention.",
+      "order": 2,
+      "prerequisites": [
+        "ml-n-train"
+      ],
+      "spineIds": [
+        "ml-emb-intro",
+        "ml-seq-rnn"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "ml-neuron",
+      "name": "The artificial neuron",
+      "moduleId": "ml-n-net",
+      "tier": 2,
+      "prerequisites": [
+        "ml-logistic"
+      ],
+      "summary": "A weighted sum, a bias, and a nonlinearity.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-activation",
+      "name": "Nonlinearities",
+      "moduleId": "ml-n-net",
+      "tier": 2,
+      "prerequisites": [
+        "ml-neuron"
+      ],
+      "summary": "Without one, a stack of layers is still a line.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-mlp",
+      "name": "Multilayer perceptrons",
+      "moduleId": "ml-n-net",
+      "tier": 2,
+      "prerequisites": [
+        "ml-activation"
+      ],
+      "summary": "Layers of neurons, each a function of the last.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-softmax",
+      "name": "Softmax",
+      "moduleId": "ml-n-net",
+      "tier": 2,
+      "prerequisites": [
+        "ml-logistic"
+      ],
+      "summary": "Turning scores into a distribution over classes.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-ce-loss",
+      "name": "Cross-entropy",
+      "moduleId": "ml-n-net",
+      "tier": 2,
+      "prerequisites": [
+        "ml-softmax",
+        "ml-loss"
+      ],
+      "summary": "The usual loss when the output is a distribution.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-depth",
+      "name": "Why depth",
+      "moduleId": "ml-n-net",
+      "tier": 3,
+      "prerequisites": [
+        "ml-mlp"
+      ],
+      "summary": "Composition of simple functions instead of one wide shallow map.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-backprop",
+      "name": "Backpropagation",
+      "moduleId": "ml-n-train",
+      "tier": 2,
+      "prerequisites": [
+        "ml-gd",
+        "ml-mlp"
+      ],
+      "summary": "Reverse-mode autodiff, not a separate algorithm from calculus.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-autodiff",
+      "name": "Reverse-mode autodiff",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-backprop"
+      ],
+      "summary": "One backward pass gives every partial you need.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-init",
+      "name": "Initialization",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-backprop"
+      ],
+      "summary": "Where the weights start decides whether gradients survive.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-vanishing",
+      "name": "Vanishing and exploding gradients",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-backprop",
+        "ml-depth"
+      ],
+      "summary": "A product of many derivatives that goes to zero or infinity.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-sgd-mom",
+      "name": "Momentum and adaptive methods",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-gd-variants"
+      ],
+      "summary": "Remembering recent slopes, scaling per-parameter.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-batchnorm",
+      "name": "Normalization layers",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-mlp"
+      ],
+      "summary": "Re-centering activations so the next layer sees a stable input.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-dropout",
+      "name": "Dropout",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-overfit"
+      ],
+      "summary": "Training as an ensemble of thinned nets.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-overparam",
+      "name": "Overparameterization",
+      "moduleId": "ml-n-train",
+      "tier": 3,
+      "prerequisites": [
+        "ml-capacity",
+        "ml-mlp"
+      ],
+      "summary": "More parameters than data points — and it can still generalize.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-inductive",
+      "name": "Inductive bias",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-hypothesis"
+      ],
+      "summary": "What the architecture refuses to represent.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-cnn",
+      "name": "Convolutions",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-mlp",
+        "ml-inductive"
+      ],
+      "summary": "Weight sharing across space because the world repeats.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-emb-intro",
+      "name": "Embeddings",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-mlp"
+      ],
+      "summary": "A learned lookup from a discrete symbol to a vector.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-repr",
+      "name": "Learned representations",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-emb-intro"
+      ],
+      "summary": "Features the model invented instead of features you wrote.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-word2vec",
+      "name": "Distributional embeddings",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-emb-intro"
+      ],
+      "summary": "You shall know a word by the company it keeps.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-seq-rnn",
+      "name": "Recurrent sequence models",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-mlp"
+      ],
+      "summary": "A hidden state that walks the sequence.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-vanish-seq",
+      "name": "Why RNNs forget",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-seq-rnn",
+        "ml-vanishing"
+      ],
+      "summary": "The same vanishing product, now across time.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-transfer",
+      "name": "Transfer learning, first look",
+      "moduleId": "ml-n-rep",
+      "tier": 3,
+      "prerequisites": [
+        "ml-repr"
+      ],
+      "summary": "Reuse a representation trained on a different job.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

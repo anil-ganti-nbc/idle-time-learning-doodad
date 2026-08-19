@@ -13,6 +13,7 @@ export interface QuizPromptContext {
   prerequisites: { id: string; name: string }[];
   demonstrated: { id: string; name: string }[];
   weak: { id: string; name: string }[];
+  objectives?: string[];
 }
 
 export interface LessonPromptInput {
@@ -122,6 +123,7 @@ export function quizUserPrompt(lesson: Lesson, ctx?: QuizPromptContext) {
     ctx?.demonstrated.length
       ? `Already demonstrated (questions may use these): ${ctx.demonstrated.map((p) => p.name).join(", ")}`
       : "",
+    ctx?.objectives?.length ? `Learning objectives: ${ctx.objectives.join("; ")}` : "",
     ctx?.weak.length ? `Previously weak: ${ctx.weak.map((p) => p.name).join(", ")}` : "",
     `Title: ${lesson.title}`,
     lesson.explanation.join("\n\n"),

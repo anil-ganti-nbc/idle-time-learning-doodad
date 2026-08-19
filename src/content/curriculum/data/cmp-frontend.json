@@ -1,0 +1,302 @@
+{
+  "id": "cmp-frontend",
+  "title": "Compiler Front-End",
+  "categoryId": "compilers",
+  "description": "From characters to a typed tree: lexing, parsing, names, and the errors a compiler owes the human.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    3
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs143",
+      "title": "Stanford CS143 Compilers",
+      "url": "https://web.stanford.edu/class/cs143/",
+      "kind": "syllabus",
+      "notes": "Lex, parse, semantic analysis as the first project phases. Optimization waits."
+    }
+  ],
+  "modules": [
+    {
+      "id": "cmp-fe-lex",
+      "title": "Lexical analysis",
+      "blurb": "Characters into tokens.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "cmp-front"
+      ]
+    },
+    {
+      "id": "cmp-fe-parse",
+      "title": "Parsing",
+      "blurb": "Tokens into a tree.",
+      "order": 1,
+      "prerequisites": [
+        "cmp-fe-lex"
+      ],
+      "spineIds": [
+        "cmp-cfg",
+        "cmp-ast"
+      ]
+    },
+    {
+      "id": "cmp-fe-sem",
+      "title": "Names and types",
+      "blurb": "The tree becomes honest.",
+      "order": 2,
+      "prerequisites": [
+        "cmp-fe-parse"
+      ],
+      "spineIds": [
+        "cmp-typecheck"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "cmp-front",
+      "name": "Lexing and parsing",
+      "moduleId": "cmp-fe-lex",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Turning characters into a tree the rest of the compiler can hate.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-token",
+      "name": "Tokens",
+      "moduleId": "cmp-fe-lex",
+      "tier": 1,
+      "prerequisites": [
+        "cmp-front"
+      ],
+      "summary": "The words of a programming language.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-regex-lex",
+      "name": "Regular lexers",
+      "moduleId": "cmp-fe-lex",
+      "tier": 1,
+      "prerequisites": [
+        "cmp-token"
+      ],
+      "summary": "Why identifiers are regular and expressions are not.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-source-loc",
+      "name": "Source locations",
+      "moduleId": "cmp-fe-lex",
+      "tier": 1,
+      "prerequisites": [
+        "cmp-token"
+      ],
+      "summary": "Every diagnostic needs a span.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-preproc",
+      "name": "Preprocessing",
+      "moduleId": "cmp-fe-lex",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-token"
+      ],
+      "summary": "A language before the language.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-macro",
+      "name": "Macros",
+      "moduleId": "cmp-fe-lex",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-preproc"
+      ],
+      "summary": "Expansion that later phases must still explain.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-cfg",
+      "name": "Context-free grammars",
+      "moduleId": "cmp-fe-parse",
+      "tier": 1,
+      "prerequisites": [
+        "cmp-front"
+      ],
+      "summary": "Recursive structure you can write down.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-parse-tree",
+      "name": "Parse trees",
+      "moduleId": "cmp-fe-parse",
+      "tier": 1,
+      "prerequisites": [
+        "cmp-cfg"
+      ],
+      "summary": "The derivation, including the punctuation.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-ast",
+      "name": "Abstract syntax trees",
+      "moduleId": "cmp-fe-parse",
+      "tier": 1,
+      "prerequisites": [
+        "cmp-parse-tree"
+      ],
+      "summary": "The tree you actually want to typecheck.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-recursive-descent",
+      "name": "Recursive descent",
+      "moduleId": "cmp-fe-parse",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-cfg"
+      ],
+      "summary": "One function per nonterminal.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-lr",
+      "name": "Bottom-up parsing",
+      "moduleId": "cmp-fe-parse",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-cfg"
+      ],
+      "summary": "Shift and reduce, and the tables that drive them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-ambiguity",
+      "name": "Ambiguity",
+      "moduleId": "cmp-fe-parse",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-cfg"
+      ],
+      "summary": "Two trees for one string.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-grammar-class",
+      "name": "LL versus LR",
+      "moduleId": "cmp-fe-parse",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-recursive-descent",
+        "cmp-lr"
+      ],
+      "summary": "What each algorithm will not swallow.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-semantic-action",
+      "name": "Semantic actions",
+      "moduleId": "cmp-fe-parse",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-ast"
+      ],
+      "summary": "Building values while you parse.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-error-recovery",
+      "name": "Parse error recovery",
+      "moduleId": "cmp-fe-parse",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-recursive-descent"
+      ],
+      "summary": "Reporting more than the first mistake.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-symbol-table",
+      "name": "Symbol tables",
+      "moduleId": "cmp-fe-sem",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-ast"
+      ],
+      "summary": "A map from names to meanings, stacked by scope.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-scope",
+      "name": "Scope",
+      "moduleId": "cmp-fe-sem",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-symbol-table"
+      ],
+      "summary": "Where a name is visible.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-name-resolve",
+      "name": "Name resolution",
+      "moduleId": "cmp-fe-sem",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-scope"
+      ],
+      "summary": "Which declaration this use refers to.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-typecheck",
+      "name": "Type checking",
+      "moduleId": "cmp-fe-sem",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-name-resolve"
+      ],
+      "summary": "Rejecting trees that cannot mean anything.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-overload",
+      "name": "Overload resolution",
+      "moduleId": "cmp-fe-sem",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-typecheck"
+      ],
+      "summary": "Picking which f this f is.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-visitor",
+      "name": "Walking the tree",
+      "moduleId": "cmp-fe-sem",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-ast"
+      ],
+      "summary": "Visitors and the passes that share them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-ir-lower-intro",
+      "name": "Lowering, first look",
+      "moduleId": "cmp-fe-sem",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-typecheck"
+      ],
+      "summary": "The typed tree is not yet something you can allocate registers for.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

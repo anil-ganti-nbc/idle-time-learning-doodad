@@ -8,14 +8,15 @@ import { generateLesson } from "@/lib/ai/client";
 import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { startLive, getLive, generationsAfterStart } from "@/lib/learning/live";
-import { courseForCategory, inferTier } from "@/lib/learning/curriculum";
+import { coursesForCategory, inferTier } from "@/lib/learning/curriculum";
 import { declareKnown, pickPlacementItems, scorePlacement } from "@/lib/learning/placement";
 import { useProgress } from "@/lib/learning/progress";
 import { quizContextForConcept } from "@/lib/learning/quiz-context";
-import { frontierConcepts, makeReadinessContext } from "@/lib/learning/readiness";
+import { frontierConcepts, makeReadinessContext, pickCourseForLearner } from "@/lib/learning/readiness";
 import { missingConceptForGeneration, selectLesson } from "@/lib/learning/select";
 import { conceptState } from "@/lib/learning/state";
 import type { CategoryId, Effort, Mode, TimeBudget } from "@/lib/learning/types";
+import { isSelectableCategory } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 import { cn } from "@/lib/utils";
 
@@ -120,9 +121,12 @@ function SessionReady() {
     [minutes, category, effort, mode, settings.journalistDepth, progress, recent, catalog, profile, courseRows],
   );
 
-  const activeCourse = category && category !== "random" ? courseForCategory(catalog, category) : undefined;
-  const courseState = activeCourse ? courseRows[activeCourse.id] : undefined;
   const readiness = makeReadinessContext(catalog, progress, profile, courseRows);
+  const activeCourse =
+    category && category !== "random"
+      ? pickCourseForLearner(catalog, category, readiness) ?? coursesForCategory(catalog, category)[0]
+      : undefined;
+  const courseState = activeCourse ? courseRows[activeCourse.id] : undefined;
   const nextInCourse = activeCourse ? frontierConcepts(activeCourse, readiness)[0] : undefined;
   const placementItems = useMemo(
     () => (activeCourse ? pickPlacementItems(activeCourse, catalog) : []),
@@ -306,7 +310,7 @@ function SessionReady() {
               >
                 Any / surprise
               </Chip>
-              {catalog.categories.map((c) => (
+              {catalog.categories.filter(isSelectableCategory).map((c) => (
                 <Chip key={c.id} active={category === c.id} onClick={() => setCategory(c.id)}>
                   {c.name}
                 </Chip>

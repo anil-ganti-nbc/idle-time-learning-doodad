@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { HydrateGate } from "@/components/hydrate";
 import { SourceBadge } from "@/components/provenance";
@@ -7,7 +7,8 @@ import { startLive } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
 import { conceptState } from "@/lib/learning/state";
 import { useCatalog } from "@/lib/learning/use-catalog";
-import { useNavigate } from "@tanstack/react-router";
+import { computeCoverage } from "@/content/curriculum/coverage";
+import { isSelectableCategory } from "@/lib/learning/types";
 
 export const Route = createFileRoute("/library")({ component: LibraryPage });
 
@@ -46,13 +47,17 @@ function LibraryReady() {
     void navigate({ to: "/learn/$lessonId", params: { lessonId: id } });
   }
 
+  const coverage = useMemo(() => computeCoverage(catalog, progress), [catalog, progress]);
+  const hours = Math.round(coverage.estimatedMinutes / 6) / 10;
+
   return (
     <div className="mx-auto max-w-2xl">
       <p className="text-xs tracking-[0.18em] text-muted uppercase">Catalog</p>
       <h1 className="mt-2 font-display text-3xl tracking-tight">Library</h1>
       <p className="mt-2 text-sm text-muted">
-        {catalog.lessons.length} units across {catalog.categories.length} fields. Search or open a
-        unit directly — the router is still the fastest path.
+        {coverage.subjects} fields · {coverage.courses} courses · {coverage.modules} modules ·{" "}
+        {coverage.activeConcepts} concepts · ~{hours} h of skeleton.
+        Search or open a unit — the router is still the fastest path.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">
@@ -63,18 +68,10 @@ function LibraryReady() {
         <Link to="/session" className="text-sm text-muted no-underline hover:text-fg">
           Time router
         </Link>
-        {catalog.courses.map((course) => (
-          <span key={course.id} className="contents">
-            <span className="text-subtle">·</span>
-            <Link
-              to="/course/$courseId"
-              params={{ courseId: course.id }}
-              className="text-sm text-muted no-underline hover:text-fg"
-            >
-              {course.title}
-            </Link>
-          </span>
-        ))}
+        <span className="text-subtle">·</span>
+        <Link to="/graph" className="text-sm text-muted no-underline hover:text-fg">
+          Graph
+        </Link>
       </div>
 
       <div className="mt-6">
@@ -103,11 +100,18 @@ function LibraryReady() {
       </div>
 
       <ul className="mt-8 space-y-2">
-        {catalog.categories.map((cat) => {
+        {catalog.categories
+          .filter((cat) => {
+            if (isSelectableCategory(cat)) return true;
+            if (q) return true;
+            return catalog.concepts.some((c) => c.category === cat.id && progress[c.id]?.encountered);
+          })
+          .map((cat) => {
           const concepts = catalog.concepts.filter((c) => c.category === cat.id);
           const units = lessons.filter((l) => concepts.some((c) => c.id === l.conceptId));
           if (units.length === 0 && q) return null;
           const seen = concepts.filter((c) => progress[c.id]?.encountered).length;
+          const courses = catalog.courses.filter((course) => course.categoryId === cat.id);
           return (
             <li key={cat.id} className="rounded-lg bg-surface shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
               <details>
@@ -116,8 +120,25 @@ function LibraryReady() {
                     <p className="text-sm font-medium text-fg">
                       {cat.name}
                       {cat.custom ? <span className="ml-2 text-[10px] tracking-wide text-muted uppercase">yours</span> : null}
+                      {cat.status === "retired" ? (
+                        <span className="ml-2 text-[10px] tracking-wide text-muted uppercase">archived</span>
+                      ) : null}
                     </p>
                     <p className="mt-1 text-sm text-muted">{cat.blurb}</p>
+                    {courses.length > 0 && (
+                      <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
+                        {courses.map((course) => (
+                          <Link
+                            key={course.id}
+                            to="/course/$courseId"
+                            params={{ courseId: course.id }}
+                            className="text-muted no-underline hover:text-fg"
+                          >
+                            {course.title}
+                          </Link>
+                        ))}
+                      </p>
+                    )}
                   </div>
                   <p className="shrink-0 font-mono text-xs tabular-nums text-subtle">
                     {seen}/{concepts.length} · {units.length}u
