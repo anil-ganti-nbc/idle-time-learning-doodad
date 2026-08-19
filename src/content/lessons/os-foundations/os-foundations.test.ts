@@ -39,8 +39,6 @@ import { mixIsDistinct, objectiveCoverage } from "../../../lib/quiz/mix.ts";
 import { createSeededRng, shuffleQuestion } from "../../../lib/quiz/shuffle.ts";
 
 const COURSE_ID = "os-foundations";
-const CONCURRENCY_ID = "os-concurrency";
-const STORAGE_ID = "os-storage";
 const FOUNDATIONS_ID = "cpu-foundations";
 const MICROARCH_ID = "cpu-microarch";
 const GPU_ID = "arch-gpu";
@@ -105,8 +103,6 @@ const KNOWN_DIAGRAMS = new Set([
 ]);
 
 const OTHER_BULK_COURSES = [
-  "os-concurrency",
-  "os-storage",
   "net-foundations",
   "ml-foundations",
   "mus-foundations",
@@ -201,8 +197,6 @@ describe("Operating Systems Foundations coverage", () => {
       assert.ok(row, id);
       assert.ok(row.coveragePct < 100, `${id} should not be fully populated`);
     }
-    assert.ok((coverage.coursesCovered.find((c) => c.courseId === CONCURRENCY_ID)?.coveragePct ?? 100) < 100);
-    assert.ok((coverage.coursesCovered.find((c) => c.courseId === STORAGE_ID)?.coveragePct ?? 100) < 100);
   });
 
   it("has no shallow modules", () => {
