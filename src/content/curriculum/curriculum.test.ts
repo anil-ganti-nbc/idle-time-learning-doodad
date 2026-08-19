@@ -4,6 +4,7 @@ import { CATEGORIES } from "../categories.ts";
 import { CONCEPTS } from "../concepts.ts";
 import { COURSES } from "../courses/index.ts";
 import { CPU_FOUNDATIONS_LESSONS } from "../lessons/cpu-foundations/index.ts";
+import { CPU_MICROARCH_LESSONS } from "../lessons/cpu-microarch/index.ts";
 import { CPU_SEMI_LESSONS } from "../lessons/cpu-semi.ts";
 import { CULTURE_LESSONS } from "../lessons/culture.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
@@ -25,6 +26,7 @@ import { validateCurriculum } from "./validate.ts";
 
 const LESSONS = [
   ...CPU_FOUNDATIONS_LESSONS,
+  ...CPU_MICROARCH_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,

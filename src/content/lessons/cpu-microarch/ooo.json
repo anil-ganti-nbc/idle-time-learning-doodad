@@ -1,0 +1,457 @@
+{
+  "courseId": "cpu-microarch",
+  "moduleId": "cpu-m-ooo",
+  "lessons": [
+    {
+      "id": "cpu-renaming-10",
+      "conceptId": "cpu-renaming",
+      "title": "Names are not locations",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-pipeline"],
+      "goDeeper": "cpu-rob",
+      "diagram": "rename-map",
+      "explanation": [
+        "ISA registers are a small set of names. Programs reuse them constantly. `r1 = a; use r1; r1 = b; use r1` looks like one location. The first and third writes are not a real data dependence — they just share a name. That is a WAW or WAR hazard, a false dependence. A true RAW edge is different: a later instruction needs the value the earlier one produces.",
+        "The renamer maps each write to a new physical register from a larger file. Readers of the old value keep the old physical. The ISA name becomes a pointer in a map table. True RAW edges remain; false ones disappear. Out-of-order issue can then run the second write while the first value is still in flight. Architectural names were too few. Physical names are the working set.",
+        "When the physical file or the free list is exhausted, rename stalls even if ALUs are idle. That is a hidden capacity limit, and it is why microarchitectures advertise physical register file size next to ROB entries. A 'small ISA register set' is not a death sentence if rename is wide. A huge ISA file still stalls if physicals run out."
+      ],
+      "example": "Two independent `add` instructions that both dest `eax` on x86 can execute in parallel after rename, because they write p37 and p41. Without rename, the second add would wait for the first to retire, for no semantic reason.",
+      "whyItMatters": "The next units — scheduling, the ROB, precise exceptions — all assume this map exists. If you still think r1 is a place, out-of-order will look like a violation of the ISA.",
+      "quiz": [
+        {
+          "id": "rn10-1",
+          "stem": "Renaming removes which dependences?",
+          "correctAnswer": "False WAW and WAR name conflicts",
+          "distractors": [
+            { "text": "True RAW data edges", "kind": "reversed", "rationale": "Those must remain or the program is wrong." },
+            { "text": "Cache misses", "kind": "nearby", "rationale": "Rename cannot invent missing data." },
+            { "text": "Unknown next PCs", "kind": "subtle", "rationale": "Control hazards are a fetch problem." }
+          ],
+          "correctExplanation": "It gives each write a fresh physical destination. The value edges stay.",
+          "objectiveIds": ["Separate false WAW/WAR name conflicts from true RAW edges"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "rn10-2",
+          "stem": "After rename, an ISA register name is best thought of as:",
+          "correctAnswer": "A pointer to the latest physical register for that name",
+          "distractors": [
+            { "text": "A physical location in the file", "kind": "reversed", "rationale": "The physical file is larger and separate." },
+            { "text": "A cache tag", "kind": "nearby", "rationale": "Tags identify lines, not destinations." },
+            { "text": "Only a ROB index", "kind": "subtle", "rationale": "The map table, not the ROB slot, is the live translation." }
+          ],
+          "correctExplanation": "The map table is the live translation from architectural name to physical destination.",
+          "objectiveIds": ["Treat an architectural register as a pointer into a larger physical file"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "rn10-3",
+          "stem": "A rename stall with idle ALUs usually means:",
+          "correctAnswer": "The physical register file or free list is empty",
+          "distractors": [
+            { "text": "The branch predictor failed first", "kind": "nearby", "rationale": "A mispredict flushes. It does not starve destinations first." },
+            { "text": "DRAM is offline", "kind": "misapplied", "rationale": "That would stall execution, not rename specifically." },
+            { "text": "The TLB hit", "kind": "subtle", "rationale": "A hit is the opposite of a problem." }
+          ],
+          "correctExplanation": "No physical destination, no dispatch. The ALUs can be hungry and still wait.",
+          "objectiveIds": ["Treat an architectural register as a pointer into a larger physical file"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-rob-10",
+      "conceptId": "cpu-rob",
+      "title": "Out of order, in order at the end",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-renaming"],
+      "goDeeper": "cpu-precise-exceptions",
+      "diagram": "rob-queue",
+      "explanation": [
+        "Out-of-order execution finishes instructions whenever their inputs exist. Precise exceptions and a coherent architectural state still require program order at retirement. The reorder buffer is the queue that restores that order. An instruction is allocated in order at the tail, executes whenever, and commits only when it reaches the head and has completed.",
+        "On a mispredict or fault, everything younger than the offending instruction is discarded. Physical registers allocated for those ops return to the free list. Stores are not released to the coherent memory system until commit — they sit in a store buffer. That is how a faulting load does not leave a half-updated heap.",
+        "ROB capacity is a window size. A 400-entry ROB can have 400 ops in flight, hiding tens of nanoseconds of miss if the compiler and predictor kept them independent. A full ROB blocks rename even if execution units are hungry. Reviews that only quote width without window size are quoting the firehose, not the tank."
+      ],
+      "example": "A load misses. Eighty independent adds follow it. They execute and sit in the ROB completed. The load returns, the load commits, then the adds drain at commit width. If an interrupt arrives before the load commits, those adds never happened architecturally.",
+      "whyItMatters": "When a vendor increases ROB from 256 to 512, they are buying miss tolerance, not peak FLOPs. That number is how you should read 'better at high-latency code'.",
+      "quiz": [
+        {
+          "id": "rob10-1",
+          "stem": "Instructions enter the ROB:",
+          "correctAnswer": "In program order, at allocate",
+          "distractors": [
+            { "text": "Whenever they finish execute", "kind": "reversed", "rationale": "Execute is out of order; allocate is not." },
+            { "text": "Only on a cache miss", "kind": "nearby", "rationale": "Every op allocates, not just misses." },
+            { "text": "Only branches", "kind": "subtle", "rationale": "The window holds the whole stream." }
+          ],
+          "correctExplanation": "Allocate is in order. Execute is not. Commit is in order again.",
+          "objectiveIds": ["State in-order allocate and commit around out-of-order execute"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "rob10-2",
+          "stem": "Stores become globally visible:",
+          "correctAnswer": "At or after commit, via the store buffer",
+          "distractors": [
+            { "text": "At execute", "kind": "reversed", "rationale": "A squashed path must not mutate memory." },
+            { "text": "When they issue to the ALU", "kind": "nearby", "rationale": "Stores are not ALU results." },
+            { "text": "At fetch", "kind": "subtle", "rationale": "Fetch has not even decoded the store." }
+          ],
+          "correctExplanation": "Otherwise a discarded path would mutate memory. Commit is the covenant.",
+          "objectiveIds": ["Explain why stores wait for commit before becoming globally visible"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "rob10-3",
+          "stem": "A full ROB with idle ALUs means:",
+          "correctAnswer": "The window cannot accept more work, often because an old instruction has not committed",
+          "distractors": [
+            { "text": "There are no instructions in the program", "kind": "misconception", "rationale": "The tank is full, not empty." },
+            { "text": "The predictor is perfect", "kind": "nearby", "rationale": "Perfection would tend to keep the window moving." },
+            { "text": "Caches are off", "kind": "subtle", "rationale": "Caches being off would stall execute, not uniquely fill the ROB." }
+          ],
+          "correctExplanation": "The tank is full. Rename has to wait on the oldest unfinished op.",
+          "objectiveIds": ["State in-order allocate and commit around out-of-order execute"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-rob-20",
+      "conceptId": "cpu-rob",
+      "title": "The window is several tables",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cpu-renaming"],
+      "goDeeper": "cpu-precise-exceptions",
+      "diagram": "rob-queue",
+      "explanation": [
+        "The ten-minute unit said the ROB restores program order. The working window is not only the ROB. An instruction also needs a physical destination, a scheduler entry, and — if it is a memory op — a load or store queue slot. The first of those tables to fill is the real width that day. A bigger ROB without a bigger physical file just moves the stall from allocate-at-ROB to rename.",
+        "Commit width is another hose. A 4-wide commit can drain four completed head entries per cycle. After a long miss, you may have hundreds of completed younger ops waiting. They cannot become architectural until the miss commits, and then they drain at commit width. Peak execute is not peak retirement. The user-visible state moves at the slower of the two.",
+        "This is also why SMT, security mitigations, and a sudden burst of stores change the feel of the same advertised ROB size. SMT adds a second customer of the same tables. A mitigation that fences or serializes shrinks how much of the window you dare to fill. A store-heavy stretch fills the store queue first. One number on a slide is a choice of which bottleneck to brag about.",
+        "When a vendor says they 'increased the window', ask which table grew, and on which workload class. A 512-entry ROB is a miss-tolerance story. A larger physical file is a rename-stall story. They are not interchangeable adjectives."
+      ],
+      "example": "A load misses 80 ns. At 4 GHz that is 320 cycles. A machine that can keep 320 independent ops in flight can hide the miss; one that fills a 192-entry ROB at cycle 50 sits idle for the rest. Growing only the ROB to 256 still dies if the physical file was 180.",
+      "whyItMatters": "You cannot read a launch slide, or a 'security tax', unless you can name the scarce table. The ROB is the one vendors quote. It is not always the one that filled.",
+      "quiz": [
+        {
+          "id": "rob20-1",
+          "stem": "The effective instruction window is limited by:",
+          "correctAnswer": "The first structure to fill among ROB, physicals, scheduler, queues",
+          "distractors": [
+            { "text": "Clock frequency alone", "kind": "nearby", "rationale": "Frequency sets the tick. Capacity sets how much you can hide." },
+            { "text": "ISA register count alone", "kind": "reversed", "rationale": "Rename exists so the ISA count is not the window." },
+            { "text": "How many chips were sold", "kind": "subtle", "rationale": "Volume is not a microarchitectural capacity." }
+          ],
+          "correctExplanation": "Min of the capacities, not the brochure max.",
+          "objectiveIds": ["State in-order allocate and commit around out-of-order execute"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "rob20-2",
+          "stem": "A bigger ROB without a bigger physical file often:",
+          "correctAnswer": "Moves the stall from allocate-at-ROB to rename",
+          "distractors": [
+            { "text": "Always doubles IPC", "kind": "misconception", "rationale": "You still need destinations." },
+            { "text": "Removes the need for caches", "kind": "nearby", "rationale": "Window size hides misses. It does not delete them." },
+            { "text": "Fixes mispredicts", "kind": "subtle", "rationale": "A wrong path still flushes, whatever the ROB size." }
+          ],
+          "correctExplanation": "You still need physical destinations. The bottleneck walked upstream.",
+          "objectiveIds": ["State in-order allocate and commit around out-of-order execute"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "rob20-3",
+          "stem": "After a long miss, completed younger ops become architectural:",
+          "correctAnswer": "Only after the miss commits, then at commit width",
+          "distractors": [
+            { "text": "Immediately, because they already executed", "kind": "reversed", "rationale": "Execute is not commit. Program order still rules the head." },
+            { "text": "Never, because a miss cancels the window", "kind": "nearby", "rationale": "A hit-after-wait still commits." },
+            { "text": "At fetch width, which is the same number", "kind": "subtle", "rationale": "Fetch, issue, and commit widths need not match." }
+          ],
+          "correctExplanation": "The head has to move. Drain rate is commit width, not execute width.",
+          "objectiveIds": ["Explain why stores wait for commit before becoming globally visible"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-ooo-schedule-10",
+      "conceptId": "cpu-ooo-schedule",
+      "title": "Ready, not next",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-renaming", "cpu-ilp-idea"],
+      "goDeeper": "cpu-wakeup-select",
+      "explanation": [
+        "After rename, an instruction is not 'the next one in the program'. It is a scheduler entry waiting on its operands. Out-of-order scheduling means: when a physical register is produced, any waiting op that needed it may issue, even if an older op is still stuck on a miss. Program order lives in the ROB. Issue order lives in the scheduler.",
+        "A reservation station or issue-queue entry holds the op, its ready bits, and usually the physical source tags. It is waiting on data, or on a port, or on a memory-order constraint. It is not waiting on 'being next'. That is the whole point of the rename + schedule split. ILP is what the scheduler can see. The ROB is what it must eventually confess.",
+        "When the queue fills, allocate stalls even if some ALUs are idle — same shape as a full ROB or an empty free list. A 'smarter scheduler' can mean more entries, better oldest-first pick, or fewer false dependencies still leaking through rename. Those are different claims. The next unit names the two-step dance that actually picks the next issue group: wakeup and select."
+      ],
+      "example": "`r1 = load [r2]; r3 = r1 + 4; r5 = r6 + r7`. The add of r6 and r7 does not mention r1. After rename it can issue while the load is still in flight. The add of r1 cannot. The scheduler issued the independent work. The ROB will still commit the load first.",
+      "whyItMatters": "This is the mechanism behind every 'out-of-order core' sentence. If you think issue is still program order, the ROB will look redundant and a miss will look like the whole machine stopped.",
+      "quiz": [
+        {
+          "id": "oo10-1",
+          "stem": "Out-of-order scheduling issues:",
+          "correctAnswer": "Ready work, not necessarily the next instruction in program order",
+          "distractors": [
+            { "text": "Always the oldest instruction, even if its data is missing", "kind": "reversed", "rationale": "Missing data is exactly what the scheduler skips." },
+            { "text": "Only after the ROB commits", "kind": "nearby", "rationale": "Commit is later. Issue is earlier." },
+            { "text": "Only ops that the ISA marked parallel", "kind": "misapplied", "rationale": "The ISA stayed sequential. Hardware found the independence." }
+          ],
+          "correctExplanation": "Issue follows readiness. The ROB still confesses in program order.",
+          "objectiveIds": ["Explain issuing ready work rather than the next program-order instruction"],
+          "prerequisiteConceptIds": ["cpu-renaming", "cpu-ilp-idea"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "oo10-2",
+          "stem": "A scheduler entry is primarily waiting on:",
+          "correctAnswer": "Its operands (and a free execution port)",
+          "distractors": [
+            { "text": "Being the next PC in the binary", "kind": "reversed", "rationale": "That is in-order issue. This unit left that behind." },
+            { "text": "The BTB to confirm the opcode", "kind": "nearby", "rationale": "The BTB steers fetch, not issue readiness." },
+            { "text": "A new ISA name for the destination", "kind": "subtle", "rationale": "Rename already gave it a physical destination." }
+          ],
+          "correctExplanation": "Tags and ready bits. When the last source arrives, the op may issue.",
+          "objectiveIds": ["Name what a scheduler entry is waiting on"],
+          "prerequisiteConceptIds": ["cpu-renaming"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "oo10-3",
+          "stem": "After rename, `r5 = r6 + r7` can issue during a load-to-r1 miss because:",
+          "correctAnswer": "It does not wait on r1; its sources are a different physical pair",
+          "distractors": [
+            { "text": "The miss deleted program order", "kind": "misconception", "rationale": "Program order still sits in the ROB." },
+            { "text": "All adds share one physical register", "kind": "nearby", "rationale": "Rename exists so they do not." },
+            { "text": "Loads are not allowed to miss in an OOO core", "kind": "subtle", "rationale": "Misses are why OOO exists." }
+          ],
+          "correctExplanation": "Independence after rename is what the scheduler spends. The load still commits first.",
+          "objectiveIds": ["Explain issuing ready work rather than the next program-order instruction"],
+          "prerequisiteConceptIds": ["cpu-renaming", "cpu-ilp-idea"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-wakeup-select-10",
+      "conceptId": "cpu-wakeup-select",
+      "title": "Broadcast, then pick",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-ooo-schedule"],
+      "goDeeper": "cpu-smt",
+      "diagram": "wakeup-select",
+      "explanation": [
+        "Scheduling is two steps that hardware people refuse to merge. Wakeup: an execution unit finishes and broadcasts the physical destination tag. Every waiting entry compares that tag to its sources and marks a ready bit. Select: among the entries that are now fully ready, pick as many as you have issue ports, usually oldest-first, and send them.",
+        "Those steps are on the critical loop of the core. Wakeup is a many-to-many compare. Select is a priority pick. Making the scheduler larger makes both slower, which is why entries are expensive and why a 100-entry queue is a different machine from a 32-entry one. Pipelining wakeup/select adds a cycle between 'produced' and 'issued' — a hidden latency that can undo some of the ILP you just found.",
+        "A select policy is a bet. Oldest-first is fair to the ROB head and usually hides misses better. Picking a young independent multiply because it is ready can fill a port the oldest load needed. There is no free policy. When a write-up says 'improved scheduling', ask whether they grew the queue, shortened the wakeup loop, or changed the pick."
+      ],
+      "example": "p41 becomes ready. Three adds in the queue have p41 as a source. All three flip a ready bit in the same cycle (wakeup). Only two ALU ports are free. Select sends the two oldest, holds the third. The broadcast did not issue anything by itself.",
+      "whyItMatters": "Occupancy of a GPU and wakeup/select of a CPU are cousins: both are 'who is ready, who gets the pipe'. If you flatten them into 'the scheduler', you will misread both machines.",
+      "quiz": [
+        {
+          "id": "ws10-1",
+          "stem": "Wakeup is:",
+          "correctAnswer": "Broadcasting a completed physical tag so waiting ops can mark ready",
+          "distractors": [
+            { "text": "Picking which ready op occupies a port", "kind": "nearby", "rationale": "That is select, the next step." },
+            { "text": "Committing the ROB head", "kind": "misapplied", "rationale": "Commit is architectural. Wakeup is still speculative execute." },
+            { "text": "Fetching the next cache line", "kind": "subtle", "rationale": "That is prefetch or a miss fill." }
+          ],
+          "correctExplanation": "A tag on a result bus. Ready bits flip. Nothing has issued yet.",
+          "objectiveIds": ["Describe wakeup as broadcasting a completion to waiting ops"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ws10-2",
+          "stem": "Select is:",
+          "correctAnswer": "Choosing which fully-ready ops occupy this cycle's issue slots",
+          "distractors": [
+            { "text": "Marking a source ready when a tag matches", "kind": "nearby", "rationale": "That is wakeup." },
+            { "text": "Renaming the destination", "kind": "misapplied", "rationale": "Rename already happened." },
+            { "text": "Flushing the wrong-path ROB suffix", "kind": "subtle", "rationale": "Recovery is a different pipe." }
+          ],
+          "correctExplanation": "Ports are scarce. Ready is not the same as issued.",
+          "objectiveIds": ["Describe select as choosing which ready ops occupy issue slots"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ws10-3",
+          "stem": "Growing the issue queue without changing wakeup/select delay often:",
+          "correctAnswer": "Finds more ready work and may slow the critical scheduling loop",
+          "distractors": [
+            { "text": "Always raises frequency", "kind": "reversed", "rationale": "A larger compare/pick can hurt the cycle time." },
+            { "text": "Removes the need for rename", "kind": "nearby", "rationale": "The queue holds already-renamed ops." },
+            { "text": "Makes every op ready on allocate", "kind": "subtle", "rationale": "Readiness still waits on producers." }
+          ],
+          "correctExplanation": "Capacity versus loop delay. Both moved, in opposite directions.",
+          "objectiveIds": ["Describe select as choosing which ready ops occupy issue slots"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-precise-exceptions-10",
+      "conceptId": "cpu-precise-exceptions",
+      "title": "As if nothing younger happened",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-rob"],
+      "explanation": [
+        "A precise exception is a promise: when the handler runs, architectural state looks as if the faulting instruction is next, and nothing after it has executed. Registers, memory, and the PC match that story. Out-of-order execute constantly violates the story in private — younger adds have finished, younger stores sit in a buffer. The ROB is how the core keeps the promise anyway.",
+        "On a fault at the ROB head, every younger allocated op is discarded. Their physical destinations return to the free list. Their store-buffer entries never become globally visible. Speculative loads that already filled a cache line are a harder leftover — the line may stay, which is a later security story — but the architectural registers and memory do not show those ops. The handler sees a sequential machine.",
+        "Imprecise exceptions exist in some DSPs and older machines: the handler cannot name which instruction failed, or younger ops have already written memory. They are simpler hardware. They are a nightmare for a general-purpose OS. The ROB's whole job, including 'stores wait for commit', is this illusion. If you delete precise exceptions, a lot of the out-of-order tax goes with them."
+      ],
+      "example": "A load at ROB head page-faults. Eighty younger independent adds have already written physical registers. Flush: those physicals go free, the adds never commit, the store buffer still holds nothing from them. The OS sees the load's PC and the register file as of that load. The eighty adds will run again after the handler, if the program still wants them.",
+      "whyItMatters": "This is why a page fault, a divide-by-zero, or a debugger breakpoint can exist on a wildly out-of-order core. The ISA did not become 'whatever finished first'.",
+      "quiz": [
+        {
+          "id": "pe10-1",
+          "stem": "A precise exception promises that architectural state looks as if:",
+          "correctAnswer": "The faulting instruction is next and nothing after it has happened",
+          "distractors": [
+            { "text": "Every younger op has already committed", "kind": "reversed", "rationale": "Younger ops must not be architectural yet." },
+            { "text": "The ROB has been deleted", "kind": "nearby", "rationale": "The ROB is how the promise is kept." },
+            { "text": "Physical registers are the architectural file", "kind": "subtle", "rationale": "The map table still translates. The handler sees ISA names." }
+          ],
+          "correctExplanation": "Sequential illusion at the fault. Private execute may have run ahead.",
+          "objectiveIds": ["State the illusion that nothing after the faulting instruction happened"],
+          "prerequisiteConceptIds": ["cpu-rob"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "pe10-2",
+          "stem": "On a fault at the ROB head, younger ops are:",
+          "correctAnswer": "Discarded; their physicals return and their stores never become visible",
+          "distractors": [
+            { "text": "Forced to commit so the handler sees them", "kind": "reversed", "rationale": "That would break the promise." },
+            { "text": "Moved into the OS page tables", "kind": "misapplied", "rationale": "Page tables are a different contract." },
+            { "text": "Left in the scheduler forever", "kind": "subtle", "rationale": "The flush clears the window, not just the head." }
+          ],
+          "correctExplanation": "A ROB flush restores the sequential picture. That is the mechanism.",
+          "objectiveIds": ["Explain how a ROB flush restores architectural state"],
+          "prerequisiteConceptIds": ["cpu-rob"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pe10-3",
+          "stem": "Stores wait for commit, rather than writing memory at execute, because:",
+          "correctAnswer": "A later flush must not leave a half-updated heap",
+          "distractors": [
+            { "text": "Caches cannot accept stores", "kind": "nearby", "rationale": "They can. Timing is the point." },
+            { "text": "The ISA forbids stores", "kind": "misapplied", "rationale": "Stores are normal. Visibility is gated." },
+            { "text": "Rename has no physicals for addresses", "kind": "subtle", "rationale": "Addresses are computed. Release is the covenant." }
+          ],
+          "correctExplanation": "Precise memory state is the same promise as precise registers.",
+          "objectiveIds": ["Explain how a ROB flush restores architectural state"],
+          "prerequisiteConceptIds": ["cpu-rob"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-smt-10",
+      "conceptId": "cpu-smt",
+      "title": "Another thread's ready work",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-ooo-schedule"],
+      "explanation": [
+        "Simultaneous multithreading puts more than one architectural context on one core so leftover issue slots can be filled from another thread. When thread A is waiting on a miss, thread B may have ready adds. The scheduler already issues ready work. SMT just added another source of ready work that does not depend on A's miss.",
+        "The two threads typically share the expensive tables: ROB, physical file, scheduler, caches, predictors. Each needs its own architectural state — a map table, a PC, some extra RAS or predictor coloring. Sharing is the win and the tax. One thread can fill the ROB with misses and starve the other of window. A '2-way SMT' slide is not two cores.",
+        "SMT is a throughput bet, like issue width. It helps when one thread's ILP or memory behavior leaves slots idle. It hurts when both threads want the same scarce port or the same predictor, or when a security domain requires you to partition those shared tables. Turning SMT off is sometimes a correctness or isolation decision, not a performance one."
+      ],
+      "example": "Thread A walks a linked list (a miss chain). Thread B is a tight independent add loop. On a single-threaded core, A's misses empty the backend. With SMT, B's adds keep the ALUs busy in those cycles. A's latency did not shrink. The core's throughput did.",
+      "whyItMatters": "Laptop 'thread' counts that double the core count are this trick. If you cannot say what is shared, you will treat SMT as free cores and then be surprised by tail latency and side channels.",
+      "quiz": [
+        {
+          "id": "smt10-1",
+          "stem": "SMT fills leftover issue slots by:",
+          "correctAnswer": "Taking ready work from another hardware thread on the same core",
+          "distractors": [
+            { "text": "Inventing independent ops in the stalled thread", "kind": "reversed", "rationale": "A miss chain is still a miss chain. The other thread is the supply." },
+            { "text": "Adding a second ROB that never shares", "kind": "nearby", "rationale": "Most designs share the expensive tables." },
+            { "text": "Raising the clock during a miss", "kind": "subtle", "rationale": "This is occupancy of slots, not frequency." }
+          ],
+          "correctExplanation": "Another context, same pipes. Throughput while one thread waits.",
+          "objectiveIds": ["Explain filling leftover issue slots from another thread"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "smt10-2",
+          "stem": "Two SMT threads typically share:",
+          "correctAnswer": "ROB, physical file, scheduler, and caches",
+          "distractors": [
+            { "text": "Nothing; each has a full private core", "kind": "reversed", "rationale": "That would be two cores." },
+            { "text": "Only the DRAM DIMMs, nothing on the core", "kind": "nearby", "rationale": "The win is leftover issue slots on this core." },
+            { "text": "A single architectural register file with no map tables", "kind": "subtle", "rationale": "Each thread needs its own architectural state." }
+          ],
+          "correctExplanation": "Share the expensive backend. Duplicate the cheap architectural view.",
+          "objectiveIds": ["Name the structures two threads typically share"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "smt10-3",
+          "stem": "SMT can hurt tail latency when:",
+          "correctAnswer": "One thread fills a shared table and starves the other of window",
+          "distractors": [
+            { "text": "Both threads have infinite ILP and never miss", "kind": "reversed", "rationale": "Then they compete less for idle slots and more for peak ports — a different story." },
+            { "text": "The ISA has no branches", "kind": "nearby", "rationale": "Branchiness is not required for a shared-ROB stall." },
+            { "text": "The core has only one ALU", "kind": "subtle", "rationale": "Even a wide core can starve on ROB or physicals." }
+          ],
+          "correctExplanation": "More customers, same tank. Throughput up, worst-thread latency sometimes down.",
+          "objectiveIds": ["Name the structures two threads typically share"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

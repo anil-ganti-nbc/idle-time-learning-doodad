@@ -4,6 +4,7 @@ import { CATEGORIES } from "../categories.ts";
 import { CONCEPTS } from "../concepts.ts";
 import { COURSES } from "../courses/index.ts";
 import { CPU_SEMI_LESSONS } from "../lessons/cpu-semi.ts";
+import { CPU_MICROARCH_LESSONS } from "../lessons/cpu-microarch/index.ts";
 import { GPU_LESSONS } from "../lessons/gpu.ts";
 import { buildCatalog } from "../../lib/learning/catalog.ts";
 import { quizContextForConcept } from "../../lib/learning/quiz-context.ts";
@@ -14,7 +15,7 @@ import { allowedKnowledge } from "../../lib/quiz/knowledge.ts";
 import { mixIsDistinct, objectiveCoverage } from "../../lib/quiz/mix.ts";
 import { ARCH_REFERENCE_DRAFTS } from "./arch-reference.ts";
 
-const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
+const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...CPU_MICROARCH_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
 
 function held(id: string) {
   return {
@@ -37,8 +38,8 @@ describe("CPU/GPU reference quizzes", () => {
       "cpu-pipeline-5",
       "cpu-hazards-10",
       "gpu-simt-10",
-      "cpu-rename-10",
-      "cpu-mesi-20",
+      "cpu-renaming-10",
+      "cpu-coherency-10",
     ]) {
       const lesson = catalog.lessonMap[id];
       assert.ok(lesson, id);

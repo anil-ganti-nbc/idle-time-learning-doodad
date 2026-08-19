@@ -1,0 +1,457 @@
+{
+  "courseId": "cpu-microarch",
+  "moduleId": "cpu-m-memsys",
+  "lessons": [
+    {
+      "id": "cpu-load-store-queue-10",
+      "conceptId": "cpu-load-store-queue",
+      "title": "Memory ops need their own window",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-ooo-schedule"],
+      "goDeeper": "cpu-memory-disambig",
+      "diagram": "lsq",
+      "explanation": [
+        "The ROB already holds every instruction in program order. That is not enough for memory. A load or store does not know its address at allocate — the address is a computed value, often not ready. Two memory ops can be independent, or they can touch the same bytes. The ROB cannot answer that. A load/store queue is a second window that tracks memory ops by address, once the address exists, so the core can issue them without inventing a new order.",
+        "A store queue entry remembers the address, the data, and whether it has committed. A later load that matches that address can take the data from the queue instead of the cache. That is forwarding: the store has not become a cache line yet, but the younger load in this thread must still see it. Without that path, every load would wait for every older store to drain, and out-of-order memory would collapse into in-order memory.",
+        "The queues are also a capacity. A burst of stores fills the store queue and allocate stalls, even if the ROB and the ALUs have room. A burst of loads with unknown addresses fills the load queue the same way. When a write-up says the memory pipeline grew, they usually mean these tables, not a larger L1."
+      ],
+      "example": "`st [r2], r1; ld r3, [r2]` with the same r2. After addresses compute, the load finds the store in the queue and takes r1's value without waiting for the cache. `st [r2], r1; ld r3, [r4]` with different addresses can both go to cache. Same two opcodes. The queues are what made the difference visible.",
+      "whyItMatters": "Out-of-order execute without a memory window is a machine that can only hide ALU latency. Almost every stall you care about is a miss. This is the structure that lets a load leave while older stores are still in flight — honestly.",
+      "quiz": [
+        {
+          "id": "lsq10-1",
+          "stem": "Memory ops need their own queues besides the ROB because:",
+          "correctAnswer": "Addresses arrive late, and independence depends on those addresses",
+          "distractors": [
+            { "text": "The ROB cannot hold stores, only adds", "kind": "reversed", "rationale": "The ROB holds every op. It just cannot name memory order." },
+            { "text": "Caches refuse to accept ROB indices", "kind": "nearby", "rationale": "Caches deal in addresses and lines, which is why the queues exist." },
+            { "text": "The ISA forbids more than one memory op", "kind": "subtle", "rationale": "Programs are full of them. The hardware has to order them." }
+          ],
+          "correctExplanation": "Program order lives in the ROB. Address order lives in the queues.",
+          "objectiveIds": ["Say why memory ops need their own queues besides the ROB"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "lsq10-2",
+          "stem": "A later load sees an earlier store to the same address by:",
+          "correctAnswer": "Taking the data from the store queue instead of waiting for the cache",
+          "distractors": [
+            { "text": "Reading DRAM directly and ignoring the store", "kind": "reversed", "rationale": "That would miss the store still sitting in the core." },
+            { "text": "Renaming the address into a new ISA register", "kind": "nearby", "rationale": "Rename maps register names, not memory locations." },
+            { "text": "Deleting the store so the load is first", "kind": "subtle", "rationale": "The store is older. The load must see it, not erase it." }
+          ],
+          "correctExplanation": "Forwarding from the queue is how this thread stays sequential on that address.",
+          "objectiveIds": ["Track a store so a later load can see it without going to cache"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "lsq10-3",
+          "stem": "A full store queue with idle ALUs usually means:",
+          "correctAnswer": "Allocate cannot take more stores until older ones drain toward cache",
+          "distractors": [
+            { "text": "The program contains no stores", "kind": "reversed", "rationale": "The tank is full, not empty." },
+            { "text": "Rename has run out of architectural names", "kind": "nearby", "rationale": "This stall is a memory-queue capacity, not an ISA-name shortage." },
+            { "text": "The branch predictor is required to stop", "kind": "subtle", "rationale": "Fetch can still run. The memory window is what filled." }
+          ],
+          "correctExplanation": "Same shape as a full ROB: a table filled, a hose still hungry.",
+          "objectiveIds": ["Say why memory ops need their own queues besides the ROB"],
+          "prerequisiteConceptIds": ["cpu-ooo-schedule"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-memory-disambig-10",
+      "conceptId": "cpu-memory-disambig",
+      "title": "Guessing that two addresses miss",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-load-store-queue"],
+      "goDeeper": "cpu-speculative-load",
+      "explanation": [
+        "A load is often ready before every older store has computed its address. If you wait for all of them, a long store-address chain becomes a memory fence. Memory disambiguation is the guess that this load does not overlap those unknown older stores — that the addresses will miss each other — so the load may go to cache now.",
+        "The guess is recorded. When an older store's address later appears, the queues compare. A miss (no overlap) means the speculation was right and nothing happens. A hit (same bytes) means the load took stale cache data and ignored a store it should have seen. Recovery is a pipeline replay or a squash of the load and everything younger. The cheap case is a partial replay of the load; the expensive case looks like a branch mispredict.",
+        "A conservative core never guesses: every load waits until older store addresses are known. That is correct and slow. An aggressive core guesses independence and pays when a compiler-invisible alias shows up — two pointers the static program could not prove distinct. Store-load forwarding is the known-same-address case. Disambiguation is the unknown-address case. They are not the same box."
+      ],
+      "example": "`st [r9], r1` with r9 still in flight; `ld r3, [r4]` with r4 ready. The load goes. Later r9 equals r4. The load should have taken r1. It did not. The core kills the load and the adds that used r3, then reissues the load against the store. The program never sees the stale r3. The cycle counters do.",
+      "whyItMatters": "This is why a 'memory-order nuke' or a sudden replay storm shows up in profiles of pointer-heavy code. The core gambled that two addresses would miss. They did not.",
+      "quiz": [
+        {
+          "id": "md10-1",
+          "stem": "Memory disambiguation means the core:",
+          "correctAnswer": "Guesses that a load does not overlap an older store whose address is still unknown",
+          "distractors": [
+            { "text": "Waits for every older store address before any load may issue", "kind": "reversed", "rationale": "That is the conservative policy that refuses to guess." },
+            { "text": "Renames two pointers to the same physical register", "kind": "nearby", "rationale": "Rename is a register-name story. This is an address-overlap story." },
+            { "text": "Deletes older stores so the load is first in the program", "kind": "subtle", "rationale": "Program order did not change. The load just left early." }
+          ],
+          "correctExplanation": "Independence is a prediction about addresses, not a rewrite of the program.",
+          "objectiveIds": ["State what it means to guess that a load does not overlap an earlier store"],
+          "prerequisiteConceptIds": ["cpu-load-store-queue"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "md10-2",
+          "stem": "When the older store's address later matches the load, the core typically:",
+          "correctAnswer": "Replays or squashes the load and the work that used its value",
+          "distractors": [
+            { "text": "Keeps the stale load because execute already finished", "kind": "reversed", "rationale": "A wrong memory value is not architectural. It has to die." },
+            { "text": "Only flushes the instruction cache", "kind": "nearby", "rationale": "The bug is a data value, not a fetched opcode." },
+            { "text": "Marks the store illegal and drops it", "kind": "subtle", "rationale": "The store was older and correct. The load was the speculation." }
+          ],
+          "correctExplanation": "The dependence was real. Recovery puts the load back after the store.",
+          "objectiveIds": ["Predict the recovery when the dependence guess is wrong"],
+          "prerequisiteConceptIds": ["cpu-load-store-queue"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "md10-3",
+          "stem": "Always waiting for older store addresses, instead of guessing, trades:",
+          "correctAnswer": "Fewer replays for more loads stuck behind unknown addresses",
+          "distractors": [
+            { "text": "Correctness for a smaller cache", "kind": "nearby", "rationale": "Both policies are correct. The guess is about performance." },
+            { "text": "The ISA for a different opcode set", "kind": "misapplied", "rationale": "This is an implementation bet, not a contract change." },
+            { "text": "Branch prediction for a larger BTB", "kind": "subtle", "rationale": "Control prediction is a different box." }
+          ],
+          "correctExplanation": "Conservative is correct and slow. Aggressive is correct until an alias, then expensive.",
+          "objectiveIds": ["Predict the recovery when the dependence guess is wrong"],
+          "prerequisiteConceptIds": ["cpu-load-store-queue"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-speculative-load-10",
+      "conceptId": "cpu-speculative-load",
+      "title": "A load that might not be next",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-memory-disambig", "cpu-branch-prediction"],
+      "goDeeper": "cpu-security-spec",
+      "explanation": [
+        "A load can start before you know you should issue it. Two common reasons. Control: the load sits on a predicted path, and the branch has not resolved. Dependence: an older store's address is still unknown, and disambiguation guessed a miss. In both cases the cache access begins early because a miss is long and you would rather overlap it than wait.",
+        "If the guess was wrong, the architectural picture has to look as if the load never happened. The destination register is discarded with the ROB flush or the replay. The store buffer does not publish a younger store. The hard leftover is microarchitectural: a cache line the load brought in may still be sitting there, and a predictor the wrong path trained may still be trained. Architecture rolled the load back. The memory hierarchy may not have.",
+        "That leftover is not a bug in the ISA. It is a consequence of starting a load before the permission existed. The next concept in the last module is why leftover state is a side channel. This unit only needs the mechanism: start early, be ready to undo the register, and notice that the cache fill is not automatically undone."
+      ],
+      "example": "`if (i < n) x = a[i];` with the bound predicted true. The load of `a[i]` issues, misses, and fills a line. The bound was false. The ROB kills the load's destination. `x` never changes. The line of `a[i]` is now in L1 anyway. A later honest access to that line is faster than it would have been.",
+      "whyItMatters": "Every modern core starts loads early. That is how they hide DRAM. If you think a squash deletes the cache fill, the later security story will sound like magic instead of a leftover.",
+      "quiz": [
+        {
+          "id": "sl10-1",
+          "stem": "A speculative load is one that starts:",
+          "correctAnswer": "Before control or an older memory dependence is known",
+          "distractors": [
+            { "text": "Only after the ROB has committed it", "kind": "reversed", "rationale": "Commit is the opposite of speculation." },
+            { "text": "Only when the compiler marked it prefetch", "kind": "nearby", "rationale": "The hardware starts ordinary loads early. Prefetch is a different hint." },
+            { "text": "Only on a cold boot", "kind": "subtle", "rationale": "This is an every-branch, every-unknown-store story." }
+          ],
+          "correctExplanation": "The cache access begins on a guess. The ISA has not blessed it yet.",
+          "objectiveIds": ["Explain starting a load before control or dependence is known"],
+          "prerequisiteConceptIds": ["cpu-memory-disambig", "cpu-branch-prediction"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sl10-2",
+          "stem": "If a speculative load should not have happened, the core must undo:",
+          "correctAnswer": "The destination register, and any younger work that used it",
+          "distractors": [
+            { "text": "The entire ISA, which is then rewritten", "kind": "nearby", "rationale": "The contract stays. Only this path is discarded." },
+            { "text": "DRAM contents for every line the program has ever touched", "kind": "misapplied", "rationale": "You are not erasing memory. You are killing a private result." },
+            { "text": "The clock, so the load never issued in time", "kind": "subtle", "rationale": "Recovery is a flush or replay, not a time machine." }
+          ],
+          "correctExplanation": "Architectural state goes back. That is the register and the younger dependents.",
+          "objectiveIds": ["Name what must be undone if the load should not have happened"],
+          "prerequisiteConceptIds": ["cpu-memory-disambig"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sl10-3",
+          "stem": "A squash of a speculative load typically does not automatically:",
+          "correctAnswer": "Evict the cache line that load may already have filled",
+          "distractors": [
+            { "text": "Discard the load's destination register", "kind": "reversed", "rationale": "The register is exactly what the ROB flush does undo." },
+            { "text": "Keep younger stores from becoming globally visible", "kind": "nearby", "rationale": "Stores still wait for commit. That part is undone." },
+            { "text": "Stop issue of the discarded path", "kind": "subtle", "rationale": "The window is cleared. The leftover is the hierarchy, not the window." }
+          ],
+          "correctExplanation": "Registers roll back. A filled line is a leftover. That is the gap a later unit names.",
+          "objectiveIds": ["Name what must be undone if the load should not have happened"],
+          "prerequisiteConceptIds": ["cpu-memory-disambig", "cpu-branch-prediction"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-store-buffer-10",
+      "conceptId": "cpu-store-buffer",
+      "title": "Finished here, not yet in memory",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-write-policy"],
+      "goDeeper": "cpu-load-store-queue",
+      "diagram": "store-buffer",
+      "explanation": [
+        "A store can be done as far as the core is concerned — the address and data are known, the instruction can leave the pipeline — long before the cache or DRAM is ready to accept the write. A store buffer is the queue of those finished stores. The core does not sit on the store waiting for a cache hit, a miss fill, or a dirty eviction. It hands the write to the buffer and moves on.",
+        "A later load to the same address must still see that store. Waiting for the cache would put the buffer back on the critical path. Store-buffer forwarding answers the load from the buffer itself. A later load to a different address can go to cache without waiting for the older store to drain. That is the performance: stores stop being a full memory wait. That is also the ordering hole later units will name — another core may not see the store until the buffer drains.",
+        "This is a different timescale from write-back. Write-back delays telling the next cache level about a dirty line. The store buffer delays telling this cache about a store the core already finished. You can have both. A write-through cache still wants a store buffer, or every store becomes a next-level wait. The buffer is about the core's completion, not about the dirty bit."
+      ],
+      "example": "`*p = 1; x = *q;` with p ≠ q. The store of 1 sits in the buffer. The load of q can hit the cache immediately. `*p = 1; x = *p;` must not read the old *p. The load forwards from the buffer and sees 1, even though the cache line still holds 0.",
+      "whyItMatters": "Foundations taught you when a cache tells the next level. This is when the core tells the cache. If you flatten both into 'the store happened', you cannot read an x86 store-buffer stall or a later memory-model diagram.",
+      "quiz": [
+        {
+          "id": "sb10-1",
+          "stem": "A store buffer exists so that:",
+          "correctAnswer": "The core can finish a store before the cache or memory has accepted it",
+          "distractors": [
+            { "text": "Stores can skip the program entirely", "kind": "reversed", "rationale": "The store still happens. Only the wait moved." },
+            { "text": "Write-back caches no longer need dirty bits", "kind": "nearby", "rationale": "Dirty bits are a cache-to-next-level story. This is core-to-cache." },
+            { "text": "Loads become illegal until DRAM writes back", "kind": "subtle", "rationale": "Loads keep going. That is the point of the buffer." }
+          ],
+          "correctExplanation": "Completion and visibility split. The core is done; memory may not be.",
+          "objectiveIds": ["Say why a store buffer lets the core retire a store before memory has it"],
+          "prerequisiteConceptIds": ["cpu-write-policy"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "sb10-2",
+          "stem": "Store-buffer forwarding differs from waiting for the cache because:",
+          "correctAnswer": "A later load to the same address reads the buffered store directly",
+          "distractors": [
+            { "text": "The load always waits for DRAM to acknowledge the store", "kind": "reversed", "rationale": "Forwarding exists so it does not wait." },
+            { "text": "The store is deleted and the load sees the old line", "kind": "nearby", "rationale": "That would break this thread's sequential picture." },
+            { "text": "The cache is turned off for that address", "kind": "subtle", "rationale": "The cache may still hold the old line. The buffer is newer." }
+          ],
+          "correctExplanation": "Same address, newer data still in the buffer. Do not walk to a stale line.",
+          "objectiveIds": ["Contrast store-buffer forwarding with waiting for the cache"],
+          "prerequisiteConceptIds": ["cpu-write-policy"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sb10-3",
+          "stem": "A later load to a different address can proceed while a store sits in the buffer because:",
+          "correctAnswer": "That load does not need the buffered data, so it need not wait for the drain",
+          "distractors": [
+            { "text": "Different addresses are illegal in one thread", "kind": "nearby", "rationale": "Programs touch many addresses. That is normal." },
+            { "text": "The store buffer only holds instruction bytes", "kind": "misapplied", "rationale": "It holds stores. Fetch is a different path." },
+            { "text": "Write-through has already updated every cache in the system", "kind": "subtle", "rationale": "The buffer exists precisely because that update has not finished." }
+          ],
+          "correctExplanation": "Independence of addresses is why the buffer hides store latency. It is also why another observer can see a hole.",
+          "objectiveIds": ["Contrast store-buffer forwarding with waiting for the cache"],
+          "prerequisiteConceptIds": ["cpu-write-policy"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-mshr-10",
+      "conceptId": "cpu-mshr",
+      "title": "A miss is a piece of state",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-cache-miss"],
+      "goDeeper": "cpu-prefetch",
+      "explanation": [
+        "A cache miss is not just a wait. It is an outstanding request: which line, which level will fill it, which loads are waiting on that fill. A miss-status holding register is that request as first-class state. The cache can keep answering other hits while the miss is in flight. Without MSHRs, a single miss would freeze the whole cache controller until the line came back.",
+        "A second miss to the same line does not need a second trip. It merges into the existing MSHR: another waiter on the same fill. A miss to a different line needs another entry. When the MSHRs are full, a new miss cannot even be issued — a structural stall that looks like a memory-bandwidth problem and is actually a table-capacity problem. That is why 'misses under miss' or 'outstanding misses' show up next to bandwidth on a slide.",
+        "Foundations named compulsory, capacity, and conflict as reasons a lookup fails. An MSHR does not change the reason. It changes whether the machine can have more than one failure in flight, and whether two failures to one line pay twice. Prefetch, the next unit, is often just an MSHR allocated before the demand miss arrives."
+      ],
+      "example": "Sixteen loads to the same cold line: one MSHR, one fill, sixteen waiters. Sixteen loads to sixteen different cold lines: sixteen MSHRs, or a stall when the sixteenth finds the table full. Same miss class (compulsory). Different outstanding-state stories.",
+      "whyItMatters": "A 'memory-level parallelism' claim is an MSHR claim. If you only count miss rate, you will miss the machine that can have twelve fills in flight versus the one that can have two.",
+      "quiz": [
+        {
+          "id": "mh10-1",
+          "stem": "An MSHR treats an outstanding miss as:",
+          "correctAnswer": "First-class state: which line is in flight and who is waiting on it",
+          "distractors": [
+            { "text": "A retired instruction that has already committed", "kind": "reversed", "rationale": "The miss is still open. That is why it needs state." },
+            { "text": "A new opcode in the ISA", "kind": "nearby", "rationale": "This is cache-controller bookkeeping, not a program-visible op." },
+            { "text": "A dirty bit on a line that hit", "kind": "subtle", "rationale": "A hit is present. An MSHR is about a line that is not." }
+          ],
+          "correctExplanation": "The request lives until the fill returns. That record is the MSHR.",
+          "objectiveIds": ["Treat an outstanding miss as first-class state"],
+          "prerequisiteConceptIds": ["cpu-cache-miss"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "mh10-2",
+          "stem": "A second miss to a line that already has an MSHR typically:",
+          "correctAnswer": "Merges: it waits on the same in-flight fill",
+          "distractors": [
+            { "text": "Issues a second full trip to memory for the same line", "kind": "reversed", "rationale": "That is what merging exists to avoid." },
+            { "text": "Converts the first miss into a hit immediately", "kind": "nearby", "rationale": "The line is still not here. The second waiter just shares the wait." },
+            { "text": "Flushes the ROB because two misses are illegal", "kind": "subtle", "rationale": "Multiple waiters on one fill are the normal case." }
+          ],
+          "correctExplanation": "One request, many waiters. Same line, same fill.",
+          "objectiveIds": ["Explain merging a second miss to the same line"],
+          "prerequisiteConceptIds": ["cpu-cache-miss"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mh10-3",
+          "stem": "A cache that is still hitting other lines but cannot accept a new miss is often:",
+          "correctAnswer": "Out of MSHRs, so a new outstanding request cannot be recorded",
+          "distractors": [
+            { "text": "Out of architectural registers", "kind": "nearby", "rationale": "This is controller state, not the ISA file." },
+            { "text": "Required to turn the clock off", "kind": "misapplied", "rationale": "The stall is a full table, not a stopped tick." },
+            { "text": "Proof that miss rate has become zero", "kind": "reversed", "rationale": "You are refusing a miss, not succeeding on every lookup." }
+          ],
+          "correctExplanation": "Hits still work. A new in-flight miss has nowhere to live.",
+          "objectiveIds": ["Treat an outstanding miss as first-class state"],
+          "prerequisiteConceptIds": ["cpu-cache-miss"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-prefetch-10",
+      "conceptId": "cpu-prefetch",
+      "title": "Start the next line on purpose",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-cache-miss"],
+      "goDeeper": "cpu-mshr",
+      "explanation": [
+        "A demand miss is a request you already know you need. A hardware prefetcher starts a request you do not yet know you need, because the last few misses looked sequential — line N, then N+1, so probably N+2. The fill occupies an MSHR and, if it arrives in time, the later demand is a hit. Compulsory misses on a long array walk are the textbook win.",
+        "Prefetch hurts when the guess is wrong or early in a way that evicts something you still needed. A pointer-chasing walk is not sequential in address space; prefetching N+1 pulls junk and can kick out the line you will actually dereference. A too-aggressive prefetcher on a small cache pollutes: it spends capacity and bandwidth on lines that die before they are used. Software prefetch is a hint with the same failure mode.",
+        "The useful sentence in a review is not 'we added prefetch'. It is which pattern it looks for (next-line, stride, stream), how far ahead, and whether it throttles when it starts missing. A prefetcher that cannot be wrong is a prefetcher that never starts."
+      ],
+      "example": "Walking `a[0]..a[n]` on 64-byte lines: after two consecutive misses the next-line prefetcher fills `a[i+64]` while you compute on `a[i]`. The demand hits. Walking a linked list whose nodes were allocated far apart: the next line is a stranger. You paid a fill and maybe evicted the node you will visit after next.",
+      "whyItMatters": "Prefetch is how sequential code looks like it 'doesn't miss'. Random or graph-shaped code looks like the prefetcher is an enemy. Same hardware, opposite verdicts.",
+      "quiz": [
+        {
+          "id": "pf10-1",
+          "stem": "A next-line hardware prefetcher starts a fill because:",
+          "correctAnswer": "Recent misses looked sequential, so the next line is a bet",
+          "distractors": [
+            { "text": "The ISA requires every array to be prefetched", "kind": "nearby", "rationale": "Prefetch is an implementation, not a contract." },
+            { "text": "A hit on this line forbids touching neighbours", "kind": "reversed", "rationale": "Spatial locality is why the neighbour is the bet." },
+            { "text": "MSHRs are only allowed to hold demand misses", "kind": "subtle", "rationale": "Prefetches occupy MSHRs. That is how they run early." }
+          ],
+          "correctExplanation": "The past looked like a stream. Start N+1 before the demand arrives.",
+          "objectiveIds": ["Explain starting the next line because the past looked sequential"],
+          "prerequisiteConceptIds": ["cpu-cache-miss"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pf10-2",
+          "stem": "Prefetch hurts when:",
+          "correctAnswer": "The guessed line is unused and evicts a line you still needed",
+          "distractors": [
+            { "text": "A sequential array walk hits the prefetched line", "kind": "reversed", "rationale": "That is the case prefetch exists for." },
+            { "text": "The cache is infinitely large and the guess is right", "kind": "nearby", "rationale": "No capacity pressure, useful line: no hurt." },
+            { "text": "The program contains no loads", "kind": "subtle", "rationale": "Then the prefetcher is idle, not harmful." }
+          ],
+          "correctExplanation": "Pollution plus wasted bandwidth. Wrong or unused lines are the failure.",
+          "objectiveIds": ["Name a case where prefetch hurts"],
+          "prerequisiteConceptIds": ["cpu-cache-miss"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pf10-3",
+          "stem": "A linked-list walk is a poor next-line target because:",
+          "correctAnswer": "The next useful node is often not the next address",
+          "distractors": [
+            { "text": "Lists are not allowed to miss", "kind": "nearby", "rationale": "They miss constantly. The addresses are just not sequential." },
+            { "text": "Hardware cannot issue more than one miss", "kind": "misapplied", "rationale": "MSHRs exist. The pattern is what failed." },
+            { "text": "The prefetcher only works on stores", "kind": "subtle", "rationale": "Next-line is a fetch of a line, usually started from loads." }
+          ],
+          "correctExplanation": "Sequential in pointer space, not in addresses. The neighbour is a stranger.",
+          "objectiveIds": ["Name a case where prefetch hurts"],
+          "prerequisiteConceptIds": ["cpu-cache-miss"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-inclusive-cache-10",
+      "conceptId": "cpu-inclusive-cache",
+      "title": "Must L2 hold what L1 holds?",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-cache-levels"],
+      "goDeeper": "cpu-coherency",
+      "diagram": "hierarchy",
+      "explanation": [
+        "Inclusion is a rule about copies. If a line is in L1, an inclusive L2 must also hold that line. Evicting the line from L2 then requires invalidating it from L1, or the rule breaks. The win is lookup: a snoop or a directory check that misses in L2 can ignore L1. The cost is capacity: L2 spends space on lines that already sit in L1, so its unique capacity is smaller than its advertised size.",
+        "An exclusive hierarchy forbids that double occupancy. A line lives in L1 or in L2, not both. A victim from L1 is placed in L2. The win is capacity: the two arrays add. The cost is lookup: 'not in L2' does not mean 'not in L1'. You need another way to know whether a core still holds the line — extra tags, or a snoop into L1 on every L2 miss.",
+        "Non-inclusive / non-exclusive (NINE) is the common middle: L2 may hold the line, or not; there is no promise either way. Inclusive L3s are popular in multi-core packages exactly because they filter coherence traffic. The next module is that traffic. This unit only needs the copy rule and the capacity it buys or spends."
+      ],
+      "example": "A 32 KiB L1 and a 256 KiB inclusive L2: up to 32 KiB of the L2 is a shadow of the L1. Unique L2 capacity can be 224 KiB. The same sizes exclusive: 288 KiB of unique lines, and an L2 miss no longer proves the L1 is empty.",
+      "whyItMatters": "When a vendor quotes L2 or L3 size, inclusion decides how much of that size is new. A coherence filter and a capacity number are in tension. You cannot read the slide without the rule.",
+      "quiz": [
+        {
+          "id": "ic10-1",
+          "stem": "Inclusion requires that when a line is in L1:",
+          "correctAnswer": "L2 must also hold that line",
+          "distractors": [
+            { "text": "L2 is forbidden to hold that line", "kind": "reversed", "rationale": "That is exclusivity." },
+            { "text": "DRAM must delete its copy", "kind": "nearby", "rationale": "Memory still has the data. This is a cache-to-cache rule." },
+            { "text": "L1 and L2 must have the same number of sets", "kind": "subtle", "rationale": "Sizes can differ. The rule is about that one line." }
+          ],
+          "correctExplanation": "A copy in the child implies a copy in the inclusive parent.",
+          "objectiveIds": ["State what inclusion requires of L2 when a line is in L1"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ic10-2",
+          "stem": "An exclusive L2, compared with an inclusive one, typically:",
+          "correctAnswer": "Holds victims from L1 instead of shadowing L1's lines",
+          "distractors": [
+            { "text": "Must keep every L1 line duplicated", "kind": "reversed", "rationale": "Duplication is inclusion." },
+            { "text": "Cannot exist if L1 exists", "kind": "nearby", "rationale": "Exclusive hierarchies are common. They add the two arrays." },
+            { "text": "Turns every hit into a miss by law", "kind": "subtle", "rationale": "Hits still happen. The line just lives in one of the two." }
+          ],
+          "correctExplanation": "One copy, not two. Capacity adds. Lookup gets harder.",
+          "objectiveIds": ["Contrast exclusive hierarchies with inclusive ones"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ic10-3",
+          "stem": "An inclusive last-level cache is often chosen because:",
+          "correctAnswer": "A miss there can filter work that would otherwise search every private L1",
+          "distractors": [
+            { "text": "It maximises unique capacity for a given silicon area", "kind": "reversed", "rationale": "Inclusion spends capacity on copies. That is the cost, not the win." },
+            { "text": "It deletes the need for an L1", "kind": "nearby", "rationale": "L1 is still the closest, smallest array." },
+            { "text": "It forces write-through on every store", "kind": "subtle", "rationale": "Write policy and inclusion are different knobs." }
+          ],
+          "correctExplanation": "Filter versus capacity. Multi-core lookup is why people pay the duplicate.",
+          "objectiveIds": ["Contrast exclusive hierarchies with inclusive ones"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

@@ -21,9 +21,29 @@ export const CURRICULUM_SOURCES: CurriculumSourceRecord[] = [
     url: "https://gfxcourses.stanford.edu/cs149/fall25/",
     institution: "Stanford CS149",
     kind: "syllabus",
-    informed: ["cpu-foundations", "arch-gpu"],
+    informed: ["cpu-foundations", "cpu-microarch", "arch-gpu"],
     notes:
       "Why parallelism and a modern multi-core before GPU/CUDA. Locality and work distribution before occupancy jargon. GPU lecture implements an already-taught data-parallel model. Coherence/consistency come after, not as a first GPU topic.",
+  },
+  {
+    id: "intel-sdm",
+    title: "Intel 64 and IA-32 Architectures Software Developer's Manual",
+    url: "https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html",
+    institution: "Intel",
+    kind: "vendor",
+    informed: ["cpu-microarch"],
+    notes:
+      "Architectural visibility of store buffers, serializing instructions, and the x86 TSO-like model. Used only for mechanism names and ordering facts, not copied text. Microcode assists as implementation of complex ISA ops.",
+  },
+  {
+    id: "arm-arm",
+    title: "Arm Architecture Reference Manual",
+    url: "https://developer.arm.com/documentation/ddi0487/latest/",
+    institution: "Arm",
+    kind: "vendor",
+    informed: ["cpu-microarch"],
+    notes:
+      "Weaker default ordering than x86; explicit barriers. Used to contrast TSO with a relaxed model after coherence is already thinkable.",
   },
   {
     id: "nvidia-educators",

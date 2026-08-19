@@ -1,0 +1,394 @@
+{
+  "courseId": "cpu-microarch",
+  "moduleId": "cpu-m-pred",
+  "lessons": [
+    {
+      "id": "cpu-branch-prediction-10",
+      "conceptId": "cpu-branch-prediction",
+      "title": "Two guesses, not one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-pipeline"],
+      "goDeeper": "cpu-predictors",
+      "diagram": "branch",
+      "explanation": [
+        "A pipeline cannot wait for a branch to finish execute. Fetch has to pick a next address now. That is a control hazard you already know. Prediction is how the front end refuses to sit empty: it guesses, fetches down the guess, and is prepared to throw the guess away.",
+        "The guess has two parts that people flatten into one word. Direction is a bit: taken or not-taken. Target is an address: if taken, where. A loop branch has an easy direction and an easy target. An indirect jump through a table has an easy 'it will jump' and a hard destination. A BTB, a direction table, and a return stack are different boxes because they answer different questions.",
+        "A wrong guess is not a small embarrassment. Everything younger than the branch — every in-flight decode, execute, and half-done load — is discarded. The longer and wider the machine, the more work that flush throws away. A 97% hit rate can still dominate runtime if each miss empties a deep window."
+      ],
+      "example": "A loop `i < n` is almost always taken until the last iteration. Direction is cheap. `goto *handlers[opcode]` is almost always taken and the address keeps changing. You can be perfect on the bit and still fetch from the last opcode's handler. Those are different failures.",
+      "whyItMatters": "Foundations taught you that an unknown next PC empties the line. This course is the machinery that fills it anyway — and the bill when the guess is wrong. If you cannot split direction from target, every later predictor name will sound like a brand.",
+      "quiz": [
+        {
+          "id": "bp10-1",
+          "stem": "Direction prediction and target prediction are separate because:",
+          "correctAnswer": "Taken/not-taken is one bit; the destination is an address",
+          "distractors": [
+            { "text": "Targets never repeat, so only direction matters", "kind": "misconception", "rationale": "Targets repeat constantly; that is why a BTB exists." },
+            { "text": "Only indirect jumps have a direction", "kind": "reversed", "rationale": "Conditionals have a direction; indirects stress the target." },
+            { "text": "The pipeline no longer has a program counter", "kind": "subtle", "rationale": "Fetch still needs a PC. The question is which one." }
+          ],
+          "correctExplanation": "A taken branch still has to say where. The bit and the address are different predictions.",
+          "objectiveIds": ["Separate direction prediction from target prediction"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "bp10-2",
+          "stem": "A pipeline uses a branch predictor mainly so that:",
+          "correctAnswer": "Fetch can keep supplying instructions while the branch is still unresolved",
+          "distractors": [
+            { "text": "The branch's result can skip execute entirely", "kind": "reversed", "rationale": "The branch still executes. Fetch just refused to wait." },
+            { "text": "The ISA no longer contains branches", "kind": "nearby", "rationale": "Prediction is an implementation, not a contract change." },
+            { "text": "Data hazards disappear", "kind": "misapplied", "rationale": "A missing register value is a different empty-stage story." }
+          ],
+          "correctExplanation": "The control hazard is an unknown next PC. The predictor fills fetch anyway.",
+          "objectiveIds": ["Separate direction prediction from target prediction"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "bp10-3",
+          "stem": "A high prediction rate can still dominate runtime when:",
+          "correctAnswer": "Each miss flushes a wide or deep window of already-fetched work",
+          "distractors": [
+            { "text": "Each miss is only one wasted cycle by law", "kind": "reversed", "rationale": "Miss cost is miss-rate times miss-penalty, and the penalty grew with the machine." },
+            { "text": "There are no branches in the program", "kind": "nearby", "rationale": "Then the predictor is idle." },
+            { "text": "The cache always hits", "kind": "subtle", "rationale": "A cache hit does not shrink a control-flow flush." }
+          ],
+          "correctExplanation": "Cost is rate times penalty. A full pipeline makes the penalty large.",
+          "objectiveIds": ["Say what a mispredict costs in a full pipeline"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-btb-10",
+      "conceptId": "cpu-btb",
+      "title": "A cache for the next fetch address",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-branch-prediction"],
+      "goDeeper": "cpu-ras",
+      "diagram": "btb",
+      "explanation": [
+        "Direction tells you whether to leave sequential fetch. It does not tell you where to go. Waiting for decode to notice 'this is a branch' and then compute the target already costs a cycle in a fast front end. A branch target buffer is a cache from a fetch PC (usually a tag on that PC) to the last-seen destination. It answers: if I am fetching here, where do I fetch next, before decode has spoken.",
+        "That timing is the point. The BTB lets fetch steer itself. Capacity, associativity, and how many branches per fetch group it can handle show up as front-end stalls long before you look at a direction table. A taken branch that misses the BTB is often still predicted taken — you just discover the address late and insert a short bubble.",
+        "Indirect branches stress a simple BTB because the target is data. One cached destination per site thrashes on an interpreter dispatch loop. Some designs keep several targets and a chooser; some fold in path history. When a write-up says 'better indirect prediction', this is the structure they grew, not the two-bit counter."
+      ],
+      "example": "A bytecode interpreter's dispatch is often `handler = table[*pc++]; goto *handler`. Every opcode is an indirect branch through the same site. A one-target BTB is almost useless. A history-tagged indirect predictor can learn that ADD is often followed by LOAD and steer correctly.",
+      "whyItMatters": "Reviews that say 'better branch prediction' after a launch are usually mixing three boxes: BTB, direction predictor, and return stack. They miss different workloads. If you cannot name which box moved, you cannot judge the claim.",
+      "quiz": [
+        {
+          "id": "btb10-1",
+          "stem": "The BTB's job is primarily to:",
+          "correctAnswer": "Provide a fetch redirect address early",
+          "distractors": [
+            { "text": "Guess taken versus not-taken", "kind": "nearby", "rationale": "That is direction prediction, a different box." },
+            { "text": "Rename architectural registers", "kind": "misapplied", "rationale": "Renaming is a later name-mapping story." },
+            { "text": "Store only return addresses", "kind": "subtle", "rationale": "Returns have their own stack; the BTB is the general target cache." }
+          ],
+          "correctExplanation": "It is a target cache used before decode has computed the destination.",
+          "objectiveIds": ["State that a BTB caches a fetch redirect address, not a taken bit"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "btb10-2",
+          "stem": "A BTB miss on an otherwise well-predicted taken branch typically costs:",
+          "correctAnswer": "A short front-end bubble until decode computes the target",
+          "distractors": [
+            { "text": "A full pipeline flush equal to a direction mispredict", "kind": "reversed", "rationale": "You still discover the branch; you just steered late." },
+            { "text": "A writeback to DRAM", "kind": "nearby", "rationale": "This is a fetch-redirect miss, not a memory write." },
+            { "text": "The direction bit flipping forever", "kind": "subtle", "rationale": "Direction can stay correct while the address arrives late." }
+          ],
+          "correctExplanation": "Late steer, not a wrong path. The penalty is a bubble, not a flush of the window.",
+          "objectiveIds": ["Explain why a late-discovered taken branch still costs a bubble"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "btb10-3",
+          "stem": "Indirect branches hurt a simple one-target BTB because:",
+          "correctAnswer": "The destination varies and one cached address is often wrong",
+          "distractors": [
+            { "text": "They are never taken", "kind": "reversed", "rationale": "Indirects are taken. The address is the problem." },
+            { "text": "They have no program counter", "kind": "nearby", "rationale": "They have a PC. The target is data-dependent." },
+            { "text": "Decode is forbidden to see them", "kind": "subtle", "rationale": "Decode will see them; fetch wanted the address earlier." }
+          ],
+          "correctExplanation": "One site, many destinations. The last target is a weak guess.",
+          "objectiveIds": ["State that a BTB caches a fetch redirect address, not a taken bit"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-predictors-10",
+      "conceptId": "cpu-predictors",
+      "title": "Local history is not enough",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-branch-prediction"],
+      "goDeeper": "cpu-security-spec",
+      "diagram": "branch",
+      "explanation": [
+        "A local predictor keeps a short history per branch: the last few outcomes of this site. It wins on loops and simple phases. It loses when this branch's behavior is a function of other recent branches — a test inside a nested condition whose outcome correlates with an earlier compare.",
+        "A global predictor hashes a shared history of recent outcomes and indexes a table of counters. That captures correlation across sites. It also aliases: unrelated branches collide in the same counter. Gshare XORs the history with the PC to spread them. The point is not the acronym. The point is that useful correlation often lives in other branches' recent bits.",
+        "TAGE-style predictors keep several tagged tables, each indexed with a geometrically longer history. A hit on a longer table wins. Partial tags cut aliasing. The geometric lengths exist because useful correlation lives at many timescales at once — four bits for a loop, forty bits for a parser. 'Increased the predictor' can mean more entries, longer histories, or a new helper. Those are different silicon."
+      ],
+      "example": "`if (a) …; if (b) …; if (a || b)` — the third test is a logical function of the first two. A local history of the third site cannot see `a` and `b`. A global or TAGE history can. That is the textbook reason global history exists.",
+      "whyItMatters": "Security mitigations that flush or partition predictor state destroy exactly this long history. The performance cliff after a domain switch is often a cold TAGE, not a smaller BTB.",
+      "quiz": [
+        {
+          "id": "pr10-1",
+          "stem": "Local history fails when:",
+          "correctAnswer": "This branch's outcome depends on other recent branches",
+          "distractors": [
+            { "text": "A branch is a simple counted loop", "kind": "reversed", "rationale": "Loops are exactly what local history learns." },
+            { "text": "The BTB hits", "kind": "nearby", "rationale": "A target hit is not a direction-history problem." },
+            { "text": "The pipeline is short", "kind": "subtle", "rationale": "Depth changes the miss penalty, not whether local history can see other sites." }
+          ],
+          "correctExplanation": "Local tables never see the other sites. Correlation across branches needs shared history.",
+          "objectiveIds": ["Contrast local history with global or TAGE-style correlation"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pr10-2",
+          "stem": "Aliasing in a global predictor means:",
+          "correctAnswer": "Two branches share a counter and pollute each other's state",
+          "distractors": [
+            { "text": "The BTB overflowed", "kind": "nearby", "rationale": "That is a target-cache capacity miss." },
+            { "text": "History is empty so every guess is random", "kind": "reversed", "rationale": "Aliasing is too much sharing, not too little history." },
+            { "text": "The return stack underflowed", "kind": "subtle", "rationale": "RAS underflow is a different structure." }
+          ],
+          "correctExplanation": "Same index, unrelated correlation. Tags and gshare exist to cut that.",
+          "objectiveIds": ["Contrast local history with global or TAGE-style correlation"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pr10-3",
+          "stem": "TAGE uses multiple geometric history lengths because:",
+          "correctAnswer": "Useful correlation exists at several timescales at once",
+          "distractors": [
+            { "text": "Silicon cannot store one long history", "kind": "misconception", "rationale": "It can. One length just fits only one kind of pattern." },
+            { "text": "Tags are illegal at short histories", "kind": "nearby", "rationale": "Tags are a collision check, not a length law." },
+            { "text": "It predicts targets, not directions", "kind": "subtle", "rationale": "TAGE is a direction family. Targets are a different box." }
+          ],
+          "correctExplanation": "Loops, nested predicates, and parsers want different history depths.",
+          "objectiveIds": ["Explain why one history length is not enough"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-predictors-20",
+      "conceptId": "cpu-predictors",
+      "title": "TAGE allocation and what 'bigger' meant",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cpu-branch-prediction"],
+      "goDeeper": "cpu-security-spec",
+      "explanation": [
+        "The ten-minute unit said why several history lengths exist. This one is about how a tagged geometric predictor spends a limited number of entries. On a mispredict, TAGE tries to allocate in a longer table than the one that provided the prediction. Newly allocated entries start cautious — a weak counter — because a lucky long history that never repeats is worse than no allocation. Useful entries need time to become confident.",
+        "That allocation policy is where 'we grew the predictor' becomes a specific claim. More entries cut conflicts when two unrelated long histories want the same slot. Longer maximum history captures rarer correlations — a parser state forty branches back — and also creates more opportunities to allocate junk. Better replacement or a useful/useless bit is a third knob: keep the entry that has been hitting, evict the tourist.",
+        "Loop predictors and indirect helpers sit beside TAGE because some patterns are a poor fit for a shared geometric table. A counted loop is a countdown, not a correlation. An indirect jump is a target problem wearing a direction hat. Vendors add those helpers, then still quote one 'predictor accuracy' number. The interesting sentence is which helper moved, on which workload.",
+        "When a mitigation flushes predictor state on a security domain switch, it is resetting exactly this learned allocation. The next milliseconds look like a cold start: short tables hit, long tables miss, allocation thrashes. That is a TAGE story, not a BTB-capacity story, even though both boxes sit in the front end."
+      ],
+      "example": "A 16-iteration loop is predicted by a tiny loop helper or a short TAGE table. A Perl-style interpreter with correlated indirects wants the long tables and an indirect target cache. Growing only the short table helps the loop and does nothing for the interpreter. The slide that says 'plus 8 KB of predictor' without saying which table grew is refusing the distinction.",
+      "whyItMatters": "You cannot read a microarchitecture launch, or a Spectre-era performance cliff, if 'the predictor' is one noun. Ask which table, which history length, and whether allocation or capacity moved.",
+      "quiz": [
+        {
+          "id": "pr20-1",
+          "stem": "TAGE typically allocates on a mispredict in:",
+          "correctAnswer": "A longer-history table than the one that just missed",
+          "distractors": [
+            { "text": "Always the shortest table, to stay safe", "kind": "reversed", "rationale": "The miss is evidence that more history might have helped." },
+            { "text": "The BTB, because direction and target are the same array", "kind": "nearby", "rationale": "The BTB is a target cache, not a TAGE table." },
+            { "text": "Main memory, so the next boot remembers", "kind": "subtle", "rationale": "Predictor state is core-private and volatile." }
+          ],
+          "correctExplanation": "A miss is a bid for a more specific history. New entries start weak.",
+          "objectiveIds": ["Explain why one history length is not enough"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pr20-2",
+          "stem": "A newly allocated TAGE entry starts cautious because:",
+          "correctAnswer": "A long history that never repeats would otherwise poison the table",
+          "distractors": [
+            { "text": "Hardware cannot store a strong counter", "kind": "misconception", "rationale": "It can. The policy is not to trust a first sighting." },
+            { "text": "The ISA forbids confident predictions", "kind": "nearby", "rationale": "Prediction is not an ISA rule." },
+            { "text": "Flushing the ROB requires weak entries", "kind": "subtle", "rationale": "ROB recovery and predictor allocation are different boxes." }
+          ],
+          "correctExplanation": "One lucky match is not a pattern. Weak until proven useful.",
+          "objectiveIds": ["Contrast local history with global or TAGE-style correlation"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pr20-3",
+          "stem": "Flushing predictor state on a domain switch hurts most because:",
+          "correctAnswer": "Long-history tables lose the correlation they had just learned",
+          "distractors": [
+            { "text": "The BTB can no longer store addresses of any kind", "kind": "nearby", "rationale": "A BTB flush is a different, usually smaller, story." },
+            { "text": "Frequency is legally required to drop", "kind": "misapplied", "rationale": "This is a cold-predictor problem, not a clock problem." },
+            { "text": "Every branch becomes an illegal instruction", "kind": "subtle", "rationale": "Branches still execute. Fetch just guesses worse." }
+          ],
+          "correctExplanation": "TAGE's value is learned long history. Reset it and you are a short local predictor again.",
+          "objectiveIds": ["Explain why one history length is not enough"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-ras-10",
+      "conceptId": "cpu-ras",
+      "title": "Returns are a stack, not a correlation",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-branch-prediction"],
+      "goDeeper": "cpu-btb",
+      "explanation": [
+        "Returns are indirect branches, but they are not random. A CALL pushes a return PC; the matching RET should pop it. A small hardware stack, the return address stack, predicts returns with near-perfect accuracy as long as call depth stays within the stack and the compiler uses the calling convention. This is structure, not TAGE-style correlation.",
+        "Overflow and underflow are the real bugs. Deep recursion, or a flood of calls from a trampoline, wraps the RAS and starts predicting stale addresses. Unbalanced CALL/RET pairs — tail-call tricks, hand-written assembly, context switches — desynchronize it. Operating systems snapshot or flush the RAS on a swap so one process does not gift another a predicted target.",
+        "This is also a speculative-execution gadget. A poisoned RAS makes RET speculate to an attacker-chosen address. That is why kernels stuff the RAS with known-good entries, or flush it, on a context switch. The performance cost is a burst of return mispredicts after the stuffing — a front-end tax you can name."
+      ],
+      "example": "A 16-entry RAS correctly predicts a well-nested call tree of depth 16. The 17th nested call overwrites the oldest entry. When you unwind past 16, the remaining returns predict whatever the overflow wrote — often a spectacular front-end flush.",
+      "whyItMatters": "If a review mentions worse-than-expected recursion, or a kernel mitigation that costs a few percent on syscall-heavy work, look at the RAS before you look at the ALU.",
+      "quiz": [
+        {
+          "id": "ras10-1",
+          "stem": "The RAS predicts returns by:",
+          "correctAnswer": "Pushing the link address at CALL and popping at RET",
+          "distractors": [
+            { "text": "Hashing global history like TAGE", "kind": "nearby", "rationale": "Returns are LIFO structure, not correlation." },
+            { "text": "Storing one target per binary", "kind": "misapplied", "rationale": "A program has many live return sites." },
+            { "text": "Asking only the BTB", "kind": "subtle", "rationale": "A BTB would see one site and many destinations. The stack is the point." }
+          ],
+          "correctExplanation": "It exploits last-in first-out structure. That is why it beats a general target cache.",
+          "objectiveIds": ["Explain how CALL/RET uses a LIFO stack of return PCs"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ras10-2",
+          "stem": "RAS overflow happens when:",
+          "correctAnswer": "Call depth exceeds the hardware stack",
+          "distractors": [
+            { "text": "A branch is not taken", "kind": "nearby", "rationale": "Not-taken is a direction outcome, not a stack wrap." },
+            { "text": "L1 misses", "kind": "misapplied", "rationale": "A cache miss does not wrap the return stack." },
+            { "text": "The ROB fills", "kind": "subtle", "rationale": "A full ROB is a window stall, not a RAS wrap." }
+          ],
+          "correctExplanation": "Extra CALLs overwrite older return PCs. Unwind then predicts junk.",
+          "objectiveIds": ["Diagnose overflow and why kernels stuff or flush the RAS"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ras10-3",
+          "stem": "Kernels stuff or flush the RAS on a context switch to:",
+          "correctAnswer": "Stop one task's return predictions from steering another",
+          "distractors": [
+            { "text": "Warm the data cache", "kind": "misapplied", "rationale": "The RAS is a predictor, not a cache of data." },
+            { "text": "Clear BTB tags for every branch in the binary", "kind": "nearby", "rationale": "That is a different, blunter front-end reset." },
+            { "text": "Reset the core clock", "kind": "subtle", "rationale": "This is about predicted targets, not frequency." }
+          ],
+          "correctExplanation": "Otherwise RET speculation becomes a cross-task gadget and a mispredict source.",
+          "objectiveIds": ["Diagnose overflow and why kernels stuff or flush the RAS"],
+          "prerequisiteConceptIds": ["cpu-branch-prediction"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-issue-width-10",
+      "conceptId": "cpu-issue-width",
+      "title": "How many can start, if they are ready",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-pipeline", "cpu-ilp-idea"],
+      "goDeeper": "cpu-ooo-schedule",
+      "explanation": [
+        "Issue width is how many operations a cycle can start if they are ready. A 4-wide machine can begin four independent ops in the same tick. That is a throughput knob, not a latency miracle. Each op still takes however long it takes. You bought more completions per cycle when the program actually has that many independent pieces sitting there.",
+        "Width is not the same as the supply of independent work. Instruction-level parallelism is a property of the instruction stream — how many ops are actually ready, with inputs already produced. A 6-wide decoder staring at a long dependent chain issues one. A 2-wide machine staring at a pile of independent adds can stay full. Advertised width is a hose. ILP is whether anything is in the tank.",
+        "Superscalar just means 'wider than one' on a sequential ISA. The hardware finds the independent ops. That search gets expensive fast: more ports on the register file, more result buses, more steering. The next module is how renaming and out-of-order issue try to keep those extra slots fed. Width without independence is empty silicon."
+      ],
+      "example": "Four independent `add` instructions can issue together on a 4-wide core. `r1 = r1 + 1` four times in a row cannot: each waits on the last. Same opcode, same width, different ILP. The brochure still says 4-wide.",
+      "whyItMatters": "Every 'wider issue' claim is a bet that the compiler and the program will produce enough independent work. If you cannot separate width from ILP, you will treat a 6-wide slide as a 6× program.",
+      "quiz": [
+        {
+          "id": "iw10-1",
+          "stem": "Issue width is:",
+          "correctAnswer": "How many ready operations a cycle can start",
+          "distractors": [
+            { "text": "How long one operation takes", "kind": "reversed", "rationale": "That is latency, not width." },
+            { "text": "How many architectural registers the ISA names", "kind": "nearby", "rationale": "ISA names are a contract. Width is an implementation." },
+            { "text": "How many cores the package contains", "kind": "misapplied", "rationale": "That is thread- or process-level parallelism." }
+          ],
+          "correctExplanation": "A hose size. Useful only if ready work exists.",
+          "objectiveIds": ["Define issue width as how many ready ops can start in one cycle"],
+          "prerequisiteConceptIds": ["cpu-pipeline", "cpu-ilp-idea"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "iw10-2",
+          "stem": "A 6-wide core facing a long dependent chain typically:",
+          "correctAnswer": "Issues one, because the next ops are not ready",
+          "distractors": [
+            { "text": "Issues six copies of the same dependent add", "kind": "misconception", "rationale": "Copies do not create independence." },
+            { "text": "Deletes the dependence because it is wide", "kind": "reversed", "rationale": "Width does not invent ILP." },
+            { "text": "Must stall fetch until the chain ends", "kind": "subtle", "rationale": "Fetch can run ahead. Issue still waits on the data." }
+          ],
+          "correctExplanation": "Width is unused without ready operands. ILP is the supply.",
+          "objectiveIds": ["Contrast width with the supply of independent work"],
+          "prerequisiteConceptIds": ["cpu-ilp-idea"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "iw10-3",
+          "stem": "Superscalar execution on a sequential ISA means:",
+          "correctAnswer": "Hardware looks for independent ops and starts more than one per cycle",
+          "distractors": [
+            { "text": "The compiler must rewrite the program as four-wide packets", "kind": "nearby", "rationale": "Hardware finds independent ops. Compile-time packing is a different bet." },
+            { "text": "The ISA now requires four destinations per instruction", "kind": "misapplied", "rationale": "The contract stayed sequential. The implementation got wider." },
+            { "text": "Pipelining has been removed", "kind": "subtle", "rationale": "Width sits on top of a pipeline, it does not replace it." }
+          ],
+          "correctExplanation": "Same sequential program. More issue slots if independence exists.",
+          "objectiveIds": ["Contrast width with the supply of independent work"],
+          "prerequisiteConceptIds": ["cpu-pipeline", "cpu-ilp-idea"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

@@ -3,30 +3,6 @@ import { L, q } from "../lesson";
 
 export const LONGFORM_LESSONS: Lesson[] = [
   L({
-    id: "cpu-window-30",
-    conceptId: "cpu-rob",
-    title: "The instruction window as an economy",
-    durationMin: 30,
-    effort: "deep",
-    level: "journalist",
-    prerequisites: ["cpu-renaming"],
-    explanation: [
-      "A modern core is not ‘faster clocks’ and not even ‘wider issue’ in isolation. It is a window: how many not-yet-retired instructions can sit in flight while the machine waits on a miss, a mispredict, or a long divider. The window is the product of several finite tables that must all have a free slot: ROB, physical registers, scheduler entries, load/store queue, fetch buffer. The first one that fills is the real width that day.",
-      "This is why two chips with the same advertised 6-wide decode can feel different on a browser versus a GEMM. The browser is front-end and predictor bound; the GEMM is backend and cache bound. A larger ROB without a larger physical file just moves the stall. Vendor slides that quote one number are choosing which bottleneck to brag about.",
-      "Spectre-era mitigations, SMT, and security domains tax the same tables. An RSB stuff is a burst of fake calls that occupy predictor state. An IBPB is a flush of useful history. SMT doubles the customers of one ROB and one file. When a review says ‘security tax’, try to name the table that got smaller in practice.",
-      "For reporting: ask which structure grew, on which workload class, and whether the compiler or the runtime was assumed. A 512-entry ROB is a miss-tolerance story. A 20% larger BTB is a frontend-in-the-interpreter story. They are not interchangeable adjectives.",
-    ],
-    example:
-      "A load misses 80 ns. At 4 GHz that is 320 cycles. A 4-wide machine that can keep 320 independent ops in flight can hide the miss; one that fills a 192-entry ROB at cycle 50 sits idle for the rest. The SPECint delta from ‘bigger window’ is this arithmetic on the misses that actually happen.",
-    whyItMatters:
-      "This is the single model that lets you read a microarchitecture launch without being towed by the slide. Name the scarce table.",
-    quiz: [
-      q("w1", "The effective window is limited by:", ["Clock only", "The first structure to fill among ROB, PRF, scheduler, LSQs…", "ISA register count alone", "The number of sold chips"], 1, "Min of the capacities, not the brochure max."),
-      q("w2", "A bigger ROB without a bigger PRF often:", ["Always doubles IPC", "Moves the stall from allocate-at-ROB to rename", "Removes caches", "Fixes mispredicts"], 1, "You still need destinations."),
-      q("w3", "SMT typically:", ["Duplicates every table perfectly", "Shares many of those tables, so one thread can starve the window of the other", "Turns off the predictor", "Makes ROB infinite"], 1, "More customers, same tank."),
-    ],
-  }),
-  L({
     id: "semi-stack-30",
     conceptId: "semi-stochastics",
     title: "How an EUV layer actually fails",

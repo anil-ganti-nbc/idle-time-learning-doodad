@@ -4,6 +4,7 @@ import { CONCEPT_MAP } from "../concepts";
 import { lessonFileSchema } from "../schema";
 import { CPU_SEMI_LESSONS } from "./cpu-semi";
 import { CPU_FOUNDATIONS_LESSONS } from "./cpu-foundations";
+import { CPU_MICROARCH_LESSONS } from "./cpu-microarch";
 import { SYSTEMS_LESSONS } from "./systems";
 import { SCIENCE_LESSONS } from "./science";
 import { CULTURE_LESSONS } from "./culture";
@@ -34,6 +35,7 @@ function loadExternal(): Lesson[] {
 
 export const LESSONS: Lesson[] = [
   ...CPU_FOUNDATIONS_LESSONS,
+  ...CPU_MICROARCH_LESSONS,
   ...CPU_SEMI_LESSONS,
   ...GPU_LESSONS,
   ...SYSTEMS_LESSONS,
