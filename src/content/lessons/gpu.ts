@@ -1,5 +1,5 @@
 import type { Lesson } from "@/lib/learning/types";
-import { L, q } from "../lesson";
+import { L, d, item } from "../lesson";
 
 export const GPU_LESSONS: Lesson[] = [
   L({
@@ -21,32 +21,48 @@ export const GPU_LESSONS: Lesson[] = [
     whyItMatters:
       "Every confused chip announcement — 'faster clocks', 'more CUDA cores', 'higher occupancy' — is a latency/throughput mix-up. If you cannot say which quantity moved, you cannot read the claim.",
     quiz: [
-      q(
-        "lt1",
-        "A change that shrinks how long one instruction takes, without changing how many finish per cycle, primarily moved:",
-        ["Throughput", "Latency", "Occupancy", "Coherence"],
-        1,
-        "Latency is per-item time. Throughput is completion rate.",
-      ),
-      q(
-        "lt2",
-        "A factory with a 40-minute bake and 200 loaves in the oven at once is mainly an example of:",
-        [
-          "Eliminating latency",
-          "High throughput despite high latency",
-          "A structural hazard",
-          "Register renaming",
+      item({
+        id: "lt1",
+        stem: "A change that shrinks how long one instruction takes, without changing how many finish per cycle, primarily moved:",
+        correct: "Latency",
+        distractors: [
+          d("Throughput", "nearby", "Throughput is completion rate, not per-item time."),
+          d("Occupancy", "misapplied", "Occupancy is a later GPU resource idea, not this quantity."),
+          d("Coherence", "subtle", "Coherence is about agreeing copies, not speed."),
         ],
-        1,
-        "Each loaf still takes 40 minutes; many finish each hour.",
-      ),
-      q(
-        "lt3",
-        "Switching to another ready thread while a load is in flight is trying to protect:",
-        ["The load’s latency", "Throughput while latency is paid", "DRAM capacity", "ISA compatibility"],
-        1,
-        "The miss is still slow. The machine keeps retiring other work.",
-      ),
+        explanation: "Latency is per-item time. Throughput is completion rate.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Distinguish latency from throughput with a concrete pipeline or factory example"],
+        difficultyTier: 0,
+      }),
+      item({
+        id: "lt2",
+        stem: "A factory with a 40-minute bake and 200 loaves in the oven at once is mainly an example of:",
+        correct: "High throughput despite high latency",
+        distractors: [
+          d("Eliminating latency", "reversed", "Each loaf still takes 40 minutes."),
+          d("A structural hazard", "misapplied", "Hazards are pipeline conflicts, not oven overlap."),
+          d("Register renaming", "nearby", "Renaming is a later name-dependency trick."),
+        ],
+        explanation: "Each loaf still takes 40 minutes; many finish each hour.",
+        cognitiveType: "apply",
+        objectiveIds: ["Distinguish latency from throughput with a concrete pipeline or factory example"],
+        difficultyTier: 0,
+      }),
+      item({
+        id: "lt3",
+        stem: "Switching to another ready thread while a load is in flight is trying to protect:",
+        correct: "Throughput while latency is paid",
+        distractors: [
+          d("The load’s latency", "reversed", "The miss is still slow; switching does not shorten it."),
+          d("DRAM capacity", "nearby", "Capacity is not the quantity being hidden."),
+          d("ISA compatibility", "subtle", "The ISA does not change because a warp is swapped."),
+        ],
+        explanation: "The miss is still slow. The machine keeps retiring other work.",
+        cognitiveType: "identify",
+        objectiveIds: ["Explain why raising clock or width can move one without the other"],
+        difficultyTier: 0,
+      }),
     ],
   }),
   L({
@@ -68,42 +84,49 @@ export const GPU_LESSONS: Lesson[] = [
     whyItMatters:
       "GPUs are not faster CPUs. They are machines for data-parallel work. If you cannot point at the independent elements, you are about to be disappointed by a kernel.",
     quiz: [
-      q(
-        "dp1",
-        "A computation is data-parallel when:",
-        [
-          "It uses a GPU",
-          "The same operation applies to independent elements",
-          "It has a for-loop",
-          "It touches DRAM",
+      item({
+        id: "dp1",
+        stem: "A computation is data-parallel when:",
+        correct: "The same operation applies to independent elements",
+        distractors: [
+          d("It uses a GPU", "misapplied", "The vendor logo is not the property."),
+          d("It has a for-loop", "nearby", "Loops can be sequential chains."),
+          d("It touches DRAM", "subtle", "Memory traffic is unrelated to independence."),
         ],
-        1,
-        "The hardware property is independence, not the vendor logo.",
-      ),
-      q(
-        "dp2",
-        "`x = f(x)` each iteration is hard to parallelize because:",
-        [
-          "Functions are slow",
-          "Each step depends on the previous result",
-          "f cannot run on a SIMD unit",
-          "The ISA forbids it",
+        explanation: "The hardware property is independence, not the vendor logo.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Recognize when a computation is data-parallel"],
+        difficultyTier: 0,
+      }),
+      item({
+        id: "dp2",
+        stem: "`x = f(x)` each iteration is hard to parallelize because:",
+        correct: "Each step depends on the previous result",
+        distractors: [
+          d("Functions are slow", "misconception", "The cost is the dependence, not call overhead."),
+          d("f cannot run on a SIMD unit", "misapplied", "f can run; it just cannot run independently."),
+          d("The ISA forbids it", "subtle", "ISAs happily express sequential updates."),
         ],
-        1,
-        "A loop-carried dependence is a chain, not a map.",
-      ),
-      q(
-        "dp3",
-        "Rewriting a reduction as a tree of partials is an example of:",
-        [
-          "Raising DRAM latency",
-          "Creating independence the original loop did not have",
-          "Register renaming",
-          "Cache coherency",
+        explanation: "A loop-carried dependence is a chain, not a map.",
+        cognitiveType: "apply",
+        objectiveIds: ["Contrast that with a sequential dependence a GPU cannot wish away"],
+        prerequisiteConceptIds: ["arch-latency-throughput"],
+        difficultyTier: 0,
+      }),
+      item({
+        id: "dp3",
+        stem: "Rewriting a reduction as a tree of partials is an example of:",
+        correct: "Creating independence the original loop did not have",
+        distractors: [
+          d("Raising DRAM latency", "reversed", "The rewrite is about dependence, not making memory slower."),
+          d("Register renaming", "nearby", "Renaming kills false name conflicts, not loop-carried edges."),
+          d("Cache coherency", "subtle", "Coherence does not manufacture parallelism."),
         ],
-        1,
-        "The algorithm manufactures parallelism. Hardware cannot invent it.",
-      ),
+        explanation: "The algorithm manufactures parallelism. Hardware cannot invent it.",
+        cognitiveType: "identify",
+        objectiveIds: ["Contrast that with a sequential dependence a GPU cannot wish away"],
+        difficultyTier: 0,
+      }),
     ],
   }),
   L({
@@ -125,37 +148,51 @@ export const GPU_LESSONS: Lesson[] = [
     whyItMatters:
       "Stories that a new laptop 'has more cores so everything is faster' collapse once you know which program is a map and which is a chain. The rest of this module is how the map is actually executed.",
     quiz: [
-      q(
-        "gw1",
-        "A latency-optimized core spends relatively more area on:",
-        [
-          "Identical ALUs",
-          "Prediction, reordering, and caches for one thread",
-          "HBM stacks",
-          "Wavefront occupancy",
+      item({
+        id: "gw1",
+        stem: "A latency-optimized core spends relatively more area on:",
+        correct: "Prediction, reordering, and caches for one thread",
+        distractors: [
+          d("Identical ALUs", "nearby", "Many ALUs is the throughput bet, not the single-thread bet."),
+          d("HBM stacks", "misapplied", "Memory stacks are a package choice, not the core’s crystal ball."),
+          d("Wavefront occupancy", "subtle", "Occupancy is a later GPU resource word."),
         ],
-        1,
-        "The CPU bet is 'make this PC fast'.",
-      ),
-      q(
-        "gw2",
-        "A throughput GPU is a good match when:",
-        [
-          "The next instruction always depends on the last",
-          "Many elements can be processed independently",
-          "The working set is one cache line",
-          "You need precise exceptions on every instruction",
+        explanation: "The CPU bet is 'make this PC fast'.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Explain the area bet of a sequential core versus a throughput machine"],
+        prerequisiteConceptIds: ["arch-data-parallel", "cpu-pipeline"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "gw2",
+        stem: "A throughput GPU is a good match when:",
+        correct: "Many elements can be processed independently",
+        distractors: [
+          d("The next instruction always depends on the last", "reversed", "That is the sequential-core case."),
+          d("The working set is one cache line", "nearby", "Tiny working sets favour caches, not thousands of ALUs."),
+          d("You need precise exceptions on every instruction", "subtle", "Precise exceptions are a CPU-core luxury."),
         ],
-        1,
-        "Independence is what extra ALUs can spend.",
-      ),
-      q(
-        "gw3",
-        "Switching to another group of threads during a miss is buying:",
-        ["Shorter DRAM latency", "Throughput while a long latency is in flight", "A larger ISA", "Coherence"],
-        1,
-        "The miss is still slow. Other maps keep the ALUs fed.",
-      ),
+        explanation: "Independence is what extra ALUs can spend.",
+        cognitiveType: "apply",
+        objectiveIds: ["Match a workload to the throughput bet"],
+        prerequisiteConceptIds: ["arch-data-parallel"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "gw3",
+        stem: "Switching to another group of threads during a miss is buying:",
+        correct: "Throughput while a long latency is in flight",
+        distractors: [
+          d("Shorter DRAM latency", "reversed", "The miss is still slow."),
+          d("A larger ISA", "nearby", "The instruction set does not grow because a warp swapped."),
+          d("Coherence", "subtle", "Coherence is about agreeing copies, not hiding a miss."),
+        ],
+        explanation: "The miss is still slow. Other maps keep the ALUs fed.",
+        cognitiveType: "predict",
+        objectiveIds: ["Predict what latency hiding actually protects"],
+        prerequisiteConceptIds: ["arch-latency-throughput"],
+        difficultyTier: 2,
+      }),
     ],
   }),
   L({
@@ -177,37 +214,49 @@ export const GPU_LESSONS: Lesson[] = [
     whyItMatters:
       "Every later word — warp, occupancy, coalescing — is an implementation detail of this launch. If you skip the model, those words become vendor folklore.",
     quiz: [
-      q(
-        "ge1",
-        "In the CUDA-style model, the function you write that runs per thread is a:",
-        ["Wavefront", "Kernel", "Reorder buffer", "Page table"],
-        1,
-        "A kernel is the per-thread body; the launch supplies the index space.",
-      ),
-      q(
-        "ge2",
-        "A thread block is the level that can:",
-        [
-          "Address all of DRAM privately",
-          "Share a small on-chip memory and a barrier",
-          "Retire x86 instructions",
-          "Replace the grid",
+      item({
+        id: "ge1",
+        stem: "In the CUDA-style model, the function you write that runs per thread is a:",
+        correct: "Kernel",
+        distractors: [
+          d("Wavefront", "nearby", "A wavefront is a later hardware grouping."),
+          d("Reorder buffer", "misapplied", "ROBs belong to out-of-order CPU cores."),
+          d("Page table", "subtle", "Address translation is a different contract."),
         ],
-        1,
-        "Shared memory and __syncthreads are block-scoped.",
-      ),
-      q(
-        "ge3",
-        "threadIdx / blockIdx exist so that:",
-        [
-          "The compiler can rename registers",
-          "Each thread can compute which element it owns",
-          "Warps can be 64 wide",
-          "Caches stay coherent",
+        explanation: "A kernel is the per-thread body; the launch supplies the index space.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Name the kernel as the per-thread body of a launch"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "ge2",
+        stem: "A thread block is the level that can:",
+        correct: "Share a small on-chip memory and a barrier",
+        distractors: [
+          d("Address all of DRAM privately", "misconception", "DRAM is a device resource, not block-private."),
+          d("Retire x86 instructions", "misapplied", "Blocks are not CPU cores."),
+          d("Replace the grid", "reversed", "The grid contains blocks; a block is not the launch."),
         ],
-        1,
-        "The index *is* the parallel loop variable.",
-      ),
+        explanation: "Shared memory and __syncthreads are block-scoped.",
+        cognitiveType: "apply",
+        objectiveIds: ["Separate thread, block, and grid responsibilities"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "ge3",
+        stem: "threadIdx / blockIdx exist so that:",
+        correct: "Each thread can compute which element it owns",
+        distractors: [
+          d("The compiler can rename registers", "nearby", "Renaming is a CPU-core name trick."),
+          d("Warps can be 64 wide", "misapplied", "Warp width is hardware, not why indices exist."),
+          d("Caches stay coherent", "subtle", "Indices do not implement MESI."),
+        ],
+        explanation: "The index is the parallel loop variable.",
+        cognitiveType: "predict",
+        objectiveIds: ["Use launch indices as the parallel loop variable"],
+        prerequisiteConceptIds: ["gpu-why-throughput"],
+        difficultyTier: 2,
+      }),
     ],
   }),
   L({
@@ -229,42 +278,49 @@ export const GPU_LESSONS: Lesson[] = [
     whyItMatters:
       "SIMT is why GPU kernels read like C and profile like vector machines. Divergence, occupancy, and 'why is my if so slow?' are all this fact wearing different hats.",
     quiz: [
-      q(
-        "gs1",
-        "SIMT differs from explicit SIMD mainly because:",
-        [
-          "It uses slower ALUs",
-          "You write scalar thread code; the hardware groups and masks lanes",
-          "It cannot do floating point",
-          "It has no registers",
+      item({
+        id: "gs1",
+        stem: "SIMT differs from explicit SIMD mainly because:",
+        correct: "You write scalar thread code; the hardware groups and masks lanes",
+        distractors: [
+          d("It uses slower ALUs", "misconception", "The ALUs are not the distinction."),
+          d("It cannot do floating point", "nearby", "SIMT machines do plenty of FP."),
+          d("It has no registers", "subtle", "Threads still have register files."),
         ],
-        1,
-        "The pack is implicit. The cost of idle lanes is not.",
-      ),
-      q(
-        "gs2",
-        "When some threads in a SIMT group take an if and others take the else:",
-        [
-          "Both paths run, with inactive lanes masked",
-          "The GPU forks into two independent programs",
-          "The compiler rejects the kernel",
-          "Only the first thread’s path runs",
+        explanation: "The pack is implicit. The cost of idle lanes is not.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Distinguish SIMT from explicit SIMD"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "gs2",
+        stem: "When some threads in a SIMT group take an if and others take the else:",
+        correct: "Both paths run, with inactive lanes masked",
+        distractors: [
+          d("The GPU forks into two independent programs", "reversed", "There is still one instruction stream."),
+          d("The compiler rejects the kernel", "nearby", "Divergent kernels compile; they just run both sides."),
+          d("Only the first thread’s path runs", "misapplied", "Lane 0 is not a dictator."),
         ],
-        0,
-        "One instruction stream, two passes, a mask.",
-      ),
-      q(
-        "gs3",
-        "A kernel that looks scalar can still waste work because:",
-        [
-          "C cannot run on a GPU",
-          "Inactive lanes in the group still occupy the instruction issue",
-          "DRAM ignores masks",
-          "Blocks cannot share memory",
+        explanation: "One instruction stream, two passes, a mask.",
+        cognitiveType: "apply",
+        objectiveIds: ["Trace what a divergent if/else actually does"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "gs3",
+        stem: "A kernel that looks scalar can still waste work because:",
+        correct: "Inactive lanes in the group still occupy the instruction issue",
+        distractors: [
+          d("C cannot run on a GPU", "misconception", "Scalar-looking C is the programming model."),
+          d("DRAM ignores masks", "nearby", "The tax is issue/occupancy, not DRAM refusing masks."),
+          d("Blocks cannot share memory", "subtle", "Shared memory is unrelated to idle lanes."),
         ],
-        1,
-        "Idle lanes are why divergence is a throughput tax.",
-      ),
+        explanation: "Idle lanes are why divergence is a throughput tax.",
+        cognitiveType: "predict",
+        objectiveIds: ["Predict the cost of idle lanes"],
+        prerequisiteConceptIds: ["gpu-execution-model"],
+        difficultyTier: 2,
+      }),
     ],
   }),
   L({
@@ -286,42 +342,50 @@ export const GPU_LESSONS: Lesson[] = [
     whyItMatters:
       "Occupancy, divergence, and coalescing are all warp-shaped. If you keep thinking in individual threads, those words will stay metaphorical.",
     quiz: [
-      q(
-        "ww1",
-        "A warp (or wavefront) is primarily:",
-        [
-          "A programmer-declared block",
-          "The hardware group that shares an instruction and is scheduled as one",
-          "A DRAM page",
-          "A CUDA stream",
+      item({
+        id: "ww1",
+        stem: "A warp (or wavefront) is primarily:",
+        correct: "The hardware group that shares an instruction and is scheduled as one",
+        distractors: [
+          d("A programmer-declared block", "nearby", "Blocks are the programming-model grouping."),
+          d("A DRAM page", "misapplied", "Pages are an OS/memory idea."),
+          d("A CUDA stream", "subtle", "Streams order launches, they do not share a PC."),
         ],
-        1,
-        "The scheduler’s quantum, not the kernel’s syntax.",
-      ),
-      q(
-        "ww2",
-        "A 40-thread block on a 32-wide warp wastes lanes because:",
-        [
-          "40 is prime",
-          "The second warp is only 8 threads and still occupies 32 lanes",
-          "Blocks cannot exceed 32",
-          "The compiler rounds down to 32 and drops work",
+        explanation: "The scheduler’s quantum, not the kernel’s syntax.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Name the warp as the scheduler’s quantum"],
+        difficultyTier: 3,
+      }),
+      item({
+        id: "ww2",
+        stem: "A 40-thread block on a 32-wide warp wastes lanes because:",
+        correct: "The second warp is only 8 threads and still occupies 32 lanes",
+        distractors: [
+          d("40 is prime", "misconception", "Primality is irrelevant."),
+          d("Blocks cannot exceed 32", "reversed", "Blocks can be much larger than a warp."),
+          d("The compiler rounds down to 32 and drops work", "nearby", "The extra 8 threads still run; they just pad a warp."),
         ],
-        1,
-        "Partial warps still take a full issue slot.",
-      ),
-      q(
-        "ww3",
-        "Two threads in *different* warps taking opposite branches:",
-        [
-          "Must mask each other",
-          "Do not diverge against each other; divergence is intra-warp",
-          "Force a grid-wide barrier",
-          "Disable coalescing permanently",
+        explanation: "Partial warps still take a full issue slot.",
+        cognitiveType: "apply",
+        objectiveIds: ["Compute the cost of a partial warp"],
+        prerequisiteConceptIds: ["gpu-simt"],
+        difficultyTier: 3,
+      }),
+      item({
+        id: "ww3",
+        stem: "Two threads in different warps taking opposite branches:",
+        correct: "Do not diverge against each other; divergence is intra-warp",
+        distractors: [
+          d("Must mask each other", "reversed", "Different warps have different program counters."),
+          d("Force a grid-wide barrier", "misapplied", "A branch is not a grid barrier."),
+          d("Disable coalescing permanently", "subtle", "Coalescing is an address-pattern story."),
         ],
-        1,
-        "Divergence is a property of one shared program counter.",
-      ),
+        explanation: "Divergence is a property of one shared program counter.",
+        cognitiveType: "integrate",
+        objectiveIds: ["Separate intra-warp divergence from inter-warp independence"],
+        prerequisiteConceptIds: ["gpu-simt"],
+        difficultyTier: 3,
+      }),
     ],
   }),
 ];

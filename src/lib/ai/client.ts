@@ -1,6 +1,6 @@
 import { assembleQuiz } from "@/lib/quiz/assemble";
 import { PROMPT_VERSION } from "@/lib/learning/types";
-import type { AiSecrets, AiSettings, Lesson, PendingPath } from "@/lib/learning/types";
+import type { AiSecrets, AiSettings, Lesson, PendingPath, Tier } from "@/lib/learning/types";
 import { cacheKey, findCachedLesson, hashText } from "./cache";
 import { assertAiAllowed, assertMissingOnly } from "./guard";
 import {
@@ -182,6 +182,25 @@ export async function generateLesson(
         cacheKey: cacheKey(query),
         notes,
       }),
+      assemble: input.quizContext
+        ? {
+            expectedTier: input.quizContext.tier as Tier | undefined,
+            knownObjectiveIds: input.quizContext.objectives?.length ? input.quizContext.objectives : undefined,
+            allowed: input.quizContext.allowedKnowledge
+              ? {
+                  currentConceptId: input.quizContext.conceptId ?? input.concept.id,
+                  conceptIds: [
+                    ...new Set([
+                      input.quizContext.conceptId ?? input.concept.id,
+                      ...input.quizContext.allowedKnowledge.map((k) => k.id),
+                    ]),
+                  ],
+                  names: input.quizContext.allowedKnowledge,
+                  reasons: {},
+                }
+              : undefined,
+          }
+        : undefined,
     });
   } catch (err) {
     return {
@@ -233,6 +252,33 @@ export async function generateExplain(
   };
 }
 
+function assembleGeneratedQuiz(raw: unknown, quizCtx: QuizPromptContext | undefined, lesson: Lesson) {
+  return assembleQuiz(raw as Parameters<typeof assembleQuiz>[0], {
+    expectedTier: quizCtx?.tier as Tier | undefined,
+    knownObjectiveIds: quizCtx?.objectives?.length ? quizCtx.objectives : undefined,
+    allowed: quizCtx?.allowedKnowledge
+      ? {
+          currentConceptId: quizCtx.conceptId ?? lesson.conceptId,
+          conceptIds: [
+            ...new Set([
+              quizCtx.conceptId ?? lesson.conceptId,
+              ...quizCtx.allowedKnowledge.map((k) => k.id),
+            ]),
+          ],
+          names: quizCtx.allowedKnowledge,
+          reasons: {},
+        }
+      : undefined,
+  });
+}
+
+function canRetryQuiz(ctx: GenerateContext, alreadyUsed: number): boolean {
+  return (
+    ctx.logCountToday + alreadyUsed < ctx.settings.maxPerDay &&
+    ctx.sessionGenerations + alreadyUsed < ctx.settings.maxPerSession
+  );
+}
+
 export async function generateQuiz(
   ctx: GenerateContext,
   lesson: Lesson,
@@ -241,21 +287,53 @@ export async function generateQuiz(
   const meta = { provider: ctx.settings.provider, model: ctx.settings.model };
   const guard = assertAiAllowed(ctx.settings, ctx.logCountToday, ctx.sessionGenerations);
   if (!guard.ok) return { ...guard, billable: false, ...meta };
+
   const user = quizUserPrompt(lesson, quizCtx);
-  const completion = await completeText(ctx.settings, ctx.secrets, quizSystemPrompt(), user);
-  const billable = billed(completion);
-  const usage = usageFrom(completion, user);
+  let completion = await completeText(ctx.settings, ctx.secrets, quizSystemPrompt(), user);
+  let billable = billed(completion);
+  let usage = usageFrom(completion, user);
   if (!completion.ok) return { ok: false, error: completion.error, billable, ...meta, ...usage };
-  const json = extractJson(completion.text);
-  if (!json.ok) return { ...json, billable, provider: completion.provider, model: completion.model, ...usage };
-  const parsed = parseGeneratedQuiz(json.value);
-  if (!parsed.ok) return { ...parsed, billable, provider: completion.provider, model: completion.model, ...usage };
-  const assembled = assembleQuiz(parsed.value.quiz);
-  if (!assembled.ok) {
+
+  const first = finalizeGeneratedQuiz(completion.text, quizCtx, lesson);
+  if (first.ok) {
+    return {
+      ok: true as const,
+      value: first.quiz,
+      billable: true,
+      model: completion.model,
+      provider: completion.provider,
+      ...usage,
+    };
+  }
+
+  if (!canRetryQuiz(ctx, 1)) {
     return {
       ok: false,
-      error: assembled.error,
-      issues: assembled.issues,
+      error: first.error,
+      issues: first.issues,
+      billable,
+      provider: completion.provider,
+      model: completion.model,
+      ...usage,
+    };
+  }
+
+  completion = await completeText(ctx.settings, ctx.secrets, quizSystemPrompt(), user);
+  billable = billable || billed(completion);
+  const retryUsage = usageFrom(completion, user);
+  usage = {
+    inputTokens: usage.inputTokens + retryUsage.inputTokens,
+    outputTokens: (usage.outputTokens ?? 0) + (retryUsage.outputTokens ?? 0),
+  };
+  if (!completion.ok) {
+    return { ok: false, error: first.error, issues: first.issues, billable, ...meta, ...usage };
+  }
+  const second = finalizeGeneratedQuiz(completion.text, quizCtx, lesson);
+  if (!second.ok) {
+    return {
+      ok: false,
+      error: second.error,
+      issues: second.issues,
       billable,
       provider: completion.provider,
       model: completion.model,
@@ -264,12 +342,28 @@ export async function generateQuiz(
   }
   return {
     ok: true as const,
-    value: assembled.quiz,
+    value: second.quiz,
     billable: true,
     model: completion.model,
     provider: completion.provider,
     ...usage,
   };
+}
+
+function finalizeGeneratedQuiz(
+  text: string,
+  quizCtx: QuizPromptContext | undefined,
+  lesson: Lesson,
+): { ok: true; quiz: Lesson["quiz"] } | { ok: false; error: string; issues?: string[] } {
+  const json = extractJson(text);
+  if (!json.ok) return json;
+  const parsed = parseGeneratedQuiz(json.value);
+  if (!parsed.ok) return parsed;
+  const assembled = assembleGeneratedQuiz(parsed.value.quiz, quizCtx, lesson);
+  if (!assembled.ok) {
+    return { ok: false, error: assembled.error, issues: assembled.issues };
+  }
+  return { ok: true, quiz: assembled.quiz };
 }
 
 export async function generatePath(

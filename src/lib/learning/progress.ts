@@ -7,6 +7,7 @@ import { PROGRESS_PERSIST_VERSION, PROGRESS_STORAGE_KEY } from "./persistence";
 import { emptyProgress, normalizeProgressRow, quizRatio, reviewQuality, scheduleReviewFull } from "./srs";
 import type {
   AiSettings,
+  AssessmentItemRecord,
   Category,
   CategoryId,
   Concept,
@@ -27,6 +28,7 @@ import type {
   TimeBudget,
   Understanding,
 } from "./types";
+import { appendAssessmentItems, emptyAssessmentHistory, markLaterPoorRating } from "@/lib/quiz/history";
 
 interface ProgressStore extends ProgressState {
   setJournalist: (on: boolean) => void;
@@ -51,6 +53,8 @@ interface ProgressStore extends ProgressState {
     sourceType: SessionRecord["sourceType"];
     sourceProvider?: string;
     courseId?: string;
+    assessmentItems?: AssessmentItemRecord[];
+    positions?: number[];
   }) => SessionRecord;
   upsertCategory: (category: Category) => void;
   removeCategory: (id: string) => void;
@@ -102,6 +106,7 @@ function migratePersisted(persisted: unknown): ProgressState {
     pendingPath: p.pendingPath ?? null,
     courses: p.courses ?? {},
     customCourses: p.customCourses ?? [],
+    assessmentHistory: (p as ProgressState).assessmentHistory ?? emptyAssessmentHistory(),
   };
 }
 
@@ -189,6 +194,11 @@ export const useProgress = create<ProgressStore>()(
               ...s.recentCategoryIds.filter((c) => c !== input.categoryId),
             ].slice(0, 8),
             courses,
+            assessmentHistory: markLaterPoorRating(
+              appendAssessmentItems(s.assessmentHistory, input.assessmentItems ?? [], input.positions ?? []),
+              input.conceptId,
+              input.understanding,
+            ),
           };
         });
         return session;
@@ -350,6 +360,7 @@ export const useProgress = create<ProgressStore>()(
         pendingPath: s.pendingPath,
         courses: s.courses,
         customCourses: s.customCourses,
+        assessmentHistory: s.assessmentHistory,
       }),
     },
   ),
@@ -387,6 +398,7 @@ function snapshot(s: ProgressState): ProgressState {
     pendingPath: s.pendingPath,
     courses: s.courses,
     customCourses: s.customCourses,
+    assessmentHistory: s.assessmentHistory,
   };
 }
 

@@ -240,6 +240,31 @@ export const exportBundleV2Schema = z.object({
     sessions: z.array(sessionRecordSchema),
     recentCategoryIds: z.array(z.string()),
     courses: z.record(z.string(), courseProgressSchema).optional(),
+    assessmentHistory: z
+      .object({
+        items: z.array(
+          z.object({
+            at: z.string(),
+            lessonId: z.string(),
+            conceptId: z.string(),
+            questionId: z.string(),
+            courseId: z.string().optional(),
+            moduleId: z.string().optional(),
+            objectiveIds: z.array(z.string()).default([]),
+            cognitiveType: z.string().optional(),
+            difficultyTier: tier.optional(),
+            answerIndex: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]),
+            correct: z.boolean(),
+            laterPoorRating: z.boolean().optional(),
+            generationKind: z.enum(["seeded", "generated"]).optional(),
+            promptVersion: z.string().optional(),
+            provider: z.string().optional(),
+            model: z.string().optional(),
+          }),
+        ),
+        recentPositions: z.array(z.number()),
+      })
+      .optional(),
   }),
   catalog: z.object({
     categories: z.array(categorySchema),

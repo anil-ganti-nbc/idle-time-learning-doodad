@@ -24,11 +24,17 @@ export function isPlausibleKind(kind: string | undefined): kind is DistractorKin
   return Boolean(kind && (DISTRACTOR_KINDS as readonly string[]).includes(kind));
 }
 
+/**
+ * Catch sentence-versus-paragraph tells. Short noun-phrase options
+ * next to a one-line correct answer are a normal MCQ shape.
+ */
 export function lengthReveal(correct: string, option: string): boolean {
   const a = correct.trim().length;
   const b = option.trim().length;
-  if (a < 8 || b < 8) return false;
-  return b > a * 2.4 || a > b * 2.4;
+  const shorter = Math.min(a, b);
+  const longer = Math.max(a, b);
+  if (shorter < 16) return false;
+  return longer > shorter * 4 || (longer > shorter * 2.8 && longer - shorter > 80);
 }
 
 export function validateDistractors(
@@ -68,7 +74,9 @@ export function itemFromLegacy(question: QuizQuestion): { correct: string; distr
 }
 
 const JOKE = /\b(lol|lmao|jk|just kidding|foo bar|asdf|placeholder)\b/i;
+const ALL_NONE = /^(all|none) of (the above|these|the following)\.?$/i;
 
 export function looksJokeOrNonsense(text: string): boolean {
-  return JOKE.test(text) || text.trim().length < 2;
+  const trimmed = text.trim();
+  return JOKE.test(trimmed) || trimmed.length < 2 || ALL_NONE.test(trimmed);
 }

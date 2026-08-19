@@ -29,12 +29,17 @@ describe("distractor validation", () => {
       true,
     );
     const result = validateDistractors("The warp is the hardware scheduling quantum.", [
-      { text: "No", kind: "nearby" },
-      { text: "A block is just another name for a kernel launch configuration and also the unit that shares an instruction pointer across an entire grid of independent host threads.", kind: "subtle" },
-      { text: "A stream", kind: "misapplied" },
+      { text: "A block is just another name for a kernel launch configuration and also the unit that shares an instruction pointer across an entire grid of independent host threads that the driver scheduled onto every SM in the device.", kind: "subtle" },
+      { text: "A CUDA stream that only orders host launches", kind: "misapplied" },
+      { text: "A DRAM page the OS happens to have mapped", kind: "nearby" },
     ]);
     assert.equal(result.ok, false);
     if (!result.ok) assert.ok(result.issues.some((i) => /length reveals/i.test(i)));
+  });
+
+  it("allows a short noun-phrase option next to a one-line correct answer", () => {
+    assert.equal(lengthReveal("Throughput as completion rate", "Occupancy"), false);
+    assert.equal(lengthReveal("Throughput as completion rate", "Latency"), false);
   });
 
   it("rejects an unknown kind and a joke", () => {

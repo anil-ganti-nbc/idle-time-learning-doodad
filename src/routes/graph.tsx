@@ -120,6 +120,7 @@ function GraphReady() {
             <section key={cat.id}>
               <div className="mb-3 flex items-baseline justify-between gap-3">
                 <h2 className="font-display text-xl tracking-tight">{cat.name}</h2>
+              {cat.status !== "retired" ? (
                 <Link
                   to="/session"
                   search={{ category: cat.id }}
@@ -127,6 +128,9 @@ function GraphReady() {
                 >
                   Study
                 </Link>
+              ) : (
+                <span className="text-xs text-subtle">archived</span>
+              )}
               </div>
               <ul className="space-y-1">
                 {catRoots.map((c) => (

@@ -101,12 +101,29 @@ export const DISTRACTOR_KINDS = [
 ] as const;
 export type DistractorKind = (typeof DISTRACTOR_KINDS)[number];
 
+export const COGNITIVE_TYPES = [
+  "recognize",
+  "distinguish",
+  "identify",
+  "apply",
+  "predict",
+  "trace",
+  "compare",
+  "diagnose",
+  "integrate",
+  "tradeoff",
+] as const;
+export type CognitiveType = (typeof COGNITIVE_TYPES)[number];
+
+export const QUIZ_GENERATION_KINDS = ["seeded", "generated"] as const;
+export type QuizGenerationKind = (typeof QUIZ_GENERATION_KINDS)[number];
+
 export const CURRICULUM_SOURCE_KINDS = ["syllabus", "ocw", "textbook", "vendor", "notes"] as const;
 export type CurriculumSourceKind = (typeof CURRICULUM_SOURCE_KINDS)[number];
 
 export const LESSON_SCHEMA_VERSION = 1;
 export const EXPORT_SCHEMA_VERSION = 2;
-export const PROMPT_VERSION = "dau-lesson-v2";
+export const PROMPT_VERSION = "dau-quiz-v3";
 export const CURRICULUM_VERSION = 1;
 
 export interface Category {
@@ -192,6 +209,56 @@ export interface QuizQuestion {
   answerIndex: 0 | 1 | 2 | 3;
   explanation: string;
   distractors?: QuizDistractor[];
+  cognitiveType?: CognitiveType;
+  objectiveIds?: string[];
+  prerequisiteConceptIds?: string[];
+  difficultyTier?: Tier;
+}
+
+/** Canonical generated item. The app shuffles; AI must not set answerIndex. */
+export interface QuizItemDraft {
+  id: string;
+  stem: string;
+  correctAnswer: string;
+  distractors: [QuizDistractor, QuizDistractor, QuizDistractor];
+  correctExplanation: string;
+  objectiveIds: string[];
+  prerequisiteConceptIds: string[];
+  difficultyTier: Tier;
+  cognitiveType?: CognitiveType;
+}
+
+export interface AssessmentItemRecord {
+  at: string;
+  lessonId: string;
+  conceptId: string;
+  questionId: string;
+  courseId?: string;
+  moduleId?: string;
+  objectiveIds: string[];
+  cognitiveType?: CognitiveType;
+  difficultyTier?: Tier;
+  answerIndex: 0 | 1 | 2 | 3;
+  correct: boolean;
+  laterPoorRating?: boolean;
+  generationKind?: QuizGenerationKind;
+  promptVersion?: string;
+  provider?: string;
+  model?: string;
+}
+
+export interface AssessmentHistory {
+  items: AssessmentItemRecord[];
+  recentPositions: number[];
+}
+
+export interface LessonResult {
+  lessonId: string;
+  conceptId: string;
+  quizCorrect: number;
+  quizTotal: number;
+  understanding: Understanding | null;
+  at: string;
 }
 
 export interface Provenance {
@@ -419,6 +486,7 @@ export interface ProgressState {
   pendingPath: PendingPath | null;
   courses: Record<string, CourseProgress>;
   customCourses: Course[];
+  assessmentHistory: AssessmentHistory;
 }
 
 export interface SessionRequest {

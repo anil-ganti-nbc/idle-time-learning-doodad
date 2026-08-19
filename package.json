@@ -13,7 +13,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview --host 0.0.0.0 --port 8080",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/learning/*.test.ts src/lib/ai/*.test.ts src/lib/quiz/*.test.ts src/content/schema.test.ts src/content/courses/*.test.ts src/content/curriculum/*.test.ts scripts/**/*.test.mjs",
+    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/learning/*.test.ts src/lib/ai/*.test.ts src/lib/quiz/*.test.ts src/content/schema.test.ts src/content/courses/*.test.ts src/content/curriculum/*.test.ts src/content/quizzes/*.test.ts scripts/**/*.test.mjs",
     "curriculum:build": "node scripts/generate-curriculum.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."

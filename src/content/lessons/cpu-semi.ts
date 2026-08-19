@@ -1,5 +1,5 @@
 import type { Lesson } from "@/lib/learning/types";
-import { L, q } from "../lesson";
+import { L, d, item, q } from "../lesson";
 
 export const CPU_SEMI_LESSONS: Lesson[] = [
   L({
@@ -22,9 +22,49 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     whyItMatters:
       "Almost every performance claim about a CPU — clocks, cores, ‘efficiency cores’, GPU occupancy — is a story about keeping a pipeline fed. If you only remember frequency, you will misread every chip announcement.",
     quiz: [
-      q("p1", "Pipelining primarily improves which quantity?", ["Instruction latency", "Throughput / IPC", "Cache capacity", "DRAM latency"], 1, "Each instruction still takes multiple stages. Overlap raises how many finish per unit time."),
-      q("p2", "A pipeline bubble is:", ["A spare physical register", "An empty stage waiting on a dependency or miss", "A branch that was predicted taken", "A SIMD lane with no work"], 1, "The stage has nothing useful to do until the producer finishes."),
-      q("p3", "Deeper pipelines usually:", ["Eliminate data hazards", "Lower the cost of a mispredict", "Allow a higher clock at the cost of more expensive interruptions", "Remove the need for caches"], 2, "Shorter stages clock faster; a flush wastes more in-flight work."),
+      item({
+        id: "p1",
+        stem: "Pipelining primarily improves which quantity?",
+        correct: "Throughput / IPC",
+        distractors: [
+          d("Instruction latency", "reversed", "Each instruction still takes multiple stages."),
+          d("Cache capacity", "nearby", "Caches are a different mechanism."),
+          d("DRAM latency", "subtle", "The line does not make DRAM faster."),
+        ],
+        explanation: "Each instruction still takes multiple stages. Overlap raises how many finish per unit time.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Explain overlap without shrinking latency"],
+        prerequisiteConceptIds: ["arch-latency-throughput"],
+        difficultyTier: 1,
+      }),
+      item({
+        id: "p2",
+        stem: "A pipeline bubble is:",
+        correct: "An empty stage waiting on a dependency or miss",
+        distractors: [
+          d("A spare physical register", "nearby", "That is a rename-file leftover."),
+          d("A branch that was predicted taken", "misapplied", "A predicted branch may still be useful work."),
+          d("A SIMD lane with no work", "subtle", "Idle SIMD lanes are a later GPU/vector story."),
+        ],
+        explanation: "The stage has nothing useful to do until the producer finishes.",
+        cognitiveType: "apply",
+        objectiveIds: ["Explain overlap without shrinking latency"],
+        difficultyTier: 1,
+      }),
+      item({
+        id: "p3",
+        stem: "Deeper pipelines usually:",
+        correct: "Allow a higher clock at the cost of more expensive interruptions",
+        distractors: [
+          d("Eliminate data hazards", "reversed", "Depth makes hazards more expensive."),
+          d("Lower the cost of a mispredict", "misconception", "A flush wastes more in-flight work."),
+          d("Remove the need for caches", "subtle", "Depth does not replace locality."),
+        ],
+        explanation: "Shorter stages clock faster; a flush wastes more in-flight work.",
+        cognitiveType: "identify",
+        objectiveIds: ["Name the three hazard classes"],
+        difficultyTier: 1,
+      }),
     ],
   }),
   L({
@@ -47,9 +87,50 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     whyItMatters:
       "When a reviewer writes that a chip is ‘bad at games’ or ‘great at compiles’, they are usually pointing at how often this machine hits a hazard its predictors and caches cannot hide.",
     quiz: [
-      q("h1", "Forwarding fixes which situation?", ["A cache miss", "A RAW hazard when the value already exists in the pipeline", "A structural conflict on one divider", "An interrupt"], 1, "Bypass wires ship an already-computed result. They cannot invent a value still in DRAM."),
-      q("h2", "A control hazard exists because:", ["Registers have names", "The next fetch address depends on an unresolved branch", "The TLB is full", "The ROB is a queue"], 1, "Fetch cannot know the correct PC until the branch (or its predictor) speaks."),
-      q("h3", "Which stall cannot be removed by a bigger register file alone?", ["WAW on the same architectural register", "A load that misses in cache", "An output dependency the renamer would kill", "Two writes to r1 in program order"], 1, "A miss is a data availability problem, not a name conflict."),
+      item({
+        id: "h1",
+        stem: "Forwarding fixes which situation?",
+        correct: "A RAW hazard when the value already exists in the pipeline",
+        distractors: [
+          d("A cache miss", "reversed", "There is no value to forward yet."),
+          d("A structural conflict on one divider", "nearby", "That is a missing unit, not a missing value."),
+          d("An interrupt", "subtle", "Interrupts are control transfers, not bypass wires."),
+        ],
+        explanation: "Bypass wires ship an already-computed result. They cannot invent a value still in DRAM.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Name the three hazard classes"],
+        prerequisiteConceptIds: ["cpu-pipeline"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "h2",
+        stem: "A control hazard exists because:",
+        correct: "The next fetch address depends on an unresolved branch",
+        distractors: [
+          d("Registers have names", "nearby", "That is a data/name problem."),
+          d("The TLB is full", "misapplied", "TLB pressure is a memory-system stall."),
+          d("The ROB is a queue", "subtle", "The ROB restores order; it does not create the unknown PC."),
+        ],
+        explanation: "Fetch cannot know the correct PC until the branch (or its predictor) speaks.",
+        cognitiveType: "apply",
+        objectiveIds: ["Name the three hazard classes"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "h3",
+        stem: "Which stall cannot be removed by a bigger register file alone?",
+        correct: "A load that misses in cache",
+        distractors: [
+          d("WAW on the same architectural register", "nearby", "Renaming kills that name conflict."),
+          d("An output dependency the renamer would kill", "misapplied", "That is exactly what more physicals help."),
+          d("Two writes to r1 in program order", "subtle", "Those are false dependencies after rename."),
+        ],
+        explanation: "A miss is a data availability problem, not a name conflict.",
+        cognitiveType: "predict",
+        objectiveIds: ["Distinguish name conflicts from missing data"],
+        prerequisiteConceptIds: ["cpu-pipeline"],
+        difficultyTier: 2,
+      }),
     ],
   }),
   L({
@@ -72,9 +153,49 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     whyItMatters:
       "Spectre made branch predictors famous for the wrong reason. For reporting and for performance work, the right reason remains: mispredicts are how control flow taxes IPC, and every ‘security mitigation’ that constrains prediction has a measurable throughput cost.",
     quiz: [
-      q("b1", "Direction prediction and target prediction are separate because:", ["Taken/not-taken is one bit; the destination is an address", "Targets never repeat", "Only indirect branches have a direction", "The BTB stores flags, not PCs"], 0, "A taken branch still needs to know *where*."),
-      q("b2", "A two-bit saturating counter is used so that:", ["It can store the target PC", "A single unusual outcome does not flip the prediction", "It predicts return addresses", "It replaces the BTB"], 1, "It takes two consecutive disagreements to change state."),
-      q("b3", "A 97% prediction rate can still dominate runtime when:", ["Each miss is cheap", "The window is wide and each miss flushes a lot of work", "There are no branches", "The cache always hits"], 1, "Cost is miss-rate × miss-penalty. Wide/deep machines have huge penalties."),
+      item({
+        id: "b1",
+        stem: "Direction prediction and target prediction are separate because:",
+        correct: "Taken/not-taken is one bit; the destination is an address",
+        distractors: [
+          d("Targets never repeat", "misconception", "Targets repeat constantly; that is why a BTB works."),
+          d("Only indirect branches have a direction", "reversed", "Conditionals have a direction; indirects stress the target."),
+          d("The BTB stores flags, not PCs", "nearby", "The BTB is a target cache."),
+        ],
+        explanation: "A taken branch still needs to know where.",
+        cognitiveType: "recognize",
+        objectiveIds: ["Separate direction from target"],
+        prerequisiteConceptIds: ["cpu-pipeline"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "b2",
+        stem: "A two-bit saturating counter is used so that:",
+        correct: "A single unusual outcome does not flip the prediction",
+        distractors: [
+          d("It can store the target PC", "misapplied", "Counters do not store addresses."),
+          d("It predicts return addresses", "nearby", "That is the RAS."),
+          d("It replaces the BTB", "subtle", "Direction and target stay different boxes."),
+        ],
+        explanation: "It takes two consecutive disagreements to change state.",
+        cognitiveType: "apply",
+        objectiveIds: ["Explain a two-bit counter"],
+        difficultyTier: 2,
+      }),
+      item({
+        id: "b3",
+        stem: "A 97% prediction rate can still dominate runtime when:",
+        correct: "The window is wide and each miss flushes a lot of work",
+        distractors: [
+          d("Each miss is cheap", "reversed", "Cheap misses would not dominate."),
+          d("There are no branches", "nearby", "Then the predictor is idle."),
+          d("The cache always hits", "subtle", "Cache hits do not shrink a flush of a wide window."),
+        ],
+        explanation: "Cost is miss-rate × miss-penalty. Wide/deep machines have huge penalties.",
+        cognitiveType: "predict",
+        objectiveIds: ["Predict why a high hit rate can still be expensive"],
+        difficultyTier: 2,
+      }),
     ],
   }),
   L({
@@ -168,9 +289,50 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     whyItMatters:
       "Compiler register pressure and ISA width arguments are incomplete without the physical file. A ‘small ISA register set’ is not a death sentence if rename is wide; a huge ISA file still stalls if physicals run out.",
     quiz: [
-      q("n1", "Renaming removes which dependencies?", ["True RAW data dependencies", "False WAW/WAR name dependencies", "Cache misses", "Control hazards"], 1, "It gives each write a fresh physical destination."),
-      q("n2", "A rename stall with idle ALUs usually means:", ["The branch predictor failed", "The physical register file or free list is empty", "DRAM is offline", "The TLB hit"], 1, "No physical destination, no dispatch."),
-      q("n3", "After rename, an ISA register name is best thought of as:", ["A physical location", "A pointer to the latest physical register for that name", "A cache tag", "A ROB index only"], 1, "The map table is the live translation."),
+      item({
+        id: "n1",
+        stem: "Renaming removes which dependencies?",
+        correct: "False WAW/WAR name dependencies",
+        distractors: [
+          d("True RAW data dependencies", "reversed", "Those must remain or the program is wrong."),
+          d("Cache misses", "nearby", "Rename cannot invent missing data."),
+          d("Control hazards", "subtle", "Unknown PCs are a fetch problem."),
+        ],
+        explanation: "It gives each write a fresh physical destination.",
+        cognitiveType: "apply",
+        objectiveIds: ["Separate false name conflicts from true data edges"],
+        prerequisiteConceptIds: ["cpu-pipeline", "cpu-hazards"],
+        difficultyTier: 3,
+      }),
+      item({
+        id: "n2",
+        stem: "A rename stall with idle ALUs usually means:",
+        correct: "The physical register file or free list is empty",
+        distractors: [
+          d("The branch predictor failed", "nearby", "A mispredict flushes; it does not starve dests first."),
+          d("DRAM is offline", "misapplied", "That would stall execution, not rename specifically."),
+          d("The TLB hit", "subtle", "A hit is the opposite of a problem."),
+        ],
+        explanation: "No physical destination, no dispatch.",
+        cognitiveType: "diagnose",
+        objectiveIds: ["Diagnose a rename stall"],
+        difficultyTier: 3,
+      }),
+      item({
+        id: "n3",
+        stem: "After rename, an ISA register name is best thought of as:",
+        correct: "A pointer to the latest physical register for that name",
+        distractors: [
+          d("A physical location", "reversed", "The physical file is larger and separate."),
+          d("A cache tag", "nearby", "Tags identify lines, not destinations."),
+          d("A ROB index only", "subtle", "The map table, not the ROB slot, is the live translation."),
+        ],
+        explanation: "The map table is the live translation.",
+        cognitiveType: "integrate",
+        objectiveIds: ["Treat an ISA name as a pointer after rename"],
+        prerequisiteConceptIds: ["cpu-hazards"],
+        difficultyTier: 3,
+      }),
     ],
   }),
   L({
@@ -192,9 +354,50 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     whyItMatters:
       "When a vendor increases ROB from 256 to 512, they are buying miss tolerance, not peak FLOPs. That number is how you should read ‘better at high-latency code’ claims.",
     quiz: [
-      q("o1", "Instructions enter the ROB:", ["Whenever they finish", "In program order, at allocate", "Only on a miss", "Only branches"], 1, "Allocate is in-order; execute is not."),
-      q("o2", "Stores become globally visible:", ["At execute", "When they issue to the ALU", "At or after commit, via the store buffer", "At fetch"], 2, "Otherwise a squashed path would mutate memory."),
-      q("o3", "A full ROB with idle ALUs means:", ["The window cannot accept more in-flight work, often because an old instruction has not committed", "There are no instructions in the program", "The predictor is perfect", "Caches are off"], 0, "The tank is full; the firehose has to wait."),
+      item({
+        id: "o1",
+        stem: "Instructions enter the ROB:",
+        correct: "In program order, at allocate",
+        distractors: [
+          d("Whenever they finish", "reversed", "Execute is out of order; allocate is not."),
+          d("Only on a miss", "nearby", "Every op allocates, not just misses."),
+          d("Only branches", "subtle", "The window holds the whole stream."),
+        ],
+        explanation: "Allocate is in-order; execute is not.",
+        cognitiveType: "apply",
+        objectiveIds: ["State the ROB’s in-order allocate / out-of-order execute contract"],
+        prerequisiteConceptIds: ["cpu-renaming"],
+        difficultyTier: 3,
+      }),
+      item({
+        id: "o2",
+        stem: "Stores become globally visible:",
+        correct: "At or after commit, via the store buffer",
+        distractors: [
+          d("At execute", "reversed", "A squashed path must not mutate memory."),
+          d("When they issue to the ALU", "nearby", "Stores are not ALU results."),
+          d("At fetch", "subtle", "Fetch has not even decoded the store."),
+        ],
+        explanation: "Otherwise a squashed path would mutate memory.",
+        cognitiveType: "diagnose",
+        objectiveIds: ["Explain why stores wait for commit"],
+        difficultyTier: 3,
+      }),
+      item({
+        id: "o3",
+        stem: "A full ROB with idle ALUs means:",
+        correct: "The window cannot accept more in-flight work, often because an old instruction has not committed",
+        distractors: [
+          d("There are no instructions in the program", "misconception", "The tank is full, not empty."),
+          d("The predictor is perfect", "nearby", "Perfection would tend to keep the window moving."),
+          d("Caches are off", "subtle", "Caches being off would stall execution, not uniquely fill the ROB."),
+        ],
+        explanation: "The tank is full; the firehose has to wait.",
+        cognitiveType: "integrate",
+        objectiveIds: ["Diagnose a full-window stall"],
+        prerequisiteConceptIds: ["cpu-renaming"],
+        difficultyTier: 3,
+      }),
     ],
   }),
   L({
@@ -216,9 +419,49 @@ export const CPU_SEMI_LESSONS: Lesson[] = [
     whyItMatters:
       "Every ‘we sharded this counter’ or ‘false sharing’ performance note is a MESI story. If you write about multicore speedups without mentioning invalidation traffic, you are describing the wish, not the machine.",
     quiz: [
-      q("c1", "A write to a line in Shared typically requires:", ["Nothing", "Invalidating or downgrading other copies (RFO)", "Flushing the ROB", "A disk sync"], 1, "Single-writer invariant."),
-      q("c2", "False sharing is:", ["Two cores fighting over different variables on the same cache line", "A branch mispredict", "A TLB shootdown", "A RAID level"], 0, "The protocol cannot see your C fields, only 64-byte lines."),
-      q("c3", "Coherence vs consistency:", ["They are synonyms", "Coherence is per-address agreement; consistency is ordering across addresses", "Consistency is only for disks", "MESI implements sequential consistency by itself"], 1, "MESI does not pick x86 TSO vs ARM."),
+      item({
+        id: "c1",
+        stem: "A write to a line in Shared typically requires:",
+        correct: "Invalidating or downgrading other copies (RFO)",
+        distractors: [
+          d("Nothing", "reversed", "Single-writer is the invariant."),
+          d("Flushing the ROB", "nearby", "Visibility is a memory-system protocol, not a ROB flush."),
+          d("A disk sync", "subtle", "MESI is not a storage stack."),
+        ],
+        explanation: "Single-writer invariant.",
+        cognitiveType: "integrate",
+        objectiveIds: ["State the single-writer / multiple-reader rule"],
+        prerequisiteConceptIds: ["cpu-pipeline"],
+        difficultyTier: 4,
+      }),
+      item({
+        id: "c2",
+        stem: "False sharing is:",
+        correct: "Two cores fighting over different variables on the same cache line",
+        distractors: [
+          d("A branch mispredict", "nearby", "That is a control-hazard cost."),
+          d("A TLB shootdown", "misapplied", "Shootdowns invalidate translations, not 64-byte data lines."),
+          d("A RAID level", "subtle", "Storage arrays are not cache-coherence."),
+        ],
+        explanation: "The protocol cannot see your C fields, only 64-byte lines.",
+        cognitiveType: "diagnose",
+        objectiveIds: ["Diagnose false sharing as a line-granularity problem"],
+        difficultyTier: 4,
+      }),
+      item({
+        id: "c3",
+        stem: "Coherence versus consistency:",
+        correct: "Coherence is per-address agreement; consistency is ordering across addresses",
+        distractors: [
+          d("They are synonyms", "misconception", "They answer different questions."),
+          d("Consistency is only for disks", "nearby", "Memory models are about cores, not only storage."),
+          d("MESI implements sequential consistency by itself", "reversed", "MESI does not pick x86 TSO vs ARM."),
+        ],
+        explanation: "MESI does not pick x86 TSO vs ARM.",
+        cognitiveType: "tradeoff",
+        objectiveIds: ["Separate coherence from consistency"],
+        difficultyTier: 4,
+      }),
     ],
   }),
 

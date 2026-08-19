@@ -1,4 +1,4 @@
-import type { Mode, TimeBudget } from "./types";
+import type { AssessmentItemRecord, Mode, TimeBudget } from "./types";
 
 const KEY = "dau-live-session";
 
@@ -10,6 +10,8 @@ export interface LiveSession {
   quizCorrect?: number;
   answered?: number;
   generations?: number;
+  quizItems?: AssessmentItemRecord[];
+  positions?: number[];
 }
 
 export function startLive(session: Omit<LiveSession, "quizCorrect" | "answered">) {

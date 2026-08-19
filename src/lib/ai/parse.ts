@@ -82,8 +82,9 @@ export function parseGeneratedPath(raw: unknown) {
 
 function finalizedQuiz(
   raw: ReturnType<typeof generatedLessonSchema.parse>["quiz"],
+  opts?: Parameters<typeof assembleQuiz>[1],
 ): [QuizQuestion, QuizQuestion, QuizQuestion] {
-  const assembled = assembleQuiz(raw);
+  const assembled = assembleQuiz(raw, opts);
   if (!assembled.ok) {
     throw new Error(assembled.error);
   }
@@ -101,6 +102,7 @@ export function lessonFromGenerated(
     prerequisites?: string[];
     goDeeper?: string;
     provenance: Provenance;
+    assemble?: Parameters<typeof assembleQuiz>[1];
   },
 ): Lesson {
   const explanation = Array.isArray(data.explanation) ? data.explanation : [data.explanation];
@@ -120,7 +122,7 @@ export function lessonFromGenerated(
       example: data.example,
       whyItMatters: data.why_it_matters,
       diagram: data.diagram ?? undefined,
-      quiz: finalizedQuiz(data.quiz),
+      quiz: finalizedQuiz(data.quiz, meta.assemble),
       custom: true,
       createdAt: meta.provenance.generatedAt,
       updatedAt: meta.provenance.generatedAt,

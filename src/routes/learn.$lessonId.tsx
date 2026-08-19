@@ -13,7 +13,7 @@ import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
 import { quizContextFor } from "@/lib/learning/quiz-context";
 import { makeReadinessContext } from "@/lib/learning/readiness";
-import type { LessonFeedbackVerdict } from "@/lib/learning/types";
+import { PROMPT_VERSION, type LessonFeedbackVerdict } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 
 export const Route = createFileRoute("/learn/$lessonId")({
@@ -103,7 +103,7 @@ function LessonReady() {
           provider: result.provider,
           model: result.model,
           generatedAt: new Date().toISOString(),
-          promptVersion: "dau-lesson-v1",
+          promptVersion: PROMPT_VERSION,
           schemaVersion: 1,
           notes: `explain:${style}`,
         },
@@ -123,7 +123,10 @@ function LessonReady() {
     const result = await generateQuiz(
       aiCtx,
       unit,
-      quizContextFor(unit, makeReadinessContext(catalog, progress, profile, courseProgress), catalog),
+      quizContextFor(unit, makeReadinessContext(catalog, progress, profile, courseProgress), catalog, {
+        journalist: useProgress.getState().settings.journalistDepth,
+        history: useProgress.getState().assessmentHistory,
+      }),
     );
     setBusy(null);
     if (result.billable) bumpLiveGeneration();
@@ -144,7 +147,7 @@ function LessonReady() {
           provider: result.provider,
           model: result.model,
           generatedAt: new Date().toISOString(),
-          promptVersion: "dau-lesson-v1",
+          promptVersion: PROMPT_VERSION,
           schemaVersion: 1,
         },
       },
@@ -174,6 +177,11 @@ function LessonReady() {
       <div className="mt-3">
         <ProvenanceLine lesson={unit} />
       </div>
+      {unit.versions && unit.versions.length > 0 ? (
+        <p className="mt-2 text-xs text-subtle">
+          {unit.versions.length} earlier version{unit.versions.length === 1 ? "" : "s"} kept
+        </p>
+      ) : null}
 
       <div className="mt-8 space-y-5 text-[17px] leading-[1.6] text-fg">
         {unit.explanation.map((p) => (

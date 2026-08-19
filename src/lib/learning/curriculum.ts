@@ -75,13 +75,19 @@ export function selectableCategories(catalog: Catalog): Category[] {
   return catalog.categories.filter((c) => isSelectableCategory(c));
 }
 
+export function isRetiredBuiltInStudyTarget(catalog: Catalog, categoryId: string | null | undefined): boolean {
+  if (!categoryId || categoryId === "random") return false;
+  const meta = catalog.categoryMap[categoryId];
+  if (meta?.custom) return false;
+  return meta?.status === "retired" || isRetiredSeededCategory(categoryId);
+}
+
 export function isCategoryOpenForSelection(
   catalog: Catalog,
   categoryId: string | undefined,
-  explicitCategory?: string | null,
+  _explicitCategory?: string | null,
 ): boolean {
   if (!categoryId) return true;
-  if (explicitCategory && explicitCategory === categoryId) return true;
   const meta = catalog.categoryMap[categoryId];
   if (meta?.custom) return true;
   if (meta?.status === "retired" || isRetiredSeededCategory(categoryId)) return false;

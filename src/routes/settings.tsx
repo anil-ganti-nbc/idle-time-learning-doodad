@@ -97,6 +97,7 @@ function SettingsReady() {
       pendingPath: s.pendingPath,
       courses: s.courses,
       customCourses: s.customCourses,
+      assessmentHistory: s.assessmentHistory,
     };
   }
 

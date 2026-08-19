@@ -1,3 +1,4 @@
+import { emptyAssessmentHistory } from "@/lib/quiz/history";
 import type { AiSettings, LocalProfile, Preferences, ProgressState } from "./types";
 
 export const defaultProfile: LocalProfile = {
@@ -44,4 +45,5 @@ export const defaultState = (): Omit<
   pendingPath: null,
   courses: {},
   customCourses: [],
+  assessmentHistory: emptyAssessmentHistory(),
 });

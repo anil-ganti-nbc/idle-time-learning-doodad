@@ -271,4 +271,34 @@ describe("export/import", () => {
     assert.equal(isNewer("2026-08-01", "2026-08-19"), false);
     assert.equal(isNewer(null, "2026-08-19"), false);
   });
+
+  it("round-trips assessment history without secrets", () => {
+    const state = defaultState();
+    state.assessmentHistory = {
+      items: [
+        {
+          at: "2026-08-19T00:00:00.000Z",
+          lessonId: "arch-latency-throughput-5",
+          conceptId: "arch-latency-throughput",
+          questionId: "lt1",
+          courseId: "cpu-foundations",
+          objectiveIds: ["Distinguish latency from throughput"],
+          cognitiveType: "recognize",
+          difficultyTier: 0,
+          answerIndex: 2,
+          correct: true,
+          generationKind: "seeded",
+          promptVersion: "dau-quiz-v3",
+        },
+      ],
+      recentPositions: [2, 0, 1],
+    };
+    const bundle = buildExport(state);
+    assert.deepEqual(bundle.progress.assessmentHistory?.recentPositions, [2, 0, 1]);
+    const blob = JSON.stringify(bundle);
+    assert.equal(/api[_-]?key|authorization:|chain.of.thought/i.test(blob), false);
+    const imported = importExport(defaultState(), bundle, "replace");
+    assert.equal(imported.state.assessmentHistory.items[0].questionId, "lt1");
+    assert.deepEqual(imported.state.assessmentHistory.recentPositions, [2, 0, 1]);
+  });
 });

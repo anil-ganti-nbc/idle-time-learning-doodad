@@ -100,6 +100,63 @@ export const generatedQuizItemSchema = z.union([
       }),
     ]),
     explanation: z.string().min(8),
+    cognitiveType: z
+      .enum([
+        "recognize",
+        "distinguish",
+        "identify",
+        "apply",
+        "predict",
+        "trace",
+        "compare",
+        "diagnose",
+        "integrate",
+        "tradeoff",
+      ])
+      .optional(),
+    objectiveIds: z.array(z.string()).optional(),
+    prerequisiteConceptIds: z.array(z.string()).optional(),
+    difficultyTier: z
+      .union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)])
+      .optional(),
+  }),
+  z.object({
+    id: z.string().min(1),
+    stem: z.string().min(8),
+    correctAnswer: z.string().min(1),
+    distractors: z.tuple([
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+    ]),
+    correctExplanation: z.string().min(8),
+    objectiveIds: z.array(z.string()).default([]),
+    prerequisiteConceptIds: z.array(z.string()).default([]),
+    difficultyTier: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]),
+    cognitiveType: z.enum([
+      "recognize",
+      "distinguish",
+      "identify",
+      "apply",
+      "predict",
+      "trace",
+      "compare",
+      "diagnose",
+      "integrate",
+      "tradeoff",
+    ]),
   }),
 ]);
 

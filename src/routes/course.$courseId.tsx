@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HydrateGate } from "@/components/hydrate";
-import { inferTier } from "@/lib/learning/curriculum";
+import { inferTier, isRetiredBuiltInStudyTarget } from "@/lib/learning/curriculum";
 import { useProgress } from "@/lib/learning/progress";
 import {
   frontierConcepts,
@@ -61,13 +61,17 @@ function CourseReady() {
       )}
 
       <div className="mt-6 flex flex-wrap gap-4 text-sm">
-        <Link
-          to="/session"
-          search={{ category: course.categoryId }}
-          className="text-fg no-underline hover:underline"
-        >
-          Study this course
-        </Link>
+        {isRetiredBuiltInStudyTarget(catalog, course.categoryId) ? (
+          <span className="text-subtle">Archived field — readable, not opened as a new session</span>
+        ) : (
+          <Link
+            to="/session"
+            search={{ category: course.categoryId }}
+            className="text-fg no-underline hover:underline"
+          >
+            Study this course
+          </Link>
+        )}
         <Link to="/graph" className="text-muted no-underline hover:text-fg">
           Full graph
         </Link>

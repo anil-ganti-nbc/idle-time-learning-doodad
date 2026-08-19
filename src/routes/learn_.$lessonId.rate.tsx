@@ -99,6 +99,8 @@ function RatePage() {
       sourceType: unit.source.type,
       sourceProvider: unit.source.provider,
       courseId: course?.id,
+      assessmentItems: live.quizItems,
+      positions: live.positions,
     });
     clearLive();
     setDoneId(session.id);

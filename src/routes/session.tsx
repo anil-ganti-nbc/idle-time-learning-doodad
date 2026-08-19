@@ -8,7 +8,7 @@ import { generateLesson } from "@/lib/ai/client";
 import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { startLive, getLive, generationsAfterStart } from "@/lib/learning/live";
-import { coursesForCategory, inferTier } from "@/lib/learning/curriculum";
+import { coursesForCategory, inferTier, isRetiredBuiltInStudyTarget } from "@/lib/learning/curriculum";
 import { declareKnown, pickPlacementItems, scorePlacement } from "@/lib/learning/placement";
 import { useProgress } from "@/lib/learning/progress";
 import { quizContextForConcept } from "@/lib/learning/quiz-context";
@@ -76,10 +76,11 @@ function SessionReady() {
   const liveGens = getLive()?.generations ?? 0;
   const aiCtx = useAiContext(liveGens);
 
-  const initialCategory =
-    (search.category as CategoryId | "random" | undefined) ??
-    settings.lastCategory ??
-    (profile.preferredTopics[0] ?? null);
+  const requestedFromUrl = typeof search.category === "string" ? search.category : null;
+  const retiredRequested = isRetiredBuiltInStudyTarget(catalog, requestedFromUrl);
+  const rawInitial =
+    requestedFromUrl ?? settings.lastCategory ?? (profile.preferredTopics[0] ?? null);
+  const initialCategory = isRetiredBuiltInStudyTarget(catalog, rawInitial) ? null : rawInitial;
   const initialMode = (search.mode as Mode | undefined) ?? settings.lastMode;
 
   const [minutes, setMinutes] = useState<TimeBudget>(settings.lastTime || settings.preferredDuration);
@@ -222,7 +223,10 @@ function SessionReady() {
         weak,
         recent: [],
         adapt: settings.journalistDepth ? "skip-known" : undefined,
-        quizContext: quizContextForConcept(concept, readiness, catalog),
+        quizContext: quizContextForConcept(concept, readiness, catalog, {
+          journalist: settings.journalistDepth,
+          history: useProgress.getState().assessmentHistory,
+        }),
       },
       { hasLocalMatch: Boolean(preview) },
     );
@@ -249,6 +253,20 @@ function SessionReady() {
       <p className="text-xs tracking-[0.2em] text-muted uppercase">Session</p>
       <h1 className="mt-2 font-display text-3xl tracking-tight sm:text-4xl">How long is the gap?</h1>
       <p className="mt-2 text-sm text-muted">One unit. No playlist. Options below are optional.</p>
+
+      {retiredRequested && (
+        <div className="mt-6 rounded-xl bg-raised p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.12)]">
+          <p className="text-sm font-medium text-fg">This field is archived</p>
+          <p className="mt-1 text-sm text-muted">
+            {catalog.categoryMap[requestedFromUrl ?? ""]?.name ?? "This subject"} is kept so old
+            progress still reads. It is not an active built-in course, and Surprise Me will not open
+            it. Open the library if you want to reread something you already studied.
+          </p>
+          <Link to="/library" className="mt-3 inline-block text-sm text-muted no-underline hover:text-fg">
+            Open library
+          </Link>
+        </div>
+      )}
 
       <div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {TIMES.map((t) => (

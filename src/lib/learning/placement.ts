@@ -100,8 +100,8 @@ export function declareKnown(
   };
 }
 
-export function placementUnlocksAdvanced(placement: CoursePlacement): boolean {
-  return placement.recommendedTier >= 4 || placement.waivedConceptIds.some((id) => id.includes("gpu-scheduler"));
+export function placementUnlocksAdvanced(_placement: CoursePlacement): boolean {
+  return false;
 }
 
 export function lessonHasPlacementQuestion(lesson: Lesson): boolean {

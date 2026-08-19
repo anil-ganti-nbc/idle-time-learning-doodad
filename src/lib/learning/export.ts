@@ -2,7 +2,8 @@ import { exportBundleV2Schema, formatZodIssues, secretExportGuard } from "./expo
 import { ROLLBACK_STORAGE_KEY } from "./persistence";
 import { normalizeProgressRow } from "./srs";
 import { EXPORT_SCHEMA_VERSION } from "./types";
-import type { AiSecrets, ConceptProgress, Lesson, ProgressState, SessionRecord } from "./types";
+import type { AiSecrets, AssessmentHistory, ConceptProgress, Lesson, ProgressState, SessionRecord } from "./types";
+import { emptyAssessmentHistory } from "@/lib/quiz/history";
 
 export { secretExportGuard };
 
@@ -19,6 +20,7 @@ export interface ExportBundleV2 {
     sessions: SessionRecord[];
     recentCategoryIds: string[];
     courses?: ProgressState["courses"];
+    assessmentHistory?: ProgressState["assessmentHistory"];
   };
   catalog: {
     categories: ProgressState["customCategories"];
@@ -56,6 +58,7 @@ export function buildExport(
       sessions: state.sessions,
       recentCategoryIds: state.recentCategoryIds,
       courses: state.courses,
+      assessmentHistory: state.assessmentHistory,
     },
     catalog: {
       categories: state.customCategories,
@@ -140,6 +143,7 @@ export function importExport(
           pendingPath: data.pending_path ?? null,
           courses: data.progress.courses ?? {},
           customCourses: data.catalog.courses ?? [],
+          assessmentHistory: data.progress.assessmentHistory ?? emptyAssessmentHistory(),
         },
         warnings,
         backup,
@@ -223,6 +227,7 @@ function mergeStates(current: ProgressState, data: ExportBundleV2, warnings: str
       ["title", "description", "curriculumVersion"],
       warnings,
     ),
+    assessmentHistory: mergeAssessmentHistory(current.assessmentHistory, data.progress.assessmentHistory),
   };
 }
 
@@ -284,6 +289,20 @@ function mergeCourseProgress(
 
 function mergeSessions(local: SessionRecord[], incoming: SessionRecord[]): SessionRecord[] {
   return uniqueById([...incoming, ...local]).slice(0, 800);
+}
+
+function mergeAssessmentHistory(
+  local: AssessmentHistory | undefined,
+  incoming: AssessmentHistory | undefined,
+): AssessmentHistory {
+  if (!incoming) return local ?? emptyAssessmentHistory();
+  if (!local) return incoming;
+  const seen = new Set(local.items.map((item) => `${item.at}:${item.questionId}:${item.lessonId}`));
+  const extra = incoming.items.filter((item) => !seen.has(`${item.at}:${item.questionId}:${item.lessonId}`));
+  return {
+    items: [...local.items, ...extra].slice(-200),
+    recentPositions: [...local.recentPositions, ...incoming.recentPositions].slice(-24),
+  };
 }
 
 function mergeLessons(local: Lesson[], incoming: Lesson[], warnings: string[]): Lesson[] {

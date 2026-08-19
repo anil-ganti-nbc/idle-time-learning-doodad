@@ -16,6 +16,7 @@ import { pickCourseForLearner, isConceptUnlocked, isDemonstrated, makeReadinessC
 import { selectLesson } from "../../lib/learning/select.ts";
 import { emptyProgress } from "../../lib/learning/srs.ts";
 import { isRetiredSeededCategory, isSelectableCategory } from "../../lib/learning/types.ts";
+import { isRetiredBuiltInStudyTarget } from "../../lib/learning/curriculum.ts";
 import { computeCoverage } from "./coverage.ts";
 import { MANIFESTS, MANIFEST_IDS } from "./data/registry.ts";
 import { courseManifestSchema } from "./schema.ts";
@@ -138,6 +139,8 @@ describe("removed topics", () => {
     assert.ok(surprise);
     const cat = catalog.conceptMap[surprise.lesson.conceptId]?.category;
     assert.equal(isRetiredSeededCategory(cat ?? ""), false);
+    assert.equal(isRetiredBuiltInStudyTarget(catalog, "astronomy"), true);
+    assert.equal(isRetiredBuiltInStudyTarget(catalog, "cpu"), false);
   });
 
   it("does not crash when imported progress references retired concept ids", () => {
@@ -161,8 +164,7 @@ describe("removed topics", () => {
       [],
       catalog,
     );
-    assert.ok(picked);
-    assert.equal(catalog.conceptMap[picked.lesson.conceptId]?.category, "astronomy");
+    assert.equal(picked, null);
   });
 });
 
