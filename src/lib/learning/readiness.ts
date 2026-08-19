@@ -1,4 +1,4 @@
-import { courseForConcept, inferTier, moduleForConcept, prereqClosure } from "./curriculum";
+import { courseForConcept, coursesForCategory, inferTier, moduleForConcept, prereqClosure } from "./curriculum";
 import type {
   Catalog,
   Concept,
@@ -95,16 +95,10 @@ export function isModuleSpineCleared(
 export function isConceptUnlocked(concept: Concept, ctx: ReadinessContext): boolean {
   // Already-started or waived units stay available for review. Journalist
   // depth is not consulted — it cannot open a concept the graph has not.
+  // Module order is a hint; the concept prerequisite graph is authoritative.
   if (isWaived(concept.id, ctx)) return true;
   if (ctx.progress[concept.id]?.encountered) return true;
   const tier = inferTier(concept);
-  const course = courseForConcept(ctx.catalog, concept.id);
-  const mod = moduleForConcept(ctx.catalog, concept.id);
-  if (course && mod) {
-    for (const moduleId of mod.prerequisites) {
-      if (!isModuleSpineCleared(moduleId, course, ctx, tier)) return false;
-    }
-  }
   return concept.prerequisites.every((id) => isDemonstrated(id, ctx, tier));
 }
 
@@ -135,6 +129,23 @@ export function frontierConcepts(course: Course, ctx: ReadinessContext): Concept
     if (ma !== mb) return ma - mb;
     return inferTier(a) - inferTier(b);
   });
+}
+
+/** Pick the earliest course in a subject that still has work the learner can hold. */
+export function pickCourseForLearner(
+  catalog: Catalog,
+  categoryId: string | null | undefined,
+  ctx: ReadinessContext,
+): Course | undefined {
+  const courses = coursesForCategory(catalog, categoryId);
+  if (courses.length === 0) return undefined;
+  for (const course of courses) {
+    if (frontierConcepts(course, ctx).length > 0) return course;
+  }
+  for (const course of courses) {
+    if (ctx.courses?.[course.id]?.startedAt) return course;
+  }
+  return courses[0];
 }
 
 export function makeReadinessContext(

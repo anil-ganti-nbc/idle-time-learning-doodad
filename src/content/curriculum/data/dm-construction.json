@@ -1,0 +1,350 @@
+{
+  "id": "dm-construction",
+  "title": "Riff, Rhythm, and Harmony Construction",
+  "categoryId": "death-metal",
+  "description": "How the music is built: riff cells, tremolo, chromatic motion, pedal tones, blast and double-kick vocabulary, song structure. Assumes music-theory foundations rather than reteaching intervals.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "mus-interval",
+    "mus-modes",
+    "mus-meter",
+    "dm-listening"
+  ],
+  "sourceReferences": [
+    {
+      "id": "berklee-metal",
+      "title": "Berklee Metal Guitar",
+      "url": "https://online.berklee.edu/courses/metal-guitar",
+      "kind": "syllabus",
+      "notes": "Riff vocabulary, rhythm, modes, and right-hand technique as construction skills. Depends on fundamentals rather than reteaching intervals."
+    },
+    {
+      "id": "mit-metal101",
+      "title": "MIT Heavy Metal 101",
+      "url": "https://ocw.mit.edu/courses/res-21m-001-heavy-metal-101-january-iap-2025/",
+      "kind": "ocw",
+      "notes": "Songwriting tropes and technique as construction, not celebrity."
+    },
+    {
+      "id": "berklee-guitar",
+      "title": "Berklee Guitar Fundamentals",
+      "url": "https://online.berklee.edu/courses/guitar-fundamentals",
+      "kind": "syllabus",
+      "notes": "This course must not duplicate interval and meter literacy."
+    }
+  ],
+  "modules": [
+    {
+      "id": "dm-c-riff",
+      "title": "Riff vocabulary",
+      "blurb": "Cells, tremolo, chromatic motion, pedals.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "dm-riff-cell",
+        "dm-harmony"
+      ]
+    },
+    {
+      "id": "dm-c-rhythm",
+      "title": "Rhythm-section grammar",
+      "blurb": "Blast, double-kick, displacement.",
+      "order": 1,
+      "prerequisites": [
+        "dm-c-riff"
+      ],
+      "spineIds": [
+        "dm-blast",
+        "dm-double-kick"
+      ]
+    },
+    {
+      "id": "dm-c-form",
+      "title": "Putting a song together",
+      "blurb": "Structure, two guitars, vocals as rhythm.",
+      "order": 2,
+      "prerequisites": [
+        "dm-c-rhythm"
+      ],
+      "spineIds": [
+        "dm-song-form",
+        "dm-riff-form"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "dm-riff-cell",
+      "name": "The riff cell",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "mus-interval",
+        "dm-listening"
+      ],
+      "summary": "A short figure that can be repeated, displaced, or mutated.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-tremolo",
+      "name": "Tremolo writing",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Picking that turns a pitch into a surface.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-chromatic-move",
+      "name": "Chromatic movement",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-semitone"
+      ],
+      "summary": "Semitone steps as the riff's spine.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-pedal-tone",
+      "name": "Pedal tones",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-pedal"
+      ],
+      "summary": "An open string that the cell grinds against.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-harmony",
+      "name": "Death-metal harmony",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "mus-interval",
+        "mus-modes",
+        "dm-riff-cell"
+      ],
+      "summary": "Diminished cells, chromatic planing, and riff as form.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-diminished",
+      "name": "Diminished cells",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-tritone"
+      ],
+      "summary": "Minor thirds stacked until the octave repeats.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-tritone-riff",
+      "name": "Tritone and flat-2 riffs",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-phrygian"
+      ],
+      "summary": "The two intervals this style treats as home.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-palm-mute",
+      "name": "Palm mute as orchestration",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Choked versus open as two instruments.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-guitar-tune",
+      "name": "Tunings that change the riff",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-pedal-tone",
+        "mus-drop-tune"
+      ],
+      "summary": "A dropped string is a compositional choice.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-pick-hand",
+      "name": "Right-hand endurance versus accent",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-tremolo"
+      ],
+      "summary": "Speed that still has a downbeat.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-blast",
+      "name": "Blast beats",
+      "moduleId": "dm-c-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "dm-listening",
+        "mus-meter"
+      ],
+      "summary": "The drum grammar that made death metal possible.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-blast-types",
+      "name": "Blast vocabulary",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-blast"
+      ],
+      "summary": "Traditional, bomb, hammer — different occupations of the kit.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-double-kick",
+      "name": "Double-kick vocabulary",
+      "moduleId": "dm-c-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "dm-blast"
+      ],
+      "summary": "Two feet as a subdivision engine.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-dm-displacement",
+      "name": "Rhythmic displacement",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-displacement"
+      ],
+      "summary": "The same cell, started on a different beat of the bar.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-odd-meter",
+      "name": "Odd meter in death metal",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-odd-meter"
+      ],
+      "summary": "Groupings that are felt, not counted out loud.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-polymeter-dm",
+      "name": "Polymeter in the band",
+      "moduleId": "dm-c-rhythm",
+      "tier": 4,
+      "prerequisites": [
+        "dm-odd-meter",
+        "mus-polymeter"
+      ],
+      "summary": "Guitar in 3, kit in 4, a coincidence later.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-string-skip",
+      "name": "String skipping and wide intervals",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Leaps that refuse stepwise comfort.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-sweep-function",
+      "name": "Sweeps as function, not sport",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony"
+      ],
+      "summary": "An arpeggio that has a harmonic job.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-song-form",
+      "name": "Song structure",
+      "moduleId": "dm-c-form",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Intro, riff A, riff B, return — or a through-composed stack.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-riff-form",
+      "name": "Riff as form",
+      "moduleId": "dm-c-form",
+      "tier": 3,
+      "prerequisites": [
+        "dm-song-form",
+        "mus-form-riff"
+      ],
+      "summary": "The form is the order of cells and their mutations.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-breakdown-dm",
+      "name": "Breakdowns and whether they belong",
+      "moduleId": "dm-c-form",
+      "tier": 2,
+      "prerequisites": [
+        "dm-song-form"
+      ],
+      "summary": "Half-time weight as contrast, or as a different genre arriving.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-vocal-rhythm",
+      "name": "Vocals as a rhythmic instrument",
+      "moduleId": "dm-c-form",
+      "tier": 2,
+      "prerequisites": [
+        "dm-blast",
+        "dm-song-form"
+      ],
+      "summary": "Phrasing against the kick, not a melody sitting on top.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-harmony-two-gtr",
+      "name": "Two-guitar writing",
+      "moduleId": "dm-c-form",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-voice-lead"
+      ],
+      "summary": "Unison, harmony a third above, or a second riff.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

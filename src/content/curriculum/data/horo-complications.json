@@ -1,0 +1,320 @@
+{
+  "id": "horo-complications",
+  "title": "Complications and Advanced Watchmaking",
+  "categoryId": "horology",
+  "description": "After the simple movement is honest: calendars, chronographs, automatic winding, tourbillons, and the finishing a service actually protects.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    2,
+    5
+  ],
+  "entryRequirements": [
+    "horo-escape",
+    "horo-setting"
+  ],
+  "sourceReferences": [
+    {
+      "id": "wostep-chrono",
+      "title": "WOSTEP Chronograph / Chronometry",
+      "url": "https://www.wostep.ch/index.php/en/training/chronograph",
+      "kind": "syllabus",
+      "notes": "Chronograph as a later specialization. Timing remains a discipline. Tourbillon is not a beginner object."
+    },
+    {
+      "id": "hsny-edu",
+      "title": "HSNY education ladder",
+      "url": "https://hs-ny.org/nyc-education",
+      "kind": "syllabus",
+      "notes": "Complications sit after 101–104, not inside them."
+    }
+  ],
+  "modules": [
+    {
+      "id": "horo-c-time",
+      "title": "Timekeeping extras",
+      "blurb": "Date, GMT, automatic winding.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "horo-date",
+        "horo-auto-winding"
+      ]
+    },
+    {
+      "id": "horo-c-chrono",
+      "title": "Chronograph",
+      "blurb": "A stopwatch grafted onto a watch.",
+      "order": 1,
+      "prerequisites": [
+        "horo-c-time"
+      ],
+      "spineIds": [
+        "horo-chrono"
+      ]
+    },
+    {
+      "id": "horo-c-show",
+      "title": "High complications and finishing",
+      "blurb": "Tourbillon, striking, what a service is.",
+      "order": 2,
+      "prerequisites": [
+        "horo-c-chrono"
+      ],
+      "spineIds": [
+        "horo-tourbillon",
+        "horo-service"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "horo-date",
+      "name": "Simple date",
+      "moduleId": "horo-c-time",
+      "tier": 2,
+      "prerequisites": [
+        "horo-cannon"
+      ],
+      "summary": "A 31-tooth wheel the motion works advances once a day.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-calendar",
+      "name": "Annual and perpetual calendars",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-date"
+      ],
+      "summary": "Remembering months, and sometimes leap years.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-moon",
+      "name": "Moonphase",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-date"
+      ],
+      "summary": "A 59-tooth compromise with the sky.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-gmt",
+      "name": "GMT and world time",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-setting"
+      ],
+      "summary": "A second hour hand, or a disc of cities.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-alarm",
+      "name": "Alarm",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-mainspring"
+      ],
+      "summary": "A second barrel whose job is noise.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-auto-winding",
+      "name": "Automatic winding",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-winding"
+      ],
+      "summary": "A rotor that winds so the wearer does not have to.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-rotor",
+      "name": "The rotor",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-auto-winding"
+      ],
+      "summary": "A weight that turns, and the reverser that makes both ways count.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-power-reserve-ind",
+      "name": "Power-reserve indication",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-power-reserve"
+      ],
+      "summary": "A hand that tracks the barrel, not the time.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-chrono",
+      "name": "Chronograph",
+      "moduleId": "horo-c-chrono",
+      "tier": 3,
+      "prerequisites": [
+        "horo-escape",
+        "horo-setting"
+      ],
+      "summary": "Start, stop, reset — a second train clutched in.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-column-wheel",
+      "name": "Column wheel versus cam",
+      "moduleId": "horo-c-chrono",
+      "tier": 4,
+      "prerequisites": [
+        "horo-chrono"
+      ],
+      "summary": "How the pusher's logic is remembered.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-chrono-reset",
+      "name": "Reset and hammers",
+      "moduleId": "horo-c-chrono",
+      "tier": 4,
+      "prerequisites": [
+        "horo-chrono"
+      ],
+      "summary": "Hearts on the chronograph wheels, and the hammers that find them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-flyback",
+      "name": "Flyback",
+      "moduleId": "horo-c-chrono",
+      "tier": 4,
+      "prerequisites": [
+        "horo-chrono-reset"
+      ],
+      "summary": "Reset that restarts without a separate stop.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-rattrapante",
+      "name": "Rattrapante",
+      "moduleId": "horo-c-chrono",
+      "tier": 5,
+      "prerequisites": [
+        "horo-chrono"
+      ],
+      "summary": "A split seconds hand that can wait.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-tourbillon",
+      "name": "The tourbillon",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-escape",
+        "horo-positional"
+      ],
+      "summary": "Averaging positional error, and when it is theater.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-tourbillon-honest",
+      "name": "When a tourbillon is theater",
+      "moduleId": "horo-c-show",
+      "tier": 4,
+      "prerequisites": [
+        "horo-tourbillon",
+        "horo-isochronism"
+      ],
+      "summary": "A wrist is not a pocket. Rotation does not cancel every error.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-repeater",
+      "name": "Minute repeater",
+      "moduleId": "horo-c-show",
+      "tier": 5,
+      "prerequisites": [
+        "horo-cannon"
+      ],
+      "summary": "Sounding the time with racks and snails.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-striking",
+      "name": "Striking work",
+      "moduleId": "horo-c-show",
+      "tier": 5,
+      "prerequisites": [
+        "horo-repeater"
+      ],
+      "summary": "A second gear train whose product is sound.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-equation",
+      "name": "Equation of time",
+      "moduleId": "horo-c-show",
+      "tier": 5,
+      "prerequisites": [
+        "horo-calendar"
+      ],
+      "summary": "The difference between sundial noon and mean noon.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-finishing",
+      "name": "Finishing",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-bridges"
+      ],
+      "summary": "Anglage and perlage as function and display.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-service",
+      "name": "What a service actually does",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-lubrication",
+        "horo-disassembly"
+      ],
+      "summary": "Clean, oil, adjust — not a battery.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-accuracy-claim",
+      "name": "COSC and certificates",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-positional",
+        "horo-rate"
+      ],
+      "summary": "A protocol, not a personality.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "horo-silicon",
+      "name": "Silicon hairsprings and escapes",
+      "moduleId": "horo-c-show",
+      "tier": 4,
+      "prerequisites": [
+        "horo-hairspring",
+        "horo-magnet"
+      ],
+      "summary": "A material that does not magnetize and does not rust.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

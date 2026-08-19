@@ -1,0 +1,349 @@
+{
+  "id": "ml-foundations",
+  "title": "Machine Learning Foundations",
+  "categoryId": "ml",
+  "description": "The learning problem, linear models, generalization, and gradient descent. Neural nets wait. Transformers wait longer.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs229",
+      "title": "Stanford CS229 Machine Learning",
+      "url": "https://cs229.stanford.edu/syllabus-new.html",
+      "kind": "syllabus",
+      "notes": "Supervised setup and linear/logistic models before neural nets. No transformers in the core sequence. Linear algebra and probability are assumed tools, not LLM trivia."
+    }
+  ],
+  "modules": [
+    {
+      "id": "ml-f-problem",
+      "title": "The learning problem",
+      "blurb": "Examples, features, and a loss you can actually compute.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "ml-learning-problem",
+        "ml-loss"
+      ],
+      "learningObjectives": [
+        "State a supervised learning problem",
+        "Name what a loss is for"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-f-linear",
+      "title": "Linear models",
+      "blurb": "Regression, classification, and a slope.",
+      "order": 1,
+      "prerequisites": [
+        "ml-f-problem"
+      ],
+      "spineIds": [
+        "ml-linear-reg",
+        "ml-gd"
+      ]
+    },
+    {
+      "id": "ml-f-gen",
+      "title": "Generalization",
+      "blurb": "Train, validation, test, and the ways you fool yourself.",
+      "order": 2,
+      "prerequisites": [
+        "ml-f-linear"
+      ],
+      "spineIds": [
+        "ml-overfit",
+        "ml-train-val-test"
+      ]
+    },
+    {
+      "id": "ml-f-opt",
+      "title": "Optimization in practice",
+      "blurb": "Stochastic gradients and the assumptions underneath.",
+      "order": 3,
+      "prerequisites": [
+        "ml-f-gen"
+      ],
+      "spineIds": [
+        "ml-gd-variants",
+        "ml-iid"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "ml-learning-problem",
+      "name": "The learning problem",
+      "moduleId": "ml-f-problem",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Inferring a rule from examples that should work on examples you have not seen.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-features-targets",
+      "name": "Features and targets",
+      "moduleId": "ml-f-problem",
+      "tier": 0,
+      "prerequisites": [
+        "ml-learning-problem"
+      ],
+      "summary": "The inputs you chose and the thing you are trying to predict.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-hypothesis",
+      "name": "Hypothesis class",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-features-targets"
+      ],
+      "summary": "The family of functions you are willing to consider.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-loss",
+      "name": "Loss functions",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-hypothesis"
+      ],
+      "summary": "A number that says how wrong a prediction is.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-lin-alg-lite",
+      "name": "Vectors as the language of models",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-features-targets"
+      ],
+      "summary": "Features live in a space. Geometry is not decoration.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-prob-lite",
+      "name": "Probability as bookkeeping",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-learning-problem"
+      ],
+      "summary": "Uncertainty written as numbers you can multiply.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-baselines",
+      "name": "Baselines before cleverness",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-loss"
+      ],
+      "summary": "The dumb answer you must beat.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-linear-reg",
+      "name": "Linear regression",
+      "moduleId": "ml-f-linear",
+      "tier": 1,
+      "prerequisites": [
+        "ml-loss",
+        "ml-lin-alg-lite"
+      ],
+      "summary": "A weighted sum plus a bias, fit by reducing squared error.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-logistic",
+      "name": "Logistic regression",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-linear-reg"
+      ],
+      "summary": "A linear score turned into a probability.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-prob-model",
+      "name": "Predictions as probabilities",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-logistic",
+        "ml-prob-lite"
+      ],
+      "summary": "A number between 0 and 1 is not a promise.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-gd",
+      "name": "Gradient descent",
+      "moduleId": "ml-f-linear",
+      "tier": 1,
+      "prerequisites": [
+        "ml-loss"
+      ],
+      "summary": "Following the slope of a loss you can actually compute.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-feature-scale",
+      "name": "Feature scaling",
+      "moduleId": "ml-f-linear",
+      "tier": 1,
+      "prerequisites": [
+        "ml-gd"
+      ],
+      "summary": "Why unscaled inputs make the slope lie.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-convex",
+      "name": "Convex versus non-convex loss",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-gd"
+      ],
+      "summary": "One bowl, or a landscape with many basins.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-metrics-class",
+      "name": "Classification metrics",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-logistic"
+      ],
+      "summary": "Precision, recall, and why accuracy lies.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-train-val-test",
+      "name": "Train, validation, test",
+      "moduleId": "ml-f-gen",
+      "tier": 1,
+      "prerequisites": [
+        "ml-learning-problem"
+      ],
+      "summary": "Three splits, three jobs. Mixing them is the original sin.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-overfit",
+      "name": "Overfitting",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-train-val-test",
+        "ml-hypothesis"
+      ],
+      "summary": "Fitting the sample, missing the population.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-generalization",
+      "name": "Generalization",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-overfit"
+      ],
+      "summary": "Performance on the distribution, not the spreadsheet.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-bias-variance",
+      "name": "Bias and variance",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-generalization"
+      ],
+      "summary": "A model that cannot see versus a model that sees noise.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-regularization",
+      "name": "Regularization",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-overfit"
+      ],
+      "summary": "Paying a tax on complexity so the fit cannot wander.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-crossval",
+      "name": "Cross-validation",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-train-val-test"
+      ],
+      "summary": "Rotating the held-out slice when data is scarce.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-capacity",
+      "name": "Model capacity",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-bias-variance"
+      ],
+      "summary": "How much structure the hypothesis class can represent.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-early-stop",
+      "name": "Early stopping",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-overfit",
+        "ml-gd"
+      ],
+      "summary": "Quitting while the validation loss is still honest.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-gd-variants",
+      "name": "Stochastic and mini-batch gradients",
+      "moduleId": "ml-f-opt",
+      "tier": 2,
+      "prerequisites": [
+        "ml-gd"
+      ],
+      "summary": "Estimating the slope from a handful of examples.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "ml-iid",
+      "name": "The i.i.d. assumption",
+      "moduleId": "ml-f-opt",
+      "tier": 2,
+      "prerequisites": [
+        "ml-generalization"
+      ],
+      "summary": "Independent, identically distributed — and how often that is a lie.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

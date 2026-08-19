@@ -9,16 +9,22 @@ import { buildCatalog } from "./catalog.ts";
 import { declareKnown, pickPlacementItems, scorePlacement } from "./placement.ts";
 
 const catalog = buildCatalog(CATEGORIES, CONCEPTS, [...CPU_SEMI_LESSONS, ...GPU_LESSONS], [], [], [], COURSES);
-const course = catalog.courseMap["arch-gpu"];
+const foundations = catalog.courseMap["cpu-foundations"];
+const gpuCourse = catalog.courseMap["arch-gpu"];
 
 describe("placement", () => {
   it("draws only early, non-advanced items", () => {
-    const items = pickPlacementItems(course, catalog);
+    const items = pickPlacementItems(foundations, catalog);
     assert.ok(items.length >= 1 && items.length <= 3);
     for (const item of items) {
       assert.ok(item.tier <= 2);
       assert.ok(!item.conceptId.startsWith("gpu-scheduler"));
       assert.equal(item.question.choices.length, 4);
+    }
+    const gpuItems = pickPlacementItems(gpuCourse, catalog);
+    for (const item of gpuItems) {
+      assert.ok(item.tier <= 2);
+      assert.ok(!item.conceptId.startsWith("gpu-scheduler"));
     }
   });
 
@@ -46,7 +52,7 @@ describe("placement", () => {
   });
 
   it("declaration refuses anything above introductory", () => {
-    const placement = declareKnown(course, catalog, [
+    const placement = declareKnown(foundations, catalog, [
       "arch-latency-throughput",
       "cpu-pipeline",
       "gpu-warps",

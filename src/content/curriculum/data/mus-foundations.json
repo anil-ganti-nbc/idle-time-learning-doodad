@@ -1,0 +1,336 @@
+{
+  "id": "mus-foundations",
+  "title": "Music Theory Foundations",
+  "categoryId": "music-theory",
+  "description": "Sound as elements, then intervals, scales, modes, rhythm, and meter. Harmony as a craft waits until these names are honest. Built to support later heavy-music work, not a conservatory recital track.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "mit-21m051",
+      "title": "MIT 21M.051 Fundamentals of Music",
+      "url": "https://ocw.mit.edu/courses/21m-051-fundamentals-of-music-spring-2007/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Elements and rhythm/pitch before major/minor, then functional harmony last. Ear and notation travel with the theory."
+    },
+    {
+      "id": "berklee-guitar",
+      "title": "Berklee Guitar Fundamentals",
+      "url": "https://online.berklee.edu/courses/guitar-fundamentals",
+      "kind": "syllabus",
+      "notes": "Technique and basic harmonic literacy that death-metal construction should assume, not duplicate."
+    }
+  ],
+  "modules": [
+    {
+      "id": "mus-f-elem",
+      "title": "Sound as elements",
+      "blurb": "Pitch, duration, loudness, notation.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "mus-sound",
+        "mus-interval"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-f-pitch",
+      "title": "Pitch collections",
+      "blurb": "Scales, keys, modes.",
+      "order": 1,
+      "prerequisites": [
+        "mus-f-elem"
+      ],
+      "spineIds": [
+        "mus-scale",
+        "mus-modes"
+      ]
+    },
+    {
+      "id": "mus-f-rhythm",
+      "title": "Rhythm and meter",
+      "blurb": "Pulse, bars, and the off-beat.",
+      "order": 2,
+      "prerequisites": [
+        "mus-f-elem"
+      ],
+      "spineIds": [
+        "mus-meter",
+        "mus-rhythm"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "mus-sound",
+      "name": "Pitch, duration, loudness, timbre",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "The four things a note can be before it is a theory problem.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-notation",
+      "name": "Notation as a map",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [
+        "mus-sound"
+      ],
+      "summary": "A staff is a diagram, not the music.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-clef",
+      "name": "Staves and clefs",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [
+        "mus-notation"
+      ],
+      "summary": "Where a pitch sits depends on the clef.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-octave",
+      "name": "Octave equivalence",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [
+        "mus-sound"
+      ],
+      "summary": "The same letter, a doubling of frequency.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-semitone",
+      "name": "Semitones and the chromatic collection",
+      "moduleId": "mus-f-elem",
+      "tier": 1,
+      "prerequisites": [
+        "mus-octave"
+      ],
+      "summary": "Twelve named steps in the common tuning.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-interval",
+      "name": "Intervals and consonance",
+      "moduleId": "mus-f-elem",
+      "tier": 1,
+      "prerequisites": [
+        "mus-semitone"
+      ],
+      "summary": "Ratios, beating, and why a fifth sits still.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-ear-interval",
+      "name": "Hearing an interval",
+      "moduleId": "mus-f-elem",
+      "tier": 1,
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "summary": "A name that has to survive without the page.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-scale",
+      "name": "Scales",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "summary": "An ordered pitch collection with a tonic.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-major",
+      "name": "The major scale",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-scale"
+      ],
+      "summary": "W-W-H-W-W-W-H as a pattern, not a mood.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-minor",
+      "name": "Minor scales",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-major"
+      ],
+      "summary": "Natural, harmonic, melodic — three answers to one tonic.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-key",
+      "name": "Key and tonic",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-scale"
+      ],
+      "summary": "The pitch everything else is measured from.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-modes",
+      "name": "Modes",
+      "moduleId": "mus-f-pitch",
+      "tier": 2,
+      "prerequisites": [
+        "mus-interval",
+        "mus-scale"
+      ],
+      "summary": "Same pitch set, different tonic gravity.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-circle",
+      "name": "Circle of fifths",
+      "moduleId": "mus-f-pitch",
+      "tier": 2,
+      "prerequisites": [
+        "mus-key"
+      ],
+      "summary": "Near keys share almost all their pitches.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-enharmonic",
+      "name": "Enharmonic spelling",
+      "moduleId": "mus-f-pitch",
+      "tier": 2,
+      "prerequisites": [
+        "mus-semitone"
+      ],
+      "summary": "F♯ and G♭ are the same key and a different claim.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-pentatonic",
+      "name": "Pentatonic collections",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-scale"
+      ],
+      "summary": "A reduced set that still implies a tonic.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-rhythm",
+      "name": "Pulse and rhythm",
+      "moduleId": "mus-f-rhythm",
+      "tier": 0,
+      "prerequisites": [
+        "mus-sound"
+      ],
+      "summary": "When events happen, independent of which pitch.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-rest",
+      "name": "Silence as rhythm",
+      "moduleId": "mus-f-rhythm",
+      "tier": 0,
+      "prerequisites": [
+        "mus-rhythm"
+      ],
+      "summary": "A rest is an event.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-meter",
+      "name": "Meter",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-rhythm"
+      ],
+      "summary": "A repeating accent pattern you can count.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-beat-div",
+      "name": "Beat subdivision",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Twos and threes inside the beat.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-tempo",
+      "name": "Tempo",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "How fast the pulse is, not how busy the surface is.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-tie-dot",
+      "name": "Ties and dots",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-rhythm"
+      ],
+      "summary": "Ways of writing a duration that crosses a beat.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-anacrusis",
+      "name": "Pickup and downbeat",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Starting before the barline.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-syncopation",
+      "name": "Syncopation",
+      "moduleId": "mus-f-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Accent where the meter did not ask for one.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-polyrhythm-intro",
+      "name": "Polyrhythm, first look",
+      "moduleId": "mus-f-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "mus-beat-div"
+      ],
+      "summary": "Two subdivisions at once.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

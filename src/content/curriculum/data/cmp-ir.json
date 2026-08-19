@@ -1,0 +1,317 @@
+{
+  "id": "cmp-ir",
+  "title": "Intermediate Representations and Optimisation",
+  "categoryId": "compilers",
+  "description": "SSA, dataflow, and the passes that change the program without changing what it means.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "cmp-typecheck",
+    "cmp-ast"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs143",
+      "title": "Stanford CS143",
+      "url": "https://web.stanford.edu/class/cs143/",
+      "kind": "syllabus",
+      "notes": "IR and local/global optimization after the front-end exists."
+    },
+    {
+      "id": "cmu-15411",
+      "title": "CMU 15-411/611 Compiler Design",
+      "url": "https://csd.cs.cmu.edu/15411611-compiler-design",
+      "kind": "syllabus",
+      "notes": "IR and dataflow as the intellectual center."
+    }
+  ],
+  "modules": [
+    {
+      "id": "cmp-ir-form",
+      "title": "IR shapes",
+      "blurb": "Three-address, CFG, SSA.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "cmp-ssa"
+      ]
+    },
+    {
+      "id": "cmp-ir-flow",
+      "title": "Dataflow",
+      "blurb": "Liveness and friends.",
+      "order": 1,
+      "prerequisites": [
+        "cmp-ir-form"
+      ],
+      "spineIds": [
+        "cmp-dataflow"
+      ]
+    },
+    {
+      "id": "cmp-ir-opt",
+      "title": "Transformations",
+      "blurb": "The useful rewrites.",
+      "order": 2,
+      "prerequisites": [
+        "cmp-ir-flow"
+      ],
+      "spineIds": [
+        "cmp-dce",
+        "cmp-inlining"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "cmp-three-addr",
+      "name": "Three-address code",
+      "moduleId": "cmp-ir-form",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-ir-lower-intro"
+      ],
+      "summary": "One operator, a few operands, easy to move.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-cfg-ir",
+      "name": "Control-flow graphs",
+      "moduleId": "cmp-ir-form",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-three-addr"
+      ],
+      "summary": "Basic blocks and the edges between them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-ssa",
+      "name": "SSA form",
+      "moduleId": "cmp-ir-form",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-front"
+      ],
+      "summary": "Single assignment so dataflow becomes a graph problem.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-phi",
+      "name": "φ-nodes",
+      "moduleId": "cmp-ir-form",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa",
+        "cmp-cfg-ir"
+      ],
+      "summary": "A merge of names at a join point.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-mem2reg",
+      "name": "Memory to registers",
+      "moduleId": "cmp-ir-form",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Promoting allocas so SSA can see them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-ir-verify",
+      "name": "IR verification",
+      "moduleId": "cmp-ir-form",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Types and dominance as a checker, not a hope.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-dataflow",
+      "name": "Dataflow analysis",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "Facts that flow forward or backward until they settle.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-liveness",
+      "name": "Liveness",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-dataflow"
+      ],
+      "summary": "Which values are still needed.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-alias",
+      "name": "Alias analysis",
+      "moduleId": "cmp-ir-flow",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-dataflow"
+      ],
+      "summary": "May these two pointers be the same.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-call-graph",
+      "name": "Call graphs",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "Who might call whom.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-pass-manager",
+      "name": "Pass managers",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ir-verify"
+      ],
+      "summary": "Order, invalidation, and why passes fight.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-const-fold",
+      "name": "Constant folding",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Doing arithmetic the compiler can already see.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-dce",
+      "name": "Dead code elimination",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-liveness"
+      ],
+      "summary": "Deleting what nothing uses.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-cse",
+      "name": "Common-subexpression elimination",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Computing a thing once.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-inlining",
+      "name": "Inlining",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-call-graph"
+      ],
+      "summary": "Replacing a call with the body, for a price.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-loop-inv",
+      "name": "Loop-invariant code motion",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "Hoisting work the loop does not change.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-licm",
+      "name": "LICM carefully",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-loop-inv",
+        "cmp-alias"
+      ],
+      "summary": "When a load is not actually invariant.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-strength-red",
+      "name": "Strength reduction",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-loop-inv"
+      ],
+      "summary": "A multiply becoming an add.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-sroa",
+      "name": "Scalar replacement of aggregates",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-mem2reg"
+      ],
+      "summary": "Exploding a struct into pieces SSA can eat.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-tailcall",
+      "name": "Tail calls",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "A call that can be a jump.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-vectorize",
+      "name": "Vectorization",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-loop-inv",
+        "cpu-vector-simd"
+      ],
+      "summary": "One instruction, many loop iterations.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "cmp-ipo",
+      "name": "Interprocedural optimization",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-inlining",
+        "cmp-call-graph"
+      ],
+      "summary": "Facts that cross function boundaries.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

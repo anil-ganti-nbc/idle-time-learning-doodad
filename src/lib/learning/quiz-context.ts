@@ -28,6 +28,7 @@ export function quizContextForConcept(
     })),
     demonstrated,
     weak,
+    objectives: concept?.objectives ?? mod?.learningObjectives,
   };
 }
 

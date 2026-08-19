@@ -1,0 +1,310 @@
+{
+  "id": "os-foundations",
+  "title": "Operating Systems Foundations",
+  "categoryId": "os",
+  "description": "Kernel, syscalls, processes, and isolation — the contract between program and machine, taught the xv6 way: small enough to hold.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "mit-61810",
+      "title": "MIT 6.1810 Operating System Engineering",
+      "url": "https://ocw.mit.edu/courses/6-1810-operating-system-engineering-fall-2023/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Hardware/software contract first. xv6 as a complete small Unix."
+    },
+    {
+      "id": "mit-xv6",
+      "title": "xv6 book",
+      "url": "https://pdos.csail.mit.edu/6.1810/2025/xv6.html",
+      "kind": "notes",
+      "notes": "Organization, traps, isolation before locks and filesystems."
+    }
+  ],
+  "modules": [
+    {
+      "id": "os-f-kernel",
+      "title": "The kernel as a program",
+      "blurb": "Privilege, traps, syscalls.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "os-kernel",
+        "os-syscall"
+      ]
+    },
+    {
+      "id": "os-f-proc",
+      "title": "Processes",
+      "blurb": "Address spaces, fork, isolation.",
+      "order": 1,
+      "prerequisites": [
+        "os-f-kernel"
+      ],
+      "spineIds": [
+        "os-process"
+      ]
+    },
+    {
+      "id": "os-f-switch",
+      "title": "Leaving and returning",
+      "blurb": "Interrupts, context switch, devices at a glance.",
+      "order": 2,
+      "prerequisites": [
+        "os-f-proc"
+      ],
+      "spineIds": [
+        "os-context-switch"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "os-kernel",
+      "name": "The kernel",
+      "moduleId": "os-f-kernel",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "The program that owns the machine and rents it out.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-privilege",
+      "name": "Privilege rings",
+      "moduleId": "os-f-kernel",
+      "tier": 1,
+      "prerequisites": [
+        "os-kernel"
+      ],
+      "summary": "User code that cannot issue the dangerous instructions.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-syscall",
+      "name": "System calls",
+      "moduleId": "os-f-kernel",
+      "tier": 1,
+      "prerequisites": [
+        "os-kernel"
+      ],
+      "summary": "The narrow door a process uses to ask for work.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-trap",
+      "name": "Traps and exceptions",
+      "moduleId": "os-f-kernel",
+      "tier": 1,
+      "prerequisites": [
+        "os-syscall"
+      ],
+      "summary": "How control transfers into the kernel without a CALL.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-user-kernel",
+      "name": "User versus kernel memory",
+      "moduleId": "os-f-kernel",
+      "tier": 1,
+      "prerequisites": [
+        "os-privilege"
+      ],
+      "summary": "Two maps, one CPU, a lot of checking.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-abi",
+      "name": "The syscall ABI",
+      "moduleId": "os-f-kernel",
+      "tier": 2,
+      "prerequisites": [
+        "os-syscall"
+      ],
+      "summary": "Registers, numbers, and the compatibility tax.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-xv6-map",
+      "name": "A small Unix as a map",
+      "moduleId": "os-f-kernel",
+      "tier": 1,
+      "prerequisites": [
+        "os-kernel"
+      ],
+      "summary": "xv6 as a complete system you can finish reading.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-boot",
+      "name": "Booting",
+      "moduleId": "os-f-kernel",
+      "tier": 2,
+      "prerequisites": [
+        "os-kernel"
+      ],
+      "summary": "From reset vector to the first process.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-process",
+      "name": "Processes and threads",
+      "moduleId": "os-f-proc",
+      "tier": 1,
+      "prerequisites": [
+        "os-kernel"
+      ],
+      "summary": "Address spaces, threads, and what isolation actually costs.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-thread-vs-proc",
+      "name": "Threads versus processes",
+      "moduleId": "os-f-proc",
+      "tier": 1,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Shared address space versus a private one.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-isolation",
+      "name": "Isolation",
+      "moduleId": "os-f-proc",
+      "tier": 1,
+      "prerequisites": [
+        "os-process",
+        "os-privilege"
+      ],
+      "summary": "A crash next door should be someone else's problem.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-fork",
+      "name": "fork",
+      "moduleId": "os-f-proc",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Copy the process, then diverge.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-exec",
+      "name": "exec",
+      "moduleId": "os-f-proc",
+      "tier": 2,
+      "prerequisites": [
+        "os-fork"
+      ],
+      "summary": "Replace the address space, keep the process id.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-wait",
+      "name": "wait",
+      "moduleId": "os-f-proc",
+      "tier": 2,
+      "prerequisites": [
+        "os-fork"
+      ],
+      "summary": "Reaping children so they do not stay zombies.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-shell",
+      "name": "The shell as a user of the API",
+      "moduleId": "os-f-proc",
+      "tier": 2,
+      "prerequisites": [
+        "os-exec",
+        "os-wait"
+      ],
+      "summary": "A loop of fork, exec, wait that invents scripting.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-protection",
+      "name": "Protection domains",
+      "moduleId": "os-f-proc",
+      "tier": 2,
+      "prerequisites": [
+        "os-isolation"
+      ],
+      "summary": "Who may touch which object.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-monolithic-vs-micro",
+      "name": "Kernel structure",
+      "moduleId": "os-f-proc",
+      "tier": 2,
+      "prerequisites": [
+        "os-kernel"
+      ],
+      "summary": "Monoliths, microkernels, and the argument about where the driver lives.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-context-switch",
+      "name": "Context switches",
+      "moduleId": "os-f-switch",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Saving one life and restoring another.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-interrupt",
+      "name": "Interrupts",
+      "moduleId": "os-f-switch",
+      "tier": 2,
+      "prerequisites": [
+        "os-trap"
+      ],
+      "summary": "The device rings; the kernel answers.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-device-intro",
+      "name": "Devices as files of a sort",
+      "moduleId": "os-f-switch",
+      "tier": 2,
+      "prerequisites": [
+        "os-interrupt"
+      ],
+      "summary": "A register file on the other side of a bus.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-ipc-intro",
+      "name": "IPC, first look",
+      "moduleId": "os-f-switch",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Pipes and messages before shared-memory races.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-batch-vs-time",
+      "name": "Batch, multiprogramming, time-share",
+      "moduleId": "os-f-switch",
+      "tier": 1,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Why we started switching at all.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

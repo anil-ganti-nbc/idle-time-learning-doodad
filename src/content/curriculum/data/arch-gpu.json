@@ -1,0 +1,398 @@
+{
+  "id": "arch-gpu",
+  "title": "GPU Architecture and Parallel Execution",
+  "categoryId": "cpu",
+  "description": "Throughput hardware: grids, SIMT, warps, occupancy, and the schedulers that hide latency. Surprise Me may drop you in this subject; it will not start you on occupancy.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    2,
+    5
+  ],
+  "entryRequirements": [
+    "cpu-pipeline",
+    "arch-data-parallel"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs149",
+      "title": "Stanford CS149 Parallel Computing",
+      "url": "https://gfxcourses.stanford.edu/cs149/fall25/",
+      "kind": "syllabus",
+      "notes": "GPU after multi-core and data-parallel thinking."
+    },
+    {
+      "id": "nvidia-educators",
+      "title": "NVIDIA CUDA C++ Programming Guide",
+      "url": "https://developer.nvidia.com/educators/existing-courses",
+      "kind": "vendor",
+      "notes": "Thread hierarchy → SIMT/warps → memory → occupancy/divergence as performance."
+    },
+    {
+      "id": "mit-6823",
+      "title": "MIT 6.823",
+      "url": "https://ocw.mit.edu/courses/6-823-computer-system-architecture-fall-2005/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Vectors/GPUs after pipelining and OOO, not as a first encounter with hardware."
+    }
+  ],
+  "modules": [
+    {
+      "id": "arch-gpu-simt",
+      "title": "GPU execution model",
+      "blurb": "Why a GPU exists, then grids, SIMT, warps.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "gpu-why-throughput",
+        "gpu-execution-model",
+        "gpu-simt",
+        "gpu-warps"
+      ]
+    },
+    {
+      "id": "arch-gpu-resources",
+      "title": "Resources and the memory hierarchy",
+      "blurb": "What a warp is competing for, and where data lives.",
+      "order": 1,
+      "prerequisites": [
+        "arch-gpu-simt"
+      ],
+      "spineIds": [
+        "gpu-memory-hierarchy",
+        "gpu-occupancy"
+      ]
+    },
+    {
+      "id": "arch-gpu-schedule",
+      "title": "Hiding latency, paying for divergence",
+      "blurb": "Scheduling interactions — the advanced end of this course.",
+      "order": 2,
+      "prerequisites": [
+        "arch-gpu-resources"
+      ],
+      "spineIds": [
+        "gpu-divergence",
+        "gpu-latency-hiding"
+      ]
+    },
+    {
+      "id": "arch-gpu-systems",
+      "title": "Beyond one SM",
+      "blurb": "Atomics, multi-GPU, and specialized units.",
+      "order": 3,
+      "prerequisites": [
+        "arch-gpu-schedule"
+      ],
+      "spineIds": [
+        "gpu-atomics"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "gpu-why-throughput",
+      "name": "Why a GPU exists",
+      "moduleId": "arch-gpu-simt",
+      "tier": 2,
+      "prerequisites": [
+        "arch-data-parallel",
+        "cpu-pipeline"
+      ],
+      "summary": "Spending transistors on ALUs instead of speculation when the work is wide.",
+      "parentId": "arch-data-parallel",
+      "objectives": [
+        "Contrast a latency-optimized core with a throughput-optimized one",
+        "Say what kind of program a GPU is for"
+      ],
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-execution-model",
+      "name": "Grid, block, thread",
+      "moduleId": "arch-gpu-simt",
+      "tier": 3,
+      "prerequisites": [
+        "gpu-why-throughput"
+      ],
+      "summary": "The programmer-visible hierarchy a kernel is launched over.",
+      "parentId": "gpu-why-throughput",
+      "objectives": [
+        "Map a kernel launch onto threads, blocks, and a grid",
+        "Keep the programming model separate from the hardware warp"
+      ],
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-kernel-launch",
+      "name": "Kernel launch",
+      "moduleId": "arch-gpu-simt",
+      "tier": 3,
+      "prerequisites": [
+        "gpu-execution-model"
+      ],
+      "summary": "A host-side decision that creates millions of threads the hardware will schedule.",
+      "parentId": "gpu-execution-model",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-simt",
+      "name": "SIMT versus SIMD",
+      "moduleId": "arch-gpu-simt",
+      "tier": 3,
+      "prerequisites": [
+        "gpu-execution-model"
+      ],
+      "summary": "One instruction stream, many threads, with implicit lockstep and a way to mask lanes.",
+      "parentId": "gpu-execution-model",
+      "objectives": [
+        "Distinguish SIMT from packed SIMD",
+        "Explain why a scalar-looking kernel still runs in lockstep"
+      ],
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-simd-lane",
+      "name": "Lanes and masks",
+      "moduleId": "arch-gpu-simt",
+      "tier": 3,
+      "prerequisites": [
+        "gpu-simt",
+        "cpu-vector-simd"
+      ],
+      "summary": "A disabled lane still occupies the cycle.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-warps",
+      "name": "Warps and wavefronts",
+      "moduleId": "arch-gpu-simt",
+      "tier": 3,
+      "prerequisites": [
+        "gpu-simt"
+      ],
+      "summary": "The hardware scheduling quantum — 32 or 64 threads sharing an instruction.",
+      "parentId": "gpu-simt",
+      "objectives": [
+        "Name the warp/wavefront as the unit the scheduler sees",
+        "Explain why block size that is not a multiple of the warp width wastes lanes"
+      ],
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-exec-resources",
+      "name": "Execution resources",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-warps"
+      ],
+      "summary": "ALUs, special-function units, and load/store pipes a SM/CU actually has.",
+      "parentId": "gpu-warps",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-memory-hierarchy",
+      "name": "GPU memory hierarchy",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-warps"
+      ],
+      "summary": "Registers, shared/LDS, L1/L2, and HBM — different spaces, different costs.",
+      "parentId": "gpu-warps",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-shared-mem",
+      "name": "Shared memory / LDS",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-memory-hierarchy"
+      ],
+      "summary": "A software-managed scratchpad visible to a block.",
+      "parentId": "gpu-memory-hierarchy",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-bank-conflict",
+      "name": "Bank conflicts",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-shared-mem"
+      ],
+      "summary": "When several threads hit the same shared-memory bank and serialize.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-coalescing",
+      "name": "Memory coalescing",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-memory-hierarchy"
+      ],
+      "summary": "Adjacent threads touching adjacent addresses become one transaction.",
+      "parentId": "gpu-memory-hierarchy",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-occupancy",
+      "name": "Occupancy",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-exec-resources",
+        "gpu-memory-hierarchy"
+      ],
+      "summary": "How many warps can live on a processor at once, limited by registers and shared memory.",
+      "parentId": "gpu-exec-resources",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-occupancy-math",
+      "name": "Occupancy as a budget",
+      "moduleId": "arch-gpu-resources",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-occupancy"
+      ],
+      "summary": "Registers × warps × blocks against a finite file.",
+      "parentId": "gpu-occupancy",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-divergence",
+      "name": "Control divergence",
+      "moduleId": "arch-gpu-schedule",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-warps",
+        "gpu-occupancy"
+      ],
+      "summary": "Threads in a warp taking different paths, so both sides run under a mask.",
+      "parentId": "gpu-warps",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-latency-hiding",
+      "name": "Latency hiding",
+      "moduleId": "arch-gpu-schedule",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-occupancy"
+      ],
+      "summary": "Switching to another ready warp instead of stalling the whole machine on a miss.",
+      "parentId": "gpu-occupancy",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-ilp-vs-tlp",
+      "name": "ILP versus TLP on a GPU",
+      "moduleId": "arch-gpu-schedule",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-latency-hiding",
+        "cpu-ilp-idea"
+      ],
+      "summary": "Instruction slack inside a thread versus more warps.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-scheduler",
+      "name": "Warp scheduling",
+      "moduleId": "arch-gpu-schedule",
+      "tier": 5,
+      "prerequisites": [
+        "gpu-latency-hiding",
+        "gpu-divergence"
+      ],
+      "summary": "Which ready warp runs next, and why that interacts with caches and issue width.",
+      "parentId": "gpu-latency-hiding",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-resource-limits",
+      "name": "Resource-limited launch",
+      "moduleId": "arch-gpu-schedule",
+      "tier": 5,
+      "prerequisites": [
+        "gpu-occupancy",
+        "gpu-scheduler"
+      ],
+      "summary": "Registers, shared memory, and warp slots as coupled constraints on a kernel.",
+      "parentId": "gpu-occupancy",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-persistent-threads",
+      "name": "Persistent threads",
+      "moduleId": "arch-gpu-schedule",
+      "tier": 5,
+      "prerequisites": [
+        "gpu-scheduler"
+      ],
+      "summary": "A kernel that lives and pulls work, instead of one launch per tile.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-atomics",
+      "name": "Atomics and contention",
+      "moduleId": "arch-gpu-systems",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-memory-hierarchy"
+      ],
+      "summary": "Read-modify-write that stays correct when many threads hit one address.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-unified-mem",
+      "name": "Unified virtual memory",
+      "moduleId": "arch-gpu-systems",
+      "tier": 4,
+      "prerequisites": [
+        "gpu-memory-hierarchy",
+        "cpu-virtual-addr"
+      ],
+      "summary": "A single address space whose pages migrate, with a cost.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-tensor-core",
+      "name": "Tensor / matrix units",
+      "moduleId": "arch-gpu-systems",
+      "tier": 5,
+      "prerequisites": [
+        "gpu-exec-resources",
+        "cpu-vector-simd"
+      ],
+      "summary": "Specialized pipes for dense matrix fragments.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-multi-gpu",
+      "name": "Multi-GPU communication",
+      "moduleId": "arch-gpu-systems",
+      "tier": 5,
+      "prerequisites": [
+        "gpu-memory-hierarchy"
+      ],
+      "summary": "NVLink, PCIe, and the fact that 'the GPU' is often several.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "gpu-graph-capture",
+      "name": "Work graphs and capture",
+      "moduleId": "arch-gpu-systems",
+      "tier": 5,
+      "prerequisites": [
+        "gpu-kernel-launch"
+      ],
+      "summary": "Recording a launch sequence so the host is not in the inner loop.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

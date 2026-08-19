@@ -1,8 +1,16 @@
-import type { Catalog, Concept, Course, CourseModule, Lesson, SessionRequest, Tier } from "./types";
+import { isRetiredSeededCategory, isSelectableCategory } from "./types";
+import type { Catalog, Category, Concept, Course, CourseModule, Lesson, SessionRequest, Tier } from "./types";
+
+export function coursesForCategory(catalog: Catalog, categoryId: string | null | undefined): Course[] {
+  if (!categoryId || categoryId === "random") return [];
+  return catalog.courses
+    .filter((c) => c.categoryId === categoryId)
+    .slice()
+    .sort((a, b) => (a.orderHint ?? 0) - (b.orderHint ?? 0));
+}
 
 export function courseForCategory(catalog: Catalog, categoryId: string | null | undefined): Course | undefined {
-  if (!categoryId || categoryId === "random") return undefined;
-  return catalog.courses.find((c) => c.categoryId === categoryId);
+  return coursesForCategory(catalog, categoryId)[0];
 }
 
 export function courseForConcept(catalog: Catalog, conceptId: string): Course | undefined {
@@ -61,4 +69,21 @@ export function emptyCourseProgress(courseId: string) {
     lastStudiedAt: null as string | null,
     waivedConceptIds: [] as string[],
   };
+}
+
+export function selectableCategories(catalog: Catalog): Category[] {
+  return catalog.categories.filter((c) => isSelectableCategory(c));
+}
+
+export function isCategoryOpenForSelection(
+  catalog: Catalog,
+  categoryId: string | undefined,
+  explicitCategory?: string | null,
+): boolean {
+  if (!categoryId) return true;
+  if (explicitCategory && explicitCategory === categoryId) return true;
+  const meta = catalog.categoryMap[categoryId];
+  if (meta?.custom) return true;
+  if (meta?.status === "retired" || isRetiredSeededCategory(categoryId)) return false;
+  return true;
 }

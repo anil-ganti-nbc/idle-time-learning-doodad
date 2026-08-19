@@ -1,0 +1,322 @@
+{
+  "id": "net-internet",
+  "title": "Routing and Internet Architecture",
+  "categoryId": "networking",
+  "description": "How packets find a path across independently owned networks: prefixes, IGPs, BGP, peering, and the failures that are political.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    3,
+    5
+  ],
+  "entryRequirements": [
+    "net-cidr",
+    "net-ip"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs144",
+      "title": "Stanford CS144",
+      "url": "https://web.stanford.edu/class/cs144/",
+      "kind": "syllabus",
+      "notes": "Internet architecture after a working transport. BGP is policy, not a shortest-path toy."
+    }
+  ],
+  "modules": [
+    {
+      "id": "net-i-fwd",
+      "title": "Forwarding",
+      "blurb": "Longest prefix, tables.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "net-forwarding-vs-routing"
+      ]
+    },
+    {
+      "id": "net-i-igp",
+      "title": "Inside an AS",
+      "blurb": "IGPs, OSPF.",
+      "order": 1,
+      "prerequisites": [
+        "net-i-fwd"
+      ],
+      "spineIds": [
+        "net-igp"
+      ]
+    },
+    {
+      "id": "net-i-bgp",
+      "title": "Between ASes",
+      "blurb": "BGP, peering, hijacks.",
+      "order": 2,
+      "prerequisites": [
+        "net-i-igp"
+      ],
+      "spineIds": [
+        "net-bgp"
+      ]
+    },
+    {
+      "id": "net-i-sys",
+      "title": "The system around it",
+      "blurb": "DNS, anycast, CDN, IPv6.",
+      "order": 3,
+      "prerequisites": [
+        "net-i-bgp"
+      ],
+      "spineIds": [
+        "net-dns-system",
+        "net-anycast"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "net-forwarding-vs-routing",
+      "name": "Forwarding versus routing",
+      "moduleId": "net-i-fwd",
+      "tier": 3,
+      "prerequisites": [
+        "net-cidr"
+      ],
+      "summary": "The lookup in the datapath versus the process that filled the table.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-longest-prefix",
+      "name": "Longest-prefix match",
+      "moduleId": "net-i-fwd",
+      "tier": 3,
+      "prerequisites": [
+        "net-forwarding-vs-routing"
+      ],
+      "summary": "More specific wins.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-as",
+      "name": "Autonomous systems",
+      "moduleId": "net-i-igp",
+      "tier": 3,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "A network with one routing policy.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-igp",
+      "name": "Interior gateway protocols",
+      "moduleId": "net-i-igp",
+      "tier": 3,
+      "prerequisites": [
+        "net-as"
+      ],
+      "summary": "How an AS talks to itself.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-ospf",
+      "name": "Link-state routing (OSPF)",
+      "moduleId": "net-i-igp",
+      "tier": 4,
+      "prerequisites": [
+        "net-igp"
+      ],
+      "summary": "Everyone floods the map, then runs shortest path.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-bgp",
+      "name": "BGP",
+      "moduleId": "net-i-bgp",
+      "tier": 3,
+      "prerequisites": [
+        "net-stack"
+      ],
+      "summary": "Policy routing between autonomous systems.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-peering",
+      "name": "Peering",
+      "moduleId": "net-i-bgp",
+      "tier": 4,
+      "prerequisites": [
+        "net-bgp"
+      ],
+      "summary": "Settlement-free exchange, until it is not.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-transit",
+      "name": "Transit",
+      "moduleId": "net-i-bgp",
+      "tier": 4,
+      "prerequisites": [
+        "net-bgp"
+      ],
+      "summary": "Paying someone to reach the rest of the Internet.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-ixp",
+      "name": "Internet exchange points",
+      "moduleId": "net-i-bgp",
+      "tier": 4,
+      "prerequisites": [
+        "net-peering"
+      ],
+      "summary": "A room where many ASes meet.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-policy-route",
+      "name": "Policy in the path",
+      "moduleId": "net-i-bgp",
+      "tier": 4,
+      "prerequisites": [
+        "net-bgp"
+      ],
+      "summary": "Local preference and AS-path as politics encoded in attributes.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-hijack",
+      "name": "Route hijacks",
+      "moduleId": "net-i-bgp",
+      "tier": 4,
+      "prerequisites": [
+        "net-bgp"
+      ],
+      "summary": "Announcing a prefix you do not own.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-rpki",
+      "name": "RPKI",
+      "moduleId": "net-i-bgp",
+      "tier": 5,
+      "prerequisites": [
+        "net-hijack"
+      ],
+      "summary": "Cryptographic permission to announce a prefix.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-dns-system",
+      "name": "The DNS as a system",
+      "moduleId": "net-i-sys",
+      "tier": 3,
+      "prerequisites": [
+        "net-dns-intro"
+      ],
+      "summary": "Hierarchy, caches, and the resolvers in the middle.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-anycast",
+      "name": "Anycast",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-bgp"
+      ],
+      "summary": "One address, many locations, routing decides which.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-anycast-dns",
+      "name": "Anycast DNS",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-anycast",
+        "net-dns-system"
+      ],
+      "summary": "Why 8.8.8.8 is near everyone.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-cdn",
+      "name": "CDNs",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-anycast",
+        "net-dns-system"
+      ],
+      "summary": "Putting the bytes next to the viewer.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-ipv6",
+      "name": "IPv6",
+      "moduleId": "net-i-sys",
+      "tier": 3,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Larger addresses and a different neighbor-discovery story.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-mpls",
+      "name": "MPLS",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-forwarding-vs-routing"
+      ],
+      "summary": "Labels instead of IP lookups in the core.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-sdn",
+      "name": "Software-defined control",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-forwarding-vs-routing"
+      ],
+      "summary": "A logically centralized controller filling the tables.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-measurement",
+      "name": "Measuring the Internet",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-icmp",
+        "net-bgp"
+      ],
+      "summary": "Traceroute lies, and we use it anyway.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-anycast-http",
+      "name": "Anycast at L7",
+      "moduleId": "net-i-sys",
+      "tier": 4,
+      "prerequisites": [
+        "net-cdn"
+      ],
+      "summary": "When the TCP connection and the HTTP cache disagree about where you are.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-anycast-bgp",
+      "name": "BGP and anycast interaction",
+      "moduleId": "net-i-sys",
+      "tier": 5,
+      "prerequisites": [
+        "net-anycast",
+        "net-policy-route"
+      ],
+      "summary": "A more-specific prefix pulling traffic across an ocean.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

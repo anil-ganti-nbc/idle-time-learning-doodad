@@ -1,0 +1,305 @@
+{
+  "id": "dm-history",
+  "title": "Death Metal History and Vocabulary",
+  "categoryId": "death-metal",
+  "description": "Listening literacy: lineage, the thrash transition, Florida and Stockholm as production doctrines, then the branches. Scenes, not celebrity lists.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "mit-metal101",
+      "title": "MIT Heavy Metal 101",
+      "url": "https://ocw.mit.edu/courses/res-21m-001-heavy-metal-101-january-iap-2025/",
+      "kind": "ocw",
+      "notes": "History, listening, culture, songwriting tropes, harsh vocals — not celebrity lists. Extreme metal is a sound and a construction problem."
+    }
+  ],
+  "modules": [
+    {
+      "id": "dm-h-lineage",
+      "title": "Before it was named",
+      "blurb": "Lineage and the thrash/extreme cut.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "dm-lineage",
+        "dm-listening"
+      ]
+    },
+    {
+      "id": "dm-h-scenes",
+      "title": "Two founding scenes",
+      "blurb": "Florida and Stockholm as doctrines.",
+      "order": 1,
+      "prerequisites": [
+        "dm-h-lineage"
+      ],
+      "spineIds": [
+        "dm-history",
+        "dm-production-doctrine"
+      ]
+    },
+    {
+      "id": "dm-h-branches",
+      "title": "Branches",
+      "blurb": "Brutal, technical, progressive, dissonant.",
+      "order": 2,
+      "prerequisites": [
+        "dm-h-scenes"
+      ],
+      "spineIds": [
+        "dm-brutal",
+        "dm-tech-hist"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "dm-lineage",
+      "name": "Pre-death-metal lineage",
+      "moduleId": "dm-h-lineage",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Hardcore, thrash, and extreme metal as the soil, not a name-drop.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-listening",
+      "name": "How to listen to a death-metal record",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-lineage"
+      ],
+      "summary": "Riff, kit, vocal as equal parts. The mix is an argument.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-thrash-bridge",
+      "name": "The thrash/extreme transition",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-lineage"
+      ],
+      "summary": "When speed stopped being the point and weight took over.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-vocal-hist",
+      "name": "Harsh vocals as a lineage",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "A technique with a history, not a personality.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-scene-not-celeb",
+      "name": "Scenes, not celebrity lists",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-lineage"
+      ],
+      "summary": "A city, a studio, a tape network.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-tape-trading",
+      "name": "How the style spread",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-scene-not-celeb"
+      ],
+      "summary": "Tapes, zines, and the fact that scenes were postal.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-history",
+      "name": "Florida and Stockholm",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "Two scenes, two production doctrines, one genre name.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-florida",
+      "name": "The Florida sound",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Clarity, palm-mute punctuation, a particular drum sound.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-stockholm",
+      "name": "The Stockholm sound",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Buzzsaw guitars and a drier, dirtier midrange.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-production-doctrine",
+      "name": "Production as a stylistic fact",
+      "moduleId": "dm-h-scenes",
+      "tier": 2,
+      "prerequisites": [
+        "dm-florida",
+        "dm-stockholm"
+      ],
+      "summary": "The mix is part of the composition.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-gore-vs-occult",
+      "name": "Lyrical domains",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "Gore, occult, and social disgust as registers — not trivia.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-double-kick-hist",
+      "name": "Double-kick as a historical marker",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "When the right foot stopped being enough.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-brutal",
+      "name": "Brutal death metal",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Lower, thicker, less interested in a sung interval.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-tech-hist",
+      "name": "Technical death metal as a branch",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Density and odd grouping as a scene, not a compliment.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-prog-hist",
+      "name": "Progressive death metal as a branch",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Longer forms and borrowed jazz/fusion grammar.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-dissonant-hist",
+      "name": "Dissonant and avant-garde branches",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "When the riff stops agreeing with itself.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-melodeath",
+      "name": "Melodic death metal as a fork",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-stockholm"
+      ],
+      "summary": "Harmony that wants to be sung, still under distortion.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-grind-border",
+      "name": "The grind border",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-brutal"
+      ],
+      "summary": "Duration and blast as a different contract.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-ossuary",
+      "name": "A second wave of brutality",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-brutal"
+      ],
+      "summary": "What 'brutal' meant a decade later.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-tech-90s",
+      "name": "1990s technicality",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-tech-hist"
+      ],
+      "summary": "The first records that treated odd grouping as normal.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-modern-wave",
+      "name": "The later technical/dissonant wave",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-dissonant-hist",
+        "dm-tech-hist"
+      ],
+      "summary": "2000s onward: triggers, tighter grids, colder harmony.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "dm-regional",
+      "name": "Regional dialects after the two capitals",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Quebec, Poland, the American south, and why the accent is the riff.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

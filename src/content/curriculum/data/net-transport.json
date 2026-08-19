@@ -1,0 +1,312 @@
+{
+  "id": "net-transport",
+  "title": "Transport and Congestion",
+  "categoryId": "networking",
+  "description": "Reliability, windows, and how senders share a pipe they cannot see. TCP first; QUIC as a later design that learned the same lessons.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "net-ip",
+    "net-socket-api"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs144",
+      "title": "Stanford CS144",
+      "url": "https://web.stanford.edu/class/cs144/",
+      "kind": "syllabus",
+      "notes": "Labs build a reliable transport. Congestion is a mechanism, not a slogan."
+    }
+  ],
+  "modules": [
+    {
+      "id": "net-t-rel",
+      "title": "Reliability",
+      "blurb": "Acks, windows, state.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "net-reliable",
+        "net-tcp-state"
+      ]
+    },
+    {
+      "id": "net-t-cc",
+      "title": "Congestion control",
+      "blurb": "AIMD, RTT, the unseen pipe.",
+      "order": 1,
+      "prerequisites": [
+        "net-t-rel"
+      ],
+      "spineIds": [
+        "net-congestion"
+      ]
+    },
+    {
+      "id": "net-t-mod",
+      "title": "Modern transports",
+      "blurb": "Bufferbloat, BBR, QUIC.",
+      "order": 2,
+      "prerequisites": [
+        "net-t-cc"
+      ],
+      "spineIds": [
+        "net-bbr",
+        "net-quic"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "net-reliable",
+      "name": "Reliable delivery",
+      "moduleId": "net-t-rel",
+      "tier": 2,
+      "prerequisites": [
+        "net-udp"
+      ],
+      "summary": "Retransmit what was lost, in order, exactly once — approximately.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-tcp-state",
+      "name": "TCP state machine",
+      "moduleId": "net-t-rel",
+      "tier": 2,
+      "prerequisites": [
+        "net-reliable"
+      ],
+      "summary": "LISTEN to TIME_WAIT as a protocol, not a diagram to memorize.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-handshake",
+      "name": "The handshake",
+      "moduleId": "net-t-rel",
+      "tier": 2,
+      "prerequisites": [
+        "net-tcp-state"
+      ],
+      "summary": "Three packets to agree a starting sequence.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-sliding-window",
+      "name": "Sliding windows",
+      "moduleId": "net-t-rel",
+      "tier": 3,
+      "prerequisites": [
+        "net-reliable",
+        "net-bandwidth-delay"
+      ],
+      "summary": "Many packets in flight, one window to bound them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-flow-control",
+      "name": "Flow control",
+      "moduleId": "net-t-rel",
+      "tier": 3,
+      "prerequisites": [
+        "net-sliding-window"
+      ],
+      "summary": "The receiver advertising how much it can still take.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-timeout",
+      "name": "Retransmit timers",
+      "moduleId": "net-t-rel",
+      "tier": 3,
+      "prerequisites": [
+        "net-reliable"
+      ],
+      "summary": "When silence means loss.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-fast-retransmit",
+      "name": "Fast retransmit",
+      "moduleId": "net-t-rel",
+      "tier": 3,
+      "prerequisites": [
+        "net-timeout"
+      ],
+      "summary": "Triple-duplicate ACK as an earlier hint than a timeout.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-nagle",
+      "name": "Nagle and delayed ACK",
+      "moduleId": "net-t-rel",
+      "tier": 3,
+      "prerequisites": [
+        "net-tcp-state"
+      ],
+      "summary": "Two optimizations that deadlock each other.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-keepalive",
+      "name": "Keepalives",
+      "moduleId": "net-t-rel",
+      "tier": 2,
+      "prerequisites": [
+        "net-tcp-state"
+      ],
+      "summary": "Probing a quiet connection so middleboxes do not forget it.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-congestion",
+      "name": "Congestion control",
+      "moduleId": "net-t-cc",
+      "tier": 2,
+      "prerequisites": [
+        "net-stack"
+      ],
+      "summary": "How senders share a pipe they cannot see.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-aimd",
+      "name": "AIMD",
+      "moduleId": "net-t-cc",
+      "tier": 3,
+      "prerequisites": [
+        "net-congestion"
+      ],
+      "summary": "Additive increase, multiplicative decrease — fairness from a rule.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-slow-start",
+      "name": "Slow start",
+      "moduleId": "net-t-cc",
+      "tier": 3,
+      "prerequisites": [
+        "net-aimd"
+      ],
+      "summary": "Exponential probing until you hit something.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-rtt",
+      "name": "RTT estimation",
+      "moduleId": "net-t-cc",
+      "tier": 3,
+      "prerequisites": [
+        "net-timeout"
+      ],
+      "summary": "Jacobson/Karels: the mean is not enough; you need the variance.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-fairness-tcp",
+      "name": "TCP fairness",
+      "moduleId": "net-t-cc",
+      "tier": 3,
+      "prerequisites": [
+        "net-aimd"
+      ],
+      "summary": "Equal shares among equal RTTs — and the bias when they are not.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-head-of-line",
+      "name": "Head-of-line blocking",
+      "moduleId": "net-t-cc",
+      "tier": 3,
+      "prerequisites": [
+        "net-reliable"
+      ],
+      "summary": "One lost packet stalling the streams behind it.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-bufferbloat",
+      "name": "Bufferbloat",
+      "moduleId": "net-t-mod",
+      "tier": 3,
+      "prerequisites": [
+        "net-congestion"
+      ],
+      "summary": "Huge buffers turning loss into delay.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-ecn",
+      "name": "Explicit congestion notification",
+      "moduleId": "net-t-mod",
+      "tier": 4,
+      "prerequisites": [
+        "net-congestion"
+      ],
+      "summary": "Marking instead of dropping.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-bbr",
+      "name": "Delay-based control (BBR)",
+      "moduleId": "net-t-mod",
+      "tier": 4,
+      "prerequisites": [
+        "net-congestion",
+        "net-bandwidth-delay"
+      ],
+      "summary": "Model the pipe instead of waiting for a drop.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-quic",
+      "name": "QUIC",
+      "moduleId": "net-t-mod",
+      "tier": 4,
+      "prerequisites": [
+        "net-udp",
+        "net-head-of-line"
+      ],
+      "summary": "Transport over UDP so we can change it without the kernel.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-tls-place",
+      "name": "Where TLS sits",
+      "moduleId": "net-t-mod",
+      "tier": 3,
+      "prerequisites": [
+        "net-tcp-state"
+      ],
+      "summary": "Encryption as a layer, and why QUIC ate it.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-udp-use",
+      "name": "When UDP is the right tool",
+      "moduleId": "net-t-mod",
+      "tier": 3,
+      "prerequisites": [
+        "net-udp",
+        "net-congestion"
+      ],
+      "summary": "Media, games, and anything that would rather drop than stall.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "net-middlebox",
+      "name": "Middleboxes",
+      "moduleId": "net-t-mod",
+      "tier": 4,
+      "prerequisites": [
+        "net-nat-intro",
+        "net-tcp-state"
+      ],
+      "summary": "The path is not just routers. It rewrites you.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

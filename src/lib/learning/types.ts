@@ -16,9 +16,34 @@ export const SEEDED_CATEGORY_IDS = [
   "history",
 ] as const;
 
+/** Built-in fields that still participate in Surprise Me and curriculum expansion. */
+export const ACTIVE_SEEDED_CATEGORY_IDS = [
+  "cpu",
+  "semiconductors",
+  "os",
+  "networking",
+  "compilers",
+  "ml",
+  "horology",
+  "music-theory",
+  "death-metal",
+] as const;
+
+/** Kept in the catalog so old progress does not crash. Never chosen by Surprise Me. */
+export const RETIRED_SEEDED_CATEGORY_IDS = [
+  "astronomy",
+  "evo-bio",
+  "economics",
+  "statistics",
+  "audio",
+  "history",
+] as const;
+
 /** Any category id — seeded or user-created. */
 export type CategoryId = string;
 export type SeededCategoryId = (typeof SEEDED_CATEGORY_IDS)[number];
+export type ActiveSeededCategoryId = (typeof ACTIVE_SEEDED_CATEGORY_IDS)[number];
+export type RetiredSeededCategoryId = (typeof RETIRED_SEEDED_CATEGORY_IDS)[number];
 
 export const TIME_OPTIONS = [5, 10, 20, 30] as const;
 export type TimeBudget = (typeof TIME_OPTIONS)[number];
@@ -82,6 +107,7 @@ export type CurriculumSourceKind = (typeof CURRICULUM_SOURCE_KINDS)[number];
 export const LESSON_SCHEMA_VERSION = 1;
 export const EXPORT_SCHEMA_VERSION = 2;
 export const PROMPT_VERSION = "dau-lesson-v2";
+export const CURRICULUM_VERSION = 1;
 
 export interface Category {
   id: CategoryId;
@@ -90,9 +116,12 @@ export interface Category {
   custom?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  /** Retired seeded fields stay in the catalog but are not chosen by Surprise Me. */
+  status?: "active" | "retired";
 }
 
 export interface CurriculumSourceRef {
+  id?: string;
   title: string;
   url?: string;
   kind: CurriculumSourceKind;
@@ -104,11 +133,13 @@ export interface CourseModule {
   title: string;
   blurb?: string;
   order: number;
-  /** Other module ids that should be cleared first. */
+  /** Other module ids that should be cleared first. Not an authoritative linear lock. */
   prerequisites: string[];
   conceptIds: string[];
   /** Concepts that must be demonstrated to leave the module. */
   spineIds: string[];
+  learningObjectives?: string[];
+  sourceIds?: string[];
 }
 
 export interface Course {
@@ -122,6 +153,10 @@ export interface Course {
   entryRequirements: string[];
   modules: CourseModule[];
   custom?: boolean;
+  /** Subject-local sequence hint. Prerequisite graph remains authoritative. */
+  orderHint?: number;
+  difficultyRange?: [Tier, Tier];
+  estimatedMinutes?: number;
 }
 
 export interface Concept {
@@ -140,6 +175,8 @@ export interface Concept {
   curriculumOrder?: number;
   tier?: Tier;
   objectives?: string[];
+  estimatedMinutes?: number;
+  sourceIds?: string[];
 }
 
 export interface QuizDistractor {
@@ -416,3 +453,17 @@ export interface Catalog {
   lessonMap: Record<string, Lesson>;
   courseMap: Record<string, Course>;
 }
+
+export function isRetiredSeededCategory(id: string): boolean {
+  return (RETIRED_SEEDED_CATEGORY_IDS as readonly string[]).includes(id);
+}
+
+export function isActiveSeededCategory(id: string): boolean {
+  return (ACTIVE_SEEDED_CATEGORY_IDS as readonly string[]).includes(id);
+}
+
+export function isSelectableCategory(category: Category): boolean {
+  if (category.custom) return true;
+  return category.status !== "retired";
+}
+

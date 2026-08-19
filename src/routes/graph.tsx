@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HydrateGate } from "@/components/hydrate";
-import { courseForCategory } from "@/lib/learning/curriculum";
+import { coursesForCategory } from "@/lib/learning/curriculum";
 import { useProgress } from "@/lib/learning/progress";
 import { isConceptUnlocked, makeReadinessContext } from "@/lib/learning/readiness";
 import { nextConcepts } from "@/lib/learning/select";
@@ -94,18 +94,24 @@ function GraphReady() {
       )}
 
       <div className="mt-10 space-y-10">
-        {catalog.categories.map((cat) => {
-          const course = courseForCategory(catalog, cat.id);
-          if (course) {
+        {catalog.categories
+          .filter((cat) => cat.status !== "retired" || catalog.concepts.some((c) => c.category === cat.id && progress[c.id]?.encountered))
+          .map((cat) => {
+          const courses = coursesForCategory(catalog, cat.id);
+          if (courses.length > 0) {
             return (
-              <CourseSection
-                key={cat.id}
-                course={course}
-                categoryName={cat.name}
-                progress={progress}
-                known={known}
-                readiness={readiness}
-              />
+              <div key={cat.id} className="space-y-10">
+                {courses.map((course) => (
+                  <CourseSection
+                    key={course.id}
+                    course={course}
+                    categoryName={cat.name}
+                    progress={progress}
+                    known={known}
+                    readiness={readiness}
+                  />
+                ))}
+              </div>
             );
           }
           const catRoots = roots.filter((c) => c.category === cat.id);

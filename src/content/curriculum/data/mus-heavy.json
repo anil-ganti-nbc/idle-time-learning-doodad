@@ -1,0 +1,323 @@
+{
+  "id": "mus-heavy",
+  "title": "Advanced Analysis for Modern Heavy Music",
+  "categoryId": "music-theory",
+  "description": "Non-functional harmony, unusual meter, riff-as-harmony, and an analysis method that does not force a chorale onto a blast-beat song.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    3,
+    4
+  ],
+  "entryRequirements": [
+    "mus-function",
+    "mus-modes",
+    "mus-voice-lead"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-21m350",
+      "title": "MIT 21M.350 Musical Analysis",
+      "url": "https://ocw.mit.edu/courses/21m-350-musical-analysis-spring-2008/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Form and analysis as a method. We reuse the method on riff-based music rather than copying the repertoire."
+    },
+    {
+      "id": "mit-21m302",
+      "title": "MIT 21M.302",
+      "url": "https://ocw.mit.edu/courses/21m-302-harmony-and-counterpoint-ii-spring-2005/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Chromatic craft is the last common-practice tool this course still needs."
+    }
+  ],
+  "modules": [
+    {
+      "id": "mus-x-nonfunc",
+      "title": "Beyond function",
+      "blurb": "Planing, mediants, modes that refuse a dominant.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "mus-nonfunc",
+        "mus-planing"
+      ]
+    },
+    {
+      "id": "mus-x-meter",
+      "title": "Meter that lies",
+      "blurb": "Odd meters, polymeter, displacement.",
+      "order": 1,
+      "prerequisites": [
+        "mus-x-nonfunc"
+      ],
+      "spineIds": [
+        "mus-odd-meter",
+        "mus-polymeter"
+      ]
+    },
+    {
+      "id": "mus-x-riff",
+      "title": "Riff as harmony",
+      "blurb": "Pedals, cells, distortion, analysis.",
+      "order": 2,
+      "prerequisites": [
+        "mus-x-meter"
+      ],
+      "spineIds": [
+        "mus-riff-harmony",
+        "mus-analysis-method"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "mus-nonfunc",
+      "name": "Non-functional harmony",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-function"
+      ],
+      "summary": "Progression that does not report to a dominant.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-planing",
+      "name": "Planing",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-nonfunc",
+        "mus-voice-lead"
+      ],
+      "summary": "A shape that slides, keeping its intervals.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-chromatic-mediant",
+      "name": "Chromatic mediants",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-nonfunc"
+      ],
+      "summary": "Roots a third apart, few common tones, a lot of color.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-tritone",
+      "name": "Tritone relationships",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-interval",
+        "mus-nonfunc"
+      ],
+      "summary": "The interval that bisects the octave.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-locrian",
+      "name": "Locrian and the diminished tonic",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-modes"
+      ],
+      "summary": "A mode whose tonic triad is already unstable.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-phrygian",
+      "name": "Phrygian and the flat second",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-modes"
+      ],
+      "summary": "The half-step above the tonic as a signature.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-harmonic-minor",
+      "name": "Harmonic minor as a metal default",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 3,
+      "prerequisites": [
+        "mus-minor"
+      ],
+      "summary": "The raised seventh without the rest of the classical contract.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-octatonic",
+      "name": "Octatonic collections",
+      "moduleId": "mus-x-nonfunc",
+      "tier": 4,
+      "prerequisites": [
+        "mus-semitone"
+      ],
+      "summary": "Alternating tones and semitones, two flavors.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-odd-meter",
+      "name": "Odd meter",
+      "moduleId": "mus-x-meter",
+      "tier": 3,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Bars that are not 2 or 4 on the surface.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-polymeter",
+      "name": "Polymeter",
+      "moduleId": "mus-x-meter",
+      "tier": 4,
+      "prerequisites": [
+        "mus-odd-meter",
+        "mus-polyrhythm-intro"
+      ],
+      "summary": "Two meters at once, coinciding later.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-metric-ambig",
+      "name": "Metric ambiguity",
+      "moduleId": "mus-x-meter",
+      "tier": 4,
+      "prerequisites": [
+        "mus-odd-meter"
+      ],
+      "summary": "A pulse you cannot yet group.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-displacement",
+      "name": "Rhythmic displacement",
+      "moduleId": "mus-x-meter",
+      "tier": 3,
+      "prerequisites": [
+        "mus-syncopation"
+      ],
+      "summary": "The same cell, started on a different beat.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-hemiola",
+      "name": "Hemiola and 3:2",
+      "moduleId": "mus-x-meter",
+      "tier": 3,
+      "prerequisites": [
+        "mus-polyrhythm-intro"
+      ],
+      "summary": "Three in the time of two, or the reverse.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-riff-harmony",
+      "name": "Riff-based harmony",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-nonfunc",
+        "mus-power-chord"
+      ],
+      "summary": "The riff is the progression.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-pedal-riff",
+      "name": "Pedal-tone riffs",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-pedal",
+        "mus-riff-harmony"
+      ],
+      "summary": "An open string that everything else grinds against.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-chromatic-riff",
+      "name": "Chromatic riff cells",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-chromatic",
+        "mus-riff-harmony"
+      ],
+      "summary": "Semitone motion as the material, not the decoration.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-dissonant-voicing",
+      "name": "Cluster and close dissonance",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-dissonance"
+      ],
+      "summary": "Seconds stacked until the chord has no name.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-form-riff",
+      "name": "Form built from riffs",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-riff-harmony",
+        "mus-phrase"
+      ],
+      "summary": "Contrast and return without a verse-chorus contract.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-analysis-method",
+      "name": "What analysis is for",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-form-riff"
+      ],
+      "summary": "A method: what repeats, what contrasts, what is the cell.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-reduction",
+      "name": "Reduction without forcing a chorale",
+      "moduleId": "mus-x-riff",
+      "tier": 4,
+      "prerequisites": [
+        "mus-analysis-method"
+      ],
+      "summary": "Strip the surface. Do not invent a I–V that is not there.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-timbre-harmony",
+      "name": "Distortion as a harmonic fact",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-power-chord"
+      ],
+      "summary": "Gain adds partials. A fifth becomes a crowd.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "mus-drop-tune",
+      "name": "Drop tunings and string physics",
+      "moduleId": "mus-x-riff",
+      "tier": 3,
+      "prerequisites": [
+        "mus-power-chord"
+      ],
+      "summary": "A lowered sixth string that makes the power chord one finger.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

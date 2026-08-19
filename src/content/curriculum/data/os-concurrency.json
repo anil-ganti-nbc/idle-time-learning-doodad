@@ -1,0 +1,344 @@
+{
+  "id": "os-concurrency",
+  "title": "Memory, Concurrency, and Scheduling",
+  "categoryId": "os",
+  "description": "Page tables, the TLB, locks, races, and the scheduler that lies about how many CPUs you have.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "os-process",
+    "os-syscall"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-xv6",
+      "title": "xv6 book",
+      "url": "https://pdos.csail.mit.edu/6.1810/2025/xv6.html",
+      "kind": "notes",
+      "notes": "Page tables, then locks, then scheduling."
+    },
+    {
+      "id": "mit-61810",
+      "title": "MIT 6.1810",
+      "url": "https://ocw.mit.edu/courses/6-1810-operating-system-engineering-fall-2023/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Labs extend VM and concurrency after the kernel is thinkable."
+    }
+  ],
+  "modules": [
+    {
+      "id": "os-c-vm",
+      "title": "Virtual memory",
+      "blurb": "Pages, tables, faults.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "os-vm"
+      ]
+    },
+    {
+      "id": "os-c-sched",
+      "title": "Scheduling",
+      "blurb": "Fairness, latency, and classes.",
+      "order": 1,
+      "prerequisites": [
+        "os-c-vm"
+      ],
+      "spineIds": [
+        "os-sched"
+      ]
+    },
+    {
+      "id": "os-c-sync",
+      "title": "Synchronization",
+      "blurb": "Locks, races, atomics.",
+      "order": 2,
+      "prerequisites": [
+        "os-c-sched"
+      ],
+      "spineIds": [
+        "os-lock",
+        "os-race"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "os-vm",
+      "name": "Virtual memory",
+      "moduleId": "os-c-vm",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Pages, page tables, and the TLB as a cache of translations.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-page-table",
+      "name": "Page tables",
+      "moduleId": "os-c-vm",
+      "tier": 2,
+      "prerequisites": [
+        "os-vm"
+      ],
+      "summary": "A tree of translations the hardware walks.",
+      "parentId": "os-vm",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-tlb-os",
+      "name": "TLB shootdown",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-vm",
+        "cpu-tlb"
+      ],
+      "summary": "When one core changes a mapping, the others must forget.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-page-fault",
+      "name": "Page faults",
+      "moduleId": "os-c-vm",
+      "tier": 2,
+      "prerequisites": [
+        "os-vm",
+        "os-trap"
+      ],
+      "summary": "A missing translation as a request, not only a crash.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-swap",
+      "name": "Paging to disk",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-page-fault"
+      ],
+      "summary": "The illusion of more RAM than you bought.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-cow",
+      "name": "Copy-on-write",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-fork",
+        "os-page-fault"
+      ],
+      "summary": "fork that does not copy until a write.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-mmap",
+      "name": "mmap",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-vm"
+      ],
+      "summary": "A file, or anonymous memory, appearing as a range of addresses.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-sched",
+      "name": "CPU scheduling",
+      "moduleId": "os-c-sched",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Fairness, latency, and why CFS is not a real-time scheduler.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-fairness",
+      "name": "Fair-share scheduling",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Who is owed the next slice.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-latency-sched",
+      "name": "Latency versus throughput in the scheduler",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched",
+        "arch-latency-throughput"
+      ],
+      "summary": "Interactive tails versus batch work.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-realtime",
+      "name": "Real-time scheduling",
+      "moduleId": "os-c-sched",
+      "tier": 4,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Deadlines, not averages.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-scheduler-class",
+      "name": "Scheduling classes",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "More than one policy living in one kernel.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-load-balance",
+      "name": "Load balancing",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Moving work across cores without wrecking caches.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-numa",
+      "name": "NUMA awareness",
+      "moduleId": "os-c-sched",
+      "tier": 4,
+      "prerequisites": [
+        "os-load-balance",
+        "os-vm"
+      ],
+      "summary": "Memory that is closer to some cores than others.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-preempt",
+      "name": "Preemption",
+      "moduleId": "os-c-sched",
+      "tier": 2,
+      "prerequisites": [
+        "os-context-switch",
+        "os-sched"
+      ],
+      "summary": "Taking the CPU back.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-priority-inv",
+      "name": "Priority inversion",
+      "moduleId": "os-c-sched",
+      "tier": 4,
+      "prerequisites": [
+        "os-sched",
+        "os-lock"
+      ],
+      "summary": "A low task holding a lock a high task needs.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-lock",
+      "name": "Locks",
+      "moduleId": "os-c-sync",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Mutual exclusion as a primitive, not a vibe.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-sleep-lock",
+      "name": "Sleeping locks",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-lock"
+      ],
+      "summary": "Blocking instead of spinning when the hold is long.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-deadlock",
+      "name": "Deadlock",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-lock"
+      ],
+      "summary": "Everyone waiting for someone who is waiting for them.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-race",
+      "name": "Races",
+      "moduleId": "os-c-sync",
+      "tier": 2,
+      "prerequisites": [
+        "os-thread-vs-proc"
+      ],
+      "summary": "A result that depends on who ran first.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-atomic",
+      "name": "Atomics",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-race"
+      ],
+      "summary": "Read-modify-write that does not tear.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-seqcst",
+      "name": "Memory ordering for programmers",
+      "moduleId": "os-c-sync",
+      "tier": 4,
+      "prerequisites": [
+        "os-atomic",
+        "cpu-consistency"
+      ],
+      "summary": "Why a store on this core is not yet a load on that one.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-semaphore",
+      "name": "Semaphores",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-lock"
+      ],
+      "summary": "A counter you can wait on.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-condvar",
+      "name": "Condition variables",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-sleep-lock"
+      ],
+      "summary": "Sleep until someone says the world changed.",
+      "estimatedMinutes": 10
+    }
+  ]
+}

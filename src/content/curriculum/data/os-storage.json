@@ -1,0 +1,319 @@
+{
+  "id": "os-storage",
+  "title": "Storage, Filesystems, and Kernel Internals",
+  "categoryId": "os",
+  "description": "Persistence after virtualization: blocks, inodes, journals, drivers, and the namespaces containers actually use.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    2,
+    5
+  ],
+  "entryRequirements": [
+    "os-vm",
+    "os-lock"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-xv6",
+      "title": "xv6 book",
+      "url": "https://pdos.csail.mit.edu/6.1810/2025/xv6.html",
+      "kind": "notes",
+      "notes": "File system after locks. Crash consistency is the hard part."
+    },
+    {
+      "id": "mit-61810",
+      "title": "MIT 6.1810",
+      "url": "https://ocw.mit.edu/courses/6-1810-operating-system-engineering-fall-2023/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Labs add sophisticated VM and networking onto a known kernel."
+    }
+  ],
+  "modules": [
+    {
+      "id": "os-s-fs",
+      "title": "Filesystems",
+      "blurb": "Inodes, directories, journals.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "os-inode",
+        "os-journal"
+      ]
+    },
+    {
+      "id": "os-s-io",
+      "title": "I/O path",
+      "blurb": "Caches, DMA, drivers.",
+      "order": 1,
+      "prerequisites": [
+        "os-s-fs"
+      ],
+      "spineIds": [
+        "os-buffer-cache",
+        "os-driver"
+      ]
+    },
+    {
+      "id": "os-s-isol",
+      "title": "Modern isolation extras",
+      "blurb": "Namespaces, cgroups, virtualization.",
+      "order": 2,
+      "prerequisites": [
+        "os-s-io"
+      ],
+      "spineIds": [
+        "os-namespace",
+        "os-container"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "os-block-dev",
+      "name": "Block devices",
+      "moduleId": "os-s-fs",
+      "tier": 2,
+      "prerequisites": [
+        "os-device-intro"
+      ],
+      "summary": "Fixed-size sectors and the fiction of a linear disk.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-inode",
+      "name": "Inodes",
+      "moduleId": "os-s-fs",
+      "tier": 2,
+      "prerequisites": [
+        "os-block-dev"
+      ],
+      "summary": "The on-disk object a filename eventually names.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-dir",
+      "name": "Directories",
+      "moduleId": "os-s-fs",
+      "tier": 2,
+      "prerequisites": [
+        "os-inode"
+      ],
+      "summary": "A list of names to inode numbers.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-fs-layout",
+      "name": "Filesystem layout",
+      "moduleId": "os-s-fs",
+      "tier": 3,
+      "prerequisites": [
+        "os-inode"
+      ],
+      "summary": "Superblock, bitmaps, and where the data lives.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-journal",
+      "name": "Journaling",
+      "moduleId": "os-s-fs",
+      "tier": 3,
+      "prerequisites": [
+        "os-fs-layout"
+      ],
+      "summary": "Write the intent before the damage.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-crash-consist",
+      "name": "Crash consistency",
+      "moduleId": "os-s-fs",
+      "tier": 4,
+      "prerequisites": [
+        "os-journal"
+      ],
+      "summary": "A power cut in the middle of rename.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-vfs",
+      "name": "The VFS",
+      "moduleId": "os-s-fs",
+      "tier": 3,
+      "prerequisites": [
+        "os-inode"
+      ],
+      "summary": "One API over many filesystem types.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-mount",
+      "name": "Mounts",
+      "moduleId": "os-s-fs",
+      "tier": 3,
+      "prerequisites": [
+        "os-vfs"
+      ],
+      "summary": "Grafting a tree onto a directory.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-buffer-cache",
+      "name": "Buffer cache",
+      "moduleId": "os-s-io",
+      "tier": 3,
+      "prerequisites": [
+        "os-block-dev"
+      ],
+      "summary": "Recently used blocks kept in RAM.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-page-cache",
+      "name": "Page cache",
+      "moduleId": "os-s-io",
+      "tier": 3,
+      "prerequisites": [
+        "os-mmap",
+        "os-buffer-cache"
+      ],
+      "summary": "File contents as pages, not just blocks.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-dma",
+      "name": "DMA",
+      "moduleId": "os-s-io",
+      "tier": 3,
+      "prerequisites": [
+        "os-device-intro"
+      ],
+      "summary": "The device writes memory while the CPU does something else.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-driver",
+      "name": "Device drivers",
+      "moduleId": "os-s-io",
+      "tier": 3,
+      "prerequisites": [
+        "os-interrupt",
+        "os-dma"
+      ],
+      "summary": "The kernel code that speaks a particular device's dialect.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-virtio",
+      "name": "Virtio",
+      "moduleId": "os-s-io",
+      "tier": 4,
+      "prerequisites": [
+        "os-driver"
+      ],
+      "summary": "A device model designed to be virtualized.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-init",
+      "name": "init and userspace bring-up",
+      "moduleId": "os-s-io",
+      "tier": 2,
+      "prerequisites": [
+        "os-exec"
+      ],
+      "summary": "The first process and everything it starts.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-namespace",
+      "name": "Namespaces",
+      "moduleId": "os-s-isol",
+      "tier": 3,
+      "prerequisites": [
+        "os-isolation"
+      ],
+      "summary": "A process that cannot see the whole machine.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-namespace-linux",
+      "name": "Linux namespace types",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-namespace"
+      ],
+      "summary": "PID, mount, net, user — different lies.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-cgroup",
+      "name": "cgroups",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Accounting and limits on CPU, memory, I/O.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-capability",
+      "name": "Capabilities",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-privilege"
+      ],
+      "summary": "Splitting root into bits you can drop.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-seccomp",
+      "name": "seccomp",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-syscall"
+      ],
+      "summary": "A filter on which syscalls remain legal.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-syscall-filter",
+      "name": "Reducing the syscall surface",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-seccomp"
+      ],
+      "summary": "Why a sandboxed process still needs open(2).",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-kvm-intro",
+      "name": "KVM at a glance",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-privilege",
+        "cpu-virtual-addr"
+      ],
+      "summary": "The kernel as a hypervisor for other kernels.",
+      "estimatedMinutes": 10
+    },
+    {
+      "id": "os-container",
+      "name": "Containers",
+      "moduleId": "os-s-isol",
+      "tier": 4,
+      "prerequisites": [
+        "os-namespace",
+        "os-cgroup"
+      ],
+      "summary": "Namespaces plus cgroups plus a filesystem view — not a VM.",
+      "estimatedMinutes": 10
+    }
+  ]
+}
