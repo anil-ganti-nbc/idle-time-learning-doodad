@@ -168,7 +168,7 @@ function LessonReady() {
         {unit.level === "journalist" ? " · journalist" : ""}
       </p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <h1 className="font-display text-3xl leading-tight tracking-tight sm:text-4xl">{unit.title}</h1>
+        <h1 className="font-display text-3xl leading-tight tracking-tight break-words sm:text-4xl">{unit.title}</h1>
         <SourceBadge lesson={unit} />
       </div>
       {prereqNames.length > 0 && (
@@ -183,7 +183,7 @@ function LessonReady() {
         </p>
       ) : null}
 
-      <div className="mt-8 space-y-5 text-[17px] leading-[1.6] text-fg">
+      <div className="mt-8 space-y-6 text-[17px] leading-[1.65] break-words text-fg">
         {unit.explanation.map((p) => (
           <p key={p.slice(0, 24)}>{p}</p>
         ))}
@@ -193,12 +193,12 @@ function LessonReady() {
 
       <section className="mt-8 rounded-lg bg-surface px-5 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
         <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Example</h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-fg">{unit.example}</p>
+        <p className="mt-2 text-[15px] leading-relaxed break-words text-fg">{unit.example}</p>
       </section>
 
       <section className="mt-6">
         <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Why it matters</h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-muted">{unit.whyItMatters}</p>
+        <p className="mt-2 text-[15px] leading-relaxed break-words text-muted">{unit.whyItMatters}</p>
       </section>
 
       {unit.source.sourceExcerpt && (

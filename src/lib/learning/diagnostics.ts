@@ -1,4 +1,4 @@
-import { EXPORT_SCHEMA_VERSION } from "./types";
+import { APP_RELEASE, CURRICULUM_VERSION, EXPORT_SCHEMA_VERSION } from "./types";
 import { PERSISTENCE, PROGRESS_PERSIST_VERSION } from "./persistence";
 import { inspectStorage } from "./storage";
 
@@ -6,9 +6,12 @@ const ALLOWED_SOURCES = new Set(["env", "file", "none"]);
 
 export interface ClientDiagnostics {
   runtime: "ssr" | "browser";
+  appRelease: string;
+  curriculumVersion: number;
   persistVersion: number;
   exportSchemaVersion: number;
   storage: ReturnType<typeof inspectStorage>;
+  storageMode: string;
   curriculum: {
     subjects: number;
     courses: number;
@@ -50,9 +53,12 @@ export function buildClientDiagnostics(input: {
   }
   return {
     runtime: typeof window === "undefined" ? "ssr" : "browser",
+    appRelease: APP_RELEASE,
+    curriculumVersion: CURRICULUM_VERSION,
     persistVersion: PROGRESS_PERSIST_VERSION,
     exportSchemaVersion: EXPORT_SCHEMA_VERSION,
     storage,
+    storageMode: `${storage.local} / ${storage.session}`,
     curriculum: {
       subjects: input.subjects,
       courses: input.courses,

@@ -345,7 +345,7 @@
         {
           "id": "ml-bv10-1",
           "stem": "How does a high-bias model differ from a high-variance one?",
-          "correctAnswer": "Bias cannot see the signal; variance sees the noise and would change with a new sample",
+          "correctAnswer": "Bias misses the signal; variance chases sample noise",
           "distractors": [
             { "text": "Bias sees noise; variance cannot represent any signal", "kind": "reversed", "rationale": "Those roles are swapped." },
             { "text": "Both words mean the learning rate was too large", "kind": "misapplied", "rationale": "α is a step size, not this split of errors." },
@@ -375,7 +375,7 @@
         {
           "id": "ml-bv10-3",
           "stem": "Shrinking the family (less capacity) typically moves the two errors how?",
-          "correctAnswer": "Variance falls and bias can rise, because the room to memorize and to fit both shrink",
+          "correctAnswer": "Variance falls and bias can rise as the class shrinks",
           "distractors": [
             { "text": "Variance rises and bias falls, which is the larger-family story", "kind": "reversed", "rationale": "Less room is the opposite move." },
             { "text": "Both errors become the learning rate α", "kind": "misapplied", "rationale": "α is not this trade." },
@@ -473,7 +473,7 @@
         {
           "id": "ml-xv10-1",
           "stem": "You rotate the held-out slice across K folds because:",
-          "correctAnswer": "A single validation split is too noisy when data is scarce, and averaging the folds stabilizes the choice",
+          "correctAnswer": "One split is noisy when data is scarce; averaging folds stabilizes the choice",
           "distractors": [
             { "text": "Rotation invents a test set that may be reported freely each fold", "kind": "reversed", "rationale": "The average is still validation." },
             { "text": "K-fold replaces the need to fit on any training rows", "kind": "misapplied", "rationale": "Each round still trains on the other folds." },
@@ -537,7 +537,7 @@
         {
           "id": "ml-cap10-1",
           "stem": "Capacity, as this lesson uses it, names:",
-          "correctAnswer": "How much structure the hypothesis class can represent, not the optimizer's mood",
+          "correctAnswer": "How much structure the hypothesis class can represent",
           "distractors": [
             { "text": "The learning rate α you happened to pick this run", "kind": "misapplied", "rationale": "α is a step size, not the size of the family." },
             { "text": "The number of rows in the locked test drawer", "kind": "nearby", "rationale": "A split is not the room." },
@@ -616,7 +616,7 @@
         {
           "id": "ml-es10-2",
           "stem": "Early stopping counts as a regularizer because:",
-          "correctAnswer": "It taxes how far the walk may wander, and that tax needs a real validation split",
+          "correctAnswer": "It taxes how far the walk may wander; that tax still needs a validation split",
           "distractors": [
             { "text": "It replaces L2 only if you stop on training loss", "kind": "reversed", "rationale": "Stopping on train is not a tax. It is a surrender to the sample." },
             { "text": "It turns the step size α into a class probability", "kind": "misapplied", "rationale": "A tripwire is not a squash." },

@@ -77,7 +77,13 @@ function HomeReady() {
         <JournalistToggle />
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-4 text-sm">
+      <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+        <Link to="/about" className="text-muted no-underline hover:text-fg">
+          How it works
+        </Link>
+        <Link to="/settings" className="text-muted no-underline hover:text-fg">
+          Back up your university
+        </Link>
         <Link to="/library" className="text-muted no-underline hover:text-fg">
           Browse topics
         </Link>

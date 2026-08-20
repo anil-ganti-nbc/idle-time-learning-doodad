@@ -163,7 +163,67 @@ function SettingsReady() {
         an archive to move. The server never holds your graph.
       </p>
 
-      <section className="mt-8 space-y-4">
+      <section className="mt-8 space-y-3 rounded-xl bg-surface p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+        <h2 className="font-display text-xl tracking-tight">Back up your university</h2>
+        <p className="text-sm leading-relaxed text-muted">
+          Versioned JSON. This is the official way to move progress between browsers and devices.
+          A replace import downloads your current archive first and keeps a restore snapshot on
+          this device. Merge will not silently overwrite newer local progress. Archives larger
+          than 8 MB are rejected.
+        </p>
+        <label className="flex items-start gap-2 text-sm text-muted">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={includeKeys}
+            onChange={(e) => {
+              if (!e.target.checked) {
+                setIncludeKeys(false);
+                return;
+              }
+              const allowed = confirm(SECRET_EXPORT_WARNING);
+              setIncludeKeys(allowed);
+            }}
+          />
+          <span>
+            Include API keys in the file
+            <span className="mt-1 block text-xs text-bad">
+              Off by default. The JSON will contain plaintext credentials if you confirm twice.
+            </span>
+          </span>
+        </label>
+        <label className="flex items-center gap-2 text-sm text-muted">
+          Replace everything on import
+          <input
+            type="checkbox"
+            checked={mode === "replace"}
+            onChange={(e) => setMode(e.target.checked ? "replace" : "merge")}
+          />
+        </label>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" onClick={exportJson}>
+            Export learning data
+          </Button>
+          <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()}>
+            Import
+          </Button>
+          <Button type="button" variant="ghost" onClick={restoreRollback}>
+            Restore last replace
+          </Button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) onFile(f);
+            }}
+          />
+        </div>
+      </section>
+
+      <section className="mt-10 space-y-4">
         <h2 className="font-display text-xl tracking-tight">Local profile</h2>
         <label className="block text-xs text-muted">
           Display name
@@ -445,69 +505,15 @@ function SettingsReady() {
         </ul>
       </section>
 
-      <section className="mt-10 space-y-3">
-        <h2 className="font-display text-xl tracking-tight">Export / import</h2>
-        <p className="text-sm text-muted">
-          Versioned JSON. This is the official way to move progress between browsers and devices.
-          A replace import downloads your current archive first and keeps a restore snapshot on
-          this device. Merge will not silently overwrite newer local progress. Archives larger
-          than 8 MB are rejected.
-        </p>
-        <label className="flex items-start gap-2 text-sm text-muted">
-          <input
-            type="checkbox"
-            className="mt-1"
-            checked={includeKeys}
-            onChange={(e) => {
-              if (!e.target.checked) {
-                setIncludeKeys(false);
-                return;
-              }
-              const allowed = confirm(SECRET_EXPORT_WARNING);
-              setIncludeKeys(allowed);
-            }}
-          />
-          <span>
-            Include API keys in the file
-            <span className="mt-1 block text-xs text-bad">
-              Off by default. The JSON will contain plaintext credentials if you confirm twice.
-            </span>
-          </span>
-        </label>
-        <label className="flex items-center gap-2 text-sm text-muted">
-          Replace everything on import
-          <input
-            type="checkbox"
-            checked={mode === "replace"}
-            onChange={(e) => setMode(e.target.checked ? "replace" : "merge")}
-          />
-        </label>
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="secondary" onClick={exportJson}>
-            Export archive
-          </Button>
-          <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()}>
-            Import
-          </Button>
-          <Button type="button" variant="ghost" onClick={restoreRollback}>
-            Restore last replace
-          </Button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/json"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) onFile(f);
-            }}
-          />
-        </div>
-      </section>
-
-      <div className="mt-8">
-        <Link to="/topics" className="text-sm text-muted no-underline hover:text-fg">
+      <div className="mt-8 flex flex-wrap gap-4 text-sm">
+        <Link to="/about" className="text-muted no-underline hover:text-fg">
+          How it works
+        </Link>
+        <Link to="/topics" className="text-muted no-underline hover:text-fg">
           Custom topics and learning paths
+        </Link>
+        <Link to="/login" className="text-subtle no-underline hover:text-muted">
+          Optional identity
         </Link>
       </div>
 
@@ -554,21 +560,24 @@ function DiagnosticsPanel(props: {
     <details className="mt-10 rounded-xl bg-surface p-4 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
       <summary className="cursor-pointer text-muted">Diagnostics</summary>
       <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-muted">
-        <dt>Runtime</dt>
-        <dd className="text-fg">{report.runtime}</dd>
+        <dt>Release</dt>
+        <dd className="text-fg">{report.appRelease}</dd>
+        <dt>Curriculum</dt>
+        <dd className="text-fg">v{report.curriculumVersion}</dd>
+        <dt>Retained courses</dt>
+        <dd className="text-fg">{report.curriculum.courses}</dd>
+        <dt>Catalog</dt>
+        <dd className="text-fg">
+          {report.curriculum.concepts} concepts · {report.curriculum.lessons} lessons
+        </dd>
         <dt>Learning store</dt>
         <dd className="text-fg">v{report.persistVersion}</dd>
         <dt>Export schema</dt>
         <dd className="text-fg">v{report.exportSchemaVersion}</dd>
-        <dt>localStorage</dt>
-        <dd className="text-fg">{report.storage.local}</dd>
-        <dt>sessionStorage</dt>
-        <dd className="text-fg">{report.storage.session}</dd>
-        <dt>Curriculum</dt>
-        <dd className="text-fg">
-          {report.curriculum.courses} courses · {report.curriculum.concepts} concepts ·{" "}
-          {report.curriculum.lessons} lessons
-        </dd>
+        <dt>Storage</dt>
+        <dd className="break-words text-fg">{report.storageMode}</dd>
+        <dt>Runtime</dt>
+        <dd className="text-fg">{report.runtime}</dd>
         <dt>AI</dt>
         <dd className="text-fg">
           {report.aiEnabled ? "on" : "off"} / {report.aiProvider} / server {report.serverProvider}

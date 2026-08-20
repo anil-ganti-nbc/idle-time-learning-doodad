@@ -37,7 +37,7 @@
         {
           "id": "ml-pt10-2",
           "stem": "Contrast pretraining with the narrower job you will later fine-tune for:",
-          "correctAnswer": "Pretrain is a broad unlabeled continuation game; the later job is a smaller target distribution",
+          "correctAnswer": "Pretrain is a broad unlabeled game; the later job is a narrower target",
           "distractors": [
             { "text": "Pretrain is the product you serve; fine-tune is only a tokenizer rebuild", "kind": "reversed", "rationale": "The product is usually the adapted model. Pretrain is the initialization." },
             { "text": "Both jobs must use identical labels or the residual path dies", "kind": "nearby", "rationale": "The later job is allowed to be different. That is the contrast." },
@@ -308,7 +308,7 @@
         {
           "id": "ml-pr10-3",
           "stem": "Few-shot examples placed in the prefix differ from an adapter because:",
-          "correctAnswer": "They condition one forward pass and disappear with the window; an adapter rewrites weights",
+          "correctAnswer": "They condition one pass and vanish with the window; adapters rewrite weights",
           "distractors": [
             { "text": "They update every layer with a gradient before decoding starts", "kind": "reversed", "rationale": "No gradient. That would be training." },
             { "text": "They freeze the base and store a low-rank pair on disk", "kind": "nearby", "rationale": "That is the adapter. The prefix is not stored as weights." },
@@ -342,7 +342,7 @@
         {
           "id": "ml-al10-1",
           "stem": "The usual stack this lesson names is which of these sequences?",
-          "correctAnswer": "Supervised fine-tune on demonstrations, then a preference signal, then an argument about that reward",
+          "correctAnswer": "SFT on demonstrations, then a preference signal, then a fight about that reward",
           "distractors": [
             { "text": "Preference first on random weights, then a next-token pretrain to clean up", "kind": "reversed", "rationale": "You need a language machine and SFT before a preference is cheap to use." },
             { "text": "Tokenizer rebuild, then a leaderboard, with no change to completions", "kind": "nearby", "rationale": "Preference is about which completion wins, not a new alphabet." },

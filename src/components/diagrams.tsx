@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const frame = "mt-6 overflow-hidden rounded-lg bg-raised px-4 py-5 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]";
+const frame = "mt-6 max-w-full overflow-hidden rounded-lg bg-raised px-3 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)] sm:px-4 sm:py-5";
 
 export function LessonDiagram({ name }: { name?: string }) {
   if (!name) return null;

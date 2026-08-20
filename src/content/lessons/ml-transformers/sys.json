@@ -232,7 +232,7 @@
         {
           "id": "ml-kv20-2",
           "stem": "Editing the system prompt in the middle of a cached conversation should:",
-          "correctAnswer": "Invalidate the stored prefix from the edit point, because those K/V were about different text",
+          "correctAnswer": "Invalidate stored prefix from the edit; those K/V described different text",
           "distractors": [
             { "text": "Keep the old table, since the causal mask still applies to any text", "kind": "reversed", "rationale": "The mask legalizes reuse of the same prefix, not a rewritten one." },
             { "text": "Retrain the stack so the new prompt has its own weights", "kind": "misapplied", "rationale": "This is a cache correctness issue, not a training issue." },
@@ -361,7 +361,7 @@
         {
           "id": "ml-tool10-2",
           "stem": "How does a tool loop differ from a single forward pass that only emits text?",
-          "correctAnswer": "The host executes an action and feeds the result back; a lone pass never leaves the tokenizer",
+          "correctAnswer": "The host runs the action and writes the result back",
           "distractors": [
             { "text": "A lone pass already runs shell commands inside softmax", "kind": "reversed", "rationale": "Softmax emits tokens. It does not exec." },
             { "text": "The tool loop deletes the causal mask", "kind": "nearby", "rationale": "The mask stays. The host is extra." },

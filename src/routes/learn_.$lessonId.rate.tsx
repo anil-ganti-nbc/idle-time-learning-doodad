@@ -12,7 +12,7 @@ import { useProgress } from "@/lib/learning/progress";
 import { isConceptUnlocked, isLessonUnlocked, makeReadinessContext } from "@/lib/learning/readiness";
 import { daysUntil } from "@/lib/learning/srs";
 import { conceptState } from "@/lib/learning/state";
-import type { Understanding } from "@/lib/learning/types";
+import type { DifficultyNote, Understanding } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 
 export const Route = createFileRoute("/learn_/$lessonId/rate")({
@@ -25,12 +25,20 @@ const RATINGS: { id: Understanding; label: string; hint: string }[] = [
   { id: "got_it", label: "Got it", hint: "Stretch the interval" },
 ];
 
+const NOTES: { id: DifficultyNote; label: string }[] = [
+  { id: "too_easy", label: "Too easy" },
+  { id: "right_level", label: "Right level" },
+  { id: "too_hard", label: "Too hard" },
+  { id: "unclear", label: "Explanation unclear" },
+];
+
 function RatePage() {
   const { lessonId } = Route.useParams();
   const navigate = useNavigate();
   const catalog = useCatalog();
   const lesson = catalog.lessonMap[lessonId];
   const record = useProgress((s) => s.recordSession);
+  const noteDifficulty = useProgress((s) => s.noteDifficulty);
   const lastMode = useProgress((s) => s.settings.lastMode);
   const lastTime = useProgress((s) => s.settings.lastTime);
   const progress = useProgress((s) => s.concepts);
@@ -168,6 +176,8 @@ function RatePage() {
           <Stat label="Times seen" value={String(stored.timesStudied)} />
         </dl>
 
+        <DifficultyNoteControl sessionId={doneId} onPick={noteDifficulty} />
+
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {deeperReady && deeperSeed && (
             <Button
@@ -219,6 +229,40 @@ function RatePage() {
         ))}
       </div>
     </div>
+  );
+}
+
+function DifficultyNoteControl({
+  sessionId,
+  onPick,
+}: {
+  sessionId: string;
+  onPick: (sessionId: string, note: DifficultyNote) => void;
+}) {
+  const selected = useProgress((s) => s.sessions.find((row) => row.id === sessionId)?.difficultyNote);
+  return (
+    <section className="mt-8">
+      <p className="text-sm text-muted">How was the unit itself? Optional. Does not change the review schedule.</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {NOTES.map((note) => {
+          const on = selected === note.id;
+          return (
+            <button
+              key={note.id}
+              type="button"
+              onClick={() => onPick(sessionId, note.id)}
+              className={
+                on
+                  ? "min-h-11 rounded-full bg-primary px-3 py-2 text-sm text-primary-fg"
+                  : "min-h-11 rounded-full bg-raised px-3 py-2 text-sm text-muted hover:text-fg"
+              }
+            >
+              {note.label}
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 

@@ -10,8 +10,9 @@ function Login() {
       <p className="text-xs tracking-[0.18em] text-muted uppercase">Optional</p>
       <h1 className="mt-2 font-display text-3xl tracking-tight">Sign in</h1>
       <p className="mt-3 text-sm leading-relaxed text-muted">
-        Learning works without an account. Progress stays on this device. Sign in only if you want
-        an identity attached later.
+        Learning works without an account. Progress stays on this device. This page exists only
+        for optional identity on hosts that wire it; it is not required and does not sync the
+        university.
       </p>
       <div className="mt-8 space-y-3">
         {authEnabled ? (

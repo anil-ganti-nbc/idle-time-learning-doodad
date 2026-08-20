@@ -484,7 +484,7 @@
       ],
       "goDeeper": "mus-analysis-method",
       "explanation": [
-        "Form from riffs is contrast and return of cells, not a verse-chorus contract borrowed from a different song type. Section B can be a new cell, or the old cell displaced, or the old cell under a new kit texture. You mark the change where the repeating object changes.",
+        "Form from riffs is contrast and return of cells. Section B can be a new cell, or the old cell displaced, or the old cell under a new kit texture. You mark the change where the repeating object changes.",
         "A drum texture swap with a new cell is already a section. You do not owe a chorus lyric or a lift into relative major. MIT 21M.350 still asks what contrasts. If the cell and the kit both change, that is a boundary. If only the vocal enters, you may still be in the same riff-section.",
         "Build A as cell X for eight bars, B as cell Y plus blast or half-time, then return to X. That ABA is form. Writing 'verse' on A and 'chorus' on B does not add a mechanism. It adds a costume from a map the music did not use."
       ],
@@ -944,7 +944,7 @@
       ],
       "goDeeper": "mus-drop-tune",
       "explanation": [
-        "Gain is a harmonic fact, not a coat of paint. Distortion adds partials and intermodulation products. A clean fifth is two letters. The same fifth under drive is a crowd: extra harmonics, difference tones, a thickening that can make a missing third seem present. Report that crowd as harmony.",
+        "Gain is a harmonic fact. Distortion adds partials and intermodulation products. A clean fifth is two letters. The same fifth under drive is a crowd: extra harmonics, difference tones, a thickening that can make a missing third seem present. Report that crowd as harmony.",
         "Predict why a fifth becomes a crowd: the spectrum of each string is already harmonic; clipping multiplies those spectra and sums them. Close intervals get harsher because their extra partials beat. Wide, simple intervals (octave, fifth) stay readable longer, which is why the power chord survives gain that would mud a cluster.",
         "Write the same E5 clean, then driven. The letter did not change. The harmonic stack did. A chart that treats both as identical 'E5' is incomplete. Note the gain as part of the voicing, the way you would note an added seventh that was actually fingered."
       ],

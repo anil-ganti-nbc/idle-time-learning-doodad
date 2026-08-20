@@ -102,7 +102,7 @@
         {
           "id": "ml-tf10-2",
           "stem": "The residual path around attention and the feed-forward is there to:",
-          "correctAnswer": "Keep an identity the mix can sit on, so a token and a gradient are not forced through every multiply",
+          "correctAnswer": "Keep an identity so a token and a gradient need not pass every multiply",
           "distractors": [
             { "text": "Delete the feed-forward whenever the mix already looks fluent", "kind": "nearby", "rationale": "The skip adds; it does not delete the rewrite." },
             { "text": "Replace keys with values so the lookup has only one role", "kind": "misapplied", "rationale": "QKV is unchanged. The skip is around the whole mix." },

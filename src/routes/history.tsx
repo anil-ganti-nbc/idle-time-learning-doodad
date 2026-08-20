@@ -4,6 +4,7 @@ import { HydrateGate } from "@/components/hydrate";
 import { sourceLabel } from "@/components/provenance";
 import { useProgress } from "@/lib/learning/progress";
 import { useCatalog } from "@/lib/learning/use-catalog";
+import type { DifficultyNote } from "@/lib/learning/types";
 
 export const Route = createFileRoute("/history")({ component: HistoryPage });
 
@@ -85,10 +86,11 @@ function HistoryReady() {
                       {new Date(s.completedAt).toLocaleString()} · {cat?.name ?? s.categoryId} ·{" "}
                       {concept?.name}
                     </p>
-                    <p className="mt-1 font-mono text-[11px] tabular-nums text-subtle">
+                    <p className="mt-1 font-mono text-[11px] leading-relaxed break-words tabular-nums text-subtle">
                       {s.timeBudget}m asked · {s.actualMinutes}m used · quiz {s.quizCorrect}/
                       {s.quizTotal ?? 3} · {s.understanding.replace("_", " ")} · {s.mode} ·{" "}
                       {sourceLabel(s.sourceType)}
+                      {s.difficultyNote ? ` · ${difficultyLabel(s.difficultyNote)}` : ""}
                     </p>
                   </div>
                   {lesson && (
@@ -109,3 +111,11 @@ function HistoryReady() {
     </div>
   );
 }
+
+function difficultyLabel(note: DifficultyNote): string {
+  if (note === "too_easy") return "too easy";
+  if (note === "right_level") return "right level";
+  if (note === "too_hard") return "too hard";
+  return "unclear";
+}
+
