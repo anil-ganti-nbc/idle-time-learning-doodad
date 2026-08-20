@@ -27,7 +27,7 @@
           "distractors": [
             { "text": "Many identical arithmetic pipelines", "kind": "nearby", "rationale": "Many ALUs is the throughput bet, not the single-thread bet." },
             { "text": "A wider memory bus and nothing else", "kind": "misapplied", "rationale": "Bandwidth helps both machines; the distinctive spend is speculation and caches." },
-            { "text": "Removing the program counter", "kind": "subtle", "rationale": "A sequential core is built around one PC, not without one." }
+            { "text": "Omitting caches so every load goes straight to DRAM", "kind": "subtle", "rationale": "A latency core spends area on caches and prediction, not on deleting the PC." }
           ],
           "correctExplanation": "The CPU bet is 'make this one program counter look fast'.",
           "objectiveIds": ["Contrast a latency-optimized core with a throughput-optimized one"],
@@ -122,7 +122,7 @@
           "distractors": [
             { "text": "Kernels cannot have more than one thread", "kind": "reversed", "rationale": "The whole point of a launch is many threads." },
             { "text": "Blocks already are the hardware scheduling quantum", "kind": "nearby", "rationale": "A block is a programming-model grouping that can share memory." },
-            { "text": "The host has no program counter", "kind": "subtle", "rationale": "The host has a PC. It is just not the device grouping." }
+            { "text": "Warps are named in the launch API the same way blocks are", "kind": "subtle", "rationale": "The host launches a grid of blocks. Warps are a later hardware grouping." }
           ],
           "correctExplanation": "Thread, block, and grid are what you launch. The hardware grouping comes next.",
           "objectiveIds": ["Keep the programming model separate from the hardware warp"],
@@ -208,7 +208,7 @@
       "diagram": "gpu-simt",
       "explanation": [
         "Packed SIMD is a contract you write: one instruction names a vector of elements in one register. SIMT (single instruction, multiple threads) lets you write scalar thread code. The hardware still issues one instruction across a group of threads, and it masks the lanes that should not participate.",
-        "That is why a kernel can contain a scalar if and still be a vector machine. Threads that should not take the instruction sit idle under a mask; they do not fetch a different instruction. The programming model hid the pack. The energy cost of an idle lane did not go away.",
+        "That is why a kernel can contain a scalar if and still be a vector machine. Threads that should not take the instruction sit idle under a mask; they do not fetch a different instruction from a private SMT-style stream. The programming model hid the pack. The energy cost of an idle lane did not go away.",
         "People collapse SIMT into 'it is just SIMD'. The distinction matters. SIMD that you wrote as a packed add cannot silently look like two control-flow paths. SIMT can look like ordinary C and still run in lockstep. The next unit names the group that shares the instruction."
       ],
       "example": "Thirty-two threads execute y[i] = x[i] + 1. You wrote a scalar add. The hardware issues one add across the group. A thread whose predicate is false still occupies its lane for that issue; it just does not commit a result.",
@@ -337,9 +337,10 @@
       "goDeeper": "gpu-exec-resources",
       "diagram": "gpu-simt",
       "explanation": [
-        "Hardware groups consecutive threads into a warp (NVIDIA, 32) or a wavefront (AMD, historically 64, now often 32). That group shares a program counter and is the unit a scheduler considers ready or stalled. You launched threads. The chip runs warps.",
+        "Hardware groups consecutive threads into a warp (NVIDIA, 32) or a wavefront (AMD, historically 64, now often 32). That group is the unit a scheduler considers ready or stalled. You launched threads. The chip runs warps.",
+        "Pre-Volta NVIDIA hardware gave the warp one program counter. Divergent threads were serialized under a mask and literally shared that PC. Volta and later add Independent Thread Scheduling: each thread keeps its own PC. The warp is still the issue quantum — the SM picks a warp and issues one instruction to the subset of its threads that are at that PC. The useful scheduling model did not become 32 tiny CPUs.",
         "A block whose size is not a multiple of the warp width pads out a partial warp. Those extra lanes do nothing useful and still occupy the group. A block of one thread and a block of thirty-two threads that do the same math are not the same machine: the first still occupies a full-width warp.",
-        "This is why 'how many threads can I launch?' is the wrong first hardware question. The chip thinks in warps. Two threads in different warps have different program counters; they are not one lockstep group. The programming-model block can contain many warps. The scheduler's quantum is the smaller one."
+        "This is why 'how many threads can I launch?' is the wrong first hardware question. The chip thinks in warps. Two threads in different warps are not one lockstep group. Threads in one warp may sit at different PCs after Volta, but they still share the warp's issue slot. The programming-model block can contain many warps. The scheduler's quantum is the smaller one."
       ],
       "example": "A block of 40 threads on a 32-wide warp is two warps: 32 full, then 8 useful plus 24 idle. A 256-thread block is exactly 8 warps. The 256 looks neat in a slide. The 8 is what issue logic counts.",
       "whyItMatters": "The rest of this course — resources, memory, and later scheduling — is warp-shaped. If you keep thinking in individual threads, those words will stay metaphorical.",
@@ -347,10 +348,10 @@
         {
           "id": "ww10-1",
           "stem": "A warp (or wavefront) is primarily:",
-          "correctAnswer": "The hardware group that shares an instruction and is scheduled as one",
+          "correctAnswer": "The hardware group the scheduler issues as one",
           "distractors": [
             { "text": "A programmer-declared block", "kind": "nearby", "rationale": "Blocks are the programming-model grouping." },
-            { "text": "A DRAM page", "kind": "misapplied", "rationale": "Pages are an address-translation idea." },
+            { "text": "A programmer-declared thread count that the host schedules one-by-one", "kind": "misapplied", "rationale": "A warp is the hardware issue group. The programmer names threads and blocks, not warps." },
             { "text": "The entire grid of a launch", "kind": "subtle", "rationale": "A grid is many blocks. A warp is a handful of consecutive threads." }
           ],
           "correctExplanation": "The scheduler's quantum, not the kernel's syntax.",
@@ -364,7 +365,7 @@
           "stem": "A 40-thread block on a 32-wide warp wastes lanes because:",
           "correctAnswer": "The second warp is only 8 threads and still occupies 32 lanes",
           "distractors": [
-            { "text": "40 is prime, so hardware rejects the block", "kind": "misconception", "rationale": "Primality is irrelevant." },
+            { "text": "Hardware packs leftover threads into the next block so no lanes sit idle", "kind": "misconception", "rationale": "Partial warps still occupy a full issue group. Hardware does not fold leftovers into another block." },
             { "text": "Blocks cannot exceed 32 threads", "kind": "reversed", "rationale": "Blocks can be much larger than a warp." },
             { "text": "The compiler rounds down to 32 and drops the extra work", "kind": "nearby", "rationale": "The extra 8 threads still run; they just pad a warp." }
           ],
@@ -377,14 +378,17 @@
         {
           "id": "ww10-3",
           "stem": "You launched 256 threads in one block. The scheduler's first count is:",
-          "correctAnswer": "How many warps that block became, not 256 independent program counters",
+          "correctAnswer": "How many warps that block became, not 256 independently scheduled issue groups",
           "distractors": [
-            { "text": "256 separate instruction streams, one per thread", "kind": "reversed", "rationale": "SIMT grouped them. The scheduler sees the groups." },
+            { "text": "256 separate instruction streams, one independently scheduled per thread", "kind": "reversed", "rationale": "SIMT grouped them. Volta+ gives each thread a PC, not its own scheduler." },
             { "text": "One warp, because a block is a warp", "kind": "nearby", "rationale": "A 256-thread block is several warps." },
             { "text": "The host's thread count, because the device has no grouping", "kind": "subtle", "rationale": "The host launched threads. The device grouped them." }
           ],
-          "correctExplanation": "256 threads on a 32-wide machine is 8 warps. That is the quantum.",
-          "objectiveIds": ["Name the warp/wavefront as the unit the scheduler sees"],
+          "correctExplanation": "256 threads on a 32-wide machine is 8 warps. That is the quantum, before and after Volta.",
+          "objectiveIds": [
+            "Name the warp/wavefront as the unit the scheduler sees",
+            "Distinguish a pre-Volta shared warp PC from Volta+ independent thread scheduling"
+          ],
           "prerequisiteConceptIds": ["gpu-simt"],
           "difficultyTier": 3,
           "cognitiveType": "integrate"

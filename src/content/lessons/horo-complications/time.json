@@ -185,7 +185,7 @@
           "distractors": [
             { "text": "The perpetual, whose four-year wheel always stops on 29 February", "kind": "reversed", "rationale": "The perpetual's program includes the leap day. The annual's does not." },
             { "text": "Neither, because both discs are 31-tooth and therefore leap-aware", "kind": "subtle", "rationale": "Tooth count on the date disc does not encode leap years." },
-            { "text": "Both, because only a tourbillon cage can remember February", "kind": "misapplied", "rationale": "A cage averages a positional error. It is not a month program." }
+            { "text": "Both, because neither movement stores February's length until the wearer sets the date", "kind": "misapplied", "rationale": "The annual needed the wearer. The perpetual's program includes the leap day. Neither is a cage." }
           ],
           "correctExplanation": "Annual remembers short months except the leap rule. Perpetual stores that rule in a four-year program.",
           "objectiveIds": ["Predict which one needs a human in February"],

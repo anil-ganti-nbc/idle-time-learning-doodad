@@ -76,7 +76,7 @@
       "prerequisites": ["ml-emb-intro"],
       "goDeeper": "ml-attention",
       "explanation": [
-        "Raw characters are not what the model consumes. A tokenizer is a map from a string onto a sequence of discrete IDs. Each ID is a row in an embedding table. Spaces, punctuation, and rare spellings are decisions in that map, not facts about English.",
+        "Most production LLMs do not consume raw characters. A tokenizer is a map from a string onto a sequence of discrete IDs. Each ID is a row in an embedding table. Spaces, punctuation, and rare spellings are decisions in that map, not facts about English. Byte-level and character models exist; they are a different map, not a proof that 'tokens are words'.",
         "If the map splits a word the training table never saw as a unit, the model cannot attend to 'that word'. It can only mix the pieces it was given. A bad split is a different sequence, not a cosmetic detail."
       ],
       "example": "The string 'unhappiness' might become one ID, or un + happiness, or un + happy + ness. Each choice is a different sequence of vectors the mixer is allowed to look at.",
@@ -139,9 +139,9 @@
       "prerequisites": ["ml-emb-intro"],
       "goDeeper": "ml-attention",
       "explanation": [
-        "A tokenizer is a map: text in, a sequence of discrete IDs out. Byte-pair and word-piece maps grow a vocabulary by merging frequent neighbor pairs. Whitespace, lowercasing, and a leftover byte alphabet are part of the map, not a property of the language.",
+        "A tokenizer is a map: text in, a sequence of discrete IDs out. Byte-pair and word-piece maps grow a vocabulary by merging frequent neighbor pairs. Unigram / SentencePiece and a leftover byte alphabet are other first-class maps. Whitespace, lowercasing, and that byte fallback are part of the map, not a property of the language.",
         "Rare spellings and new compounds get cut into pieces the table already has. That is the point of a subword map: avoid an unknown token, pay for it with a longer sequence. The mixer later attends to those pieces, not to a word you still have in your head.",
-        "A split that severs a stem from a negation, or a name from its usual unit, changes which vectors sit next to each other. Attention cannot recover a unit that was never emitted. The map you chose is the sequence the rest of the net is allowed to see."
+        "A split that severs a stem from a negation, or a name from its usual unit, changes which vectors sit next to each other. Attention cannot attend to a single key that was never an ID; it can still assemble meaning from the pieces. The map you chose is the sequence the rest of the net is allowed to see."
       ],
       "example": "A merge table that never joined 'New' and 'York' will emit two IDs. A later lookup that wants the city as one key has to assemble it from pieces, or fail. The city did not vanish. The unit did.",
       "whyItMatters": "People argue about 'the model does not know that word' when they mean the tokenizer never emitted it as a unit. Name the map before you blame the mixer.",

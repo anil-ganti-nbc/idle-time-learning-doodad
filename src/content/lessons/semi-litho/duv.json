@@ -448,7 +448,7 @@
           "distractors": [
             { "text": "What logo is on the scanner brochure", "kind": "subtle", "rationale": "The brochure is not the exposure count." },
             { "text": "Whether the boule was notched (100) or (111)", "kind": "nearby", "rationale": "Orientation is not the split." },
-            { "text": "Whether the resist was called positive in marketing", "kind": "misapplied", "rationale": "Tone does not replace the pass count." }
+            { "text": "Whether the etch, not the exposure, defined the final space", "kind": "misapplied", "rationale": "The first question is what pitch each exposure saw, and how many passes made the union." }
           ],
           "correctExplanation": "Count the exposures. Then name the lamp.",
           "objectiveIds": ["Trace a pitch-split sequence as two or more sparser exposures whose union is the drawn pitch"],

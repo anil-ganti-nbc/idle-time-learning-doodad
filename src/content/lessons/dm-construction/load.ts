@@ -16,7 +16,7 @@ function provenance(courseId: string, moduleId: string, conceptId: string, extra
     links: extra?.links ?? LINKS,
     notes:
       extra?.notes ??
-      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by MIT Heavy Metal 101 and Berklee metal-guitar material; course prose not copied.`,
+      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · DAU construction heuristics. MIT Heavy Metal 101 and Berklee metal-guitar material are survey/technique background, not genre law. Course prose not copied.`,
   };
 }
 

@@ -16,7 +16,7 @@ function provenance(courseId: string, moduleId: string, conceptId: string, extra
     links: extra?.links ?? LINKS,
     notes:
       extra?.notes ??
-      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by MIT Heavy Metal 101; course prose not copied.`,
+      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · DAU listening heuristics. MIT Heavy Metal 101 is survey background, not a source for scene doctrines. Course prose not copied.`,
   };
 }
 

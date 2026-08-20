@@ -250,7 +250,7 @@
           "stem": "A watch at 180 degrees prints a rate you like. Before you call it regulated you should:",
           "correctAnswer": "Find the stolen energy, because that rate will not hold as swing stays sick",
           "distractors": [
-            { "text": "Fit a tourbillon, which is how a short swing is supposed to be finished", "kind": "misconception", "rationale": "The objective names that sentence as the wrong diagnosis." },
+            { "text": "Call it regulated: one healthy position is enough if the ticket is pretty", "kind": "misconception", "rationale": "A liked rate at 180 degrees will not hold. Find the stolen energy." },
             { "text": "Leave it, because 180 degrees is the definition of a healthy horizontal", "kind": "reversed", "rationale": "Healthy horizontal is much higher. 180 is a health warning." },
             { "text": "Open the index only, because a short swing is always a long spring", "kind": "nearby", "rationale": "The index will not restore a dry jewel or a set mainspring." }
           ],
@@ -432,7 +432,7 @@
           "distractors": [
             { "text": "A single clean line and a zero millisecond reading, by definition", "kind": "reversed", "rationale": "In-beat is the merged line. Out-of-beat is the split." },
             { "text": "A jewel-count printout, which is how beat error is officially graded", "kind": "misapplied", "rationale": "The machine hears ticks, not holes." },
-            { "text": "A tourbillon cage speed, which is the only other name for a split", "kind": "nearby", "rationale": "A split is the two ticks of one pair, not a cage." }
+            { "text": "A single rate offset with no split, because any error is already a daily rate", "kind": "nearby", "rationale": "Beat error prints as a split or a millisecond gap between the two ticks. A cage speed is not that signature." }
           ],
           "correctExplanation": "Two traces apart, or a millisecond gap. That is the signature.",
           "objectiveIds": ["Predict the timing-machine signature of a beat that is out of equal"],
@@ -447,7 +447,7 @@
           "distractors": [
             { "text": "Slide the index first, because a split is just a fast daily rate", "kind": "reversed", "rationale": "A plus on an unequal pair is not a rate you can trust." },
             { "text": "Oil the lock faces, because a split is missing draw under another name", "kind": "nearby", "rationale": "A split is rest position, not lock-face oil." },
-            { "text": "Fit a tourbillon, which is how a millisecond gap is supposed to close", "kind": "misapplied", "rationale": "Centre the pin. Do not add a cage." }
+            { "text": "Move the index first; beat error is a rate problem the regulator already owns", "kind": "misapplied", "rationale": "A 2.8 ms split is rest that is not centred. The index is a rate trim, not the first move." }
           ],
           "correctExplanation": "Close the beat, then regulate. The plus-six was a pair, not a period.",
           "objectiveIds": ["Predict the timing-machine signature of a beat that is out of equal"],
@@ -511,7 +511,7 @@
           "distractors": [
             { "text": "Regulate the plus-four away, because a pretty ticket is a finished watch", "kind": "reversed", "rationale": "Falling amplitude is a symptom the digits are hiding." },
             { "text": "Trust the machine to have printed the oil drop and the crack already", "kind": "misconception", "rationale": "It cannot see those. It only hears what they do to the ticks." },
-            { "text": "Fit a tourbillon, which is how a falling line is supposed to be finished", "kind": "misapplied", "rationale": "Open the calibre. Do not add a cage." }
+            { "text": "Demagnetize first, because a falling amplitude line is always a magnetized spring", "kind": "misapplied", "rationale": "A pretty plus-four with falling amplitude is unseen oil or a cracked jewel until you look inside." }
           ],
           "correctExplanation": "Pretty digits, falling swing. Open it. Oil or a crack will not print their names.",
           "objectiveIds": ["Name what the machine cannot see: magnetism, oil placement, a cracked jewel"],
@@ -640,7 +640,7 @@
           "correctAnswer": "The fault was magnetism; indexing hid it until the next field arrived",
           "distractors": [
             { "text": "The index is the cure, and the phone proved the spring needed more length", "kind": "reversed", "rationale": "The phone re-magnetized what you never demagnetized." },
-            { "text": "A tourbillon would have blocked the phone, which is the missing part", "kind": "misapplied", "rationale": "A cage does not degauss a coil." },
+            { "text": "The index permanently cancelled magnetism, so the next field cannot return", "kind": "misapplied", "rationale": "Indexing hid the magnetism. The next field brought the plus back. A cage is not a shield." },
             { "text": "Jewel count was too low, which is why fields can reach the spring", "kind": "nearby", "rationale": "Holes do not stop a magnetic field. A degausser does." }
           ],
           "correctExplanation": "You regulated a magnet. The field came back. Demagnetize next time.",
@@ -705,7 +705,7 @@
           "correctAnswer": "A dry stone that cut the plane overnight — the other wrong drop",
           "distractors": [
             { "text": "A greedy flood still sitting on the lock, which always leaves a matte plane", "kind": "reversed", "rationale": "Matte plane is a dry slide, not a flood." },
-            { "text": "A tourbillon the watch needed, which is how a matte plane is finished", "kind": "misapplied", "rationale": "Oil the impulse face. Do not add a cage." },
+            { "text": "A mainspring that fully unwound overnight, which always mattes the plane", "kind": "misapplied", "rationale": "A matte impulse plane after a dead morning is a dry stone. An unwound barrel is a different stop." },
             { "text": "A regulator boot that pinched only after sunset, which mattes steel", "kind": "nearby", "rationale": "A boot pinches the coil. It does not matte a pallet plane." }
           ],
           "correctExplanation": "Dry impulse, cut plane, dead swing by morning. Too little oil, not too much.",

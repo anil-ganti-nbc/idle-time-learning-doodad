@@ -89,7 +89,7 @@
           "correctAnswer": "A single address space whose pages can migrate between host and device",
           "distractors": [
             { "text": "A promise that device DRAM and registers are the same file", "kind": "reversed", "rationale": "The hierarchy remains. Only the name is shared." },
-            { "text": "A second page table only the GPU compiler can see", "kind": "nearby", "rationale": "The point is one space the program already uses." },
+            { "text": "A discrete copy the programmer memcpy's; pages never migrate", "kind": "nearby", "rationale": "Unified virtual memory is one address space whose pages can migrate. A permanent discrete copy is the older model." },
             { "text": "Removing virtual addresses from the host", "kind": "subtle", "rationale": "It extends the VA idea. It does not delete it." }
           ],
           "correctExplanation": "One name, two homes, pages that move. That is the contract.",

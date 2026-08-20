@@ -25,7 +25,7 @@
           "stem": "A process is primarily:",
           "correctAnswer": "An address space plus the threads that run in it",
           "distractors": [
-            { "text": "A compiler flag that names the output file", "kind": "misapplied", "rationale": "A process is a runtime object, not a build switch." },
+            { "text": "A file on disk; running it does not create a new kernel object", "kind": "misapplied", "rationale": "A process is a live kernel object. The file is only the image it may have been loaded from." },
             { "text": "A single privileged instruction on the CPU", "kind": "nearby", "rationale": "Privilege is a mode. A process is a package the kernel tracks." },
             { "text": "The firmware that counts RAM at reset", "kind": "subtle", "rationale": "Firmware is gone by the time processes exist." }
           ],
@@ -40,7 +40,7 @@
           "stem": "The editor's document usually survives a compiler crash because:",
           "correctAnswer": "The two programs do not share an address space",
           "distractors": [
-            { "text": "Compilers are forbidden from using any memory", "kind": "reversed", "rationale": "The compiler has plenty of memory — its own." },
+            { "text": "User programs are forbidden from using any memory", "kind": "reversed", "rationale": "Processes exist so programs can use memory under kernel control, not so memory is banned." },
             { "text": "The disk controller stores every keystroke twice", "kind": "nearby", "rationale": "Isolation is a memory-map fact, not a disk RAID policy." },
             { "text": "The kernel deletes the editor whenever the compiler exits", "kind": "misapplied", "rationale": "Unrelated processes do not die as a pair." }
           ],
@@ -93,7 +93,7 @@
           "distractors": [
             { "text": "The source code of every library the program might one day link", "kind": "nearby", "rationale": "The record is runtime state, not a source archive." },
             { "text": "A private copy of the kernel's own privileged instructions", "kind": "reversed", "rationale": "There is one kernel. Processes do not each own a CPU mode." },
-            { "text": "The compiler's choice of inlining threshold", "kind": "misapplied", "rationale": "Optimization knobs are not process state." }
+            { "text": "The order the programs were typed, not a kernel object", "kind": "misapplied", "rationale": "A process is a kernel object with its own state. Typing order is not that object." }
           ],
           "correctExplanation": "Identity, map, handles, credentials, threads. That is the package in the table.",
           "objectiveIds": ["Describe a process as an address space plus the threads that run in it"],
@@ -108,7 +108,7 @@
           "distractors": [
             { "text": "Sharing a file secretly merges the two memory maps", "kind": "reversed", "rationale": "A shared file is a shared object, not a shared map." },
             { "text": "The kernel forbids any two processes from opening files", "kind": "nearby", "rationale": "Opening files is normal. Sharing memory is the extra step." },
-            { "text": "File names live only inside the compiler", "kind": "misapplied", "rationale": "Handles are kernel bookkeeping at run time." }
+            { "text": "File names live only inside the process that created them", "kind": "misapplied", "rationale": "Names live in the filesystem. They are not trapped inside one process." }
           ],
           "correctExplanation": "Same object, two maps. Isolation is about the maps.",
           "objectiveIds": ["Name the isolation a process is supposed to provide, and that it is not free"],
@@ -122,7 +122,7 @@
           "correctAnswer": "The kernel still has to drop handles, free the map, and recycle the id",
           "distractors": [
             { "text": "The CPU cannot stop once a program has started", "kind": "reversed", "rationale": "The CPU is borrowed and given back all the time." },
-            { "text": "The compiler must recompile the kernel first", "kind": "misapplied", "rationale": "Teardown is runtime work." },
+            { "text": "The parent must exit before the child can start", "kind": "misapplied", "rationale": "Fork creates a child while the parent still runs. The parent does not have to exit first." },
             { "text": "Firmware has to recount RAM after every exit", "kind": "nearby", "rationale": "Exit does not rerun reset." }
           ],
           "correctExplanation": "The record is larger than 'not running'. Teardown is part of the cost.",
@@ -158,7 +158,7 @@
           "distractors": [
             { "text": "Nothing at all, including the program text", "kind": "reversed", "rationale": "Sharing the map is the definition of same-process threads." },
             { "text": "Only the processor's privileged mode bit", "kind": "nearby", "rationale": "Mode is not what threads share; memory is." },
-            { "text": "A private address space each compiler invents", "kind": "misapplied", "rationale": "A private map would make them processes." }
+            { "text": "A private kernel and a private set of open files for each thread", "kind": "misapplied", "rationale": "Threads of one process share an address space and a kernel. They do not each get a kernel." }
           ],
           "correctExplanation": "Same map, same handles, private registers and stacks.",
           "objectiveIds": ["Contrast threads that share an address space with processes that do not"],
@@ -187,7 +187,7 @@
           "correctAnswer": "Separate maps, so a crash in one need not take the other",
           "distractors": [
             { "text": "A guarantee that both sites share every byte", "kind": "reversed", "rationale": "That is the thread choice, not the process choice." },
-            { "text": "A faster compiler for both codebases", "kind": "misapplied", "rationale": "Process boundaries are not a compile speedup." },
+            { "text": "A second machine, because two programs cannot share one kernel", "kind": "misapplied", "rationale": "Two processes share a kernel and stay isolated by maps and handles, not by buying a machine." },
             { "text": "The right to issue privileged device instructions", "kind": "nearby", "rationale": "A process is still user mode." }
           ],
           "correctExplanation": "You paid for a second map. That is the isolation.",
@@ -223,7 +223,7 @@
           "distractors": [
             { "text": "Every program must run on a different physical computer", "kind": "nearby", "rationale": "Isolation is a kernel property on one machine." },
             { "text": "No program is allowed to open any file", "kind": "reversed", "rationale": "Files can be shared on purpose. Maps still differ." },
-            { "text": "The compiler refuses to emit any stores", "kind": "misapplied", "rationale": "Stores are normal. Crossing maps is the issue." }
+            { "text": "The hardware fuse that permanently disables stores after boot", "kind": "misapplied", "rationale": "Isolation is maps and privilege, not a fuse that bans stores." }
           ],
           "correctExplanation": "Next door fails; you do not. That is the promise.",
           "objectiveIds": ["Explain isolation as a crash next door remaining someone else's problem"],
@@ -251,7 +251,7 @@
           "stem": "Two programs that were supposed to be isolated keep crashing together. A likely cause is:",
           "correctAnswer": "They share memory or a handle they should not, or the kernel map is wrong",
           "distractors": [
-            { "text": "The compiler used too many comments in both programs", "kind": "misapplied", "rationale": "Comments are not a shared runtime map." },
+            { "text": "Both programs used the same source file, so isolation is impossible", "kind": "misapplied", "rationale": "Sharing a source file does not fuse two running processes." },
             { "text": "Each program is forbidden from using any CPU", "kind": "reversed", "rationale": "They are running. That is how they can crash." },
             { "text": "Firmware has disabled all disks in the building", "kind": "nearby", "rationale": "A missing disk is not a crossed map." }
           ],
@@ -289,7 +289,7 @@
           "distractors": [
             { "text": "Proof that the two processes have become one thread", "kind": "reversed", "rationale": "A handle is not a merged map." },
             { "text": "Impossible, because processes cannot open files", "kind": "nearby", "rationale": "They open files constantly." },
-            { "text": "A compiler setting that disables all stores", "kind": "misapplied", "rationale": "Sharing a file is runtime, not a compile flag." }
+            { "text": "A BIOS option that disables all stores for every process", "kind": "misapplied", "rationale": "Isolation is per-process maps, not a firmware kill-switch on stores." }
           ],
           "correctExplanation": "You shared an object. You did not merge the maps.",
           "objectiveIds": ["Explain isolation as a crash next door remaining someone else's problem"],
@@ -352,7 +352,7 @@
           "correctAnswer": "Copying the caller so parent and child can then diverge",
           "distractors": [
             { "text": "Erasing the caller and hoping a new program appears", "kind": "reversed", "rationale": "The parent continues. The child is the copy." },
-            { "text": "Asking the compiler to emit a second binary", "kind": "misapplied", "rationale": "fork is a runtime copy, not a compile." },
+            { "text": "Asking the shell to copy the executable on disk and run the copy", "kind": "misapplied", "rationale": "Fork clones the running process. It does not copy the on-disk image first." },
             { "text": "Switching the CPU permanently into firmware", "kind": "nearby", "rationale": "No firmware step is required." }
           ],
           "correctExplanation": "Photocopy, then two lives. That is fork.",
@@ -417,7 +417,7 @@
           "distractors": [
             { "text": "Copying the process so two shells exist forever", "kind": "nearby", "rationale": "That is fork, not exec." },
             { "text": "Deleting the process id and inventing a new kernel", "kind": "reversed", "rationale": "The id is what survives." },
-            { "text": "A compiler pass that inlines the whole standard library", "kind": "misapplied", "rationale": "exec is a runtime replacement." }
+            { "text": "A second fork that duplicates the caller without replacing the image", "kind": "misapplied", "rationale": "exec replaces the image in an existing process. A second fork would only clone it." }
           ],
           "correctExplanation": "New program, same process record. That is exec.",
           "objectiveIds": ["Describe exec as replacing the address space while keeping the process identity"],
@@ -432,7 +432,7 @@
           "distractors": [
             { "text": "Are copied into the kernel's privileged registers", "kind": "nearby", "rationale": "The old image is discarded, not promoted." },
             { "text": "Remain, because exec only changes the process id", "kind": "reversed", "rationale": "The id stays. The image does not." },
-            { "text": "Are written into the compiler's output file", "kind": "misapplied", "rationale": "No compile happens here." }
+            { "text": "Are written into the on-disk executable so the next launch sees them", "kind": "misapplied", "rationale": "exec overlays memory. It does not rewrite the file on disk as a side effect." }
           ],
           "correctExplanation": "Success means you are the new program. The old variables died with the old image.",
           "objectiveIds": ["Predict what survives exec and what is overwritten"],
@@ -480,7 +480,7 @@
           "correctAnswer": "A parent can collect a child's exit status and let the kernel free the record",
           "distractors": [
             { "text": "The child can keep running after it has exited", "kind": "reversed", "rationale": "The child is already dead. wait buries it." },
-            { "text": "The compiler can pause between functions", "kind": "misapplied", "rationale": "wait is a process API, not a parse pause." },
+            { "text": "The parent busy-waits on a global that the child is required to publish", "kind": "misapplied", "rationale": "wait is a kernel sleep on the child's exit, not a user-space busy-wait on a global." },
             { "text": "The kernel can forget the parent instead", "kind": "nearby", "rationale": "The parent is the one who must reap." }
           ],
           "correctExplanation": "Collect the status, free the slot. That is the reap.",
@@ -510,7 +510,7 @@
           "correctAnswer": "Accumulate zombie records until process slots run out",
           "distractors": [
             { "text": "Run faster because unreaped children are free CPUs", "kind": "reversed", "rationale": "Zombies do not run. They only occupy slots." },
-            { "text": "Cause the compiler to refuse all future builds", "kind": "misapplied", "rationale": "This is a runtime leak, not a toolchain lockout." },
+            { "text": "Cause the parent to be killed so zombies cannot exist", "kind": "misapplied", "rationale": "An unreaped child becomes a zombie. The cure is wait, not killing the parent." },
             { "text": "Disable privilege mode as a cleanup step", "kind": "nearby", "rationale": "Leaking records does not drop the mode bit." }
           ],
           "correctExplanation": "Unreaped records pile up. That is the leak.",
@@ -559,7 +559,7 @@
           "correctAnswer": "The same loop can read lines from a file instead of a keyboard",
           "distractors": [
             { "text": "Scripts run in kernel mode by definition", "kind": "reversed", "rationale": "A script is still a user program driving the API." },
-            { "text": "The compiler turns each line into a new kernel", "kind": "misapplied", "rationale": "No new kernel is built." },
+            { "text": "The shell becomes the kernel for the duration of that line", "kind": "misapplied", "rationale": "The shell is a user process that fork/execs. It does not become the kernel." },
             { "text": "wait is disabled for any line that came from a file", "kind": "nearby", "rationale": "Scripts wait too, unless they background work." }
           ],
           "correctExplanation": "Same API, different source of lines.",
@@ -575,7 +575,7 @@
           "distractors": [
             { "text": "A second shell appears automatically", "kind": "reversed", "rationale": "Without fork there is no remaining shell." },
             { "text": "The kernel invents a new terminal from ROM", "kind": "nearby", "rationale": "No new shell is created." },
-            { "text": "The compiler restores the prompt from a backup", "kind": "misapplied", "rationale": "There is no compile in this path." }
+            { "text": "Init reboots the machine so the prompt can return", "kind": "misapplied", "rationale": "The shell reprints its prompt after wait returns. Init does not reboot for that." }
           ],
           "correctExplanation": "exec replaces. fork is what keeps a parent around to wait and prompt.",
           "objectiveIds": ["Predict how that loop becomes a script of commands"],
@@ -607,7 +607,7 @@
           "correctAnswer": "A rule about which objects a process may touch, and how",
           "distractors": [
             { "text": "A second physical computer bolted to the first", "kind": "nearby", "rationale": "Domains are kernel rules, not extra chassis." },
-            { "text": "The compiler's choice of warning flags", "kind": "misapplied", "rationale": "Warnings are not object permissions." },
+            { "text": "The window manager's choice of title-bar color", "kind": "misapplied", "rationale": "Protection is kernel/hardware isolation, not a window-manager preference." },
             { "text": "A promise that every process may open every file", "kind": "reversed", "rationale": "That would be the absence of a domain." }
           ],
           "correctExplanation": "Objects plus allowed operations. The kernel checks both.",
@@ -622,7 +622,7 @@
           "correctAnswer": "A protection check, even though the two processes are already isolated",
           "distractors": [
             { "text": "Proof that address spaces have merged", "kind": "reversed", "rationale": "A denied open is not a merged map." },
-            { "text": "A compiler error about a missing header", "kind": "misapplied", "rationale": "This is a runtime permission, not a compile fail." },
+            { "text": "A window-manager warning about a missing font", "kind": "misapplied", "rationale": "A protection fault is a kernel trap, not a font warning." },
             { "text": "The disk refusing to spin for that user name", "kind": "nearby", "rationale": "The kernel decided, not the platter." }
           ],
           "correctExplanation": "Maps can be separate and the object can still be forbidden.",
@@ -672,7 +672,7 @@
           "distractors": [
             { "text": "Only in firmware ROM, never in software", "kind": "nearby", "rationale": "Drivers are software. The question is which address space." },
             { "text": "As user-level servers that the kernel cannot see", "kind": "reversed", "rationale": "That is the microkernel placement." },
-            { "text": "Inside the compiler's register allocator", "kind": "misapplied", "rationale": "Drivers are not a compile pass." }
+            { "text": "Inside a user library that the process can unload", "kind": "misapplied", "rationale": "A monolithic kernel's services live in kernel mode, not in an unloadable user library." }
           ],
           "correctExplanation": "Same privileged program. Same blast radius.",
           "objectiveIds": ["Contrast a kernel that contains drivers with one that keeps them in user space"],
@@ -686,7 +686,7 @@
           "correctAnswer": "Kill that server process rather than the whole privileged core",
           "distractors": [
             { "text": "Always halt the CPU permanently", "kind": "reversed", "rationale": "Containing the crash is the claimed benefit." },
-            { "text": "Rewrite the compiler's warning flags", "kind": "misapplied", "rationale": "A driver crash is not a compile setting." },
+            { "text": "Rewrite the BIOS splash screen", "kind": "misapplied", "rationale": "The contrast is where services live — kernel or user servers — not a splash screen." },
             { "text": "Promote the driver into firmware automatically", "kind": "nearby", "rationale": "Failure does not relocate the code into ROM." }
           ],
           "correctExplanation": "User-level server dies. The small core is supposed to remain.",
@@ -702,7 +702,7 @@
           "distractors": [
             { "text": "That devices stop needing any software at all", "kind": "reversed", "rationale": "The driver still exists. It just lives elsewhere." },
             { "text": "That user mode is removed from the architecture", "kind": "nearby", "rationale": "User mode is how the servers run." },
-            { "text": "That the compiler can no longer emit loads", "kind": "misapplied", "rationale": "Structure is not an instruction ban." }
+            { "text": "That user programs can no longer issue any system calls", "kind": "misapplied", "rationale": "A microkernel still offers syscalls to its servers. User programs still enter the kernel." }
           ],
           "correctExplanation": "Smaller blast radius, more doors on the hot path.",
           "objectiveIds": ["Predict what a driver crash costs in each structure"],

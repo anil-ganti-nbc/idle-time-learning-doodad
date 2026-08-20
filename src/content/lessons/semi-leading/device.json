@@ -15,7 +15,7 @@
       "explanation": [
         "Process Foundations left you a planar gate stack: a dielectric plus an electrode sitting on a plane of silicon. As the gate gets shorter, that plane is a worse electrostatic object. Drain field sneaks under the gate. The device leaks when it should be off. A FinFET stands a thin silicon fin up and wraps the gate around three sides. The channel is no longer a plane you sit on. It is a ridge you hug.",
         "Wrapping buys electrostatics: more gate control per length, less leak at a given threshold. It spends width quantization (drive comes in fin-count steps), harder topography for the films and etches you already know, and a fin that has to be uniform along its height. Isolation and the gate stack did not go away. They grew a third dimension.",
-        "This is the last planar-looking MOSFET most leading-edge logic will admit to. Gate-all-around, next, wraps the fourth side. Do not treat 'FinFET node' as a length. Treat it as a wrap."
+        "Gate-all-around, next, wraps the fourth side and is already in production on leading-edge logic. Do not treat 'FinFET node' as a length. Treat it as a wrap — and treat GAA as the next wrap, not a future rumor."
       ],
       "example": "A planar 20 nm-class gate leaks because the drain sees under the channel. The same drawn length on a thin fin, gate hugging three sides, turns off. Drive now comes as 2, 3, or 4 fins, not as any width the designer liked.",
       "whyItMatters": "If a FinFET is just 'a smaller transistor', GAA will look like another shrink. If it is a wrap that bought electrostatics and spent quantization, you can read the next wrap as the same bargain.",
@@ -26,7 +26,7 @@
           "correctAnswer": "The gate hugs three sides of a standing fin so drain field cannot sneak under a slab",
           "distractors": [
             { "text": "The fin is a metal wire with no silicon", "kind": "reversed", "rationale": "The fin is the silicon channel." },
-            { "text": "The channel is a buried implant under a planar gate, counted in fins for marketing", "kind": "misapplied", "rationale": "The fin is the silicon channel the gate wraps." },
+            { "text": "The channel is a buried implant under a planar gate, so drain field still sneaks under the slab", "kind": "misapplied", "rationale": "A FinFET wraps three sides of a standing fin. A buried planar channel is the problem it left." },
             { "text": "The gate stack is omitted on purpose", "kind": "nearby", "rationale": "Dielectric plus electrode still wrap the fin." }
           ],
           "correctExplanation": "Three sides of control. That is the wrap, not a slogan shrink.",
