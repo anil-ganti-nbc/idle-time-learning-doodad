@@ -60,6 +60,10 @@ export type Level = (typeof LEVELS)[number];
 export const RATINGS = ["didnt_get_it", "mostly", "got_it"] as const;
 export type Understanding = (typeof RATINGS)[number];
 
+/** Observational only. Never feeds SRS, selection, or mastery. */
+export const DIFFICULTY_NOTES = ["too_easy", "right_level", "too_hard", "unclear"] as const;
+export type DifficultyNote = (typeof DIFFICULTY_NOTES)[number];
+
 export const CONCEPT_STATES = [
   "unseen",
   "introduced",
@@ -125,6 +129,7 @@ export const LESSON_SCHEMA_VERSION = 1;
 export const EXPORT_SCHEMA_VERSION = 2;
 export const PROMPT_VERSION = "dau-quiz-v3";
 export const CURRICULUM_VERSION = 1;
+export const APP_RELEASE = "1.0";
 
 export interface Category {
   id: CategoryId;
@@ -381,6 +386,8 @@ export interface SessionRecord {
   timeBudget: TimeBudget;
   sourceType: SourceType;
   sourceProvider?: string;
+  /** Optional post-lesson note. Does not change review scheduling. */
+  difficultyNote?: DifficultyNote;
 }
 
 export interface LocalProfile {

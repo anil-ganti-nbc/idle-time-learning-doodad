@@ -25,7 +25,7 @@
           "distractors": [
             { "text": "A named tree of files the program walks by itself", "kind": "nearby", "rationale": "Names and trees are the filesystem's job, not the device's." },
             { "text": "A bag of variable-length records the disk invents per write", "kind": "reversed", "rationale": "Sectors are equal and numbered. Length is not invented per write." },
-            { "text": "A handle table the compiler builds at link time", "kind": "misapplied", "rationale": "A block device is hardware addressing, not a link record." }
+            { "text": "A character device: a byte stream with no sector numbers", "kind": "misapplied", "rationale": "A character device is a stream. A block device is a numbered array of sectors." }
           ],
           "correctExplanation": "Equal sectors, addresses from zero. That is the whole picture here.",
           "objectiveIds": ["Describe a block device as a linear array of fixed-size sectors"],
@@ -40,7 +40,7 @@
           "distractors": [
             { "text": "Passes a sector number it computed from the filename", "kind": "reversed", "rationale": "The program named a file, not a location on the array." },
             { "text": "Pokes the disk's bus registers with a sector list", "kind": "nearby", "rationale": "Register traffic is privileged. The program saw a handle." },
-            { "text": "Stores the bytes in the compiler's object file header", "kind": "misapplied", "rationale": "A save is runtime I/O, not a compile step." }
+            { "text": "Computes a sector list from the filename and programs the controller itself", "kind": "misapplied", "rationale": "Ordinary file writes go through a handle. Userspace does not compute the sector list." }
           ],
           "correctExplanation": "Handle in, sector choice in the filesystem. The program never numbered the array.",
           "objectiveIds": ["Predict why the filesystem, not the program, chooses which sector to write"],
@@ -89,7 +89,7 @@
           "distractors": [
             { "text": "Variable-sized so each file fits in one sector", "kind": "reversed", "rationale": "Sectors are fixed. Files span as many as they need." },
             { "text": "Named by the same strings the user types", "kind": "nearby", "rationale": "Strings are names. Sectors are numbers." },
-            { "text": "Allocated by the compiler for each source file", "kind": "misapplied", "rationale": "Sector numbers are a runtime disk address, not a build artifact." }
+            { "text": "Allocated from a per-file pool the disk firmware keeps for each open handle", "kind": "misapplied", "rationale": "Sectors are equal-sized, addressed by number, and unaware of files." }
           ],
           "correctExplanation": "One size, a linear index, no filenames. That is the device.",
           "objectiveIds": ["Describe a block device as a linear array of fixed-size sectors"],
@@ -154,7 +154,7 @@
           "distractors": [
             { "text": "The string the user typed, stored on disk as text", "kind": "nearby", "rationale": "The string is a name that will point here. It is not the inode." },
             { "text": "A sector the program numbered in its write call", "kind": "reversed", "rationale": "The program still does not pick sectors. The inode records which blocks were chosen." },
-            { "text": "A compiler record of which functions were inlined", "kind": "misapplied", "rationale": "An inode is a filesystem object, not a build artifact." }
+            { "text": "The directory entry that stores the filename and the data bytes together", "kind": "misapplied", "rationale": "The inode is the object the name points at. The directory entry is the name, not the data payload." }
           ],
           "correctExplanation": "A numbered on-disk record. A name will point at it. The name is not it.",
           "objectiveIds": ["Describe an inode as the on-disk object a filename eventually names"],
@@ -184,7 +184,7 @@
           "distractors": [
             { "text": "The filename is required to begin with the size in decimal", "kind": "reversed", "rationale": "Names are strings. They do not encode size." },
             { "text": "The block device reports size in the sector number", "kind": "nearby", "rationale": "A sector number is an address, not a length." },
-            { "text": "The compiler writes the size into the executable's title", "kind": "misapplied", "rationale": "On-disk size is filesystem metadata, not a compile title." }
+            { "text": "The directory entry stores the file size next to the name and the data", "kind": "misapplied", "rationale": "Size lives on the inode. The name is in the directory; the data is in separately named blocks." }
           ],
           "correctExplanation": "The inode holds type, size, and block numbers. The name only points.",
           "objectiveIds": ["Distinguish the inode's metadata and data blocks from the name that points at it"],
@@ -219,7 +219,7 @@
           "distractors": [
             { "text": "Reading the inode named readme, which stores its own filename", "kind": "nearby", "rationale": "The inode does not hold the name. The directory list does." },
             { "text": "Asking the block device for the sector titled readme", "kind": "reversed", "rationale": "Sectors have numbers, not titles. The list is in a file." },
-            { "text": "Asking the compiler which object file used that string", "kind": "misapplied", "rationale": "Lookup is a runtime walk of directory data, not a build step." }
+            { "text": "Reading the inode, which stores the filename next to the data", "kind": "misapplied", "rationale": "Lookup walks directory entries. The inode does not store the filename." }
           ],
           "correctExplanation": "String in, inode number out. The directory is that table.",
           "objectiveIds": ["Describe a directory as a list of names to inode numbers"],
@@ -284,7 +284,7 @@
           "distractors": [
             { "text": "Only the data region, because names live in sector titles", "kind": "reversed", "rationale": "Without the superblock and inodes, data blocks are unlabelled sectors." },
             { "text": "A separate disk for each inode, with no superblock", "kind": "nearby", "rationale": "One image holds the tables and the data. The superblock locates them." },
-            { "text": "Compiler sections: text, data, then the symbol table", "kind": "misapplied", "rationale": "This is an on-disk filesystem layout, not an object-file layout." }
+            { "text": "A volume label in the first sector, which is enough to rebuild the tree", "kind": "misapplied", "rationale": "The kernel must find the superblock, then the free-space map, inodes, and data from its fields." }
           ],
           "correctExplanation": "Superblock first. It names the map, the inode table, and the data.",
           "objectiveIds": ["Locate superblock, free-space map, inodes, and data on a disk image"],
@@ -379,7 +379,7 @@
           "distractors": [
             { "text": "The journal slot that holds the intent", "kind": "nearby", "rationale": "The journal is the intent, not the home. Home is where lookup will read." },
             { "text": "The user program's memory, which is the real disk", "kind": "reversed", "rationale": "Home is on the disk image, in the layout's tables and data." },
-            { "text": "The compiler's listing of object files", "kind": "misapplied", "rationale": "Home locations are filesystem blocks, not a build listing." }
+            { "text": "The superblock's list of every filename on the volume", "kind": "misapplied", "rationale": "A journal is an intent log. Filenames live in directories, not as a superblock roster." }
           ],
           "correctExplanation": "Home is the real inode, map, or directory block. The log is only the plan.",
           "objectiveIds": ["Describe journaling as writing the intent before applying it to the home location"],
@@ -415,7 +415,7 @@
           "distractors": [
             { "text": "Home write, then commit record, then the log body", "kind": "reversed", "rationale": "Home-before-commit is the torn case with no certified intent." },
             { "text": "Checkpoint, then home write, with no commit record", "kind": "nearby", "rationale": "Checkpoint last frees the log. Without a commit there is nothing to honour." },
-            { "text": "Superblock, then the compiler's symbol table", "kind": "misapplied", "rationale": "This is transaction order, not an object-file layout." }
+            { "text": "Log body and home write together, with the commit record written after checkpoint", "kind": "misapplied", "rationale": "The durable order is log body, commit, home, checkpoint. Commit-after-checkpoint is not that order." }
           ],
           "correctExplanation": "Body, commit, home, checkpoint. That is the inventory in time.",
           "objectiveIds": ["Describe journaling as writing the intent before applying it to the home location"],
@@ -445,7 +445,7 @@
           "distractors": [
             { "text": "The two orders are identical after any crash", "kind": "nearby", "rationale": "Order is the whole mechanism. They are not identical." },
             { "text": "Home-first is safer, because the log is then optional", "kind": "reversed", "rationale": "Home-first is the case the log cannot repair." },
-            { "text": "Home-first is required so the compiler can link", "kind": "misapplied", "rationale": "Linking is not a disk-commit order." }
+            { "text": "Home-first is required so replay has a home location to write into", "kind": "misapplied", "rationale": "Home-first can tear with no committed intent. Replay needs a commit, not a pre-written home." }
           ],
           "correctExplanation": "Home-first can tear with no plan. Commit-then-home can replay.",
           "objectiveIds": ["Predict why the journal must hit disk before the metadata it describes"],
@@ -458,19 +458,19 @@
     {
       "id": "os-crash-consist-10",
       "conceptId": "os-crash-consist",
-      "title": "The power dies between two name writes",
+      "title": "Atomic rename, then the crash",
       "durationMin": 10,
       "effort": "normal",
       "level": "journalist",
       "prerequisites": ["os-journal"],
       "diagram": "journal-commit",
       "explanation": [
-        "Rename of a to b is two home writes: a directory block gains the name b pointing at the inode, and a directory block loses the name a. A power cut can land between them. Diagnosis is which names still point at the inode, and whether a journal commit for those writes is on disk.",
-        "After replay, a journaled rename may legally show the old name, the new name, or both. Old name only: the transaction that added b never committed, so replay leaves a. Both: the add of b committed and the drop of a did not, so two names remain and the inode is still reachable. New name only: both committed, replay finished the drop. Those are prefixes of committed work.",
-        "Neither name, and a torn half-string in a directory block, are not legal after replay of this journal. The point of commit-then-home was that a certified intent can be installed completely. A missing file after rename is the diagnosis that the intent never made it, or that there was no journal."
+        "POSIX rename(a, b) is one atomic directory update from the program's point of view: after it returns, lookups see b, not a torn half-name, and the file was never nameless in the middle. Atomicity is that whole-operation appearance. Durability is a different question: whether the journal commit for that one transaction has hit disk.",
+        "A journaled rename is normally one transaction that records both directory updates. After replay: if that transaction never committed, the old name remains; if it committed, the new name is installed and the old name is gone. Those are the two prefixes of one atomic intent. Independently committed “add b” and “drop a” steps are not the normal semantics of one rename. They are a weaker link-then-unlink implementation. Both names after replay diagnose that split, not a successful atomic rename.",
+        "Neither name, and a torn half-string in a directory block, are not legal after replay of this journal. A missing file after rename is the diagnosis that there was no certified intent, or that there was no journal. A durable commit is why replay can finish the whole rename. Atomicity did not, by itself, put the commit on disk."
       ],
-      "example": "rename notes to old-notes, power dies. If no commit landed, notes is still there. If a commit added old-notes and the unlink of notes had not committed, both names work. If both committed, replay leaves old-notes. The inode's data blocks were not the question. The names were.",
-      "whyItMatters": "The first question after a power cut is which names remained. That is this diagnosis, not a vendor slogan.",
+      "example": "rename notes to old-notes, power dies. If the rename transaction never committed, notes is still there. If it committed, replay leaves old-notes. You do not diagnose a correct journaled rename by looking for both names as a happy prefix. Both names means the implementation committed a link and an unlink as two intents. The inode's data blocks were not the question. The names and the commit were.",
+      "whyItMatters": "The first question after a power cut is which names remained, and whether one rename transaction committed. That is this diagnosis, not a vendor slogan.",
       "quiz": [
         {
           "id": "crs10-1",
@@ -479,7 +479,7 @@
           "distractors": [
             { "text": "Whether the block device changed its sector size", "kind": "nearby", "rationale": "Geometry did not change. The names and the log did." },
             { "text": "Whether the filename is stored inside the inode", "kind": "reversed", "rationale": "The inode still does not hold the name. The directory blocks do." },
-            { "text": "Whether the compiler emitted a rename instruction", "kind": "misapplied", "rationale": "Rename is two directory updates, not a compile step." }
+            { "text": "Whether the inode number changed when the name changed", "kind": "misapplied", "rationale": "Diagnosis is which names still point at the inode, and whether a journal commit landed." }
           ],
           "correctExplanation": "Names remaining, plus commit or no commit. That is the post-crash picture.",
           "objectiveIds": ["Diagnose a filesystem after a power cut in the middle of rename"],
@@ -489,14 +489,14 @@
         },
         {
           "id": "crs10-2",
-          "stem": "After replay, a journaled rename may legally show:",
-          "correctAnswer": "The old name, the new name, or both — not a missing file, not a torn name",
+          "stem": "After replay, a journaled rename that was one transaction may legally show:",
+          "correctAnswer": "The old name, or the new name — not a missing file, not a torn name",
           "distractors": [
+            { "text": "Both names, as the normal prefix of one atomic rename", "kind": "nearby", "rationale": "Both names means the implementation split link and unlink into two commits. That is not one rename transaction." },
             { "text": "Neither name, which is how a journal reports a successful rename", "kind": "reversed", "rationale": "Neither is the lost-file leftover. Replay of a journal is not supposed to produce it." },
-            { "text": "A half-written filename as the usual committed result", "kind": "nearby", "rationale": "A torn string is the unjournaled tear. Commit-then-home forbids it." },
-            { "text": "A new superblock and an empty inode table", "kind": "misapplied", "rationale": "Rename does not reformat the layout." }
+            { "text": "A half-written filename as the usual committed result", "kind": "misconception", "rationale": "A torn string is the unjournaled tear. Commit-then-home forbids it." }
           ],
-          "correctExplanation": "Prefixes of committed work: old, both, or new. Never neither, never garbage.",
+          "correctExplanation": "One atomic intent: old if it never committed, new if it did. Never neither, never garbage, and not both as a happy prefix.",
           "objectiveIds": ["Predict which states a journaled rename may legally show after replay"],
           "prerequisiteConceptIds": ["os-journal"],
           "difficultyTier": 4,
@@ -508,8 +508,8 @@
           "correctAnswer": "Installs the logged directory updates at their home locations",
           "distractors": [
             { "text": "Deletes both names so the file cannot be confused with a torn write", "kind": "reversed", "rationale": "Replay finishes the plan. It does not hide the file." },
-            { "text": "Formats the block device to restore the superblock", "kind": "nearby", "rationale": "Replay writes home locations from the log. It does not reformat." },
-            { "text": "Asks the program to repeat the rename from a log of source code", "kind": "misapplied", "rationale": "The log holds disk blocks, not a program to rerun." }
+            { "text": "Replays only the add-name half and leaves the old name in place", "kind": "nearby", "rationale": "A committed rename is one transaction. Replay installs the whole logged update, not a leftover old name." },
+            { "text": "Rewrites the superblock from the directory tree and leaves the log untouched", "kind": "misapplied", "rationale": "Replay of a committed rename installs the logged directory updates at their home locations." }
           ],
           "correctExplanation": "The commit certified the intent. Replay is the home write, done late.",
           "objectiveIds": ["Diagnose a filesystem after a power cut in the middle of rename"],
@@ -522,20 +522,20 @@
     {
       "id": "os-crash-consist-20",
       "conceptId": "os-crash-consist",
-      "title": "Old, new, or both — never neither",
+      "title": "Old or new after replay — never a lost file",
       "durationMin": 20,
       "effort": "deep",
       "level": "journalist",
       "prerequisites": ["os-journal"],
       "diagram": "journal-commit",
       "explanation": [
-        "Unjournaled rename is two directory writes with no certified order. Drop a first, crash, b never written: neither name, inode maybe still allocated, file unreachable. Write a torn dirent: a garbage string, lookup walks off a half record. Add b first without dropping a, crash: both names, which happens to be reachable — but the next crash can still take the other tear. The illegal leftovers are neither and garbage.",
-        "A journaled rename that adds b before it drops a, each step a transaction or both in one, cannot produce those leftovers after replay. No commit: old name only. Commit of the add, not of the drop: both names, one inode, consistent. Commit of both: new name only. Replay installs whole logged directory blocks, so it does not leave a half-string.",
-        "Both names after replay is legal because it is still a prefix of committed work: the inode has a name, lookup works, the bytes are where the inode said. It looks like two strings for one object. It is not a lost file. Operators who treat 'both' as corruption are misreading a reachable state.",
-        "Compare the two disks after the same power cut. Unjournaled: old, new, both, neither, or torn. Journaled after replay: old, both, or new. The journal did not make rename free. It forbade the states in which the object has no name, and the states in which a directory block is not a list of names."
+        "Unjournaled rename is two directory writes with no certified order. Drop a first, crash, b never written: neither name, inode maybe still allocated, file unreachable. Write a torn dirent: a garbage string, lookup walks off a half record. Add b first without dropping a, crash: both names — reachable, but that is a split link+unlink, not atomic rename. The leftovers a journal exists to forbid are neither and garbage.",
+        "A journaled rename that is one transaction cannot produce those leftovers after replay, and it also should not leave both names. No commit: old name only. Commit: new name only. Replay installs whole logged directory blocks, so it does not leave a half-string. Both names after replay means the implementation logged add-b and drop-a as two commits. That is a different, weaker model. Do not teach it as the normal prefix of POSIX rename.",
+        "Atomicity and durability come apart. rename() can return — the operation looked whole to the caller — and a crash before the journal commit still shows the old name. That is not a torn rename. It is an undurable one. fsync on the directory, or a journal that already forced the commit, is what makes the new name survive.",
+        "Compare the two disks after the same power cut. Unjournaled: old, new, both, neither, or torn. Journaled one-transaction after replay: old or new. The journal did not make rename free. It forbade the states in which the object has no name, the states in which a directory block is not a list of names, and it kept the two directory updates in one intent."
       ],
-      "example": "Unjournaled: unlink a, crash before creating b. Neither name remains; the inode may still sit in the table with no pair pointing at it. Journaled add-b-then-drop-a: crash after the add's commit shows a and b. Crash after both commits shows b. Checking the journaled image after replay is not looking for a vanished file from this rename.",
-      "whyItMatters": "Lost files and torn names are the unjournaled leftover. A journal that can replay is the reason those are not legal.",
+      "example": "Unjournaled: unlink a, crash before creating b. Neither name remains; the inode may still sit in the table with no pair pointing at it. Journaled one-transaction rename: crash before the commit shows a. Crash after the commit shows b. Checking the journaled image after replay is not looking for a vanished file, and it is not looking for both names as a successful prefix.",
+      "whyItMatters": "Lost files and torn names are the unjournaled leftover. A journal that can replay one rename intent is the reason those are not legal. Atomicity did not, by itself, make the new name durable.",
       "quiz": [
         {
           "id": "crs20-1",
@@ -554,14 +554,14 @@
         },
         {
           "id": "crs20-2",
-          "stem": "After replay of a journaled rename that adds the new name before dropping the old, legal states are:",
-          "correctAnswer": "Old name only, both names, or new name only",
+          "stem": "After replay of a journaled rename that is one transaction, legal states are:",
+          "correctAnswer": "Old name only, or new name only",
           "distractors": [
             { "text": "Neither name, which is how journals report failure", "kind": "reversed", "rationale": "Neither is what the journal is there to forbid." },
-            { "text": "A half-written directory filename, as the usual success case", "kind": "nearby", "rationale": "Replay installs whole logged blocks. A torn string is the unjournaled case." },
-            { "text": "A new superblock and an empty inode table", "kind": "misapplied", "rationale": "Rename does not rebuild the layout." }
+            { "text": "Both names, as the normal committed prefix of one atomic rename", "kind": "nearby", "rationale": "Both names is a split link+unlink. One rename transaction does not leave that prefix." },
+            { "text": "A half-written directory filename, as the usual success case", "kind": "misconception", "rationale": "Replay installs whole logged blocks. A torn string is the unjournaled case." }
           ],
-          "correctExplanation": "Prefixes of committed work. The inode keeps a name through all three.",
+          "correctExplanation": "One atomic intent. The inode keeps a name. Both names is a different, weaker model.",
           "objectiveIds": ["Predict which states a journaled rename may legally show after replay"],
           "prerequisiteConceptIds": ["os-journal"],
           "difficultyTier": 4,
@@ -608,7 +608,7 @@
           "distractors": [
             { "text": "A fifth on-disk layout used instead of inodes", "kind": "nearby", "rationale": "The VFS is an API and a dispatch table, not another disk format." },
             { "text": "A separate syscall for every filesystem brand", "kind": "reversed", "rationale": "One API is the point. Brands fill in the functions." },
-            { "text": "The compiler's switch between static and dynamic linking", "kind": "misapplied", "rationale": "This is a kernel dispatch, not a link mode." }
+            { "text": "A different syscall number for each filesystem type the program must pick", "kind": "misapplied", "rationale": "VFS is one open/read/write API over many types. The program does not pick a syscall per brand." }
           ],
           "correctExplanation": "One call set, many implementations. That is the VFS.",
           "objectiveIds": ["Describe the VFS as one API over many filesystem types"],
@@ -701,7 +701,7 @@
           "distractors": [
             { "text": "Ignoring all directories and opening the superblock as a file", "kind": "reversed", "rationale": "Lookup still walks names. The graft changes which tree those names belong to." },
             { "text": "Asking the inode for its filename, which it does not store", "kind": "nearby", "rationale": "Names still live in directories. Mount does not put them in the inode." },
-            { "text": "Sending the whole path to the compiler's linker", "kind": "misapplied", "rationale": "Path walk is kernel lookup, not a link step." }
+            { "text": "Asking the inode for a cached pathname the VFS already stored", "kind": "misapplied", "rationale": "Lookup walks until a covered directory, then continues in the grafted tree." }
           ],
           "correctExplanation": "Walk, hit a cover, switch trees. That is which filesystem serves the rest.",
           "objectiveIds": ["Predict which filesystem serves a path after a mount covers that directory"],

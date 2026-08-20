@@ -361,7 +361,7 @@
           "correctAnswer": "Forbids the load from leaving until the store is visible enough to satisfy the model",
           "distractors": [
             { "text": "Deletes the flags from memory", "kind": "nearby", "rationale": "The flags stay. Their observers wait." },
-            { "text": "Makes the two cores share one program counter", "kind": "misapplied", "rationale": "They remain two threads." },
+            { "text": "Makes the two cores share one cache line so coherence is unnecessary", "kind": "misapplied", "rationale": "A fence orders the store and the later load. It does not collapse coherence." },
             { "text": "Turns TSO into a cache-less machine", "kind": "subtle", "rationale": "Caches remain. One edge got stronger." }
           ],
           "correctExplanation": "The fence is the missing edge sequential consistency had implied.",

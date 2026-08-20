@@ -41,7 +41,7 @@
           "distractors": [
             { "text": "Sees one shared cell, because the numbers match", "kind": "reversed", "rationale": "Matching names are not a shared frame." },
             { "text": "Sees the kernel's stack sitting at that number", "kind": "nearby", "rationale": "User maps do not export the kernel stack." },
-            { "text": "Sees the compiler's output file at that address", "kind": "misapplied", "rationale": "A virtual address is not a build artifact." }
+            { "text": "Sees one shared mapping the loader reserved for that number", "kind": "misapplied", "rationale": "Matching virtual numbers do not mean a shared frame unless the maps say so." }
           ],
           "correctExplanation": "Same name, private maps. Each load hits a different frame.",
           "objectiveIds": ["Predict what a program sees when two processes use the same virtual address"],
@@ -55,7 +55,7 @@
           "correctAnswer": "A virtual address that still needs a frame",
           "distractors": [
             { "text": "A physical DRAM row the program computed", "kind": "nearby", "rationale": "The program never computed a row." },
-            { "text": "A frame number the compiler burned in", "kind": "reversed", "rationale": "Binaries name process addresses, not frames." },
+            { "text": "A physical frame the program stored in its own page table", "kind": "reversed", "rationale": "A user load names a virtual address. The program does not store its own frame numbers." },
             { "text": "A syscall number for the next kernel trap", "kind": "misapplied", "rationale": "A load is an address, not a call number." }
           ],
           "correctExplanation": "The instruction holds a process name. Hardware still has to map it.",
@@ -91,7 +91,7 @@
           "distractors": [
             { "text": "Each process can rewrite every other process's frames", "kind": "reversed", "rationale": "The map is what stops that rewrite." },
             { "text": "User programs can store physical frame numbers themselves", "kind": "nearby", "rationale": "User code names virtual addresses, not frames." },
-            { "text": "The compiler can pick a unique opcode per process", "kind": "misapplied", "rationale": "Opcodes are not the map." }
+            { "text": "Each process can reuse the same physical frame numbers as names", "kind": "misapplied", "rationale": "The per-process map translates. Processes do not name physical frames as their addresses." }
           ],
           "correctExplanation": "Private names become frames only through that map.",
           "objectiveIds": ["Describe virtual memory as translating process addresses to physical frames"],
@@ -171,7 +171,7 @@
           "distractors": [
             { "text": "A cache of data bytes from the process's last load", "kind": "nearby", "rationale": "That would be a data cache, not the map." },
             { "text": "A list of physical frames the program wrote itself", "kind": "reversed", "rationale": "The kernel writes the tree. The program does not." },
-            { "text": "The compiler's map from source lines to functions", "kind": "misapplied", "rationale": "Debug maps are not page tables." }
+            { "text": "The TLB: a cache of translations the kernel walks by hand on every load", "kind": "misapplied", "rationale": "The page table is the tree hardware walks. The TLB caches recent translations; the kernel does not walk it by hand on every load." }
           ],
           "correctExplanation": "A tree of translations. Hardware walks it per page.",
           "objectiveIds": ["Describe a page table as the tree the hardware walks to translate a page"],
@@ -186,7 +186,7 @@
           "distractors": [
             { "text": "Every possible virtual page still has a reserved leaf table", "kind": "reversed", "rationale": "That would be the giant array the tree avoids." },
             { "text": "The TLB already stores the entire unused address space", "kind": "nearby", "rationale": "The TLB is small. Sparsity is in the tree." },
-            { "text": "The compiler deletes any addresses the program has not used", "kind": "misapplied", "rationale": "Unused virtual ranges are a map fact, not a compile pass." }
+            { "text": "Unmapped regions are stored as a single large identity map", "kind": "misapplied", "rationale": "Empty high-level entries skip the tables beneath. They are not an identity map." }
           ],
           "correctExplanation": "No child tables under an empty parent. The hole is free.",
           "objectiveIds": ["Predict why a multi-level table can stay sparse"],
@@ -236,7 +236,7 @@
           "distractors": [
             { "text": "Core B had an empty TLB, so it could not translate", "kind": "reversed", "rationale": "An empty TLB would walk the new table, which has no mapping." },
             { "text": "Core A forgot to switch privilege mode for the unmap", "kind": "nearby", "rationale": "The unmap already happened. The remote cache did not hear." },
-            { "text": "The compiler left a stale store instruction in B's binary", "kind": "misapplied", "rationale": "The store is legal. The translation is stale." }
+            { "text": "Core B executed a store that the ISA forbids after an unmap", "kind": "misapplied", "rationale": "The likely miss is a stale TLB entry and no shootdown, not an illegal ISA store." }
           ],
           "correctExplanation": "B translated with yesterday's entry. The table is not what B used.",
           "objectiveIds": ["Predict what happens if one core changes a mapping and the others keep the old TLB entry"],
@@ -286,7 +286,7 @@
           "distractors": [
             { "text": "A TLB hit that returns the physical frame with no trap", "kind": "nearby", "rationale": "A hit finished the translation. A fault did not." },
             { "text": "A successful walk that installs no mapping at all", "kind": "reversed", "rationale": "A successful walk is not a fault." },
-            { "text": "A compiler warning about an unused local variable", "kind": "misapplied", "rationale": "Faults are a hardware path, not a compile diagnostic." }
+            { "text": "A cache miss: the bytes are absent from L1 but the translation is present", "kind": "misapplied", "rationale": "A page fault is a missing translation that traps. A cache miss does not." }
           ],
           "correctExplanation": "The walk failed. Control goes to the kernel through a trap.",
           "objectiveIds": ["Describe a page fault as a missing translation that transfers into the kernel"],
@@ -316,7 +316,7 @@
           "distractors": [
             { "text": "Always fill a fresh frame and continue quietly", "kind": "reversed", "rationale": "A wild pointer is not a request for more heap." },
             { "text": "Flush every core's TLB and then retry as a syscall", "kind": "nearby", "rationale": "A bad address is not a shootdown or a syscall." },
-            { "text": "Ask the compiler to reserve that address next time", "kind": "misapplied", "rationale": "The compiler is not on this path." }
+            { "text": "Install an identity map so the store can complete", "kind": "misapplied", "rationale": "A store to an address the process was never given should kill, not invent a mapping." }
           ],
           "correctExplanation": "No promise, no fill. The process ends.",
           "objectiveIds": ["Distinguish a fault that should fill a page from one that should kill the process"],
@@ -382,7 +382,7 @@
           "distractors": [
             { "text": "The address was never legal, so the kernel must always kill", "kind": "reversed", "rationale": "It used to be valid. That is not a wild pointer." },
             { "text": "The TLB now holds a permanent translation for that page", "kind": "nearby", "rationale": "Not-present means the walk cannot finish." },
-            { "text": "The compiler removed that page from the running binary", "kind": "misapplied", "rationale": "The binary did not shrink at the fault." }
+            { "text": "The address was swapped into the inode and can never return", "kind": "misapplied", "rationale": "Not-present after valid usually means the kernel may fill it later." }
           ],
           "correctExplanation": "The name is still promised. The frame is gone for now.",
           "objectiveIds": ["Describe a page fault as a missing translation that transfers into the kernel"],
@@ -431,7 +431,7 @@
           "distractors": [
             { "text": "Make the disk as fast as RAM just by issuing more faults", "kind": "reversed", "rationale": "More misses make the queue longer, not the disk faster." },
             { "text": "Cause the TLB to store whole files instead of pages", "kind": "nearby", "rationale": "The TLB still caches translations, not files." },
-            { "text": "Force the compiler to emit fewer loads in new builds", "kind": "misapplied", "rationale": "A fault storm is not a compile-time rewrite." }
+            { "text": "Force the kernel to pin every process in RAM", "kind": "misapplied", "rationale": "Thrashing spends the machine on disk waits. The kernel does not respond by pinning everyone." }
           ],
           "correctExplanation": "The extra RAM was disk. Disk does not keep up with a crowd of misses.",
           "objectiveIds": ["Predict the cost of treating the disk as extra RAM when many processes miss"],
@@ -481,7 +481,7 @@
           "distractors": [
             { "text": "Each already own a private writable copy of every page", "kind": "reversed", "rationale": "That would be the expensive eager copy COW avoids." },
             { "text": "Share their register files but never share any memory frames", "kind": "nearby", "rationale": "Registers were copied. Frames are what COW shares." },
-            { "text": "Share only the compiler's debug symbols, not memory", "kind": "misapplied", "rationale": "COW is about process frames, not debug info." }
+            { "text": "Share only the kernel stack, and copy user pages immediately", "kind": "misapplied", "rationale": "Right after COW fork they share user frames and copy on the first write." }
           ],
           "correctExplanation": "Same frames, read-only, until a store forces a copy.",
           "objectiveIds": ["Describe copy-on-write as sharing frames after fork until a write"],
@@ -577,7 +577,7 @@
           "distractors": [
             { "text": "The kernel copied the page and remapped only the writing child", "kind": "reversed", "rationale": "That is the correct sequence. The parent would not see the store." },
             { "text": "The parent lost its process id when the child executed the store", "kind": "nearby", "rationale": "Ids do not leak stores across maps." },
-            { "text": "The compiler emitted one shared stack used by both programs", "kind": "misapplied", "rationale": "This is a mapping bug, not a compile artifact." }
+            { "text": "Fork aliased the two page tables to one writable directory", "kind": "misapplied", "rationale": "A store visible in the parent means the pages stayed writable or both entries were remapped to the copy." }
           ],
           "correctExplanation": "Either the store never faulted, or both tables were pointed at the new frame.",
           "objectiveIds": ["Predict which mapping changes when one side writes a shared page"],

@@ -66,6 +66,16 @@ describe("export/import", () => {
     assert.equal(imported.state.customCategories[0].id, "custom");
   });
 
+  it("round-trips an optional difficulty note without changing schema version", () => {
+    const state = defaultState();
+    state.sessions = [{ ...session("s-note", "cpu-pipeline"), difficultyNote: "too_hard" }];
+    const bundle = buildExport(state);
+    assert.equal(bundle.schema_version, 2);
+    assert.equal(bundle.progress.sessions[0].difficultyNote, "too_hard");
+    const imported = importExport(defaultState(), bundle, "replace");
+    assert.equal(imported.state.sessions[0].difficultyNote, "too_hard");
+  });
+
   it("round-trips course progress independently of other courses", () => {
     const state = defaultState();
     state.courses = {

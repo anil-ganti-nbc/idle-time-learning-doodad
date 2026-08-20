@@ -468,10 +468,10 @@
       "prerequisites": [
         "semi-euv"
       ],
-      "summary": "Bragg reflectors because nothing is a lens at 13.5 nm.",
+      "summary": "Bragg reflectors as the practical HVM projection optic at 13.5 nm.",
       "parentId": "semi-euv",
       "objectives": [
-        "Explain multilayer Bragg mirrors as the only useful EUV optic",
+        "Explain multilayer Bragg mirrors as the practical HVM projection optic once glass dies",
         "Predict why each bounce costs photons and why the column is a chain of mirrors"
       ],
       "estimatedMinutes": 10,

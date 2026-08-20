@@ -110,7 +110,7 @@ function QuizReady() {
   return (
     <div className="mx-auto max-w-xl">
       <p className="font-mono text-xs tabular-nums text-muted">{index + 1} / 3</p>
-      <h1 className="mt-2 font-display text-2xl leading-snug tracking-tight sm:text-3xl">
+      <h1 className="mt-2 font-display text-2xl leading-snug tracking-tight break-words sm:text-3xl">
         {question.prompt}
       </h1>
 
@@ -128,7 +128,7 @@ function QuizReady() {
                 }}
                 disabled={locked}
                 className={cn(
-                  "w-full rounded-lg px-4 py-3.5 text-left text-[15px] leading-snug transition-[box-shadow,background-color] duration-150",
+                  "min-h-12 w-full rounded-lg px-4 py-3.5 text-left text-[15px] leading-snug break-words transition-[box-shadow,background-color] duration-150",
                   !show &&
                     !mine &&
                     "bg-surface shadow-[0_0_0_1px_rgba(255,255,255,0.08)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.16)]",

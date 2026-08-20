@@ -52,7 +52,7 @@
         {
           "id": "ml-gdv10-3",
           "stem": "Why shuffle before you cut minibatches, rather than taking yesterday's rows as one clump?",
-          "correctAnswer": "A clump is a biased handful, so the slope estimate is not a draw from the training P",
+          "correctAnswer": "A clump is a biased handful, so the slope is not a draw from training P",
           "distractors": [
             { "text": "Shuffling turns the batch into a legal test report", "kind": "reversed", "rationale": "A batch is still train." },
             { "text": "Without a clump the gradient cannot be computed at all", "kind": "misconception", "rationale": "You can compute a bad gradient on a clump." },
@@ -86,7 +86,7 @@
         {
           "id": "ml-iid10-1",
           "stem": "The i.i.d. assumption, as this lesson states it, says examples are:",
-          "correctAnswer": "Independent and identically distributed: a fresh draw from one P, with no row telling the next",
+          "correctAnswer": "A fresh draw from one P, with no row telling the next",
           "distractors": [
             { "text": "Dependent on the previous row, and drawn from a new P each time", "kind": "reversed", "rationale": "That is the violation, not the assumption." },
             { "text": "Required to have a convex loss before any split is legal", "kind": "misapplied", "rationale": "i.i.d. is about the rows, not the bowl." },

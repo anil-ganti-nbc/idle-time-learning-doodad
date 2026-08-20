@@ -2,6 +2,7 @@ import { z } from "zod";
 import { lessonFileSchema } from "@/content/schema";
 
 const understanding = z.enum(["didnt_get_it", "mostly", "got_it"]);
+const difficultyNote = z.enum(["too_easy", "right_level", "too_hard", "unclear"]);
 const effort = z.enum(["light", "normal", "deep"]);
 const mode = z.enum(["explore", "reinforce", "surprise"]);
 const level = z.enum(["intro", "core", "journalist"]);
@@ -84,6 +85,7 @@ const sessionRecordSchema = z.object({
   timeBudget,
   sourceType,
   sourceProvider: z.string().optional(),
+  difficultyNote: difficultyNote.optional(),
 });
 
 const categorySchema = z.object({

@@ -100,7 +100,7 @@
         {
           "id": "ml-lr10-2",
           "stem": "A house table includes size in meters and the same size in millimeters. Least squares will typically:",
-          "correctAnswer": "Fit the same prices while splitting the shared direction arbitrarily between the two weights",
+          "correctAnswer": "The two weights can split a shared direction arbitrarily",
           "distractors": [
             { "text": "Refuse to run until you delete the bias term", "kind": "misapplied", "rationale": "The crime is collinear columns, not the intercept." },
             { "text": "Recover two causal effects, one per unit system", "kind": "reversed", "rationale": "Units copies are one direction, not two effects." },

@@ -283,7 +283,7 @@
           "distractors": [
             { "text": "A single fair-share rule that every thread is forced to use", "kind": "reversed", "rationale": "A class exists because the kernel kept more than one rule." },
             { "text": "Separate kernels, one per program, that never share a core", "kind": "nearby", "rationale": "One kernel. Several policies. The core is still shared." },
-            { "text": "Compiler optimization levels that rename local variables", "kind": "misapplied", "rationale": "A class is a run-time pick, not a build switch." }
+            { "text": "Nice values stored in the binary, which the kernel cannot override", "kind": "misapplied", "rationale": "Scheduling classes are kernel policies. Nice is a hint, not a baked-in class the kernel cannot change." }
           ],
           "correctExplanation": "Several rules live in one kernel. Each rule has its own enrolled set.",
           "objectiveIds": ["Describe scheduling classes as more than one policy living in one kernel"],
@@ -504,7 +504,7 @@
           "correctAnswer": "The kernel interrupts it and names a different runnable owner",
           "distractors": [
             { "text": "Hardware forbids more than one thread from existing, so it must exit", "kind": "reversed", "rationale": "Several threads exist. Preemption is how they share without asking." },
-            { "text": "The compiler inserts a yield at every add, so the loop cannot run", "kind": "misapplied", "rationale": "The loop did not yield. The kernel took the core anyway." },
+            { "text": "Hardware forbids loops longer than one timeslice, so it must yield", "kind": "misapplied", "rationale": "Preemption is the kernel interrupting a thread that never called yield." },
             { "text": "Its address space is unmapped as soon as it starts a tight loop", "kind": "nearby", "rationale": "The map stays. The owner of the core changes." }
           ],
           "correctExplanation": "Asking is optional. Taking the core back is how a greedy loop shares.",

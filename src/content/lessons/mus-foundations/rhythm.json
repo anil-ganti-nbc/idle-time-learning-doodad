@@ -132,14 +132,14 @@
     {
       "id": "mus-rest-10",
       "conceptId": "mus-rest",
-      "title": "Silence, not a leftover",
+      "title": "A rest occupies time",
       "durationMin": 10,
       "effort": "normal",
       "level": "intro",
       "prerequisites": ["mus-rhythm"],
       "goDeeper": "mus-meter",
       "explanation": [
-        "Silence occupies time. A rest is a rhythmic event with a duration, not a hole where the music forgot to write a note. Count it. A quarter rest lasts a quarter. Leaving it uncounted is how bars go crooked and how 'empty' bars get treated as mistakes.",
+        "Silence occupies time. A rest is a rhythmic event with a duration. Count it. A quarter rest lasts a quarter. Leaving it uncounted is how bars go crooked and how empty bars get treated as mistakes.",
         "Write a rest that is the point of the bar, not an empty leftover. A snare that hits on 3 after a rest on 1 and 2 makes those rests do work: they set up the hit. The silence is the figure. Fill it 'because something should be there' and you erased the figure.",
         "On a bass, mute and hold still for two beats, then attack. That mute is a rest if no pitch is sounding. It still has a length. MIT 21M.051 wants that length on the map, same as a note. The ear already heard the gap; the page should admit it."
       ],
@@ -325,7 +325,7 @@
     {
       "id": "mus-tempo-10",
       "conceptId": "mus-tempo",
-      "title": "Speed of the pulse, not the ink",
+      "title": "Tempo is pulse speed",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",

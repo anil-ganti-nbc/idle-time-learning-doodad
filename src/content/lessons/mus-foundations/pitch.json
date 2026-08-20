@@ -134,7 +134,7 @@
     {
       "id": "mus-major-10",
       "conceptId": "mus-major",
-      "title": "Pattern, not a mood",
+      "title": "The major-scale walk",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",
@@ -326,7 +326,7 @@
     {
       "id": "mus-modes-10",
       "conceptId": "mus-modes",
-      "title": "Gravity, not a shape",
+      "title": "Mode as a tonic hierarchy",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",
@@ -334,7 +334,7 @@
       "goDeeper": "mus-circle",
       "diagram": "mus-modes-tonic",
       "explanation": [
-        "Dorian is not a guitar box and not 'the white keys from D'. A mode is a tonic plus a hierarchy: which pitch is home, which degrees sit still, which lean. The same pitch set with a different tonic is a different gravity well.",
+        "A mode is a tonic plus a hierarchy: which pitch is home, which degrees sit still, which lean. The same pitch set with a different tonic is a different gravity well.",
         "Treat the characteristic degree as a neighbor of the tonic, not as leftover from some other major scale. A Phrygian riff on E with a flattened second sits on E and treats F as a step beside home. Analyze it as C major and you invent cadences the riff never played.",
         "Parallel mode change keeps the tonic and swaps the collection: C Ionian to C Aeolian. Relative mode change keeps the pitch set and moves home: C Ionian to A Aeolian. Those are different moves. One recolors the same house. The other walks next door."
       ],

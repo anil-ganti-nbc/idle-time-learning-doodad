@@ -41,7 +41,7 @@
           "correctAnswer": "A pointer to the latest physical register for that name",
           "distractors": [
             { "text": "A physical location in the file", "kind": "reversed", "rationale": "The physical file is larger and separate." },
-            { "text": "A cache tag", "kind": "nearby", "rationale": "Tags identify lines, not destinations." },
+            { "text": "A cache tag the load/store unit allocated", "kind": "nearby", "rationale": "After rename, an ISA name points at the latest physical register." },
             { "text": "Only a ROB index", "kind": "subtle", "rationale": "The map table, not the ROB slot, is the live translation." }
           ],
           "correctExplanation": "The map table is the live translation from architectural name to physical destination.",
@@ -122,7 +122,7 @@
           "distractors": [
             { "text": "There are no instructions in the program", "kind": "misconception", "rationale": "The tank is full, not empty." },
             { "text": "The predictor is perfect", "kind": "nearby", "rationale": "Perfection would tend to keep the window moving." },
-            { "text": "Caches are off", "kind": "subtle", "rationale": "Caches being off would stall execute, not uniquely fill the ROB." }
+            { "text": "Caches are off, so the ROB has nothing left to wait for", "kind": "subtle", "rationale": "A full ROB with idle ALUs usually means an old instruction has not committed." }
           ],
           "correctExplanation": "The tank is full. Rename has to wait on the oldest unfinished op.",
           "objectiveIds": ["State in-order allocate and commit around out-of-order execute"],
@@ -158,7 +158,7 @@
           "distractors": [
             { "text": "Clock frequency alone", "kind": "nearby", "rationale": "Frequency sets the tick. Capacity sets how much you can hide." },
             { "text": "ISA register count alone", "kind": "reversed", "rationale": "Rename exists so the ISA count is not the window." },
-            { "text": "How many chips were sold", "kind": "subtle", "rationale": "Volume is not a microarchitectural capacity." }
+            { "text": "The number of chips this vendor sold last quarter", "kind": "subtle", "rationale": "The window is limited by ROB, physicals, scheduler, or queues — not sales volume." }
           ],
           "correctExplanation": "Min of the capacities, not the brochure max.",
           "objectiveIds": ["State in-order allocate and commit around out-of-order execute"],

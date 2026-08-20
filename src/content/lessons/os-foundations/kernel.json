@@ -24,7 +24,7 @@
           "stem": "The kernel is best described as:",
           "correctAnswer": "The program that owns the machine and rents it to user programs",
           "distractors": [
-            { "text": "The compiler that turns C into machine code", "kind": "nearby", "rationale": "A compiler is a user program that produces binaries." },
+            { "text": "A library the process links that dies when the process exits", "kind": "nearby", "rationale": "The kernel owns the machine and outlives any one process. A linked library does not." },
             { "text": "The BIOS screen that counts memory at power-on", "kind": "misapplied", "rationale": "Firmware starts the machine; it is not the running kernel." },
             { "text": "The window manager that draws title bars", "kind": "subtle", "rationale": "A desktop shell runs in user space on top of the kernel." }
           ],
@@ -39,7 +39,7 @@
           "stem": "Two programs that both need the disk go through the kernel because:",
           "correctAnswer": "A lone program cannot safely operate a shared device on its own",
           "distractors": [
-            { "text": "Disks refuse to spin unless a compiler is running", "kind": "misapplied", "rationale": "The device does not care which language you used." },
+            { "text": "Each program must own the disk controller for the whole boot", "kind": "misapplied", "rationale": "Shared devices need a kernel because one program cannot safely operate them alone." },
             { "text": "User programs are not allowed to store any files", "kind": "reversed", "rationale": "They store files by asking the kernel, not by being banned." },
             { "text": "The kernel is the only program that can add two numbers", "kind": "nearby", "rationale": "Ordinary arithmetic does not need the kernel." }
           ],
@@ -90,7 +90,7 @@
           "correctAnswer": "It stays resident, owns the hardware, and runs other programs on its terms",
           "distractors": [
             { "text": "It is written in a language user programs cannot use", "kind": "nearby", "rationale": "Language is not what makes it the owner." },
-            { "text": "It only runs while the compiler is translating a file", "kind": "reversed", "rationale": "The kernel is resident; the compiler is a guest." },
+            { "text": "It only runs while a user program is blocked on disk", "kind": "reversed", "rationale": "The kernel is resident. It is not a helper that appears only during I/O waits." },
             { "text": "It exists only to draw the desktop wallpaper", "kind": "misapplied", "rationale": "Graphics servers are usually user programs." }
           ],
           "correctExplanation": "Residence and ownership. A library dies with you; the kernel does not.",
@@ -120,7 +120,7 @@
           "correctAnswer": "The shared device is used in an order the kernel can defend",
           "distractors": [
             { "text": "Each editor can rewire the disk controller itself", "kind": "reversed", "rationale": "Direct device access is what the kernel exists to prevent." },
-            { "text": "The compiler can rename their local variables", "kind": "misapplied", "rationale": "Saving a file is not a compile step." },
+            { "text": "A user program can rename another program's local variables", "kind": "misapplied", "rationale": "Isolation is a kernel job. User programs do not rewrite each other's locals." },
             { "text": "The desktop can change the system font mid-write", "kind": "subtle", "rationale": "Presentation is not why the disk is mediated." }
           ],
           "correctExplanation": "Shared hardware plus a crash risk. That is the mediation.",
@@ -156,7 +156,7 @@
           "distractors": [
             { "text": "A list of which users paid for a faster clock", "kind": "misapplied", "rationale": "Privilege is not a billing plan." },
             { "text": "The brand name stamped on the processor lid", "kind": "nearby", "rationale": "Brands do not create user and kernel modes." },
-            { "text": "A compiler flag that forbids while loops", "kind": "subtle", "rationale": "Language features are not CPU modes." }
+            { "text": "A firmware setting that forbids while loops", "kind": "subtle", "rationale": "Privilege is an ISA mode bit, not a firmware ban on control flow." }
           ],
           "correctExplanation": "A mode bit plus a list of dangerous instructions. That is the split.",
           "objectiveIds": ["Distinguish privileged instructions from ordinary user-mode execution"],
@@ -170,7 +170,7 @@
           "correctAnswer": "Traps; the write does not complete in user mode",
           "distractors": [
             { "text": "Succeeds, because every program owns every device", "kind": "reversed", "rationale": "That is the situation privilege exists to prevent." },
-            { "text": "Reboots the compiler and continues", "kind": "misapplied", "rationale": "The compiler is not in this path." },
+            { "text": "Ignores the privileged instruction and continues in user mode", "kind": "misapplied", "rationale": "A privileged op from user mode traps. It is not silently ignored." },
             { "text": "Silently changes the CPU's advertised clock", "kind": "nearby", "rationale": "A rejected instruction is not a frequency knob." }
           ],
           "correctExplanation": "The hardware refuses the instruction. Control goes to the kernel.",
@@ -219,7 +219,7 @@
           "correctAnswer": "A documented request that the kernel enter, check, act, and return",
           "distractors": [
             { "text": "An ordinary jump to any function inside the kernel", "kind": "reversed", "rationale": "The door is numbered and checked, not an open jump." },
-            { "text": "A compiler pass that deletes unused variables", "kind": "misapplied", "rationale": "Compilation is not a kernel request." },
+            { "text": "An ordinary function call that stays in the same privilege ring", "kind": "misapplied", "rationale": "A syscall is a documented request that changes privilege. An ordinary call does not." },
             { "text": "A hardware reset that restarts the machine", "kind": "nearby", "rationale": "A syscall returns; a reset does not." }
           ],
           "correctExplanation": "Ask, cross, check, act, return. That is the door.",
@@ -234,7 +234,7 @@
           "correctAnswer": "Back in the user program, with a result the kernel filled in",
           "distractors": [
             { "text": "Stuck in kernel mode until the next reboot", "kind": "reversed", "rationale": "The kernel returns; that is the last step of the call." },
-            { "text": "Inside the compiler rewriting the program", "kind": "misapplied", "rationale": "A read is not a compile." },
+            { "text": "Inside the same privilege ring, as an ordinary call", "kind": "misapplied", "rationale": "The work of a syscall happens in the kernel after the trap, not as a same-ring call." },
             { "text": "On a different machine that borrowed the disk", "kind": "subtle", "rationale": "The same program continues on the same CPU." }
           ],
           "correctExplanation": "Enter, work, return. The caller resumes.",
@@ -249,7 +249,7 @@
           "correctAnswer": "The kernel can check a known list instead of exposing every internal function",
           "distractors": [
             { "text": "User programs never need to read or write", "kind": "reversed", "rationale": "Read and write are on the list. The list is still finite." },
-            { "text": "The compiler can skip generating any binaries", "kind": "misapplied", "rationale": "Call count is not a compile switch." },
+            { "text": "The process can skip the kernel and poke devices itself", "kind": "misapplied", "rationale": "User programs reach devices through the kernel. They do not skip it by default." },
             { "text": "The CPU can forget how to add numbers", "kind": "nearby", "rationale": "Arithmetic is not gated by the syscall table." }
           ],
           "correctExplanation": "A numbered door is auditable. An open jump into the kernel is not.",
@@ -298,7 +298,7 @@
           "stem": "The kernel looks up a system-call number so that:",
           "correctAnswer": "Only a documented operation runs, not an arbitrary kernel function",
           "distractors": [
-            { "text": "The compiler can pick a faster clock for that number", "kind": "misapplied", "rationale": "Call numbers are not frequency settings." },
+            { "text": "The process can pick a faster clock for that number", "kind": "misapplied", "rationale": "The syscall number names a kernel entry. It is not a clock-select knob." },
             { "text": "Every integer becomes a legal jump into kernel internals", "kind": "reversed", "rationale": "The table exists to reject unknown numbers." },
             { "text": "User mode can be turned off for the rest of the day", "kind": "nearby", "rationale": "The kernel returns to user mode after the call." }
           ],
@@ -349,7 +349,7 @@
           "correctAnswer": "The CPU saving return state, raising privilege, and jumping to a handler",
           "distractors": [
             { "text": "The program issuing a normal CALL to a kernel symbol", "kind": "reversed", "rationale": "A normal CALL would need a callable kernel address in user space." },
-            { "text": "The compiler rewriting the program as it runs", "kind": "misapplied", "rationale": "Traps are a CPU mechanism, not a compile step." },
+            { "text": "The process rewriting its own privilege bit as it runs", "kind": "misapplied", "rationale": "A trap is a controlled transfer into the kernel, not a self-promoted privilege bit." },
             { "text": "The disk spinning faster until the kernel notices", "kind": "nearby", "rationale": "Entry is not a storage-speed trick." }
           ],
           "correctExplanation": "Hardware entry, not a CALL the program invented.",
@@ -379,7 +379,7 @@
           "correctAnswer": "Kernel addresses are not a user-callable library; entry is through the trap",
           "distractors": [
             { "text": "The kernel has no functions of any kind", "kind": "reversed", "rationale": "It has many. They are not on the user CALL path." },
-            { "text": "The compiler deletes every function named open", "kind": "misapplied", "rationale": "open is a syscall, reached by trap." },
+            { "text": "The window manager deletes every function named open", "kind": "misapplied", "rationale": "open is a syscall the kernel implements. The window manager does not delete it." },
             { "text": "Privilege forbids the program from running at all", "kind": "nearby", "rationale": "User programs run. They just cannot pick kernel addresses." }
           ],
           "correctExplanation": "The trap is the supported entry. A CALL to a kernel address is not.",
@@ -415,7 +415,7 @@
           "distractors": [
             { "text": "The CPU has two physical chips, one per mode", "kind": "nearby", "rationale": "One CPU, two maps — not two processors." },
             { "text": "User programs may freely overwrite kernel tables", "kind": "reversed", "rationale": "That is what the split exists to stop." },
-            { "text": "Only the compiler is allowed to have variables", "kind": "misapplied", "rationale": "Every program has memory. The maps differ." }
+            { "text": "Only the BIOS is allowed to have variables", "kind": "misapplied", "rationale": "User and kernel both have state. The split is privilege, not who may have variables." }
           ],
           "correctExplanation": "Two maps. User mode may not name the kernel's.",
           "objectiveIds": ["Contrast user-accessible memory with memory the kernel keeps for itself"],
@@ -443,7 +443,7 @@
           "stem": "A kernel that follows a hostile user pointer into its own tables usually:",
           "correctAnswer": "Kernel memory is corrupted and other programs can fail with it",
           "distractors": [
-            { "text": "Only the compiler's comments are rewritten", "kind": "misapplied", "rationale": "The tables are runtime state, not source comments." },
+            { "text": "Only the window manager's title bar is rewritten", "kind": "misapplied", "rationale": "The user/kernel split is about privilege and entry, not a title bar." },
             { "text": "Privilege mode turns itself off as a safety feature", "kind": "nearby", "rationale": "Corruption does not politely disable the mode bit." },
             { "text": "Nothing happens, because kernel memory cannot change", "kind": "reversed", "rationale": "Kernel memory changes constantly. That is why it must be guarded." }
           ],
@@ -478,7 +478,7 @@
           "correctAnswer": "The register and number contract both the program and the kernel honour",
           "distractors": [
             { "text": "The list of fonts the desktop may draw", "kind": "misapplied", "rationale": "Presentation is not a calling contract." },
-            { "text": "The compiler's choice of loop-unrolling factor", "kind": "nearby", "rationale": "Optimization policy is not the syscall layout." },
+            { "text": "The window manager's choice of title-bar font", "kind": "nearby", "rationale": "An ABI is the kernel-facing contract: numbers, registers, and what they mean." },
             { "text": "A suggestion the kernel may ignore per process", "kind": "reversed", "rationale": "If either side ignores it, the call is nonsense." }
           ],
           "correctExplanation": "Where the number and arguments live. Both sides must match.",
@@ -508,7 +508,7 @@
           "correctAnswer": "Old numbers already mean something to binaries that still run",
           "distractors": [
             { "text": "The CPU can only add, not reuse, integers", "kind": "misapplied", "rationale": "Integers reuse just fine. Meanings do not." },
-            { "text": "The compiler forbids any number smaller than 1000", "kind": "nearby", "rationale": "There is no such compiler rule." },
+            { "text": "The BIOS forbids any number smaller than 1000", "kind": "nearby", "rationale": "Syscall numbers are an ABI. The BIOS does not ban small numbers." },
             { "text": "User mode is about to be removed from the architecture", "kind": "reversed", "rationale": "The ABI exists so user mode can keep calling." }
           ],
           "correctExplanation": "Reuse would impersonate an old operation. New work gets a new number.",
@@ -542,7 +542,7 @@
           "correctAnswer": "A complete small Unix you can finish reading",
           "distractors": [
             { "text": "A replacement for every production kernel", "kind": "reversed", "rationale": "It is a teaching map, not a product swap." },
-            { "text": "A compiler that targets only one laptop model", "kind": "misapplied", "rationale": "xv6 is an operating system, not a compiler." },
+            { "text": "A window manager that targets only one laptop model", "kind": "misapplied", "rationale": "xv6 is a teaching kernel. It is not a window manager." },
             { "text": "A desktop theme shipped with Linux", "kind": "nearby", "rationale": "It is a kernel you read, not a wallpaper." }
           ],
           "correctExplanation": "Small and complete. That is why it is the map.",
@@ -557,7 +557,7 @@
           "correctAnswer": "In a table of doors the kernel honours, not as later-chapter trivia",
           "distractors": [
             { "text": "Only in the lock chapter, after filesystems", "kind": "reversed", "rationale": "Syscalls are part of the organization, not a late extra." },
-            { "text": "Inside the compiler's register allocator", "kind": "misapplied", "rationale": "Call tables are kernel, not codegen." },
+            { "text": "Inside a user-level math library", "kind": "misapplied", "rationale": "The map is kernel code. A user math library is not where traps land." },
             { "text": "Nowhere; xv6 programs never ask the kernel", "kind": "nearby", "rationale": "The shell and every utility ask constantly." }
           ],
           "correctExplanation": "Kernel, table, processes. You can point at those before later chapters.",
@@ -572,7 +572,7 @@
           "correctAnswer": "They are later chapters; the map only needs kernel, calls, and processes first",
           "distractors": [
             { "text": "xv6 does not implement either one at all", "kind": "reversed", "rationale": "The book has both. They are later." },
-            { "text": "Compilers have already provided virtual memory", "kind": "misapplied", "rationale": "Compilers do not implement page tables." },
+            { "text": "The BIOS has already provided virtual memory", "kind": "misapplied", "rationale": "Virtual memory is a kernel/hardware job. Firmware does not ship it for free." },
             { "text": "The hardware forbids teaching more than one idea", "kind": "nearby", "rationale": "Order is pedagogical, not a CPU limit." }
           ],
           "correctExplanation": "Finish the floor. Expand later. That is the 6.1810 bargain.",
@@ -605,7 +605,7 @@
           "stem": "Boot takes the machine from reset to:",
           "correctAnswer": "A kernel that can construct and run a first process",
           "distractors": [
-            { "text": "A compiler that has already finished every program", "kind": "misapplied", "rationale": "Boot does not compile the world's software." },
+            { "text": "A user process that has already finished every program", "kind": "misapplied", "rationale": "Boot starts from firmware, then the kernel. A finished user process is not first." },
             { "text": "A state with no kernel and only user programs", "kind": "reversed", "rationale": "User programs need the kernel that boot just installed." },
             { "text": "A desktop theme the firmware painted in ROM", "kind": "nearby", "rationale": "Pretty firmware screens are not a running kernel." }
           ],
@@ -621,7 +621,7 @@
           "correctAnswer": "There is not yet a kernel table or a user program to make the call",
           "distractors": [
             { "text": "The disk controller forbids arithmetic until noon", "kind": "misapplied", "rationale": "Time of day is not the dependency." },
-            { "text": "System calls exist only in the compiler", "kind": "nearby", "rationale": "Calls are a kernel interface, built during boot." },
+            { "text": "System calls exist only after the first user process starts", "kind": "nearby", "rationale": "The kernel is what implements syscalls. They exist before any user process runs." },
             { "text": "User mode is the only mode the reset CPU has", "kind": "reversed", "rationale": "Reset is privileged enough to install a kernel." }
           ],
           "correctExplanation": "No landlord, no door, no tenant. Boot builds all three.",
@@ -636,7 +636,7 @@
           "correctAnswer": "An init process the kernel constructed and then let run",
           "distractors": [
             { "text": "The firmware ROM executing every command forever", "kind": "reversed", "rationale": "Firmware handed off. It is not the first process." },
-            { "text": "The compiler running inside the reset vector", "kind": "misapplied", "rationale": "Reset is not a compile." },
+            { "text": "The first user process, which then loads the kernel from disk", "kind": "misapplied", "rationale": "After this boot, the first user program is an init the kernel constructed." },
             { "text": "A process that exists before the kernel does", "kind": "nearby", "rationale": "The kernel has to exist first to create it." }
           ],
           "correctExplanation": "Kernel builds process 1, then process 1 is just a program.",

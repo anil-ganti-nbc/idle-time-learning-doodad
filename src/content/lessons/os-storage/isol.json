@@ -27,7 +27,7 @@
           "distractors": [
             { "text": "A second copy of the kernel running on another computer", "kind": "misconception", "rationale": "The same kernel still owns the machine; only the view shrank." },
             { "text": "A new address space that merges every process's memory", "kind": "reversed", "rationale": "Maps stay separate. The namespace restricts names, not by merging maps." },
-            { "text": "A compiler pass that deletes unused global variables", "kind": "misapplied", "rationale": "A namespace is kernel bookkeeping, not a compile step." }
+            { "text": "A cgroup that only caps CPU, with the full inventory still visible", "kind": "misapplied", "rationale": "A namespace hides an inventory. A CPU cgroup caps time; it does not hide pids or mounts." }
           ],
           "correctExplanation": "The process is still a process of this kernel. What it can name got smaller.",
           "objectiveIds": ["Describe a namespace as a process that cannot see the whole machine"],
@@ -56,7 +56,7 @@
           "correctAnswer": "Itself, not the host's init",
           "distractors": [
             { "text": "The host's init, still numbered 1 in every view", "kind": "reversed", "rationale": "Host init remains the host's pid 1. It is not in this table." },
-            { "text": "A random unused pid the compiler picked", "kind": "misapplied", "rationale": "Pid 1 is assigned by the namespace, not by a build." },
+            { "text": "The host's swapper thread, remapped to pid 0 in every namespace", "kind": "misapplied", "rationale": "The first process in a new PID namespace is pid 1 in that view — itself, not the host init." },
             { "text": "Whatever pid the disk controller last used", "kind": "nearby", "rationale": "Device firmware does not hand out process IDs." }
           ],
           "correctExplanation": "Inside, the first member is pid 1. That is a view, not a new owner of the machine.",
@@ -91,7 +91,7 @@
           "correctAnswer": "Different inventories: processes, mounts, network objects, and identities",
           "distractors": [
             { "text": "The same inventory four times, with identical effects", "kind": "reversed", "rationale": "Each kind of name has its own table. The effects are not interchangeable." },
-            { "text": "Only the compiler's idea of a stack frame", "kind": "misapplied", "rationale": "These are kernel views of objects, not a calling convention." },
+            { "text": "Only file descriptors, reused under four different names", "kind": "misapplied", "rationale": "PID, mount, net, and user namespaces restrict different inventories." },
             { "text": "Which physical CPU the process is soldered to", "kind": "nearby", "rationale": "A namespace is a view of names, not a pin on a package." }
           ],
           "correctExplanation": "Four object kinds, four tables. A pid view is not a NIC view.",
@@ -172,7 +172,7 @@
           "distractors": [
             { "text": "Grows without bound until the machine reboots", "kind": "reversed", "rationale": "The limit exists so the group cannot grow without bound." },
             { "text": "Forces the scheduler to stop choosing any thread on the machine", "kind": "nearby", "rationale": "A memory cap is not a halt of every core." },
-            { "text": "Deletes the compiler so no further allocations are compiled", "kind": "misapplied", "rationale": "The victim is a runtime allocation, not a build tool." }
+            { "text": "Unmaps the group's page tables so the next fault kills the host", "kind": "misapplied", "rationale": "A memory limit reclaims or kills inside the group. It does not take down the host MMU." }
           ],
           "correctExplanation": "The ceiling is on that group's meter. Reclaim or OOM stays inside the group.",
           "objectiveIds": ["Predict what happens when a group hits its memory limit"],
@@ -221,7 +221,7 @@
           "correctAnswer": "Split root's privileged operations into bits a process can drop",
           "distractors": [
             { "text": "Turn off the CPU mode bit for the rest of the day", "kind": "reversed", "rationale": "The mode bit still exists. Capabilities further split what uid 0 may ask of the kernel." },
-            { "text": "Rename the process so the compiler treats it as firmware", "kind": "misapplied", "rationale": "Capabilities are kernel permission bits, not a compile identity." },
+            { "text": "Turn off the MMU so the process can name physical memory", "kind": "misapplied", "rationale": "Capabilities split root's privileged operations. They do not disable translation." },
             { "text": "Give every user program every privileged instruction", "kind": "nearby", "rationale": "That is the opposite of dropping bits, and user mode still forbids privileged instructions." }
           ],
           "correctExplanation": "One identity used to mean the whole bag. Each bit is now droppable.",
@@ -237,7 +237,7 @@
           "distractors": [
             { "text": "Succeeds, because uid 0 still means every privileged operation", "kind": "reversed", "rationale": "That is the folklore capabilities exist to end." },
             { "text": "Reboots the machine as a required side effect of the drop", "kind": "nearby", "rationale": "Dropping a bit is not a reset." },
-            { "text": "Is rewritten by the compiler into an unprivileged binary", "kind": "misapplied", "rationale": "The binary did not change. The kernel's bit set did." }
+            { "text": "Keeps the bind, because dropping a bit only affects the next exec", "kind": "misapplied", "rationale": "A dropped capability denies that operation now. Exec is not required for the drop to take effect." }
           ],
           "correctExplanation": "The kernel looks up the bit the operation needs. Uid 0 without that bit is not enough.",
           "objectiveIds": ["Predict a denial when a process has dropped the bit a privileged operation needs"],
@@ -301,7 +301,7 @@
           "correctAnswer": "The filter legalized the call, not every path or object that call can name",
           "distractors": [
             { "text": "open is not a system call, so filters cannot see it", "kind": "reversed", "rationale": "open is a syscall. That is why a filter can allow it — and why allowing it is coarse." },
-            { "text": "The compiler always inserts a reboot after open", "kind": "misapplied", "rationale": "A successful open is not a reset." },
+            { "text": "open is translated into a write, so the filter cannot name it", "kind": "misapplied", "rationale": "An allowed open is still a hole if the filter legalized the call but not the path." },
             { "text": "Allowed calls are secretly executed twice on another machine", "kind": "nearby", "rationale": "The hole is argument power, not a second host." }
           ],
           "correctExplanation": "Legalizing the number legalizes a wide family of operations. The path is still a choice.",
@@ -317,7 +317,7 @@
           "distractors": [
             { "text": "Every syscall was denied, including open", "kind": "reversed", "rationale": "A denied open would not produce an open." },
             { "text": "The BIOS rewrote the filter during power-on", "kind": "nearby", "rationale": "Firmware is not in this path." },
-            { "text": "The compiler deleted the kernel's syscall table", "kind": "misapplied", "rationale": "A compile does not remove the door the process is still using." }
+            { "text": "The filter attached to a different process and never saw this open", "kind": "misapplied", "rationale": "If open remained legal, the filter never constrained the path. The table is still there." }
           ],
           "correctExplanation": "The filter said the number was fine. The hole is the arguments that number still accepts.",
           "objectiveIds": ["Predict why an allowed open can still be a sandbox hole"],
@@ -350,7 +350,7 @@
           "correctAnswer": "Useful work — read, write, memory, exit — still goes through the kernel",
           "distractors": [
             { "text": "A process with zero syscalls is the only way a program can run", "kind": "reversed", "rationale": "Zero syscalls is a paperweight. Work still asks the kernel." },
-            { "text": "The compiler refuses to emit a binary unless every call is allowed", "kind": "misapplied", "rationale": "The runtime's needs are not a compile mandate for a full table." },
+            { "text": "A process with an empty filter is automatically given every call", "kind": "misapplied", "rationale": "A sandbox still needs read, write, memory, and exit. An empty filter is not a free pass by definition." },
             { "text": "The CPU cannot add numbers unless a syscall is in flight", "kind": "nearby", "rationale": "Ordinary arithmetic is not a privileged kernel request." }
           ],
           "correctExplanation": "The door has to stay open far enough for bytes, memory, and a way to stop.",
@@ -381,7 +381,7 @@
           "distractors": [
             { "text": "Makes the program faster because fewer calls are cheaper", "kind": "nearby", "rationale": "A denied write is a broken program, not a speedup." },
             { "text": "Lets the process skip the kernel for all remaining work", "kind": "reversed", "rationale": "Remaining work still uses whatever calls you left open." },
-            { "text": "Forces the compiler to inline the entire kernel", "kind": "misapplied", "rationale": "A filter does not merge kernel code into the binary." }
+            { "text": "Converts every remaining call into a raw privileged instruction", "kind": "misapplied", "rationale": "Denying write stops results from leaving. It does not turn remaining calls into privileged ops." }
           ],
           "correctExplanation": "The program still needs a way to put bytes somewhere. That call was the way.",
           "objectiveIds": ["Predict the tradeoff between a tiny syscall surface and a working program"],
@@ -414,7 +414,7 @@
           "correctAnswer": "The host kernel running other kernels in a less-privileged mode",
           "distractors": [
             { "text": "A guest kernel that takes over the host's privileged mode permanently", "kind": "reversed", "rationale": "The host stays the privileged owner. The guest is weaker." },
-            { "text": "A compiler that rewrites guest programs into firmware", "kind": "misapplied", "rationale": "KVM is a kernel mechanism, not a compile step." },
+            { "text": "A container: namespaces on the host kernel with no guest kernel", "kind": "misapplied", "rationale": "KVM runs other kernels in a less-privileged mode. A container has no guest kernel." },
             { "text": "A way for user programs to issue privileged instructions unchecked", "kind": "nearby", "rationale": "The whole point is that privileged guest ops are checked by the host." }
           ],
           "correctExplanation": "Host kernel privileged; guest kernel weaker. That is the split.",
@@ -478,7 +478,7 @@
           "correctAnswer": "Namespaces plus cgroups plus a filesystem view, on the host kernel",
           "distractors": [
             { "text": "A second kernel that replaces the host for every syscall", "kind": "reversed", "rationale": "That is the virtual-machine package, not the container." },
-            { "text": "A compiler flag that inlines the disk controller", "kind": "misapplied", "rationale": "A container is runtime isolation extras, not a build switch." },
+            { "text": "A guest kernel plus emulated devices, just named “container”", "kind": "misapplied", "rationale": "A container is namespaces, cgroups, and a filesystem view on the host kernel." },
             { "text": "Only a cgroup, with the full host inventory left visible", "kind": "nearby", "rationale": "A cap without a restricted view still shows the machine." }
           ],
           "correctExplanation": "Restricted view, meters and ceilings, a chosen root. Same kernel.",
@@ -494,7 +494,7 @@
           "distractors": [
             { "text": "Shares the host kernel and only hides pids", "kind": "reversed", "rationale": "Sharing the host kernel is the container. A VM brings another kernel." },
             { "text": "Cannot have memory limits of any kind", "kind": "nearby", "rationale": "Both packages can be capped. The kernel count is the cut." },
-            { "text": "Exists only while a compiler is running", "kind": "misapplied", "rationale": "A VM is a runtime of a guest kernel, not a build." }
+            { "text": "Runs without a kernel of any kind, including the host's", "kind": "misapplied", "rationale": "A VM runs its own kernel. A container's processes are still the host kernel's." }
           ],
           "correctExplanation": "Own kernel versus this kernel. That is the contrast.",
           "objectiveIds": ["Contrast a container with a virtual machine that has its own kernel"],
@@ -558,7 +558,7 @@
           "correctAnswer": "A PID namespace for the listing, and a memory cgroup for the growth",
           "distractors": [
             { "text": "A second kernel; view and cap cannot be the problem", "kind": "reversed", "rationale": "Those two symptoms name two container pieces, not a missing guest kernel." },
-            { "text": "A compiler that failed to inline getpid", "kind": "misapplied", "rationale": "A process listing is a runtime table, not a missed inlining." },
+            { "text": "A user namespace alone, which remaps uids but not pids or memory", "kind": "misapplied", "rationale": "Listing host pids is a missing PID namespace. Unbounded RAM is a missing memory cgroup." },
             { "text": "Only a net namespace, which hides both pids and memory", "kind": "nearby", "rationale": "Net hides interfaces. It does not rewrite pids or cap RAM." }
           ],
           "correctExplanation": "Visible host pids: the pid view was not restricted. Unbounded RAM: the memory meter was not capped.",

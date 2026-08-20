@@ -26,7 +26,7 @@
           "distractors": [
             { "text": "A ranking of which protocol is morally more important", "kind": "misconception", "rationale": "The stack is not a virtue ladder." },
             { "text": "A list of every wire gauge used in the building", "kind": "misapplied", "rationale": "Physical plant is not the contract." },
-            { "text": "A compiler pass that rewrites application source", "kind": "nearby", "rationale": "Layers wrap headers; they do not recompile the program." }
+            { "text": "A hop count the application hard-codes so Ethernet can be skipped", "kind": "nearby", "rationale": "A layer is a contract about what the layer above does not have to know." }
           ],
           "correctExplanation": "Each layer hides a job so the one above can ignore it. That is the contract.",
           "objectiveIds": ["Explain a layer as a contract about what the layer above does not have to know"],
@@ -44,7 +44,9 @@
             { "text": "Deciding the meaning of the application payload", "kind": "subtle", "rationale": "The application owns meaning." }
           ],
           "correctExplanation": "Link is local delivery. Internet is across networks. Transport names the program.",
-          "objectiveIds": ["Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"],
+          "objectiveIds": [
+            "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+          ],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "identify"
@@ -94,7 +96,9 @@
             { "text": "Exist only to draw the OSI seven-layer poster", "kind": "misapplied", "rationale": "The poster is not the mechanism." }
           ],
           "correctExplanation": "Three jobs, three contracts. Importance is not the split.",
-          "objectiveIds": ["Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"],
+          "objectiveIds": [
+            "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+          ],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "distinguish"
@@ -124,7 +128,9 @@
             { "text": "An application job that routers must also perform", "kind": "subtle", "rationale": "Routers forward packets; they do not demux processes." }
           ],
           "correctExplanation": "Ports live above IP. The link and the internet do not own the program name.",
-          "objectiveIds": ["Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"],
+          "objectiveIds": [
+            "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+          ],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "identify"

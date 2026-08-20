@@ -164,7 +164,7 @@
     {
       "id": "mus-species-10",
       "conceptId": "mus-species",
-      "title": "Craft, not a museum",
+      "title": "Species as a constraint",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",
@@ -242,7 +242,7 @@
     {
       "id": "mus-parallel-10",
       "conceptId": "mus-parallel",
-      "title": "Independence, not a doubling",
+      "title": "Parallel fifths fuse",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",

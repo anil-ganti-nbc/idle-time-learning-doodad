@@ -99,7 +99,7 @@
       "estimatedMinutes": 10,
       "objectives": [
         "Name stored work, train, escapement, and display as the four jobs of a movement",
-        "Trace energy from the spring to the hands without skipping the timebase"
+        "Trace power through the train, and say how the oscillator regulates that train rather than driving the hands"
       ],
       "sourceIds": [
         "hsny-edu",

@@ -248,7 +248,7 @@
     {
       "id": "mus-inversion-10",
       "conceptId": "mus-inversion",
-      "title": "Slash, not a new chord",
+      "title": "Inversion keeps the root",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",
@@ -336,7 +336,7 @@
       ],
       "goDeeper": "mus-cadence",
       "explanation": [
-        "Assign a job in a key, not a personality. Tonic (T) sits as home: I, often vi. Predominant (PD) prepares the dominant: ii, IV. Dominant (D) wants home: V, vii°. The same triad can hold different jobs if the key changes. Function is the job in this key.",
+        "Assign a job in a key. Tonic (T) sits as home: I, often vi. Predominant (PD) prepares the dominant: ii, IV. Dominant (D) wants home: V, vii°. The same triad can hold different jobs if the key changes. Function is the job in this key.",
         "Predict from the progression, not from the Roman numeral alone. ii going to V is PD to D. V going to I is D to T. A vi after V can still be tonic-ish, which is why deceptive moves work. MIT 21M.301 uses T-PD-D as a grammar for phrases that cadence.",
         "Refuse to pretend every riff is a chorale. An E5–G5–E5 guitar cell may never report to a V-I. Say that. Function is available when the music uses it. It is not a law you paste onto a dyad that never took a dominant job."
       ],
@@ -486,7 +486,7 @@
     {
       "id": "mus-progress-10",
       "conceptId": "mus-progress",
-      "title": "Grammar, not a law",
+      "title": "Function is a job",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const frame = "mt-6 overflow-hidden rounded-lg bg-raised px-4 py-5 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]";
+const frame = "mt-6 max-w-full overflow-hidden rounded-lg bg-raised px-3 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)] sm:px-4 sm:py-5";
 
 export function LessonDiagram({ name }: { name?: string }) {
   if (!name) return null;
@@ -335,7 +335,7 @@ const DIAGRAMS: Record<string, ReactNode> = {
     <svg viewBox="0 0 560 170" className={svg} aria-label="Divergent paths in one warp">
       <rect x="200" y="12" width="160" height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
       <text x="280" y="31" textAnchor="middle" fill="currentColor" fontSize="12">
-        one warp PC
+        one warp issue slot
       </text>
       <path d="M280 40 L160 78" stroke="currentColor" strokeOpacity="0.4" />
       <path d="M280 40 L400 78" stroke="currentColor" strokeOpacity="0.4" />
@@ -350,7 +350,7 @@ const DIAGRAMS: Record<string, ReactNode> = {
       <path d="M160 114 L280 142" stroke="currentColor" strokeOpacity="0.4" />
       <path d="M400 114 L280 142" stroke="currentColor" strokeOpacity="0.4" />
       <text x="280" y="162" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
-        both sides issue · then reconverge
+        both sides issue · then reconverge · Volta+ still pays this
       </text>
     </svg>
   ),
@@ -1959,18 +1959,38 @@ const DIAGRAMS: Record<string, ReactNode> = {
     </svg>
   ),
   "horo-power-flow": (
-    <svg viewBox="0 0 560 150" className={svg} aria-label="Energy from mainspring through train, escapement, display">
-      {["spring", "train", "escapement", "hands"].map((label, i) => (
-        <g key={label} transform={`translate(${18 + i * 136}, 32)`}>
-          <rect width="124" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
-          <text x="62" y="32" textAnchor="middle" fill="currentColor" fontSize="13">
-            {label}
-          </text>
-          {i < 3 && <path d="M128 26 H134" stroke="currentColor" strokeOpacity="0.45" />}
-        </g>
-      ))}
-      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
-        the oscillator is the timebase · the hands only report it
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Train drives the hands; escapement regulates the train">
+      <rect x="16" y="18" width="96" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="64" y="43" textAnchor="middle" fill="currentColor" fontSize="13">
+        spring
+      </text>
+      <path d="M112 38 H132" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="132" y="18" width="96" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="180" y="43" textAnchor="middle" fill="currentColor" fontSize="13">
+        train
+      </text>
+      <path d="M228 38 H248" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="248" y="18" width="120" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="308" y="43" textAnchor="middle" fill="currentColor" fontSize="12">
+        motion works
+      </text>
+      <path d="M368 38 H388" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="388" y="18" width="156" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="466" y="43" textAnchor="middle" fill="currentColor" fontSize="13">
+        hands
+      </text>
+      <path d="M180 58 V88" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="132" y="88" width="96" height="36" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="180" y="111" textAnchor="middle" fill="currentColor" fontSize="12">
+        escape
+      </text>
+      <path d="M228 106 H248" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="248" y="88" width="160" height="36" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="328" y="111" textAnchor="middle" fill="currentColor" fontSize="12">
+        oscillator
+      </text>
+      <text x="280" y="154" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the train drives the display · the oscillator regulates the train
       </text>
     </svg>
   ),

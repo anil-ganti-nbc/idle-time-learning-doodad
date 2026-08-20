@@ -5,7 +5,7 @@
     {
       "id": "mus-secondary-10",
       "conceptId": "mus-secondary",
-      "title": "Own dominant, not a random major",
+      "title": "Secondary dominants",
       "durationMin": 10,
       "effort": "normal",
       "level": "journalist",
@@ -165,7 +165,7 @@
     {
       "id": "mus-modulation-10",
       "conceptId": "mus-modulation",
-      "title": "Stay, not a visit",
+      "title": "Changing tonic for good",
       "durationMin": 10,
       "effort": "normal",
       "level": "journalist",

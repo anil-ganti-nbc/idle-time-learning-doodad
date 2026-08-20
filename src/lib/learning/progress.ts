@@ -16,6 +16,7 @@ import type {
   Course,
   CoursePlacement,
   CourseProgress,
+  DifficultyNote,
   GenerationLogEntry,
   Lesson,
   LessonFeedbackVerdict,
@@ -57,6 +58,7 @@ interface ProgressStore extends ProgressState {
     assessmentItems?: AssessmentItemRecord[];
     positions?: number[];
   }) => SessionRecord;
+  noteDifficulty: (sessionId: string, note: DifficultyNote) => void;
   upsertCategory: (category: Category) => void;
   removeCategory: (id: string) => void;
   upsertConcept: (concept: Concept) => void;
@@ -204,6 +206,10 @@ export const useProgress = create<ProgressStore>()(
         });
         return session;
       },
+      noteDifficulty: (sessionId, note) =>
+        set((s) => ({
+          sessions: s.sessions.map((row) => (row.id === sessionId ? { ...row, difficultyNote: note } : row)),
+        })),
       upsertCategory: (category) =>
         set((s) => ({
           customCategories: upsert(s.customCategories, stamp(category)),

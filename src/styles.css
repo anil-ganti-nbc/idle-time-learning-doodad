@@ -64,6 +64,14 @@
     outline: 2px solid var(--color-primary);
     outline-offset: 3px;
   }
+
+  p,
+  li,
+  h1,
+  h2,
+  button {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

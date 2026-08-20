@@ -230,7 +230,7 @@
           "stem": "A host that never hears a DHCP offer typically lacks:",
           "correctAnswer": "An IPv4 address, and usually a gateway and resolver too",
           "distractors": [
-            { "text": "A burned-in MAC, because leases replace hardware names", "kind": "reversed", "rationale": "The NIC already has a MAC. DHCP does not lend that." },
+            { "text": "A burned-in MAC, because leases replace hardware names", "kind": "reversed", "rationale": "DHCP leases an IP. It does not assign the link address." },
             { "text": "The ability to put any frame on Ethernet, even broadcasts", "kind": "nearby", "rationale": "Discovers are frames. What it lacks is an internet name." },
             { "text": "A checksum algorithm, so every header is rejected", "kind": "misapplied", "rationale": "Checksums are not leased." }
           ],
