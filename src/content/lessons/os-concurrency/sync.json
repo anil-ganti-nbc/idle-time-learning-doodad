@@ -24,7 +24,7 @@
           "correctAnswer": "At most one thread holds it at a time",
           "distractors": [
             { "text": "Every thread that wants it holds it at once", "kind": "reversed", "rationale": "That is the situation the lock exists to forbid." },
-            { "text": "The compiler forbids any shared variable", "kind": "misapplied", "rationale": "Sharing is allowed. Concurrent update is what the lock serializes." },
+            { "text": "Data-race undefined behavior means a lock is unnecessary", "kind": "misapplied", "rationale": "A data race is undefined in some languages. It does not make mutual exclusion free." },
             { "text": "The machine may run only one process ever", "kind": "nearby", "rationale": "Many threads run. Only one is the holder of this lock." }
           ],
           "correctExplanation": "One holder. That is the whole contract.",
@@ -54,7 +54,7 @@
           "correctAnswer": "The thread that acquired it and has not yet released it",
           "distractors": [
             { "text": "Every thread that will ever call acquire", "kind": "reversed", "rationale": "Wanting the lock is not holding it." },
-            { "text": "The compiler that emitted the binary", "kind": "misapplied", "rationale": "A lock is runtime state, not a build step." },
+            { "text": "Any thread that is currently inside the critical section, even if it never acquired", "kind": "misapplied", "rationale": "The holder is the thread that acquired and has not released. Presence in the section is not enough." },
             { "text": "The process, even after every thread has released", "kind": "subtle", "rationale": "Release frees the lock. There is then no holder." }
           ],
           "correctExplanation": "Acquire makes you the holder. Release ends that. One at a time.",
@@ -89,7 +89,7 @@
           "distractors": [
             { "text": "Acquire copies the structure into a private address space", "kind": "nearby", "rationale": "The structure stays shared. The lock serializes access to it." },
             { "text": "Release is optional once acquire has been called", "kind": "reversed", "rationale": "Without release there is no next holder." },
-            { "text": "The compiler rewrites the structure at compile time", "kind": "misapplied", "rationale": "The lock is a runtime token, not a compile step." }
+            { "text": "The lock converts the structure into thread-local storage for the rest of the process", "kind": "misapplied", "rationale": "The lock does not privatize the bytes. It only serializes who may touch them." }
           ],
           "correctExplanation": "One holder. That is why the section is safe to update.",
           "objectiveIds": ["Describe a lock as mutual exclusion: one holder at a time"],
@@ -218,7 +218,7 @@
           "distractors": [
             { "text": "Every thread runs at once on the same core", "kind": "reversed", "rationale": "Deadlock is no one running, not everyone running." },
             { "text": "A lock is held for a long but finite time", "kind": "nearby", "rationale": "A long hold is slow. A cycle never releases." },
-            { "text": "The compiler refuses to emit acquire", "kind": "misapplied", "rationale": "Deadlock is a runtime cycle, not a compile error." }
+            { "text": "A lock whose holder crashed, so the waiters will run after reboot", "kind": "misapplied", "rationale": "Deadlock is a cycle of waiters. A crashed holder is a different failure." }
           ],
           "correctExplanation": "A cycle of waits. No release will ever run.",
           "objectiveIds": ["Describe deadlock as everyone waiting for someone who is waiting for them"],
@@ -298,7 +298,7 @@
           "distractors": [
             { "text": "The word holds 2, so both increments landed", "kind": "reversed", "rationale": "That is the interleaving that did not lose an update." },
             { "text": "The word is unmapped and both stores fault", "kind": "nearby", "rationale": "The word is shared and writable. The store succeeds. It overwrites." },
-            { "text": "The compiler deleted one of the two threads", "kind": "misapplied", "rationale": "Both threads ran. One store erased the other's add." }
+            { "text": "The second store is buffered and never becomes visible", "kind": "misapplied", "rationale": "The lost update is both increments occurring and the word still holding 1." }
           ],
           "correctExplanation": "Last store wins with the value from an old load. One add is gone.",
           "objectiveIds": ["Diagnose a lost update when two threads read-modify-write the same word"],
@@ -413,7 +413,7 @@
           "distractors": [
             { "text": "Other threads may observe a half-old, half-new word", "kind": "reversed", "rationale": "No tear is the point of the atomic step." },
             { "text": "Every variable in the process is updated as a group", "kind": "nearby", "rationale": "Atomic names one access, not the whole program." },
-            { "text": "The compiler deletes the store so nothing can race", "kind": "misapplied", "rationale": "The update happens. It happens as one occupancy." }
+            { "text": "Other cores still see the modify as two separate memory ops", "kind": "misapplied", "rationale": "An atomic RMW occupies the word as one step. Other cores must not see a torn modify." }
           ],
           "correctExplanation": "One word, one step. That is all an atomic promises.",
           "objectiveIds": ["Describe an atomic as a read-modify-write that does not tear"],
@@ -618,7 +618,7 @@
           "distractors": [
             { "text": "Wakeup is a proof the predicate is still true, so the check would be wasted", "kind": "reversed", "rationale": "Mesa wakeup is a hint, not a proof." },
             { "text": "The lock is thrown away on wakeup and never comes back", "kind": "nearby", "rationale": "Wait reacquires the lock. That is when you look again." },
-            { "text": "The compiler deletes the condition variable after one signal", "kind": "misapplied", "rationale": "The condvar stays. The world it names may have moved." }
+            { "text": "Signal is a queued count, so a later waiter can skip the predicate", "kind": "misapplied", "rationale": "After wakeup the waiter must re-check. A signal is not a ticket to skip the predicate." }
           ],
           "correctExplanation": "Signal, then a gap, then reacquire. The world can change in the gap.",
           "objectiveIds": ["Predict why waiting on a condvar must re-check the condition after wakeup"],

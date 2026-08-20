@@ -188,7 +188,7 @@
       "prerequisites": [
         "os-journal"
       ],
-      "summary": "A power cut in the middle of rename.",
+      "summary": "Atomic rename versus durability: after a crash, which names remain.",
       "estimatedMinutes": 10,
       "objectives": [
         "Diagnose a filesystem after a power cut in the middle of rename",

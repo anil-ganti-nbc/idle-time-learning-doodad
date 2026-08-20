@@ -121,7 +121,7 @@
           "correctAnswer": "The destination varies and one cached address is often wrong",
           "distractors": [
             { "text": "They are never taken", "kind": "reversed", "rationale": "Indirects are taken. The address is the problem." },
-            { "text": "They have no program counter", "kind": "nearby", "rationale": "They have a PC. The target is data-dependent." },
+            { "text": "They are always not-taken, so the BTB is never consulted", "kind": "nearby", "rationale": "Indirect branches hurt a one-target BTB because the destination varies." },
             { "text": "Decode is forbidden to see them", "kind": "subtle", "rationale": "Decode will see them; fetch wanted the address earlier." }
           ],
           "correctExplanation": "One site, many destinations. The last target is a weak guess.",
@@ -156,7 +156,7 @@
           "correctAnswer": "This branch's outcome depends on other recent branches",
           "distractors": [
             { "text": "A branch is a simple counted loop", "kind": "reversed", "rationale": "Loops are exactly what local history learns." },
-            { "text": "The BTB hits", "kind": "nearby", "rationale": "A target hit is not a direction-history problem." },
+            { "text": "The BTB hits, so local history is unused", "kind": "nearby", "rationale": "Local history fails when this branch depends on other recent branches." },
             { "text": "The pipeline is short", "kind": "subtle", "rationale": "Depth changes the miss penalty, not whether local history can see other sites." }
           ],
           "correctExplanation": "Local tables never see the other sites. Correlation across branches needs shared history.",

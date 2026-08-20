@@ -413,8 +413,8 @@
           "correctAnswer": "A process-private name that must be translated to a physical line",
           "distractors": [
             { "text": "The row decoder inside DRAM itself", "kind": "nearby", "rationale": "That is the physical side, after translation." },
-            { "text": "A second clock", "kind": "subtle", "rationale": "Names are not oscillators." },
-            { "text": "An opcode", "kind": "misapplied", "rationale": "Addresses name locations; opcodes name operations." }
+            { "text": "A second timebase the core uses while translating", "kind": "subtle", "rationale": "A virtual address is a process-private name, not a timebase." },
+            { "text": "The opcode of the load that produced this address", "kind": "misapplied", "rationale": "The address is a name for a location. The opcode is a different field." }
           ],
           "correctExplanation": "The program names a location in its space. Hardware plus the OS map it.",
           "objectiveIds": ["Separate a process virtual address from a physical line"],
@@ -476,9 +476,9 @@
           "stem": "The TLB caches:",
           "correctAnswer": "Recent virtual-to-physical translations, not the program's data bytes",
           "distractors": [
-            { "text": "The contents of DRAM rows", "kind": "nearby", "rationale": "That is a data cache." },
-            { "text": "Decoded opcodes", "kind": "subtle", "rationale": "That would be a decoded-instruction buffer." },
-            { "text": "Clock configurations", "kind": "misapplied", "rationale": "Frequency is not a translation." }
+            { "text": "The DRAM row contents the last load returned", "kind": "nearby", "rationale": "The TLB caches translations, not the data the load returned." },
+            { "text": "Recently fetched instruction bytes, tagged by PC", "kind": "subtle", "rationale": "That would be an instruction cache or decode buffer, not the TLB." },
+            { "text": "Clock configurations the firmware last programmed", "kind": "misapplied", "rationale": "The TLB does not cache clock settings." }
           ],
           "correctExplanation": "Page → frame, plus permissions. Different array, different key.",
           "objectiveIds": ["Describe the TLB as a cache of translations, not data"],

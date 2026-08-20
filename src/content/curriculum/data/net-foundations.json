@@ -222,7 +222,7 @@
       "prerequisites": [
         "net-ethernet"
       ],
-      "summary": "A burned-in name that is not an Internet name.",
+      "summary": "A link-scoped interface name, not an Internet name.",
       "estimatedMinutes": 10,
       "objectives": [
         "Explain a MAC address as a local hardware name that is not an Internet name",

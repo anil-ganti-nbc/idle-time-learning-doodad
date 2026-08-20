@@ -13,10 +13,10 @@
       "goDeeper": "horo-nomenclature",
       "diagram": "horo-power-flow",
       "explanation": [
-        "Stored work sits in the mainspring, coiled inside the barrel. A gear train counts that unwind into steps. An escapement and oscillator meter those steps as the timebase. Hands on the dial display a count that has already been made.",
-        "Energy has to hit that timebase before it can mean a second. Skip the balance and hairspring and you have a spring dumping into a pile of wheels. The hands would spin, but nothing would have counted."
+        "Stored work sits in the mainspring, coiled inside the barrel. A gear train takes that unwind and does two jobs at once: it drives the motion works that turn the hands, and it ends at an escape wheel the oscillator will unlock. Hands display how far the train has been allowed to turn.",
+        "The escapement and oscillator regulate the train; they are not a stage the hands sit behind. Skip the balance and the locked escape wheel stops the whole train, so the hands freeze — not because power had to pass through the balance to reach them, but because a locked train cannot drive the cannon pinion."
       ],
-      "example": "On a simple three-hand calibre the barrel drives the centre wheel, the fourth drives the escape wheel, and the pallet impulses the balance. The minute hand only reports that count.",
+      "example": "On a simple three-hand calibre the barrel drives the centre wheel. The cannon pinion on that arbor carries the minute hand. The fourth wheel drives the escape wheel; the pallet impulses the balance. The hands take power from the train. The oscillator times the train.",
       "whyItMatters": "Name the four jobs first or later lessons about trains and escapements will sound like a parts list.",
       "quiz": [
         {
@@ -36,30 +36,30 @@
         },
         {
           "id": "horo-mv5-2",
-          "stem": "Energy from the mainspring reaches the hands only after it has:",
-          "correctAnswer": "Passed through the timebase that meters the unwind",
+          "stem": "Energy from the mainspring reaches the hands by:",
+          "correctAnswer": "Turning the going train, which drives the motion works; the oscillator only meters that train",
           "distractors": [
-            { "text": "Skipped the train and driven the hands from the barrel", "kind": "reversed", "rationale": "The train is on the path. Skipping it is not the path." },
-            { "text": "Been oiled at the caseback until the rate looks stable", "kind": "misapplied", "rationale": "Oil is later. It does not replace the timebase." },
-            { "text": "Filled the jewel count printed on the spec sheet", "kind": "subtle", "rationale": "Jewel count names holes. Energy still has to travel." }
+            { "text": "Skipping the train and driving the hands from the barrel", "kind": "reversed", "rationale": "The train is on the path. Skipping it is not the path." },
+            { "text": "Passing through the balance first, then out the other side into the hands", "kind": "misconception", "rationale": "The balance regulates the train. It does not sit upstream of the cannon pinion." },
+            { "text": "Filling the jewel count printed on the spec sheet", "kind": "subtle", "rationale": "Jewel count names holes. Energy still has to travel." }
           ],
-          "correctExplanation": "Barrel, train, then the timebase, then the hands. Skip the meter and you have a dump.",
-          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "correctExplanation": "Barrel, train, motion works. The oscillator meters the train; it does not drive the hands.",
+          "objectiveIds": ["Trace power through the train, and say how the oscillator regulates that train rather than driving the hands"],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "identify"
         },
         {
           "id": "horo-mv5-3",
-          "stem": "On a simple three-hand calibre, a correct energy path is:",
-          "correctAnswer": "Barrel, going train, escape, pallet and balance, then hands",
+          "stem": "On a simple three-hand calibre, a correct energy path to the hands is:",
+          "correctAnswer": "Barrel to going train to motion works; the escape and balance regulate that train",
           "distractors": [
-            { "text": "Barrel, then the hands, with the balance left until last", "kind": "reversed", "rationale": "Hands after the timebase. Last is too late for the meter." },
-            { "text": "Crown, stem, and cannon pinion, with no train at all", "kind": "nearby", "rationale": "That path is how you set the hands." },
-            { "text": "Balance first, then the barrel, so the spring has a beat", "kind": "misconception", "rationale": "Work is stored in the spring. The balance meters it." }
+            { "text": "Barrel, then the hands, with no train at all", "kind": "reversed", "rationale": "The train is on the going path." },
+            { "text": "Barrel, train, escape, pallet and balance, then the hands sit after the balance", "kind": "misconception", "rationale": "That invented path puts the display downstream of the oscillator." },
+            { "text": "Crown, stem, and cannon pinion, with no going train at all", "kind": "nearby", "rationale": "That path is how you set the hands." }
           ],
-          "correctExplanation": "Work, count, meter, display. That order is the machine.",
-          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "correctExplanation": "Work, count, display on one branch. Meter on the other. The hands are not behind the balance.",
+          "objectiveIds": ["Trace power through the train, and say how the oscillator regulates that train rather than driving the hands"],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "apply"
@@ -77,12 +77,12 @@
       "goDeeper": "horo-nomenclature",
       "diagram": "horo-power-flow",
       "explanation": [
-        "Energy leaves the barrel as torque on the first wheel of the going train. Centre, third, and fourth wheels reduce that motion and raise its speed. The escape wheel is the last of the count. It still has not metered a second.",
-        "The pallet fork takes impulse from the escape wheel and delivers it to the balance. The hairspring returns that balance. Together they are the timebase. Each swing unlocks one tooth, so the train advances in counted ticks rather than a runaway dump.",
-        "WOSTEP and HSNY 101 both start with this whole simple calibre. The cannon pinion and hands sit after the count: they display how many swings the timebase allowed. Trace barrel to balance first, then to the hands, or the path skips its meter."
+        "Energy leaves the barrel as torque on the first wheel of the going train. Centre, third, and fourth wheels reduce that motion and raise its speed. From the centre arbor the cannon pinion takes the display path: motion works, then hands. The escape wheel is the last of the count. It still has not metered a second.",
+        "The pallet fork takes impulse from the escape wheel and delivers it to the balance. The hairspring returns that balance. Together they are the timebase. Each swing unlocks one tooth, so the train advances in counted ticks rather than a runaway dump. The hands move because the train moved, not because power flowed through the balance and out the other side.",
+        "WOSTEP and HSNY 101 both start with this whole simple calibre. Trace barrel to train first. Then name the two branches: motion works for display, escape and oscillator for regulation. If you put the hands after the balance, you have invented a machine the calibre does not have."
       ],
-      "example": "Follow a wound barrel through centre, third, and fourth wheels to the escape wheel. Pallet impulse reaches the balance. Only then does the cannon pinion carry the minute hand.",
-      "whyItMatters": "Skip the timebase in the story and you will diagnose the hands when the oscillator was the fault.",
+      "example": "Follow a wound barrel to the centre wheel. The cannon pinion on that arbor carries the minute hand. Continue centre to third to fourth to the escape wheel; pallet impulse reaches the balance. Two branches off one train. One display. One regulator.",
+      "whyItMatters": "Put the hands after the balance and you will chase the oscillator when the cannon pinion was the fault.",
       "quiz": [
         {
           "id": "horo-mv10-1",
@@ -101,15 +101,15 @@
         },
         {
           "id": "horo-mv10-2",
-          "stem": "Trace torque from a wound barrel to a moving minute hand. After the fourth wheel comes:",
-          "correctAnswer": "The escape wheel, then pallet impulse, then the balance and hairspring",
+          "stem": "Trace torque from a wound barrel toward a moving minute hand. After the centre wheel comes:",
+          "correctAnswer": "The cannon pinion and motion works, while a later wheel of the same train drives the escape",
           "distractors": [
-            { "text": "The cannon pinion immediately, with the balance left sitting idle", "kind": "reversed", "rationale": "The timebase sits between fourth wheel and an honest hand." },
+            { "text": "The escape wheel, then pallet impulse, then the balance, and only then the hands", "kind": "misconception", "rationale": "The cannon sits on the centre arbor. The escape is a later branch of the same train." },
             { "text": "The winding stem, which is how energy is supposed to leave", "kind": "misapplied", "rationale": "The stem is how energy enters, on the wind." },
-            { "text": "The hour wheel, treated as the timebase of a three-hand watch", "kind": "nearby", "rationale": "The hour wheel is display gearing, after the count." }
+            { "text": "The hour wheel, treated as the timebase of a three-hand watch", "kind": "nearby", "rationale": "The hour wheel is display gearing, after the cannon. It is not the timebase." }
           ],
-          "correctExplanation": "Fourth, escape, pallet, balance. Then the cannon pinion may carry a hand.",
-          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "correctExplanation": "Centre to cannon is the display branch. Centre to third to fourth to escape is the regulation branch.",
+          "objectiveIds": ["Trace power through the train, and say how the oscillator regulates that train rather than driving the hands"],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "trace"
@@ -124,7 +124,7 @@
             { "text": "Gain exactly one hour, which is the barrel's natural period", "kind": "subtle", "rationale": "The barrel has no one-hour period that replaces the timebase." }
           ],
           "correctExplanation": "No unlocks, no count. The display has nothing new to show.",
-          "objectiveIds": ["Trace energy from the spring to the hands without skipping the timebase"],
+          "objectiveIds": ["Trace power through the train, and say how the oscillator regulates that train rather than driving the hands"],
           "prerequisiteConceptIds": [],
           "difficultyTier": 0,
           "cognitiveType": "predict"

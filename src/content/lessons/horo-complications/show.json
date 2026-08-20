@@ -365,7 +365,7 @@
           "distractors": [
             { "text": "The column wheel, whose pillars are cut to plus or minus sixteen minutes", "kind": "nearby", "rationale": "A column wheel sequences a chronograph. It is not a yearly sun cam." },
             { "text": "The 59-tooth moon disc, which already stores the sun's equation", "kind": "misapplied", "rationale": "Moonphase approximates a lunation. The sun's equation is a different curve." },
-            { "text": "The tourbillon cage, whose one-minute turn is the equation of time", "kind": "subtle", "rationale": "A cage averages a positional error. It does not plot sundial noon." }
+            { "text": "The going train's fourth wheel, whose once-a-minute turn is already mean solar time", "kind": "subtle", "rationale": "The equation of time is a yearly cam. A fourth wheel is mean time, not the equation." }
           ],
           "correctExplanation": "Calendar ratio, one turn a year, cam cut to the equation. Feeler to a hand.",
           "objectiveIds": ["Name the cam that approximates the equation of time"],
@@ -393,46 +393,46 @@
     {
       "id": "horo-finishing-10",
       "conceptId": "horo-finishing",
-      "title": "Bevels that shed oil, and bevels that shine",
+      "title": "Decoration, surface prep, and oil are different jobs",
       "durationMin": 10,
       "effort": "normal",
       "level": "core",
       "prerequisites": ["horo-bridges"],
       "goDeeper": "horo-service",
       "explanation": [
-        "Oil creeps along a sharp burr and along an unpolished milling mark. A bevel — anglage — on an edge that oil can reach sheds that creep, and dirt has less of a ledge to sit on. Perlage on a plate can hide a scratch and also hold a thin film where you meant a film to be.",
-        "Functional finishing is that work on surfaces that touch oil, dirt, or a pivot's neighborhood. Display finishing is the same grammar used where the rate never goes: a stripe on a bridge the oil cup does not see, a polish you will never put a pegwood on.",
-        "Distinguish them by path, not by shine. A bevel that does not sit on an oil path does not change amplitude. A raw burr on a jewel chaton that oil will climb is a rate problem dressed as 'leaving it honest'. Finish the path. Do not argue from gloss."
+        "Anglage is a bevelled, polished edge. Perlage is circular graining on a plate or bridge. Côtes de Genève are stripes on a bridge face. In the WOSTEP finishing and service language this course can actually source, those names are decorative finishing and the removal of tool marks. They are not oil-management mechanisms.",
+        "Oil management is a different job: oil sinks around a jewel, a measured drop on an impulse plane or in a cup, and barriers (including epilame where it is used) that stop a film from walking. A raw burr on a jewel chaton can give oil a ledge to climb. Cleaning that burr is surface preparation. Calling the decorative bevel functional anglage because oil exists somewhere on the calibre invents a mechanism WOSTEP does not teach.",
+        "Distinguish the three by job, not by shine. A stripe on a dry bridge face does not change amplitude. A greedy drop on a locking face does. A bevel that only shows in a display window is display. Finish can be well made and still not be lubrication."
       ],
-      "example": "A train-bridge inner edge, bevelled and polished, keeps a later oil creep from walking toward a wheel crossing. Côtes on the outer bridge face, above a dry surface, are display. Both can be well made. Only one sits on the oil path.",
-      "whyItMatters": "Finishing is surfaces. Some shed oil and dirt. Some only show. Rate cares which is which.",
+      "example": "Côtes on the outer train-bridge face, above a dry surface, are display. The oil cup around a train jewel is lubrication. Deburring the chaton so a later drop cannot climb a milling mark is surface prep. Three jobs. The same gloss does not make them one.",
+      "whyItMatters": "Finishing, preparation, and oil are surfaces with different jobs. Rate cares about the oil. Do not promote a decorative grammar into a lubrication theory.",
       "quiz": [
         {
           "id": "horo-fn10-1",
           "stem": "How should finishing be treated in this course, before anyone talks about shine?",
-          "correctAnswer": "As surfaces that can shed oil and dirt, and only sometimes as display",
+          "correctAnswer": "As decorative work and mark removal, distinct from oil cups and from lubrication",
           "distractors": [
-            { "text": "As a grade of the calibre equal to jewel count and to price", "kind": "misconception", "rationale": "Jewel count and price are not oil paths. Surfaces are." },
+            { "text": "As a grade of the calibre equal to jewel count and to price", "kind": "misconception", "rationale": "Jewel count and price are not oil cups. Surfaces are jobs." },
             { "text": "As a second timebase that polishes the hairspring into a better rate", "kind": "misapplied", "rationale": "The oscillator is still the spring. Finish does not replace it." },
-            { "text": "As optional paint on the case, which is where oil actually lives", "kind": "nearby", "rationale": "Oil lives in cups and on pivots. Case paint is housing." }
+            { "text": "As the oil-management system: anglage sheds film and perlage holds it", "kind": "nearby", "rationale": "That invents a lubrication job WOSTEP does not assign to decorative grain." }
           ],
-          "correctExplanation": "Edges and grain that oil can climb, or not. Display is the rest.",
-          "objectiveIds": ["Treat finishing as surfaces that shed oil and dirt, and sometimes as display"],
+          "correctExplanation": "Anglage and perlage are finish. Cups and measured drops are oil. Burrs are prep.",
+          "objectiveIds": ["Treat decorative finishing, surface preparation, and lubrication as distinct jobs"],
           "prerequisiteConceptIds": ["horo-bridges"],
           "difficultyTier": 3,
           "cognitiveType": "distinguish"
         },
         {
           "id": "horo-fn10-2",
-          "stem": "A polished bevel on an inner edge that oil would otherwise climb is:",
-          "correctAnswer": "Functional anglage: it sits on an oil path and can change where the film goes",
+          "stem": "A polished bevel on a bridge edge that never sits in an oil cup is:",
+          "correctAnswer": "Decorative anglage: display and mark removal, not a lubrication mechanism",
           "distractors": [
-            { "text": "Display only, because any shine is defined as decoration", "kind": "reversed", "rationale": "Shine on an oil path is still a path. Function follows the oil, not the gloss." },
-            { "text": "A tourbillon, because bevels average positional error as they catch the light", "kind": "misapplied", "rationale": "A cage averages a positional error. A bevel sheds oil." },
+            { "text": "Functional oil management, because any bevel sheds film by definition", "kind": "reversed", "rationale": "A dry display edge is not an oil cup. Shine is not lubrication." },
+            { "text": "Côtes on the outer dry face of the same bridge, which is the same job as the bevel", "kind": "misapplied", "rationale": "A dry-face bevel is decorative anglage. Côtes on a dry face are the same display job, not oil management." },
             { "text": "Overwind safety, which is what anglage is for on a barrel wall", "kind": "nearby", "rationale": "Overwind safety is a bridle. Anglage is an edge." }
           ],
-          "correctExplanation": "Oil would climb that edge. The bevel is on the path. That is function.",
-          "objectiveIds": ["Distinguish a functional anglage from a decoration that does not touch the rate"],
+          "correctExplanation": "No cup, no film job. Call it display. Leave lubrication to the cup and the drop.",
+          "objectiveIds": ["Refuse to treat anglage or perlage as an oil-management mechanism without a sourced claim"],
           "prerequisiteConceptIds": ["horo-bridges"],
           "difficultyTier": 3,
           "cognitiveType": "apply"
@@ -440,14 +440,14 @@
         {
           "id": "horo-fn10-3",
           "stem": "Stripes on a bridge face that never sees oil or a pivot. What do they do to rate?",
-          "correctAnswer": "Nothing the timebase can feel; they are display on a surface off the oil path",
+          "correctAnswer": "Nothing the timebase can feel; they are display on a dry surface",
           "distractors": [
             { "text": "They raise amplitude by polishing the balance from across the plate", "kind": "reversed", "rationale": "A dry outer face does not impulse the oscillator." },
-            { "text": "They are the functional anglage, because any stripe sheds oil by definition", "kind": "subtle", "rationale": "Function follows the path. A dry face is not an oil path." },
+            { "text": "They hold a designed oil film, which is why perlage and côtes are lubrication", "kind": "subtle", "rationale": "A dry face is not an oil cup. Grain is not a lubrication system." },
             { "text": "They meter the unwind, which is why striped bridges are a second escape", "kind": "misapplied", "rationale": "The escapement meters. A stripe is grain on a bridge." }
           ],
-          "correctExplanation": "Off the oil path, off the rate. Call it display. Leave the timebase out of the sentence.",
-          "objectiveIds": ["Distinguish a functional anglage from a decoration that does not touch the rate"],
+          "correctExplanation": "Off the cup, off the rate. Call it display. Leave the timebase out of the sentence.",
+          "objectiveIds": ["Refuse to treat anglage or perlage as an oil-management mechanism without a sourced claim"],
           "prerequisiteConceptIds": ["horo-bridges"],
           "difficultyTier": 3,
           "cognitiveType": "identify"
@@ -508,7 +508,7 @@
           "distractors": [
             { "text": "A successful service, because a stop after oiling means the timebase reset", "kind": "reversed", "rationale": "A stop is a fault. A timebase does not reset because you squirted the back." },
             { "text": "A missing city disc, which caseback oil is known to dissolve", "kind": "nearby", "rationale": "World time is a display. A stop after a squirt is a dirty train." },
-            { "text": "A tourbillon cage that oiling through the back is required to free", "kind": "subtle", "rationale": "A cage still needs a clean of its jewels. The back is not that clean." }
+            { "text": "The hairspring coils, which caseback oil is designed to rinse as a service", "kind": "subtle", "rationale": "The first suspect is a dirty bearing under fresh oil. Caseback oil is not a coil rinse." }
           ],
           "correctExplanation": "Gummy scored hole, still assembled. That is what the caseback shot left in place.",
           "objectiveIds": ["Predict what 'just oil it through the caseback' leaves dirty"],

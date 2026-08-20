@@ -26,7 +26,7 @@
           "correctAnswer": "Recently used disk blocks kept in RAM",
           "distractors": [
             { "text": "Sectors that exist only on the device, never in RAM", "kind": "reversed", "rationale": "The cache is the RAM copy, not the on-device original." },
-            { "text": "Object files cached by the compiler on disk", "kind": "misapplied", "rationale": "A compile cache is not the kernel's block cache." },
+            { "text": "Sectors the disk firmware keeps as a second on-device roster", "kind": "misapplied", "rationale": "The buffer cache is recently used disk blocks in RAM, not a compiler or firmware roster." },
             { "text": "The kernel's table of runnable process ids", "kind": "nearby", "rationale": "That table is process state, not cached sectors." }
           ],
           "correctExplanation": "Recently used blocks, in RAM. That is the whole object.",
@@ -90,7 +90,7 @@
           "distractors": [
             { "text": "Only the device's raw sector map, never a file's bytes", "kind": "reversed", "rationale": "That is closer to the buffer cache's grain, not the page cache's." },
             { "text": "The scheduler's run queues sitting on each core", "kind": "nearby", "rationale": "Run queues are CPU state, not file pages." },
-            { "text": "The compiler's in-memory parse tree for a source file", "kind": "misapplied", "rationale": "A frontend tree is not the kernel's file cache." }
+            { "text": "Only inode numbers, never the file's data bytes", "kind": "misapplied", "rationale": "The page cache holds file contents as pages. It is not an inode-only index." }
           ],
           "correctExplanation": "The file, as pages. Blocks are the device's grain.",
           "objectiveIds": ["Describe the page cache as file contents kept as pages, not just device blocks"],
@@ -153,7 +153,7 @@
           "correctAnswer": "The device writing memory while the CPU does other work",
           "distractors": [
             { "text": "The CPU copying every payload byte into device registers", "kind": "reversed", "rationale": "That programmed I/O keeps the CPU busy. DMA is the opposite." },
-            { "text": "A compiler pass that places globals in ROM", "kind": "misapplied", "rationale": "DMA is a runtime transfer, not a compile layout." },
+            { "text": "A cache of device registers so the CPU never has to talk to the bus", "kind": "misapplied", "rationale": "DMA is the device writing memory while the CPU does other work. It is not a register cache." },
             { "text": "The kernel deleting a buffer so the device cannot touch it", "kind": "nearby", "rationale": "The buffer must remain so the device can write it." }
           ],
           "correctExplanation": "The device is the copier. The CPU is free until completion.",
@@ -168,7 +168,7 @@
           "correctAnswer": "Not trustworthy; the transfer may still be filling the buffer",
           "distractors": [
             { "text": "Guaranteed complete, because DMA has already started", "kind": "reversed", "rationale": "Start is not done. Completion is the signal that matters." },
-            { "text": "Stored only in the compiler's listing file", "kind": "misapplied", "rationale": "The buffer is RAM the device is writing, not a listing." },
+            { "text": "Already coherent in the CPU caches, because DMA snoops every store", "kind": "misapplied", "rationale": "Bytes in a DMA buffer are not trustworthy until the device signals completion." },
             { "text": "A second kernel image the device is required to install", "kind": "nearby", "rationale": "DMA fills the agreed buffer. It does not install a kernel." }
           ],
           "correctExplanation": "Until the device says done, the buffer is still in flight.",
@@ -232,7 +232,7 @@
           "correctAnswer": "Two drivers; each dialect is its own kernel code",
           "distractors": [
             { "text": "No drivers, because DMA removes the need to speak to a device", "kind": "reversed", "rationale": "DMA is how bytes move. Someone still programs this chip." },
-            { "text": "A single compiler flag that invents both chips", "kind": "misapplied", "rationale": "A dialect is runtime kernel code, not a build switch." },
+            { "text": "One driver, because DMA makes register layouts interchangeable", "kind": "misapplied", "rationale": "Different register layouts need different drivers. DMA does not erase the dialect." },
             { "text": "The same interrupt handler copied into every user process", "kind": "nearby", "rationale": "The handler lives in the kernel driver, not in user programs." }
           ],
           "correctExplanation": "Different registers, different dialect, different driver.",
@@ -248,7 +248,7 @@
           "distractors": [
             { "text": "The raw control registers of that exact chip", "kind": "reversed", "rationale": "Hiding the registers is the point. Upper layers must not see them." },
             { "text": "A new syscall number for every register poke", "kind": "nearby", "rationale": "Syscalls stay generic. The dialect stays in the driver." },
-            { "text": "The compiler's register allocator, reused as a driver", "kind": "misapplied", "rationale": "Codegen is not a device interface." }
+            { "text": "The raw PCI config space, copied into every user process", "kind": "misapplied", "rationale": "After the driver hides registers, the rest of the kernel sees a generic request." }
           ],
           "correctExplanation": "Blocks and packets in, dialect out of sight. That is the hide.",
           "objectiveIds": ["Predict what the rest of the kernel sees after the driver hides the device registers"],
@@ -281,7 +281,7 @@
           "distractors": [
             { "text": "A real NIC's full register set, required in every guest", "kind": "reversed", "rationale": "Virtio is a spec for a fake device, not a clone of a particular NIC." },
             { "text": "A scheduler policy for sharing one core fairly", "kind": "nearby", "rationale": "Virtio is a device interface, not a CPU policy." },
-            { "text": "A compiler IR used to lower device drivers", "kind": "misapplied", "rationale": "Virtio is a runtime device model, not an IR." }
+            { "text": "A filesystem type the guest must mount to see the host disk", "kind": "misapplied", "rationale": "Virtio is a device model designed to be emulated. It is not a guest filesystem type." }
           ],
           "correctExplanation": "A spec a host can implement. That is the model.",
           "objectiveIds": ["Describe virtio as a device model designed to be emulated or paravirtualized"],
@@ -358,7 +358,7 @@
           "correctAnswer": "Using fork, exec, and wait — the process API already known",
           "distractors": [
             { "text": "Poking device registers from user mode to mint processes", "kind": "reversed", "rationale": "Process creation is the process API, not a user-mode register poke." },
-            { "text": "Asking the compiler to splice binaries into the kernel", "kind": "misapplied", "rationale": "Init execs a program. It does not rebuild the kernel." },
+            { "text": "Asking firmware to mint a new process id in the interrupt handler", "kind": "misapplied", "rationale": "Init starts programs with fork, exec, and wait — the process API already known." },
             { "text": "Opening a handle for each descendant without fork or exec", "kind": "nearby", "rationale": "A handle is not a new process. Init copies, then replaces the copy." }
           ],
           "correctExplanation": "Copy, replace the copy, reap. Init is a user of that API.",

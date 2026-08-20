@@ -300,7 +300,7 @@
           "distractors": [
             { "text": "Pays one transaction because a warp is always one request", "kind": "reversed", "rationale": "One warp can generate many transactions when addresses scatter." },
             { "text": "Turns device memory into shared memory", "kind": "nearby", "rationale": "The space does not change because the pattern was ugly." },
-            { "text": "Forces the compiler to reject the kernel", "kind": "subtle", "rationale": "Scattered kernels compile. They just hammer the pipe." }
+            { "text": "The memory controller still merges them into one transaction", "kind": "subtle", "rationale": "Scattered addresses typically become many transactions. The compiler does not reject the kernel." }
           ],
           "correctExplanation": "Scatter is many trips. The useful-word count did not grow.",
           "objectiveIds": ["Diagnose a scattered access pattern as many transactions"],

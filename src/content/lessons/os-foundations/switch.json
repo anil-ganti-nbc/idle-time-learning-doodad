@@ -108,7 +108,7 @@
           "distractors": [
             { "text": "A brand-new process id and an empty handle table", "kind": "reversed", "rationale": "That would be a different process, not a resumed one." },
             { "text": "The incoming process's map still installed", "kind": "nearby", "rationale": "The map has to be this process's again." },
-            { "text": "The compiler's inlining log from last night", "kind": "misapplied", "rationale": "Resume state is registers and stacks." }
+            { "text": "The disk's partition table from last night", "kind": "misapplied", "rationale": "A switch saves the outgoing thread's CPU state, not a disk table." }
           ],
           "correctExplanation": "A half-finished call is state. It has to still be there.",
           "objectiveIds": ["Describe a context switch as saving one process's CPU state and restoring another's"],
@@ -121,7 +121,7 @@
           "stem": "A program that 'goes mad' only after a switch, with another tenant's register values, usually means:",
           "correctAnswer": "The save/restore missed some state the previous thread left behind",
           "distractors": [
-            { "text": "The compiler inserted extra comments at runtime", "kind": "misapplied", "rationale": "Comments do not become register values." },
+            { "text": "The idle thread inserted extra comments at runtime", "kind": "misapplied", "rationale": "Switch cost is save/restore and cache/TLB effects, not comments." },
             { "text": "Context switches have been banned by the hardware", "kind": "reversed", "rationale": "The bug is an incomplete switch, not an absent one." },
             { "text": "Firmware has taken back the machine permanently", "kind": "nearby", "rationale": "The machine is still running kernels and programs." }
           ],
@@ -157,7 +157,7 @@
           "correctAnswer": "A device forcing a privileged transfer into the kernel",
           "distractors": [
             { "text": "A user program calling a kernel function by name", "kind": "nearby", "rationale": "That would be a syscall, and it is still not a CALL." },
-            { "text": "The compiler pausing to print a warning", "kind": "misapplied", "rationale": "Interrupts are a CPU-and-device path." },
+            { "text": "A syscall the program chose to execute, taken at the next ret", "kind": "misapplied", "rationale": "An interrupt is an unsolicited device/timer event, not a syscall the program picked." },
             { "text": "A process voluntarily deleting itself", "kind": "reversed", "rationale": "The current program did not request this entry." }
           ],
           "correctExplanation": "The device rang. The kernel answers. The program did not ask.",
@@ -187,7 +187,7 @@
           "correctAnswer": "The tick is a chance to give the CPU to a different runnable process",
           "distractors": [
             { "text": "Timers forbid more than one process from existing", "kind": "reversed", "rationale": "The timer is why several processes can share one CPU." },
-            { "text": "The compiler requires a rebuild on every tick", "kind": "misapplied", "rationale": "A tick is not a build." },
+            { "text": "The kernel requires a reboot on every tick", "kind": "misapplied", "rationale": "A tick is handled and returns. It is not a reboot." },
             { "text": "Firmware takes the machine back at each tick", "kind": "nearby", "rationale": "The kernel handles the tick. Firmware already handed off." }
           ],
           "correctExplanation": "The bell is the scheduler's chance. Policy decides whether to switch.",
@@ -219,7 +219,7 @@
           "stem": "From the kernel's point of view a device is primarily:",
           "correctAnswer": "Registers on a bus, plus interrupts when work finishes",
           "distractors": [
-            { "text": "A compiler warning about unused variables", "kind": "misapplied", "rationale": "Devices are hardware, not diagnostics." },
+            { "text": "A window-manager warning about unused pixels", "kind": "misapplied", "rationale": "A device interrupt is hardware raising a line, not a pixel warning." },
             { "text": "A user-mode instruction that any program may issue", "kind": "reversed", "rationale": "Talking to device registers is privileged." },
             { "text": "A second kernel that runs only at reset", "kind": "nearby", "rationale": "The device is hardware. The kernel mediates it." }
           ],
@@ -249,7 +249,7 @@
           "stem": "User programs are kept off device registers because:",
           "correctAnswer": "A wrong write can hang the bus or smash memory for everyone",
           "distractors": [
-            { "text": "Devices refuse to work unless the compiler is running", "kind": "misapplied", "rationale": "Hardware does not wait on a build." },
+            { "text": "The user program programs the controller registers itself", "kind": "misapplied", "rationale": "User programs are kept off device registers. The kernel's driver speaks to the chip." },
             { "text": "Registers are imaginary and cannot be written", "kind": "reversed", "rationale": "They are real. That is why they are dangerous." },
             { "text": "Handles are slower, so the kernel prefers they never exist", "kind": "nearby", "rationale": "Handles exist because the raw path is unsafe, not because they are fashionable." }
           ],
@@ -283,7 +283,7 @@
           "correctAnswer": "Kernel-mediated exchange so processes need not share an address space",
           "distractors": [
             { "text": "Letting both processes rewrite the kernel's maps", "kind": "reversed", "rationale": "That would destroy isolation, not communicate." },
-            { "text": "A compiler feature that merges two source files", "kind": "misapplied", "rationale": "IPC is a runtime path." },
+            { "text": "A shared library both processes load, which fuses their address spaces", "kind": "misapplied", "rationale": "IPC is messages or shared mappings the kernel sets up. Loading a library does not fuse spaces." },
             { "text": "Firmware broadcasting every register to the network", "kind": "nearby", "rationale": "A pipe is a kernel object, not a ROM broadcast." }
           ],
           "correctExplanation": "Copy through the kernel. Maps stay separate.",
@@ -349,7 +349,7 @@
           "distractors": [
             { "text": "Only batch machines have a CPU", "kind": "reversed", "rationale": "All three use a CPU. They differ in how they share it." },
             { "text": "Time-sharing deletes the kernel and runs firmware", "kind": "nearby", "rationale": "Time-sharing needs a kernel more, not less." },
-            { "text": "Multiprogramming is a compiler optimization", "kind": "misapplied", "rationale": "It is an OS arrangement of several jobs in memory." }
+            { "text": "Multiprogramming is a disk-format option set at mkfs", "kind": "misapplied", "rationale": "Multiprogramming is a kernel policy for keeping several jobs in memory." }
           ],
           "correctExplanation": "One job through, several jobs to hide I/O, slices for humans.",
           "objectiveIds": ["Contrast batch, multiprogramming, and time-sharing as reasons to switch"],
@@ -363,7 +363,7 @@
           "correctAnswer": "The CPU can run another job while one waits for I/O",
           "distractors": [
             { "text": "Every job is forced to wait whenever any disk spins", "kind": "reversed", "rationale": "The point is to not wait together." },
-            { "text": "The compiler can emit one binary for all jobs", "kind": "misapplied", "rationale": "Jobs remain separate programs." },
+            { "text": "The firmware can emit one binary for all jobs", "kind": "misapplied", "rationale": "Batch versus time-sharing is a scheduling policy, not a firmware binary." },
             { "text": "Firmware can skip loading a kernel", "kind": "nearby", "rationale": "You need a kernel to switch among the jobs." }
           ],
           "correctExplanation": "Hide I/O wait behind someone else's compute.",
@@ -378,7 +378,7 @@
           "correctAnswer": "One job left the CPU idle on I/O, and people wanted a shared prompt",
           "distractors": [
             { "text": "Hardware forbade a program from ever finishing", "kind": "reversed", "rationale": "Programs still finish. Others run in the gaps." },
-            { "text": "Compilers stopped working on single-job machines", "kind": "misapplied", "rationale": "Compilers ran fine in batch. The CPU did not." },
+            { "text": "Timers stopped working on single-job machines", "kind": "misapplied", "rationale": "Time-sharing needs a timer interrupt. Compilers and timers both work on single-job machines." },
             { "text": "Privilege mode only exists if two jobs run at once", "kind": "nearby", "rationale": "Privilege is independent of how many jobs you keep." }
           ],
           "correctExplanation": "Waste and fairness. That is why the switch exists.",

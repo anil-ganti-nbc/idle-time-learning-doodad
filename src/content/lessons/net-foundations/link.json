@@ -76,9 +76,9 @@
       "prerequisites": ["net-ethernet"],
       "goDeeper": "net-arp",
       "explanation": [
-        "The number burned into a NIC is a local name, not a passport. A MAC address identifies an interface on a link so frames can be delivered here, not so routers can compute a path across the Internet. It is a hardware name. It is not an Internet name.",
+        "The number a NIC presents as its MAC is a local name, not a passport. A factory-default (burned-in) address is common, but the name is overridable — locally administered addresses, virtual NICs, and randomized Wi-Fi MACs all change it. A MAC identifies an interface on a link so frames can be delivered here, not so routers can compute a path across the Internet. It is a link-scoped interface name. It is not an Internet name.",
         "Because a MAC is scoped to a link (or a switched LAN), two hosts on different networks can reuse the same MAC without colliding on the Internet. Routers do not forward on MACs. They strip the frame, read the IP destination, and wrap a new local name. The reused MAC never meets its twin.",
-        "The tradeoff is convenience versus scope. A burned-in name means a host can talk on a LAN without first borrowing an Internet address. It also means that name is useless once the packet leaves. ARP, next, is how a host learns the local MAC that matches the next hop's IP."
+        "The tradeoff is convenience versus scope. A link-local hardware name means a host can talk on a LAN without first borrowing an Internet address. It also means that name is useless once the packet leaves. ARP, next, is how a host learns the local MAC that matches the next hop's IP."
       ],
       "example": "Ada's NIC is 00:11:22:33:44:55. A printer on a different campus also uses 00:11:22:33:44:55. Ada sends to 93.184.216.34. Routers never see Ada's MAC as a destination; they see 93.184.216.34. The two identical MACs never share a link, so they do not collide.",
       "whyItMatters": "If a MAC were an Internet name, duplicate factory addresses would break the world, and every hop would have to know every NIC ever burned.",
@@ -92,7 +92,7 @@
             { "text": "A port number that names a program on the host", "kind": "misapplied", "rationale": "Ports are transport identifiers." },
             { "text": "A checksum that proves the payload was not changed", "kind": "subtle", "rationale": "A name is not a detector." }
           ],
-          "correctExplanation": "Burned-in, local, not routed. That is the MAC.",
+          "correctExplanation": "Link-scoped, not routed. Factory-default is common, not the definition.",
           "objectiveIds": ["Explain a MAC address as a local hardware name that is not an Internet name"],
           "prerequisiteConceptIds": ["net-ethernet"],
           "difficultyTier": 1,

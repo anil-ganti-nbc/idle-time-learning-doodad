@@ -5,7 +5,7 @@
     {
       "id": "gpu-divergence-10",
       "conceptId": "gpu-divergence",
-      "title": "Two paths, one program counter",
+      "title": "Two paths, one warp issue slot",
       "durationMin": 10,
       "effort": "normal",
       "level": "journalist",
@@ -13,9 +13,9 @@
       "goDeeper": "gpu-scheduler",
       "diagram": "gpu-diverge",
       "explanation": [
-        "Control divergence is a warp-local fact. When threads that share a program counter take different paths, the hardware issues both sides and masks the inactive lanes on each pass. You wrote a scalar if/else. You paid a SIMD-shaped bill. Threads in different warps taking different branches are not diverging against each other — they have different program counters.",
+        "Control divergence is a warp-local fact. When threads in one warp take different paths, the SM issues both sides and the inactive threads sit out that issue. Pre-Volta, those threads literally shared one program counter and a mask. Volta+ Independent Thread Scheduling gives each thread its own PC, but the warp is still one issue slot: the threads on the sqrt path issue, then the threads on the else path issue. You wrote a scalar if/else. You paid a SIMD-shaped bill. Threads in different warps taking different branches are not diverging against each other — they are different issue groups.",
         "The cost is issue time, not a fork of the kernel into two programs. A warp with 20 lanes on sqrt and 12 on else issues the sqrt path with 20 active, then the else path with 12 active. Both occupy the warp's slot. Occupancy does not delete that: a divergent warp still resides, still holds registers, and still spends two passes where a uniform warp spent one.",
-        "Reconvergence brings the lanes back to one path. Until then, idle lanes pay rent you already know. Sorting or grouping similar predicates into the same warp is a layout trick: you cannot delete the branch, but you can stop mixing both sides inside one program counter."
+        "Reconvergence brings the lanes back to one path. Pre-Volta hardware stacked masks and met at a post-dominator. Volta+ can let threads drift until an explicit convergence barrier (__syncwarp or the compiler's equivalent) gathers them. Until they meet, idle or waiting lanes still occupy the warp. Sorting similar predicates into the same warp is a layout trick: you cannot delete the branch, but you can stop mixing both sides inside one issue slot."
       ],
       "example": "32 threads execute if (x[i] > 0) y[i] = sqrt(x[i]); else y[i] = 0. If 20 lanes are positive, both the sqrt path and the else path issue. Two warps that each happen to be all-positive or all-negative issue only one path each — same kernel, no intra-warp mix.",
       "whyItMatters": "SIMT already told you the group is lockstep. This unit is the performance name for mixing control flow inside that group — and why occupancy, which you just learned, cannot paper over a double issue bill.",
@@ -29,7 +29,7 @@
             { "text": "The kernel was written with no branches at all", "kind": "reversed", "rationale": "No branches means no mixed paths." },
             { "text": "Shared memory on the SM is already full", "kind": "misapplied", "rationale": "That is a residency limit, not a control-flow mix." }
           ],
-          "correctExplanation": "One shared program counter, two passes, a mask. That is intra-warp.",
+          "correctExplanation": "One warp issue slot, two passes, a mask. That is intra-warp. A shared PC is the pre-Volta encoding of the same bill.",
           "objectiveIds": ["Locate divergence inside one warp, not across warps"],
           "prerequisiteConceptIds": ["gpu-warps", "gpu-occupancy"],
           "difficultyTier": 4,
@@ -59,7 +59,7 @@
             { "text": "Increase DRAM latency on purpose", "kind": "reversed", "rationale": "The goal is issue efficiency, not slower memory." },
             { "text": "Replace occupancy with a larger register file", "kind": "subtle", "rationale": "This is a divergence layout trick, not a file resize." }
           ],
-          "correctExplanation": "You cannot delete the branch. You can stop mixing both sides in one PC.",
+          "correctExplanation": "You cannot delete the branch. You can stop mixing both sides in one warp issue slot.",
           "objectiveIds": ["Locate divergence inside one warp, not across warps"],
           "prerequisiteConceptIds": ["gpu-warps", "gpu-occupancy"],
           "difficultyTier": 4,
@@ -78,7 +78,8 @@
       "goDeeper": "gpu-scheduler",
       "diagram": "gpu-diverge",
       "explanation": [
-        "The ten-minute unit located divergence inside a warp. This one is about how the machine gets the lanes back together, and which branches were never mixed. Hardware keeps a reconvergence point — often the immediate post-dominator of the branch — and a stack of masks. Each taken side pushes a mask, runs, then pops. Nested ifs nest the stack. An early return or a break that skips the reconvergence point is how people accidentally serialize more than they meant to.",
+        "The ten-minute unit located divergence inside a warp. This one is about how the machine gets the lanes back together. Pre-Volta hardware keeps a reconvergence point — often the immediate post-dominator of the branch — and a stack of masks. Each taken side pushes a mask, runs, then pops. Nested ifs nest the stack. An early return or a break that skips the reconvergence point is how people accidentally serialize more than they meant to.",
+        "Volta+ Independent Thread Scheduling changes the encoding, not the bill. Each thread has a PC, so a mixed warp is several PCs sharing one issue slot. The compiler and ISA insert convergence barriers so the warp can meet again; __syncwarp is the explicit form. An early return that skips the barrier can leave threads stranded on different PCs just as skipping the old reconvergence point did. The stack-of-masks picture is still the right cost model. It is no longer a claim that modern NVIDIA silicon has one PC per warp.",
         "A uniform predicate is one every lane in the warp agrees on. Then only one side issues. Compilers and ISAs increasingly advertise uniform or convergent branches so the hardware can skip the second pass. Data-dependent predicates that happen to be uniform at run time are lucky; predicates that are a function of thread index often are not. 'I have an if' is not the same sentence as 'this warp mixed'.",
         "Layout remains the practical knob. Compact the active items so a warp is all-live or all-dead, and the branch becomes uniform even though the kernel still contains it. Predication — turning a short if into a select with a mask — can avoid a reconvergence event for tiny bodies, at the cost of always evaluating both expressions. That is a trade, not a free delete.",
         "Occupancy still matters here because a divergent warp occupies a resident slot through both passes. High occupancy with many mixed warps is a full SM doing half-useful issue. Low occupancy with uniform warps can beat it. The residents are inventory. Divergence decides how much of each resident's issue is real work."
@@ -89,7 +90,7 @@
         {
           "id": "dv20-1",
           "stem": "Hardware reconverges a divergent warp at:",
-          "correctAnswer": "A later point — often the post-dominator — where both sides can share a PC again",
+          "correctAnswer": "A later point — often the post-dominator or a convergence barrier — where the warp can share an issue path again",
           "distractors": [
             { "text": "The host, which recompiles the kernel after every branch", "kind": "misapplied", "rationale": "Reconvergence is a device mask-stack fact." },
             { "text": "The start of the grid, so every block restarts", "kind": "nearby", "rationale": "Only the mixed warp is stacking masks." },

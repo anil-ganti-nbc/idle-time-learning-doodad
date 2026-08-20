@@ -16,7 +16,7 @@ function provenance(courseId: string, moduleId: string, conceptId: string, extra
     links: extra?.links ?? LINKS,
     notes:
       extra?.notes ??
-      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · informed by MIT Heavy Metal 101 and 21M.350; course prose not copied.`,
+      `${courseId} / ${moduleId} / ${conceptId} · curriculumVersion 1 · DAU analysis heuristics. MIT 21M.350 is common-practice analysis; it does not ask death-metal questions. Course prose not copied.`,
   };
 }
 

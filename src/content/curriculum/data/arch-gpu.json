@@ -179,11 +179,12 @@
       "prerequisites": [
         "gpu-simt"
       ],
-      "summary": "The hardware scheduling quantum — 32 or 64 threads sharing an instruction.",
+      "summary": "The hardware scheduling quantum — 32 or 64 threads issued as a group. Pre-Volta they shared a PC; Volta+ they keep their own.",
       "parentId": "gpu-simt",
       "objectives": [
         "Name the warp/wavefront as the unit the scheduler sees",
-        "Explain why block size that is not a multiple of the warp width wastes lanes"
+        "Explain why block size that is not a multiple of the warp width wastes lanes",
+        "Distinguish a pre-Volta shared warp PC from Volta+ independent thread scheduling"
       ],
       "estimatedMinutes": 10
     },
@@ -308,7 +309,7 @@
         "gpu-warps",
         "gpu-occupancy"
       ],
-      "summary": "Threads in a warp taking different paths, so both sides run under a mask.",
+      "summary": "Threads in a warp taking different paths, so both sides cost issue time. Pre-Volta that was one PC; Volta+ it is still one issue slot.",
       "parentId": "gpu-warps",
       "objectives": [
         "Locate divergence inside one warp, not across warps",

@@ -40,8 +40,8 @@
     },
     {
       "id": "dm-h-scenes",
-      "title": "Two founding scenes",
-      "blurb": "Florida and Stockholm as doctrines.",
+      "title": "Two early scenes",
+      "blurb": "Florida and Stockholm as two production doctrines, not a two-city origin myth.",
       "order": 1,
       "prerequisites": [
         "dm-h-lineage"
@@ -194,7 +194,7 @@
       "prerequisites": [
         "dm-listening"
       ],
-      "summary": "Two scenes, two production doctrines, one genre name.",
+      "summary": "Two early scenes, two production doctrines, one genre name used later.",
       "estimatedMinutes": 10,
       "objectives": [
         "Contrast Florida and Stockholm as two production doctrines under one genre name",

@@ -201,7 +201,7 @@
     {
       "id": "semi-euv-mirrors-10",
       "conceptId": "semi-euv-mirrors",
-      "title": "Bragg stacks because nothing is a lens",
+      "title": "Bragg stacks once glass has died",
       "durationMin": 10,
       "effort": "deep",
       "level": "journalist",
@@ -209,7 +209,7 @@
       "goDeeper": "semi-euv-vacuum",
       "diagram": "duv-vs-euv",
       "explanation": [
-        "A useful EUV optic is a multilayer Bragg reflector: dozens of alternating thin films, thicknesses chosen so reflections from the interfaces add in phase at 13.5 nm. It is a quarter-wave stack in spirit, not a silvered bathroom mirror. Peak reflectivity is a few tens of percent, not 99%. That is the best practical option once glass has died.",
+        "A useful EUV projection optic in high-volume manufacturing is a multilayer Bragg reflector: dozens of alternating thin films, thicknesses chosen so reflections from the interfaces add in phase at 13.5 nm. It is a quarter-wave stack in spirit, not a silvered bathroom mirror. Peak reflectivity is a few tens of percent, not 99%. That is the practical HVM projection optic once refractive glass has died. Collectors can be grazing-incidence; research tools have used zone plates. Those do not retire the stack in the scanner column.",
         "The column is therefore a chain. Illuminator mirrors shape the beam onto the reflective mask. Projection mirrors form the reduced image on the wafer. Each bounce keeps maybe two-thirds of the light and dumps the rest as heat and scatter. Six bounces at 65% is about 8% through. The source has to be huge because the optic is a sieve on purpose.",
         "Angle and wavelength are picky. The stack is tuned for a band around 13.5 nm and a range of incidence angles. Light outside that band is just heat. This unit does not own High-NA anamorphic geometry — that is a later platform. It owns why the optic is a stack, and why the stack is a photon tax."
       ],
@@ -225,8 +225,8 @@
             { "text": "They raise wafer diameter", "kind": "nearby", "rationale": "A stack is not a saw." },
             { "text": "They set resist tone", "kind": "misapplied", "rationale": "Tone is chemistry." }
           ],
-          "correctExplanation": "Nothing is a lens. A tuned stack is the leftover reflector.",
-          "objectiveIds": ["Explain multilayer Bragg mirrors as the only useful EUV optic"],
+          "correctExplanation": "Glass does not work as a 13.5 nm lens in the HVM column. A tuned stack is the leftover reflector.",
+          "objectiveIds": ["Explain multilayer Bragg mirrors as the practical HVM projection optic once glass dies"],
           "prerequisiteConceptIds": ["semi-euv"],
           "difficultyTier": 4,
           "cognitiveType": "integrate"

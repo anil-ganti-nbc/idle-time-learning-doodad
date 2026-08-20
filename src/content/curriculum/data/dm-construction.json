@@ -309,7 +309,7 @@
         "dm-listening",
         "mus-meter"
       ],
-      "summary": "The drum grammar that made death metal possible.",
+      "summary": "A DAU drum-grammar heuristic used in many death-metal sections, not the beat that created the genre.",
       "estimatedMinutes": 10,
       "objectives": [
         "Use a blast as a grid that removes the rock backbeat as the only accent",
