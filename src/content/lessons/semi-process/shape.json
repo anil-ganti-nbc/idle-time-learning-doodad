@@ -1,0 +1,523 @@
+{
+  "courseId": "semi-process",
+  "moduleId": "semi-p-shape",
+  "lessons": [
+    {
+      "id": "semi-cvd-10",
+      "conceptId": "semi-cvd",
+      "title": "A film from a gas that reacts on the face",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-oxide"],
+      "goDeeper": "semi-pvd",
+      "diagram": "dep-vs-etch",
+      "explanation": [
+        "Chemical vapour deposition grows a film from a gas. Precursor molecules adsorb on the wafer, react, and leave a solid. The silicon of a thermal oxide came from the wafer. The silicon of an LPCVD polysilicon or nitride film came from the gas. The surface is a reaction site, not a quarry. That is why you can coat oxide, nitride, or metal stacks the wafer itself cannot grow.",
+        "Because the precursor is a gas, it can wander into trenches and react on sidewalls. Coverage is conformal when the reaction is slow compared with how fast molecules arrive — the sidewall gets almost as much film as the top. If arrival or reaction starves the bottom, you get a seam or a keyhole. Conformal is a regime, not a brand name.",
+        "Line-of-sight arrival is the other family: atoms fly in a straight line from a source and stick where they hit. That is the next unit. CVD is the one you reach for when a trench must be lined, not just sprinkled from above."
+      ],
+      "example": "An LPCVD nitride on a 1:1 trench comes out almost as thick on the sidewall as on the top. An evaporated film of the same name on the same trench is thick on the top, thin on the wall, and barely present in the bottom corner.",
+      "whyItMatters": "Later isolation, spacers, and interlevel dielectrics are this reaction, not a synonym for 'add material'. If you cannot say what arrived and what reacted, you will confuse growth, deposition, and etch.",
+      "quiz": [
+        {
+          "id": "cv10-1",
+          "stem": "In CVD, the film's atoms primarily come from:",
+          "correctAnswer": "A gas that adsorbs and reacts on the surface",
+          "distractors": [
+            { "text": "The wafer lattice, as in thermal oxidation", "kind": "nearby", "rationale": "That is growth from the substrate, the previous module." },
+            { "text": "A saw blade scraping silicon onto the face", "kind": "subtle", "rationale": "The saw was wafer preparation, not a deposition source." },
+            { "text": "Ions implanted at high energy", "kind": "misapplied", "rationale": "Implant places dopant in the lattice, it does not grow a film." }
+          ],
+          "correctExplanation": "Gas in, solid out, at the surface. The wafer is the stage, not the quarry.",
+          "objectiveIds": ["Describe a film grown from a gas that reacts on the surface"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cv10-2",
+          "stem": "A CVD film is called conformal when:",
+          "correctAnswer": "Sidewalls and tops get nearly the same thickness because the gas can react there too",
+          "distractors": [
+            { "text": "Only the surfaces that face the source receive any film", "kind": "reversed", "rationale": "That is line-of-sight arrival, not conformal CVD." },
+            { "text": "The film must be a thermal oxide grown from the wafer", "kind": "nearby", "rationale": "Thermal oxide is growth, and it is not how you coat a trench wall of nitride." },
+            { "text": "The precursor refuses to enter any opening", "kind": "subtle", "rationale": "If it cannot enter, the bottom stays bare." }
+          ],
+          "correctExplanation": "A wandering precursor is why a trench can be lined, not just capped.",
+          "objectiveIds": ["Contrast conformal CVD coverage with line-of-sight arrival"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cv10-3",
+          "stem": "On a high-aspect trench, replacing a conformal CVD liner with a purely line-of-sight coating typically:",
+          "correctAnswer": "Leaves the sidewalls thin and the bottom corners starved",
+          "distractors": [
+            { "text": "Makes the sidewall thicker than the top", "kind": "reversed", "rationale": "Line-of-sight favours the top face." },
+            { "text": "Consumes 44% of the trench as silicon", "kind": "nearby", "rationale": "That consumption number was thermal oxide, not a liner." },
+            { "text": "Automatically dopes a well at the trench bottom", "kind": "subtle", "rationale": "A liner is a film, not an implant." }
+          ],
+          "correctExplanation": "If atoms cannot turn a corner, the wall does not get a film.",
+          "objectiveIds": ["Contrast conformal CVD coverage with line-of-sight arrival"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-pvd-10",
+      "conceptId": "semi-pvd",
+      "title": "Throwing atoms at the wafer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-cvd"],
+      "goDeeper": "semi-metals",
+      "diagram": "dep-vs-etch",
+      "explanation": [
+        "Physical vapour deposition does not ask a precursor to react. It throws atoms. In evaporation, a source is heated until atoms fly and stick. In sputtering, argon ions knock atoms off a target and those atoms fly and stick. The wafer is a catcher's mitt. Chemistry at the surface is secondary. Direction is not.",
+        "Flight is mostly line-of-sight. A high-aspect hole sees a thick film on the top corners, a thin film on the sidewall, and a starved bottom. Keep depositing and the overhangs close — a keyhole. That is why PVD is a natural way to put down a metal blanket on a flat or gentle surface, and a poor way to line a deep contact unassisted.",
+        "Factories still use it because many metals and barriers start life as a target, not as a well-behaved precursor. The next units will put a barrier under a conductor for that reason: the film you can throw is not always the film you can allow to touch silicon."
+      ],
+      "example": "Sputtered aluminum on a wide, shallow bond pad is uniform enough. The same sputter into a 5:1 contact hole coats the top rim, thins the wall, and leaves the silicon at the bottom barely covered — an open waiting to happen unless a liner chemistry or a reflow step helps.",
+      "whyItMatters": "Deposition is not one verb. CVD wanders and reacts. PVD throws. If you cannot predict a thin sidewall, you will not understand why contacts have stacks.",
+      "quiz": [
+        {
+          "id": "pv10-1",
+          "stem": "Sputtering or evaporation deposits a film by:",
+          "correctAnswer": "Sending atoms from a source or target to stick on the wafer",
+          "distractors": [
+            { "text": "Oxidizing the wafer so silicon becomes the film", "kind": "nearby", "rationale": "That is thermal growth, not PVD." },
+            { "text": "Letting a precursor gas react on every sidewall equally", "kind": "reversed", "rationale": "That is the CVD picture you just left." },
+            { "text": "Implanting dopant and then annealing it", "kind": "misapplied", "rationale": "Implant places atoms in the lattice, it does not throw a metal film." }
+          ],
+          "correctExplanation": "Atoms fly, atoms stick. The surface is a mitt, not a reaction vessel.",
+          "objectiveIds": ["Describe sputtering or evaporation as throwing atoms at the wafer"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pv10-2",
+          "stem": "On a high-aspect sidewall, a PVD film typically:",
+          "correctAnswer": "Thins, because most atoms never turn the corner",
+          "distractors": [
+            { "text": "Comes out thicker than the top face", "kind": "reversed", "rationale": "The top face sees the flux. The wall sees a sliver." },
+            { "text": "Consumes the sidewall silicon to grow oxide", "kind": "nearby", "rationale": "No oxidant reaction is required for PVD." },
+            { "text": "Automatically planarizes the wafer", "kind": "subtle", "rationale": "Throwing atoms adds topography. CMP is later." }
+          ],
+          "correctExplanation": "Line-of-sight plus a tall wall is a thin coat. That is the geometry.",
+          "objectiveIds": ["Predict where a PVD film thins on a high-aspect sidewall"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pv10-3",
+          "stem": "Filling a deep contact with only a long PVD sputter often:",
+          "correctAnswer": "Closes the top into a keyhole before the bottom is coated",
+          "distractors": [
+            { "text": "Guarantees a thicker wall than top", "kind": "reversed", "rationale": "Overhangs grow first and pinch off." },
+            { "text": "Grows a wet field oxide in the hole", "kind": "misapplied", "rationale": "No water ambient is involved." },
+            { "text": "Removes the need for any later barrier", "kind": "subtle", "rationale": "A void is not a barrier strategy." }
+          ],
+          "correctExplanation": "The rim sees flux first. It pinches. The bottom stays hungry.",
+          "objectiveIds": ["Predict where a PVD film thins on a high-aspect sidewall"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-epitaxy-10",
+      "conceptId": "semi-epitaxy",
+      "title": "A film that continues the crystal",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-cvd", "semi-crystal"],
+      "explanation": [
+        "Epitaxy is deposition with a loyalty test. Atoms arrive — often from a CVD-like precursor — and register to the lattice underneath. The new film is still a single crystal, same orientation, sometimes a different doping or a slight strain. It is not a polycrystalline coating that happens to be silicon. If you cannot point at the crystal that is being continued, you are not talking about epi.",
+        "The surface has to be a crystal the arriving atoms can copy. Native oxide, particles, or an amorphous layer break the template. What grows then is polysilicon, twins, or stacking faults — a film with grain boundaries you already know how to fear. A clean, oxide-free, crystalline face is the real recipe. The gas is the easy half.",
+        "Factories use this when they need a doped layer whose doping is not an implant tail, or a film whose defects would wreck a device sitting on it. It is still a deposition in the sense that atoms came from outside the wafer. It is growth in the sense that the lattice continued. Both sentences are true. 'Material was deposited' is not enough."
+      ],
+      "example": "A silicon epi layer grown on a clean (100) wafer after an H2 bake continues the lattice and can be doped from the gas independently of the substrate. The same recipe on a wafer that kept its native oxide grows a cloudy poly film. A MOSFET on that film crosses grains you thought you had banned in the first unit.",
+      "whyItMatters": "Epitaxy is the meeting of the crystal story and the CVD story. If the surface is dirty, you do not get a fancier film. You get the grain-boundary device you started the course to avoid.",
+      "quiz": [
+        {
+          "id": "ep10-1",
+          "stem": "Epitaxy means the new film:",
+          "correctAnswer": "Continues the crystal orientation of the surface underneath",
+          "distractors": [
+            { "text": "Must be a thermal oxide grown from the wafer", "kind": "nearby", "rationale": "Oxide is amorphous. Epi is a crystal continuing a crystal." },
+            { "text": "Is always polycrystalline so it can ignore the substrate", "kind": "reversed", "rationale": "Poly is what you get when the template is lost." },
+            { "text": "Is thrown line-of-sight from a metal target only", "kind": "subtle", "rationale": "Epi is a registry fact, not a sputtering brand." }
+          ],
+          "correctExplanation": "Same lattice, new atoms. That is the definition that matters here.",
+          "objectiveIds": ["Define epitaxy as a film that continues the crystal underneath"],
+          "prerequisiteConceptIds": ["semi-cvd", "semi-crystal"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ep10-2",
+          "stem": "Growing supposed epi on a dirty or oxide-covered surface typically:",
+          "correctAnswer": "Produces poly, twins, or faults instead of one continued lattice",
+          "distractors": [
+            { "text": "Cleans the oxide automatically and then copies the crystal", "kind": "reversed", "rationale": "Oxide is exactly what hides the template." },
+            { "text": "Implants a well through the dirt", "kind": "misapplied", "rationale": "No accelerator is involved." },
+            { "text": "Planarizes the wafer better than CMP", "kind": "subtle", "rationale": "A defective film is not a polish." }
+          ],
+          "correctExplanation": "No visible template, no epitaxy. The gas cannot invent a lattice the surface hid.",
+          "objectiveIds": ["Diagnose what a dirty or amorphous surface does to an epi layer"],
+          "prerequisiteConceptIds": ["semi-cvd", "semi-crystal"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ep10-3",
+          "stem": "Epitaxy still needs the single-crystal wafer story because:",
+          "correctAnswer": "There is no orientation to continue if the starting solid is a pile of grains",
+          "distractors": [
+            { "text": "Epi works better on a cast metal lump", "kind": "reversed", "rationale": "A lump has no single template." },
+            { "text": "Grain boundaries are required as seed rows", "kind": "nearby", "rationale": "Boundaries are what you are trying not to grow." },
+            { "text": "The puller notch is used as a dopant source", "kind": "subtle", "rationale": "The notch names orientation. It does not dope." }
+          ],
+          "correctExplanation": "You cannot continue a lattice that was never one lattice.",
+          "objectiveIds": ["Define epitaxy as a film that continues the crystal underneath"],
+          "prerequisiteConceptIds": ["semi-crystal", "semi-cvd"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-etch-wet-10",
+      "conceptId": "semi-etch-wet",
+      "title": "Chemistry that undercuts",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-oxide"],
+      "goDeeper": "semi-etch-plasma",
+      "diagram": "etch-profile",
+      "explanation": [
+        "A wet etch is a liquid that dissolves one material faster than another. HF takes SiO2 and leaves silicon. Other mixes take silicon and leave oxide. There is no preferred direction in the liquid. Wherever the etchant can touch the film, it eats. Under a mask edge that means sideways as well as down. The hole grows wider than the opening you drew. That is undercut, and it is isotropic for most wet silicon-process etches.",
+        "A long wet etch makes the profile obvious. If you etch to a depth d, you also walk about d under the mask on each side. A narrow line disappears. A contact flares. The remaining film, if any, has sloped or scooped edges, not a vertical wall. Time is not only 'more removal'. It is more sideways removal.",
+        "Wet etch stays useful where selectivity is the prize and the features are wide: stripping a sacrificial oxide, cleaning native oxide, releasing a large opening. It is the wrong tool when the next unit needs a wall that stands up. Pattern definition (the mask) and material removal (this chemistry) are not the same step — and this removal does not copy the mask faithfully once the etch is deep."
+      ],
+      "example": "A 1 µm oxide etched in HF through a 1 µm resist opening becomes roughly a 3 µm hole if you etch all the way through a 1 µm film — 1 µm down and 1 µm under each edge. The mask still says 1 µm. The wafer does not.",
+      "whyItMatters": "If you cannot draw the undercut, you will treat every etch as 'the pattern transferred'. The next unit exists because vertical walls are not what a beaker gives you.",
+      "quiz": [
+        {
+          "id": "ew10-1",
+          "stem": "A wet etch undercuts a mask because:",
+          "correctAnswer": "The liquid attacks wherever it touches, including sideways under the edge",
+          "distractors": [
+            { "text": "Ions are steered straight down by an electric field", "kind": "nearby", "rationale": "That is the plasma-etch picture, next." },
+            { "text": "The mask dissolves faster than the film", "kind": "reversed", "rationale": "A useful wet etch is selective to the film, not the mask." },
+            { "text": "Undercut only happens if the wafer is polycrystalline", "kind": "subtle", "rationale": "Isotropic wet chemistry undercuts single-crystal wafers too." }
+          ],
+          "correctExplanation": "No preferred direction in the beaker. Down and sideways are the same chemistry.",
+          "objectiveIds": ["Explain why wet chemistry undercuts a mask isotropically"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ew10-2",
+          "stem": "After a long wet etch to depth d through a small opening, the remaining hole is typically:",
+          "correctAnswer": "Wider than the mask by about 2d, with scooped sides",
+          "distractors": [
+            { "text": "Exactly the mask width, with vertical walls", "kind": "reversed", "rationale": "That is the anisotropic wish. Wet does not do it." },
+            { "text": "Narrower than the mask because liquid shrinks features", "kind": "nearby", "rationale": "Liquid removes more, not less." },
+            { "text": "A buried implant peak under the mask", "kind": "subtle", "rationale": "No accelerator ran." }
+          ],
+          "correctExplanation": "Depth d plus undercut d on each side is the geometry, not a slogan.",
+          "objectiveIds": ["Predict the remaining profile after a long wet etch"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ew10-3",
+          "stem": "A 0.3 µm line in a 0.4 µm film, etched wet to endpoint, most likely:",
+          "correctAnswer": "Disappears because the two undercuts meet",
+          "distractors": [
+            { "text": "Survives as a vertical rib exactly 0.3 µm wide", "kind": "reversed", "rationale": "Each side loses about the film thickness." },
+            { "text": "Turns into a thermal gate oxide", "kind": "misapplied", "rationale": "Etch removes. It does not grow a gate." },
+            { "text": "Becomes a conformal CVD liner", "kind": "subtle", "rationale": "Nothing is being deposited." }
+          ],
+          "correctExplanation": "Isotropic removal eats the line from both edges. Narrow features lose.",
+          "objectiveIds": ["Predict the remaining profile after a long wet etch"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-etch-plasma-10",
+      "conceptId": "semi-etch-plasma",
+      "title": "Ions for the wall, neutrals for the chemistry",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-etch-wet"],
+      "goDeeper": "semi-isolation",
+      "diagram": "etch-profile",
+      "explanation": [
+        "A plasma etch can cut a vertical wall because two species share the work. Neutrals from the discharge provide the chemistry that wants to dissolve this film and not that one — the selectivity. Ions are accelerated across the sheath and arrive mostly straight down. They supply energy that makes the bottom of the hole react much faster than the sidewall. The mask's opening is copied downward instead of blossoming sideways.",
+        "That is why this is not 'wet etch with a vacuum pump'. Take the ions away and you are back to an isotropic chemical etch. Take the neutrals away and you have a slow sputter with poor selectivity. The vertical profile is the partnership. Sidewall polymer from the discharge can help passivate the wall so it etches even less.",
+        "The cost is a new list of ways to go wrong: overetch into the layer below, microloading so dense and isolated features finish at different times, and ion damage at the bottom. Still, this is the removal step that can keep a 0.3 µm line after the wet unit said it would vanish."
+      ],
+      "example": "A plasma oxide etch through a resist mask opens a contact with nearly vertical walls. The same opening in HF would undercut and merge neighbours. Swap to a pure chemical downstream etch with almost no ion energy and the walls slump again — chemistry without the downward kick.",
+      "whyItMatters": "Pattern definition drew the opening. This step is the material removal that either respects that opening or does not. Isolation trenches and gate stacks later assume the wall stood up.",
+      "quiz": [
+        {
+          "id": "pl10-1",
+          "stem": "Plasma etch can be anisotropic while wet etch is isotropic because:",
+          "correctAnswer": "Ions arrive mostly downward and speed the bottom relative to the wall",
+          "distractors": [
+            { "text": "Liquids always etch only straight down", "kind": "reversed", "rationale": "Liquids were the isotropic case." },
+            { "text": "Plasmas cannot contain any reactive neutrals", "kind": "nearby", "rationale": "Neutrals are half the partnership. They give selectivity." },
+            { "text": "The mask is thicker in a plasma tool by definition", "kind": "subtle", "rationale": "Mask thickness is not what sets ion direction." }
+          ],
+          "correctExplanation": "Downward ions plus chemical neutrals. That pair is the wall.",
+          "objectiveIds": ["Contrast anisotropic plasma etch with isotropic wet etch"],
+          "prerequisiteConceptIds": ["semi-etch-wet"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pl10-2",
+          "stem": "Ions and neutrals together make a vertical sidewall because:",
+          "correctAnswer": "Neutrals supply the chemistry; ions deliver energy mainly at the floor",
+          "distractors": [
+            { "text": "Ions do all the dissolving and neutrals only heat the room", "kind": "nearby", "rationale": "Without neutrals you have a non-selective sputter." },
+            { "text": "Both species attack only sideways under the mask", "kind": "reversed", "rationale": "Sideways was the wet problem this partnership avoids." },
+            { "text": "They grow a thermal oxide on the wall as they etch", "kind": "subtle", "rationale": "Some recipes passivate with polymer, not by growing gate oxide." }
+          ],
+          "correctExplanation": "Chemistry everywhere ions can help, energy mostly down. The wall is left standing.",
+          "objectiveIds": ["Explain how ions and neutrals together make a vertical sidewall"],
+          "prerequisiteConceptIds": ["semi-etch-wet"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pl10-3",
+          "stem": "Switching a contact etch from wet HF to a directional plasma etch typically:",
+          "correctAnswer": "Keeps the opening near the mask width instead of undercutting neighbours",
+          "distractors": [
+            { "text": "Guarantees a 2d undercut on each side", "kind": "reversed", "rationale": "That was the wet geometry." },
+            { "text": "Places a buried boron peak in the contact", "kind": "misapplied", "rationale": "Etch removes dielectric. It does not implant." },
+            { "text": "Removes the need for any mask", "kind": "subtle", "rationale": "The plasma still etches where the mask is open." }
+          ],
+          "correctExplanation": "The drawn opening can survive. That is why later isolation can be a trench.",
+          "objectiveIds": ["Contrast anisotropic plasma etch with isotropic wet etch"],
+          "prerequisiteConceptIds": ["semi-etch-wet"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-cmp-10",
+      "conceptId": "semi-cmp",
+      "title": "Chemistry plus a pad, until the hills are gone",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-cvd"],
+      "goDeeper": "semi-planarity",
+      "diagram": "cmp-flat",
+      "explanation": [
+        "Chemical-mechanical planarization is not a grindstone and not a wet etch. A pad presses the wafer into a slurry. The chemistry weakens or dissolves the high spots; the mechanical abrasion wipes them away. Low spots see less pressure and survive longer. The surface that leaves the tool is flatter than the deposited hills that entered it.",
+        "You need that flatness because the next lithography has a depth of focus. A hill and a valley cannot both sit in the same thin slice of acceptable focus. Leftover topography after a stack of depositions and etches is how a later exposure prints one feature and blurs its neighbour. CMP is how the wafer becomes an input that lithography can use, not a cosmetic shine.",
+        "It has its own defects: dishing of soft materials, erosion of dense arrays, scratches from agglomerated slurry, and leftover steps if you stop early. Stopping on a harder film is a common trick. The point of this unit is the mechanism — chemical plus mechanical, high spots first — so the later planarity lesson can treat the result as a lithography budget."
+      ],
+      "example": "A wafer after several metal and dielectric depositions has 400 nm of local step height. A lithography lens with a few hundred nanometres of focus budget cannot hold both the hill and the valley. After CMP the step is tens of nanometres and the same lens prints both.",
+      "whyItMatters": "If you call CMP 'polishing the wafer', you will miss why it sits after deposition and before the next pattern. The pad is serving the lens, not the brochure photograph.",
+      "quiz": [
+        {
+          "id": "cm10-1",
+          "stem": "CMP flattens a wafer by:",
+          "correctAnswer": "Combining slurry chemistry with pad pressure that hits high spots first",
+          "distractors": [
+            { "text": "A purely wet isotropic etch with no pad", "kind": "nearby", "rationale": "A beaker does not know what is high." },
+            { "text": "Throwing a PVD film until the valleys fill themselves perfectly", "kind": "reversed", "rationale": "PVD adds more hills. It does not planarize." },
+            { "text": "Growing a thicker thermal oxide on the valleys only", "kind": "subtle", "rationale": "Thermal oxide does not read topography that way." }
+          ],
+          "correctExplanation": "Chemistry weakens, pressure prefers hills. Both words in the name do work.",
+          "objectiveIds": ["Describe CMP as chemical plus mechanical removal that flattens"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cm10-2",
+          "stem": "Leftover topography after a skipped or short CMP typically:",
+          "correctAnswer": "Puts some features outside the next exposure's depth of focus",
+          "distractors": [
+            { "text": "Makes every later film automatically conformal", "kind": "reversed", "rationale": "Hills remain hills. They do not become a process gift." },
+            { "text": "Removes the need for any mask on the next layer", "kind": "subtle", "rationale": "Focus is the victim, not the mask shop." },
+            { "text": "Activates implanted dopant without heat", "kind": "misapplied", "rationale": "A pad is not an anneal." }
+          ],
+          "correctExplanation": "A lens has one thin slice of focus. Hills and valleys do not share it.",
+          "objectiveIds": ["Predict what leftover topography does to the next exposure"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cm10-3",
+          "stem": "Stopping CMP the moment the wafer 'looks shiny' can still fail later lithography if:",
+          "correctAnswer": "Local step height remains larger than the focus budget",
+          "distractors": [
+            { "text": "Shininess always means atomic flatness", "kind": "reversed", "rationale": "A haze-free look can hide hundreds of nanometres of step." },
+            { "text": "The slurry has already implanted a well", "kind": "subtle", "rationale": "Slurry is chemistry plus grit, not an accelerator." },
+            { "text": "Shiny wafers cannot hold photoresist", "kind": "nearby", "rationale": "Resist coats hills too. Focus is still the issue." }
+          ],
+          "correctExplanation": "The lens cares about height, not about whether the wafer photographs well.",
+          "objectiveIds": ["Predict what leftover topography does to the next exposure"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-metals-10",
+      "conceptId": "semi-metals",
+      "title": "A wire, and the wall that keeps it home",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-pvd"],
+      "goDeeper": "semi-silicide",
+      "diagram": "contact-stack",
+      "explanation": [
+        "A metal line is how a transistor talks to the rest of the chip. Aluminum was the historical blanket; copper is the later low-resistance choice. Neither is allowed to wander into silicon or into the dielectric as a free atom. Copper in silicon is a lifetime killer. Aluminum can spike through a shallow junction. The conductor you want electrically is often a contaminant chemically.",
+        "That is why a barrier sits between the conductor and the dielectric, and between the conductor and the silicon contact. Titanium nitride, tantalum, tantalum nitride — the names matter less than the job: a thin, conformal-enough wall that electrons can still cross at the contact but copper or aluminum atoms cannot. Skip the barrier and the wire dopes, spikes, or leaks on a schedule you do not control.",
+        "Because many of these films start as PVD, the same sidewall-thinning problem you just learned shows up here. A barrier that is thick on the field and missing in the bottom of a hole is not a barrier. Integration will later insist that metals come after the last high-temperature front-end step: these films do not survive the furnaces that grew the oxide."
+      ],
+      "example": "Copper dumped into an oxide trench with no Ta/TaN liner diffuses, stains the dielectric, and appears in the silicon as a recombination center. The same copper in a lined damascene trench stays a wire. The liner added nanometres. It subtracted a poisoned lot.",
+      "whyItMatters": "A cross-section that only labels 'metal' is hiding the film that makes the metal legal. Contacts and silicides in the next module assume this wall exists.",
+      "quiz": [
+        {
+          "id": "mt10-1",
+          "stem": "A barrier sits between a conductor and the dielectric so that:",
+          "correctAnswer": "The wire's atoms cannot wander into the insulator or the silicon",
+          "distractors": [
+            { "text": "The wire can dissolve freely and still conduct better", "kind": "reversed", "rationale": "Wandering is the failure, not the feature." },
+            { "text": "The barrier can replace the need for any conductor", "kind": "nearby", "rationale": "The barrier is a wall, not the wire." },
+            { "text": "Photoresist can stick to copper more easily", "kind": "subtle", "rationale": "This is a diffusion and spike problem, not a coat problem." }
+          ],
+          "correctExplanation": "Electrons may cross at a contact. Copper atoms may not take a walk.",
+          "objectiveIds": ["Explain why a barrier sits between a conductor and the dielectric"],
+          "prerequisiteConceptIds": ["semi-pvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mt10-2",
+          "stem": "If copper or aluminum wanders into silicon, the usual electrical result is:",
+          "correctAnswer": "Traps, spikes, or a killed junction instead of a quiet substrate",
+          "distractors": [
+            { "text": "A cleaner thermal gate oxide", "kind": "reversed", "rationale": "Metals in silicon are contaminants, not oxidants." },
+            { "text": "Automatic planarization of the wafer", "kind": "subtle", "rationale": "Diffusion is not CMP." },
+            { "text": "A thicker photoresist film", "kind": "nearby", "rationale": "Resist is not involved in this failure." }
+          ],
+          "correctExplanation": "Deep levels and spikes are why the barrier was not optional.",
+          "objectiveIds": ["Name what happens if copper or aluminum wanders into silicon"],
+          "prerequisiteConceptIds": ["semi-pvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mt10-3",
+          "stem": "A PVD barrier that is missing at the bottom of a contact hole typically:",
+          "correctAnswer": "Lets the conductor touch silicon or oxide where the wall failed",
+          "distractors": [
+            { "text": "Makes the contact more conformal than CVD would", "kind": "reversed", "rationale": "A missing bottom is the PVD thinning you already know." },
+            { "text": "Activates the well implant", "kind": "misapplied", "rationale": "A barrier is not an anneal." },
+            { "text": "Grows a wet field oxide in the hole", "kind": "subtle", "rationale": "No oxidant step ran." }
+          ],
+          "correctExplanation": "A barrier that does not arrive is not a barrier. Sidewall thinning is how it fails.",
+          "objectiveIds": ["Explain why a barrier sits between a conductor and the dielectric"],
+          "prerequisiteConceptIds": ["semi-pvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-dielectric-10",
+      "conceptId": "semi-dielectric",
+      "title": "The insulator between the wires",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-cvd"],
+      "goDeeper": "semi-cmp",
+      "explanation": [
+        "An interlevel dielectric is the insulator that keeps one metal layer from becoming the next metal layer. Its job is electrical separation and a capacitance you can live with. It is a deposited film — typically a CVD oxide or a later low-k cousin — because there is no silicon left to oxidize once you are stacking wires on wires. You cannot grow a thermal gate oxide on aluminum and call it an ILD.",
+        "A thermal gate oxide was grown from the wafer, thin, clean, and in contact with the channel. An ILD is thicker, sits on metal or on other dielectrics, and is chosen for gap-fill, stress, and permittivity. Same word 'oxide' in sloppy speech. Different arrival, different surface, different job. Confusing them is how people say 'just deposit the gate'.",
+        "After the ILD is down, CMP often flattens it so the next lithography has a plane. Vias will later punch through this film to the metal below. The film has to be thick enough to isolate and thin enough that those vias are etchable. That thickness is an integration number, not a gate-oxide number."
+      ],
+      "example": "A 10 nm dry thermal oxide on silicon is a gate dielectric. A 800 nm plasma-deposited oxide on patterned metal is an ILD. Swap them and you either leak between metals or you bury a channel under a film no gate electrode can control.",
+      "whyItMatters": "Back-end stacking is deposited insulation plus metal plus CMP. If you still think every oxide is grown from the wafer, this module will read as a word salad.",
+      "quiz": [
+        {
+          "id": "id10-1",
+          "stem": "The job of an interlevel dielectric is to:",
+          "correctAnswer": "Separate metal layers and set the capacitance between them",
+          "distractors": [
+            { "text": "Become the silicon channel the MOSFET inverts", "kind": "misapplied", "rationale": "The channel is silicon, not the ILD." },
+            { "text": "Place the well implant that sets body doping", "kind": "subtle", "rationale": "An insulator is not an accelerator." },
+            { "text": "Consume the wafer to grow a 10 nm gate", "kind": "nearby", "rationale": "That is the thermal gate oxide, a different film." }
+          ],
+          "correctExplanation": "Wires need an insulator between them. That insulator is this film.",
+          "objectiveIds": ["State the job of the insulator between metal layers"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "id10-2",
+          "stem": "An ILD is deposited rather than grown as thermal gate oxide because:",
+          "correctAnswer": "It must sit on metal or other films, not consume a silicon face",
+          "distractors": [
+            { "text": "Thermal oxide cannot be an insulator", "kind": "reversed", "rationale": "Thermal oxide is an excellent insulator — for a gate on silicon." },
+            { "text": "Metals grow SiO2 when they see dry O2 at 1000 °C", "kind": "nearby", "rationale": "Those temperatures would wreck the metal. That is the point." },
+            { "text": "Deposition always consumes 44% of the metal thickness", "kind": "subtle", "rationale": "The 44% figure was silicon consumed into thermal oxide." }
+          ],
+          "correctExplanation": "No silicon quarry, no thermal growth. CVD (or similar) has to bring the atoms.",
+          "objectiveIds": ["Contrast a deposited interlevel dielectric with a thermal gate oxide"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "id10-3",
+          "stem": "Using a 10 nm thermal gate oxide as the only insulator between two metal layers would typically:",
+          "correctAnswer": "Leak or short, because that film was never meant as a back-end spacer",
+          "distractors": [
+            { "text": "Automatically planarize both metals", "kind": "subtle", "rationale": "A thin grown film does not flatten a metal stack." },
+            { "text": "Do the ILD job better because it is grown", "kind": "reversed", "rationale": "Grown-on-silicon quality does not make it thick enough between wires." },
+            { "text": "Implant copper into the lower wire", "kind": "nearby", "rationale": "No implant ran." }
+          ],
+          "correctExplanation": "Different job, different thickness, different arrival. The names collided. The physics did not.",
+          "objectiveIds": ["Contrast a deposited interlevel dielectric with a thermal gate oxide"],
+          "prerequisiteConceptIds": ["semi-cvd"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

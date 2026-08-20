@@ -1,0 +1,525 @@
+{
+  "courseId": "arch-gpu",
+  "moduleId": "arch-gpu-schedule",
+  "lessons": [
+    {
+      "id": "gpu-divergence-10",
+      "conceptId": "gpu-divergence",
+      "title": "Two paths, one warp issue slot",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-warps", "gpu-occupancy"],
+      "goDeeper": "gpu-scheduler",
+      "diagram": "gpu-diverge",
+      "explanation": [
+        "Control divergence is a warp-local fact. When threads in one warp take different paths, the SM issues both sides and the inactive threads sit out that issue. Pre-Volta, those threads literally shared one program counter and a mask. Volta+ Independent Thread Scheduling gives each thread its own PC, but the warp is still one issue slot: the threads on the sqrt path issue, then the threads on the else path issue. You wrote a scalar if/else. You paid a SIMD-shaped bill. Threads in different warps taking different branches are not diverging against each other — they are different issue groups.",
+        "The cost is issue time, not a fork of the kernel into two programs. A warp with 20 lanes on sqrt and 12 on else issues the sqrt path with 20 active, then the else path with 12 active. Both occupy the warp's slot. Occupancy does not delete that: a divergent warp still resides, still holds registers, and still spends two passes where a uniform warp spent one.",
+        "Reconvergence brings the lanes back to one path. Pre-Volta hardware stacked masks and met at a post-dominator. Volta+ can let threads drift until an explicit convergence barrier (__syncwarp or the compiler's equivalent) gathers them. Until they meet, idle or waiting lanes still occupy the warp. Sorting similar predicates into the same warp is a layout trick: you cannot delete the branch, but you can stop mixing both sides inside one issue slot."
+      ],
+      "example": "32 threads execute if (x[i] > 0) y[i] = sqrt(x[i]); else y[i] = 0. If 20 lanes are positive, both the sqrt path and the else path issue. Two warps that each happen to be all-positive or all-negative issue only one path each — same kernel, no intra-warp mix.",
+      "whyItMatters": "SIMT already told you the group is lockstep. This unit is the performance name for mixing control flow inside that group — and why occupancy, which you just learned, cannot paper over a double issue bill.",
+      "quiz": [
+        {
+          "id": "dv10-1",
+          "stem": "Control divergence hurts when:",
+          "correctAnswer": "Threads that share a warp take different paths and both sides must issue",
+          "distractors": [
+            { "text": "Two different warps happen to take different paths", "kind": "nearby", "rationale": "Inter-warp independence is not divergence." },
+            { "text": "The kernel was written with no branches at all", "kind": "reversed", "rationale": "No branches means no mixed paths." },
+            { "text": "Shared memory on the SM is already full", "kind": "misapplied", "rationale": "That is a residency limit, not a control-flow mix." }
+          ],
+          "correctExplanation": "One warp issue slot, two passes, a mask. That is intra-warp. A shared PC is the pre-Volta encoding of the same bill.",
+          "objectiveIds": ["Locate divergence inside one warp, not across warps"],
+          "prerequisiteConceptIds": ["gpu-warps", "gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "dv10-2",
+          "stem": "A warp with 20 lanes taking sqrt and 12 taking else pays:",
+          "correctAnswer": "Both paths' issue time, with inactive lanes masked on each pass",
+          "distractors": [
+            { "text": "Only the majority path's issue time", "kind": "reversed", "rationale": "Both sides run." },
+            { "text": "A grid-wide barrier across every block", "kind": "nearby", "rationale": "A branch is not a grid sync." },
+            { "text": "A host-side context switch on the CPU", "kind": "subtle", "rationale": "This is SM issue, not OS scheduling." }
+          ],
+          "correctExplanation": "You wrote scalar if/else. You paid both issues.",
+          "objectiveIds": ["Diagnose the issue cost of a mixed if/else"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dv10-3",
+          "stem": "Sorting threads so similar predicates sit in the same warp is trying to:",
+          "correctAnswer": "Reduce intra-warp path mixing without changing the math",
+          "distractors": [
+            { "text": "Change the device ISA the kernel was compiled for", "kind": "misapplied", "rationale": "Layout is not an ISA change." },
+            { "text": "Increase DRAM latency on purpose", "kind": "reversed", "rationale": "The goal is issue efficiency, not slower memory." },
+            { "text": "Replace occupancy with a larger register file", "kind": "subtle", "rationale": "This is a divergence layout trick, not a file resize." }
+          ],
+          "correctExplanation": "You cannot delete the branch. You can stop mixing both sides in one warp issue slot.",
+          "objectiveIds": ["Locate divergence inside one warp, not across warps"],
+          "prerequisiteConceptIds": ["gpu-warps", "gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-divergence-20",
+      "conceptId": "gpu-divergence",
+      "title": "Reconvergence, uniform predicates, and layout",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["gpu-warps", "gpu-occupancy"],
+      "goDeeper": "gpu-scheduler",
+      "diagram": "gpu-diverge",
+      "explanation": [
+        "The ten-minute unit located divergence inside a warp. This one is about how the machine gets the lanes back together. Pre-Volta hardware keeps a reconvergence point — often the immediate post-dominator of the branch — and a stack of masks. Each taken side pushes a mask, runs, then pops. Nested ifs nest the stack. An early return or a break that skips the reconvergence point is how people accidentally serialize more than they meant to.",
+        "Volta+ Independent Thread Scheduling changes the encoding, not the bill. Each thread has a PC, so a mixed warp is several PCs sharing one issue slot. The compiler and ISA insert convergence barriers so the warp can meet again; __syncwarp is the explicit form. An early return that skips the barrier can leave threads stranded on different PCs just as skipping the old reconvergence point did. The stack-of-masks picture is still the right cost model. It is no longer a claim that modern NVIDIA silicon has one PC per warp.",
+        "A uniform predicate is one every lane in the warp agrees on. Then only one side issues. Compilers and ISAs increasingly advertise uniform or convergent branches so the hardware can skip the second pass. Data-dependent predicates that happen to be uniform at run time are lucky; predicates that are a function of thread index often are not. 'I have an if' is not the same sentence as 'this warp mixed'.",
+        "Layout remains the practical knob. Compact the active items so a warp is all-live or all-dead, and the branch becomes uniform even though the kernel still contains it. Predication — turning a short if into a select with a mask — can avoid a reconvergence event for tiny bodies, at the cost of always evaluating both expressions. That is a trade, not a free delete.",
+        "Occupancy still matters here because a divergent warp occupies a resident slot through both passes. High occupancy with many mixed warps is a full SM doing half-useful issue. Low occupancy with uniform warps can beat it. The residents are inventory. Divergence decides how much of each resident's issue is real work."
+      ],
+      "example": "A stream-compaction pass that packs live particles into a dense prefix, then launches the expensive branch only over that prefix, turns a 50/50 mix into mostly uniform warps. The same branch left in place over a random mix issues both sides in almost every warp. Same predicate, different layout.",
+      "whyItMatters": "A profiler bar labelled 'divergent branches' is this stack plus this layout. You cannot read it if you think every if is a crime, or if you think occupancy will hide a double issue.",
+      "quiz": [
+        {
+          "id": "dv20-1",
+          "stem": "Hardware reconverges a divergent warp at:",
+          "correctAnswer": "A later point — often the post-dominator or a convergence barrier — where the warp can share an issue path again",
+          "distractors": [
+            { "text": "The host, which recompiles the kernel after every branch", "kind": "misapplied", "rationale": "Reconvergence is a device mask-stack fact." },
+            { "text": "The start of the grid, so every block restarts", "kind": "nearby", "rationale": "Only the mixed warp is stacking masks." },
+            { "text": "Never: mixed warps stay split for the rest of the launch", "kind": "reversed", "rationale": "They meet again. That is what reconvergence means." }
+          ],
+          "correctExplanation": "Push a mask, run a side, pop, meet. The meeting point is why the stack exists.",
+          "objectiveIds": ["Locate divergence inside one warp, not across warps"],
+          "prerequisiteConceptIds": ["gpu-warps", "gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "dv20-2",
+          "stem": "A predicate that every lane in the warp agrees on typically:",
+          "correctAnswer": "Issues only one side, because the warp did not mix",
+          "distractors": [
+            { "text": "Still issues both sides, because any if is divergent by law", "kind": "reversed", "rationale": "Uniform is the case that is not mixed." },
+            { "text": "Flushes occupancy down to one warp", "kind": "nearby", "rationale": "Uniform control does not evict residents." },
+            { "text": "Converts the warp into packed SIMD of width one", "kind": "subtle", "rationale": "The group is still full-width. One side just did not run." }
+          ],
+          "correctExplanation": "Agreement means one pass. Mix means two. The if in the source is not the diagnosis.",
+          "objectiveIds": ["Diagnose the issue cost of a mixed if/else"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dv20-3",
+          "stem": "Predicating a tiny if instead of branching is a trade because:",
+          "correctAnswer": "You may avoid a reconvergence event but you evaluate work both sides needed",
+          "distractors": [
+            { "text": "Predication deletes the register file", "kind": "misapplied", "rationale": "It is a control-flow encoding, not a file resize." },
+            { "text": "Branches become free when predicated", "kind": "reversed", "rationale": "You paid both expressions. That is the cost." },
+            { "text": "Occupancy doubles because masks are smaller", "kind": "subtle", "rationale": "Residency did not move. Issue shape did." }
+          ],
+          "correctExplanation": "Always-do-both versus sometimes-do-one. Short bodies can prefer the first.",
+          "objectiveIds": ["Diagnose the issue cost of a mixed if/else"],
+          "prerequisiteConceptIds": ["gpu-warps", "gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-latency-hiding-10",
+      "conceptId": "gpu-latency-hiding",
+      "title": "Switch, do not stall the machine",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-occupancy"],
+      "goDeeper": "gpu-ilp-vs-tlp",
+      "explanation": [
+        "A load from device memory can take hundreds of cycles. A latency-optimized core tries to make that one thread survive the wait — out-of-order windows, prefetch, huge caches. A GPU usually refuses that game. When a warp's next instruction is waiting on a miss, the SM switches to another resident warp that is ready and issues that one instead.",
+        "Occupancy is the inventory that makes the switch possible. If only one warp lives on the SM, a miss stalls the processor. If many warps live there and several are independent of the in-flight miss, the ALUs stay busy while the first load is still in flight. The miss is still slow. The machine is not idle.",
+        "Hiding is not shrinking. Switching does not make DRAM faster. It also fails when every resident warp is waiting on memory, or when the kernel is already using every pipe on math. Occupancy bought candidates. Latency hiding is what you do with a candidate that is ready."
+      ],
+      "example": "A warp issues a load that will come back in 400 cycles. Sixteen other resident warps each have independent adds ready. The SM issues those adds for hundreds of cycles and the load's data arrives before anyone sits in an empty pipeline. One resident warp, same load: 400 cycles of quiet.",
+      "whyItMatters": "Foundations already split latency from throughput. This unit is the GPU's specific method: switch warps, paid for by occupancy. The next units spend that method on ILP versus more warps, then on who the scheduler picks.",
+      "quiz": [
+        {
+          "id": "lh10-1",
+          "stem": "When a warp's load misses, a GPU typically protects throughput by:",
+          "correctAnswer": "Switching to another resident warp that is ready",
+          "distractors": [
+            { "text": "Shortening the DRAM access itself", "kind": "reversed", "rationale": "The miss is still slow. Switching does not shrink it." },
+            { "text": "Rewriting the kernel on the host mid-miss", "kind": "misapplied", "rationale": "The host is not in this loop." },
+            { "text": "Shrinking the warp width until the load fits in a register", "kind": "subtle", "rationale": "Width is constant. The switch is among warps." }
+          ],
+          "correctExplanation": "Switch, do not stall the SM. That is the throughput bet paying rent.",
+          "objectiveIds": ["Explain switching to another ready warp instead of stalling the machine"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "lh10-2",
+          "stem": "Occupancy is what latency hiding is buying because:",
+          "correctAnswer": "Resident warps are the candidates the SM can switch to during a miss",
+          "distractors": [
+            { "text": "Occupancy shrinks DRAM latency by the occupancy fraction", "kind": "reversed", "rationale": "Headcount is not a latency divider." },
+            { "text": "Occupancy is a host-side launch timeout", "kind": "nearby", "rationale": "It is an on-SM residency count." },
+            { "text": "Occupancy deletes the load/store pipe", "kind": "subtle", "rationale": "The pipe still serves the miss. Other warps use other issue slots." }
+          ],
+          "correctExplanation": "No residents, no one to switch to. Occupancy is inventory for the switch.",
+          "objectiveIds": ["Say what occupancy is buying when a load is in flight"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "lh10-3",
+          "stem": "High occupancy fails to hide a miss when:",
+          "correctAnswer": "Every resident warp is also waiting, or the kernel was not waiting on memory at all",
+          "distractors": [
+            { "text": "Any warp has registers allocated", "kind": "misconception", "rationale": "Registers are normal. They are not the failure mode." },
+            { "text": "The grid contains more than one block", "kind": "nearby", "rationale": "Multiple blocks are the usual case." },
+            { "text": "The device implements SIMT", "kind": "subtle", "rationale": "SIMT is the grouping, not why a switch would fail." }
+          ],
+          "correctExplanation": "Candidates only help if someone is ready and the stall was a wait. Math-bound or all-waiting both refuse the gift.",
+          "objectiveIds": ["Say what occupancy is buying when a load is in flight"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-ilp-vs-tlp-10",
+      "conceptId": "gpu-ilp-vs-tlp",
+      "title": "Slack inside a thread, or more threads",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-latency-hiding", "cpu-ilp-idea"],
+      "goDeeper": "gpu-scheduler",
+      "explanation": [
+        "Foundations called instruction-level parallelism the independent work inside one thread: a load, then two adds that do not need each other. A GPU can use a little of that — issue the independent adds while the load is in flight, even inside one warp. Thread-level parallelism is the other knob: more resident warps, so the SM has someone else to switch to. Latency hiding as you just learned is mostly the second knob.",
+        "GPUs are built for TLP. The register file and the scheduler exist to keep many warps in the air. ILP inside a thread still helps when occupancy is low — register pressure left you with few residents — or when a warp is itself math-heavy and can fill pipes without a neighbour. It does not replace occupancy on a memory-waiting kernel. One fat thread with a long independent chain is not a thousand thin ones.",
+        "The trade shows up in the compiler. Unrolling and prefetch inside a thread raise ILP and often raise register use, which can cut occupancy, which can cut TLP. You moved work from 'another warp' to 'later in this warp'. Sometimes that is right. Sometimes you just spent the file on slack you already had in other residents."
+      ],
+      "example": "A kernel that loads A[i], then does twelve independent multiplies on that value, can cover some of a miss with its own ILP even at modest occupancy. A kernel that loads, adds once, and stores wants many other warps; unrolling it just to create fake ILP may spill registers and lose the residents that were doing the real hiding.",
+      "whyItMatters": "Reviews that say 'we exposed more parallelism' are mixing these knobs. Ask whether they added independent instructions inside a thread or added residents. Those are different silicon, and they fight over the same register file.",
+      "quiz": [
+        {
+          "id": "it10-1",
+          "stem": "On a GPU, TLP compared with ILP is:",
+          "correctAnswer": "More resident warps versus independent instructions inside one thread",
+          "distractors": [
+            { "text": "A shorter DRAM latency versus a longer one", "kind": "nearby", "rationale": "Neither knob shrinks DRAM. They cover it differently." },
+            { "text": "Packed SIMD versus SIMT", "kind": "misapplied", "rationale": "That distinction is the programming model, not these two slacks." },
+            { "text": "Host threads versus device threads", "kind": "subtle", "rationale": "Both ILP and TLP here are device-side." }
+          ],
+          "correctExplanation": "Slack inside a thread, or more threads. That is the pair.",
+          "objectiveIds": ["Contrast instruction slack inside a thread with more resident warps"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "cpu-ilp-idea"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "it10-2",
+          "stem": "A memory-waiting kernel with low occupancy is usually helped more by:",
+          "correctAnswer": "More resident warps, so someone is ready during the miss",
+          "distractors": [
+            { "text": "Only by adding more dependent instructions in the same thread", "kind": "reversed", "rationale": "Dependence does not create cover. Extra residents do." },
+            { "text": "Turning off the load/store pipe", "kind": "nearby", "rationale": "You still need the data." },
+            { "text": "Making the warp narrower than the machine width", "kind": "subtle", "rationale": "Width is not the TLP knob." }
+          ],
+          "correctExplanation": "Hiding a miss wants candidates. That is TLP. Intra-thread slack is a bonus, not the inventory.",
+          "objectiveIds": ["Predict which knob helps a math-heavy versus a memory-waiting kernel"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "cpu-ilp-idea"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "it10-3",
+          "stem": "Unrolling a kernel to create ILP can backfire when:",
+          "correctAnswer": "Extra registers cut occupancy and you lose the TLP that was hiding misses",
+          "distractors": [
+            { "text": "ILP is illegal on a SIMT machine", "kind": "reversed", "rationale": "Independent ops inside a thread still issue." },
+            { "text": "The host refuses to launch unrolled kernels", "kind": "nearby", "rationale": "Launch does not police unrolling." },
+            { "text": "Warps become 64 wide automatically", "kind": "subtle", "rationale": "Unrolling does not change hardware width." }
+          ],
+          "correctExplanation": "You spent the file on slack inside a thread and evicted the neighbours who were doing the hiding.",
+          "objectiveIds": ["Predict which knob helps a math-heavy versus a memory-waiting kernel"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "cpu-ilp-idea"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-scheduler-10",
+      "conceptId": "gpu-scheduler",
+      "title": "Which ready warp issues next",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-latency-hiding", "gpu-divergence"],
+      "goDeeper": "gpu-resource-limits",
+      "diagram": "gpu-occupancy",
+      "explanation": [
+        "Latency hiding said the SM switches to a ready warp. The warp scheduler is the logic that picks which ready warp issues next. Occupancy created the candidate set. Divergence and misses created stalls. The scheduler spends whatever issue slots are left on someone who can use them.",
+        "Policies are heuristics, not laws. Oldest-first is simple and can pile many warps onto the same cache lines — or, just as easily, onto lines that evict each other. Loose round-robin spreads issue and can keep more working sets warm, or can refuse to give a burst to a warp that would have finished a short dependent chain. Two schedulers per SM exist on some chips because issue width is itself a pipe: one picker cannot fill every ALU every cycle.",
+        "A greedy pick that ignores cache footprint can lose to a slightly 'worse' pick that reuses a line another warp just brought in. The scheduler is where occupancy, divergence, and the memory system stop being separate lectures."
+      ],
+      "example": "Sixteen resident warps, four ready. Oldest-first always feeds warp 0, which streams a unique row each issue and thrashes L1. A round-robin among the four reuses a tile already in cache. Same occupancy, same kernel, different picker, different hit rate.",
+      "whyItMatters": "Specialist GPU performance is the product of who is resident, who is masked, and who issues. If those are three marketing names for one IPC number, you cannot diagnose a stall.",
+      "quiz": [
+        {
+          "id": "sc10-1",
+          "stem": "A warp scheduler's job is mainly to:",
+          "correctAnswer": "Pick which ready warp issues next given stalls, caches, and issue width",
+          "distractors": [
+            { "text": "Compile the kernel on the host before launch", "kind": "misapplied", "rationale": "The scheduler is hardware, not the compiler." },
+            { "text": "Allocate the CPU core's reorder buffer", "kind": "nearby", "rationale": "ROBs are a latency-core structure." },
+            { "text": "Choose the host-side queue the launch was submitted on", "kind": "subtle", "rationale": "Host queues order launches. They do not pick the next warp." }
+          ],
+          "correctExplanation": "Ready versus stalled warps are the occupancy you already paid for. The picker spends them.",
+          "objectiveIds": ["State what the warp scheduler actually chooses"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "gpu-divergence"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sc10-2",
+          "stem": "A greedy scheduler that always prefers the oldest ready warp can still lose when:",
+          "correctAnswer": "That warp's next memory touch fights a cache already owned by a younger warp",
+          "distractors": [
+            { "text": "Warps on this machine happen to be 32 wide", "kind": "misconception", "rationale": "Width is constant." },
+            { "text": "The kernel happens to use IEEE floats", "kind": "nearby", "rationale": "Datatype is not the scheduling conflict." },
+            { "text": "The host CPU happens to be idle", "kind": "subtle", "rationale": "Host idleness is not an SM issue." }
+          ],
+          "correctExplanation": "Issue order interacts with caches. Oldest-first is a heuristic, not a law.",
+          "objectiveIds": ["Diagnose how issue order interacts with caches and stalls"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "gpu-divergence"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sc10-3",
+          "stem": "Occupancy, divergence, and the scheduler interact because:",
+          "correctAnswer": "Residency creates candidates; divergence creates stalls; the scheduler spends the leftover issue slots",
+          "distractors": [
+            { "text": "They are three marketing names for the same IPC number", "kind": "reversed", "rationale": "They are coupled but not synonyms." },
+            { "text": "The compiler fuses them into one ISA control bit", "kind": "misapplied", "rationale": "These are runtime hardware facts." },
+            { "text": "Only the host launch geometry changes how they behave", "kind": "subtle", "rationale": "Geometry sets work. These three decide how an SM spends a cycle." }
+          ],
+          "correctExplanation": "Who lives, who is masked, who issues. That product is the specialist story.",
+          "objectiveIds": ["State what the warp scheduler actually chooses"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "gpu-divergence"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-scheduler-20",
+      "conceptId": "gpu-scheduler",
+      "title": "Issue width, cache footprint, and two pickers",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["gpu-latency-hiding", "gpu-divergence"],
+      "goDeeper": "gpu-resource-limits",
+      "explanation": [
+        "The ten-minute unit said the scheduler picks a ready warp. This one is about the pipes that pick sits in front of. An SM has an issue width: how many instructions can start in a cycle, often split across several schedulers, each owning a subset of warps. A warp that is ready on a cycle when its scheduler is already issuing waits, even if another scheduler is idle. Partitioning warps across pickers is why 'one more resident' sometimes does nothing visible.",
+        "Cache footprint is the other half. Each issued load brings a line. A picker that always feeds the same hungry warp streams unique lines and evicts the working set other ready warps needed. A picker that rotates can keep a tile warm — or can starve a warp that needed a short burst to finish and free its registers. Neither policy is 'the GPU scheduler'. Both exist, and vendors change them between generations without renaming the block on the slide.",
+        "Scoreboards and stall reasons feed the picker. A warp is not simply ready or not: it may be waiting on a load, on a barrier, on a special-function pipe, or on a reconvergence stack. The scheduler that only sees 'oldest ready' will treat a barrier-wait and a miss-wait as the same empty slot. A stall-reason-aware picker can prefer a warp that will free a barrier so a whole block unblocks.",
+        "This is also why persistent kernels and resource-limited launches — the next units — care about the picker. A kernel that lives and pulls work changes which warps are ready over a long window. A launch that just barely fits can leave a scheduler's partition empty. The picker cannot invent a candidate the files refused to house."
+      ],
+      "example": "Two schedulers, 16 warps each. All 16 on picker A are waiting on a block barrier; picker B has four ready math warps. Issue width looks 'half used' in a counter. Adding more residents that also land on A does not fill B. Moving a block so its warps split across pickers does.",
+      "whyItMatters": "A profiler that says 'issue slot unused' is asking you which picker, which stall reason, and which working set. 'The scheduler' as one noun will send you to the wrong rewrite.",
+      "quiz": [
+        {
+          "id": "sc20-1",
+          "stem": "Two schedulers on one SM exist mainly because:",
+          "correctAnswer": "Issue width is itself a pipe; one picker often cannot fill every unit every cycle",
+          "distractors": [
+            { "text": "Each scheduler compiles half the kernel", "kind": "misapplied", "rationale": "Schedulers pick warps. They do not compile." },
+            { "text": "Warp width is 16 on those chips", "kind": "nearby", "rationale": "Width and picker count are different constants." },
+            { "text": "The host needs a pair of launch queues", "kind": "subtle", "rationale": "This is on-SM issue, not host queues." }
+          ],
+          "correctExplanation": "Several pickers, partitioned warps, a chance to start more than one instruction.",
+          "objectiveIds": ["State what the warp scheduler actually chooses"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sc20-2",
+          "stem": "A stall-reason-aware picker can beat oldest-first when:",
+          "correctAnswer": "Freeing a barrier-wait warp unblocks a whole block that oldest-first would leave sitting",
+          "distractors": [
+            { "text": "All stall reasons are the same empty slot by law", "kind": "reversed", "rationale": "A miss, a barrier, and a pipe wait unblock different neighbours." },
+            { "text": "The kernel has no memory operations", "kind": "nearby", "rationale": "Barriers and pipes stall math kernels too." },
+            { "text": "Occupancy is already zero", "kind": "subtle", "rationale": "With no residents there is nothing to pick." }
+          ],
+          "correctExplanation": "Who you pick changes who becomes ready next. Stall reasons are not interchangeable.",
+          "objectiveIds": ["Diagnose how issue order interacts with caches and stalls"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding", "gpu-divergence"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sc20-3",
+          "stem": "Adding residents that all land on an already-stalled scheduler partition typically:",
+          "correctAnswer": "Does not fill the idle picker, so issue width stays underused",
+          "distractors": [
+            { "text": "Automatically rebalances warps across pickers", "kind": "reversed", "rationale": "Partitions are often static. More of the same is still the same picker." },
+            { "text": "Shrinks DRAM latency by the extra count", "kind": "nearby", "rationale": "Headcount is not a latency divider." },
+            { "text": "Converts divergence into uniform control", "kind": "subtle", "rationale": "The picker does not rewrite predicates." }
+          ],
+          "correctExplanation": "The candidate has to sit where an idle picker can see it. Occupancy is not automatically well-partitioned.",
+          "objectiveIds": ["Diagnose how issue order interacts with caches and stalls"],
+          "prerequisiteConceptIds": ["gpu-latency-hiding"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-resource-limits-10",
+      "conceptId": "gpu-resource-limits",
+      "title": "Three ceilings, one launch",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-occupancy", "gpu-scheduler"],
+      "goDeeper": "gpu-persistent-threads",
+      "diagram": "gpu-occupancy",
+      "explanation": [
+        "Occupancy counted warps against files. The scheduler spent the ones that fit. A resource-limited launch is what happens when those ceilings are coupled at launch time: registers per thread, shared memory per block, and warp or block slots on the SM. You cannot raise one without checking the others. The first ceiling that hits is the launch you actually got.",
+        "A kernel that wants a large tile in shared memory may only fit one block per SM, leaving warp slots empty. A kernel that wants many registers may fit many small blocks and still be register-capped. A kernel that looks 'occupancy-limited' in a tool is asking you which of the three numbers was the min. Treating occupancy as one knob hides the coupling.",
+        "The scheduler cannot invent a warp the files refused. Tuning launch geometry — threads per block, blocks per grid, how much dynamic shared memory — is how you walk the coupled surface. Sometimes you give back tile size to get another block, because the picker had no candidates. Sometimes you keep the tile and accept a lonely SM, because the tile was the bandwidth win."
+      ],
+      "example": "48 KB shared, 24 KB tile, 256-thread blocks (8 warps): two blocks, 16 warps, if registers allow. Grow the tile to 48 KB: one block, 8 warps, empty warp slots, and a scheduler that has half the candidates. The occupancy percentage moved because two ceilings traded, not because the chip shrank.",
+      "whyItMatters": "Launch configuration is this surface. If you only quote occupancy, you cannot say whether to shrink the tile, the register target, or the block size — and the scheduler will quietly run whatever survived.",
+      "quiz": [
+        {
+          "id": "rl10-1",
+          "stem": "A resource-limited launch means:",
+          "correctAnswer": "Registers, shared memory, and warp slots are coupled ceilings on how the kernel fits",
+          "distractors": [
+            { "text": "The host ran out of CPU threads", "kind": "misapplied", "rationale": "This is an on-SM fit, not a host thread pool." },
+            { "text": "The ISA forbids more than one block", "kind": "nearby", "rationale": "The ISA is not the ceiling. The files are." },
+            { "text": "Divergence has been disabled by the driver", "kind": "subtle", "rationale": "Control mix is not what 'resource-limited' names." }
+          ],
+          "correctExplanation": "Three budgets, one min. That min is the launch you got.",
+          "objectiveIds": ["Treat registers, shared memory, and warp slots as coupled launch limits"],
+          "prerequisiteConceptIds": ["gpu-occupancy", "gpu-scheduler"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "rl10-2",
+          "stem": "A kernel that fills the scratchpad with one block and leaves warp slots empty is limited by:",
+          "correctAnswer": "Shared memory, not by the warp-slot cap",
+          "distractors": [
+            { "text": "Warp slots, because empty slots are always the limiter", "kind": "reversed", "rationale": "Empty slots are the symptom. The scratchpad was the ceiling." },
+            { "text": "The host launch queue depth", "kind": "nearby", "rationale": "The queue accepted the launch. The SM could not house another block." },
+            { "text": "The warp width being 32", "kind": "subtle", "rationale": "Width did not decide the tile." }
+          ],
+          "correctExplanation": "Read the empty resource. The full one is the limiter.",
+          "objectiveIds": ["Diagnose which resource is actually capping a kernel"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "rl10-3",
+          "stem": "Giving back tile size to fit another block is a trade because:",
+          "correctAnswer": "You may gain scheduler candidates and lose on-chip reuse that was saving DRAM",
+          "distractors": [
+            { "text": "Tiles and residents never interact", "kind": "reversed", "rationale": "The scratchpad is exactly where they interact." },
+            { "text": "The scheduler will invent warps the files refused", "kind": "nearby", "rationale": "It cannot. That is the coupling." },
+            { "text": "Registers grow automatically to fill the hole", "kind": "subtle", "rationale": "The files are separate. Shrinking a tile does not mint registers." }
+          ],
+          "correctExplanation": "Candidates versus reuse. Both are real. The launch picks a point on that surface.",
+          "objectiveIds": ["Treat registers, shared memory, and warp slots as coupled launch limits"],
+          "prerequisiteConceptIds": ["gpu-occupancy", "gpu-scheduler"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-persistent-threads-10",
+      "conceptId": "gpu-persistent-threads",
+      "title": "Stay, and pull the next tile",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-scheduler"],
+      "goDeeper": "gpu-atomics",
+      "explanation": [
+        "The usual kernel is one launch per tile: the host names a grid, the device runs it, the grid ends, the host names another. A persistent kernel is the other shape. You launch enough blocks to fill the machine, and those blocks live. They pull the next piece of work from a queue until the queue is empty. The host is no longer in the inner loop of every tile.",
+        "That exists because launch has a cost and because work is often irregular. A short kernel over a small grid can spend more time being launched than being run. A grid whose tiles take wildly different amounts of time leaves SMs idle at the tail while the host has not yet submitted the next grid. Persistent threads keep the residents the scheduler already has, and they grab more work when they finish.",
+        "The cost is real. You now own load balancing, termination, and a queue that many blocks touch. Occupancy is chosen once, at the long-lived launch, so a bad register or scratchpad choice stays for the whole queue. Persistence is not a free faster launch. It is a decision to stop tearing down the SM's residents between tiles."
+      ],
+      "example": "A ray tracer whose rays take 10× different times: one launch per wave of rays tail-idles the chip. A persistent kernel with a work queue lets a finished block pull more rays while a neighbour is still tracing a hard one. Same occupancy budget, less host round-trip, less tail.",
+      "whyItMatters": "Capture, the last module's early cousin, records a launch sequence so the host is not in the loop. Persistence keeps the threads themselves. They solve related host-overhead problems at different layers. Do not collapse them into 'just use graphs'.",
+      "quiz": [
+        {
+          "id": "pt10-1",
+          "stem": "A persistent kernel differs from one launch per tile because:",
+          "correctAnswer": "Resident blocks live and pull the next work instead of exiting after one tile",
+          "distractors": [
+            { "text": "The host launches a new grid for every item, faster", "kind": "reversed", "rationale": "That is the usual per-tile launch, not persistence." },
+            { "text": "Warps become wider than the machine", "kind": "nearby", "rationale": "Width is constant. Lifetime is what changed." },
+            { "text": "The scheduler is turned off", "kind": "subtle", "rationale": "The scheduler still picks ready warps. The work source changed." }
+          ],
+          "correctExplanation": "Stay resident, pull work. That is the shape.",
+          "objectiveIds": ["Contrast a persistent kernel that pulls work with one launch per tile"],
+          "prerequisiteConceptIds": ["gpu-scheduler"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "pt10-2",
+          "stem": "Irregular work motivates persistence because:",
+          "correctAnswer": "A fixed grid tail-idles while slow tiles finish and the host has not submitted more",
+          "distractors": [
+            { "text": "Irregular work cannot run on SIMT at all", "kind": "reversed", "rationale": "It runs. The tail and the launch tax are the problem." },
+            { "text": "The register file grows for irregular kernels", "kind": "nearby", "rationale": "Files do not grow because work times vary." },
+            { "text": "Divergence is illegal inside a persistent kernel", "kind": "subtle", "rationale": "Persistence does not delete control mix." }
+          ],
+          "correctExplanation": "Finished blocks can pull more. A dead grid cannot.",
+          "objectiveIds": ["Say why launch overhead and irregular work motivate staying resident"],
+          "prerequisiteConceptIds": ["gpu-scheduler"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pt10-3",
+          "stem": "Choosing occupancy once for a persistent kernel is a risk because:",
+          "correctAnswer": "A bad register or scratchpad choice stays for the whole queue, not for one tile",
+          "distractors": [
+            { "text": "Persistent kernels do not use registers", "kind": "reversed", "rationale": "They use the same files. They just live longer." },
+            { "text": "The scheduler ignores persistent warps", "kind": "nearby", "rationale": "It still picks them. That is the point." },
+            { "text": "Launch cost becomes infinite", "kind": "subtle", "rationale": "Launch cost is paid once. That is the benefit, not a diverging cost." }
+          ],
+          "correctExplanation": "You stopped tearing down residents. Their budget is now a long-lived decision.",
+          "objectiveIds": ["Say why launch overhead and irregular work motivate staying resident"],
+          "prerequisiteConceptIds": ["gpu-scheduler"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

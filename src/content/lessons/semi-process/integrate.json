@@ -1,0 +1,774 @@
+{
+  "courseId": "semi-process",
+  "moduleId": "semi-p-integrate",
+  "lessons": [
+    {
+      "id": "semi-isolation-10",
+      "conceptId": "semi-isolation",
+      "title": "Neighbours must not share a channel",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-oxide", "semi-etch-plasma"],
+      "goDeeper": "semi-integration",
+      "explanation": [
+        "Two MOSFETs drawn side by side will share an inversion layer if the silicon between them can still turn on. Isolation is the process that breaks that path. A thick field oxide, or a trench cut and filled, puts insulator where a parasitic channel would have lived. Leaving more empty space on the layout is not the same thing: as pitch shrinks, the space still inverts, still leaks, still lets one device talk to the next through the substrate.",
+        "Older flows grew a thick local field oxide (LOCOS) using a nitride mask so only the field regions oxidized. Newer flows etch a shallow trench, fill it with deposited oxide, and CMP it flat. Both are isolation. Both spend the unit processes you already have: oxidation or CVD plus a directional etch. The new idea is why they exist — not the brand name of the trench.",
+        "Without isolation, a 'transistor' is a suggestion. Integration will next put a gate stack on the remaining active silicon. If that silicon is still electrically one puddle, the gate stack has nothing individual to control."
+      ],
+      "example": "Two minimum-pitch nMOS devices with only drawn space between them leak through a field inversion when the interconnect above biases the surface. The same pair with a filled trench between the active areas stays independent at the same bias.",
+      "whyItMatters": "A chip is not a pile of unit processes. Isolation is the first time those processes are used to make devices not be each other.",
+      "quiz": [
+        {
+          "id": "is10-1",
+          "stem": "Device isolation exists so that:",
+          "correctAnswer": "Neighbouring transistors do not share an inversion path through the silicon",
+          "distractors": [
+            { "text": "The wafer can skip the first clean", "kind": "subtle", "rationale": "Dirt is still dirt. Isolation is an electrical break." },
+            { "text": "Every implant automatically activates", "kind": "misapplied", "rationale": "Anneal activates. Isolation separates." },
+            { "text": "Metal lines can dissolve into the channel on purpose", "kind": "nearby", "rationale": "That is a contamination failure, not isolation." }
+          ],
+          "correctExplanation": "One channel per device. That is the job.",
+          "objectiveIds": ["Explain how neighboring transistors are kept from sharing a channel"],
+          "prerequisiteConceptIds": ["semi-oxide", "semi-etch-plasma"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "is10-2",
+          "stem": "A field oxide or a filled trench is used instead of 'just more space' because:",
+          "correctAnswer": "Drawn space still inverts and leaks once the pitch is tight",
+          "distractors": [
+            { "text": "Insulator between devices always makes them share a channel", "kind": "reversed", "rationale": "Insulator is what stops the share." },
+            { "text": "Space on the layout consumes silicon the way thermal oxide does", "kind": "nearby", "rationale": "Empty layout space does not grow a film." },
+            { "text": "Trenches are only for copper wires", "kind": "subtle", "rationale": "Shallow trench isolation is a front-end silicon cut." }
+          ],
+          "correctExplanation": "Geometry on paper is not a dielectric in the silicon.",
+          "objectiveIds": ["Contrast a field oxide or trench with just leaving more space"],
+          "prerequisiteConceptIds": ["semi-oxide", "semi-etch-plasma"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "is10-3",
+          "stem": "Skipping isolation and relying on drawn gaps at minimum pitch typically:",
+          "correctAnswer": "Lets one device’s surface inversion turn on a path into the next",
+          "distractors": [
+            { "text": "Makes every threshold more stable", "kind": "reversed", "rationale": "You added a parasitic MOSFET you did not draw." },
+            { "text": "Replaces the need for a gate dielectric", "kind": "nearby", "rationale": "The gate stack is a different film." },
+            { "text": "Planarizes the wafer better than CMP", "kind": "subtle", "rationale": "A leak path is not a polish." }
+          ],
+          "correctExplanation": "The undrawn device in the space is the failure. Isolation deletes it.",
+          "objectiveIds": ["Contrast a field oxide or trench with just leaving more space"],
+          "prerequisiteConceptIds": ["semi-oxide", "semi-etch-plasma"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-well-10",
+      "conceptId": "semi-well",
+      "title": "The tub the MOSFET sits in",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-implant"],
+      "explanation": [
+        "A well is a doped tub in the wafer that becomes the body of a MOSFET. CMOS needs both polarities: an n-well so a pMOS can live in a p-type wafer, or twin wells so each device has the body doping you actually wanted. The well is not the source/drain. It is the volume the channel sits on. Its doping is a large, relatively deep implant plus an anneal, not a surface scratch.",
+        "Threshold voltage is a strong function of that body doping. Too little well dose and the device turns on early, punches through, or latches up with its neighbour. Too much and the threshold climbs, mobility falls, and junctions get harder. A well that is shifted sideways so a pMOS sits partly in p-substrate is not a pMOS. It is a damaged drawing.",
+        "This is implant plus anneal used as architecture. The accelerator placed a tub. The heat activated it and will keep moving it if later furnaces are careless. Isolation then cuts the tubs into device-sized islands. The gate stack will sit on what remains."
+      ],
+      "example": "A pMOS drawn in a 1×10^17 cm⁻³ n-well has the intended threshold. The same mask on a wafer whose well implant was half dose turns on too early and leaks to the neighbouring nMOS through a poorly defined tub. The gate oxide was fine. The tub was not.",
+      "whyItMatters": "People blame 'the transistor' when the body doping was wrong. A well is a process object with a dose and an edge, not a colouring on a slide.",
+      "quiz": [
+        {
+          "id": "wl10-1",
+          "stem": "A well is:",
+          "correctAnswer": "The doped tub that is the MOSFET’s body",
+          "distractors": [
+            { "text": "The metal wire on the last layer", "kind": "nearby", "rationale": "Wires are back-end. The well is in the silicon." },
+            { "text": "The photoresist pattern for one contact", "kind": "subtle", "rationale": "A well is doping, not a mask film." },
+            { "text": "The CMP pad that flattens oxide", "kind": "misapplied", "rationale": "A pad is not a tub." }
+          ],
+          "correctExplanation": "Body doping in a volume. That is the well.",
+          "objectiveIds": ["Describe a well as the doped tub a MOSFET sits in"],
+          "prerequisiteConceptIds": ["semi-implant"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "wl10-2",
+          "stem": "A well implant whose dose lands far below the target typically:",
+          "correctAnswer": "Shifts threshold down and invites punchthrough or leaky neighbours",
+          "distractors": [
+            { "text": "Always raises threshold because less dose is stricter", "kind": "reversed", "rationale": "Lighter body doping usually lowers Vt." },
+            { "text": "Grows a thicker dry gate oxide", "kind": "nearby", "rationale": "Dose is not oxidant." },
+            { "text": "Removes the need for isolation", "kind": "subtle", "rationale": "A wrong tub is not a trench." }
+          ],
+          "correctExplanation": "Body doping is a Vt knob. Miss the dose, miss the device.",
+          "objectiveIds": ["Predict what a misplaced well dose does to threshold"],
+          "prerequisiteConceptIds": ["semi-implant"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "wl10-3",
+          "stem": "A well mask that is shifted so a pMOS only half-overlaps its n-well fails because:",
+          "correctAnswer": "Part of the device now sits in the wrong body doping",
+          "distractors": [
+            { "text": "The accelerator cannot run unless the overlap is perfect", "kind": "nearby", "rationale": "The tool will run. The physics will be wrong." },
+            { "text": "Copper then has to be the well dopant", "kind": "subtle", "rationale": "Copper is a contaminant, not a well species." },
+            { "text": "Thermal oxide can no longer grow on silicon", "kind": "reversed", "rationale": "Oxide does not care about this overlay error." }
+          ],
+          "correctExplanation": "The tub has an edge. The transistor has to live inside it.",
+          "objectiveIds": ["Predict what a misplaced well dose does to threshold"],
+          "prerequisiteConceptIds": ["semi-implant"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-gate-stack-10",
+      "conceptId": "semi-gate-stack",
+      "title": "Dielectric plus electrode on the channel",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-oxide", "semi-cvd"],
+      "goDeeper": "semi-integration",
+      "explanation": [
+        "The gate stack is two films with one job: control the channel. A dielectric sits on the silicon. An electrode sits on the dielectric. Voltage on the electrode moves charge in the channel through that dielectric. Either film missing, leaky, or in the wrong order and you do not have a MOSFET. You have a resistor or a short.",
+        "The dielectric in a classical stack is a dry thermal gate oxide grown from the wafer — thin, clean interface, silicon consumed on purpose. The electrode is deposited: polycrystalline silicon, later a metal. You grow the insulator on silicon; you deposit the plate that will be the other capacitor electrode. Swapping those arrivals — depositing a thick ILD-like oxide and growing something on a metal — is how the stack stops being a gate.",
+        "Later nodes change the materials (high-k, metal gates) without changing the sentence. There is still a dielectric the channel can live under, and still an electrode you can bias. This course stays on that sentence. The MOS capacitor unit next door is the same stack without source and drain."
+      ],
+      "example": "Grow 8 nm dry oxide on clean (100) Si, deposit poly, pattern the stack, then implant source/drain self-aligned to that edge. That is a gate. Deposit 800 nm ILD, sputter aluminum, and call it a gate and you have a back-end capacitor sitting nowhere near a channel.",
+      "whyItMatters": "Integration is about when this stack is built relative to wells, isolation, and the last heat. If the stack is just 'the gate', you cannot see why order matters.",
+      "quiz": [
+        {
+          "id": "gs10-1",
+          "stem": "A gate stack is:",
+          "correctAnswer": "A dielectric plus an electrode sitting on the channel",
+          "distractors": [
+            { "text": "Only the well implant", "kind": "nearby", "rationale": "The well is the body. The stack is the control surface." },
+            { "text": "A CMP pad and slurry", "kind": "subtle", "rationale": "Planarization is not the gate." },
+            { "text": "The last copper wire on the chip", "kind": "misapplied", "rationale": "A wire is interconnect, not the control electrode on the channel." }
+          ],
+          "correctExplanation": "Two films, one job: control the inversion.",
+          "objectiveIds": ["Name the gate stack as dielectric plus electrode on the channel"],
+          "prerequisiteConceptIds": ["semi-oxide", "semi-cvd"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "gs10-2",
+          "stem": "A grown gate oxide and a deposited electrode are paired because:",
+          "correctAnswer": "The insulator wants a silicon interface; the plate is a film you add on top",
+          "distractors": [
+            { "text": "Both must be grown from the wafer or neither works", "kind": "reversed", "rationale": "The electrode is deposited. Metal or poly is not grown SiO2." },
+            { "text": "The electrode must be thermal oxide and the dielectric sputtered copper", "kind": "nearby", "rationale": "That swap is the failure mode." },
+            { "text": "Growth and deposition are the same arrival", "kind": "subtle", "rationale": "This whole course has been that they are not." }
+          ],
+          "correctExplanation": "Grow the interface you can live with. Deposit the conductor you can pattern.",
+          "objectiveIds": ["Contrast a grown gate oxide with a deposited electrode"],
+          "prerequisiteConceptIds": ["semi-oxide", "semi-cvd"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "gs10-3",
+          "stem": "Replacing the grown gate oxide with a thick deposited ILD under the same electrode typically:",
+          "correctAnswer": "Kills gate control because the dielectric is the wrong film in the wrong place",
+          "distractors": [
+            { "text": "Improves the Si/SiO2 interface automatically", "kind": "reversed", "rationale": "An ILD was never grown on the channel." },
+            { "text": "Activates the well without an anneal", "kind": "misapplied", "rationale": "A dielectric swap is not heat." },
+            { "text": "Isolates neighbouring metals on the back end", "kind": "nearby", "rationale": "That is the ILD’s real job — elsewhere." }
+          ],
+          "correctExplanation": "Same word 'oxide' in sloppy speech. Different film, different surface, no transistor.",
+          "objectiveIds": ["Contrast a grown gate oxide with a deposited electrode"],
+          "prerequisiteConceptIds": ["semi-oxide", "semi-cvd"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-silicide-10",
+      "conceptId": "semi-silicide",
+      "title": "Where silicon and metal are allowed to meet",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-metals"],
+      "diagram": "contact-stack",
+      "explanation": [
+        "A contact is not a metal line dropped on bare silicon. Silicon’s native surface and a deposited metal make a poor, unstable meeting: high resistance, spikes, or a leak. A silicide is a compound that forms when a chosen metal reacts with silicon — TiSi2, CoSi2, NiSi — to make a low-resistance skin on the source, drain, and often the gate. The metal line then lands on that skin, usually with a barrier still in the hole.",
+        "The reaction is picky. Native oxide, particles, or a polymer leftover from etch block it. Then the contact is open or noisy. Too much heat and some silicides spike through a shallow junction and leak to the well. Too little heat and the phase you wanted never forms, so the resistance stays high. Cleanliness at this interface is not a slogan leftover from module one. It is the yield of the contact.",
+        "Self-aligned silicide (salicide) uses a spacer so the metal reacts only where silicon is exposed, then the unreacted metal is wet-stripped. That is integration using etch, deposition, and a clean — not a new physics. The idea to keep is: low resistance only if the meeting is a real, clean compound."
+      ],
+      "example": "Titanium deposited on HF-last silicon and annealed forms a silicide with a few ohms per square on the diffusion. The same titanium on a wafer that skipped the HF last sits on native oxide, does not react, and the contact chain opens. A harsher anneal on a clean but shallow junction spikes through to the well and leaks.",
+      "whyItMatters": "Opens and leaky contacts are this interface, not a mysterious 'backend issue'. The barrier lesson told you metals wander. This lesson is the legal meeting.",
+      "quiz": [
+        {
+          "id": "si10-1",
+          "stem": "A silicide is:",
+          "correctAnswer": "A low-resistance compound formed where a chosen metal reacts with silicon",
+          "distractors": [
+            { "text": "Any sputtered copper line on oxide", "kind": "nearby", "rationale": "A wire on oxide is interconnect, not a silicide." },
+            { "text": "A wet isotropic etch of the gate", "kind": "subtle", "rationale": "Silicide is a reaction product, not an etch." },
+            { "text": "The slurry used in CMP", "kind": "misapplied", "rationale": "Slurry is not a contact compound." }
+          ],
+          "correctExplanation": "Metal plus silicon, on purpose, as a skin the via can land on.",
+          "objectiveIds": ["Explain a silicide as a low-resistance meeting of silicon and metal"],
+          "prerequisiteConceptIds": ["semi-metals"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "si10-2",
+          "stem": "A dirty native oxide at the intended silicide surface typically:",
+          "correctAnswer": "Blocks the reaction and leaves an open or noisy contact",
+          "distractors": [
+            { "text": "Makes the silicide more conformal than CVD", "kind": "reversed", "rationale": "Dirt prevents the compound, it does not improve it." },
+            { "text": "Automatically grows a better gate oxide", "kind": "nearby", "rationale": "Native oxide here is a contact defect, not a gate process." },
+            { "text": "Implants extra well dose", "kind": "subtle", "rationale": "No accelerator ran." }
+          ],
+          "correctExplanation": "No clean silicon, no reaction, no low-R meeting.",
+          "objectiveIds": ["Diagnose an open or leaky contact from a dirty interface or an overgrown spike"],
+          "prerequisiteConceptIds": ["semi-metals"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "si10-3",
+          "stem": "An over-hard silicide anneal on a shallow junction can leak because:",
+          "correctAnswer": "The compound spikes through the junction into the well",
+          "distractors": [
+            { "text": "Heat always removes the barrier from every metal line", "kind": "nearby", "rationale": "The spike is a local reaction, not a factory-wide barrier strip." },
+            { "text": "Silicide cannot form if the well exists", "kind": "reversed", "rationale": "Silicide sits on source/drain in a well on purpose." },
+            { "text": "The pad CMP then implants copper", "kind": "subtle", "rationale": "CMP is not an implanter." }
+          ],
+          "correctExplanation": "The meeting can overgrow. A shallow junction does not forgive a spike.",
+          "objectiveIds": ["Diagnose an open or leaky contact from a dirty interface or an overgrown spike"],
+          "prerequisiteConceptIds": ["semi-metals"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-integration-10",
+      "conceptId": "semi-integration",
+      "title": "The sequence is the device",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-gate-stack", "semi-isolation"],
+      "goDeeper": "semi-yield-intro",
+      "diagram": "process-flow",
+      "explanation": [
+        "A MOSFET is not a pile of good unit processes. It is an order. Isolation first, so the active islands exist. Wells next, so each island has a body. Gate oxide and electrode next, so later source/drain implants can be self-aligned to that edge. Silicide and contacts after the last high heat. Metals last, because copper and aluminum do not belong in a 1000 °C tube. Swap two of those and you have a different object, usually a dead one.",
+        "Thermal budget is how order wrecks a profile. A shallow extension implant that is later given a long field-oxidation heat walks into the channel. A well that is implanted after the gate stack cannot be the body the stack was grown on. A metal that sees a furnace spikes or melts. The failure is not 'a bad etch'. It is a step that was legally good and illegally late.",
+        "This is why integration is a concept and not a chapter title. Every earlier unit process is still true. None of them is the device until they happen in an order the physics can survive."
+      ],
+      "example": "A student flow grows a beautiful dry gate oxide, then does a 4-hour wet field oxidation 'to save time later'. The gate oxide is now much thicker and the already-placed well has moved. The etch was fine. The order was not.",
+      "whyItMatters": "Yield, metrology, and the next semiconductor courses all assume you can see a flow as a set of promises later heat can break.",
+      "quiz": [
+        {
+          "id": "in10-1",
+          "stem": "In this course, the device is:",
+          "correctAnswer": "The sequence of unit processes, not any single beautiful step",
+          "distractors": [
+            { "text": "Whatever film was grown last, regardless of order", "kind": "reversed", "rationale": "Last is often too late for the films that needed to come first." },
+            { "text": "Only the photomask drawing", "kind": "nearby", "rationale": "A drawing is not a thermal budget." },
+            { "text": "The brand name of the etch tool", "kind": "subtle", "rationale": "Tools run steps. Order makes the transistor." }
+          ],
+          "correctExplanation": "Unit processes are ingredients. The recipe order is the MOSFET.",
+          "objectiveIds": ["State that the sequence of unit processes is the device"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "in10-2",
+          "stem": "A later high-temperature step after a shallow implant typically:",
+          "correctAnswer": "Walks the already-placed profile into a place the mask did not draw",
+          "distractors": [
+            { "text": "Freezes the implant so it can never move again", "kind": "reversed", "rationale": "Heat is how profiles move." },
+            { "text": "Removes the need for the original implant", "kind": "nearby", "rationale": "The atoms are still there. They are just elsewhere." },
+            { "text": "Converts the implant into a PVD barrier", "kind": "subtle", "rationale": "No metal was thrown." }
+          ],
+          "correctExplanation": "Dt does not care that you were 'done' with that implant.",
+          "objectiveIds": ["Predict a failure when a later high-temperature step wrecks an earlier profile"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "in10-3",
+          "stem": "Putting copper metallization before the last 1000 °C front-end furnace typically fails because:",
+          "correctAnswer": "The metal cannot legally see that heat — it spikes, melts, or poisons the tube",
+          "distractors": [
+            { "text": "Copper needs that furnace to become a gate oxide", "kind": "reversed", "rationale": "Copper is not an oxidant for a gate." },
+            { "text": "Furnaces refuse to run unless copper is present", "kind": "nearby", "rationale": "Factories segregate copper away from those tubes." },
+            { "text": "Isolation trenches only etch after copper is down", "kind": "subtle", "rationale": "Isolation was a front-end cut, much earlier." }
+          ],
+          "correctExplanation": "Back-end metals come last because the front-end heat would destroy them — and the furnace.",
+          "objectiveIds": ["Predict a failure when a later high-temperature step wrecks an earlier profile"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-integration-20",
+      "conceptId": "semi-integration",
+      "title": "A legal order, and the heats that break it",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["semi-gate-stack", "semi-isolation"],
+      "goDeeper": "semi-yield-intro",
+      "diagram": "process-flow",
+      "explanation": [
+        "The ten-minute unit said the sequence is the device. This one walks a legal beginner flow far enough to see the traps. Start with a cleaned, polished wafer. Grow or deposit a pad, etch isolation, fill, CMP. Implant wells and anneal them while there is still thermal budget to spend. Grow the gate oxide on the remaining silicon. Deposit and pattern the electrode. Implant source/drain self-aligned to that edge, then a shorter anneal than the well saw. Form silicide. Open contacts. Only then deposit barriers and metals.",
+        "Each arrow is a promise. Isolation before the gate so the active area is already an island. Wells before the gate so the body exists when the oxide grows. Gate before source/drain so the implant edge is the gate edge. Silicide after the last long heat so the compound does not spike in a 1000 °C tube. Metals after every furnace that would wreck them. A flow that does a beautiful job on each box and shuffles two arrows is not 90% right. It is a different, usually dead, object.",
+        "Self-alignment is the integration trick students miss. You do not try to overlay a source/drain mask to a gate with zero error. You implant after the gate exists and let the gate be the mask. That is why the gate stack cannot come last, and why a later heat that grows more oxide on that edge also moves the junction you thought was defined.",
+        "The other trick is 'what cannot go back'. You can measure a film and sometimes rework a lithography. You cannot un-diffuse a well, un-grow a gate oxide that saw extra wet heat, or un-poison a furnace that saw copper. Integration is the list of one-way doors."
+      ],
+      "example": "Legal: isolation → well → gate ox → poly → S/D implant → spike anneal → silicide → contacts → metal. Illegal-but-pretty: grow the gate ox, then do a long wet field oxidation to 'finish isolation', then implant the well. The oxide is now the wrong thickness, the well is in the wrong place relative to the already-grown stack, and the lot looks clean in every single-step inspection.",
+      "whyItMatters": "Metrology and yield in the next units are how you notice a broken promise before the lot is jewellery. If you cannot name the promise, you will measure the wrong film.",
+      "quiz": [
+        {
+          "id": "in20-1",
+          "stem": "Source/drain implants come after the gate stack so that:",
+          "correctAnswer": "The gate edge can be the implant mask — self-alignment",
+          "distractors": [
+            { "text": "The implant can grow the gate oxide", "kind": "reversed", "rationale": "Implant is not an oxidant." },
+            { "text": "Copper is already in the furnace by then", "kind": "nearby", "rationale": "Copper is still not allowed in that furnace." },
+            { "text": "Isolation can be skipped if the gate exists", "kind": "subtle", "rationale": "A gate does not separate neighbouring bodies." }
+          ],
+          "correctExplanation": "You let the stack define the edge instead of trusting overlay on a second mask.",
+          "objectiveIds": ["State that the sequence of unit processes is the device"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "in20-2",
+          "stem": "Doing a long wet field oxidation after a finished dry gate oxide typically:",
+          "correctAnswer": "Thickens and wets the gate you already grew, and spends more Dt on earlier profiles",
+          "distractors": [
+            { "text": "Leaves the gate oxide untouched because it is already 'done'", "kind": "reversed", "rationale": "The oxidant does not honour your schedule." },
+            { "text": "Removes the well implant from the wafer", "kind": "nearby", "rationale": "The well stays. It moves." },
+            { "text": "Deposits an ILD on the metal that is not there yet", "kind": "subtle", "rationale": "This is still a front-end furnace." }
+          ],
+          "correctExplanation": "A later heat is not a new box. It is more of every earlier box that feared heat.",
+          "objectiveIds": ["Predict a failure when a later high-temperature step wrecks an earlier profile"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "in20-3",
+          "stem": "Which move is a one-way door this flow cannot reopen?",
+          "correctAnswer": "A copper excursion into a 1000 °C front-end tube",
+          "distractors": [
+            { "text": "A resist coat you can strip and redo after inspect", "kind": "nearby", "rationale": "Lithography is often reworkable. That is the contrast." },
+            { "text": "A metrology map you can run again on the same wafer", "kind": "subtle", "rationale": "Measuring twice is not a wrecked profile." },
+            { "text": "A CMP touch-up on a still-thick ILD", "kind": "reversed", "rationale": "You can often polish more. You cannot un-poison a tube." }
+          ],
+          "correctExplanation": "Integration is knowing which mistakes are films and which are the factory.",
+          "objectiveIds": ["Predict a failure when a later high-temperature step wrecks an earlier profile"],
+          "prerequisiteConceptIds": ["semi-gate-stack", "semi-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-yield-intro-10",
+      "conceptId": "semi-yield-intro",
+      "title": "Good die per wafer is a process number",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-clean", "semi-integration"],
+      "goDeeper": "semi-defect-class",
+      "explanation": [
+        "Yield is how many die on the wafer actually work. It is not a blessing and it is not a test-floor personality. Random killer defects — particles, extras, opens — scale with area and density. A simple model is exponential in defect density times die area: bigger die, same dirt, fewer good chips. That density was being set back at the clean and at every film that could include a lump.",
+        "A parametric miss is different. The die has no particle. The gate oxide is 20% thick, the well dose is off, the line is narrow. It fails a spec. The process window — the range of time, temperature, dose, and etch that still makes a legal device — owned that fail. Widening a window is a process change. Hunting a particle is a clean or a tool change. Mixing the two is how a lot gets the wrong medicine.",
+        "Integration told you the sequence is the device. Yield is how often that sequence produced a device inside its window and without a killer. The next unit names the defect classes. This one is the split: dead from a lump, versus out of spec from a knob."
+      ],
+      "example": "A 50 mm² die at a defect density that kills one site per 100 mm² yields far better than a 200 mm² die in the same dirt. A second lot with almost no particles still yields poorly because every transistor’s threshold is 80 mV high — a well-dose window miss, not a cleaner that failed.",
+      "whyItMatters": "If you cannot separate a killer from a parametric miss, you will reclean a furnace that needed a new implant recipe, or retune a recipe that needed a filter change.",
+      "quiz": [
+        {
+          "id": "yd10-1",
+          "stem": "Yield, in this course, is:",
+          "correctAnswer": "Good die per wafer, owned by defect density and process window",
+          "distractors": [
+            { "text": "How shiny the wafer looks after CMP", "kind": "nearby", "rationale": "Shininess is not a die count." },
+            { "text": "The brand of the lithography tool", "kind": "subtle", "rationale": "A tool can be part of a window. It is not the definition." },
+            { "text": "Whether the designer used more than one metal layer", "kind": "misapplied", "rationale": "Layer count changes area and risk. It is not yield itself." }
+          ],
+          "correctExplanation": "Count the good ones. Then ask whether dirt or a knob killed the rest.",
+          "objectiveIds": ["Treat yield as good die per wafer, owned by defects and process window"],
+          "prerequisiteConceptIds": ["semi-clean", "semi-integration"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "yd10-2",
+          "stem": "A killer defect differs from a parametric miss because:",
+          "correctAnswer": "One is a local wreck (particle, open); the other is a spec miss with no lump required",
+          "distractors": [
+            { "text": "They are two words for the same flake", "kind": "reversed", "rationale": "That was the particle-versus-metal lesson. This split is lump versus knob." },
+            { "text": "Parametric misses only happen after copper is poured", "kind": "nearby", "rationale": "A thick gate oxide is a front-end parametric miss." },
+            { "text": "Killers can only be metals, never particles", "kind": "subtle", "rationale": "A particle under the first oxide is a classic killer." }
+          ],
+          "correctExplanation": "Dead site versus out-of-spec site. Different owners, different fixes.",
+          "objectiveIds": ["Separate a killer defect from a parametric miss"],
+          "prerequisiteConceptIds": ["semi-clean", "semi-integration"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "yd10-3",
+          "stem": "A clean lot with almost no particles still yields badly and every die is 80 mV high in Vt. The better first guess is:",
+          "correctAnswer": "A process-window miss such as well dose or gate oxide thickness",
+          "distractors": [
+            { "text": "A single particle under one contact on one die", "kind": "reversed", "rationale": "One particle does not shift every die the same way." },
+            { "text": "The boule was never sliced", "kind": "subtle", "rationale": "You would not have a lot of die to test." },
+            { "text": "CMP automatically implanted extra boron", "kind": "nearby", "rationale": "A pad is not an implanter." }
+          ],
+          "correctExplanation": "Same miss on every die is a knob. A killer is local.",
+          "objectiveIds": ["Separate a killer defect from a parametric miss"],
+          "prerequisiteConceptIds": ["semi-clean", "semi-integration"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-defect-class-10",
+      "conceptId": "semi-defect-class",
+      "title": "Three ways a die can be wrong",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-yield-intro"],
+      "explanation": [
+        "Name the class before you name the tool. A particle is a lump from a clean, a deposition, or handling — it shadows, includes, or shorts. A pattern defect is a feature that is not what the mask asked for: a bridge, a mousebite, an extra blob after etch or lithography. A parametric miss is a legal-looking pattern whose thickness, dose, or overlay sits outside the window. Three classes, three first phone calls.",
+        "Mapping is the skill. Particles point at cleans, loaders, and dirty depositions. Pattern defects point at lithography, etch, and sometimes CMP scratches that print. Parametric misses point at furnaces, implanters, and metrology that should have caught a drift. A via chain that is open on one site is not automatically 'the etch tool' — it might be a particle in that hole, a resist scum, or a barrier that thinned. The class narrows the list.",
+        "Yield as a process property only becomes actionable once the class is known. Recleaning a furnace because every die is 80 mV high is the wrong class. Retuning an implant because one die has a flake under a contact is also the wrong class."
+      ],
+      "example": "Lot A: clustered failures near the wafer notch, SEM shows flakes in oxide — particle, clean or deposition. Lot B: every dense metal comb is bridged, isolated lines are fine — pattern/etch. Lot C: all die fail the same Vt spec, no extras on SEM — parametric, well or gate.",
+      "whyItMatters": "The next unit, in-line metrology, is how you catch a class before the lot is jewellery. If you cannot name the class, you will measure the wrong thing.",
+      "quiz": [
+        {
+          "id": "dc10-1",
+          "stem": "Particles, pattern defects, and parametric misses differ because:",
+          "correctAnswer": "They are a lump, a wrong shape, and a spec miss — not three words for one flake",
+          "distractors": [
+            { "text": "They always have the same owner and the same fix", "kind": "reversed", "rationale": "The whole point is different owners." },
+            { "text": "Only metals can be particles", "kind": "nearby", "rationale": "A resist flake is a particle too." },
+            { "text": "Parametric misses require a visible extra on SEM", "kind": "subtle", "rationale": "A parametric miss can look perfect and still be out of spec." }
+          ],
+          "correctExplanation": "Lump, shape, knob. Separate them before you pick up a phone.",
+          "objectiveIds": ["Distinguish particles, pattern defects, and parametric misses"],
+          "prerequisiteConceptIds": ["semi-yield-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dc10-2",
+          "stem": "A lot where every die fails the same threshold spec and SEM shows no extras is usually owned by:",
+          "correctAnswer": "A furnace or implanter that drifted out of the process window",
+          "distractors": [
+            { "text": "A single handling flake on one site", "kind": "nearby", "rationale": "One flake does not move every die the same way." },
+            { "text": "The CMP pad brand only", "kind": "subtle", "rationale": "A pad can scratch (pattern) or dish (parametric) — but a global Vt is a dose or oxide first." },
+            { "text": "A missing boule notch that stopped all cleans", "kind": "reversed", "rationale": "You still had a patterned, testable lot." }
+          ],
+          "correctExplanation": "Global, identical, no lump: parametric. Call the implanter or the tube.",
+          "objectiveIds": ["Map a defect class onto the unit process that usually owns it"],
+          "prerequisiteConceptIds": ["semi-yield-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dc10-3",
+          "stem": "Bridged dense combs with clean isolated lines most likely map to:",
+          "correctAnswer": "A lithography or etch pattern problem in tight spaces",
+          "distractors": [
+            { "text": "A well-dose miss on every transistor equally", "kind": "nearby", "rationale": "That would be parametric and not pitch-selective in that way." },
+            { "text": "A single particle under a gate on one die", "kind": "reversed", "rationale": "One particle is local, not a dense-versus-isolated signature." },
+            { "text": "Copper in a front-end oxidation tube only", "kind": "subtle", "rationale": "That is a contamination class you will meet next, not this comb signature." }
+          ],
+          "correctExplanation": "Pitch-dependent extras are a pattern-transfer signature.",
+          "objectiveIds": ["Map a defect class onto the unit process that usually owns it"],
+          "prerequisiteConceptIds": ["semi-yield-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-metrology-10",
+      "conceptId": "semi-metrology",
+      "title": "Measure before the lot is jewellery",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-integration"],
+      "explanation": [
+        "In-line metrology is a measurement taken while the lot can still be saved or stopped. Thickness after an oxide or CVD film, critical dimension after develop or etch, overlay after a pattern — these numbers tell you whether the promise of the last step was kept. If the oxide is already 30% thick, you do not send that lot into gate etch and metal. You stop.",
+        "End-of-line test is a different clock. It is electrical, complete, and late. The films are stacked, the metals are on, the thermal budget is spent. A fail there is information for the next lot, not a rework for this one. Waiting for end-of-line to learn that the first oxide drifted is how you manufacture scrap efficiently.",
+        "The measurements match the unit processes you already know: ellipsometry for transparent films, a CD tool for openings, overlay marks for layer-to-layer placement. You do not need the later lithography course to understand why you would rather know now. Integration made the promises. Metrology reads them while the door is still open."
+      ],
+      "example": "An ellipsometer after gate oxidation says 12 nm instead of 8 nm. The lot is held. A sister lot that skipped that measurement discovers the same miss at wafer probe, after isolation, wells, implants, silicide, and two metals have been added to a hopeless stack.",
+      "whyItMatters": "A factory without in-line numbers only has funerals. The next lot cannot learn from a death you did not time.",
+      "quiz": [
+        {
+          "id": "me10-1",
+          "stem": "In-line metrology exists to:",
+          "correctAnswer": "Read thickness, CD, or overlay while the lot can still be stopped or reworked",
+          "distractors": [
+            { "text": "Replace the need for any process control", "kind": "reversed", "rationale": "A measurement is how you control. It is not a substitute for a process." },
+            { "text": "Implant the well more uniformly", "kind": "misapplied", "rationale": "Metrology does not place dopant." },
+            { "text": "Grow a thicker field oxide automatically", "kind": "nearby", "rationale": "A tool that measures is not a furnace." }
+          ],
+          "correctExplanation": "Know now, while a door is still open.",
+          "objectiveIds": ["Explain measuring thickness, CD, or overlay before the lot is lost"],
+          "prerequisiteConceptIds": ["semi-integration"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "me10-2",
+          "stem": "Waiting for end-of-line test instead of in-line oxide thickness typically:",
+          "correctAnswer": "Finds the miss after later steps have already been spent on a bad film",
+          "distractors": [
+            { "text": "Lets you un-grow the oxide at probe", "kind": "reversed", "rationale": "End-of-line cannot un-grow a film." },
+            { "text": "Activates the implant without heat", "kind": "subtle", "rationale": "A tester is not an anneal." },
+            { "text": "Removes particles that were under the first oxide", "kind": "nearby", "rationale": "Those particles are already inside the device." }
+          ],
+          "correctExplanation": "Late and complete versus early and still reversible. That is the contrast.",
+          "objectiveIds": ["Contrast in-line metrology with waiting for end-of-line test"],
+          "prerequisiteConceptIds": ["semi-integration"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "me10-3",
+          "stem": "A CD measurement after etch, before metals, is more useful than the same number at probe because:",
+          "correctAnswer": "You can still hold or rework the lot before adding irreversible value",
+          "distractors": [
+            { "text": "Probe cannot measure anything electrical", "kind": "reversed", "rationale": "Probe is electrical — and late." },
+            { "text": "Etch CD is unrelated to the drawn opening", "kind": "nearby", "rationale": "CD is exactly about that opening." },
+            { "text": "Metals must be on for any length to exist", "kind": "subtle", "rationale": "The opening exists as soon as it is etched." }
+          ],
+          "correctExplanation": "The number is cheaper when the wafer is still a film, not jewellery.",
+          "objectiveIds": ["Contrast in-line metrology with waiting for end-of-line test"],
+          "prerequisiteConceptIds": ["semi-integration"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-moscap-10",
+      "conceptId": "semi-moscap",
+      "title": "The stack, before there is a transistor",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-oxide"],
+      "goDeeper": "semi-gate-stack",
+      "explanation": [
+        "A MOS capacitor is the gate stack without source and drain: metal or poly on oxide on silicon. It is the simplest object that still contains the interface this course has been building toward. You can make one as soon as you can grow an oxide and deposit an electrode. You do not need isolation, wells, or silicides to learn whether that oxide is a dielectric you can live with.",
+        "C-V — capacitance versus voltage — is how the stack talks. In accumulation the capacitor looks like the oxide thickness. In depletion the silicon adds a series capacitance and the curve tells you doping. Interface traps stretch and shift the curve. A leaky oxide never gives a clean C-V. All of that is visible before a MOSFET exists.",
+        "Factories still run MOSCAPs as monitors beside product wafers for this reason. A drifted dry oxidation shows up here without waiting for a full flow. The later gate-stack unit is this object plus an electrode pattern that will define source and drain. If you cannot read a MOSCAP, you will treat the transistor as the first time the oxide mattered."
+      ],
+      "example": "A monitor wafer with 8 nm dry oxide and a blanket aluminum dot shows a C-V whose accumulation capacitance matches 8 nm and whose flatband is clean. A sister run that skipped the last clean shows stretch-out and a voltage shift — traps and oxide charge — before any source/drain mask is used.",
+      "whyItMatters": "The transistor is a late exam. The MOSCAP is the quiz after oxidation. Integration goes faster when you fail the quiz, not the exam.",
+      "quiz": [
+        {
+          "id": "mc10-1",
+          "stem": "A MOS capacitor is:",
+          "correctAnswer": "Oxide plus an electrode on silicon, without needing source and drain",
+          "distractors": [
+            { "text": "A copper via with no barrier", "kind": "nearby", "rationale": "That is a contact stack, not a MOSCAP." },
+            { "text": "A CMP pad sitting on slurry", "kind": "subtle", "rationale": "A pad is not a capacitor." },
+            { "text": "An implant peak with no anneal", "kind": "misapplied", "rationale": "No dielectric, no electrode." }
+          ],
+          "correctExplanation": "The control stack, isolated as its own device.",
+          "objectiveIds": ["Describe the MOS capacitor as oxide plus electrode on silicon"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mc10-2",
+          "stem": "C-V on a MOSCAP teaches, before a transistor exists:",
+          "correctAnswer": "Oxide thickness, doping, and whether the interface is clean",
+          "distractors": [
+            { "text": "Only the colour of the photoresist", "kind": "subtle", "rationale": "C-V is electrical, not a coat inspection." },
+            { "text": "The exact copper barrier thickness on metal-3", "kind": "nearby", "rationale": "There is no back-end yet." },
+            { "text": "Whether the boule was pulled, which C-V cannot see", "kind": "reversed", "rationale": "C-V sees the stack you just made, which is the point." }
+          ],
+          "correctExplanation": "Accumulation, depletion, stretch-out. The oxide reports in.",
+          "objectiveIds": ["Say what C-V on that stack teaches before a transistor exists"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mc10-3",
+          "stem": "A factory runs MOSCAP monitors beside product because:",
+          "correctAnswer": "A bad oxide shows up without waiting for the full device flow",
+          "distractors": [
+            { "text": "MOSCAPs replace the need for any later transistor", "kind": "reversed", "rationale": "They monitor the stack. They are not the product." },
+            { "text": "C-V implants the well", "kind": "misapplied", "rationale": "A meter does not place dopant." },
+            { "text": "Only end-of-line probe can see an oxide", "kind": "nearby", "rationale": "That late clock is what the monitor avoids." }
+          ],
+          "correctExplanation": "Fail the stack quiz, not the finished-chip exam.",
+          "objectiveIds": ["Say what C-V on that stack teaches before a transistor exists"],
+          "prerequisiteConceptIds": ["semi-oxide"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-planarity-10",
+      "conceptId": "semi-planarity",
+      "title": "Flatness is what the lens is given",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-cmp"],
+      "goDeeper": "semi-litho",
+      "diagram": "cmp-flat",
+      "explanation": [
+        "A lithography lens has a depth of focus: a thin slice of height where the image is sharp. That slice shrinks as numerical aperture rises and is already small for fine features. Hills and valleys from earlier depositions and etches put some of the die outside that slice. The exposure does not 'try harder'. The high features print, the low ones blur, or the other way around.",
+        "CMP was the tool. This unit is the budget. Treating polish as a cosmetic is how a lot looks shiny and still fails the next pattern. The incoming flatness is an input to lithography the same way dose and focus are inputs. You would not say 'the lens will fix the dose'. Do not say 'the lens will fix the topography'.",
+        "The later lithography course will name Rayleigh, k1, and tools. It assumes a wafer that is already a plane on the scale of that depth of focus. This course’s last mechanical promise is that plane. Isolation fills, ILD stacks, and metal hills are why the promise had to be made on purpose."
+      ],
+      "example": "A 400 nm local step after an unplanarized dielectric stack sits next to a process whose depth of focus is ~200 nm. One of those two heights is out of focus on every exposure. After CMP the step is 40 nm and both print. The scanner recipe did not change.",
+      "whyItMatters": "Lithography is the next course, not this one. If you leave this course thinking polish is shine, you will blame the lens for a hill you refused to cut.",
+      "quiz": [
+        {
+          "id": "pln10-1",
+          "stem": "Depth of focus cannot forgive leftover topography because:",
+          "correctAnswer": "The lens has one thin slice of sharp height, and hills sit outside it",
+          "distractors": [
+            { "text": "Lenses automatically track every hill in hardware", "kind": "reversed", "rationale": "A scanner focus loop cannot invent a second plane across a tall step." },
+            { "text": "Photoresist only coats valleys", "kind": "nearby", "rationale": "Resist coats hills too. Focus is still one slice." },
+            { "text": "Topography only matters after copper is in the tube", "kind": "subtle", "rationale": "Any tall stack, front or back, can blow the budget." }
+          ],
+          "correctExplanation": "One slice of focus. Two heights. One of them loses.",
+          "objectiveIds": ["Explain why depth of focus cannot forgive leftover topography"],
+          "prerequisiteConceptIds": ["semi-cmp"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pln10-2",
+          "stem": "CMP flatness is an input to later lithography rather than a cosmetic because:",
+          "correctAnswer": "The next exposure’s focus budget is spent on whatever height you leave",
+          "distractors": [
+            { "text": "Shininess is what the Rayleigh criterion measures", "kind": "nearby", "rationale": "Rayleigh is about resolution. This unit is about height." },
+            { "text": "A shiny wafer cannot hold a gate oxide", "kind": "subtle", "rationale": "Oxide cares about the silicon face, not a brochure shine." },
+            { "text": "Lithography tools refuse to load unpolished wafers by law", "kind": "reversed", "rationale": "They will load. They will print garbage." }
+          ],
+          "correctExplanation": "You are handing the lens a plane, or you are not. Shine is a side effect.",
+          "objectiveIds": ["Treat CMP flatness as an input to later lithography, not a cosmetic"],
+          "prerequisiteConceptIds": ["semi-cmp"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pln10-3",
+          "stem": "Skipping CMP before a fine lithography layer typically:",
+          "correctAnswer": "Prints one height in focus and blurs the other",
+          "distractors": [
+            { "text": "Makes every feature sharper because more topography aids contrast", "kind": "reversed", "rationale": "Contrast does not love a hill." },
+            { "text": "Activates the well implant", "kind": "misapplied", "rationale": "A skipped polish is not heat." },
+            { "text": "Grows a dry gate oxide in the valleys only", "kind": "nearby", "rationale": "No oxidant step ran." }
+          ],
+          "correctExplanation": "The lens does not get a second slice. You were supposed to give it one plane.",
+          "objectiveIds": ["Treat CMP flatness as an input to later lithography, not a cosmetic"],
+          "prerequisiteConceptIds": ["semi-cmp"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-contamination-10",
+      "conceptId": "semi-contamination",
+      "title": "A metal that is legal here poisons there",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-clean"],
+      "explanation": [
+        "The clean unit split particles from metals on one wafer. This unit is metals moving between tools. Copper is a legal conductor in the back end and a lifetime killer in a gate-oxidation furnace. Gold is a useful bond-pad metal and a recombination disaster in silicon. Iron from a stainless cassette is a small risk in some metrology and a large risk on a gate oxide. The same atom changes meaning when the module changes.",
+        "That is why tools are segregated by material. Front-end furnaces, implanters, and wet benches that touch gate oxide do not see copper wafers. Copper polishers, copper deposition, and copper etch live in their own aisle, with their own cassettes and often their own people. A shared robot that handled both is not a convenience. It is a cross-contamination path.",
+        "The first clean still matters: it is how you take metals off a wafer. Segregation is how you stop putting them on in the next bay. Yield as a process property includes this factory-scale cleanliness, not just a beaker at the start of the flow."
+      ],
+      "example": "A 'quick' rework that runs a copper-polished wafer through a front-end oxidation tube to strip a film leaves iron and copper in the quartz. The next gate-oxide lot, which never saw copper on purpose, shifts and leaks. The tube is now a contaminant source until it is replaced or painfully cleaned.",
+      "whyItMatters": "A process engineer who only thinks about one wafer will keep poisoning the tool that makes the next hundred. Segregation is a unit-process idea applied to the building.",
+      "quiz": [
+        {
+          "id": "cn10-1",
+          "stem": "A metal allowed in one module can poison another because:",
+          "correctAnswer": "The same atom is a legal wire in one place and a lifetime killer in a gate furnace",
+          "distractors": [
+            { "text": "All metals are equally harmless in every furnace", "kind": "reversed", "rationale": "That is the myth this unit deletes." },
+            { "text": "Particles and metals are the same flake", "kind": "nearby", "rationale": "You already distinguished those. This is tool-to-tool metals." },
+            { "text": "Copper becomes a dry oxidant at 1000 °C", "kind": "subtle", "rationale": "Copper contaminates. It does not grow a gate oxide." }
+          ],
+          "correctExplanation": "Legality is local. The atom does not know your org chart.",
+          "objectiveIds": ["Explain why a metal allowed in one module poisons another"],
+          "prerequisiteConceptIds": ["semi-clean"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cn10-2",
+          "stem": "Tools are segregated by material so that:",
+          "correctAnswer": "A copper wafer cannot leave atoms in a front-end furnace or cassette",
+          "distractors": [
+            { "text": "Every tool can share one robot without risk", "kind": "reversed", "rationale": "A shared robot is a path, not a safety." },
+            { "text": "Implant dose becomes independent of energy", "kind": "misapplied", "rationale": "Segregation is not an implant recipe." },
+            { "text": "CMP can be skipped on copper wafers only", "kind": "nearby", "rationale": "Copper still needs its own polishers — in its own aisle." }
+          ],
+          "correctExplanation": "Separate aisles, cassettes, and often people. That is the reason, not etiquette.",
+          "objectiveIds": ["Name a reason tools are segregated by material"],
+          "prerequisiteConceptIds": ["semi-clean"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "cn10-3",
+          "stem": "Running a copper-polished wafer through a gate-oxidation tube typically:",
+          "correctAnswer": "Leaves a contaminant source that later clean lots will inherit",
+          "distractors": [
+            { "text": "Cleans the tube of all prior metals", "kind": "reversed", "rationale": "You added copper. You did not subtract it." },
+            { "text": "Activates every implant on the wafer", "kind": "nearby", "rationale": "A poison is not an anneal." },
+            { "text": "Makes the next lot’s MOSCAPs look better", "kind": "subtle", "rationale": "Monitor capacitors will show the mess, not hide it." }
+          ],
+          "correctExplanation": "You did not contaminate one wafer. You contaminated the tool.",
+          "objectiveIds": ["Explain why a metal allowed in one module poisons another"],
+          "prerequisiteConceptIds": ["semi-clean"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

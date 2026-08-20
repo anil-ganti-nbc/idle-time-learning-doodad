@@ -21,8 +21,7 @@ export function conceptState(
   }
   if (isDue(progress, now)) return "due";
 
-  const quizWeak =
-    progress.lastQuizScore !== null && progress.quizTotal > 0 && progress.lastQuizScore / 3 < 0.67;
+  const quizWeak = progress.lastQuizScore !== null && progress.lastQuizScore < 0.67;
   const failed = progress.understanding === "didnt_get_it";
   const lingering =
     progress.understanding === "mostly" && progress.timesStudied >= 2 && quizWeak;
@@ -34,7 +33,8 @@ export function conceptState(
   const strong =
     progress.timesStudied >= 3 &&
     progress.understanding === "got_it" &&
-    progress.lastQuizScore === 3 &&
+    progress.lastQuizScore !== null &&
+    progress.lastQuizScore >= 1 &&
     progress.intervalDays >= 14;
 
   if (strong) return "strong";
@@ -62,13 +62,12 @@ export function stateLabel(state: ConceptState): string {
 export function isReady(
   conceptId: string,
   progress: Record<string, ConceptProgress>,
-  journalist: boolean,
+  _journalist: boolean,
   knownIds: string[],
-  introIds: Set<string>,
+  _introIds: Set<string>,
 ): boolean {
   if (knownIds.includes(conceptId)) return true;
   const p = progress[conceptId];
   if (p && (p.understanding === "got_it" || p.understanding === "mostly")) return true;
-  if (journalist && introIds.has(conceptId)) return true;
   return false;
 }

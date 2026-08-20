@@ -1,0 +1,649 @@
+{
+  "courseId": "net-foundations",
+  "moduleId": "net-f-ip",
+  "lessons": [
+    {
+      "id": "net-ip-10",
+      "conceptId": "net-ip",
+      "title": "Routers forward on a hierarchical name",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-packet"],
+      "goDeeper": "net-cidr",
+      "explanation": [
+        "An IPv4 address is a hierarchical name that routers know how to walk. Thirty-two bits, usually written as four decimal octets, split into a network part and a host part. The network part is what a hop uses to choose an outgoing interface. The host part is who on that network should eventually receive the packet.",
+        "The destination address in the IP header, not a MAC, decides the next network hop. A router strips the local frame, looks at the destination IP, picks an interface, and wraps a new frame. Ada's packet to 93.184.216.34 keeps that destination all the way. Only the local envelopes change.",
+        "Hops also decrement a time-to-live so a looping packet dies. They do not read the application payload to decide the path. If the destination is on this network, the last hop delivers locally. If not, the packet goes toward some next network. Hierarchy is why a router can know a block, not every host on Earth."
+      ],
+      "example": "Ada at 10.0.0.7 sends to 93.184.216.34. Her stack sees that 93.184.216.34 is not on 10.0.0.0/24, so the next hop is router 10.0.0.1. The packet's destination field stays 93.184.216.34. The frame's destination is the router's MAC. Each later router repeats that: same IP destination, new local envelope.",
+      "whyItMatters": "If you think routers forward on MACs, every Internet hop would need a world map of NICs, and a packet could not leave its first LAN.",
+      "quiz": [
+        {
+          "id": "nf-ip10-1",
+          "stem": "An IPv4 address is:",
+          "correctAnswer": "A hierarchical name routers use to forward toward a network, then a host",
+          "distractors": [
+            { "text": "A burned-in hardware name that never leaves the first switch", "kind": "nearby", "rationale": "That is a MAC, not an IPv4 address." },
+            { "text": "A port number that names a program on the host", "kind": "misapplied", "rationale": "Ports are transport identifiers." },
+            { "text": "A checksum proving the payload was not accidentally changed", "kind": "subtle", "rationale": "A name is not a detector." }
+          ],
+          "correctExplanation": "Network then host. That hierarchy is what hops walk.",
+          "objectiveIds": ["Describe an IPv4 address as a hierarchical name routers use to forward"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-ip10-2",
+          "stem": "At a router, the next network hop is chosen from:",
+          "correctAnswer": "The packet's destination IP address, not the arriving frame's MAC",
+          "distractors": [
+            { "text": "The source MAC, which already names the far server", "kind": "reversed", "rationale": "The source MAC names the previous hop's interface." },
+            { "text": "The application payload, which lists preferred cities", "kind": "misapplied", "rationale": "Hops do not parse the cargo to forward." },
+            { "text": "The Ethernet type field, which encodes the whole path", "kind": "nearby", "rationale": "Type says what the payload is, not where to send it." }
+          ],
+          "correctExplanation": "Destination IP picks the next network. The MAC was only this link's envelope.",
+          "objectiveIds": ["Trace how a packet's destination address, not a MAC, decides the next network hop"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "nf-ip10-3",
+          "stem": "Ada's packet to 93.184.216.34 keeps that destination across routers so that:",
+          "correctAnswer": "Each hop can still forward on the same hierarchical name",
+          "distractors": [
+            { "text": "Each hop can replace it with the next MAC and forget IP", "kind": "reversed", "rationale": "The IP destination stays. The local envelope changes." },
+            { "text": "The payload can be delivered without any header at all", "kind": "misapplied", "rationale": "Hops still need the internet name." },
+            { "text": "Ethernet can route the original frame across every network", "kind": "nearby", "rationale": "The frame is stripped. The packet continues." }
+          ],
+          "correctExplanation": "Same internet name, new local envelope. That is hop-by-hop forwarding.",
+          "objectiveIds": ["Trace how a packet's destination address, not a MAC, decides the next network hop"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-ip-20",
+      "conceptId": "net-ip",
+      "title": "The destination IP does not change at each hop",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "intro",
+      "prerequisites": ["net-packet"],
+      "goDeeper": "net-cidr",
+      "diagram": "net-subnet",
+      "explanation": [
+        "The ten-minute unit named the address. This one walks a packet across a hop. Encapsulation at the sender: application bytes, then a later transport header, then an IP header whose destination is the far host, then a link frame whose destination is the next hop's MAC. At the router the frame comes off. The IP header is what remains to be judged.",
+        "Forwarding is a local decision on a global name. The router compares the destination IP to the networks it knows, picks an outgoing interface, decrements TTL, and builds a new frame for whatever link is next — Ethernet today, some other medium tomorrow. The destination IP does not become the next hop's address. If it did, the far host would never see its own name.",
+        "On the same LAN the story is shorter. Ada at 10.0.0.7 sending to 10.0.0.9 sees that the destination is local, resolves Bea's MAC, and never bothers the router. The packet still has an IP header. Local delivery did not demote it to 'Ethernet only'. The internet name is how the host decided the packet did not need a gateway.",
+        "Failure modes sit in the header. TTL hits zero: drop. No matching network: drop, and maybe a control message back. A wrong netmask at Ada makes her treat 93.184.216.34 as local and ARP for a MAC that will never answer. The hierarchy only works if hosts and routers agree which bits are the network."
+      ],
+      "example": "Ada sends to 93.184.216.34 via 10.0.0.1. Hop 1: frame to the router's MAC, IP destination 93.184.216.34, TTL 64. The router strips the frame, TTL becomes 63, and emits a new frame toward its upstream. Ten hops later the last router sees 93.184.216.34 is on its locally attached network and frames to that server's MAC. The IP destination never became 10.0.0.1.",
+      "whyItMatters": "If the destination IP were rewritten to the next hop, the far server would never know the packet was for it, and you would have invented a chain of local names pretending to be an Internet.",
+      "quiz": [
+        {
+          "id": "nf-ip20-1",
+          "stem": "When a router forwards Ada's packet, the IP destination field typically:",
+          "correctAnswer": "Stays the far host's address while a new local frame is built",
+          "distractors": [
+            { "text": "Is overwritten with the next hop's MAC, then with the next", "kind": "reversed", "rationale": "The internet name stays. Only the envelope changes." },
+            { "text": "Is deleted so Ethernet can route the rest of the way", "kind": "nearby", "rationale": "Without the IP destination, later hops have nothing to walk." },
+            { "text": "Becomes Ada's address so replies can find the reverse path", "kind": "misapplied", "rationale": "The source is Ada. The destination is still the far host." }
+          ],
+          "correctExplanation": "Same hierarchical name at every hop. New local envelope each time.",
+          "objectiveIds": ["Trace how a packet's destination address, not a MAC, decides the next network hop"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "nf-ip20-2",
+          "stem": "Ada sending to 10.0.0.9 on her own LAN still uses an IP header because:",
+          "correctAnswer": "The hierarchical name is how she decided the destination is local",
+          "distractors": [
+            { "text": "Local frames are forbidden from carrying any internet name", "kind": "reversed", "rationale": "The packet sits inside the frame even on a LAN." },
+            { "text": "The switch forwards on IP, not on MAC, for every frame", "kind": "nearby", "rationale": "The switch still learns MACs. IP is the host's decision." },
+            { "text": "10.0.0.9 is not a legal address until a router rewrites it", "kind": "misapplied", "rationale": "Private and public names both work as destinations." }
+          ],
+          "correctExplanation": "IP decided 'this network'. Ethernet then delivered. Both headers are present.",
+          "objectiveIds": ["Describe an IPv4 address as a hierarchical name routers use to forward"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "nf-ip20-3",
+          "stem": "If Ada's host wrongly treats 93.184.216.34 as on-LAN, the usual failure is:",
+          "correctAnswer": "She ARPs for a MAC that no local NIC owns, and the packet never leaves",
+          "distractors": [
+            { "text": "Every router on Earth installs her MAC as a default route", "kind": "misapplied", "rationale": "A local ARP miss does not reprogram the Internet." },
+            { "text": "The packet is delivered because MACs and IPs are the same bits", "kind": "reversed", "rationale": "They are different names with different scope." },
+            { "text": "TTL is ignored and the packet loops until the cable melts", "kind": "nearby", "rationale": "The packet often never reaches a router at all." }
+          ],
+          "correctExplanation": "Wrong hierarchy, wrong next hop. She asked the LAN a question only a gateway can answer.",
+          "objectiveIds": ["Trace how a packet's destination address, not a MAC, decides the next network hop"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-cidr-10",
+      "conceptId": "net-cidr",
+      "title": "A length, not a class",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-forwarding-vs-routing",
+      "diagram": "net-subnet",
+      "explanation": [
+        "The network is as wide as you say it is, not as wide as a lettered class. A prefix is an address plus a length: 10.0.0.0/24 means 'the first 24 bits are the network'. Two addresses share a network when those bits match. The old A/B/C class boundaries are not the rule.",
+        "Apply the length as a mask. 10.0.0.7 and 10.0.0.9 under /24 match: both live in 10.0.0.0/24. 10.0.0.7 and 10.1.0.9 do not. Under /16 they might. The same four octets mean different networks depending on the length you were given. Hosts use that length to decide 'local' versus 'send to the gateway'.",
+        "A classful guess — '10 is Class A, so /8' — will glue together networks that operations split, or split ones they meant to join. The length is configuration, not a property hiding in the first octet. Write the prefix. Do not infer a class."
+      ],
+      "example": "Ada is 10.0.0.7/24. Bea is 10.0.0.9/24. Same network: Ada ARPs for Bea. Lab-9 is 10.0.1.9/24. Different network: Ada sends that packet to 10.0.0.1. If someone had told Ada she was 10.0.0.7/16, she would have treated 10.0.1.9 as local and ARP'd for a MAC that is not on her LAN.",
+      "whyItMatters": "If the network is a class, every later subnet and route looks like a violation instead of a length you were free to choose.",
+      "quiz": [
+        {
+          "id": "nf-cidr10-1",
+          "stem": "A prefix is:",
+          "correctAnswer": "An address plus a length, not a class letter",
+          "distractors": [
+            { "text": "A MAC that routers treat as a world-wide name", "kind": "misapplied", "rationale": "Prefixes are IP network names, not hardware names." },
+            { "text": "A class A/B/C code inferred only from the first octet", "kind": "misconception", "rationale": "The length is stated. It is not implied by a class." },
+            { "text": "A port number that names a program on the host", "kind": "nearby", "rationale": "Ports are not network masks." }
+          ],
+          "correctExplanation": "Address plus length. Class is not the definition.",
+          "objectiveIds": ["Explain a prefix as an address plus a length, not a class"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-cidr10-2",
+          "stem": "Ada is 10.0.0.7/24 and Lab-9 is 10.0.1.9/24. They share a network?",
+          "correctAnswer": "No: the first 24 bits differ, so they are different networks",
+          "distractors": [
+            { "text": "Yes: both start with 10, which is always one network", "kind": "misconception", "rationale": "The length is /24, not an implied /8 class." },
+            { "text": "Yes: any two private addresses are defined to be local", "kind": "nearby", "rationale": "Private is a use of the space, not a shared prefix." },
+            { "text": "No: IPv4 forbids 10.0.1.9 from existing at all", "kind": "misapplied", "rationale": "The address is fine. The prefix does not match." }
+          ],
+          "correctExplanation": "Compare the bits the length names. 10.0.0 and 10.0.1 are not the same /24.",
+          "objectiveIds": ["Apply a prefix length to decide whether two addresses share a network"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nf-cidr10-3",
+          "stem": "10.0.0.7 and 10.0.0.9 under /24 share a network because:",
+          "correctAnswer": "The bits covered by the length are identical",
+          "distractors": [
+            { "text": "They are both class C, and class C is always /24 worldwide", "kind": "subtle", "rationale": "The match comes from the stated length, not a class rule." },
+            { "text": "Their MACs happen to start with the same three bytes", "kind": "nearby", "rationale": "Sharing a network is an IP-prefix question." },
+            { "text": "A router rewrote both addresses to the same public name", "kind": "misapplied", "rationale": "Local sharing does not require a public rewrite." }
+          ],
+          "correctExplanation": "Same prefix bits. That is the test. Class letters are not.",
+          "objectiveIds": ["Apply a prefix length to decide whether two addresses share a network"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-icmp-10",
+      "conceptId": "net-icmp",
+      "title": "Unreachable, too big, echo",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-measurement",
+      "explanation": [
+        "Forwarding can fail out of sight. ICMP is how a hop reports that: control messages about reachability, size, and echo, carried in IP packets of their own. Destination unreachable means this hop will not, or cannot, send the packet onward. Packet too big means the next link will not take this size. Echo request and reply are a liveness probe: did this address answer?",
+        "The message names a reason and usually quotes enough of the original header that the sender can match it to a packet it sent. It is not a transport for application data. It is not a map of the whole path as a system. A hop that cannot forward should send unreachable. A hop that faces a smaller MTU should send too big rather than silently drop, so the sender can shrink.",
+        "Silence is the other failure. Filters eat ICMP, and then Ada's 'too big' never arrives, or her echo looks like a dead host. Treating ICMP as optional decoration is how path problems become mysteries."
+      ],
+      "example": "Ada pings 10.0.0.9: an echo request, Bea returns an echo reply. Later Ada sends a large packet toward 93.184.216.34. A hop with a 1500-byte limit cannot forward 2000 bytes and sends ICMP too big back to 10.0.0.7. If the router has no route at all, it sends unreachable instead.",
+      "whyItMatters": "If ICMP is just 'ping', you will miss the messages that tell a sender the dest is gone or the packet will not fit.",
+      "quiz": [
+        {
+          "id": "nf-icmp10-1",
+          "stem": "ICMP is:",
+          "correctAnswer": "Control messages about reachability, size, and echo",
+          "distractors": [
+            { "text": "A transport that promises ordered delivery of files", "kind": "nearby", "rationale": "ICMP is not a reliability layer for applications." },
+            { "text": "A way to assign a host its IPv4 address and lease", "kind": "misapplied", "rationale": "Borrowing an address is a different protocol." },
+            { "text": "The Ethernet trailer that catches bit errors on one link", "kind": "subtle", "rationale": "Link trailers are not internet control messages." }
+          ],
+          "correctExplanation": "Unreachable, too big, echo. That is the control plane Ada actually meets.",
+          "objectiveIds": ["Describe ICMP as control messages about reachability, size, and echo"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "nf-icmp10-2",
+          "stem": "A hop that cannot forward Ada's packet toward 93.184.216.34 typically sends:",
+          "correctAnswer": "ICMP destination unreachable back toward Ada",
+          "distractors": [
+            { "text": "A new Ethernet frame that invents a MAC for the far server", "kind": "misapplied", "rationale": "A missing route is not solved by guessing a MAC." },
+            { "text": "An echo reply, because every failure is reported as liveness", "kind": "nearby", "rationale": "Echo is a probe, not a forwarding-failure report." },
+            { "text": "The original payload to every host on Ada's LAN", "kind": "reversed", "rationale": "Unreachable is a control message, not a flood of cargo." }
+          ],
+          "correctExplanation": "Cannot forward: unreachable. Too big is a different message, for size.",
+          "objectiveIds": ["Predict which ICMP message a hop sends when it cannot forward or the packet is too big"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-icmp10-3",
+          "stem": "A hop whose next link will not take Ada's packet size should send:",
+          "correctAnswer": "ICMP packet too big, so the sender can shrink",
+          "distractors": [
+            { "text": "ICMP echo request, to see if Ada is still alive", "kind": "nearby", "rationale": "Echo is liveness, not a size report." },
+            { "text": "Nothing, because size problems are not control-plane issues", "kind": "reversed", "rationale": "Silent drop is how the sender never learns to shrink." },
+            { "text": "A DHCP offer with a smaller address", "kind": "misapplied", "rationale": "Address leases do not fix packet size." }
+          ],
+          "correctExplanation": "Too big names the size problem. Unreachable names the reachability problem.",
+          "objectiveIds": ["Predict which ICMP message a hop sends when it cannot forward or the packet is too big"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-mtu-10",
+      "conceptId": "net-mtu",
+      "title": "The largest packet this hop will take",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-fragment",
+      "explanation": [
+        "Every hop has a size it will not exceed. The MTU is the largest packet this hop will accept — typically the largest IP datagram the outgoing link will carry, headers included. Ethernet's common 1500-byte figure is an MTU, not a law of IP. A tunnel or a constrained link can be smaller.",
+        "When a packet is larger than the next hop's MTU, that hop cannot send it as-is. It may fragment, if allowed, or drop the packet and tell the sender it was too big. Ada cannot assume that because her NIC took 1500 bytes, every hop to 93.184.216.34 will. The path's bottleneck is the smallest MTU along it.",
+        "The failure is sending as if the first hop's MTU were the path. Silent drops look like a dead server. ICMP too-big, next to fragmentation, is how a sender learns to shrink. The MTU is a hop fact. Path size is a chain of those facts."
+      ],
+      "example": "Ada emits a 2000-byte IP packet toward 93.184.216.34. Her LAN takes it. A later hop has a 1500-byte MTU. That hop will not put 2000 bytes on the wire. If it is not allowed to fragment, it drops the packet and should send ICMP too big back to 10.0.0.7.",
+      "whyItMatters": "If MTU is just 'Ethernet is 1500', a smaller hop in the middle will eat your packets and you will debug the far host.",
+      "quiz": [
+        {
+          "id": "nf-mtu10-1",
+          "stem": "The MTU is:",
+          "correctAnswer": "The largest packet this hop will accept",
+          "distractors": [
+            { "text": "The bandwidth-delay product of the whole path", "kind": "nearby", "rationale": "Volume in flight is not a per-hop size limit." },
+            { "text": "The number of hops a packet is allowed to take", "kind": "misapplied", "rationale": "That bound is TTL, not MTU." },
+            { "text": "The size of a MAC address in bytes", "kind": "subtle", "rationale": "A hardware name is not a size limit." }
+          ],
+          "correctExplanation": "Per hop, max packet. That is the MTU.",
+          "objectiveIds": ["Define the MTU as the largest packet this hop will accept"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-mtu10-2",
+          "stem": "Ada's 2000-byte packet hits a hop with a 1500-byte MTU. That hop:",
+          "correctAnswer": "Cannot send the packet as-is; it must fragment or drop",
+          "distractors": [
+            { "text": "Stretches the link clock until 2000 bytes fit by law", "kind": "misapplied", "rationale": "The limit is a size the medium will take, not a clock trick." },
+            { "text": "Forwards it unchanged, because IP has no size limit anywhere", "kind": "reversed", "rationale": "Each hop has an MTU. This one is 1500." },
+            { "text": "Converts the packet into a MAC-only frame that ignores size", "kind": "nearby", "rationale": "The local envelope does not abolish the IP size problem." }
+          ],
+          "correctExplanation": "Too big for this hop. Fragment or drop — those are the options.",
+          "objectiveIds": ["Predict what happens when a packet is larger than the next hop's MTU"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-mtu10-3",
+          "stem": "Ada cannot assume her LAN's 1500-byte MTU is the path's because:",
+          "correctAnswer": "A later hop may accept only a smaller packet",
+          "distractors": [
+            { "text": "IP forbids any packet smaller than 1500 bytes", "kind": "reversed", "rationale": "Smaller is legal. Larger than a hop's MTU is the problem." },
+            { "text": "Routers delete MTU information as a matter of policy", "kind": "nearby", "rationale": "The fact is per hop, whether or not anyone tells Ada." },
+            { "text": "MAC addresses grow with each hop and consume the packet", "kind": "misapplied", "rationale": "Local names do not eat the datagram that way." }
+          ],
+          "correctExplanation": "The bottleneck is the smallest hop, not the first hop.",
+          "objectiveIds": ["Predict what happens when a packet is larger than the next hop's MTU"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-fragment-10",
+      "conceptId": "net-fragment",
+      "title": "Split what the next link will not take",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-mtu"],
+      "explanation": [
+        "When the next link is too narrow, a router can split the datagram — and then hope every piece arrives. Fragmentation is that split: one IP packet becomes several, each with enough header to be forwarded alone, each carrying a slice of the original payload and an offset so the far host can reassemble.",
+        "We try not to. If any fragment is lost, the original datagram is gone; the receiver cannot fill the hole from its neighbors, and the whole object waits for a timeout. Reassembly is an endpoint job, so a busy router that fragmented has already spent CPU to create more packets that may still die independently. Path-size discovery and sending smaller in the first place avoid that bill.",
+        "The don't-fragment preference is the other half: a hop that is not allowed to split drops and reports too big. That is the better failure. Silent fragmentation on a lossy path looks like random corruption of large transfers even when small packets are fine."
+      ],
+      "example": "Ada's 2000-byte packet hits a 1500-byte hop that is allowed to fragment. The hop emits two packets toward 93.184.216.34. The second fragment is dropped. The server holds the first slice, then discards it; it cannot reconstruct 2000 bytes from 1500. Ada's transfer of that datagram failed even though 'a packet' arrived.",
+      "whyItMatters": "If fragmentation were free insurance, a single lost slice would not kill the original — but it does, which is why we would rather shrink than split.",
+      "quiz": [
+        {
+          "id": "nf-frag10-1",
+          "stem": "Fragmentation is:",
+          "correctAnswer": "Splitting a packet the next link will not take into several IP pieces",
+          "distractors": [
+            { "text": "Merging many small packets into one file at each hop", "kind": "reversed", "rationale": "Fragmentation splits. It does not assemble in the middle." },
+            { "text": "Rewriting the destination IP so a smaller network can accept it", "kind": "nearby", "rationale": "The destination stays. The payload is sliced." },
+            { "text": "Compressing Ethernet headers until 2000 bytes fit in 1500", "kind": "misapplied", "rationale": "The split is of the IP datagram, not a magic squeeze." }
+          ],
+          "correctExplanation": "One datagram, several forwardable pieces. That is the split.",
+          "objectiveIds": ["Explain fragmentation as splitting a packet the next link will not take"],
+          "prerequisiteConceptIds": ["net-mtu"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-frag10-2",
+          "stem": "If one fragment of Ada's datagram is lost, the receiver typically:",
+          "correctAnswer": "Cannot reassemble the original, so the whole datagram is lost",
+          "distractors": [
+            { "text": "Fills the hole from neighboring packets' payloads automatically", "kind": "reversed", "rationale": "Neighbors are independent. A missing slice is a missing original." },
+            { "text": "Asks Ethernet to replay only the missing MAC bytes", "kind": "misapplied", "rationale": "Reassembly is an IP-endpoint job, not a link replay of cargo." },
+            { "text": "Treats the arrived fragment as a complete 2000-byte packet", "kind": "nearby", "rationale": "An offset and a length say this is a piece, not the whole." }
+          ],
+          "correctExplanation": "Lose a slice, lose the datagram. That is why we try not to fragment.",
+          "objectiveIds": ["Predict why we try to avoid fragmenting and what fails if a fragment is lost"],
+          "prerequisiteConceptIds": ["net-mtu"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-frag10-3",
+          "stem": "We prefer sending a smaller packet instead of fragmenting because:",
+          "correctAnswer": "A lost fragment still kills the original, after extra hop work",
+          "distractors": [
+            { "text": "IP forbids more than one packet on a path at a time", "kind": "misapplied", "rationale": "Many packets may be in flight. The issue is reassembly of one datagram." },
+            { "text": "Smaller packets cannot be dropped by any hop", "kind": "reversed", "rationale": "Small packets can still be lost. They just are not interdependent slices." },
+            { "text": "Routers cannot forward a packet that was never split", "kind": "nearby", "rationale": "Unsplit packets are the normal case." }
+          ],
+          "correctExplanation": "Splitting creates correlated loss and extra work. Shrinking avoids both.",
+          "objectiveIds": ["Predict why we try to avoid fragmenting and what fails if a fragment is lost"],
+          "prerequisiteConceptIds": ["net-mtu"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-nat-intro-10",
+      "conceptId": "net-nat-intro",
+      "title": "Many private addresses, one public mapping",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-middlebox",
+      "diagram": "net-nat-map",
+      "explanation": [
+        "One public address can stand in for many private ones if something remembers the mapping. NAT rewrites the source of Ada's outbound packet from 10.0.0.7 to the box's public address, records that rewrite, and undoes it on the reply. Many hosts share one public name. The table is the only reason replies find the right private host.",
+        "An unsolicited inbound packet has no table entry to land on. The public address is busy standing for whoever last went out, not for a server that never asked. The box drops the inbound datagram, or has nothing to rewrite it toward. Hosting from behind NAT without creating an entry first does not work.",
+        "The tradeoff is address sharing versus inbound reachability. Private space can be reused in every home. The public Internet sees one address. Anything that needed a stable, reachable name for Ada's host no longer has one unless the table is taught."
+      ],
+      "example": "Ada at 10.0.0.7 fetches 93.184.216.34. The NAT sends the packet from 203.0.113.5 and stores: 10.0.0.7 plus her port maps to 203.0.113.5 plus a public port. The reply matches that row and is rewritten back to 10.0.0.7. A stranger who sends a packet to 203.0.113.5 unsolicited finds no row. It does not reach Ada.",
+      "whyItMatters": "If NAT were just 'private addresses work on the Internet', you would not expect inbound to fail, and you would debug Ada's host instead of the missing table row.",
+      "quiz": [
+        {
+          "id": "nf-nat10-1",
+          "stem": "NAT is best described as:",
+          "correctAnswer": "Many private addresses sharing one public address via a mapping",
+          "distractors": [
+            { "text": "A protocol that assigns a host its first IPv4 address", "kind": "nearby", "rationale": "Borrowing an address is a different job." },
+            { "text": "A switch table that maps MACs to ports on a LAN", "kind": "misapplied", "rationale": "That is learning, not address sharing." },
+            { "text": "A checksum that proves the public address was not forged", "kind": "subtle", "rationale": "NAT is a rewrite plus a table, not a proof." }
+          ],
+          "correctExplanation": "Private many, public one, table in between.",
+          "objectiveIds": ["Describe NAT as many private addresses sharing one public address via a mapping"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-nat10-2",
+          "stem": "An unsolicited inbound packet to the public address typically:",
+          "correctAnswer": "Has no table entry to land on, so it does not reach a private host",
+          "distractors": [
+            { "text": "Is flooded to every private address as a courtesy", "kind": "reversed", "rationale": "Without a row, there is no private destination to rewrite to." },
+            { "text": "Is delivered to 10.0.0.7 because that is the only private host", "kind": "nearby", "rationale": "Many hosts may sit behind the same public name." },
+            { "text": "Rewrites itself into an Ethernet broadcast on the WAN", "kind": "misapplied", "rationale": "The failure is a missing mapping, not a broadcast." }
+          ],
+          "correctExplanation": "No row, no landing. Inbound without a prior outbound mapping fails.",
+          "objectiveIds": ["Predict why an unsolicited inbound packet has no table entry to land on"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-nat10-3",
+          "stem": "Ada's outbound fetch creates a NAT row so that:",
+          "correctAnswer": "The reply can be rewritten back to her private address and port",
+          "distractors": [
+            { "text": "The far server learns her MAC and can ARP across the Internet", "kind": "misapplied", "rationale": "The far side sees a public IP, not a LAN MAC." },
+            { "text": "Every future stranger can reach her without any mapping", "kind": "reversed", "rationale": "The row is for the conversation that created it, not a standing invitation." },
+            { "text": "Her private address is deleted and replaced forever", "kind": "nearby", "rationale": "She keeps 10.0.0.7 on the LAN. The rewrite is at the box." }
+          ],
+          "correctExplanation": "Outbound writes the table. Replies match it. That is the share.",
+          "objectiveIds": ["Describe NAT as many private addresses sharing one public address via a mapping"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-nat-intro-20",
+      "conceptId": "net-nat-intro",
+      "title": "No table entry, no inbound landing",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-middlebox",
+      "diagram": "net-nat-map",
+      "explanation": [
+        "The mapping table is the whole trick, and the whole restriction. A typical row remembers a private IP and port, the public IP and port they were rewritten to, and the far address the outbound packet named. Outbound creates or refreshes the row. Inbound is a lookup. Match: rewrite destination back to the private pair and send it into the LAN. Miss: drop.",
+        "Ada at 10.0.0.7:4430 talking to 93.184.216.34:80 might appear as 203.0.113.5:54000. Bea at 10.0.0.9 talking to the same server gets a different public port, so the replies demux. The far server only sees 203.0.113.5. It cannot distinguish Ada from Bea except by that public port. The table is the demux the public address no longer provides.",
+        "Rows expire. If Ada goes quiet, the mapping vanishes, and a late reply has nowhere to land — the same failure as a stranger's unsolicited packet. Teaching the table in advance (a static inbound mapping) is how a host behind NAT becomes reachable on purpose. Without that teaching, 'have a public address' is not the same as 'be a server'.",
+        "The LAN still uses private names among itself. Ada to Bea at 10.0.0.9 never needs the table. NAT is on the path to the public Internet, not a rewrite of every local frame. Mixing those up is how people NAT traffic that should have stayed a LAN ARP and a local IP."
+      ],
+      "example": "A scanner on the Internet sends a packet to 203.0.113.5:22. The NAT has no row for that public port. The packet is dropped; neither Ada nor Bea hears it. Minutes earlier Ada's fetch created a row for 54000, so replies from 93.184.216.34:80 to 203.0.113.5:54000 are rewritten to 10.0.0.7:4430 and delivered. Same public IP, two different fates, decided only by the table.",
+      "whyItMatters": "When inbound 'just doesn't work' from a home network, the first question is whether a row exists — not whether IPv4 itself is broken.",
+      "quiz": [
+        {
+          "id": "nf-nat20-1",
+          "stem": "A NAT row typically maps:",
+          "correctAnswer": "A private address and port to a public address and port for a conversation",
+          "distractors": [
+            { "text": "A MAC address to a switch port on the LAN", "kind": "nearby", "rationale": "That is a learning table, not an address-sharing table." },
+            { "text": "A hostname to an IPv4 address the program can send to", "kind": "misapplied", "rationale": "Name resolution is not NAT." },
+            { "text": "Every private host to every public host, permanently", "kind": "reversed", "rationale": "Rows are per conversation and they expire." }
+          ],
+          "correctExplanation": "Private pair, public pair, far side. That is the demux.",
+          "objectiveIds": ["Describe NAT as many private addresses sharing one public address via a mapping"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "nf-nat20-2",
+          "stem": "A late reply arriving after Ada's mapping expired is treated like:",
+          "correctAnswer": "An unsolicited inbound: no row, so it does not reach Ada",
+          "distractors": [
+            { "text": "A local LAN frame that the switch will flood to Bea instead", "kind": "misapplied", "rationale": "The miss is at the NAT table, before any LAN delivery." },
+            { "text": "A guaranteed delivery, because public addresses never drop", "kind": "reversed", "rationale": "The public name without a row is not a landing pad." },
+            { "text": "An ICMP echo that automatically recreates her private address", "kind": "nearby", "rationale": "Echo does not rebuild a NAT mapping." }
+          ],
+          "correctExplanation": "Expired row equals no landing. Timeouts turn replies into strangers.",
+          "objectiveIds": ["Predict why an unsolicited inbound packet has no table entry to land on"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-nat20-3",
+          "stem": "Ada talking to Bea at 10.0.0.9 on the same LAN typically:",
+          "correctAnswer": "Skips NAT; both names are already local",
+          "distractors": [
+            { "text": "Must still appear as 203.0.113.5 so Bea can answer", "kind": "reversed", "rationale": "Bea can ARP for 10.0.0.9. The public mapping is for leaving." },
+            { "text": "Uses Bea's public mapping even though Bea never went out", "kind": "nearby", "rationale": "No outbound, no row — and local delivery does not need one." },
+            { "text": "Cannot proceed until a stranger sends an inbound packet first", "kind": "misapplied", "rationale": "Local IP plus a local MAC is enough on the LAN." }
+          ],
+          "correctExplanation": "NAT sits on the way out. Same-LAN delivery never consults that table.",
+          "objectiveIds": ["Describe NAT as many private addresses sharing one public address via a mapping"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-endian-wire-10",
+      "conceptId": "net-endian-wire",
+      "title": "Big-endian on the wire, whatever you are at home",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-packet", "cpu-endian"],
+      "explanation": [
+        "Multi-byte fields on the wire have an agreed order. Your CPU might not. Network byte order is big-endian: most significant byte first, for every multi-byte header field, regardless of whether the host is little-endian or big-endian in memory. The wire is a contract between strangers. Home layout is not.",
+        "A little-endian host must convert before a multi-byte field is sent, and convert again when one is received. IPv4 addresses, lengths, checksums, port numbers — anything wider than a byte in a header — goes through that swap. Single bytes are immune. Forgetting the swap on a little-endian machine sends a scrambled destination that some other host will treat as a different address.",
+        "The adjacent trap is treating host order as 'the' order. Two little-endian machines that skip the conversion may seem to work on a LAN and then fail the moment a big-endian hop or a spec-compliant stack reads the header. The conversion is not decoration. It is how a 32-bit name stays the same name on the path."
+      ],
+      "example": "Ada's little-endian host wants to send to 10.0.0.9. In memory the address bytes sit least-significant first. Before the NIC transmits, the stack writes 0A 00 00 09 on the wire, not 09 00 00 0A. Bea, also little-endian, swaps back. A hop in between reads 10.0.0.9, not some other host.",
+      "whyItMatters": "If the wire inherited each CPU's memory order, an IPv4 destination would mean different hosts depending on who wrote the header.",
+      "quiz": [
+        {
+          "id": "nf-end10-1",
+          "stem": "Network byte order is:",
+          "correctAnswer": "Big-endian on the wire regardless of the host's memory order",
+          "distractors": [
+            { "text": "Whatever order the sending CPU uses in RAM", "kind": "reversed", "rationale": "Home layout is not the wire contract." },
+            { "text": "Little-endian only, because most NICs are x86", "kind": "nearby", "rationale": "The wire is specified independently of the popular CPU." },
+            { "text": "A checksum algorithm, not an order of bytes", "kind": "misapplied", "rationale": "Endianness is layout. Checksums are a detector." }
+          ],
+          "correctExplanation": "Most significant byte first, always, on the wire.",
+          "objectiveIds": ["Explain network byte order as big-endian on the wire regardless of the host"],
+          "prerequisiteConceptIds": ["net-packet", "cpu-endian"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-end10-2",
+          "stem": "Before Ada's little-endian host sends a 32-bit IP address, it must:",
+          "correctAnswer": "Convert that multi-byte field into big-endian wire order",
+          "distractors": [
+            { "text": "Leave the bytes in memory order so the NIC can guess", "kind": "reversed", "rationale": "The NIC transmits what it is given. The stack must convert." },
+            { "text": "Delete the address and send only a MAC", "kind": "misapplied", "rationale": "The internet name still has to go on the wire." },
+            { "text": "Repeat the address four times, once per endianness", "kind": "nearby", "rationale": "One order, one copy. Conversion, not duplication." }
+          ],
+          "correctExplanation": "Swap to big-endian, then send. Receive is the reverse swap.",
+          "objectiveIds": ["Predict what a little-endian host must do before a multi-byte header field is sent"],
+          "prerequisiteConceptIds": ["net-packet", "cpu-endian"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-end10-3",
+          "stem": "A single-byte header field on Ada's little-endian host typically:",
+          "correctAnswer": "Needs no endian swap, because a byte has no byte order",
+          "distractors": [
+            { "text": "Must still be reversed, because every field is 32 bits", "kind": "reversed", "rationale": "Width matters. A byte is already one unit." },
+            { "text": "Is illegal on the wire unless expanded to four bytes", "kind": "misapplied", "rationale": "Headers contain one-byte fields on purpose." },
+            { "text": "Is converted by rewriting the destination MAC instead", "kind": "nearby", "rationale": "Endianness is about multi-byte integers, not local names." }
+          ],
+          "correctExplanation": "Conversion is for multi-byte fields. A byte is already in the only order it has.",
+          "objectiveIds": ["Predict what a little-endian host must do before a multi-byte header field is sent"],
+          "prerequisiteConceptIds": ["net-packet", "cpu-endian"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-checksum-10",
+      "conceptId": "net-checksum",
+      "title": "A cheap detector, not a proof",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-packet"],
+      "explanation": [
+        "A flipped bit in a header should not be trusted as a destination. A checksum is a cheap detector of accidental change: add up the header (or header plus payload, depending on the protocol), stick the complement in a field, and let the receiver repeat the sum. Match: probably fine. Mismatch: something changed in transit.",
+        "It is not a cryptographic proof. An attacker who wants a particular header can often fix the checksum to match. Random line noise, a bad NIC, a corrupted length — those are the threats it is for. IP's header checksum covers the internet header so a hop can reject a mangled destination without trusting the rest.",
+        "When the checksum does not match, the receiver discards the packet. It does not repair the bits and it does not assume the payload is still meaningful. A later end-to-end check may still run on data that passed this cheap test. Cheap is the point. Proof is a different tool."
+      ],
+      "example": "Ada's packet to 10.0.0.9 takes a bit flip in the destination field on a noisy hop and becomes 10.0.1.9. The header checksum no longer matches. Bea never sees it; the hop or the receiver drops it. If the checksum had been skipped, Lab-9 might have accepted a packet meant for Bea.",
+      "whyItMatters": "If a checksum were a signature, you would trust a matching header as identity. It is only a filter for accidents, and a mismatch means throw the packet away.",
+      "quiz": [
+        {
+          "id": "nf-csum10-1",
+          "stem": "A checksum is:",
+          "correctAnswer": "A cheap detector of accidental change, not a cryptographic proof",
+          "distractors": [
+            { "text": "A signature that proves who wrote the packet", "kind": "misconception", "rationale": "Anyone who can change bits can often fix a checksum." },
+            { "text": "A hierarchical name routers use to forward", "kind": "nearby", "rationale": "That is an address, not a detector." },
+            { "text": "A lease that lends a host its IP address for a while", "kind": "misapplied", "rationale": "Borrowing an address is a different protocol." }
+          ],
+          "correctExplanation": "Detect accidents. Do not confuse that with a proof of origin.",
+          "objectiveIds": ["Describe a checksum as a cheap detector of accidental change, not a cryptographic proof"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-csum10-2",
+          "stem": "When the header checksum does not match, a receiver typically:",
+          "correctAnswer": "Discards the packet rather than trusting the mangled header",
+          "distractors": [
+            { "text": "Repairs the bits from neighboring packets and forwards anyway", "kind": "reversed", "rationale": "A mismatch is not a reconstruction recipe." },
+            { "text": "Treats the mismatch as proof the sender is authentic", "kind": "misconception", "rationale": "A failed detector is not an identity check." },
+            { "text": "Converts the packet into a frame with no internet header", "kind": "misapplied", "rationale": "Throwing away a bad header is not demotion to Ethernet." }
+          ],
+          "correctExplanation": "Mismatch, drop. Do not forward a destination you cannot trust.",
+          "objectiveIds": ["Predict what a receiver does when the checksum does not match"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-csum10-3",
+          "stem": "IP's header checksum exists so a hop can:",
+          "correctAnswer": "Reject a corrupted internet header without trusting its fields",
+          "distractors": [
+            { "text": "Prove the application payload was written by Ada", "kind": "nearby", "rationale": "The header checksum is not a payload signature." },
+            { "text": "Learn Bea's MAC from the checksum value alone", "kind": "misapplied", "rationale": "A detector is not an address resolution protocol." },
+            { "text": "Guarantee the next packet will arrive in order", "kind": "subtle", "rationale": "Checksums do not create delivery or ordering promises." }
+          ],
+          "correctExplanation": "Cheap reject of a mangled header. Not a proof, not a stream.",
+          "objectiveIds": ["Describe a checksum as a cheap detector of accidental change, not a cryptographic proof"],
+          "prerequisiteConceptIds": ["net-packet"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

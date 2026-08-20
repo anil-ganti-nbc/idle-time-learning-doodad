@@ -16,9 +16,34 @@ export const SEEDED_CATEGORY_IDS = [
   "history",
 ] as const;
 
+/** Built-in fields that still participate in Surprise Me and curriculum expansion. */
+export const ACTIVE_SEEDED_CATEGORY_IDS = [
+  "cpu",
+  "semiconductors",
+  "os",
+  "networking",
+  "compilers",
+  "ml",
+  "horology",
+  "music-theory",
+  "death-metal",
+] as const;
+
+/** Kept in the catalog so old progress does not crash. Never chosen by Surprise Me. */
+export const RETIRED_SEEDED_CATEGORY_IDS = [
+  "astronomy",
+  "evo-bio",
+  "economics",
+  "statistics",
+  "audio",
+  "history",
+] as const;
+
 /** Any category id — seeded or user-created. */
 export type CategoryId = string;
 export type SeededCategoryId = (typeof SEEDED_CATEGORY_IDS)[number];
+export type ActiveSeededCategoryId = (typeof ACTIVE_SEEDED_CATEGORY_IDS)[number];
+export type RetiredSeededCategoryId = (typeof RETIRED_SEEDED_CATEGORY_IDS)[number];
 
 export const TIME_OPTIONS = [5, 10, 20, 30] as const;
 export type TimeBudget = (typeof TIME_OPTIONS)[number];
@@ -34,6 +59,10 @@ export type Level = (typeof LEVELS)[number];
 
 export const RATINGS = ["didnt_get_it", "mostly", "got_it"] as const;
 export type Understanding = (typeof RATINGS)[number];
+
+/** Observational only. Never feeds SRS, selection, or mastery. */
+export const DIFFICULTY_NOTES = ["too_easy", "right_level", "too_hard", "unclear"] as const;
+export type DifficultyNote = (typeof DIFFICULTY_NOTES)[number];
 
 export const CONCEPT_STATES = [
   "unseen",
@@ -54,15 +83,102 @@ export type AiProviderId = (typeof AI_PROVIDERS)[number];
 export const AI_POLICIES = ["off", "manual", "missing-only"] as const;
 export type AiPolicy = (typeof AI_POLICIES)[number];
 
+export const TIERS = [0, 1, 2, 3, 4, 5] as const;
+export type Tier = (typeof TIERS)[number];
+
+/** Internal only — never shown as "Level N". */
+export const TIER_LABELS: Record<Tier, string> = {
+  0: "Foundation",
+  1: "Introductory",
+  2: "Core",
+  3: "Intermediate",
+  4: "Advanced",
+  5: "Specialist",
+};
+
+export const DISTRACTOR_KINDS = [
+  "misconception",
+  "nearby",
+  "reversed",
+  "misapplied",
+  "subtle",
+] as const;
+export type DistractorKind = (typeof DISTRACTOR_KINDS)[number];
+
+export const COGNITIVE_TYPES = [
+  "recognize",
+  "distinguish",
+  "identify",
+  "apply",
+  "predict",
+  "trace",
+  "compare",
+  "diagnose",
+  "integrate",
+  "tradeoff",
+] as const;
+export type CognitiveType = (typeof COGNITIVE_TYPES)[number];
+
+export const QUIZ_GENERATION_KINDS = ["seeded", "generated"] as const;
+export type QuizGenerationKind = (typeof QUIZ_GENERATION_KINDS)[number];
+
+export const CURRICULUM_SOURCE_KINDS = ["syllabus", "ocw", "textbook", "vendor", "notes"] as const;
+export type CurriculumSourceKind = (typeof CURRICULUM_SOURCE_KINDS)[number];
+
 export const LESSON_SCHEMA_VERSION = 1;
 export const EXPORT_SCHEMA_VERSION = 2;
-export const PROMPT_VERSION = "dau-lesson-v1";
+export const PROMPT_VERSION = "dau-quiz-v3";
+export const CURRICULUM_VERSION = 1;
+export const APP_RELEASE = "1.0";
 
 export interface Category {
   id: CategoryId;
   name: string;
   blurb: string;
   custom?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  /** Retired seeded fields stay in the catalog but are not chosen by Surprise Me. */
+  status?: "active" | "retired";
+}
+
+export interface CurriculumSourceRef {
+  id?: string;
+  title: string;
+  url?: string;
+  kind: CurriculumSourceKind;
+  notes: string;
+}
+
+export interface CourseModule {
+  id: string;
+  title: string;
+  blurb?: string;
+  order: number;
+  /** Other module ids that should be cleared first. Not an authoritative linear lock. */
+  prerequisites: string[];
+  conceptIds: string[];
+  /** Concepts that must be demonstrated to leave the module. */
+  spineIds: string[];
+  learningObjectives?: string[];
+  sourceIds?: string[];
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  categoryId: CategoryId;
+  description: string;
+  curriculumVersion: number;
+  sourceReferences: CurriculumSourceRef[];
+  /** Concept ids that may come from other courses. */
+  entryRequirements: string[];
+  modules: CourseModule[];
+  custom?: boolean;
+  /** Subject-local sequence hint. Prerequisite graph remains authoritative. */
+  orderHint?: number;
+  difficultyRange?: [Tier, Tier];
+  estimatedMinutes?: number;
 }
 
 export interface Concept {
@@ -76,6 +192,19 @@ export interface Concept {
   custom?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  courseId?: string;
+  moduleId?: string;
+  curriculumOrder?: number;
+  tier?: Tier;
+  objectives?: string[];
+  estimatedMinutes?: number;
+  sourceIds?: string[];
+}
+
+export interface QuizDistractor {
+  text: string;
+  kind: DistractorKind;
+  rationale: string;
 }
 
 export interface QuizQuestion {
@@ -84,6 +213,57 @@ export interface QuizQuestion {
   choices: [string, string, string, string];
   answerIndex: 0 | 1 | 2 | 3;
   explanation: string;
+  distractors?: QuizDistractor[];
+  cognitiveType?: CognitiveType;
+  objectiveIds?: string[];
+  prerequisiteConceptIds?: string[];
+  difficultyTier?: Tier;
+}
+
+/** Canonical generated item. The app shuffles; AI must not set answerIndex. */
+export interface QuizItemDraft {
+  id: string;
+  stem: string;
+  correctAnswer: string;
+  distractors: [QuizDistractor, QuizDistractor, QuizDistractor];
+  correctExplanation: string;
+  objectiveIds: string[];
+  prerequisiteConceptIds: string[];
+  difficultyTier: Tier;
+  cognitiveType?: CognitiveType;
+}
+
+export interface AssessmentItemRecord {
+  at: string;
+  lessonId: string;
+  conceptId: string;
+  questionId: string;
+  courseId?: string;
+  moduleId?: string;
+  objectiveIds: string[];
+  cognitiveType?: CognitiveType;
+  difficultyTier?: Tier;
+  answerIndex: 0 | 1 | 2 | 3;
+  correct: boolean;
+  laterPoorRating?: boolean;
+  generationKind?: QuizGenerationKind;
+  promptVersion?: string;
+  provider?: string;
+  model?: string;
+}
+
+export interface AssessmentHistory {
+  items: AssessmentItemRecord[];
+  recentPositions: number[];
+}
+
+export interface LessonResult {
+  lessonId: string;
+  conceptId: string;
+  quizCorrect: number;
+  quizTotal: number;
+  understanding: Understanding | null;
+  at: string;
 }
 
 export interface Provenance {
@@ -98,6 +278,8 @@ export interface Provenance {
   links?: string[];
   sourceExcerpt?: string;
   notes?: string;
+  /** Full generation cache key. Present on AI lessons so reuse cannot cross contexts. */
+  cacheKey?: string;
 }
 
 /** @deprecated v1 seed shape — still accepted on import and normalized. */
@@ -166,7 +348,15 @@ export interface ConceptProgress {
   understanding: Understanding | null;
   quizCorrect: number;
   quizTotal: number;
+  /**
+   * Last-session quiz ratio in [0, 1].
+   * Legacy v1/v2 stores wrote the raw correct-count (0–3) here; migrate on read.
+   */
   lastQuizScore: number | null;
+  /** Raw correct answers from the last session. Display only — ranking uses lastQuizScore. */
+  lastQuizCorrect: number | null;
+  /** Question count of the last session (usually 3). */
+  lastQuizTotal: number;
   estimatedMinutes: number;
   actualMinutes: number;
   lastStudiedAt: string | null;
@@ -174,6 +364,8 @@ export interface ConceptProgress {
   timesStudied: number;
   ease: number;
   intervalDays: number;
+  /** Lifetime count of failing reviews (quality ≤ 1). Distinguishes a one-off miss from a pattern. */
+  lapseCount: number;
   reviewHistory: ReviewEvent[];
   updatedAt: string | null;
 }
@@ -194,6 +386,8 @@ export interface SessionRecord {
   timeBudget: TimeBudget;
   sourceType: SourceType;
   sourceProvider?: string;
+  /** Optional post-lesson note. Does not change review scheduling. */
+  difficultyNote?: DifficultyNote;
 }
 
 export interface LocalProfile {
@@ -244,6 +438,7 @@ export interface GenerationLogEntry {
   lessonId?: string;
   conceptId?: string;
   cached?: boolean;
+  billable?: boolean;
   inputTokens?: number;
   outputTokens?: number;
 }
@@ -258,6 +453,22 @@ export interface PendingPath {
   model: string;
   concepts: Concept[];
   sequence: string[];
+}
+
+export interface CoursePlacement {
+  at: string;
+  recommendedTier: Tier;
+  waivedConceptIds: string[];
+  evidence: string[];
+  kind: "quiz" | "declaration" | "inferred";
+}
+
+export interface CourseProgress {
+  courseId: string;
+  startedAt: string | null;
+  lastStudiedAt: string | null;
+  waivedConceptIds: string[];
+  placement?: CoursePlacement;
 }
 
 export interface Settings {
@@ -280,6 +491,9 @@ export interface ProgressState {
   customLessons: Lesson[];
   generationLog: GenerationLogEntry[];
   pendingPath: PendingPath | null;
+  courses: Record<string, CourseProgress>;
+  customCourses: Course[];
+  assessmentHistory: AssessmentHistory;
 }
 
 export interface SessionRequest {
@@ -297,11 +511,34 @@ export interface SelectionResult {
   generatedCandidate?: boolean;
 }
 
+export interface SelectOptions {
+  now?: Date;
+  /** Injected for tests. Production uses Math.random. */
+  rng?: () => number;
+  courses?: Record<string, CourseProgress>;
+}
+
 export interface Catalog {
   categories: Category[];
   concepts: Concept[];
   lessons: Lesson[];
+  courses: Course[];
   categoryMap: Record<string, Category>;
   conceptMap: Record<string, Concept>;
   lessonMap: Record<string, Lesson>;
+  courseMap: Record<string, Course>;
 }
+
+export function isRetiredSeededCategory(id: string): boolean {
+  return (RETIRED_SEEDED_CATEGORY_IDS as readonly string[]).includes(id);
+}
+
+export function isActiveSeededCategory(id: string): boolean {
+  return (ACTIVE_SEEDED_CATEGORY_IDS as readonly string[]).includes(id);
+}
+
+export function isSelectableCategory(category: Category): boolean {
+  if (category.custom) return true;
+  return category.status !== "retired";
+}
+

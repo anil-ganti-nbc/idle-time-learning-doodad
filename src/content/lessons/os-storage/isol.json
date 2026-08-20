@@ -1,0 +1,588 @@
+{
+  "courseId": "os-storage",
+  "moduleId": "os-s-isol",
+  "lessons": [
+    {
+      "id": "os-namespace-10",
+      "conceptId": "os-namespace",
+      "title": "The rest of the machine is off the list",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-isolation"],
+      "goDeeper": "os-namespace-linux",
+      "diagram": "process-space",
+      "explanation": [
+        "Isolation already promised that a smash next door stays next door. That promise is about maps: another process's memory is not on this one. A namespace is a different cut. The kernel also decides which objects this process may even name — process IDs, mounts, network interfaces, user IDs. The host still has the full inventory. A namespaced process is handed a smaller table and is told that table is the world.",
+        "The kernel still sees everything. The restriction is the process's view. A listing of processes, a walk of mounts, an enumeration of interfaces, a lookup of a uid — those queries return the namespace's table, not the host's. Two processes can be isolated from each other's memory and still share a view, or they can have private views while remaining processes of the same kernel.",
+        "A PID namespace is the concrete case. The first process in that namespace is process 1 as far as anyone inside can tell. Host init is still host init; it is simply not in this table. A kill aimed at pid 1 inside the namespace targets the namespace's first process, not the machine's."
+      ],
+      "example": "A helper is the first task placed in a new PID namespace. It calls getpid and gets 1. The host's process table still has a different number for that same task. A listing from inside shows the helper and its children. The host's other daemons are not on that list.",
+      "whyItMatters": "A private address space still leaves a process a full inventory of the machine. Restricting that inventory is a separate mechanism, and it is the one pid 1 stories actually use.",
+      "quiz": [
+        {
+          "id": "isol-ns-1",
+          "stem": "A namespace is primarily:",
+          "correctAnswer": "A restricted view, so the process cannot see the whole machine",
+          "distractors": [
+            { "text": "A second copy of the kernel running on another computer", "kind": "misconception", "rationale": "The same kernel still owns the machine; only the view shrank." },
+            { "text": "A new address space that merges every process's memory", "kind": "reversed", "rationale": "Maps stay separate. The namespace restricts names, not by merging maps." },
+            { "text": "A cgroup that only caps CPU, with the full inventory still visible", "kind": "misapplied", "rationale": "A namespace hides an inventory. A CPU cgroup caps time; it does not hide pids or mounts." }
+          ],
+          "correctExplanation": "The process is still a process of this kernel. What it can name got smaller.",
+          "objectiveIds": ["Describe a namespace as a process that cannot see the whole machine"],
+          "prerequisiteConceptIds": ["os-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "isol-ns-2",
+          "stem": "A process listing tasks from inside a PID namespace sees:",
+          "correctAnswer": "The processes in that namespace, not the host's full table",
+          "distractors": [
+            { "text": "Every process on the machine, with the original host numbers", "kind": "reversed", "rationale": "That is the view the PID namespace exists to hide." },
+            { "text": "No processes at all, including itself", "kind": "nearby", "rationale": "The namespace still has members. It is not an empty machine." },
+            { "text": "Only the firmware's power-on self-test", "kind": "misapplied", "rationale": "Firmware is gone. This is a runtime table of tasks." }
+          ],
+          "correctExplanation": "The listing is the namespace's inventory. The host table is a different list.",
+          "objectiveIds": ["Describe a namespace as a process that cannot see the whole machine"],
+          "prerequisiteConceptIds": ["os-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-ns-3",
+          "stem": "A process that is first in a new PID namespace treats process 1 as:",
+          "correctAnswer": "Itself, not the host's init",
+          "distractors": [
+            { "text": "The host's init, still numbered 1 in every view", "kind": "reversed", "rationale": "Host init remains the host's pid 1. It is not in this table." },
+            { "text": "The host's swapper thread, remapped to pid 0 in every namespace", "kind": "misapplied", "rationale": "The first process in a new PID namespace is pid 1 in that view — itself, not the host init." },
+            { "text": "Whatever pid the disk controller last used", "kind": "nearby", "rationale": "Device firmware does not hand out process IDs." }
+          ],
+          "correctExplanation": "Inside, the first member is pid 1. That is a view, not a new owner of the machine.",
+          "objectiveIds": ["Predict what a process in a PID namespace believes is process 1"],
+          "prerequisiteConceptIds": ["os-isolation"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-namespace-linux-10",
+      "conceptId": "os-namespace-linux",
+      "title": "Four tables, not one switch",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-namespace"],
+      "goDeeper": "os-container",
+      "diagram": "process-space",
+      "explanation": [
+        "Linux splits the restricted view by object kind. A PID namespace rewrites which processes exist and what their numbers are. A mount namespace rewrites which filesystem trees are attached. A net namespace rewrites which interfaces, addresses, and sockets exist. A user namespace rewrites which user and group IDs the process holds, including whether uid 0 inside is a privileged uid on the host.",
+        "The four tables compose independently. A process can have a private PID table and still see the host's network interfaces. It can have a private net stack and still see every process on the machine. Saying a process is 'namespaced' does not say which inventory moved. Each kind of name has its own table.",
+        "The net namespace is the one that hides the host's network interfaces. Inside it, the host's NICs are simply not there; the process sees only the interfaces that were placed in that net namespace — often a loopback and nothing else. A mount namespace does not hide NICs. A PID namespace does not hide NICs. A user namespace changes who you are, not which packets you can name."
+      ],
+      "example": "A process is placed in a new net namespace and lists interfaces: only lo. The host still has its real NICs. The same process was not given a PID namespace, so a process listing still shows every task on the host. Two tables, two answers.",
+      "whyItMatters": "Treating 'a namespace' as one object hides which inventory actually moved. A visible NIC or a visible pid is a named table that was not replaced.",
+      "quiz": [
+        {
+          "id": "isol-nsl-1",
+          "stem": "PID, mount, net, and user namespaces differ because they restrict:",
+          "correctAnswer": "Different inventories: processes, mounts, network objects, and identities",
+          "distractors": [
+            { "text": "The same inventory four times, with identical effects", "kind": "reversed", "rationale": "Each kind of name has its own table. The effects are not interchangeable." },
+            { "text": "Only file descriptors, reused under four different names", "kind": "misapplied", "rationale": "PID, mount, net, and user namespaces restrict different inventories." },
+            { "text": "Which physical CPU the process is soldered to", "kind": "nearby", "rationale": "A namespace is a view of names, not a pin on a package." }
+          ],
+          "correctExplanation": "Four object kinds, four tables. A pid view is not a NIC view.",
+          "objectiveIds": ["Distinguish PID, mount, net, and user namespaces as different restricted views"],
+          "prerequisiteConceptIds": ["os-namespace"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "isol-nsl-2",
+          "stem": "A process given only a user namespace, not a net namespace, still:",
+          "correctAnswer": "Sees the host's network interfaces; identity changed, not the net table",
+          "distractors": [
+            { "text": "Loses every host NIC, because any namespace hides interfaces", "kind": "misconception", "rationale": "Only the net namespace rewrites the interface list." },
+            { "text": "Becomes pid 1 on the host", "kind": "nearby", "rationale": "Pid 1 is a PID-namespace fact, not a user-namespace fact." },
+            { "text": "Deletes the host's mount table as a side effect", "kind": "misapplied", "rationale": "User IDs and mounts are different tables." }
+          ],
+          "correctExplanation": "User namespace rewrites who you are. Interfaces live in the net table.",
+          "objectiveIds": ["Distinguish PID, mount, net, and user namespaces as different restricted views"],
+          "prerequisiteConceptIds": ["os-namespace"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-nsl-3",
+          "stem": "The namespace that hides the host's network interfaces is:",
+          "correctAnswer": "The net namespace",
+          "distractors": [
+            { "text": "The PID namespace", "kind": "nearby", "rationale": "PID rewrites the process table, not the interface list." },
+            { "text": "The mount namespace", "kind": "nearby", "rationale": "Mount rewrites attached trees, not NICs." },
+            { "text": "The user namespace", "kind": "misapplied", "rationale": "User rewrites uids. It does not unplug host interfaces from the view." }
+          ],
+          "correctExplanation": "Interfaces, addresses, and sockets live in the net table. That is the one that hides the host's NICs.",
+          "objectiveIds": ["Predict which namespace hides the host's network interfaces"],
+          "prerequisiteConceptIds": ["os-namespace"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-cgroup-10",
+      "conceptId": "os-cgroup",
+      "title": "Meter the group, then cap it",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-sched"],
+      "goDeeper": "os-container",
+      "diagram": "ready-queue",
+      "explanation": [
+        "The scheduler already chooses which runnable thread owns a core next. A cgroup does not replace that choice. It groups tasks so the kernel can account their CPU time, their memory, and their I/O, and then impose a limit on those meters. The group is the unit of the bill and the unit of the ceiling.",
+        "CPU limits bound how much time the group may consume. Memory limits bound how much RAM the group's pages may occupy. I/O limits bound bandwidth or operation rate to a device. Accounting is what makes a ceiling real: without a meter, a cap is a comment in a config file.",
+        "When a group hits its memory limit, the kernel does not enlarge the machine. It reclaims from that group, and if reclaim is not enough it kills a member of that group or fails the allocation that would have gone over. Other groups keep their pages. One greedy group is not a reboot of the host."
+      ],
+      "example": "A build is placed in a group with a 512 MiB memory max. It allocates until the meter hits 512 MiB. Further growth is reclaimed or a task in that group is killed. An editor in a different group is not chosen as the victim merely because it is also on the machine.",
+      "whyItMatters": "A scheduler can still be fair among threads and still let one job exhaust RAM. Cgroups are the meters and the ceilings on a set of tasks.",
+      "quiz": [
+        {
+          "id": "isol-cg-1",
+          "stem": "A cgroup is the kernel's way to:",
+          "correctAnswer": "Account CPU, memory, and I/O for a group of tasks, then cap those meters",
+          "distractors": [
+            { "text": "Replace the scheduler with a single always-on thread", "kind": "reversed", "rationale": "The scheduler still picks the next runnable. The group is billed and capped." },
+            { "text": "Rename local variables in every program in the group", "kind": "misapplied", "rationale": "Accounting is runtime resource use, not a compile rename." },
+            { "text": "Give each task a private copy of the entire kernel", "kind": "nearby", "rationale": "A cgroup is meters on shared kernel resources, not a second kernel." }
+          ],
+          "correctExplanation": "Group the tasks, meter them, cap them. The scheduler is still the scheduler.",
+          "objectiveIds": ["Describe a cgroup as accounting and limits on CPU, memory, and I/O"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-cg-2",
+          "stem": "A group that hits its memory limit typically:",
+          "correctAnswer": "Has reclaim or a kill applied inside the group; other groups keep their pages",
+          "distractors": [
+            { "text": "Grows without bound until the machine reboots", "kind": "reversed", "rationale": "The limit exists so the group cannot grow without bound." },
+            { "text": "Forces the scheduler to stop choosing any thread on the machine", "kind": "nearby", "rationale": "A memory cap is not a halt of every core." },
+            { "text": "Unmaps the group's page tables so the next fault kills the host", "kind": "misapplied", "rationale": "A memory limit reclaims or kills inside the group. It does not take down the host MMU." }
+          ],
+          "correctExplanation": "The ceiling is on that group's meter. Reclaim or OOM stays inside the group.",
+          "objectiveIds": ["Predict what happens when a group hits its memory limit"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "isol-cg-3",
+          "stem": "The resources a cgroup meters and can cap are:",
+          "correctAnswer": "CPU time, memory occupancy, and I/O for the group's tasks",
+          "distractors": [
+            { "text": "Which programming language each task was written in", "kind": "misapplied", "rationale": "Language is not a kernel meter." },
+            { "text": "The BIOS memory count from power-on", "kind": "nearby", "rationale": "Firmware inventory is not a per-group runtime cap." },
+            { "text": "The names of local variables in the ready queue", "kind": "subtle", "rationale": "The scheduler names threads, not source identifiers, and a cgroup is not a rename." }
+          ],
+          "correctExplanation": "Time, pages, and device traffic. Those are the bills and the ceilings.",
+          "objectiveIds": ["Describe a cgroup as accounting and limits on CPU, memory, and I/O"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-capability-10",
+      "conceptId": "os-capability",
+      "title": "Drop the privileged bits you do not need",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-privilege"],
+      "goDeeper": "os-seccomp",
+      "diagram": "user-kernel-boundary",
+      "explanation": [
+        "Privilege on the CPU is a mode: some instructions are illegal in user mode. Unix then piled a second idea on top. Uid 0 — root — may perform every privileged operation the kernel offers: bind low ports, change file ownership, load a module, set the clock. One identity covers a bag of operations.",
+        "Capabilities split the bag into bits. Each bit names a class of privileged kernel work. A process can start with many bits and drop the ones it does not need, including while remaining uid 0. A process that is not uid 0 can be granted a single bit. The kernel checks the bit, not the folklore that root may do anything.",
+        "After a drop, the denied operation fails even if the process still has uid 0. A process that dropped the bit required to bind a privileged port gets a permission error on that bind. The CPU mode bit did not change. The capability bit did."
+      ],
+      "example": "A network helper runs as uid 0 but drops every capability except the bit that lets it bind port 443. It can listen on 443. It cannot change file ownership, load a kernel module, or set the system clock. Those operations look up bits it no longer holds.",
+      "whyItMatters": "Uid 0 as a synonym for every privileged operation makes a small program a large target. Bits you can drop are how the kernel stops treating root as one switch.",
+      "quiz": [
+        {
+          "id": "isol-cap-1",
+          "stem": "Capabilities exist to:",
+          "correctAnswer": "Split root's privileged operations into bits a process can drop",
+          "distractors": [
+            { "text": "Turn off the CPU mode bit for the rest of the day", "kind": "reversed", "rationale": "The mode bit still exists. Capabilities further split what uid 0 may ask of the kernel." },
+            { "text": "Turn off the MMU so the process can name physical memory", "kind": "misapplied", "rationale": "Capabilities split root's privileged operations. They do not disable translation." },
+            { "text": "Give every user program every privileged instruction", "kind": "nearby", "rationale": "That is the opposite of dropping bits, and user mode still forbids privileged instructions." }
+          ],
+          "correctExplanation": "One identity used to mean the whole bag. Each bit is now droppable.",
+          "objectiveIds": ["Describe capabilities as splitting root into bits you can drop"],
+          "prerequisiteConceptIds": ["os-privilege"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-cap-2",
+          "stem": "A uid-0 process that dropped the bit a privileged bind needs typically:",
+          "correctAnswer": "Gets a denial on that bind; remaining root bits do not cover it",
+          "distractors": [
+            { "text": "Succeeds, because uid 0 still means every privileged operation", "kind": "reversed", "rationale": "That is the folklore capabilities exist to end." },
+            { "text": "Reboots the machine as a required side effect of the drop", "kind": "nearby", "rationale": "Dropping a bit is not a reset." },
+            { "text": "Keeps the bind, because dropping a bit only affects the next exec", "kind": "misapplied", "rationale": "A dropped capability denies that operation now. Exec is not required for the drop to take effect." }
+          ],
+          "correctExplanation": "The kernel looks up the bit the operation needs. Uid 0 without that bit is not enough.",
+          "objectiveIds": ["Predict a denial when a process has dropped the bit a privileged operation needs"],
+          "prerequisiteConceptIds": ["os-privilege"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "isol-cap-3",
+          "stem": "The check that allows a privileged kernel operation after a drop is:",
+          "correctAnswer": "Whether the process still holds the bit that operation requires",
+          "distractors": [
+            { "text": "Whether the process's source file still contains the word root", "kind": "misapplied", "rationale": "A comment in source is not a capability bit." },
+            { "text": "Whether the CPU has permanently left user mode", "kind": "nearby", "rationale": "The process is still user mode. The bit is a kernel permission, not a stuck privileged mode." },
+            { "text": "Whether uid 0 was ever true at any past moment", "kind": "misconception", "rationale": "A past uid does not restore a dropped bit." }
+          ],
+          "correctExplanation": "The bit that names the operation, held now. History and folklore do not substitute.",
+          "objectiveIds": ["Describe capabilities as splitting root into bits you can drop"],
+          "prerequisiteConceptIds": ["os-privilege"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-seccomp-10",
+      "conceptId": "os-seccomp",
+      "title": "Nail unused syscall numbers shut",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-syscall"],
+      "goDeeper": "os-syscall-filter",
+      "diagram": "trap-entry",
+      "explanation": [
+        "A system call is already a narrow door: a number, arguments, a privilege crossing, a check, a return. seccomp is a further filter on that door. After a process installs a filter, some syscall numbers remain legal and the rest are not. The kernel refuses the illegal ones with a kill, a trap, or an error, depending on how the filter was written.",
+        "The filter is on the call, not on every meaning of every argument. That coarseness is the usual hole. Allowing open means the process may open. It does not mean the process may open only one path. An allowed open can still name a password file, a socket, or a device node, unless some other mechanism restricts those names.",
+        "A sandbox that allows a coarse call has not finished. Diagnosing a breakout starts with which numbers were left legal, and what those calls can do with attacker-controlled arguments. The filter is not a complete policy language for files. It is a filter on the syscall table."
+      ],
+      "example": "A worker is allowed read, write, exit, and open. It is denied ptrace, mount, and clone. An attacker who can choose the path in open still opens whatever the remaining credentials allow. The denied calls never run. The allowed open did.",
+      "whyItMatters": "Closing unused syscall numbers shrinks what a compromised process can ask the kernel. Leaving a coarse call enabled reopens a lot of kernel code under one name.",
+      "quiz": [
+        {
+          "id": "isol-secp-1",
+          "stem": "seccomp is the kernel's way to:",
+          "correctAnswer": "Filter which syscall numbers remain legal for a process",
+          "distractors": [
+            { "text": "Replace the syscall table with an ordinary function CALL", "kind": "reversed", "rationale": "The door is still a trap. Some numbers on it are now refused." },
+            { "text": "Speed up the clock when a call number is even", "kind": "nearby", "rationale": "A filter is a legality check, not a frequency knob." },
+            { "text": "Compile the program a second time inside the kernel", "kind": "misapplied", "rationale": "seccomp inspects the requested call, not the source." }
+          ],
+          "correctExplanation": "Same door, fewer legal numbers. That is the filter.",
+          "objectiveIds": ["Describe seccomp as a filter on which syscalls remain legal"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-secp-2",
+          "stem": "An allowed open can still be a sandbox hole because:",
+          "correctAnswer": "The filter legalized the call, not every path or object that call can name",
+          "distractors": [
+            { "text": "open is not a system call, so filters cannot see it", "kind": "reversed", "rationale": "open is a syscall. That is why a filter can allow it — and why allowing it is coarse." },
+            { "text": "open is translated into a write, so the filter cannot name it", "kind": "misapplied", "rationale": "An allowed open is still a hole if the filter legalized the call but not the path." },
+            { "text": "Allowed calls are secretly executed twice on another machine", "kind": "nearby", "rationale": "The hole is argument power, not a second host." }
+          ],
+          "correctExplanation": "Legalizing the number legalizes a wide family of operations. The path is still a choice.",
+          "objectiveIds": ["Predict why an allowed open can still be a sandbox hole"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "isol-secp-3",
+          "stem": "A filtered process still opens an unexpected file. The likely cause is:",
+          "correctAnswer": "open remained legal, so the filter never constrained the path",
+          "distractors": [
+            { "text": "Every syscall was denied, including open", "kind": "reversed", "rationale": "A denied open would not produce an open." },
+            { "text": "The BIOS rewrote the filter during power-on", "kind": "nearby", "rationale": "Firmware is not in this path." },
+            { "text": "The filter attached to a different process and never saw this open", "kind": "misapplied", "rationale": "If open remained legal, the filter never constrained the path. The table is still there." }
+          ],
+          "correctExplanation": "The filter said the number was fine. The hole is the arguments that number still accepts.",
+          "objectiveIds": ["Predict why an allowed open can still be a sandbox hole"],
+          "prerequisiteConceptIds": ["os-syscall"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "os-syscall-filter-10",
+      "conceptId": "os-syscall-filter",
+      "title": "Leave enough calls that the program still runs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-seccomp"],
+      "diagram": "trap-entry",
+      "explanation": [
+        "A filter that denies every syscall leaves a process that cannot read, write, obtain memory, or exit. That is a secure paperweight. Useful work still goes through the kernel: bytes in and out, a heap, a clock, a way to terminate. A sandbox therefore keeps a few calls, on purpose.",
+        "Typical keepers are variants of read, write, and exit, plus whatever the runtime uses to obtain memory, and sometimes a time call. Each extra number is more kernel code the process can reach. Each missing number is a crash or an errno in a library that assumed the usual Unix door was still there.",
+        "The tradeoff is the whole design. A tiny surface is easier to audit and harder to exploit; many real programs will not run on it. A surface large enough to host a language runtime is large enough to include dangerous calls. The filter's job is to pick a point on that line, not to pretend the line is not there."
+      ],
+      "example": "A compressor needs to read stdin, write stdout, grow a heap, and exit. Deny write and it cannot emit the result. Allow a general open, ioctl, and ptrace 'so the runtime is happy' and the surface is no longer tiny. The working set of calls is the policy.",
+      "whyItMatters": "Sandboxing is not deny-everything. It is choosing which remaining kernel entries are still worth the risk of a working program.",
+      "quiz": [
+        {
+          "id": "isol-sf-1",
+          "stem": "A sandboxed process still needs a few syscalls because:",
+          "correctAnswer": "Useful work — read, write, memory, exit — still goes through the kernel",
+          "distractors": [
+            { "text": "A process with zero syscalls is the only way a program can run", "kind": "reversed", "rationale": "Zero syscalls is a paperweight. Work still asks the kernel." },
+            { "text": "A process with an empty filter is automatically given every call", "kind": "misapplied", "rationale": "A sandbox still needs read, write, memory, and exit. An empty filter is not a free pass by definition." },
+            { "text": "The CPU cannot add numbers unless a syscall is in flight", "kind": "nearby", "rationale": "Ordinary arithmetic is not a privileged kernel request." }
+          ],
+          "correctExplanation": "The door has to stay open far enough for bytes, memory, and a way to stop.",
+          "objectiveIds": ["Explain why a sandboxed process still needs a few syscalls to do useful work"],
+          "prerequisiteConceptIds": ["os-seccomp"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-sf-2",
+          "stem": "Shrinking the syscall surface versus keeping a working program is a tradeoff because:",
+          "correctAnswer": "Fewer legal calls are easier to audit; too few and the program cannot run",
+          "distractors": [
+            { "text": "A smaller surface always makes every program faster and correct", "kind": "reversed", "rationale": "A smaller surface breaks programs that needed the missing calls." },
+            { "text": "The two goals never interact; filters are only a compile-time style", "kind": "misapplied", "rationale": "The filter is a runtime legality set. It is exactly the interaction." },
+            { "text": "A larger surface always removes the kernel from the path", "kind": "nearby", "rationale": "More legal calls mean more kernel code reachable, not less." }
+          ],
+          "correctExplanation": "Auditability and exploit surface pull one way. A working libc pulls the other.",
+          "objectiveIds": ["Predict the tradeoff between a tiny syscall surface and a working program"],
+          "prerequisiteConceptIds": ["os-seccomp"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        },
+        {
+          "id": "isol-sf-3",
+          "stem": "Denying write in a filter that otherwise looks 'tiny' typically:",
+          "correctAnswer": "Stops the program from emitting results, even if it can still compute",
+          "distractors": [
+            { "text": "Makes the program faster because fewer calls are cheaper", "kind": "nearby", "rationale": "A denied write is a broken program, not a speedup." },
+            { "text": "Lets the process skip the kernel for all remaining work", "kind": "reversed", "rationale": "Remaining work still uses whatever calls you left open." },
+            { "text": "Converts every remaining call into a raw privileged instruction", "kind": "misapplied", "rationale": "Denying write stops results from leaving. It does not turn remaining calls into privileged ops." }
+          ],
+          "correctExplanation": "The program still needs a way to put bytes somewhere. That call was the way.",
+          "objectiveIds": ["Predict the tradeoff between a tiny syscall surface and a working program"],
+          "prerequisiteConceptIds": ["os-seccomp"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-kvm-intro-10",
+      "conceptId": "os-kvm-intro",
+      "title": "The host kernel runs other kernels weaker",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-privilege", "cpu-virtual-addr"],
+      "diagram": "user-kernel-boundary",
+      "explanation": [
+        "Privilege is a CPU mode: the real kernel executes the dangerous instructions; user code does not. KVM is the host kernel using that fact on other kernels. A guest kernel runs in a less-privileged mode. It believes it owns a machine. The host kernel still owns the real one.",
+        "Guest programs, and the guest kernel, name virtual addresses in the guest's space. Those names are not host physical lines. Two guests can use the same guest-virtual number without naming the same host line, for the same reason two processes can. The host is responsible for the fact that a guest load does not become an unchecked access to host memory.",
+        "When the guest executes a privileged instruction — loading a control register, issuing privileged I/O, trying to change mode as if it were the host — the CPU does not let the guest complete it as the host kernel would. Control transfers to the host. KVM then emulates the operation for the guest or refuses it. The guest's privileged instruction is a trap on the host, not a host-privileged execute."
+      ],
+      "example": "A guest kernel executes an instruction that would, on bare metal, write a system control register. The processor is not in the host's privileged mode for that guest. The instruction causes an exit into the host kernel. KVM inspects the attempt and either emulates a register the guest is allowed to think it has, or rejects it. The host's real control register is not that write.",
+      "whyItMatters": "A second kernel is not a second owner of the hardware. It is a program the host kernel runs in a weaker mode, and privileged guest ops become host traps.",
+      "quiz": [
+        {
+          "id": "isol-kvm-1",
+          "stem": "KVM is best described as:",
+          "correctAnswer": "The host kernel running other kernels in a less-privileged mode",
+          "distractors": [
+            { "text": "A guest kernel that takes over the host's privileged mode permanently", "kind": "reversed", "rationale": "The host stays the privileged owner. The guest is weaker." },
+            { "text": "A container: namespaces on the host kernel with no guest kernel", "kind": "misapplied", "rationale": "KVM runs other kernels in a less-privileged mode. A container has no guest kernel." },
+            { "text": "A way for user programs to issue privileged instructions unchecked", "kind": "nearby", "rationale": "The whole point is that privileged guest ops are checked by the host." }
+          ],
+          "correctExplanation": "Host kernel privileged; guest kernel weaker. That is the split.",
+          "objectiveIds": ["Describe KVM as the host kernel running other kernels in a less-privileged mode"],
+          "prerequisiteConceptIds": ["os-privilege", "cpu-virtual-addr"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "isol-kvm-2",
+          "stem": "A privileged instruction executed by a guest kernel typically:",
+          "correctAnswer": "Transfers control to the host kernel rather than executing as host-privileged",
+          "distractors": [
+            { "text": "Writes the host's real control state as if the guest were the host", "kind": "reversed", "rationale": "That is what the weaker mode exists to prevent." },
+            { "text": "Is ignored forever, with no transfer and no emulation", "kind": "nearby", "rationale": "The host sees the attempt. It may emulate or refuse; it does not vanish." },
+            { "text": "Compiles a new host kernel from the guest's source", "kind": "misapplied", "rationale": "An instruction trap is not a build of the host." }
+          ],
+          "correctExplanation": "The CPU hands the attempt to the host. KVM emulates or denies. The host's privileged state is not the guest's write.",
+          "objectiveIds": ["Predict what a privileged instruction in the guest causes on the host"],
+          "prerequisiteConceptIds": ["os-privilege", "cpu-virtual-addr"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "isol-kvm-3",
+          "stem": "Compared with the host kernel, a guest kernel under KVM:",
+          "correctAnswer": "Runs weaker; its privileged ops become host traps, and its virtual addresses are not host lines",
+          "distractors": [
+            { "text": "Shares the host's privileged mode and names host physical lines directly", "kind": "reversed", "rationale": "Then it would be the host. KVM exists because it is not." },
+            { "text": "Cannot use virtual addresses at all, only physical host rows", "kind": "nearby", "rationale": "The guest still names virtual addresses. They are guest names, not host lines." },
+            { "text": "Replaces the host kernel each time a user process calls getpid", "kind": "misapplied", "rationale": "The host kernel remains resident. A guest is another kernel it is running." }
+          ],
+          "correctExplanation": "Weaker mode plus guest-virtual names. The host still owns privilege and physical lines.",
+          "objectiveIds": ["Describe KVM as the host kernel running other kernels in a less-privileged mode"],
+          "prerequisiteConceptIds": ["os-privilege", "cpu-virtual-addr"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-container-10",
+      "conceptId": "os-container",
+      "title": "A view, a cap, and a root — still this kernel",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-namespace", "os-cgroup"],
+      "diagram": "process-space",
+      "explanation": [
+        "A container is not a new kernel. It is a process, or a tree of them, given namespaces so it cannot see the whole machine, cgroups so its CPU, memory, and I/O are metered and capped, and a filesystem view so its / is a tree the host chose, not the host's real root.",
+        "Each piece does one job. Namespaces hide pids, mounts, and interfaces. Cgroups stop the group from taking every core and all of RAM. The filesystem view makes pathnames inside resolve in a prepared tree. Missing one piece leaves a hole: a private pid table with no memory cap still lets the job exhaust the host; a cap with the host's mount table still lets it name host files.",
+        "A virtual machine runs another kernel, with its own idea of devices and of pid 1. A container's processes are processes of the host kernel. They issue the host's syscalls. They live or die by the host's maps and the host's bugs. The cheaper package is also the thinner wall."
+      ],
+      "example": "A service starts with a PID namespace so it is pid 1 inside, a mount namespace whose / is a prepared tree, a net namespace with only a private interface, and a memory cgroup at 256 MiB. It cannot list the host's other processes or grow past the cap. It still traps into the same kernel as the host's other daemons. A virtual machine running the same service would bring its own kernel.",
+      "whyItMatters": "Calling both packages isolation hides the kernel count. A container shares one; a virtual machine does not.",
+      "quiz": [
+        {
+          "id": "isol-ct-1",
+          "stem": "A container is composed of:",
+          "correctAnswer": "Namespaces plus cgroups plus a filesystem view, on the host kernel",
+          "distractors": [
+            { "text": "A second kernel that replaces the host for every syscall", "kind": "reversed", "rationale": "That is the virtual-machine package, not the container." },
+            { "text": "A guest kernel plus emulated devices, just named “container”", "kind": "misapplied", "rationale": "A container is namespaces, cgroups, and a filesystem view on the host kernel." },
+            { "text": "Only a cgroup, with the full host inventory left visible", "kind": "nearby", "rationale": "A cap without a restricted view still shows the machine." }
+          ],
+          "correctExplanation": "Restricted view, meters and ceilings, a chosen root. Same kernel.",
+          "objectiveIds": ["Describe a container as namespaces plus cgroups plus a filesystem view"],
+          "prerequisiteConceptIds": ["os-namespace", "os-cgroup"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "isol-ct-2",
+          "stem": "A virtual machine differs from a container because the VM:",
+          "correctAnswer": "Runs its own kernel; a container's processes are still the host kernel's",
+          "distractors": [
+            { "text": "Shares the host kernel and only hides pids", "kind": "reversed", "rationale": "Sharing the host kernel is the container. A VM brings another kernel." },
+            { "text": "Cannot have memory limits of any kind", "kind": "nearby", "rationale": "Both packages can be capped. The kernel count is the cut." },
+            { "text": "Runs without a kernel of any kind, including the host's", "kind": "misapplied", "rationale": "A VM runs its own kernel. A container's processes are still the host kernel's." }
+          ],
+          "correctExplanation": "Own kernel versus this kernel. That is the contrast.",
+          "objectiveIds": ["Contrast a container with a virtual machine that has its own kernel"],
+          "prerequisiteConceptIds": ["os-namespace", "os-cgroup"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "isol-ct-3",
+          "stem": "A job with a private pid table and no memory cgroup typically:",
+          "correctAnswer": "Cannot see host processes, and can still exhaust host RAM",
+          "distractors": [
+            { "text": "Cannot see host processes, and cannot allocate any memory either", "kind": "nearby", "rationale": "A PID namespace does not install a memory ceiling." },
+            { "text": "Has become a virtual machine with its own kernel", "kind": "reversed", "rationale": "A pid view is not a second kernel." },
+            { "text": "Is rewritten at compile time to use a smaller heap", "kind": "misapplied", "rationale": "The missing piece is a runtime cap, not a compile." }
+          ],
+          "correctExplanation": "Namespaces hide. Cgroups cap. One without the other is a hole.",
+          "objectiveIds": ["Describe a container as namespaces plus cgroups plus a filesystem view"],
+          "prerequisiteConceptIds": ["os-namespace", "os-cgroup"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-container-20",
+      "conceptId": "os-container",
+      "title": "Each piece's job, and the kernel you still share",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["os-namespace", "os-cgroup"],
+      "diagram": "process-space",
+      "explanation": [
+        "Namespaces contribute the restricted view: which pids, mounts, interfaces, and uids the processes may name. Without them the job sees the host. Cgroups contribute the meters and ceilings: CPU time, memory, I/O. Without them the job can be polite in its view and still starve the machine. The filesystem view contributes a root: pathnames start in a tree the host assembled, so /etc inside is not automatically /etc on the host.",
+        "After all three, the kernel is still the host kernel. System-call numbers mean what they mean on the host. The scheduler, the drivers, and the maps are the host's. A kernel bug is a bug for every container on that kernel. A privileged instruction is still a privileged instruction of this CPU, gated by this host, not by a guest kernel.",
+        "Diagnosis follows the pieces. Two containers that can see each other's processes: the PID namespace was not applied, or they share one. A container that can read the host's real /etc: the filesystem view or the mount namespace was too wide. A container that remains polite in a process listing and still takes all of RAM: the memory cgroup is missing or set too high. Shared fate with no shared object and no agreed view still points at the host kernel.",
+        "The tradeoff against a virtual machine is the leftover kernel. Sharing it is cheaper: no second kernel to schedule, no second privileged mode to enter for every device. It is also thinner: the attack surface is this kernel's syscall table and this kernel's bugs. Paying for a guest kernel buys a second owner of maps and of pid 1. It does not make the host disappear; it moves the trust boundary."
+      ],
+      "example": "A job is 'contained' with a memory cap but the host mount table. It cannot grow RAM as easily. It can still open host files its credentials allow. Another job gets a private pid and mount table and no cap; the process listing looks clean and then RAM is gone. A third job is a virtual machine: its kernel is not this one, and a smash in that kernel is not automatically a smash in the host's syscall path — at the cost of running that second kernel.",
+      "whyItMatters": "A container is a composition. Naming which piece failed — view, cap, root, or the shared kernel — is the difference between moving a flag and understanding the wall.",
+      "quiz": [
+        {
+          "id": "isol-ct20-1",
+          "stem": "Compared with a virtual machine's own kernel, a container's three pieces:",
+          "correctAnswer": "Restrict view, cap resources, and choose a root, while still using the host kernel",
+          "distractors": [
+            { "text": "Replace the host kernel with a guest kernel for every process", "kind": "reversed", "rationale": "Replacing the kernel is the VM. The three pieces leave the host kernel in place." },
+            { "text": "Only rename the job at compile time, with no runtime view or cap", "kind": "misapplied", "rationale": "Namespaces and cgroups are kernel runtime, not a build rename." },
+            { "text": "Delete the need for any filesystem view because pids imply paths", "kind": "nearby", "rationale": "A pid table does not choose what / names. That is a separate piece." }
+          ],
+          "correctExplanation": "View, cap, root on this kernel. A VM buys a different kernel instead.",
+          "objectiveIds": ["Contrast a container with a virtual machine that has its own kernel"],
+          "prerequisiteConceptIds": ["os-namespace", "os-cgroup"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "isol-ct20-2",
+          "stem": "A contained job can list host processes and also grow until RAM is gone. The missing pieces are:",
+          "correctAnswer": "A PID namespace for the listing, and a memory cgroup for the growth",
+          "distractors": [
+            { "text": "A second kernel; view and cap cannot be the problem", "kind": "reversed", "rationale": "Those two symptoms name two container pieces, not a missing guest kernel." },
+            { "text": "A user namespace alone, which remaps uids but not pids or memory", "kind": "misapplied", "rationale": "Listing host pids is a missing PID namespace. Unbounded RAM is a missing memory cgroup." },
+            { "text": "Only a net namespace, which hides both pids and memory", "kind": "nearby", "rationale": "Net hides interfaces. It does not rewrite pids or cap RAM." }
+          ],
+          "correctExplanation": "Visible host pids: the pid view was not restricted. Unbounded RAM: the memory meter was not capped.",
+          "objectiveIds": ["Describe a container as namespaces plus cgroups plus a filesystem view"],
+          "prerequisiteConceptIds": ["os-namespace", "os-cgroup"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "isol-ct20-3",
+          "stem": "Sharing the host kernel instead of running a guest kernel trades:",
+          "correctAnswer": "Lower cost and a thinner wall — this kernel's syscalls and bugs are shared",
+          "distractors": [
+            { "text": "A thicker wall at lower cost, because sharing a kernel adds a second owner", "kind": "reversed", "rationale": "Sharing is cheaper and thinner. A second kernel is the thicker, costlier package." },
+            { "text": "A guarantee that pathnames inside never resolve anywhere", "kind": "nearby", "rationale": "The filesystem view still resolves paths. Kernel-sharing is not a deleted root." },
+            { "text": "A compile-time proof that no syscall can ever fail", "kind": "misapplied", "rationale": "The leftover kernel still implements syscalls, including failures." }
+          ],
+          "correctExplanation": "You did not pay for a second kernel. You still trust this one.",
+          "objectiveIds": ["Contrast a container with a virtual machine that has its own kernel"],
+          "prerequisiteConceptIds": ["os-namespace", "os-cgroup"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

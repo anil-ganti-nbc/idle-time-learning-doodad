@@ -1,0 +1,463 @@
+{
+  "courseId": "semi-leading",
+  "moduleId": "semi-a-limit",
+  "lessons": [
+    {
+      "id": "semi-stochastic-limit-10",
+      "conceptId": "semi-stochastic-limit",
+      "title": "More NA does not buy you photons",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-stochastics", "semi-na"],
+      "goDeeper": "semi-euv-throughput",
+      "diagram": "stochastic-wall",
+      "explanation": [
+        "The lithography course taught stochastics as photon and photoacid shot noise, and the RLS triangle as the local trade. This unit is the wall that triangle becomes. Raising NA buys pitch. It does not put more 13.5 nm photons into the smaller feature you just printed. The volume shrank. The count shrank with it. Poisson relative noise got fatter.",
+        "High-NA makes the wall louder: smaller CD, thinner resist (to live in the slice), same or fewer photons per event. Dose can fight the noise. Dose spends wafers per hour. A more sensitive resist can fight the time. Sensitivity often spends roughness. You cannot take all three corners. That is no longer a lab curiosity. It is why a layer stops scaling even though the optic could, on paper, print the pitch.",
+        "So when a briefing says 'stochastic defects limit EUV scaling', do not hear 'EUV is unlucky.' Hear: NA is not a photon source, and the count in the feature is now the yield term."
+      ],
+      "example": "A contact that printed at 0.33 NA with a barely legal photon count is asked to print smaller at higher NA in a thinner film. Mean count drops. The left tail misses develop. Raising dose restores the tail and drops WPH. The optic did its job. The count did not.",
+      "whyItMatters": "If you think more NA is more capability in every currency, you will believe a node slide that only quotes pitch. The missing currency is photons per feature.",
+      "quiz": [
+        {
+          "id": "sl10-1",
+          "stem": "Raising NA does not buy photons at the feature because:",
+          "correctAnswer": "NA is a cone that shrinks the printable pitch; it is not a source of 13.5 nm counts",
+          "distractors": [
+            { "text": "High-NA tools secretly double the tin laser for free", "kind": "reversed", "rationale": "The source is a separate budget." },
+            { "text": "k1 is defined as photons per hole", "kind": "misapplied", "rationale": "k1 is process cleverness." },
+            { "text": "Overlay residuals create photons", "kind": "nearby", "rationale": "Placement is not a light source." }
+          ],
+          "correctExplanation": "A tighter cone, a smaller volume, fewer events. That is the wall.",
+          "objectiveIds": ["Explain why raising NA does not buy more photons at the feature"],
+          "prerequisiteConceptIds": ["semi-stochastics", "semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sl10-2",
+          "stem": "A layer whose pitch High-NA can print but whose contacts still go missing after a 'faster' resist is usually:",
+          "correctAnswer": "A count wall: sensitivity saved time and spent the tail the develop threshold needed",
+          "distractors": [
+            { "text": "Proof that 13.5 nm light cannot form an image at all", "kind": "reversed", "rationale": "The field printed. The tail failed." },
+            { "text": "A Czochralski grain boundary in the resist", "kind": "subtle", "rationale": "The wafer crystal is not this miss." },
+            { "text": "A wet field oxide grown during expose", "kind": "misapplied", "rationale": "No oxidant step ran." }
+          ],
+          "correctExplanation": "The optic had the pitch. The count did not have the tail. That is RLS as a wall.",
+          "objectiveIds": ["Predict a yield wall when dose, roughness, and throughput cannot be satisfied together"],
+          "prerequisiteConceptIds": ["semi-stochastics", "semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sl10-3",
+          "stem": "Fighting the stochastic wall with dose versus with sensitivity is a trade because:",
+          "correctAnswer": "Dose buys count and spends wafers per hour; sensitivity saves time and often spends roughness",
+          "distractors": [
+            { "text": "Both are free and move all three RLS corners the right way", "kind": "reversed", "rationale": "If they were free, there would be no wall." },
+            { "text": "Only the CMP vendor can move either knob", "kind": "nearby", "rationale": "Dose and resist are lithography knobs." },
+            { "text": "NA automatically cancels Poisson at any count", "kind": "misapplied", "rationale": "NA is not a photon source." }
+          ],
+          "correctExplanation": "Time versus noise versus size. The wall is that you cannot take all three.",
+          "objectiveIds": ["Predict a yield wall when dose, roughness, and throughput cannot be satisfied together"],
+          "prerequisiteConceptIds": ["semi-stochastics", "semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-stochastic-limit-20",
+      "conceptId": "semi-stochastic-limit",
+      "title": "The wall is the triangle you cannot close",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-stochastics", "semi-na"],
+      "goDeeper": "semi-euv-throughput",
+      "diagram": "stochastic-wall",
+      "explanation": [
+        "The ten-minute unit said NA is not a photon source. This one is how that becomes a scaling wall rather than a lot-level nuisance. Feature area scales with pitch squared. Photon count in the feature scales with area times dose. Relative Poisson noise scales as 1/√N. You can restore N by raising dose. Scanner time scales with dose. You can restore time with a more sensitive film. The film then often wanders or leaves a rougher wall. Resolution, roughness, sensitivity — the triangle does not open because you bought a steeper cone.",
+        "High-NA adds two insults: the feature is smaller, and the resist is thinner to live in the focus slice. Thinner film, fewer acids, same or worse diffusion length relative to the CD. Inspection after develop catches some missing holes; inspection after etch catches the ones the transfer amplified. A 'random' killer that clusters on a tip or a tiny gap is a local count problem the layout amplified. It is not a cleaner story and it is not fixed by more NA.",
+        "Multipatterning at 193 or at 0.33 EUV can still be the cheaper wall-avoidance: each exposure sees a sparser, larger feature with more photons, and etch freezes it. High-NA's sales sentence is that it reduces those passes. The counter-sentence is that the single pass now carries the count wall those passes had been avoiding.",
+        "Do not quiz yourself on a particular mJ/cm² or a particular WPH. Ask whether the layer's failure clusters on geometry, whether dose restores it, and whether the restored dose still fits the factory. Those three answers are the wall."
+      ],
+      "example": "A 20 nm-class contact at a dose whose mean count in the hole is ~100 has a 1σ of 10%. The left tail does not clear develop. Multiply by a hundred billion contacts. Raising dose 30% kills the tail and drops the scanner's wafers per hour below the line the cost model assumed. A 0.33 double-patterned version of the same layer is slower in masks and faster in photons. The wall is which bill you want to pay.",
+      "whyItMatters": "A piece that says 'stochastics limit EUV' without saying count versus dose versus layout is interchangeable with last year. The piece that holds up names the corner of the triangle that went negative.",
+      "quiz": [
+        {
+          "id": "sl20-1",
+          "stem": "Feature area shrinking with pitch while dose stays put fattens relative noise because:",
+          "correctAnswer": "Photon count N drops with the volume, and Poisson relative noise scales as 1/√N",
+          "distractors": [
+            { "text": "NA injects extra photons as the cone opens", "kind": "reversed", "rationale": "NA is not a source." },
+            { "text": "Overlay residuals are a form of Poisson light", "kind": "nearby", "rationale": "Placement is not a count." },
+            { "text": "k1 is defined as 1/√N", "kind": "misapplied", "rationale": "k1 is process cleverness." }
+          ],
+          "correctExplanation": "Smaller hole, fewer events, fatter tail. The optic did not repeal that.",
+          "objectiveIds": ["Explain why raising NA does not buy more photons at the feature"],
+          "prerequisiteConceptIds": ["semi-stochastics", "semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sl20-2",
+          "stem": "A missing-hole cluster on one drawn tip that dose restores and a 'faster' resist makes worse is:",
+          "correctAnswer": "A local count wall the layout amplified, not a particle leftover from a clean",
+          "distractors": [
+            { "text": "Proof that vacuum has sprung a photon leak", "kind": "reversed", "rationale": "A motif-clustered tail is geometry plus count." },
+            { "text": "A CFET stacking error on the reticle", "kind": "subtle", "rationale": "CFETs are a later device." },
+            { "text": "A wet etch of the multilayer mirror during develop", "kind": "misapplied", "rationale": "Develop does not etch the optic." }
+          ],
+          "correctExplanation": "Same tip, fewer events, worse tail. That is the wall, not housekeeping.",
+          "objectiveIds": ["Predict a yield wall when dose, roughness, and throughput cannot be satisfied together"],
+          "prerequisiteConceptIds": ["semi-stochastics", "semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sl20-3",
+          "stem": "Keeping a layer on multipatterned 0.33 or 193 instead of a single High-NA pass can be rational when:",
+          "correctAnswer": "Each sparser pass carries more photons per feature than the single tight High-NA hole can afford",
+          "distractors": [
+            { "text": "Multipatterning always deletes overlay as a term", "kind": "reversed", "rationale": "More passes add overlay pairs. That is the other bill." },
+            { "text": "High-NA automatically fattens every photon count", "kind": "nearby", "rationale": "It shrinks the feature. Count falls." },
+            { "text": "193 nm glass absorbs fewer photons than vacuum", "kind": "subtle", "rationale": "The comparison is feature volume, not the column gas." }
+          ],
+          "correctExplanation": "Masks versus counts. The wall is which currency you still have.",
+          "objectiveIds": ["Predict a yield wall when dose, roughness, and throughput cannot be satisfied together"],
+          "prerequisiteConceptIds": ["semi-stochastics", "semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-defectivity-10",
+      "conceptId": "semi-defectivity",
+      "title": "A killer is now a handful of nanometres",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-defect-class", "semi-euv"],
+      "goDeeper": "semi-yield-model",
+      "diagram": "stochastic-wall",
+      "explanation": [
+        "Process Foundations split particles, pattern defects, and parametric misses. At leading-edge CDs those three still exist, but the same physical lump changes class. A particle that was a nuisance on a 90 nm line is a killer on a 20 nm line. A stochastic missing hole is a pattern defect that looks random and is often a local count problem. A threshold that drifted because a nanosheet is a nanometre thin is a parametric miss with a process owner.",
+        "So 'leading-edge defectivity' is not a new dirt. It is the same classes, now at a size where almost everything is a killer. Inspection has to see them. After-develop inspection catches some stochastic and scum events. After-etch inspection catches what the transfer amplified. Electrical test catches the rest, late.",
+        "Do not collapse every EUV fail into 'defectivity.' Ask which class, which module owns it, and whether more NA or more cleanroom would have moved it. Photons do not care about the cleanroom. Particles do not care about dose."
+      ],
+      "example": "A lot fails via-chain yield. Split: higher EUV dose cuts a clustered missing-hole population (stochastic / pattern). A different split with a better incoming clean cuts a scattered open population that after-etch review calls particles. Same electrical symptom, two classes, two owners.",
+      "whyItMatters": "Yield-ramp journalism that says 'defectivity' as one noun is hiding the only useful question: which class, and who owns the knob.",
+      "quiz": [
+        {
+          "id": "df10-1",
+          "stem": "A killer defect at a handful of nanometres is often just:",
+          "correctAnswer": "An old defect class whose physical size is now the whole feature",
+          "distractors": [
+            { "text": "A brand-new species that did not exist at 90 nm", "kind": "reversed", "rationale": "The classes persist. The CD shrank around them." },
+            { "text": "Proof that overlay is a particle", "kind": "nearby", "rationale": "Overlay is placement, not a lump." },
+            { "text": "k1 expressed as a defect density", "kind": "misapplied", "rationale": "k1 is process cleverness." }
+          ],
+          "correctExplanation": "Same classes, less room. That is leading-edge defectivity.",
+          "objectiveIds": ["Describe a killer defect when the CD is a handful of nanometers"],
+          "prerequisiteConceptIds": ["semi-defect-class", "semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "df10-2",
+          "stem": "A missing hole that clusters on one drawn motif and yields to extra dose is usually:",
+          "correctAnswer": "A stochastic or pattern killer, not a particle leftover from an earlier clean",
+          "distractors": [
+            { "text": "A stainless-cassette metal that only sits on that motif", "kind": "nearby", "rationale": "Metals do not draw the layout." },
+            { "text": "Proof the column is full of air", "kind": "reversed", "rationale": "The field printed. The tail failed." },
+            { "text": "A backside power via grown in resist", "kind": "subtle", "rationale": "Power vias are a later device." }
+          ],
+          "correctExplanation": "Geometry plus count. That is not the particle class.",
+          "objectiveIds": ["Distinguish a stochastic or pattern killer from a particle leftover from an earlier module"],
+          "prerequisiteConceptIds": ["semi-defect-class", "semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "df10-3",
+          "stem": "Raising dose to fight a scattered particle-open population typically:",
+          "correctAnswer": "Spends scanner time and leaves the particles, because photons are the wrong class's knob",
+          "distractors": [
+            { "text": "Dissolves every incoming flake", "kind": "reversed", "rationale": "Dose is not a clean." },
+            { "text": "Converts particles into extra photons", "kind": "nearby", "rationale": "A lump is not a count." },
+            { "text": "Automatically legalizes overlay tails", "kind": "subtle", "rationale": "Placement is another class." }
+          ],
+          "correctExplanation": "Match the knob to the class. Photons do not sweep flakes.",
+          "objectiveIds": ["Distinguish a stochastic or pattern killer from a particle leftover from an earlier module"],
+          "prerequisiteConceptIds": ["semi-defect-class", "semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-overlay-budget-10",
+      "conceptId": "semi-overlay-budget",
+      "title": "The budget is now a fraction of a nanometre",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-overlay", "semi-multi-pattern"],
+      "goDeeper": "semi-cost-per-wafer",
+      "diagram": "overlay-budget",
+      "explanation": [
+        "The last course treated overlay as a yield budget whose tail eats landings. At the leading edge the landing is a handful of nanometres and the legal residual is a fraction of one. Stage, lens or mirror distortion, mask write, wafer warp, and High-NA field stitches all have to fit in that fraction. Multipatterning still in the flow adds pairs: pass A versus pass B on the same drawn layer, plus that union versus the next layer.",
+        "You do not 'have 0.5 nm overlay.' You have a 3σ on a particular pair, after correction, on wafers that bowed in the last anneal or the last backside grind. Correction is a model. The model is part of the process. A residual that clusters at stitch boundaries is a field-size story. A residual that clusters after a high-temperature step is a warp story.",
+        "Self-aligned vias and fattened pads exist because designers do not trust this tail. A node delay that mentions 'process window' and never mentions overlay at the stitch is usually missing the villain."
+      ],
+      "example": "A High-NA metal-via pair fails at the field seam and yields in field centres. Dose splits do nothing. A higher-order alignment model plus a fatter via landing kills the seam population. The lamp was never the knob.",
+      "whyItMatters": "If overlay is a slogan, High-NA 'reducing multipatterning' sounds free. If overlay is a stack of sub-nanometre terms, you know the stitch is part of the purchase price.",
+      "quiz": [
+        {
+          "id": "ob10-1",
+          "stem": "Leading-edge overlay is a budget in fractions of a nanometre because:",
+          "correctAnswer": "The landing is now a handful of nanometres, so the tail of a 3σ residual is the whole pad",
+          "distractors": [
+            { "text": "Scanners legally cannot measure larger errors", "kind": "reversed", "rationale": "They can. The pad cannot afford them." },
+            { "text": "k1 is now quoted in nanometres of overlay", "kind": "misapplied", "rationale": "k1 is resolution cleverness." },
+            { "text": "Stochastics are a form of overlay", "kind": "nearby", "rationale": "Count noise is a different budget." }
+          ],
+          "correctExplanation": "Small pad, small legal tail. The classes of error did not shrink as fast as the pad.",
+          "objectiveIds": ["Treat leading-edge overlay as a budget measured in fractions of a nanometer"],
+          "prerequisiteConceptIds": ["semi-overlay", "semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ob10-2",
+          "stem": "Opens that cluster on High-NA field seams and ignore a dose split usually mean:",
+          "correctAnswer": "A stitch-overlay residual eating the landing, not a photon-count miss",
+          "distractors": [
+            { "text": "The tin source forgot those fields", "kind": "reversed", "rationale": "The fields printed. The seam missed." },
+            { "text": "A grain boundary in the pellicle", "kind": "subtle", "rationale": "Pellicles eat dose. They do not draw seams." },
+            { "text": "A wet oxide grown only at the stitch", "kind": "misapplied", "rationale": "No oxidant step is required for a placement miss." }
+          ],
+          "correctExplanation": "Pretty features, wrong place, at the seam. That is the pair the field created.",
+          "objectiveIds": ["Predict how field stitches and multipatterning multiply the pairs you must control"],
+          "prerequisiteConceptIds": ["semi-overlay", "semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ob10-3",
+          "stem": "High-NA reducing multipatterning while adding stitches is a trade because:",
+          "correctAnswer": "You delete some litho-etch pairs and add field-to-field pairs; the budget does not get a holiday",
+          "distractors": [
+            { "text": "Stitches cancel overlay the way NA cancels Poisson", "kind": "reversed", "rationale": "Neither cancellation exists." },
+            { "text": "Multipatterning never had overlay pairs", "kind": "nearby", "rationale": "Pass A versus pass B is the original extra pair." },
+            { "text": "A smaller field thickens depth of focus", "kind": "subtle", "rationale": "Field size is not DoF." }
+          ],
+          "correctExplanation": "Pairs in, pairs out. Count them. That is the budget.",
+          "objectiveIds": ["Predict how field stitches and multipatterning multiply the pairs you must control"],
+          "prerequisiteConceptIds": ["semi-overlay", "semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-overlay-budget-20",
+      "conceptId": "semi-overlay-budget",
+      "title": "Every extra pass and every extra field is a pair",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-overlay", "semi-multi-pattern"],
+      "goDeeper": "semi-cost-per-wafer",
+      "diagram": "overlay-budget",
+      "explanation": [
+        "The ten-minute unit said the tail is the pad. This one is the stack that fills the tail. Systematic terms: stage grid, mirror or lens distortion, mask-write placement, anamorphic field distortion, wafer warp from anneal or backside grind. Random leftover after correction. Each term is modelled, subtracted, and still leaves a residual. Yield dies in the residual, not in the mean.",
+        "Multipatterning multiplies pairs on one drawn layer. High-NA stitching multiplies pairs across fields of the same layer. A via on High-NA metal that still has a 193 cut nearby is three different pair families. Self-aligned schemes exist to retire some of those pairs — the process, not the designer, defines the edge. They spend extra films and etches. They do not spend as much overlay.",
+        "Metrology is in the loop. After-develop or after-etch residuals retune the next lot. A model that was good on 0.33 fields can be wrong on half-size High-NA fields. A lot that 'suddenly' fails overlay after a backside power grind is not cursed. The wafer is a different shape than the model.",
+        "Read a node-delay sentence that names overlay by asking: which pair, after which correction, on wafers that did what last. If the sentence cannot answer, it is a slogan."
+      ],
+      "example": "A via-metal pair is legal in field centres and illegal on High-NA stitches after a backside grind. The grind bowed the wafer. The 0.33-era alignment model did not have that shape. Updating the model and fattening the landing recovers the lot. Buying another scanner would not have.",
+      "whyItMatters": "Overlay at this depth is how you read 'yield ramp' without mysticism: a stack of pair distributions, some of which refuse to sit down after the last mechanical surprise.",
+      "quiz": [
+        {
+          "id": "ob20-1",
+          "stem": "A leading-edge overlay budget is a stack of terms because:",
+          "correctAnswer": "Stage, mask write, warp, and stitches each spend a fraction of a nanometre, and yield dies in the residual",
+          "distractors": [
+            { "text": "Only the mean placement matters once High-NA exists", "kind": "reversed", "rationale": "Yield is the tail." },
+            { "text": "k1 absorbs every placement error", "kind": "misapplied", "rationale": "k1 is not overlay." },
+            { "text": "Stochastics are the only remaining term", "kind": "nearby", "rationale": "Count and placement are different budgets." }
+          ],
+          "correctExplanation": "Add the terms. Subtract the model. The leftover is the pad.",
+          "objectiveIds": ["Treat leading-edge overlay as a budget measured in fractions of a nanometer"],
+          "prerequisiteConceptIds": ["semi-overlay", "semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ob20-2",
+          "stem": "A pair that was legal until a backside grind and then fails at High-NA seams usually points to:",
+          "correctAnswer": "Wafer warp the alignment model did not have, not a lamp that forgot the field",
+          "distractors": [
+            { "text": "Tin plasma that only forms after grind", "kind": "reversed", "rationale": "The source did not change at grind." },
+            { "text": "A missing Czochralski flat", "kind": "subtle", "rationale": "Orientation marks are not this miss." },
+            { "text": "A wet etch of the overlay marks during CMP", "kind": "misapplied", "rationale": "The new shape is the grind, not a wet etch." }
+          ],
+          "correctExplanation": "The wafer is a different object than the model. The seam is where that shows.",
+          "objectiveIds": ["Predict how field stitches and multipatterning multiply the pairs you must control"],
+          "prerequisiteConceptIds": ["semi-overlay", "semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ob20-3",
+          "stem": "Self-aligned vias versus another High-NA overlay correction loop is a trade because:",
+          "correctAnswer": "Self-align spends films and etches to retire a pair; the loop spends metrology and still trusts a tail",
+          "distractors": [
+            { "text": "Self-align deletes the need for any metal", "kind": "reversed", "rationale": "The via still has to land on something." },
+            { "text": "Correction loops make pads infinitely large", "kind": "nearby", "rationale": "They shrink residuals. They do not invent pad." },
+            { "text": "Both automatically thicken depth of focus", "kind": "subtle", "rationale": "Neither is the DoF knob." }
+          ],
+          "correctExplanation": "Process-defined edge versus modelled tail. Both cost. Only one retires the pair.",
+          "objectiveIds": ["Predict how field stitches and multipatterning multiply the pairs you must control"],
+          "prerequisiteConceptIds": ["semi-overlay", "semi-multi-pattern"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-euv-throughput-10",
+      "conceptId": "semi-euv-throughput",
+      "title": "Source power versus the dose the tail demands",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv-source", "semi-stochastics"],
+      "goDeeper": "semi-cost-per-wafer",
+      "diagram": "stochastic-wall",
+      "explanation": [
+        "You already know the source: a CO2 laser on tin droplets, tens of thousands of times a second. Throughput is how many wafers see a legal dose per hour. Stochastics set a floor on that dose. Source power sets how fast you can deliver it. Pellicles eat some of the photons on the way. The factory cares about the quotient, not either number alone.",
+        "Raising dose to fight a missing-hole tail spends seconds per field. Those seconds are the scanner's scarce resource. A 'faster' resist spends less time and often spends roughness. A clearer pellicle gives back transmission and spends a harder membrane. None of these is a brochure WPH. Brochure WPH assumes a dose. The tail may not.",
+        "So 'EUV throughput' in a leading-edge sentence is almost always 'did the stochastic dose still fit the cost model.' If the sentence only quotes a tool's nameplate wafers per hour, it has not started."
+      ],
+      "example": "A nameplate number assumes 20 mJ/cm². The missing-hole tail on this via layer wants 30. The same tool is now two-thirds as fast on that layer. The source did not break. The budget moved.",
+      "whyItMatters": "Cost-per-wafer, next door, is this quotient times depreciation. If you cannot say why the dose went up, you cannot say why the die got expensive.",
+      "quiz": [
+        {
+          "id": "et10-1",
+          "stem": "EUV throughput at this depth is a wafers-per-hour budget because:",
+          "correctAnswer": "Source power delivers photons at a rate, and the stochastic dose is how many each wafer must collect",
+          "distractors": [
+            { "text": "The laser is paid by the hour regardless of dose", "kind": "reversed", "rationale": "Time on the wafer is dose over power." },
+            { "text": "k1 is defined as wafers per hour on the EUV scanner", "kind": "misapplied", "rationale": "k1 is process cleverness." },
+            { "text": "Overlay residuals set the tin droplet rate", "kind": "nearby", "rationale": "Placement is not the source clock." }
+          ],
+          "correctExplanation": "Photons per second versus photons per wafer. That is WPH.",
+          "objectiveIds": ["Explain source power versus the dose stochastics demand as a wafers-per-hour budget"],
+          "prerequisiteConceptIds": ["semi-euv-source", "semi-stochastics"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "et10-2",
+          "stem": "A tool that 'slows down' after a dose raise to kill missing holes usually:",
+          "correctAnswer": "Is collecting the extra photons the tail demanded; the source did not have to break",
+          "distractors": [
+            { "text": "Has forgotten how to make tin plasma", "kind": "reversed", "rationale": "The plasma is still firing. The wafer is lingering." },
+            { "text": "Has converted to 193 nm lenses", "kind": "nearby", "rationale": "The wavelength did not jump." },
+            { "text": "Has wet-etched its own mirrors", "kind": "subtle", "rationale": "No wet etch ran on the column." }
+          ],
+          "correctExplanation": "Same source, higher dose, fewer wafers. That is the quotient talking.",
+          "objectiveIds": ["Predict why raising dose to fight noise spends scanner time"],
+          "prerequisiteConceptIds": ["semi-euv-source", "semi-stochastics"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "et10-3",
+          "stem": "Buying source power versus raising resist sensitivity to hit WPH is a trade because:",
+          "correctAnswer": "Power buys photons per second and spends tool cost; sensitivity saves time and often spends roughness",
+          "distractors": [
+            { "text": "Both are free and thicken depth of focus", "kind": "reversed", "rationale": "Neither is the DoF knob, and neither is free." },
+            { "text": "Only CMP planarization can change wafers per hour on the scanner", "kind": "nearby", "rationale": "WPH is a lithography-time budget." },
+            { "text": "Pellicles add photons so both knobs vanish", "kind": "subtle", "rationale": "Pellicles eat transmission." }
+          ],
+          "correctExplanation": "Factory time versus film noise. The nameplate assumes you already picked.",
+          "objectiveIds": ["Predict why raising dose to fight noise spends scanner time"],
+          "prerequisiteConceptIds": ["semi-euv-source", "semi-stochastics"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-yield-model-10",
+      "conceptId": "semi-yield-model",
+      "title": "Die size and defect density fight",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-yield-intro"],
+      "goDeeper": "semi-chiplets",
+      "diagram": "chiplet-bond",
+      "explanation": [
+        "Process Foundations treated yield as good die per wafer, owned by defects and process window. A model makes that quantitative. The simple Poisson form says yield ≈ e^(−A·D): area times defect density. Double the die, and the same D hurts more than twice as much once you are off the small-A plateau. That is why a huge monolithic die can look brilliant in a slide and die in a fab.",
+        "Poisson is a start, not a religion. Defects cluster. Critical area is not the whole die — a killer in SRAM is not a killer in a fat analog block. Layer-limited yield multiplies: a stochastic EUV layer, an overlay pair, a particle module. The product of several 0.95s is not 0.95.",
+        "Chiplets, later in this course, are what you do when A became the enemy. This unit is why A became the enemy. Do not memorise a particular D0. Predict the direction: bigger die, same density, worse yield, and clustered killers make the simple exponential optimistic."
+      ],
+      "example": "Two products, same defect density. A 100 mm² die yields. A 400 mm² die on the same flow does not, even though the transistors are identical. Cutting the large die into four chiplets and assembling them is a yield play before it is a marketing play.",
+      "whyItMatters": "If 'yield' is a mood, chiplets look like fashion. If yield is e^(−A·D) plus clustering, chiplets are arithmetic.",
+      "quiz": [
+        {
+          "id": "ym10-1",
+          "stem": "A simple yield model says die size and defect density fight because:",
+          "correctAnswer": "Yield falls as something like e^(−A·D), so the same D hurts a large die more",
+          "distractors": [
+            { "text": "Large die magically attract fewer defects", "kind": "reversed", "rationale": "They present more area to the same density." },
+            { "text": "k1 is the die area in mm²", "kind": "misapplied", "rationale": "k1 is lithography cleverness." },
+            { "text": "NA sets defect density directly", "kind": "nearby", "rationale": "NA is an optic, not a D0." }
+          ],
+          "correctExplanation": "Area times density. That is the fight, even before clustering.",
+          "objectiveIds": ["State a yield model as die size fighting defect density"],
+          "prerequisiteConceptIds": ["semi-yield-intro"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ym10-2",
+          "stem": "A 400 mm² die failing where a 100 mm² die on the same flow yields usually means:",
+          "correctAnswer": "The same defect density now sees four times the area, and the exponential has left the plateau",
+          "distractors": [
+            { "text": "The large die cannot be sawn from a 300 mm wafer", "kind": "reversed", "rationale": "It can be sawn. It cannot be yielded." },
+            { "text": "Poisson has been repealed for large rectangles", "kind": "nearby", "rationale": "The exponential is why it is worse, not gone." },
+            { "text": "Only backside power can yield a large die", "kind": "subtle", "rationale": "Power delivery is not this area law." }
+          ],
+          "correctExplanation": "Same D, bigger A, worse Y. That is the model talking.",
+          "objectiveIds": ["Predict why a large die loses more to the same defect density than a small one"],
+          "prerequisiteConceptIds": ["semi-yield-intro"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ym10-3",
+          "stem": "Treating Poisson e^(−A·D) as the whole truth is a mistake when:",
+          "correctAnswer": "Defects cluster and layers multiply, so the simple exponential is often optimistic",
+          "distractors": [
+            { "text": "Area has no effect once EUV exists", "kind": "reversed", "rationale": "Area still multiplies risk." },
+            { "text": "Clustering always makes yield better than Poisson", "kind": "nearby", "rationale": "Clustering changes the shape; it is not a gift." },
+            { "text": "k1 cancels D0 at any area", "kind": "misapplied", "rationale": "k1 is not a yield model." }
+          ],
+          "correctExplanation": "Start with Poisson. Then add clustering and layer limits. Do not stop at the slogan.",
+          "objectiveIds": ["Predict why a large die loses more to the same defect density than a small one"],
+          "prerequisiteConceptIds": ["semi-yield-intro"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

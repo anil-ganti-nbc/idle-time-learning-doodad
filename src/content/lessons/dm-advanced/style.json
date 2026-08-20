@@ -1,0 +1,776 @@
+{
+  "courseId": "dm-advanced",
+  "moduleId": "dm-a-style",
+  "lessons": [
+    {
+      "id": "dm-analysis-riff-10",
+      "conceptId": "dm-analysis-riff",
+      "title": "Pitch, cell, meter, and seat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["mus-analysis-method", "dm-riff-cell"],
+      "goDeeper": "dm-analysis-tune",
+      "explanation": [
+        "Pitch collection, cell, meter, and seat in the form are the four facts of a riff. Analysis already asks what repeats, what contrasts, and what the cell is. A riff cell is still a short figure you can repeat or mutate. This lesson writes those answers down without requiring anyone to know the band.",
+        "Name the pitches the figure actually uses — a chromatic pair, a diminished outline, a tritone plus a lean — not a scale you wish were there. Isolate the cell as the shortest group that still turns. Name the meter or the felt grouping. Then say whether the riff opens, contrasts, returns, or closes.",
+        "A roster is not an analysis. If the paragraph only works when the listener already loves the lineup, you wrote fandom. The four facts should survive a muted vocal and a missing liner note. DAU borrows a repeat/contrast habit from tonal analysis and applies a four-fact riff card here. MIT 21M.350 asked those questions of Bach and Schumann, not of this repertoire."
+      ],
+      "example": "Four pitches, a three-attack cell, a 4/4 blast grouping, opening the cut. You can say all of that before anyone names a city or a singer. That is a finished riff analysis.",
+      "whyItMatters": "Whole-tune reading stacks these riff cards. If a card is a band name, the stack is gossip.",
+      "quiz": [
+        {
+          "id": "dm-arf10-1",
+          "stem": "A riff analysis in this lesson has to name which four facts?",
+          "correctAnswer": "Pitch collection, cell, meter, and where the riff sits in the form",
+          "distractors": [
+            { "text": "Band, city, year, and a ranked list of singers", "kind": "nearby", "rationale": "That roster is the substitute this method drops." },
+            { "text": "Only the brand of guitar, treated as the whole analysis", "kind": "reversed", "rationale": "A brand is not a pitch collection or a cell." },
+            { "text": "A V–I chart invented so the riff can look like a chorale", "kind": "misapplied", "rationale": "Invented chorales are what the method refuses." }
+          ],
+          "correctExplanation": "Four facts: pitches, cell, grouping, seat. A roster is not a fifth fact.",
+          "objectiveIds": ["Name pitch collection, cell, meter, and where the riff sits in the form"],
+          "prerequisiteConceptIds": ["mus-analysis-method", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-arf10-2",
+          "stem": "The analysis should work even if the listener does not know the band because:",
+          "correctAnswer": "The four facts are construction, and a roster is not required to hear them",
+          "distractors": [
+            { "text": "The band name is secretly one of the four facts", "kind": "reversed", "rationale": "A name is the thing the method refuses to require." },
+            { "text": "Only fans are allowed to name a pitch collection at all", "kind": "nearby", "rationale": "Pitches do not wait on fandom." },
+            { "text": "A biography can replace meter if the singer is famous enough", "kind": "misapplied", "rationale": "Fame does not state a grouping." }
+          ],
+          "correctExplanation": "Muted vocal, missing liner note, four facts still stand. That is the test.",
+          "objectiveIds": ["Do that analysis without requiring the listener to know the band"],
+          "prerequisiteConceptIds": ["mus-analysis-method", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-arf10-3",
+          "stem": "Four pitches, a three-attack cell, a blast grouping, opening the cut, is complete because:",
+          "correctAnswer": "Collection, cell, meter, and seat are all named without a roster",
+          "distractors": [
+            { "text": "The analysis is incomplete until a celebrity list is added", "kind": "reversed", "rationale": "The roster would replace the facts, not complete them." },
+            { "text": "Meter can be skipped if the pitch collection looks chromatic", "kind": "nearby", "rationale": "Meter is one of the four facts. Chromaticism does not excuse it." },
+            { "text": "A production brand must be named before the cell can count", "kind": "misapplied", "rationale": "Production is a later listening pass, not a riff card." }
+          ],
+          "correctExplanation": "Those four names are the analysis. Nothing famous has to be attached.",
+          "objectiveIds": ["Name pitch collection, cell, meter, and where the riff sits in the form"],
+          "prerequisiteConceptIds": ["mus-analysis-method", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-analysis-riff-20",
+      "conceptId": "dm-analysis-riff",
+      "title": "Reading a riff without a roster",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["mus-analysis-method", "dm-riff-cell"],
+      "goDeeper": "dm-analysis-tune",
+      "explanation": [
+        "Four facts still start the card: collection, cell, meter, seat. This pass is the method in order, slow enough to catch the usual cheats — inventing a scale, missing the hinge, skipping the grouping, or seating the riff by a famous intro story instead of by what the cut actually does.",
+        "Collect only the pitches the figure uses. A chromatic pair is a pair. A diminished outline is four notes that stack in minor thirds, not a permission to write the whole diminished scale in the margin. If a pitch happens once as a pickup, mark it as ornamental so it does not inflate the collection.",
+        "Isolate the cell as the shortest repeatable group with a breath. Then name the felt grouping: 4, 3+3+2, a five that cycles over a 4/4 kit. Seat comes last: opener, contrast, return, or close. Analysis method still forbids a chorale the music does not play. If you need a I–V to make the card look finished, the card is already finished without it.",
+        "Run the no-roster test out loud. Hand the card to someone who has not heard the lineup. If they can tap the grouping, hum the cell, and say whether the riff opens or contrasts, the analysis worked. If they ask who played it before they can tap, you wrote fandom in the meter slot."
+      ],
+      "example": "Card: pitches E–F–B; cell of three attacks with a mute on three; grouping 3+3+2 under a blast; seats as the contrast after a straight-4 opener. No city, no singer, no brand. The next listener can still use the card.",
+      "whyItMatters": "Whole-tune form is a sequence of these cards. A cheat on one card becomes a fake section later.",
+      "quiz": [
+        {
+          "id": "dm-arf20-1",
+          "stem": "The honest order of a riff card in this longer method is:",
+          "correctAnswer": "Pitches the figure uses, then cell, then grouping, then seat in the cut",
+          "distractors": [
+            { "text": "Band name first, then a scale you wish were there, then a chorus label", "kind": "reversed", "rationale": "That order is fandom plus an invented scale." },
+            { "text": "Seat first by a famous intro story, with pitches left for later", "kind": "nearby", "rationale": "Stories are not seats. Pitches come first." },
+            { "text": "A V–I reduction first so the cell can be ignored", "kind": "misapplied", "rationale": "A forced chorale is the cheat the method refuses." }
+          ],
+          "correctExplanation": "Collection, cell, grouping, seat. Stories and chorales are other sports.",
+          "objectiveIds": ["Name pitch collection, cell, meter, and where the riff sits in the form"],
+          "prerequisiteConceptIds": ["mus-analysis-method", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "dm-arf20-2",
+          "stem": "A diminished outline on a riff card should be written as:",
+          "correctAnswer": "The four notes the figure stacks, not a whole scale in the margin",
+          "distractors": [
+            { "text": "Every diminished pitch class, whether the figure used them or not", "kind": "reversed", "rationale": "Inflating the collection is the cheat." },
+            { "text": "A singer's surname standing in for the four notes", "kind": "nearby", "rationale": "A surname is a roster, not a collection." },
+            { "text": "A production brand, because outline and mix are the same fact", "kind": "misapplied", "rationale": "Mix is a later pass. This card is pitches." }
+          ],
+          "correctExplanation": "Write what sounded. A margin scale is a wish, not a collection.",
+          "objectiveIds": ["Name pitch collection, cell, meter, and where the riff sits in the form"],
+          "prerequisiteConceptIds": ["mus-analysis-method", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-arf20-3",
+          "stem": "The no-roster test fails when the next listener must ask who played it before they can:",
+          "correctAnswer": "Tap the grouping, hum the cell, or say whether the riff opens or contrasts",
+          "distractors": [
+            { "text": "Name a celebrity, which is already required for any cell to count", "kind": "reversed", "rationale": "The test forbids that requirement." },
+            { "text": "Recite a verse-chorus map the cut does not use", "kind": "nearby", "rationale": "A pop map is not what the test asks them to tap." },
+            { "text": "Pass a harmony exam before any mute can be called a hinge", "kind": "misapplied", "rationale": "A mute is a local breath, not an exam gate." }
+          ],
+          "correctExplanation": "If they need the lineup to tap or hum, the card hid construction behind a roster.",
+          "objectiveIds": ["Do that analysis without requiring the listener to know the band"],
+          "prerequisiteConceptIds": ["mus-analysis-method", "dm-riff-cell"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-analysis-tune-10",
+      "conceptId": "dm-analysis-tune",
+      "title": "The cut as an order of textures",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-analysis-riff", "dm-song-form"],
+      "goDeeper": "dm-production-listen",
+      "explanation": [
+        "A whole cut is contrast, density, production, and the vocal as rhythm. Song form is already an order of cells — intro, A, B, return, or a refusal of return. This reading marks that order as textures: blast, dry kit, half-time, smear, a vocal that chatters or drones. Verse-chorus is the map you do not owe.",
+        "Stack the riff cards. Where density drops, you likely have a section even if the pitch set stays. Where production changes — a drier guitar, a wider image, a kick that suddenly clicks — treat that as a formal event. The vocal is a third grid: where it attacks, which register it occupies.",
+        "Refuse a pop reduction. If you cannot find a chorus, you are not missing the form. You may be looking at a through-composed stack or a return that is a texture, not a hook. Write the sequence of textures in time. That sequence is the analysis of the cut."
+      ],
+      "example": "Blast plus cell A; dry kit plus A at half speed; smear plus a new cell B; vocal drone over a held A. That is a form. Calling the dry stretch a chorus because it is slower is a pop habit, not a reading.",
+      "whyItMatters": "Arrangement and scene comparison both need this sequence. A verse-chorus sticker will hide the actual cuts.",
+      "quiz": [
+        {
+          "id": "dm-atn10-1",
+          "stem": "Reading a whole cut in this lesson means you track:",
+          "correctAnswer": "Contrast, density, production, and the vocal as a rhythm grid",
+          "distractors": [
+            { "text": "Only the singer's biography and a ranked guest list", "kind": "nearby", "rationale": "Biography is not a cut reading." },
+            { "text": "Verse and chorus labels even when no hook returns", "kind": "reversed", "rationale": "Those labels are the map this reading drops." },
+            { "text": "A brand of drums treated as the entire form", "kind": "misapplied", "rationale": "A brand is not contrast or density." }
+          ],
+          "correctExplanation": "Four layers on the cut. A pop map is optional and often wrong.",
+          "objectiveIds": ["Read a whole cut: contrast, density, production, vocal as rhythm"],
+          "prerequisiteConceptIds": ["dm-analysis-riff", "dm-song-form"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-atn10-2",
+          "stem": "Form on this whole cut should be marked as which kind of object?",
+          "correctAnswer": "An order of textures in time, not a verse-chorus sticker",
+          "distractors": [
+            { "text": "A chorus whenever the tempo drops, even if the cell never returns", "kind": "nearby", "rationale": "Slower is not a chorus. Texture and cell are the marks." },
+            { "text": "A single texture, because density is already the whole form", "kind": "reversed", "rationale": "Density changes are how sections appear." },
+            { "text": "A forced I–V so the stack can look like a chorale", "kind": "misapplied", "rationale": "A chorale is not this form." }
+          ],
+          "correctExplanation": "Write the textures in order. That is the form. A sticker is a habit.",
+          "objectiveIds": ["Mark the form as an order of textures, not as verse-chorus"],
+          "prerequisiteConceptIds": ["dm-analysis-riff", "dm-song-form"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-atn10-3",
+          "stem": "A dry half-time stretch of cell A after a blast is a section because:",
+          "correctAnswer": "Density and kit texture changed, even if the pitch set barely moved",
+          "distractors": [
+            { "text": "It must be labeled chorus or the cut has no form at all", "kind": "reversed", "rationale": "The section does not owe that label." },
+            { "text": "Only a new celebrity vocalist can turn a texture into a section", "kind": "nearby", "rationale": "A person is not a texture change." },
+            { "text": "Production cannot be a formal event on any cut", "kind": "misapplied", "rationale": "A drier kit is exactly a formal event here." }
+          ],
+          "correctExplanation": "Drop in density, new kit weather. That is a section without a chorus name.",
+          "objectiveIds": ["Mark the form as an order of textures, not as verse-chorus"],
+          "prerequisiteConceptIds": ["dm-analysis-riff", "dm-song-form"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-compare-scenes-10",
+      "conceptId": "dm-compare-scenes",
+      "title": "Same year, two construction answers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-production-doctrine", "dm-analysis-tune"],
+      "goDeeper": "dm-influence-map",
+      "explanation": [
+        "Two cities in the same year can answer the same problem with two constructions. Production doctrine already said the mix is part of the composition: cells fuse or stay separate depending on how dry or wet the guitars sit. Comparative analysis keeps both answers on those facts, not on gossip about who drank with whom.",
+        "Pick one problem: how to pack a blast and still hear a cell; how to make weight without speed; how to let a vocal occupy the bar. Then read two cuts from the same years. One room may separate pick attack and kick. The other may smear midrange into a wall. Both can be complete answers.",
+        "Keep people out of the verdict. Names can label a tape path after the construction is named. They cannot stand in for a wider guitar image, a clickier kick, or a cell that stays singable under a smear. If the paragraph still works with the surnames deleted, the comparison is honest."
+      ],
+      "example": "Same decade, two rooms: one dry and articulate under a chromatic cell, one midrange wall under a similar cell. The problem was density versus clarity. The answers were two mix doctrines. The singers' résumés do not sort those answers.",
+      "whyItMatters": "Influence maps will borrow cells, not lives. If scenes are gossip, influence becomes a name-drop.",
+      "quiz": [
+        {
+          "id": "dm-csc10-1",
+          "stem": "A comparative scene reading in the same year should start from:",
+          "correctAnswer": "One shared problem and two construction or production answers",
+          "distractors": [
+            { "text": "Two celebrity lists ranked by who toured harder that year", "kind": "nearby", "rationale": "Tour gossip is not a shared problem." },
+            { "text": "One city declared the winner because it was heavier", "kind": "reversed", "rationale": "Heavier-as-better is a ranking this course refuses." },
+            { "text": "A single capital that licensed both rooms before either could track", "kind": "misapplied", "rationale": "A capital is not how these answers were built." }
+          ],
+          "correctExplanation": "One problem, two builds. That is the comparison. Rankings are another sport.",
+          "objectiveIds": ["Compare two cities in the same year by two answers to the same problem"],
+          "prerequisiteConceptIds": ["dm-production-doctrine", "dm-analysis-tune"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-csc10-2",
+          "stem": "The comparison stays honest when you keep it on:",
+          "correctAnswer": "Construction and production facts that survive deleted surnames",
+          "distractors": [
+            { "text": "Gossip about who drank with whom on the same tour", "kind": "reversed", "rationale": "Gossip is what this lesson keeps out." },
+            { "text": "A purity test that grades one city as more real", "kind": "nearby", "rationale": "A purity test is a ranking, not a reading." },
+            { "text": "A brand paragraph that replaces the mix doctrine", "kind": "misapplied", "rationale": "A brand is not the dry-or-smear fact." }
+          ],
+          "correctExplanation": "Delete the names. If the two answers still stand, the comparison is construction.",
+          "objectiveIds": ["Keep the comparison on construction and production, not on gossip"],
+          "prerequisiteConceptIds": ["dm-production-doctrine", "dm-analysis-tune"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-csc10-3",
+          "stem": "Dry separation versus a midrange wall, under similar cells, is a scene comparison because:",
+          "correctAnswer": "Two mix doctrines answered the same density-versus-clarity problem",
+          "distractors": [
+            { "text": "One mix is automatically better because walls are always heavier", "kind": "misconception", "rationale": "Heavier is not a grade. Both can be complete answers." },
+            { "text": "The singers' résumés already decide which room was correct", "kind": "reversed", "rationale": "Résumés do not sort mix doctrines." },
+            { "text": "Only a verse-chorus map can make two rooms comparable", "kind": "misapplied", "rationale": "The comparable object is the construction answer." }
+          ],
+          "correctExplanation": "Same problem, two desks. That is the scene object, not a résumé.",
+          "objectiveIds": ["Compare two cities in the same year by two answers to the same problem"],
+          "prerequisiteConceptIds": ["dm-production-doctrine", "dm-analysis-tune"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "dm-production-listen-10",
+      "conceptId": "dm-production-listen",
+      "title": "Gate, room, width, and click",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-production-doctrine"],
+      "goDeeper": "dm-live-vs-record",
+      "explanation": [
+        "Gate, room, guitar width, and kick click are compositional choices. Production doctrine already treated the mix as part of the piece: a drier guitar keeps cells separate; a wetter one fuses them. This listening pass names four levers without a brand-name paragraph.",
+        "A gate chops the decay so the kit speaks in blocks. Room mics add a hall that can glue or wash the cell. Width places two guitars as a wall or as two lines you can still track. Kick click is a high transient that either outlines the subdivision or turns the feet into a typewriter. Each lever changes whether a cell is audible.",
+        "Describe the doctrine in those words. 'Short gated snare, little room, wide doubled guitars, a clicky kick' is a complete sentence. 'They used X console and Y pedal' is a shopping list. The shopping list will not predict what happens to the next cell. The four levers will."
+      ],
+      "example": "Hear a snare that dies immediately, guitars hard-panned, kick ticking every subdivision, almost no hall. That doctrine keeps cells separate. A long room and a midrange smear is a different doctrine, not a failed recording.",
+      "whyItMatters": "Live density and modern grids only make sense once you can hear these levers as writing, not as gear talk.",
+      "quiz": [
+        {
+          "id": "dm-prl10-1",
+          "stem": "Gate, room, guitar width, and kick click should be heard as:",
+          "correctAnswer": "Compositional choices that change whether a cell stays audible",
+          "distractors": [
+            { "text": "Brand names you must recite before any cell can count", "kind": "nearby", "rationale": "Brands are the shopping list this lesson drops." },
+            { "text": "Accidents of a failed recording that have no formal job", "kind": "reversed", "rationale": "They are writing. They are not accidents." },
+            { "text": "A purity test that ranks one city as more real", "kind": "misapplied", "rationale": "Levers are not a ranking." }
+          ],
+          "correctExplanation": "Four levers, four jobs. A shopping list is not a listening pass.",
+          "objectiveIds": ["Hear gate, room, guitar width, and kick click as compositional choices"],
+          "prerequisiteConceptIds": ["dm-production-doctrine"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-prl10-2",
+          "stem": "A mix doctrine can be described without brands when you name:",
+          "correctAnswer": "How short the gate is, how much room, how wide the guitars, how clicky the kick",
+          "distractors": [
+            { "text": "The console and pedal list printed in a magazine interview", "kind": "reversed", "rationale": "That list is the brand paragraph this lesson refuses." },
+            { "text": "Only the singer, treated as if the desk had no levers", "kind": "nearby", "rationale": "A person is not a gate or a width." },
+            { "text": "A verse-chorus sticker so the mix can look like a pop form", "kind": "misapplied", "rationale": "Form stickers are not a doctrine." }
+          ],
+          "correctExplanation": "Four words about four levers. That is a doctrine. A console name is not.",
+          "objectiveIds": ["Describe a mix doctrine without a brand-name paragraph"],
+          "prerequisiteConceptIds": ["dm-production-doctrine"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-prl10-3",
+          "stem": "A long room plus a midrange smear, versus a gated dry kit, differs as doctrine because:",
+          "correctAnswer": "One fuses cells into a wall; the other keeps attacks separable",
+          "distractors": [
+            { "text": "One is automatically better because smear is always heavier", "kind": "misconception", "rationale": "Heavier is not a grade. They are two doctrines." },
+            { "text": "They are the same doctrine measured at two volumes", "kind": "reversed", "rationale": "Volume is playback. Fusion versus separation is the split." },
+            { "text": "Only a brand of hall reverb can legally create a room sound", "kind": "misapplied", "rationale": "Room is a lever, not a license." }
+          ],
+          "correctExplanation": "Fuse or separate. That is the compositional split, not a volume knob.",
+          "objectiveIds": ["Hear gate, room, guitar width, and kick click as compositional choices"],
+          "prerequisiteConceptIds": ["dm-production-doctrine"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-drum-comp-10",
+      "conceptId": "dm-drum-comp",
+      "title": "Texture changes write the form",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-blast-types"],
+      "goDeeper": "dm-arrangement",
+      "explanation": [
+        "Kit texture writes form. Blast vocabulary is already a set of occupations: traditional as a kick-and-snare roll, bomb with the kick on a different job, hammer leaning on the hands. Switching among those, or leaving them for half-time or a dry groove, is a section change even when the guitar cell stays.",
+        "Analyze the drum part as composition, not as sport. Sport asks who played more notes. Composition asks which texture arrived, what it did to the cell, and when the kit dropped to let a riff speak. A fill that only proves feet is unused technicality on a different instrument.",
+        "Mark the kit's form on the same timeline as the riff cards. If the guitar never changes and the drums move from blast to half-time to a clicky ostinato, you still have three sections. If the drums never move, the guitar will have to do all the formal work, and often cannot."
+      ],
+      "example": "Traditional blast under cell A, then a bomb texture under the same A, then half-time with the snare on 3. Three sections, one guitar figure. A page of faster blasts with no texture change is one section with more sport.",
+      "whyItMatters": "Arrangement will ask who drops out. If you only hear drums as sport, you will never choose a drop.",
+      "quiz": [
+        {
+          "id": "dm-drc10-1",
+          "stem": "The kit writes form in this lesson when it:",
+          "correctAnswer": "Changes texture so a new section arrives even if the guitar cell stays",
+          "distractors": [
+            { "text": "Only adds notes so sport can replace a texture change", "kind": "reversed", "rationale": "More notes are sport, not a section." },
+            { "text": "Stops having a job so the guitar must carry every section", "kind": "nearby", "rationale": "The kit is supposed to share the formal work." },
+            { "text": "Is ranked by who toured with a more famous drummer", "kind": "misapplied", "rationale": "A ranking is not a texture." }
+          ],
+          "correctExplanation": "Texture change is a section. Note-count is sport.",
+          "objectiveIds": ["Let the kit write form with texture changes"],
+          "prerequisiteConceptIds": ["dm-blast-types"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-drc10-2",
+          "stem": "Analyzing a drum part as composition rather than sport means you ask:",
+          "correctAnswer": "Which texture arrived, what it did to the cell, and what the kit dropped",
+          "distractors": [
+            { "text": "Who played more notes, treated as the whole analysis", "kind": "reversed", "rationale": "That question is the sport this lesson refuses." },
+            { "text": "Which brand of pedal made the kick automatically formal", "kind": "nearby", "rationale": "A brand is not a texture change." },
+            { "text": "Whether a V–I can be tapped on the snare as a chorale", "kind": "misapplied", "rationale": "A chorale is not kit composition." }
+          ],
+          "correctExplanation": "Texture, job, drop. Those are compositional questions. Note-count is not.",
+          "objectiveIds": ["Analyze a drum part as composition, not as sport"],
+          "prerequisiteConceptIds": ["dm-blast-types"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-drc10-3",
+          "stem": "Traditional blast, then bomb, then half-time under one guitar cell, is:",
+          "correctAnswer": "Three sections written by kit texture, not one long sport fill",
+          "distractors": [
+            { "text": "One section, because the guitar never moved so form cannot move", "kind": "reversed", "rationale": "The kit moved. That is enough for sections." },
+            { "text": "Automatically better than a dry groove because more blast is heavier", "kind": "misconception", "rationale": "Heavier is not a grade. Texture is the fact." },
+            { "text": "Proof that blast types are only speed ranks, not occupations", "kind": "nearby", "rationale": "The types are occupations. That is why the form moved." }
+          ],
+          "correctExplanation": "Three occupations, three sections. The guitar can sit still.",
+          "objectiveIds": ["Let the kit write form with texture changes"],
+          "prerequisiteConceptIds": ["dm-blast-types"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-bass-role-10",
+      "conceptId": "dm-bass-role",
+      "title": "Lock, pick, or smear",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-harmony-two-gtr"],
+      "goDeeper": "dm-arrangement",
+      "explanation": [
+        "Bass can lock, pick, or smear. Two-guitar writing already chooses unison, a third above, or a second riff, and distortion fattens close intervals. The bass is a fourth decision on that stack: double the guitar cell, state a picked counter-line, or become a distorted bed that thickens the midrange.",
+        "Lock is the default that keeps the cell readable. Pick is a second contour that must still leave the guitar cell audible, or you wrote two leads and no foundation. Smear is a compositional haze: useful when the guitars are articulate and you want weight; fatal when the guitars are already a wall.",
+        "Predict the collision. A distorted bass under a close two-guitar harmony will fuse the third into a single thick pitch. If you needed that third to be heard, lock with a cleaner bass or drop one guitar. If you wanted a monolith, the smear is the arrangement. Choose it on purpose."
+      ],
+      "example": "Unison guitars, bass locking the cell: the figure stays sharp. Same guitars, bass a distorted bed: the figure becomes a slab. Close-harmony guitars plus that bed: the interval often disappears.",
+      "whyItMatters": "Arrangement by subtraction will ask which of these three to mute. If bass is only 'low guitar,' you cannot choose.",
+      "quiz": [
+        {
+          "id": "dm-bas10-1",
+          "stem": "Which three bass jobs does this lesson ask you to choose among?",
+          "correctAnswer": "Lock the guitar cell, pick a counter-line, or smear as a distorted bed",
+          "distractors": [
+            { "text": "Play faster than the kit, replace the vocal, or name a brand", "kind": "nearby", "rationale": "Those are sport, a vocal job, and a shopping list." },
+            { "text": "Only lock, because pick and smear are illegal in this style", "kind": "reversed", "rationale": "All three are available. They are different jobs." },
+            { "text": "Double a verse-chorus hook so the bass can be a pop bass", "kind": "misapplied", "rationale": "A pop hook is not this choice." }
+          ],
+          "correctExplanation": "Lock, pick, smear. Three jobs, three effects on the cell.",
+          "objectiveIds": ["Choose lock, pick, or smear"],
+          "prerequisiteConceptIds": ["dm-harmony-two-gtr"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-bas10-2",
+          "stem": "A distorted bass under a close two-guitar harmony will typically:",
+          "correctAnswer": "Fuse the third into a thick pitch so the interval may disappear",
+          "distractors": [
+            { "text": "Make the third clearer, because smear always separates close intervals", "kind": "reversed", "rationale": "Smear fuses. It does not separate." },
+            { "text": "Turn the bass into a twelve-tone row the guitars must follow", "kind": "nearby", "rationale": "Distortion is a bed, not a serial method." },
+            { "text": "Require a brand-name paragraph before any fusion can occur", "kind": "misapplied", "rationale": "Fusion is acoustics plus gain, not a brand." }
+          ],
+          "correctExplanation": "Close third plus a distorted bed often becomes one slab. Predict that fusion.",
+          "objectiveIds": ["Predict what a distorted bass does to a two-guitar cell"],
+          "prerequisiteConceptIds": ["dm-harmony-two-gtr"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-bas10-3",
+          "stem": "If the two-guitar third must stay audible, the honest bass choice is usually:",
+          "correctAnswer": "Lock with a cleaner bass, or drop one guitar before you smear",
+          "distractors": [
+            { "text": "Smear harder so the third can be recovered from the slab", "kind": "reversed", "rationale": "More smear hides the third further." },
+            { "text": "Pick a third lead so four contours can share the same midrange", "kind": "nearby", "rationale": "Another lead is not a foundation." },
+            { "text": "Replace the cell with a celebrity bassist's biography", "kind": "misapplied", "rationale": "A biography does not keep an interval audible." }
+          ],
+          "correctExplanation": "Cleaner lock, or subtract a guitar. Smear is the choice when you want the slab.",
+          "objectiveIds": ["Choose lock, pick, or smear"],
+          "prerequisiteConceptIds": ["dm-harmony-two-gtr"],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "dm-arrangement-10",
+      "conceptId": "dm-arrangement",
+      "title": "Drop a part so the cell speaks",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-analysis-tune"],
+      "goDeeper": "dm-live-vs-record",
+      "diagram": "dm-arrange",
+      "explanation": [
+        "Subtraction is how a dense mix lets the next riff be heard. Whole-tune analysis already marked form as an order of textures. Arrangement is the next edit: who drops out — a guitar, the bass smear, cymbals, the vocal — so the arriving cell has a hole to occupy. Another layer is the reflex this lesson refuses.",
+        "Rewrite a packed bar by taking something away. Mute the second guitar for two attacks. Gate the cymbals before a new cell. Stop the kick click so a half-time snare can speak. The diagram is that hole, not a thicker stack. If every part stays, the new riff has nowhere to land except more midrange.",
+        "Density is still a choice. Keep the wall when the wall is the section. Drop someone when the next card on the form needs to be audible. Live density will punish you if the studio never practiced these drops. Write them as part of the cut, not as a panic move on stage."
+      ],
+      "example": "Both guitars, bass smear, blast, and vocal into one bar, then the same bar with the second guitar and cymbals gone for two beats before cell B. The second version is the arrangement. The first is a pile.",
+      "whyItMatters": "A three-piece on stage cannot fake every studio layer. Drops you wrote are the only ones you will have.",
+      "quiz": [
+        {
+          "id": "dm-arr10-1",
+          "stem": "So the next riff can be heard in a dense mix, the first move is:",
+          "correctAnswer": "Drop a part — guitar, smear, cymbals, or vocal — to open a hole",
+          "distractors": [
+            { "text": "Add another layer so the new riff can hide inside more midrange", "kind": "reversed", "rationale": "Another layer is the reflex this lesson refuses." },
+            { "text": "Raise the metronome so speed can stand in for a hole", "kind": "nearby", "rationale": "Tempo does not create arrangement space." },
+            { "text": "Print a brand list so the mix can look more arranged", "kind": "misapplied", "rationale": "A brand list is not a drop." }
+          ],
+          "correctExplanation": "Someone leaves. That hole is the arrangement.",
+          "objectiveIds": ["Drop someone out so the next riff can be heard"],
+          "prerequisiteConceptIds": ["dm-analysis-tune"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-arr10-2",
+          "stem": "Rewriting a dense bar by subtraction rather than another layer means you:",
+          "correctAnswer": "Mute or gate an existing part so the arriving cell has space",
+          "distractors": [
+            { "text": "Stack a third guitar so the bar can look more finished", "kind": "reversed", "rationale": "A third guitar is another layer, not a rewrite." },
+            { "text": "Keep every part and call the pile a texture change", "kind": "nearby", "rationale": "A pile with no hole is not a rewrite." },
+            { "text": "Invent a chorus label so the bar can skip the drop", "kind": "misapplied", "rationale": "A label is not an arrangement." }
+          ],
+          "correctExplanation": "Mute, gate, or stop a part. That is the rewrite. Stacking is the old bar.",
+          "objectiveIds": ["Rewrite a dense bar by subtraction, not by another layer"],
+          "prerequisiteConceptIds": ["dm-analysis-tune"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-arr10-3",
+          "stem": "Both guitars, smear, blast, and vocal into one bar fail the next-riff test when:",
+          "correctAnswer": "Cell B has no hole, so it lands as more midrange instead of an arrival",
+          "distractors": [
+            { "text": "The pile is already the arrival, because more parts always clarify B", "kind": "reversed", "rationale": "More parts hide B. They do not announce it." },
+            { "text": "Only a famous producer can legally mute a guitar for two beats", "kind": "nearby", "rationale": "A mute is an arrangement choice, not a license." },
+            { "text": "A twelve-tone row must replace B before any drop is allowed", "kind": "misapplied", "rationale": "A row is not an arrangement hole." }
+          ],
+          "correctExplanation": "No hole, no arrival. B becomes weather. Drop someone before B speaks.",
+          "objectiveIds": ["Drop someone out so the next riff can be heard"],
+          "prerequisiteConceptIds": ["dm-analysis-tune"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-influence-map-10",
+      "conceptId": "dm-influence-map",
+      "title": "Borrowed cells, not borrowed lives",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-compare-scenes"],
+      "goDeeper": "dm-notation-limit",
+      "explanation": [
+        "Influence is a borrowed cell, not a borrowed biography. Scene comparison already kept two cities on construction. The map of influence is the same discipline: point at a figure, a grouping, a mix lever, or a vocal rhythm that moved from one cut to another. A list of bands is a shopping list.",
+        "Trace the move. A three-attack chromatic cell that later sits under a different blast type; a gated snare doctrine that travels; a half-time contrast copied as a section idea. Those are arrows you can draw. 'They liked the same records' is not an arrow. It is a mood.",
+        "Keep lives off the map. Players move, rooms close, tapes get dubbed. The useful object is still the construction that can be pointed at on two recordings. If you cannot hum or tap the borrowed thing, you do not yet have an influence. You have a rumor about taste."
+      ],
+      "example": "Cut A: three-attack cell, dry gate, vocal on downbeats. Cut B, years later: the same cell displaced, a wetter room, vocal chattering with the snare. The cell is the borrowed object. The singers' hometowns are not.",
+      "whyItMatters": "Notation and modern grids will hide or reveal those borrowed objects. A biography cannot be hidden or revealed by a tab.",
+      "quiz": [
+        {
+          "id": "dm-inf10-1",
+          "stem": "Influence in this lesson is named as which kind of object?",
+          "correctAnswer": "A borrowed cell, grouping, mix lever, or vocal rhythm you can point at",
+          "distractors": [
+            { "text": "A borrowed biography treated as the whole map", "kind": "reversed", "rationale": "Lives are what this map keeps off the page." },
+            { "text": "A ranked list of bands that liked the same magazines", "kind": "nearby", "rationale": "A list is a shopping list, not an arrow." },
+            { "text": "A capital that licensed every later cell before it could be used", "kind": "misapplied", "rationale": "No office licenses a borrowed figure." }
+          ],
+          "correctExplanation": "Point at the figure or the lever. A life story is not the object.",
+          "objectiveIds": ["Name a borrowed cell, not a borrowed biography"],
+          "prerequisiteConceptIds": ["dm-compare-scenes"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-inf10-2",
+          "stem": "An influence is traced as construction when you can:",
+          "correctAnswer": "Draw an arrow from a checkable move on one cut to the same move on another",
+          "distractors": [
+            { "text": "Replace the arrow with a rumor about who liked whom", "kind": "reversed", "rationale": "A rumor is a mood, not a trace." },
+            { "text": "Print both singers' résumés and stop at the hometowns", "kind": "nearby", "rationale": "Hometowns are lives, not construction." },
+            { "text": "Invent a V–I that neither cut plays so the arrow looks tonal", "kind": "misapplied", "rationale": "An invented chorale is not a borrowed cell." }
+          ],
+          "correctExplanation": "Checkable move, then the later cut. That is the arrow.",
+          "objectiveIds": ["Trace an influence as construction you can point at"],
+          "prerequisiteConceptIds": ["dm-compare-scenes"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "dm-inf10-3",
+          "stem": "If you cannot hum or tap the borrowed thing, the honest report is:",
+          "correctAnswer": "You have a rumor about taste, not an influence you can map",
+          "distractors": [
+            { "text": "You still have a complete map, because taste is already construction", "kind": "reversed", "rationale": "Taste without a figure is not a map." },
+            { "text": "A famous name can stand in for the missing hummed cell", "kind": "nearby", "rationale": "A name is the biography this lesson drops." },
+            { "text": "A brand of distortion secretly carries the borrowed cell for you", "kind": "misapplied", "rationale": "A brand is not a figure you can tap." }
+          ],
+          "correctExplanation": "No hum, no tap, no arrow. Do not upgrade a rumor.",
+          "objectiveIds": ["Trace an influence as construction you can point at"],
+          "prerequisiteConceptIds": ["dm-compare-scenes"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-live-vs-record-10",
+      "conceptId": "dm-live-vs-record",
+      "title": "Three bodies on a stage",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-production-listen"],
+      "goDeeper": "dm-modern-prod",
+      "explanation": [
+        "Studio layers can outrun a three-piece. Production listening already named gate, room, width, and click as writing. Live density asks what three bodies can actually play: two hands on a guitar cannot be a hard-panned wall and a lead at once; one kit cannot be a triggered click and a huge room together unless you brought the tape.",
+        "Predict the collapse. A record with four guitar tracks, a distorted bass bed, and a vocal stacked in two registers will thin on stage when one guitarist sings. Width disappears. The smear may remain. Cells that were separated by the desk will fuse under stage volume. That is not a moral failure. It is a body count.",
+        "Write a live reduction. Keep the cell, keep one texture change the kit can make, decide whether bass locks or smears, and drop the studio-only doubles. If the song only works when the hidden tracks play, the record density was the composition and the stage cannot carry it. Say that before you book the room."
+      ],
+      "example": "Record: doubled rhythm, a third lead, bass smear, clicky kick, stacked vocals. Stage: one rhythm, one vocal, bass lock, acoustic kit. The lead and the stack vanish. If the song needed them, the live cut is a different piece.",
+      "whyItMatters": "Modern triggers can fake some of this on stage. They can also erase the performance you still wanted people to see.",
+      "quiz": [
+        {
+          "id": "dm-lvr10-1",
+          "stem": "Asking what a three-piece can actually play is a test of:",
+          "correctAnswer": "Which studio layers have no body left to perform them",
+          "distractors": [
+            { "text": "Which famous guest can be hired so the body count does not matter", "kind": "nearby", "rationale": "A guest is another body, not a three-piece test." },
+            { "text": "Whether the record is automatically better because it has more layers", "kind": "reversed", "rationale": "More layers are not a grade. They may not travel." },
+            { "text": "Whether a verse-chorus map can replace the missing doubles", "kind": "misapplied", "rationale": "A pop map does not play a guitar track." }
+          ],
+          "correctExplanation": "Bodies play parts. Hidden tracks have no body. That is the test.",
+          "objectiveIds": ["Ask what a three-piece can actually play"],
+          "prerequisiteConceptIds": ["dm-production-listen"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-lvr10-2",
+          "stem": "A studio density that will collapse on stage is one where:",
+          "correctAnswer": "Doubles, stacks, and desk separation disappear once the extra tracks are gone",
+          "distractors": [
+            { "text": "Every live cut is identical to the record, because desks travel for free", "kind": "reversed", "rationale": "Desks do not travel. Bodies do." },
+            { "text": "Stage volume automatically restores hard-panned width", "kind": "nearby", "rationale": "Volume fuses more than it separates." },
+            { "text": "A brand of cabinet keeps four guitar tracks in one pair of hands", "kind": "misapplied", "rationale": "A cabinet is not four performances." }
+          ],
+          "correctExplanation": "When the hidden tracks leave, width and stacks leave. Predict that collapse.",
+          "objectiveIds": ["Predict a studio density that will collapse on stage"],
+          "prerequisiteConceptIds": ["dm-production-listen"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-lvr10-3",
+          "stem": "A live reduction that keeps the cell and one kit texture change is honest when:",
+          "correctAnswer": "The song still works after studio-only doubles and stacks are dropped",
+          "distractors": [
+            { "text": "The song only works if the hidden tracks still play beside the trio", "kind": "reversed", "rationale": "That case is a record composition the stage cannot carry." },
+            { "text": "The trio adds more midrange so the missing doubles are not noticed", "kind": "nearby", "rationale": "More midrange is a pile, not a reduction." },
+            { "text": "A biography of the studio makes the missing tracks count as live", "kind": "misapplied", "rationale": "A story does not perform a double." }
+          ],
+          "correctExplanation": "If the cell and one texture still hold, the reduction is a piece. If not, say so.",
+          "objectiveIds": ["Ask what a three-piece can actually play"],
+          "prerequisiteConceptIds": ["dm-production-listen"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-modern-prod-10",
+      "conceptId": "dm-modern-prod",
+      "title": "Grid that can erase a take",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["dm-production-listen", "dm-modern-wave"],
+      "goDeeper": "dm-arrangement",
+      "explanation": [
+        "Triggers and edits are a grid that can erase a performance or reveal it. The later technical and dissonant wave tightened those grids and cooled the harmony. Production listening already gave you gate, room, width, and click. This lesson asks whether the grid is the composition or a cover-up of a take that could not hold the figure.",
+        "Reveal is a click that outlines a kick the drummer actually played, or an edit that removes a noise so the cell is audible. Erase is a sample replacing every stroke until the human grouping is gone, or a vocal aligned until the third grid becomes a ruler. Both can be chosen. They are not the same choice.",
+        "Hear the difference on the form. If texture changes still arrive — blast to half-time, a breath, a pivot — the grid may be serving the piece. If every bar is the same quantized weather, the grid became the piece and the performance is a skin. Say which one you are hearing. Do not call either one more real as a moral rank."
+      ],
+      "example": "A kick sample that follows a played 3:2 and still meets a pulse is a reveal. The same sample firing on a straight sixteenth regardless of the drummer's grouping is a cover-up. The cell may survive the first and die in the second.",
+      "whyItMatters": "Tab already hides grouping. A grid can hide it twice. You need words for when the hide is the writing.",
+      "quiz": [
+        {
+          "id": "dm-mpr10-1",
+          "stem": "Triggers and edits should be treated as a grid that can:",
+          "correctAnswer": "Erase a performance or reveal the figure the take already played",
+          "distractors": [
+            { "text": "Only improve a take, because a grid is automatically honest", "kind": "reversed", "rationale": "A grid can also erase the grouping." },
+            { "text": "Replace production listening so gate and room no longer matter", "kind": "nearby", "rationale": "The old levers still write. The grid is another lever." },
+            { "text": "Rank a scene as more real once every stroke is replaced", "kind": "misapplied", "rationale": "Realness is not a moral rank in this course." }
+          ],
+          "correctExplanation": "Erase or reveal. Both are available. They are not the same job.",
+          "objectiveIds": ["Treat triggers and edits as a grid that can erase or reveal a performance"],
+          "prerequisiteConceptIds": ["dm-production-listen", "dm-modern-wave"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-mpr10-2",
+          "stem": "The grid is the composition, rather than a cover-up, when:",
+          "correctAnswer": "Texture changes and groupings still arrive, and the sample follows them",
+          "distractors": [
+            { "text": "Every bar is the same quantized weather and the take no longer groups", "kind": "reversed", "rationale": "That sameness is the cover-up case." },
+            { "text": "A brand of sampler is named, which automatically writes the form", "kind": "nearby", "rationale": "A brand is not a texture change." },
+            { "text": "The vocal is aligned to a ruler so the third grid disappears", "kind": "misapplied", "rationale": "A ruler that deletes the vocal grid is usually a cover-up." }
+          ],
+          "correctExplanation": "If the form still moves and the grid follows, the grid is serving. If not, it replaced the take.",
+          "objectiveIds": ["Hear when the grid is the composition and when it is a cover-up"],
+          "prerequisiteConceptIds": ["dm-production-listen", "dm-modern-wave"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dm-mpr10-3",
+          "stem": "A kick sample that ignores a played 3:2 and fires straight sixteenths is:",
+          "correctAnswer": "A cover-up that erases the grouping the take had offered",
+          "distractors": [
+            { "text": "A reveal, because any sample automatically clarifies a ratio", "kind": "reversed", "rationale": "Ignoring the ratio hides it." },
+            { "text": "Proof that modern grids cannot ever follow a played grouping", "kind": "nearby", "rationale": "They can follow. This one chose not to." },
+            { "text": "Required by the later wave before any cell can count as cold", "kind": "misapplied", "rationale": "Cold harmony is not a license to erase a 3:2." }
+          ],
+          "correctExplanation": "The take had a ratio. The sample flattened it. That is erase, not reveal.",
+          "objectiveIds": ["Hear when the grid is the composition and when it is a cover-up"],
+          "prerequisiteConceptIds": ["dm-production-listen", "dm-modern-wave"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-notation-limit-10",
+      "conceptId": "dm-notation-limit",
+      "title": "Tablature hides the grouping",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-analysis-riff", "mus-notation"],
+      "goDeeper": "dm-arrangement",
+      "explanation": [
+        "Tablature prints frets. It hides meter, cell, and function. Notation is already a map of sound, not the music: a staff leaves out loudness curves, mute noise, and the hinge you breathe. Tab leaves out even more. A column of numbers does not say whether those attacks are a three-group, a pickup, or a fill with no job.",
+        "Riff analysis needed pitch collection, cell, meter, and seat. Tab can hint at the collection if you know the tuning. It will not mark the cell unless you add a bracket. It will not state the grouping unless you add beams, numbers, or a written 3+3+2. It will not say whether the run turns the form or only fills a bar.",
+        "Augment the tab. Circle the cell. Write the grouping over the bar. Mark the function in a word: state, mutate, contrast, fill. A staff with those marks is still a map, but it is a map this music can be read from. Bare tab is a fingering aid. Do not confuse it with a reading of the riff."
+      ],
+      "example": "Six numbers in a row on the low string. Without a mark they could be a cell, a pickup, or a cliché fill. Add a bracket on the first three, a 3+3 grouping, and the word 'state.' Now the riff can be read.",
+      "whyItMatters": "Every earlier method in this course dies if the only score is bare tab. Mark the map or you are only teaching fingers.",
+      "quiz": [
+        {
+          "id": "dm-ntl10-1",
+          "stem": "Tablature hides which three facts this course needs in order to read a riff?",
+          "correctAnswer": "Meter or grouping, the cell boundary, and the function of the figure",
+          "distractors": [
+            { "text": "Only the fret numbers, which tab refuses to print at all", "kind": "reversed", "rationale": "Tab prints frets. Those are what it does show." },
+            { "text": "The brand of the guitar and the singer's hometown", "kind": "nearby", "rationale": "Those are roster facts, not the hidden musical ones." },
+            { "text": "A V–I chorale that the tab was supposed to invent for you", "kind": "misapplied", "rationale": "A chorale is not what this map is missing." }
+          ],
+          "correctExplanation": "Frets are visible. Grouping, cell, and job are not, until you mark them.",
+          "objectiveIds": ["State what tablature hides: meter, cell, and function"],
+          "prerequisiteConceptIds": ["dm-analysis-riff", "mus-notation"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-ntl10-2",
+          "stem": "Bare tab becomes a readable riff map when you augment it with:",
+          "correctAnswer": "A cell bracket or grouping mark, plus a word for the figure's job",
+          "distractors": [
+            { "text": "A longer column of unmarked numbers so the hiding can finish", "kind": "reversed", "rationale": "More unmarked frets hide more, not less." },
+            { "text": "A celebrity signature printed in the margin as the analysis", "kind": "nearby", "rationale": "A signature is a roster, not a grouping." },
+            { "text": "A brand of pickup so the function can be inferred from gear", "kind": "misapplied", "rationale": "Gear is not a cell mark." }
+          ],
+          "correctExplanation": "Bracket, grouping, job-word. Then the map can be read.",
+          "objectiveIds": ["Augment tab with a grouping or a cell mark so the riff can be read"],
+          "prerequisiteConceptIds": ["dm-analysis-riff", "mus-notation"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-ntl10-3",
+          "stem": "Six unmarked numbers on the low string fail as a reading because:",
+          "correctAnswer": "They could be a cell, a pickup, or a fill, and tab will not say which",
+          "distractors": [
+            { "text": "Numbers are illegal once a staff exists, so tab cannot be augmented", "kind": "nearby", "rationale": "Tab can be marked. That is the fix." },
+            { "text": "Six numbers already state meter, cell, and function without marks", "kind": "reversed", "rationale": "Unmarked numbers state frets only." },
+            { "text": "A twelve-tone row is required before any fret can be circled", "kind": "misapplied", "rationale": "A row is not the missing mark." }
+          ],
+          "correctExplanation": "Unmarked frets are fingering. Circle the cell or you have not read the riff.",
+          "objectiveIds": ["State what tablature hides: meter, cell, and function"],
+          "prerequisiteConceptIds": ["dm-analysis-riff", "mus-notation"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

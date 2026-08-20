@@ -1,0 +1,200 @@
+{
+  "courseId": "semi-process",
+  "moduleId": "semi-p-wafer",
+  "lessons": [
+    {
+      "id": "semi-crystal-10",
+      "conceptId": "semi-crystal",
+      "title": "A chip starts as one crystal, not a lump",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "semi-wafer",
+      "diagram": "wafer-cross",
+      "explanation": [
+        "A transistor is a region of silicon whose electrical behaviour you intend. That intention only holds if the atoms sit on one continuous lattice. In a single crystal, every atom has a predictable set of neighbours. Electrons and holes move through a periodic potential, not through a jumble of misaligned grains. A metal lump or a polycrystalline ingot is cheap to pour. It is the wrong starting solid for a MOSFET.",
+        "Where two crystal grains meet, the lattice stops matching. That grain boundary scatters carriers, traps charge, and offers a leak path. A channel that crosses it no longer has one mobility or one threshold. You cannot draw a transistor across a grain boundary and pretend the drawing is the device. The foundry's first decision is therefore not a tool. It is: grow one crystal, then cut it.",
+        "The usual route is Czochralski: a seed of known orientation is dipped into molten silicon and pulled so the freeze front copies the seed. The boule that comes out is one crystal, maybe a metre long, with a notch or flat that names the orientation. Everything later — polish, oxide, implant — inherits that lattice. If the lattice is wrong here, later process magic cannot invent it."
+      ],
+      "example": "A MOSFET drawn so its channel crosses a grain boundary in polysilicon or in a poorly grown wafer has two thresholds in one device: one grain's doping and traps, then the other's. Current crowds at the boundary. A neighbouring device on a single-crystal wafer, same mask, behaves as drawn.",
+      "whyItMatters": "Every later unit process in this course assumes a wafer that is one crystal. If you start from 'silicon is a grey metal', oxidation, implant, and epitaxy become slogans instead of physics.",
+      "quiz": [
+        {
+          "id": "cr10-1",
+          "stem": "A chip starts as single-crystal silicon rather than a cast metal lump because:",
+          "correctAnswer": "A transistor needs one continuous lattice so carriers see a predictable potential",
+          "distractors": [
+            { "text": "Molten silicon cannot be frozen at all", "kind": "reversed", "rationale": "The boule is frozen on purpose, from a seed." },
+            { "text": "Metals cannot be sawn into disks", "kind": "nearby", "rationale": "Sawing is not why the lattice must be single-crystal." },
+            { "text": "A grain boundary makes lithography lamps brighter", "kind": "subtle", "rationale": "Grain boundaries are electrical defects, not light sources." }
+          ],
+          "correctExplanation": "One lattice, one set of neighbours. That is what a drawn transistor assumes.",
+          "objectiveIds": ["Explain why a chip starts as an ordered silicon lattice rather than a metal lump"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cr10-2",
+          "stem": "A MOSFET channel that crosses a grain boundary typically:",
+          "correctAnswer": "Sees traps, scattering, and a leak path instead of one threshold",
+          "distractors": [
+            { "text": "Becomes a better conductor than either grain", "kind": "reversed", "rationale": "Boundaries scatter and leak; they do not improve the channel." },
+            { "text": "Ignores doping because grains have no atoms", "kind": "nearby", "rationale": "Both grains are still silicon. The mismatch is the problem." },
+            { "text": "Automatically aligns to the mask notch", "kind": "subtle", "rationale": "The notch names wafer orientation, not a grain boundary." }
+          ],
+          "correctExplanation": "The drawing assumed one crystal. The boundary is a second, unplanned device.",
+          "objectiveIds": ["Name what a grain boundary would do to a transistor that crosses it"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cr10-3",
+          "stem": "Czochralski pulling from a seed is used so that:",
+          "correctAnswer": "The freeze front copies one orientation instead of nucleating many grains",
+          "distractors": [
+            { "text": "The melt can stay polycrystalline on purpose", "kind": "reversed", "rationale": "The seed exists to prevent that." },
+            { "text": "The saw can skip polishing later", "kind": "nearby", "rationale": "Pulling makes a crystal. Polish is a later surface step." },
+            { "text": "Copper can dissolve into the lattice as the main dopant", "kind": "subtle", "rationale": "Copper is a contaminant, not the reason for a seed." }
+          ],
+          "correctExplanation": "The seed is the template. Without it you get grains, not a wafer crystal.",
+          "objectiveIds": ["Explain why a chip starts as an ordered silicon lattice rather than a metal lump"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-wafer-10",
+      "conceptId": "semi-wafer",
+      "title": "The surface everything else will inherit",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-crystal"],
+      "goDeeper": "semi-clean",
+      "diagram": "wafer-cross",
+      "explanation": [
+        "A boule is not a wafer. It is ground to a cylinder, notched or flatted so later tools know the crystal orientation, then sliced. The saw leaves damage: a crushed, cracked skin thicker than any gate oxide you will grow. Lapping and a damage-removing etch take that skin off. Chemical-mechanical polish then makes one face a mirror. That face, not the saw kerf, is what oxidation and deposition will see.",
+        "Later films copy the starting surface. Roughness becomes thickness variation. A scratch becomes a leak or a particle trap. A residual saw pit becomes a stacking fault when you oxidize. You do not get a second chance to invent a better starting plane after the first thermal oxide has already grown into that damage.",
+        "This is why the first defect budget is set before any pattern exists. Particle counts, metals, and polish haze are properties of the incoming wafer and the clean that follows. A process engineer who treats 'the wafer' as a blank disk is already late."
+      ],
+      "example": "Two otherwise identical lots: one polished to a low haze, one rushed off a damaged saw face. The first thermal oxide on the damaged lot shows pits and a wide thickness spread. The clean lithography tool cannot un-grow that oxide.",
+      "whyItMatters": "Every unit process later in this course sits on this face. If you skip how the face was made, 'the wafer is processed' is all you will be able to say, and it will not be enough.",
+      "quiz": [
+        {
+          "id": "wa10-1",
+          "stem": "Slicing, lapping, and polish exist, in that order, to:",
+          "correctAnswer": "Turn a boule into a disk whose face later films can inherit",
+          "distractors": [
+            { "text": "Dope the crystal from the saw blade", "kind": "misapplied", "rationale": "The saw cuts. It is not a dopant source." },
+            { "text": "Grow the first gate oxide in the wire saw", "kind": "nearby", "rationale": "Oxide is a later thermal step, after a polished face exists." },
+            { "text": "Melt the boule back into a polycrystalline lump", "kind": "reversed", "rationale": "You just spent a puller making one crystal." }
+          ],
+          "correctExplanation": "Cut, remove saw damage, then mirror the face. That face is the starting surface.",
+          "objectiveIds": ["Trace slicing, lapping, and polish as the surface later films inherit"],
+          "prerequisiteConceptIds": ["semi-crystal"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "wa10-2",
+          "stem": "A scratch left by a rushed polish shows up later mainly because:",
+          "correctAnswer": "The first oxide or film grows into that scratch instead of onto a flat plane",
+          "distractors": [
+            { "text": "The scratch raises the melting point of the whole boule", "kind": "subtle", "rationale": "The boule is already solid and sliced." },
+            { "text": "Lithography lamps refuse to turn on near a scratch", "kind": "nearby", "rationale": "The lamp is not the inheritance. The surface is." },
+            { "text": "A scratch automatically dopes the channel p-type", "kind": "misapplied", "rationale": "A scratch is topography and damage, not a well implant." }
+          ],
+          "correctExplanation": "Later steps copy the face they are given. They do not invent a better one.",
+          "objectiveIds": ["Say why the starting surface, not later magic, sets the first defect budget"],
+          "prerequisiteConceptIds": ["semi-crystal"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "wa10-3",
+          "stem": "The first defect budget of a lot is set when:",
+          "correctAnswer": "The incoming surface and its clean exist — before any pattern is printed",
+          "distractors": [
+            { "text": "The last metal layer is probed at the end of the line", "kind": "reversed", "rationale": "End-of-line test reads a budget that was already spent." },
+            { "text": "The designer picks a logo for the reticle", "kind": "subtle", "rationale": "A logo is not a surface." },
+            { "text": "The implant tool is first turned on", "kind": "nearby", "rationale": "Implant is later. The face already exists." }
+          ],
+          "correctExplanation": "Saw damage, polish, and cleanliness are already a yield term before a mask is used.",
+          "objectiveIds": ["Say why the starting surface, not later magic, sets the first defect budget"],
+          "prerequisiteConceptIds": ["semi-crystal"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-clean-10",
+      "conceptId": "semi-clean",
+      "title": "Dirt is yield, even with no pattern",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-wafer"],
+      "goDeeper": "semi-contamination",
+      "explanation": [
+        "Two different dirts ruin a wafer, and they do not ruin it the same way. A particle is a lump: it shadows an etch, blocks a later film, or becomes an inclusion in oxide. Metallic contamination is atomic: iron, copper, sodium dissolve, create generation-recombination centers, shift oxide charge, and kill minority-carrier lifetime. Counting particles does not tell you the metal story, and a metals clean does not pick up a 0.3 µm flake.",
+        "A clean happens before any pattern exists because the first thermal oxide will grow around whatever is on the surface. A particle under that oxide is already a killer defect. A metal atom at the Si/SiO2 interface is already a trap. Waiting for lithography to 'wash it off' is waiting for a step that cannot un-grow an oxide.",
+        "A classic wet sequence separates the jobs: an alkaline peroxide mix lifts particles and organics; an acid peroxide mix takes metals; dilute HF strips native oxide and leaves a hydrogen-terminated face when you need one. The names matter less than the split. Particle chemistry is not metal chemistry."
+      ],
+      "example": "A wafer that looks spotless under a lamp can still fail a gate-oxide lot if it carried iron from a stainless cassette. A different wafer with one visible particle under the first oxide has a dead die at that site even if the metals test is clean.",
+      "whyItMatters": "Yield lectures that start at lithography skip the dirt that was already baked into the first film. Cleanliness is a process step with a mechanism, not a housekeeping slogan.",
+      "quiz": [
+        {
+          "id": "cl10-1",
+          "stem": "A particle and a metal atom are different contaminants because:",
+          "correctAnswer": "One is a lump that shadows or includes; the other dissolves and creates electrical traps",
+          "distractors": [
+            { "text": "They are two names for the same flake", "kind": "reversed", "rationale": "Size and chemistry differ. So does the failure." },
+            { "text": "Metals only matter after the last metal layer is plated", "kind": "nearby", "rationale": "Fe or Na at the first oxide is already a front-end killer." },
+            { "text": "Particles dissolve into the lattice and become dopants", "kind": "subtle", "rationale": "That is closer to the metals story, not the particle story." }
+          ],
+          "correctExplanation": "Lump versus atom. Shadow versus generation center. Different cleans.",
+          "objectiveIds": ["Distinguish particles from metallic contamination"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cl10-2",
+          "stem": "A clean runs before any pattern exists because:",
+          "correctAnswer": "The first oxide or film will grow around whatever is already on the face",
+          "distractors": [
+            { "text": "Masks refuse to load unless the wafer is wet", "kind": "subtle", "rationale": "Wetness is not the reason. Inheritance is." },
+            { "text": "Implant tools only accept dirty wafers", "kind": "reversed", "rationale": "Implant is later, and it does not want dirt either." },
+            { "text": "Particles can only land after photoresist is coated", "kind": "nearby", "rationale": "Particles land whenever the surface is exposed, including now." }
+          ],
+          "correctExplanation": "Once the first film grows, the dirt is inside the device, not on a bench.",
+          "objectiveIds": ["Explain why a clean happens before any pattern exists"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cl10-3",
+          "stem": "A lot fails with dead gate oxides and a clean metals test. The more likely leftover is:",
+          "correctAnswer": "A particle that was under the first oxide",
+          "distractors": [
+            { "text": "Dissolved iron at every interface", "kind": "nearby", "rationale": "That would have shown up on the metals test." },
+            { "text": "A missing boule notch", "kind": "subtle", "rationale": "Orientation marks are not oxide killers." },
+            { "text": "Too little implant dose in a well that does not exist yet", "kind": "misapplied", "rationale": "There is no well until later. This is a clean/oxide fail." }
+          ],
+          "correctExplanation": "Particles and metals fail differently. A clean metals assay does not clear a flake.",
+          "objectiveIds": ["Distinguish particles from metallic contamination"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

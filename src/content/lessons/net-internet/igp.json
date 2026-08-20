@@ -1,0 +1,198 @@
+{
+  "courseId": "net-internet",
+  "moduleId": "net-i-igp",
+  "lessons": [
+    {
+      "id": "net-as-10",
+      "conceptId": "net-as",
+      "title": "A cable is not a policy",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-ip"],
+      "goDeeper": "net-igp",
+      "diagram": "net-as-graph",
+      "explanation": [
+        "A cable between two networks is not an agreement about where packets may go. An autonomous system is a network that presents one routing policy to the rest of the world: these prefixes are ours, those neighbors may send this way, this traffic we will not carry. The number on the AS is a name for that policy, not a count of routers.",
+        "Two organizations can share a fiber and still refuse each other's customers, still prefer different exits, still treat a destination as unreachably expensive. The shared medium moves bits. The AS boundary is the place where those bits become someone else's political problem.",
+        "Inside one AS, operators can still run many routers, many sites, many prefixes. The claim is unity of policy, not unity of geography. When that claim is a lie — two groups under one number who will not honor the same preferences — neighbors see flapping, leaks, and surprises, because they were told they were talking to one network."
+      ],
+      "example": "Campus AS 64500 and an ISP share a cable. Campus policy says student wifi is not a transit path for the ISP's other customers. The ISP's policy says campus is just one customer. Same fiber, two policies, two ASes.",
+      "whyItMatters": "Internet paths are chosen by networks that have opinions, not by a global shortest-path oracle. Until you can name the opinion-holder, 'the network routed it wrong' is a shrug.",
+      "quiz": [
+        {
+          "id": "ni-as10-1",
+          "stem": "An autonomous system is primarily:",
+          "correctAnswer": "A network that presents one routing policy to the outside",
+          "distractors": [
+            { "text": "Any two routers that share a physical cable", "kind": "nearby", "rationale": "A cable is a medium. Policy is what makes an AS." },
+            { "text": "A single host with one IP address", "kind": "misapplied", "rationale": "An AS is a policy domain, not a host." },
+            { "text": "A protocol that floods a topology map among its routers", "kind": "subtle", "rationale": "How an AS talks to itself is a later interior mechanism, not the definition." }
+          ],
+          "correctExplanation": "One policy, presented as a unit. The cable and the interior protocol are not the definition.",
+          "objectiveIds": ["Describe an autonomous system as a network with one routing policy"],
+          "prerequisiteConceptIds": ["net-ip"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-as10-2",
+          "stem": "Campus and an ISP share a fiber but will not carry each other's extra customers. They are:",
+          "correctAnswer": "Two ASes, because they do not share a routing policy",
+          "distractors": [
+            { "text": "One AS, because a shared cable merges policy automatically", "kind": "reversed", "rationale": "A cable does not merge opinions about whose traffic may transit." },
+            { "text": "Not networks at all, because they still use IP addresses", "kind": "misapplied", "rationale": "IP is how they name destinations. Policy is how they choose paths." },
+            { "text": "Required to become one AS before any packet can cross the fiber", "kind": "nearby", "rationale": "Packets cross all the time. The AS cut is about policy, not about frames." }
+          ],
+          "correctExplanation": "Shared medium, different opinions about who may send what. That is two ASes.",
+          "objectiveIds": ["Describe an autonomous system as a network with one routing policy"],
+          "prerequisiteConceptIds": ["net-ip", "net-as"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-as10-3",
+          "stem": "Two networks share a cable and still need a protocol between them when:",
+          "correctAnswer": "Their routing policies differ, so each must choose what to accept and announce",
+          "distractors": [
+            { "text": "They already share one policy, so a protocol would be redundant", "kind": "reversed", "rationale": "Shared policy is the case that does not need an inter-network protocol." },
+            { "text": "IP addresses cannot cross a fiber without changing length", "kind": "misapplied", "rationale": "Addresses do not need a policy protocol to sit on a wire." },
+            { "text": "A cable forbids any packet from leaving its home network", "kind": "nearby", "rationale": "Cables carry packets. Policy decides which prefixes and whose traffic." }
+          ],
+          "correctExplanation": "Different policies mean each side must speak for what it will carry. A cable does not do that talking.",
+          "objectiveIds": ["Predict why two networks that share a cable still need a protocol if they have different policies"],
+          "prerequisiteConceptIds": ["net-as"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-igp-10",
+      "conceptId": "net-igp",
+      "title": "An AS talks to itself first",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-as"],
+      "goDeeper": "net-ospf",
+      "explanation": [
+        "Inside one policy domain, routers still have to agree on a map. An interior gateway protocol is how an AS computes paths among its own routers: which internal link is up, which prefix sits behind which router, which next hop stays inside the AS. The rest of the Internet is not invited to that conversation.",
+        "The interior job is reachability under one administration. Metrics can mean delay, cost, or 'please not that core link'. Neighbors outside the AS do not see those metrics and do not vote on them. What they see later is the policy the AS chose to present, not the map it used to walk its own buildings.",
+        "Confusing the interior protocol with the protocol used between ASes is the usual mistake. Interior: we share a policy, we can flood a topology or gossip distances, we can optimize. Between ASes: we do not share a policy, so we advertise what we are willing to carry. Scale and incentives are different because trust is different."
+      ],
+      "example": "AS 64500 has three routers: lab, core, library. An IGP tells lab that 10.2.0.0/16 at the library is via core, not via a cable that happens to touch an outside network. The outside network is never asked how to cross the campus.",
+      "whyItMatters": "A broken interior map takes down an AS even when every external advertisement is still true. The failure is inside the policy, not at the border.",
+      "quiz": [
+        {
+          "id": "ni-igp10-1",
+          "stem": "An IGP exists to:",
+          "correctAnswer": "Compute paths among routers that share one AS policy",
+          "distractors": [
+            { "text": "Replace IP addresses with a single global name", "kind": "misapplied", "rationale": "An IGP still forwards to IP prefixes. It does not rename the Internet." },
+            { "text": "Let neighboring ASes vote on this AS's internal metrics", "kind": "reversed", "rationale": "Outside ASes are not in the interior conversation." },
+            { "text": "Carry other ASes' traffic as a paid default without a border protocol", "kind": "nearby", "rationale": "Carrying another AS is an inter-AS job, not the interior map." }
+          ],
+          "correctExplanation": "Interior means inside one policy. The map is private to that AS.",
+          "objectiveIds": ["Explain an IGP as how an AS computes paths inside itself"],
+          "prerequisiteConceptIds": ["net-as"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-igp10-2",
+          "stem": "Lab, core, and library share AS 64500. The protocol that tells lab to reach 10.2.0.0/16 via core is:",
+          "correctAnswer": "The AS's interior protocol, not a conversation with outside networks",
+          "distractors": [
+            { "text": "A protocol run with every AS on the Internet at once", "kind": "reversed", "rationale": "The rest of the Internet is not invited to campus topology." },
+            { "text": "A link-layer broadcast that ignores IP prefixes", "kind": "misapplied", "rationale": "The IGP is still about prefixes and next hops, just inside the AS." },
+            { "text": "A static cable that forbids more than two routers", "kind": "nearby", "rationale": "Three routers still need a shared map. A cable is not that map." }
+          ],
+          "correctExplanation": "Shared policy, internal prefixes, internal next hops. That is the IGP's job.",
+          "objectiveIds": ["Explain an IGP as how an AS computes paths inside itself"],
+          "prerequisiteConceptIds": ["net-as", "net-igp"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-igp10-3",
+          "stem": "The interior protocol differs from the protocol used between ASes because:",
+          "correctAnswer": "Interior routers share a policy; neighboring ASes do not",
+          "distractors": [
+            { "text": "Interior routers refuse to use IP prefixes at all", "kind": "misapplied", "rationale": "Both jobs still forward on prefixes. Trust and policy are what changed." },
+            { "text": "Neighboring ASes always share one metric and one map", "kind": "reversed", "rationale": "Between ASes, policy is not shared. That is why a different protocol exists." },
+            { "text": "An AS is forbidden from running any protocol on its own routers", "kind": "nearby", "rationale": "The IGP is exactly the protocol an AS runs on its own routers." }
+          ],
+          "correctExplanation": "Shared policy makes an interior map possible. Different policies need a different conversation.",
+          "objectiveIds": ["Distinguish an interior protocol from the protocol used between ASes"],
+          "prerequisiteConceptIds": ["net-igp"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-ospf-10",
+      "conceptId": "net-ospf",
+      "title": "Flood the map, then run shortest path",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-igp"],
+      "explanation": [
+        "Link-state does not vote on a next hop. Each router describes its own links — who is adjacent, what the cost is, which prefixes sit here — and floods that description. Every other router in the area assembles the same map, then runs shortest path on it. The next hop is a local conclusion from a shared topology, not a rumor of someone else's distance.",
+        "A link dies. The routers at each end flood a new advertisement. Recipients recompute. Destinations that used the dead link pick a new next hop; destinations that never used it stay put. Convergence is 'did everyone get the same map and finish Dijkstra', not 'did a distance count down hop by hop'.",
+        "The scale bill is the map, not the path. More routers, more links, more floods, more SPF runs. Areas exist to keep the map from being the whole AS. The interior protocol still only talks to itself: neighboring ASes do not receive the link-state database and do not run this shortest path."
+      ],
+      "example": "R2-R3 fails. R2 floods that the link is down. Every router in the area rebuilds the graph and reruns shortest path. For 10.1.0.0/16, R1's next hop changes from R3 to R4. Packets already in flight on the dead link are gone; the next ones follow the new next hop.",
+      "whyItMatters": "A 'routing loop after a cut' is often two routers who do not yet share a map. The fix is flood plus recompute, not a longer argument about the old next hop.",
+      "quiz": [
+        {
+          "id": "ni-ospf10-1",
+          "stem": "Link-state routing builds a next hop by:",
+          "correctAnswer": "Flooding topology, then running shortest path on the shared map",
+          "distractors": [
+            { "text": "Asking each packet to carry the entire map to its destination", "kind": "misapplied", "rationale": "The map lives on the routers. Packets still get a next hop." },
+            { "text": "Counting rumors of distance without ever assembling topology", "kind": "nearby", "rationale": "That is distance-vector. Link-state floods the graph first." },
+            { "text": "Letting neighboring ASes vote on this AS's link costs", "kind": "reversed", "rationale": "The flood stays inside the AS. Outside ASes do not run this SPF." }
+          ],
+          "correctExplanation": "Same map, local shortest-path run, then a next hop. The packet never carries the graph.",
+          "objectiveIds": ["Describe link-state routing as flooding a map and then running shortest path"],
+          "prerequisiteConceptIds": ["net-igp"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-ospf10-2",
+          "stem": "A link-state advertisement for a failed R2-R3 link arrives. Each router typically:",
+          "correctAnswer": "Updates its map and recomputes shortest paths, possibly changing next hops",
+          "distractors": [
+            { "text": "Forwards the packet that was already on R2-R3 by rewriting its prefix", "kind": "misapplied", "rationale": "Packets on a dead link are lost. The advertisement is about the next ones." },
+            { "text": "Ignores the advertisement unless a neighboring AS confirms it", "kind": "reversed", "rationale": "Interior floods do not wait on outside ASes." },
+            { "text": "Deletes every prefix in the AS until a human redraws the graph", "kind": "nearby", "rationale": "Only paths that used the failed link need a new next hop." }
+          ],
+          "correctExplanation": "New map, new SPF. Next hops that still look right stay; the ones that used R2-R3 move.",
+          "objectiveIds": ["Predict what each router recomputes after a link-state advertisement arrives"],
+          "prerequisiteConceptIds": ["net-igp", "net-ospf"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-ospf10-3",
+          "stem": "After the flood for R2-R3, R1's next hop for 10.1.0.0/16 moves from R3 to R4 because:",
+          "correctAnswer": "Shortest path on the new map no longer uses the dead link",
+          "distractors": [
+            { "text": "R4 originated 10.1.0.0/16 as a more specific than R3", "kind": "nearby", "rationale": "The prefix did not change length. The graph did." },
+            { "text": "Packets now carry a note telling R1 to skip R3", "kind": "misapplied", "rationale": "The datapath still looks up a next hop. It does not read a flood note." },
+            { "text": "Neighboring ASes withdrew 10.1.0.0/16 from R1's interior table", "kind": "reversed", "rationale": "This is an interior recompute, not an inter-AS withdrawal." }
+          ],
+          "correctExplanation": "Same prefix, new graph, new shortest path. That is what the advertisement was for.",
+          "objectiveIds": ["Predict what each router recomputes after a link-state advertisement arrives"],
+          "prerequisiteConceptIds": ["net-ospf"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

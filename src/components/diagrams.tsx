@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const frame = "mt-6 overflow-hidden rounded-lg bg-raised px-4 py-5 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]";
+const frame = "mt-6 max-w-full overflow-hidden rounded-lg bg-raised px-3 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)] sm:px-4 sm:py-5";
 
 export function LessonDiagram({ name }: { name?: string }) {
   if (!name) return null;
@@ -13,6 +13,115 @@ export function LessonDiagram({ name }: { name?: string }) {
 const svg = "h-auto w-full text-fg";
 
 const DIAGRAMS: Record<string, ReactNode> = {
+  "latency-throughput": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Latency versus throughput">
+      <rect x="24" y="28" width="150" height="44" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="99" y="55" textAnchor="middle" fill="currentColor" fontSize="13">
+        one item
+      </text>
+      <path d="M174 50 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="268" y="46" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        40 min
+      </text>
+      <text x="268" y="64" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.5">
+        latency
+      </text>
+      <rect x="320" y="20" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="378" y="20" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="436" y="20" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="320" y="56" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="378" y="56" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="436" y="56" width="52" height="28" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <text x="404" y="112" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        many finish / hour — throughput
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        overlap does not shorten one item
+      </text>
+    </svg>
+  ),
+  "fetch-decode": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Fetch decode execute loop">
+      {["fetch", "decode", "execute", "next PC"].map((label, i) => (
+        <g key={label} transform={`translate(${20 + i * 135}, 36)`}>
+          <rect width="118" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="32" textAnchor="middle" fill="currentColor" fontSize="14">
+            {label}
+          </text>
+          {i < 3 && <path d="M122 26 H132" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        the sequential loop a pipeline later overlaps
+      </text>
+    </svg>
+  ),
+  datapath: (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Datapath versus control">
+      <rect x="40" y="24" width="220" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="150" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        datapath
+      </text>
+      <text x="150" y="76" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        regs · ALU · mem ports
+      </text>
+      <rect x="300" y="24" width="220" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="410" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        control
+      </text>
+      <text x="410" y="76" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        which transform, next PC
+      </text>
+      <path d="M260 68 H300" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="138" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        values move left · decisions come from the right
+      </text>
+    </svg>
+  ),
+  locality: (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Temporal and spatial locality">
+      {Array.from({ length: 12 }, (_, i) => (
+        <rect
+          key={i}
+          x={36 + i * 42}
+          y="40"
+          width="34"
+          height="34"
+          rx="4"
+          fill={i === 4 || i === 5 || i === 6 ? "currentColor" : "none"}
+          fillOpacity={i === 4 ? 0.28 : i === 5 || i === 6 ? 0.12 : 0}
+          stroke="currentColor"
+          strokeOpacity="0.35"
+        />
+      ))}
+      <text x="221" y="96" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        same cell again — temporal
+      </text>
+      <text x="347" y="96" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        neighbours — spatial
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        a small fast memory only wins if the next access is here
+      </text>
+    </svg>
+  ),
+  hierarchy: (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Cache hierarchy">
+      {[
+        { y: 16, w: 120, label: "L1 · small · few cycles" },
+        { y: 52, w: 220, label: "L2 · larger · slower" },
+        { y: 88, w: 340, label: "L3 · larger still" },
+        { y: 124, w: 480, label: "DRAM · capacity · long wait" },
+      ].map((row) => (
+        <g key={row.label} transform={`translate(${280 - row.w / 2}, ${row.y})`}>
+          <rect width={row.w} height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x={row.w / 2} y="19" textAnchor="middle" fill="currentColor" fontSize="12">
+            {row.label}
+          </text>
+        </g>
+      ))}
+    </svg>
+  ),
   pipeline: (
     <svg viewBox="0 0 560 140" className={svg} aria-label="Five-stage pipeline">
       {["IF", "ID", "EX", "MEM", "WB"].map((label, i) => (
@@ -78,6 +187,244 @@ const DIAGRAMS: Record<string, ReactNode> = {
       ))}
       <text x="280" y="132" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
         Modified · Exclusive · Shared · Invalid
+      </text>
+    </svg>
+  ),
+  "rename-map": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Architectural names map to physical registers">
+      <rect x="24" y="28" width="150" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="99" y="58" textAnchor="middle" fill="currentColor" fontSize="13">ISA names</text>
+      <text x="99" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">r1 r2 r3 …</text>
+      <path d="M174 72 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="202" y="64" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">map</text>
+      <rect x="230" y="28" width="150" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="305" y="58" textAnchor="middle" fill="currentColor" fontSize="13">physicals</text>
+      <text x="305" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">p37 p41 p52 …</text>
+      <path d="M380 72 H430" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="430" y="40" width="106" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="483" y="78" textAnchor="middle" fill="currentColor" fontSize="12">issue</text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        a name is a pointer, not a location
+      </text>
+    </svg>
+  ),
+  "rob-queue": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Reorder buffer">
+      {["alloc", "…", "exec", "…", "commit"].map((label, i) => (
+        <g key={`${label}-${i}`} transform={`translate(${20 + i * 108}, 36)`}>
+          <rect width="96" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="48" y="32" textAnchor="middle" fill="currentColor" fontSize="13">{label}</text>
+          {i < 4 && <path d="M100 26 H108" stroke="currentColor" strokeOpacity="0.4" />}
+        </g>
+      ))}
+      <text x="68" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">in order</text>
+      <text x="284" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">any order</text>
+      <text x="500" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">in order</text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        the window restores program order at the head
+      </text>
+    </svg>
+  ),
+  "wakeup-select": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Wakeup then select">
+      <rect x="24" y="28" width="140" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="94" y="66" textAnchor="middle" fill="currentColor" fontSize="13">tag broadcast</text>
+      <path d="M164 60 H214" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="214" y="28" width="140" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="284" y="66" textAnchor="middle" fill="currentColor" fontSize="13">ready bits</text>
+      <path d="M354 60 H404" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="404" y="28" width="132" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="470" y="66" textAnchor="middle" fill="currentColor" fontSize="13">pick ports</text>
+      <text x="280" y="124" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        wakeup marks ready · select occupies the slots
+      </text>
+    </svg>
+  ),
+  lsq: (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Load and store queues beside the ROB">
+      <rect x="24" y="24" width="200" height="88" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="124" y="58" textAnchor="middle" fill="currentColor" fontSize="13">ROB · program order</text>
+      <text x="124" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">every op</text>
+      <rect x="260" y="16" width="276" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="398" y="46" textAnchor="middle" fill="currentColor" fontSize="13">store queue · addr · data</text>
+      <rect x="260" y="76" width="276" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="398" y="106" textAnchor="middle" fill="currentColor" fontSize="13">load queue · may forward</text>
+      <text x="280" y="142" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        addresses arrive late · forwarding stays on this thread
+      </text>
+    </svg>
+  ),
+  "store-buffer": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Store buffer between core and cache">
+      <rect x="20" y="36" width="120" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="80" y="70" textAnchor="middle" fill="currentColor" fontSize="13">core done</text>
+      <path d="M140 64 H190" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="190" y="28" width="180" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="58" textAnchor="middle" fill="currentColor" fontSize="13">store buffer</text>
+      <text x="280" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">forward to later load</text>
+      <path d="M370 64 H420" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="420" y="36" width="120" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="480" y="70" textAnchor="middle" fill="currentColor" fontSize="13">cache</text>
+    </svg>
+  ),
+  "two-caches": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Two private caches, one address">
+      <rect x="28" y="20" width="160" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="108" y="50" textAnchor="middle" fill="currentColor" fontSize="13">core 0 cache</text>
+      <text x="108" y="70" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">x = 1</text>
+      <rect x="372" y="20" width="160" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="452" y="50" textAnchor="middle" fill="currentColor" fontSize="13">core 1 cache</text>
+      <text x="452" y="70" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">x = 0 ?</text>
+      <rect x="180" y="108" width="200" height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="127" textAnchor="middle" fill="currentColor" fontSize="12">one address · one writer</text>
+    </svg>
+  ),
+  "gpu-grid": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Grid of blocks of threads">
+      <rect x="20" y="18" width="520" height="118" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="38" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        grid
+      </text>
+      {[0, 1, 2].map((b) => (
+        <g key={b} transform={`translate(${48 + b * 168}, 52)`}>
+          <rect width="148" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+          <text x="74" y="18" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+            block {b}
+          </text>
+          {[0, 1, 2, 3].map((t) => (
+            <rect key={t} x={10 + t * 32} y="28" width="26" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+          ))}
+        </g>
+      ))}
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        you launch threads and blocks · hardware groups them later
+      </text>
+    </svg>
+  ),
+  "gpu-simt": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="SIMT lockstep group">
+      <text x="280" y="22" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        one instruction
+      </text>
+      <path d="M280 28 V44" stroke="currentColor" strokeOpacity="0.4" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <g key={i} transform={`translate(${36 + i * 64}, 52)`}>
+          <rect
+            width="52"
+            height="52"
+            rx="6"
+            fill="currentColor"
+            fillOpacity={i === 2 || i === 5 ? 0.06 : 0.14}
+            stroke="currentColor"
+            strokeOpacity="0.4"
+          />
+          <text x="26" y="32" textAnchor="middle" fill="currentColor" fontSize="11">
+            {i === 2 || i === 5 ? "off" : "lane"}
+          </text>
+        </g>
+      ))}
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        masked lanes still occupy the issue
+      </text>
+      <text x="280" y="150" textAnchor="middle" fill="currentColor" fillOpacity="0.5" fontSize="11">
+        scalar source · lockstep hardware
+      </text>
+    </svg>
+  ),
+  "gpu-diverge": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Divergent paths in one warp">
+      <rect x="200" y="12" width="160" height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="31" textAnchor="middle" fill="currentColor" fontSize="12">
+        one warp issue slot
+      </text>
+      <path d="M280 40 L160 78" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M280 40 L400 78" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="88" y="78" width="144" height="36" rx="6" fill="currentColor" fillOpacity="0.1" />
+      <text x="160" y="101" textAnchor="middle" fill="currentColor" fontSize="12">
+        if path · some lanes
+      </text>
+      <rect x="328" y="78" width="144" height="36" rx="6" fill="currentColor" fillOpacity="0.1" />
+      <text x="400" y="101" textAnchor="middle" fill="currentColor" fontSize="12">
+        else path · rest
+      </text>
+      <path d="M160 114 L280 142" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M400 114 L280 142" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="162" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        both sides issue · then reconverge · Volta+ still pays this
+      </text>
+    </svg>
+  ),
+  "gpu-mem": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="GPU memory hierarchy">
+      {[
+        { y: 16, label: "registers", note: "per thread" },
+        { y: 52, label: "shared / LDS", note: "named · per block" },
+        { y: 88, label: "L1 / L2", note: "hardware caches" },
+        { y: 124, label: "device DRAM / HBM", note: "off-chip" },
+      ].map((row) => (
+        <g key={row.label} transform={`translate(80, ${row.y})`}>
+          <rect width="400" height="28" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="16" y="19" fill="currentColor" fontSize="13">
+            {row.label}
+          </text>
+          <text x="384" y="19" textAnchor="end" fill="currentColor" fontSize="11" fillOpacity="0.55">
+            {row.note}
+          </text>
+        </g>
+      ))}
+    </svg>
+  ),
+  "gpu-coalesce": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Coalesced versus scattered access">
+      <text x="140" y="22" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        coalesced
+      </text>
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={`c${i}`} x={48 + i * 30} y="36" width="26" height="26" rx="3" fill="currentColor" fillOpacity="0.16" />
+      ))}
+      <rect x="44" y="72" width="188" height="22" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="138" y="87" textAnchor="middle" fill="currentColor" fontSize="11">
+        one transaction
+      </text>
+      <text x="420" y="22" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        scattered
+      </text>
+      {[0, 1, 2, 3].map((i) => (
+        <g key={`s${i}`}>
+          <rect x={320 + i * 52} y="36" width="26" height="26" rx="3" fill="currentColor" fillOpacity="0.16" />
+          <rect x={316 + i * 52} y={72 + (i % 2) * 18} width="34" height="16" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+        </g>
+      ))}
+      <text x="280" y="154" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        adjacent threads · adjacent addresses · few trips
+      </text>
+    </svg>
+  ),
+  "gpu-occupancy": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Occupancy as a budget">
+      <rect x="24" y="20" width="160" height="100" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="104" y="44" textAnchor="middle" fill="currentColor" fontSize="12">
+        registers
+      </text>
+      <text x="104" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        per thread × warps
+      </text>
+      <rect x="200" y="20" width="160" height="100" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="44" textAnchor="middle" fill="currentColor" fontSize="12">
+        shared / LDS
+      </text>
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        per block
+      </text>
+      <rect x="376" y="20" width="160" height="100" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="456" y="44" textAnchor="middle" fill="currentColor" fontSize="12">
+        warp slots
+      </text>
+      <text x="456" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        architectural cap
+      </text>
+      <text x="280" y="148" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        first ceiling wins · that many warps reside
       </text>
     </svg>
   ),
@@ -148,6 +495,2150 @@ const DIAGRAMS: Record<string, ReactNode> = {
       <path d="M48 80 C 140 80 180 40 260 42 C 340 44 380 90 520 96" fill="none" stroke="currentColor" strokeOpacity="0.7" />
       <text x="520" y="142" textAnchor="end" fill="currentColor" fillOpacity="0.5" fontSize="11">Hz</text>
       <text x="28" y="24" fill="currentColor" fillOpacity="0.5" fontSize="11">dB</text>
+    </svg>
+  ),
+  "wafer-cross": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Boule sliced into a polished wafer">
+      <ellipse cx="90" cy="78" rx="36" ry="52" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="90" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        boule
+      </text>
+      <path d="M130 78 H190" stroke="currentColor" strokeOpacity="0.4" />
+      {[0, 1, 2].map((i) => (
+        <rect key={i} x={200 + i * 14} y="46" width="8" height="64" rx="1" fill="currentColor" fillOpacity={0.1 + i * 0.08} stroke="currentColor" strokeOpacity="0.35" />
+      ))}
+      <text x="222" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        slices
+      </text>
+      <path d="M268 78 H318" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="330" y="58" width="190" height="40" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="330" y="58" width="190" height="8" rx="2" fill="currentColor" fillOpacity="0.18" />
+      <text x="425" y="84" textAnchor="middle" fill="currentColor" fontSize="12">
+        polished surface
+      </text>
+      <text x="425" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        every later film inherits this face
+      </text>
+    </svg>
+  ),
+  "oxide-growth": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Thermal oxide consumes silicon and grows both ways">
+      <rect x="40" y="70" width="220" height="60" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="150" y="106" textAnchor="middle" fill="currentColor" fontSize="13">
+        Si
+      </text>
+      <rect x="300" y="48" width="220" height="36" rx="3" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="410" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        SiO2 grown
+      </text>
+      <rect x="300" y="84" width="220" height="46" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="410" y="112" textAnchor="middle" fill="currentColor" fontSize="13">
+        remaining Si
+      </text>
+      <path d="M268 100 H292" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="28" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        O2 or H2O + heat
+      </text>
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        about 44% of the oxide thickness was silicon
+      </text>
+    </svg>
+  ),
+  "dopant-profiles": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Implant peak versus a diffusion tail from the surface">
+      <path d="M40 140 H520" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M60 20 V150" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M60 36 C 90 36 110 50 140 90 C 180 148 240 148 320 148" fill="none" stroke="currentColor" strokeOpacity="0.75" />
+      <path d="M160 140 C 200 40 260 28 320 70 C 380 112 430 140 500 148" fill="none" stroke="currentColor" strokeOpacity="0.45" strokeDasharray="5 4" />
+      <text x="150" y="28" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        surface source
+      </text>
+      <text x="360" y="48" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        implant peak
+      </text>
+      <text x="540" y="136" textAnchor="end" fill="currentColor" fontSize="11" fillOpacity="0.5">
+        depth
+      </text>
+      <text x="48" y="18" fill="currentColor" fontSize="11" fillOpacity="0.5">
+        conc.
+      </text>
+    </svg>
+  ),
+  "dep-vs-etch": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Deposition adds a film, etch removes one">
+      <rect x="36" y="88" width="200" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="36" y="56" width="200" height="32" rx="3" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="136" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        added film
+      </text>
+      <text x="136" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        deposit / grow
+      </text>
+      <rect x="324" y="72" width="200" height="52" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M380 72 V124" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M468 72 V124" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="424" y="104" textAnchor="middle" fill="currentColor" fontSize="12">
+        opening
+      </text>
+      <text x="424" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        etch
+      </text>
+    </svg>
+  ),
+  "etch-profile": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Isotropic undercut versus anisotropic vertical etch">
+      <rect x="48" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="160" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <path d="M48 52 Q 120 120 160 52" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <text x="140" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        wet · undercut
+      </text>
+      <rect x="328" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <rect x="440" y="36" width="72" height="16" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <path d="M400 52 V124 H440 V52" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <text x="420" y="148" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        plasma · vertical
+      </text>
+    </svg>
+  ),
+  "cmp-flat": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="CMP flattens topography">
+      <path d="M40 90 L90 90 L110 50 L170 50 L190 90 L250 90" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <path d="M40 110 H250" stroke="currentColor" strokeOpacity="0.25" />
+      <text x="145" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        before
+      </text>
+      <path d="M310 70 H520" stroke="currentColor" strokeOpacity="0.7" />
+      <path d="M310 110 H520" stroke="currentColor" strokeOpacity="0.25" />
+      <text x="415" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        after CMP
+      </text>
+    </svg>
+  ),
+  "contact-stack": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Silicide contact under a barrier and metal">
+      <rect x="80" y="24" width="400" height="28" rx="3" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12">
+        metal
+      </text>
+      <rect x="80" y="52" width="400" height="20" rx="2" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="66" textAnchor="middle" fill="currentColor" fontSize="11">
+        barrier
+      </text>
+      <rect x="200" y="72" width="160" height="22" rx="2" fill="currentColor" fillOpacity="0.28" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="87" textAnchor="middle" fill="currentColor" fontSize="11">
+        silicide
+      </text>
+      <rect x="80" y="94" width="400" height="40" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12">
+        silicon
+      </text>
+      <text x="280" y="156" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        low resistance only if the meeting is clean
+      </text>
+    </svg>
+  ),
+  "process-flow": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A simple front-end sequence">
+      {["oxide", "dope", "gate", "contact"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 134}, 36)`}>
+          <rect width="118" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="32" textAnchor="middle" fill="currentColor" fontSize="14">
+            {label}
+          </text>
+          {i < 3 && <path d="M122 26 H132" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        later heat cannot undo an earlier profile
+      </text>
+    </svg>
+  ),
+  "litho-sequence": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Coat, expose, develop, then transfer">
+      {["coat", "expose", "develop", "transfer"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 134}, 36)`}>
+          <rect width="118" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="32" textAnchor="middle" fill="currentColor" fontSize="14">
+            {label}
+          </text>
+          {i < 3 && <path d="M122 26 H132" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        the resist is a stencil · etch or implant is the device
+      </text>
+    </svg>
+  ),
+  "resist-tone": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Positive resist leaves where exposed; negative stays">
+      <rect x="40" y="28" width="200" height="18" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <text x="140" y="20" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        light
+      </text>
+      <rect x="40" y="52" width="70" height="22" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="170" y="52" width="70" height="22" rx="2" fill="currentColor" fillOpacity="0.12" />
+      <rect x="40" y="80" width="200" height="28" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="140" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        positive · exposed leaves
+      </text>
+      <rect x="320" y="28" width="200" height="18" rx="2" fill="currentColor" fillOpacity="0.2" />
+      <text x="420" y="20" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        light
+      </text>
+      <rect x="390" y="52" width="60" height="22" rx="2" fill="currentColor" fillOpacity="0.28" />
+      <rect x="320" y="80" width="200" height="28" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="420" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        negative · exposed stays
+      </text>
+    </svg>
+  ),
+  "rayleigh-knobs": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Resolution as k1 times lambda over NA">
+      <rect x="36" y="40" width="100" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="86" y="64" textAnchor="middle" fill="currentColor" fontSize="16">
+        k1
+      </text>
+      <text x="86" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        process
+      </text>
+      <text x="154" y="70" fill="currentColor" fontSize="18" fillOpacity="0.45">
+        ·
+      </text>
+      <rect x="176" y="40" width="100" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="226" y="64" textAnchor="middle" fill="currentColor" fontSize="16">
+        λ
+      </text>
+      <text x="226" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        wavelength
+      </text>
+      <text x="292" y="72" fill="currentColor" fontSize="20" fillOpacity="0.45">
+        /
+      </text>
+      <rect x="316" y="40" width="100" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="366" y="64" textAnchor="middle" fill="currentColor" fontSize="16">
+        NA
+      </text>
+      <text x="366" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        aperture
+      </text>
+      <text x="440" y="72" fill="currentColor" fontSize="18" fillOpacity="0.5">
+        =
+      </text>
+      <text x="500" y="74" textAnchor="middle" fill="currentColor" fontSize="14">
+        CD
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        three knobs · not a slogan
+      </text>
+    </svg>
+  ),
+  "dof-trade": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Raising NA tightens pitch and thins the focus slice">
+      <rect x="40" y="36" width="200" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M60 88 H220" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M70 56 H90 M110 56 H130 M150 56 H170 M190 56 H210" stroke="currentColor" strokeOpacity="0.7" strokeWidth="3" />
+      <text x="140" y="124" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        lower NA · thicker focus
+      </text>
+      <rect x="320" y="28" width="200" height="86" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M340 80 H500" stroke="currentColor" strokeOpacity="0.35" />
+      <path d="M348 68 H360 M376 68 H388 M404 68 H416 M432 68 H444 M460 68 H472 M488 68 H500" stroke="currentColor" strokeOpacity="0.7" strokeWidth="2" />
+      <path d="M330 52 H510" stroke="currentColor" strokeOpacity="0.2" strokeDasharray="4 3" />
+      <path d="M330 108 H510" stroke="currentColor" strokeOpacity="0.2" strokeDasharray="4 3" />
+      <text x="420" y="140" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        higher NA · thinner slice
+      </text>
+    </svg>
+  ),
+  "overlay-marks": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="This layer must sit on the last layer's marks">
+      <rect x="48" y="36" width="200" height="70" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <rect x="88" y="52" width="48" height="38" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <rect x="160" y="52" width="48" height="38" rx="2" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="148" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        aligned
+      </text>
+      <rect x="312" y="36" width="200" height="70" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <rect x="352" y="52" width="48" height="38" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <rect x="432" y="44" width="48" height="38" rx="2" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="412" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        overlay miss
+      </text>
+    </svg>
+  ),
+  "multi-pattern": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="One drawn pitch split across two litho-etch passes">
+      <path d="M48 48 H88 M112 48 H152 M176 48 H216 M240 48 H280" stroke="currentColor" strokeOpacity="0.25" strokeWidth="10" />
+      <text x="164" y="84" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        drawn pitch
+      </text>
+      <path d="M336 36 H376 M464 36 H504" stroke="currentColor" strokeOpacity="0.75" strokeWidth="10" />
+      <path d="M400 64 H440" stroke="currentColor" strokeOpacity="0.4" strokeWidth="10" />
+      <text x="420" y="100" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        pass A · pass B
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        etch freezes each pass · union is the drawing
+      </text>
+    </svg>
+  ),
+  "duv-vs-euv": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="DUV refractive path versus EUV reflective path">
+      <circle cx="56" cy="48" r="10" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M66 48 H130" stroke="currentColor" strokeOpacity="0.45" />
+      <ellipse cx="154" cy="48" rx="16" ry="22" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <path d="M170 48 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="230" y="36" width="36" height="24" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="154" y="92" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        DUV · lenses
+      </text>
+      <circle cx="320" cy="52" r="10" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M330 48 L380 28 L440 56 L500 32" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="362" y="22" width="36" height="10" rx="1" fill="currentColor" fillOpacity="0.3" />
+      <rect x="422" y="56" width="36" height="10" rx="1" fill="currentColor" fillOpacity="0.3" />
+      <text x="420" y="92" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        EUV · mirrors
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        glass works at 193 nm · air and glass eat 13.5 nm
+      </text>
+    </svg>
+  ),
+  "high-na-field": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="High-NA is a new family with a smaller field">
+      <rect x="40" y="28" width="200" height="80" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="56" y="44" width="168" height="48" rx="3" fill="currentColor" fillOpacity="0.1" />
+      <text x="140" y="72" textAnchor="middle" fill="currentColor" fontSize="12">
+        0.33 field
+      </text>
+      <text x="140" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        one shot · thicker focus
+      </text>
+      <rect x="320" y="28" width="200" height="80" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="336" y="44" width="80" height="48" rx="3" fill="currentColor" fillOpacity="0.16" />
+      <rect x="424" y="44" width="80" height="48" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="420" y="72" textAnchor="middle" fill="currentColor" fontSize="12">
+        0.55 · stitch
+      </text>
+      <text x="420" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        two shots · thinner slice
+      </text>
+    </svg>
+  ),
+  "anamorphic-field": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Anamorphic demagnification keeps the mask printable">
+      <rect x="48" y="36" width="140" height="80" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="118" y="80" textAnchor="middle" fill="currentColor" fontSize="12">
+        mask
+      </text>
+      <path d="M196 76 H250" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="222" y="68" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        4× / 8×
+      </text>
+      <rect x="258" y="52" width="100" height="48" rx="3" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="308" y="80" textAnchor="middle" fill="currentColor" fontSize="12">
+        wafer field
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        not a simple 4× shrink in both axes
+      </text>
+    </svg>
+  ),
+  "mask-3d-stack": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Absorber on a multilayer is not a 2D drawing">
+      <rect x="80" y="28" width="160" height="18" rx="2" fill="currentColor" fillOpacity="0.28" />
+      <text x="160" y="42" textAnchor="middle" fill="currentColor" fontSize="11">
+        absorber
+      </text>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect key={i} x="80" y={50 + i * 10} width="320" height="8" rx="1" fill="currentColor" fillOpacity={i % 2 ? 0.2 : 0.08} />
+      ))}
+      <text x="400" y="78" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        Bragg stack
+      </text>
+      <path d="M40 20 L120 48" stroke="currentColor" strokeOpacity="0.55" />
+      <path d="M120 48 L200 20" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        thickness shadows · the drawing is not the image
+      </text>
+    </svg>
+  ),
+  "stochastic-wall": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="More NA does not buy photons">
+      <rect x="40" y="36" width="150" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="115" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        smaller feature
+      </text>
+      <text x="115" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        fewer photons
+      </text>
+      <rect x="210" y="36" width="140" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        more NA
+      </text>
+      <text x="280" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        no extra count
+      </text>
+      <rect x="370" y="36" width="150" height="70" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="445" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        more dose
+      </text>
+      <text x="445" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        fewer wafers / h
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        NA is not a photon source
+      </text>
+    </svg>
+  ),
+  "overlay-budget": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Overlay budget as a stack of small errors">
+      {["stage", "mask write", "warp", "stitch"].map((label, i) => (
+        <g key={label} transform={`translate(${36 + i * 130}, 36)`}>
+          <rect width="112" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="56" y="32" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+        </g>
+      ))}
+      <text x="280" y="124" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        each term is a fraction of a nanometre · the tail still eats the pad
+      </text>
+    </svg>
+  ),
+  "gag-sheet": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Nanosheets wrapped on every face">
+      <rect x="70" y="36" width="22" height="80" rx="3" fill="currentColor" fillOpacity="0.16" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="108" y="36" width="22" height="80" rx="3" fill="currentColor" fillOpacity="0.16" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="100" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        fins · wrap three sides
+      </text>
+      <rect x="280" y="44" width="180" height="16" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="280" y="70" width="180" height="16" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="280" y="96" width="180" height="16" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="268" y="36" width="12" height="84" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="460" y="36" width="12" height="84" rx="2" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="370" y="136" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        sheets · wrap every face
+      </text>
+    </svg>
+  ),
+  "backside-power": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Power from the back, signals on the front">
+      <rect x="80" y="24" width="400" height="28" rx="3" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12">
+        front-side signals
+      </text>
+      <rect x="80" y="56" width="400" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        devices
+      </text>
+      <rect x="80" y="96" width="400" height="28" rx="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="114" textAnchor="middle" fill="currentColor" fontSize="12">
+        backside power
+      </text>
+      <path d="M160 96 V124" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M400 96 V124" stroke="currentColor" strokeOpacity="0.5" />
+      <text x="280" y="152" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        power vias from the other face · the front can breathe
+      </text>
+    </svg>
+  ),
+  "chiplet-bond": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Small die assembled on a package">
+      <rect x="70" y="36" width="90" height="52" rx="4" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="172" y="36" width="90" height="52" rx="4" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="274" y="36" width="70" height="52" rx="4" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="207" y="66" textAnchor="middle" fill="currentColor" fontSize="12">
+        chiplets
+      </text>
+      <rect x="56" y="96" width="448" height="22" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="112" textAnchor="middle" fill="currentColor" fontSize="11">
+        interposer / hybrid bond
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        yield the small pieces · assemble the product
+      </text>
+    </svg>
+  ),
+  "user-kernel-boundary": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="User programs ask; the kernel owns the machine">
+      <rect x="40" y="28" width="200" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="140" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        user programs
+      </text>
+      <text x="140" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        ordinary instructions
+      </text>
+      <path d="M240 64 H300" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        syscall
+      </text>
+      <rect x="300" y="28" width="220" height="72" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="410" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        kernel
+      </text>
+      <text x="410" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        privileged · owns devices
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the door is narrow · the hardware enforces the split
+      </text>
+    </svg>
+  ),
+  "trap-entry": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A trap or interrupt enters the kernel">
+      <rect x="36" y="36" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="106" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        user code
+      </text>
+      <path d="M176 64 H250" stroke="currentColor" strokeOpacity="0.5" />
+      <text x="213" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        trap
+      </text>
+      <rect x="250" y="28" width="130" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="315" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        handler
+      </text>
+      <path d="M380 64 H454" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <rect x="454" y="40" width="70" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="489" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        device
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        program asks · or the device rings
+      </text>
+    </svg>
+  ),
+  "process-space": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Each process has its own address space">
+      <rect x="40" y="28" width="200" height="88" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="140" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        process A
+      </text>
+      <rect x="64" y="66" width="70" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="146" y="66" width="70" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <text x="140" y="84" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        threads
+      </text>
+      <rect x="320" y="28" width="200" height="88" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="420" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        process B
+      </text>
+      <rect x="370" y="66" width="100" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        two maps · a smash stays on its own map
+      </text>
+    </svg>
+  ),
+  "thread-share": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Threads share a map; processes do not">
+      <rect x="48" y="24" width="220" height="100" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="158" y="46" textAnchor="middle" fill="currentColor" fontSize="12">
+        one address space
+      </text>
+      <rect x="68" y="60" width="80" height="40" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <rect x="168" y="60" width="80" height="40" rx="4" fill="currentColor" fillOpacity="0.12" />
+      <text x="108" y="84" textAnchor="middle" fill="currentColor" fontSize="12">
+        T1
+      </text>
+      <text x="208" y="84" textAnchor="middle" fill="currentColor" fontSize="12">
+        T2
+      </text>
+      <rect x="320" y="36" width="90" height="76" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="430" y="36" width="90" height="76" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="365" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        P1
+      </text>
+      <text x="475" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        P2
+      </text>
+      <text x="280" y="146" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        shared map versus private maps
+      </text>
+    </svg>
+  ),
+  "context-switch": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Save one thread, restore another">
+      <rect x="40" y="32" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="115" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread A
+      </text>
+      <text x="115" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        registers saved
+      </text>
+      <path d="M190 64 H250" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="250" y="36" width="60" height="56" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        CPU
+      </text>
+      <path d="M310 64 H370" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="370" y="32" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="445" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread B
+      </text>
+      <text x="445" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        registers restored
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one register file · two lives in memory
+      </text>
+    </svg>
+  ),
+  "ready-queue": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Several jobs ready so the CPU need not idle">
+      <rect x="36" y="40" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="118" y="40" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="200" y="40" width="70" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="153" y="66" textAnchor="middle" fill="currentColor" fontSize="12">
+        ready
+      </text>
+      <path d="M270 62 H330" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="330" y="36" width="90" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="375" y="66" textAnchor="middle" fill="currentColor" fontSize="13">
+        CPU
+      </text>
+      <rect x="440" y="40" width="80" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="480" y="66" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        waiting I/O
+      </text>
+      <text x="280" y="128" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        switch so the CPU is not idle with the job
+      </text>
+    </svg>
+  ),
+  "virt-translate": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A virtual address walks a table to a frame">
+      <rect x="28" y="40" width="110" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="83" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        virtual
+      </text>
+      <path d="M138 66 H200" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="200" y="28" width="150" height="76" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="275" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        page table
+      </text>
+      <text x="275" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        walk
+      </text>
+      <path d="M350 66 H412" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="412" y="40" width="120" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="472" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        frame
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the program names a page · the machine finds a frame
+      </text>
+    </svg>
+  ),
+  "tlb-shootdown": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="One core changes a map; the others must drop the old translation">
+      <rect x="36" y="28" width="140" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="106" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        core A
+      </text>
+      <text x="106" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        mapping changed
+      </text>
+      <path d="M176 64 H240" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="208" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        shoot
+      </text>
+      <rect x="240" y="28" width="120" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="300" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        core B TLB
+      </text>
+      <rect x="400" y="28" width="120" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="460" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        core C TLB
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        stale translations must die on every core
+      </text>
+    </svg>
+  ),
+  "page-fault-path": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A missing translation traps into the kernel">
+      <rect x="28" y="36" width="120" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="88" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        load / store
+      </text>
+      <path d="M148 64 H210" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="210" y="28" width="130" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="275" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        no translation
+      </text>
+      <text x="275" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        trap
+      </text>
+      <path d="M340 64 H400" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="400" y="28" width="132" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="466" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        kernel
+      </text>
+      <text x="466" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        fill or kill
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a miss is a request · not always a crash
+      </text>
+    </svg>
+  ),
+  "cow-fork": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Parent and child share a frame until a write">
+      <rect x="36" y="28" width="130" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="101" y="66" textAnchor="middle" fill="currentColor" fontSize="13">
+        parent
+      </text>
+      <rect x="214" y="44" width="132" height="48" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="74" textAnchor="middle" fill="currentColor" fontSize="13">
+        shared frame
+      </text>
+      <rect x="394" y="28" width="130" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="459" y="66" textAnchor="middle" fill="currentColor" fontSize="13">
+        child
+      </text>
+      <path d="M166 60 H214" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M346 60 H394" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a write copies · the other side keeps the old frame
+      </text>
+    </svg>
+  ),
+  "sched-queues": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="The scheduler picks from the runnable set">
+      <rect x="32" y="36" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="112" y="36" width="70" height="44" rx="5" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="192" y="36" width="70" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <text x="151" y="62" textAnchor="middle" fill="currentColor" fontSize="12">
+        runnable
+      </text>
+      <path d="M262 58 H318" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="318" y="32" width="88" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="362" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        pick
+      </text>
+      <rect x="430" y="36" width="98" height="44" rx="5" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="479" y="62" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        waiting
+      </text>
+      <text x="280" y="126" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        policy chooses the next owner · it does not invent cores
+      </text>
+    </svg>
+  ),
+  "race-interleave": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Two threads read the same word and both write">
+      <rect x="36" y="28" width="150" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread A
+      </text>
+      <text x="111" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        read 7 · write 8
+      </text>
+      <rect x="374" y="28" width="150" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="449" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        thread B
+      </text>
+      <text x="449" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        read 7 · write 8
+      </text>
+      <rect x="210" y="40" width="140" height="48" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        word = 7
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        two increments · one is lost
+      </text>
+    </svg>
+  ),
+  "lock-sleep": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Spin burns the core; sleep gives it away">
+      <rect x="40" y="32" width="200" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="140" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        spin
+      </text>
+      <text x="140" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        core stays busy waiting
+      </text>
+      <rect x="320" y="32" width="200" height="72" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="420" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        sleep
+      </text>
+      <text x="420" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        core runs someone else
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        long holds belong on the sleep path
+      </text>
+    </svg>
+  ),
+  "inode-dir-fd": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A handle names an open file; a directory name names an inode">
+      <rect x="24" y="40" width="80" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="64" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        fd
+      </text>
+      <path d="M104 64 H150" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="150" y="36" width="100" height="56" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="200" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        open file
+      </text>
+      <path d="M250 64 H296" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="296" y="36" width="90" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="341" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        inode
+      </text>
+      <path d="M386 64 H430" stroke="currentColor" strokeOpacity="0.35" strokeDasharray="4 3" />
+      <rect x="430" y="36" width="106" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="483" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        name
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the name is not the object · the inode is
+      </text>
+    </svg>
+  ),
+  "fs-layout": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Disk image: superblock, free map, inodes, data">
+      <rect x="28" y="40" width="100" height="48" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="78" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        super
+      </text>
+      <rect x="136" y="40" width="100" height="48" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="186" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        free map
+      </text>
+      <rect x="244" y="40" width="120" height="48" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="304" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        inodes
+      </text>
+      <rect x="372" y="40" width="160" height="48" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="452" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        data
+      </text>
+      <text x="280" y="124" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a linear disk wearing a filesystem
+      </text>
+    </svg>
+  ),
+  "journal-commit": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Write the intent, then the home location">
+      <rect x="36" y="36" width="150" height="64" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="111" y="64" textAnchor="middle" fill="currentColor" fontSize="13">
+        journal
+      </text>
+      <text x="111" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        intent first
+      </text>
+      <path d="M186 68 H250" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="218" y="60" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        then
+      </text>
+      <rect x="250" y="36" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="325" y="64" textAnchor="middle" fill="currentColor" fontSize="13">
+        home
+      </text>
+      <text x="325" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        metadata / data
+      </text>
+      <rect x="430" y="44" width="96" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="478" y="74" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        durable
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the log must land before the damage
+      </text>
+    </svg>
+  ),
+  "buffer-path": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A write hits RAM first, then the device">
+      <rect x="28" y="40" width="110" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="83" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        write()
+      </text>
+      <path d="M138 66 H196" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="196" y="32" width="150" height="68" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="271" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        buffer cache
+      </text>
+      <text x="271" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        RAM
+      </text>
+      <path d="M346 66 H408" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="408" y="40" width="124" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="470" y="72" textAnchor="middle" fill="currentColor" fontSize="13">
+        device
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        cached is not durable
+      </text>
+    </svg>
+  ),
+  "net-encap": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Encapsulation stack">
+      <rect x="40" y="20" width="480" height="32" rx="4" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="41" textAnchor="middle" fill="currentColor" fontSize="12">
+        data
+      </text>
+      <rect x="40" y="56" width="110" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="95" y="77" textAnchor="middle" fill="currentColor" fontSize="12">
+        ports
+      </text>
+      <rect x="150" y="56" width="370" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="335" y="77" textAnchor="middle" fill="currentColor" fontSize="12">
+        segment
+      </text>
+      <rect x="40" y="92" width="110" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="95" y="113" textAnchor="middle" fill="currentColor" fontSize="12">
+        IP addrs
+      </text>
+      <rect x="150" y="92" width="370" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="335" y="113" textAnchor="middle" fill="currentColor" fontSize="12">
+        packet
+      </text>
+      <rect x="40" y="128" width="110" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="95" y="149" textAnchor="middle" fill="currentColor" fontSize="12">
+        MACs
+      </text>
+      <rect x="150" y="128" width="370" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="335" y="149" textAnchor="middle" fill="currentColor" fontSize="12">
+        frame
+      </text>
+    </svg>
+  ),
+  "net-switch-lan": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A switch learns which port a MAC spoke from">
+      <rect x="220" y="56" width="120" height="48" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="85" textAnchor="middle" fill="currentColor" fontSize="13">
+        switch
+      </text>
+      <rect x="28" y="20" width="88" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="72" y="43" textAnchor="middle" fill="currentColor" fontSize="12">
+        A :1
+      </text>
+      <rect x="28" y="104" width="88" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="72" y="127" textAnchor="middle" fill="currentColor" fontSize="12">
+        C :3
+      </text>
+      <rect x="444" y="56" width="88" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="488" y="79" textAnchor="middle" fill="currentColor" fontSize="12">
+        B :2
+      </text>
+      <path d="M116 38 H220 M116 122 H220 M340 80 H444" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="148" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        A last spoke on 1 · B on 2 · flood only the unknown
+      </text>
+    </svg>
+  ),
+  "net-arp-resolve": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="ARP asks who has this IP">
+      <rect x="24" y="36" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="94" y="60" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.7
+      </text>
+      <text x="94" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        who has .9?
+      </text>
+      <path d="M164 64 H248" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="206" y="56" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        broadcast
+      </text>
+      <rect x="248" y="36" width="140" height="56" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="318" y="60" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.9
+      </text>
+      <text x="318" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        aa:bb:… answers
+      </text>
+      <path d="M388 64 H436" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="436" y="40" width="100" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="486" y="69" textAnchor="middle" fill="currentColor" fontSize="12">
+        cache
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        IP known · MAC not yet · then the frame can leave
+      </text>
+    </svg>
+  ),
+  "net-subnet": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A prefix is an address plus a length">
+      <rect x="28" y="28" width="240" height="72" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="148" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        10.1.0.0/16
+      </text>
+      <text x="148" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        sixteen bits in common
+      </text>
+      <rect x="300" y="28" width="232" height="72" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="416" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        10.1.4.0/24
+      </text>
+      <text x="416" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        more bits · more specific
+      </text>
+      <text x="280" y="130" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a length, not a class · the longer match wins
+      </text>
+    </svg>
+  ),
+  "net-nat-map": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="NAT maps many private addresses onto one public">
+      <rect x="20" y="28" width="150" height="88" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="95" y="56" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.7:4000
+      </text>
+      <text x="95" y="78" textAnchor="middle" fill="currentColor" fontSize="12">
+        10.0.0.8:4000
+      </text>
+      <text x="95" y="100" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.55">
+        private
+      </text>
+      <path d="M170 72 H230" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="230" y="36" width="140" height="72" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="300" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        NAT table
+      </text>
+      <text x="300" y="88" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        203.0.113.4:…
+      </text>
+      <path d="M370 72 H430" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="430" y="44" width="110" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="485" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        public
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        no mapping · inbound has nowhere to land
+      </text>
+    </svg>
+  ),
+  "net-tcp-ack": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Sequence numbers and acknowledgements">
+      <text x="80" y="28" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        sender
+      </text>
+      <text x="460" y="28" textAnchor="end" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        receiver
+      </text>
+      <path d="M80 48 H480" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M80 88 H480" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M80 128 H480" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M120 48 L420 88" stroke="currentColor" strokeOpacity="0.55" />
+      <text x="270" y="62" textAnchor="middle" fill="currentColor" fontSize="11">
+        seq 100
+      </text>
+      <path d="M420 88 L160 128" stroke="currentColor" strokeOpacity="0.55" />
+      <text x="300" y="118" textAnchor="middle" fill="currentColor" fontSize="11">
+        ack 200
+      </text>
+      <text x="280" y="152" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        what arrived · what to send next
+      </text>
+    </svg>
+  ),
+  "net-slide-win": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A sliding window bounds data in flight">
+      <rect x="24" y="40" width="48" height="36" rx="3" fill="currentColor" fillOpacity="0.2" />
+      <rect x="76" y="40" width="48" height="36" rx="3" fill="currentColor" fillOpacity="0.2" />
+      <rect x="128" y="36" width="260" height="44" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.55" />
+      <rect x="140" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="196" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="252" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="308" y="44" width="48" height="28" rx="3" fill="currentColor" fillOpacity="0.12" />
+      <rect x="400" y="40" width="48" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.25" />
+      <rect x="452" y="40" width="48" height="36" rx="3" fill="none" stroke="currentColor" strokeOpacity="0.25" />
+      <text x="258" y="64" textAnchor="middle" fill="currentColor" fontSize="11">
+        in flight
+      </text>
+      <text x="280" y="116" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        ACKed · window · not yet allowed
+      </text>
+    </svg>
+  ),
+  "net-cwnd": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A congestion window grows then cuts">
+      <path d="M40 120 H520" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M40 20 V120" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M40 110 L120 90 L200 50 L280 20 L280 70 L360 55 L440 40 L440 80 L520 68" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+      <text x="280" y="36" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        loss
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        probe up · cut on a signal · share the unseen pipe
+      </text>
+    </svg>
+  ),
+  "net-bloat": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A huge buffer turns congestion into delay">
+      <rect x="40" y="36" width="100" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="90" y="70" textAnchor="middle" fill="currentColor" fontSize="12">
+        sender
+      </text>
+      <path d="M140 64 H200" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="200" y="24" width="180" height="88" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="216" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <rect x="250" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <rect x="284" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <rect x="318" y="40" width="28" height="56" rx="2" fill="currentColor" fillOpacity="0.25" />
+      <text x="290" y="128" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        standing queue
+      </text>
+      <path d="M380 64 H440" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="440" y="44" width="88" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="484" y="69" textAnchor="middle" fill="currentColor" fontSize="12">
+        link
+      </text>
+      <text x="280" y="146" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        no drop · just late
+      </text>
+    </svg>
+  ),
+  "net-as-graph": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Autonomous systems as policy islands">
+      <rect x="36" y="28" width="130" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="101" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        AS 1
+      </text>
+      <rect x="214" y="28" width="130" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="279" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        AS 2
+      </text>
+      <rect x="392" y="28" width="130" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="457" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        AS 3
+      </text>
+      <path d="M166 64 H214 M344 64 H392" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one policy per island · a cable is not agreement
+      </text>
+    </svg>
+  ),
+  "net-bgp-path": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="BGP chooses a path by policy">
+      <rect x="24" y="40" width="90" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="69" y="67" textAnchor="middle" fill="currentColor" fontSize="12">
+        you
+      </text>
+      <path d="M114 54 H170" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M114 70 H170" stroke="currentColor" strokeOpacity="0.25" />
+      <rect x="170" y="24" width="110" height="36" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="225" y="47" textAnchor="middle" fill="currentColor" fontSize="11">
+        65000 1 2
+      </text>
+      <rect x="170" y="76" width="110" height="36" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="225" y="99" textAnchor="middle" fill="currentColor" fontSize="11">
+        80 90 2
+      </text>
+      <path d="M280 42 H340" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="340" y="28" width="196" height="80" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="438" y="58" textAnchor="middle" fill="currentColor" fontSize="12">
+        local pref first
+      </text>
+      <text x="438" y="80" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        then AS-path · not hops
+      </text>
+      <text x="280" y="138" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the longer rumor can still win
+      </text>
+    </svg>
+  ),
+  "net-peer-transit": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Peering exchanges customers; transit sells the rest">
+      <rect x="40" y="28" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="110" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        peer
+      </text>
+      <rect x="210" y="28" width="140" height="56" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        you
+      </text>
+      <rect x="380" y="28" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="450" y="62" textAnchor="middle" fill="currentColor" fontSize="13">
+        transit
+      </text>
+      <path d="M180 56 H210" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M350 56 H380" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="195" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        customers only
+      </text>
+      <text x="365" y="112" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.7">
+        everyone else · paid
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        settlement-free is not a default route
+      </text>
+    </svg>
+  ),
+  "net-leak": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="A more-specific unauthorized prefix steals traffic">
+      <rect x="28" y="36" width="150" height="64" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="103" y="64" textAnchor="middle" fill="currentColor" fontSize="12">
+        owner
+      </text>
+      <text x="103" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        203.0.113.0/24
+      </text>
+      <rect x="206" y="36" width="148" height="64" rx="6" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="64" textAnchor="middle" fill="currentColor" fontSize="12">
+        hijack
+      </text>
+      <text x="280" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        203.0.113.0/25
+      </text>
+      <path d="M354 68 H412" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="412" y="44" width="120" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="472" y="73" textAnchor="middle" fill="currentColor" fontSize="12">
+        traffic
+      </text>
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        more specific wins · ownership is not checked
+      </text>
+    </svg>
+  ),
+  "net-planes": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Control plane fills the table the data plane looks up">
+      <rect x="36" y="28" width="220" height="80" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        control plane
+      </text>
+      <text x="146" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        routing fills the table
+      </text>
+      <path d="M256 68 H316" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="316" y="28" width="208" height="80" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="420" y="60" textAnchor="middle" fill="currentColor" fontSize="13">
+        data plane
+      </text>
+      <text x="420" y="82" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        lookup · next hop
+      </text>
+      <text x="280" y="134" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the process can die · the last table still forwards
+      </text>
+    </svg>
+  ),
+  "cmp-pipeline": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Front end pipeline from characters to a typed tree">
+      {["characters", "tokens", "tree", "names · types"].map((label, i) => (
+        <g key={label} transform={`translate(${18 + i * 136}, 32)`}>
+          <rect width="124" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="62" y="32" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+          {i < 3 && <path d="M128 26 H134" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fillOpacity="0.55" fontSize="12">
+        later stages consume the tree · they do not start from bytes
+      </text>
+    </svg>
+  ),
+  "cmp-tokens": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Characters become classified tokens">
+      <text x="90" y="36" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        i f   x = 1 4
+      </text>
+      <path d="M90 48 V72" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="24" y="76" width="70" height="36" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="59" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        if
+      </text>
+      <rect x="106" y="76" width="70" height="36" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="141" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        id x
+      </text>
+      <rect x="188" y="76" width="52" height="36" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="214" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        =
+      </text>
+      <rect x="252" y="76" width="78" height="36" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="291" y="98" textAnchor="middle" fill="currentColor" fontSize="12">
+        int 14
+      </text>
+      <text x="280" y="138" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        class plus payload · the parser never re-reads the digits
+      </text>
+    </svg>
+  ),
+  "cmp-ast-drop": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Parse tree keeps punctuation the AST drops">
+      <rect x="24" y="24" width="240" height="96" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="144" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        parse tree
+      </text>
+      <text x="144" y="76" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        ( · + · ) kept
+      </text>
+      <path d="M264 72 H316" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="316" y="24" width="220" height="96" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="426" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        AST
+      </text>
+      <text x="426" y="76" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        plus(x, 1)
+      </text>
+      <text x="280" y="146" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        typechecking walks the meaning, not the parentheses
+      </text>
+    </svg>
+  ),
+  "cmp-cfg-blocks": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Basic blocks and the edges between them">
+      <rect x="200" y="16" width="160" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12">
+        entry · t1 = a + b
+      </text>
+      <path d="M280 56 V72" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="40" y="76" width="180" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="130" y="104" textAnchor="middle" fill="currentColor" fontSize="12">
+        then · t2 = t1
+      </text>
+      <rect x="340" y="76" width="180" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="430" y="104" textAnchor="middle" fill="currentColor" fontSize="12">
+        else · t3 = 0
+      </text>
+      <path d="M220 98 H340" stroke="currentColor" strokeOpacity="0.2" />
+      <path d="M130 120 V140 H430 V120" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="162" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one entry · one exit · edges carry the joins
+      </text>
+    </svg>
+  ),
+  "cmp-ssa-phi": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="A phi merges two SSA names at a join">
+      <rect x="36" y="20" width="150" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="48" textAnchor="middle" fill="currentColor" fontSize="12">
+        x1 = 1
+      </text>
+      <rect x="374" y="20" width="150" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="449" y="48" textAnchor="middle" fill="currentColor" fontSize="12">
+        x2 = 2
+      </text>
+      <path d="M111 64 V92 H280" stroke="currentColor" strokeOpacity="0.45" fill="none" />
+      <path d="M449 64 V92 H280" stroke="currentColor" strokeOpacity="0.45" fill="none" />
+      <rect x="190" y="92" width="180" height="44" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="120" textAnchor="middle" fill="currentColor" fontSize="13">
+        x3 = φ(x1, x2)
+      </text>
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one name per assignment · the join records the choice
+      </text>
+    </svg>
+  ),
+  "cmp-dataflow": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A dataflow fact walks the graph until it settles">
+      <rect x="28" y="28" width="140" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="98" y="52" textAnchor="middle" fill="currentColor" fontSize="12">
+        block
+      </text>
+      <text x="98" y="70" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">
+        in / gen / kill
+      </text>
+      <path d="M168 56 H228" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="228" y="28" width="140" height="56" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="298" y="62" textAnchor="middle" fill="currentColor" fontSize="12">
+        out
+      </text>
+      <path d="M368 56 H428" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="428" y="28" width="108" height="56" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="482" y="62" textAnchor="middle" fill="currentColor" fontSize="12">
+        next
+      </text>
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        repeat until the fact stops changing
+      </text>
+    </svg>
+  ),
+  "cmp-isel-tile": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="An IR operator becomes target opcodes">
+      <rect x="36" y="32" width="180" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="126" y="70" textAnchor="middle" fill="currentColor" fontSize="13">
+        t = a + b
+      </text>
+      <path d="M216 64 H276" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="276" y="20" width="248" height="88" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="400" y="52" textAnchor="middle" fill="currentColor" fontSize="13">
+        leaq (%rax,%rbx), %rcx
+      </text>
+      <text x="400" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.65">
+        or add + mov
+      </text>
+      <text x="280" y="134" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        several legal tiles · one cheaper on this machine
+      </text>
+    </svg>
+  ),
+  "cmp-alloc-color": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Interfering live ranges cannot share a register">
+      <circle cx="140" cy="70" r="36" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="140" y="74" textAnchor="middle" fill="currentColor" fontSize="12">
+        t1
+      </text>
+      <circle cx="280" cy="70" r="36" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="74" textAnchor="middle" fill="currentColor" fontSize="12">
+        t2
+      </text>
+      <circle cx="420" cy="70" r="36" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="420" y="74" textAnchor="middle" fill="currentColor" fontSize="12">
+        t3
+      </text>
+      <path d="M176 70 H244" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M316 70 H384" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        an edge means they are live together · different colors
+      </text>
+    </svg>
+  ),
+  "cmp-frame-abi": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="A stack frame the callee and unwinder can both read">
+      <rect x="180" y="16" width="200" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="35" textAnchor="middle" fill="currentColor" fontSize="12">
+        incoming args
+      </text>
+      <rect x="180" y="48" width="200" height="28" rx="4" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="67" textAnchor="middle" fill="currentColor" fontSize="12">
+        return address
+      </text>
+      <rect x="180" y="80" width="200" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="99" textAnchor="middle" fill="currentColor" fontSize="12">
+        saved rbp
+      </text>
+      <rect x="180" y="112" width="200" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="280" y="131" textAnchor="middle" fill="currentColor" fontSize="12">
+        spills · locals
+      </text>
+      <text x="280" y="160" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        prologue builds it · epilogue tears it down
+      </text>
+    </svg>
+  ),
+  "cmp-gc-roots": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="GC walks from roots to find live objects">
+      <rect x="28" y="36" width="120" height="52" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="88" y="68" textAnchor="middle" fill="currentColor" fontSize="12">
+        roots
+      </text>
+      <path d="M148 62 H200" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="200" y="24" width="140" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="49" textAnchor="middle" fill="currentColor" fontSize="12">
+        live
+      </text>
+      <rect x="200" y="76" width="140" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="101" textAnchor="middle" fill="currentColor" fontSize="12">
+        live
+      </text>
+      <rect x="388" y="50" width="140" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="458" y="75" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.7">
+        unreachable
+      </text>
+      <text x="280" y="144" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        no matching free · liveness is reachability from roots
+      </text>
+    </svg>
+  ),
+  "ml-learn-loop": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Examples in, a rule out, then a held-out check">
+      <rect x="20" y="28" width="120" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="80" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        examples
+      </text>
+      <path d="M140 54 H188" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="188" y="28" width="120" height="52" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="248" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        a rule
+      </text>
+      <path d="M308 54 H356" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="356" y="28" width="180" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="446" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        unseen rows
+      </text>
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the job is the new row · a recited table is storage
+      </text>
+    </svg>
+  ),
+  "horo-power-flow": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Train drives the hands; escapement regulates the train">
+      <rect x="16" y="18" width="96" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="64" y="43" textAnchor="middle" fill="currentColor" fontSize="13">
+        spring
+      </text>
+      <path d="M112 38 H132" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="132" y="18" width="96" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="180" y="43" textAnchor="middle" fill="currentColor" fontSize="13">
+        train
+      </text>
+      <path d="M228 38 H248" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="248" y="18" width="120" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="308" y="43" textAnchor="middle" fill="currentColor" fontSize="12">
+        motion works
+      </text>
+      <path d="M368 38 H388" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="388" y="18" width="156" height="40" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="466" y="43" textAnchor="middle" fill="currentColor" fontSize="13">
+        hands
+      </text>
+      <path d="M180 58 V88" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="132" y="88" width="96" height="36" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="180" y="111" textAnchor="middle" fill="currentColor" fontSize="12">
+        escape
+      </text>
+      <path d="M228 106 H248" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="248" y="88" width="160" height="36" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="328" y="111" textAnchor="middle" fill="currentColor" fontSize="12">
+        oscillator
+      </text>
+      <text x="280" y="154" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the train drives the display · the oscillator regulates the train
+      </text>
+    </svg>
+  ),
+  "horo-parts": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Plate and bridges locate wheels, pinions, jewels">
+      <rect x="36" y="20" width="488" height="88" rx="10" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="42" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.65">
+        plate
+      </text>
+      <rect x="70" y="52" width="110" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="125" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        bridge
+      </text>
+      <rect x="210" y="52" width="110" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="265" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        wheel
+      </text>
+      <rect x="350" y="52" width="70" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="385" y="76" textAnchor="middle" fill="currentColor" fontSize="12">
+        pinion
+      </text>
+      <circle cx="460" cy="72" r="16" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="460" y="76" textAnchor="middle" fill="currentColor" fontSize="11">
+        jewel
+      </text>
+      <text x="280" y="140" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the frame locates every pivot · names come before complications
+      </text>
+    </svg>
+  ),
+  "mus-dimensions": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Pitch, duration, loudness, and timbre as independent axes">
+      {["pitch", "duration", "loudness", "timbre"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 132}, 36)`}>
+          <rect width="118" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="30" textAnchor="middle" fill="currentColor" fontSize="13">
+            {label}
+          </text>
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        change one axis · the other three can stay put
+      </text>
+    </svg>
+  ),
+  "mus-interval-ratio": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Octave 2:1 and fifth 3:2 as frequency ratios">
+      <rect x="36" y="28" width="220" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        octave 2:1
+      </text>
+      <text x="146" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">
+        same letter · new register
+      </text>
+      <rect x="304" y="28" width="220" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="414" y="58" textAnchor="middle" fill="currentColor" fontSize="13">
+        fifth 3:2
+      </text>
+      <text x="414" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">
+        beats slow when just
+      </text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        count the ratio · equal temperament is a later compromise
+      </text>
+    </svg>
+  ),
+  "dm-lineage-soil": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Hardcore and thrash as soil under death metal">
+      <rect x="36" y="24" width="150" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        hardcore
+      </text>
+      <rect x="206" y="24" width="150" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="281" y="54" textAnchor="middle" fill="currentColor" fontSize="13">
+        thrash
+      </text>
+      <path d="M111 76 V100 H281 V76" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="160" y="100" width="240" height="28" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="119" textAnchor="middle" fill="currentColor" fontSize="12">
+        weight takes the job speed had
+      </text>
+    </svg>
+  ),
+  "dm-listen-layers": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Riff, kit, and vocal as equal listening layers">
+      <rect x="48" y="20" width="464" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="41" textAnchor="middle" fill="currentColor" fontSize="13">
+        riff cell
+      </text>
+      <rect x="48" y="60" width="464" height="32" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="81" textAnchor="middle" fill="currentColor" fontSize="13">
+        kit grammar
+      </text>
+      <rect x="48" y="100" width="464" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="121" textAnchor="middle" fill="currentColor" fontSize="13">
+        vocal as rhythm
+      </text>
+      <text x="280" y="150" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the mix is an argument · none of the three is decoration
+      </text>
+    </svg>
+  ),
+  "ml-gd-steps": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Gradient descent steps opposite the slope">
+      <path d="M40 40 Q280 20 520 120" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+      <circle cx="160" cy="36" r="6" fill="currentColor" fillOpacity="0.7" />
+      <circle cx="260" cy="48" r="6" fill="currentColor" fillOpacity="0.55" />
+      <circle cx="360" cy="76" r="6" fill="currentColor" fillOpacity="0.4" />
+      <path d="M166 40 L250 50" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M266 52 L352 74" stroke="currentColor" strokeOpacity="0.5" />
+      <text x="280" y="136" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        step opposite the gradient of a loss you can compute
+      </text>
+    </svg>
+  ),
+  "ml-splits": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Train, validation, and test keep three jobs">
+      <rect x="24" y="28" width="160" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="104" y="62" textAnchor="middle" fill="currentColor" fontSize="13">train · fit</text>
+      <rect x="200" y="28" width="160" height="56" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="62" textAnchor="middle" fill="currentColor" fontSize="13">val · choose</text>
+      <rect x="376" y="28" width="160" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="456" y="62" textAnchor="middle" fill="currentColor" fontSize="13">test · report</text>
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        mixing the three jobs is the original sin
+      </text>
+    </svg>
+  ),
+  "ml-backprop-graph": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Forward values then reverse adjoints">
+      <rect x="24" y="24" width="120" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="84" y="51" textAnchor="middle" fill="currentColor" fontSize="12">x</text>
+      <rect x="180" y="24" width="120" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="240" y="51" textAnchor="middle" fill="currentColor" fontSize="12">Wx</text>
+      <rect x="336" y="24" width="120" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="396" y="51" textAnchor="middle" fill="currentColor" fontSize="12">loss</text>
+      <path d="M144 46 H180" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M300 46 H336" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M396 68 V96 H84 V68" fill="none" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        forward values · reverse adjoints · one loss, many knobs
+      </text>
+    </svg>
+  ),
+  "ml-qkv": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Query scores keys and mixes values">
+      <rect x="24" y="28" width="90" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="69" y="55" textAnchor="middle" fill="currentColor" fontSize="13">Q</text>
+      <rect x="150" y="28" width="90" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="195" y="55" textAnchor="middle" fill="currentColor" fontSize="13">K</text>
+      <rect x="276" y="28" width="120" height="44" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="336" y="55" textAnchor="middle" fill="currentColor" fontSize="12">softmax scores</text>
+      <rect x="432" y="28" width="90" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="477" y="55" textAnchor="middle" fill="currentColor" fontSize="13">V</text>
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a weighted read · not a hard address
+      </text>
+    </svg>
+  ),
+  "ml-causal-mask": (
+    <svg viewBox="0 0 560 160" className={svg} aria-label="Causal mask hides future keys">
+      {["t1", "t2", "t3", "t4"].map((label, i) => (
+        <g key={label}>
+          <text x={90 + i * 110} y="28" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">{label}</text>
+          {[0, 1, 2, 3].map((j) => (
+            <rect key={`${i}-${j}`} x={60 + i * 110} y={40 + j * 24} width="60" height="20" rx="3"
+              fill={j > i ? "none" : "currentColor"} fillOpacity={j > i ? 0 : 0.12}
+              stroke="currentColor" strokeOpacity={j > i ? 0.2 : 0.45} />
+          ))}
+        </g>
+      ))}
+      <text x="280" y="152" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        future keys are zero · that is the autoregressive contract
+      </text>
+    </svg>
+  ),
+  "ml-transformer-block": (
+    <svg viewBox="0 0 560 170" className={svg} aria-label="Transformer block with residual and norm">
+      <rect x="200" y="12" width="160" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="33" textAnchor="middle" fill="currentColor" fontSize="12">attn</text>
+      <rect x="200" y="56" width="160" height="32" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="77" textAnchor="middle" fill="currentColor" fontSize="12">+ residual · norm</text>
+      <rect x="200" y="100" width="160" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="121" textAnchor="middle" fill="currentColor" fontSize="12">FFN + residual · norm</text>
+      <text x="280" y="158" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the skip is the path that keeps a gradient
+      </text>
+    </svg>
+  ),
+  "ml-kv-cache": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="KV cache appends past keys and values">
+      <rect x="36" y="28" width="220" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="58" textAnchor="middle" fill="currentColor" fontSize="13">past K · V</text>
+      <text x="146" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">unchanged</text>
+      <rect x="304" y="28" width="220" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="414" y="58" textAnchor="middle" fill="currentColor" fontSize="13">new query</text>
+      <text x="414" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">append, do not recompute</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        causal generation makes history reusable
+      </text>
+    </svg>
+  ),
+  "ml-rag-path": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Retrieve then condition the model">
+      {["query", "retrieve", "condition", "decode"].map((label, i) => (
+        <g key={label} transform={`translate(${18 + i * 136}, 32)`}>
+          <rect width="124" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="62" y="32" textAnchor="middle" fill="currentColor" fontSize="13">{label}</text>
+          {i < 3 && <path d="M128 26 H134" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the host fetches · the model still only continues tokens
+      </text>
+    </svg>
+  ),
+  "horo-train": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Going train from barrel to escape">
+      {["barrel", "centre", "third", "fourth", "escape"].map((label, i) => (
+        <g key={label} transform={`translate(${16 + i * 108}, 36)`}>
+          <circle cx="44" cy="26" r="22" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="44" y="30" textAnchor="middle" fill="currentColor" fontSize="11">{label}</text>
+          {i < 4 && <path d="M68 26 H84" stroke="currentColor" strokeOpacity="0.4" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the train counts · it does not meter a second
+      </text>
+    </svg>
+  ),
+  "horo-escape-cycle": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Lock, unlock, impulse, lock">
+      {["lock", "unlock", "impulse", "lock"].map((label, i) => (
+        <g key={`${label}-${i}`} transform={`translate(${24 + i * 132}, 36)`}>
+          <rect width="118" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="30" textAnchor="middle" fill="currentColor" fontSize="13">{label}</text>
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        each unlock spends one tooth · the impulse keeps the oscillator alive
+      </text>
+    </svg>
+  ),
+  "horo-chrono-couple": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Chronograph coupling the seconds runner">
+      <rect x="36" y="28" width="180" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="126" y="68" textAnchor="middle" fill="currentColor" fontSize="13">going train</text>
+      <rect x="344" y="28" width="180" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="434" y="68" textAnchor="middle" fill="currentColor" fontSize="13">chrono runner</text>
+      <rect x="220" y="44" width="120" height="40" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="69" textAnchor="middle" fill="currentColor" fontSize="12">clutch</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        start couples · stop uncouples · reset hammers the heart
+      </text>
+    </svg>
+  ),
+  "mus-meter-grid": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A 4/4 grid versus a displaced accent">
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <rect key={i} x={40 + i * 60} y="36" width="44" height="36" rx="4"
+          fill={i === 0 || i === 4 ? "currentColor" : "none"}
+          fillOpacity={i === 0 || i === 4 ? 0.12 : 0}
+          stroke="currentColor" strokeOpacity="0.4" />
+      ))}
+      <text x="280" y="110" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the bar is a grouping · an accent can sit off the printed 1
+      </text>
+    </svg>
+  ),
+  "mus-voice-lead": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Common tone held while neighbors move">
+      <text x="80" y="40" fill="currentColor" fontSize="12" fillOpacity="0.65">C</text>
+      <text x="80" y="80" fill="currentColor" fontSize="12" fillOpacity="0.65">E</text>
+      <text x="80" y="120" fill="currentColor" fontSize="12" fillOpacity="0.65">G</text>
+      <path d="M100 36 H240" stroke="currentColor" strokeOpacity="0.45" />
+      <path d="M100 76 H240 L260 100" stroke="currentColor" strokeOpacity="0.45" fill="none" />
+      <path d="M100 116 H240 L260 92" stroke="currentColor" strokeOpacity="0.45" fill="none" />
+      <text x="280" y="40" fill="currentColor" fontSize="12">C</text>
+      <text x="280" y="104" fill="currentColor" fontSize="12">F</text>
+      <text x="280" y="88" fill="currentColor" fontSize="12">A</text>
+      <text x="400" y="80" fill="currentColor" fontSize="12" fillOpacity="0.55">hold · step · step</text>
+    </svg>
+  ),
+  "dm-riff-cell": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A short cell sequenced and inverted">
+      <rect x="28" y="36" width="140" height="48" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="98" y="65" textAnchor="middle" fill="currentColor" fontSize="13">cell</text>
+      <rect x="204" y="36" width="140" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="274" y="65" textAnchor="middle" fill="currentColor" fontSize="13">sequence</text>
+      <rect x="380" y="36" width="140" height="48" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="450" y="65" textAnchor="middle" fill="currentColor" fontSize="13">invert</text>
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        form starts at the cell · not at a chorus chart
+      </text>
+    </svg>
+  ),
+  "dm-two-factories": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Two founding production doctrines">
+      <rect x="36" y="28" width="220" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="58" textAnchor="middle" fill="currentColor" fontSize="13">dry · articulate</text>
+      <text x="146" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">pick attack kept</text>
+      <rect x="304" y="28" width="220" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="414" y="58" textAnchor="middle" fill="currentColor" fontSize="13">midrange wall</text>
+      <text x="414" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">cells smear</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        two factories · one later name
+      </text>
+    </svg>
+  ),
+  "ml-bias-var": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Bias misses the signal, variance chases noise">
+      <rect x="36" y="28" width="220" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="58" textAnchor="middle" fill="currentColor" fontSize="13">bias</text>
+      <text x="146" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">room too small</text>
+      <rect x="304" y="28" width="220" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="414" y="58" textAnchor="middle" fill="currentColor" fontSize="13">variance</text>
+      <text x="414" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">room fits the noise</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        both errors are about the room · not a moral
+      </text>
+    </svg>
+  ),
+  "ml-decision-boundary": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A linear score cuts the plane">
+      <circle cx="140" cy="48" r="8" fill="currentColor" fillOpacity="0.25" />
+      <circle cx="180" cy="72" r="8" fill="currentColor" fillOpacity="0.25" />
+      <circle cx="120" cy="96" r="8" fill="currentColor" fillOpacity="0.25" />
+      <circle cx="400" cy="44" r="8" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <circle cx="430" cy="80" r="8" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <circle cx="380" cy="108" r="8" fill="none" stroke="currentColor" strokeOpacity="0.5" />
+      <path d="M250 20 L310 130" stroke="currentColor" strokeOpacity="0.55" />
+      <text x="280" y="142" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the score is a cut · a sigmoid only names the sides
+      </text>
+    </svg>
+  ),
+  "ml-neuron": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Weighted sum, bias, nonlinearity">
+      {["x", "w·x+b", "σ"].map((label, i) => (
+        <g key={label} transform={`translate(${40 + i * 170}, 32)`}>
+          <rect width="140" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="70" y="32" textAnchor="middle" fill="currentColor" fontSize="14">{label}</text>
+          {i < 2 && <path d="M144 26 H166" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        without σ this is still a line
+      </text>
+    </svg>
+  ),
+  "ml-mlp-forward": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Layered map from input to scores">
+      {["x", "h1", "h2", "ŷ"].map((label, i) => (
+        <g key={label} transform={`translate(${36 + i * 130}, 36)`}>
+          <rect width="104" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="52" y="30" textAnchor="middle" fill="currentColor" fontSize="14">{label}</text>
+          {i < 3 && <path d="M108 24 H126" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        each layer is a map · the stack is the function
+      </text>
+    </svg>
+  ),
+  "ml-cnn-share": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="One filter reused across positions">
+      <rect x="36" y="32" width="280" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="56" y="44" width="52" height="40" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="150" y="44" width="52" height="40" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="244" y="44" width="52" height="40" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <rect x="360" y="32" width="164" height="64" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="442" y="70" textAnchor="middle" fill="currentColor" fontSize="13">same W</text>
+      <text x="280" y="128" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        translation reuse is the inductive bet
+      </text>
+    </svg>
+  ),
+  "ml-rnn-unroll": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A recurrent cell unrolled in time">
+      {["t1", "t2", "t3"].map((label, i) => (
+        <g key={label} transform={`translate(${48 + i * 160}, 28)`}>
+          <rect width="120" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="60" y="34" textAnchor="middle" fill="currentColor" fontSize="14">{label}</text>
+          {i < 2 && <path d="M124 28 H156" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        one cell · many times · the state is the only memory
+      </text>
+    </svg>
+  ),
+  "ml-vanish": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A product of small slopes dies out">
+      {["0.4", "0.3", "0.2", "~0"].map((label, i) => (
+        <g key={label} transform={`translate(${28 + i * 132}, 36)`}>
+          <rect width="112" height="44" rx="6" fill="none" stroke="currentColor" strokeOpacity={0.45 - i * 0.08} />
+          <text x="56" y="28" textAnchor="middle" fill="currentColor" fontSize="14" fillOpacity={1 - i * 0.18}>{label}</text>
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        a chain of tiny derivatives never reaches the early weights
+      </text>
+    </svg>
+  ),
+  "horo-keyless": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Stem positions select winding or setting">
+      <rect x="36" y="28" width="150" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="111" y="68" textAnchor="middle" fill="currentColor" fontSize="13">stem in</text>
+      <rect x="206" y="28" width="148" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="68" textAnchor="middle" fill="currentColor" fontSize="13">clutch</text>
+      <rect x="374" y="28" width="150" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="449" y="58" textAnchor="middle" fill="currentColor" fontSize="13">wind / set</text>
+      <text x="449" y="78" textAnchor="middle" fill="currentColor" fontSize="11" fillOpacity="0.6">two jobs, one stem</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        pull height chooses the train the square drives
+      </text>
+    </svg>
+  ),
+  "horo-lever": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Escape wheel, pallet, impulse pin">
+      <circle cx="120" cy="70" r="36" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="120" y="74" textAnchor="middle" fill="currentColor" fontSize="12">wheel</text>
+      <rect x="200" y="46" width="140" height="48" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="270" y="75" textAnchor="middle" fill="currentColor" fontSize="13">pallet</text>
+      <circle cx="430" cy="70" r="36" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="430" y="74" textAnchor="middle" fill="currentColor" fontSize="12">pin</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        lock · unlock · impulse · the lever is the translator
+      </text>
+    </svg>
+  ),
+  "horo-balance-spring": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Balance wheel and hairspring as the timebase">
+      <circle cx="180" cy="68" r="42" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <circle cx="180" cy="68" r="18" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="180" y="72" textAnchor="middle" fill="currentColor" fontSize="11">balance</text>
+      <path d="M230 68 H310" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="310" y="44" width="180" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="400" y="73" textAnchor="middle" fill="currentColor" fontSize="13">hairspring</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        period lives here · the train only counts swings
+      </text>
+    </svg>
+  ),
+  "horo-positions": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Dial up, pendant positions, and rate">
+      {["DU", "DD", "PU", "PR"].map((label, i) => (
+        <g key={label} transform={`translate(${40 + i * 130}, 32)`}>
+          <rect width="108" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="54" y="34" textAnchor="middle" fill="currentColor" fontSize="14">{label}</text>
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        gravity loads the pivots differently · poise is the argument
+      </text>
+    </svg>
+  ),
+  "horo-tourbillon-cage": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Escapement rotating inside a cage">
+      <circle cx="200" cy="70" r="48" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <circle cx="200" cy="70" r="22" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="200" y="74" textAnchor="middle" fill="currentColor" fontSize="11">escape</text>
+      <rect x="300" y="42" width="200" height="56" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="400" y="75" textAnchor="middle" fill="currentColor" fontSize="13">rotating cage</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        averages pendant error · not a free lunch on amplitude
+      </text>
+    </svg>
+  ),
+  "horo-date-works": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Cannon pinion to date jumper">
+      {["cannon", "date wheel", "jumper"].map((label, i) => (
+        <g key={label} transform={`translate(${28 + i * 180}, 32)`}>
+          <rect width="156" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="78" y="32" textAnchor="middle" fill="currentColor" fontSize="13">{label}</text>
+          {i < 2 && <path d="M160 26 H176" stroke="currentColor" strokeOpacity="0.45" />}
+        </g>
+      ))}
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        midnight is a stored snap · not a smooth 24-hour crawl unless designed so
+      </text>
+    </svg>
+  ),
+  "mus-scale-steps": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Whole and half steps in a scale">
+      {["W", "W", "H", "W", "W", "W", "H"].map((label, i) => (
+        <g key={`${label}-${i}`} transform={`translate(${28 + i * 74}, 36)`}>
+          <rect width="62" height="44" rx="6" fill={label === "H" ? "currentColor" : "none"} fillOpacity={label === "H" ? 0.12 : 0} stroke="currentColor" strokeOpacity="0.4" />
+          <text x="31" y="28" textAnchor="middle" fill="currentColor" fontSize="14">{label}</text>
+        </g>
+      ))}
+      <text x="280" y="114" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the pattern of steps is the scale · the tonic is where you sit
+      </text>
+    </svg>
+  ),
+  "mus-modes-tonic": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Same collection, different tonic">
+      <rect x="36" y="28" width="220" height="72" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="146" y="58" textAnchor="middle" fill="currentColor" fontSize="13">same pitch set</text>
+      <text x="146" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">C D E F G A B</text>
+      <rect x="304" y="28" width="220" height="72" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="414" y="58" textAnchor="middle" fill="currentColor" fontSize="13">new home</text>
+      <text x="414" y="80" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.6">Dorian sits on D</text>
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        mode is a tonic claim · not a new alphabet
+      </text>
+    </svg>
+  ),
+  "mus-triad-stack": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Root, third, and fifth stacked">
+      <text x="160" y="48" fill="currentColor" fontSize="16">5th</text>
+      <text x="160" y="84" fill="currentColor" fontSize="16">3rd</text>
+      <text x="160" y="120" fill="currentColor" fontSize="16">root</text>
+      <path d="M220 44 H340" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M220 80 H340" stroke="currentColor" strokeOpacity="0.4" />
+      <path d="M220 116 H340" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="400" y="84" fill="currentColor" fontSize="13" fillOpacity="0.6">quality lives in the third</text>
+    </svg>
+  ),
+  "mus-pedal": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A held bass under changing chords">
+      <rect x="36" y="72" width="488" height="20" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="280" y="87" textAnchor="middle" fill="currentColor" fontSize="12">pedal</text>
+      {["I", "♭II", "iv", "I"].map((label, i) => (
+        <g key={label} transform={`translate(${56 + i * 120}, 24)`}>
+          <rect width="88" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="44" y="22" textAnchor="middle" fill="currentColor" fontSize="13">{label}</text>
+        </g>
+      ))}
+      <text x="280" y="124" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the floor stays · the room above can wander
+      </text>
+    </svg>
+  ),
+  "mus-odd-grid": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="7/8 as 2+2+3">
+      {[2, 2, 3].map((n, g) => (
+        <g key={g} transform={`translate(${40 + (g === 0 ? 0 : g === 1 ? 150 : 300)}, 32)`}>
+          {Array.from({ length: n }).map((_, i) => (
+            <rect key={i} x={i * 44} y="8" width="36" height="40" rx="4" fill={i === 0 ? "currentColor" : "none"} fillOpacity={i === 0 ? 0.12 : 0} stroke="currentColor" strokeOpacity="0.4" />
+          ))}
+        </g>
+      ))}
+      <text x="280" y="114" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        odd meter is additive grouping · not a broken 4
+      </text>
+    </svg>
+  ),
+  "mus-polymeter": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="A 3-cycle against a 4-cycle">
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={`a-${i}`} x={48 + i * 120} y="28" width="88" height="28" rx="4" fill={i === 0 ? "currentColor" : "none"} fillOpacity={i === 0 ? 0.12 : 0} stroke="currentColor" strokeOpacity="0.4" />
+      ))}
+      {[0, 1, 2].map((i) => (
+        <rect key={`b-${i}`} x={48 + i * 160} y="72" width="140" height="28" rx="4" fill={i === 0 ? "currentColor" : "none"} fillOpacity={i === 0 ? 0.12 : 0} stroke="currentColor" strokeOpacity="0.4" />
+      ))}
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        two meters share a pulse · they realign after the product
+      </text>
+    </svg>
+  ),
+  "mus-riff-cell-harm": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="A riff cell with a harmonic job">
+      <rect x="36" y="32" width="160" height="52" rx="8" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="116" y="63" textAnchor="middle" fill="currentColor" fontSize="13">cell</text>
+      <rect x="220" y="32" width="140" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="290" y="63" textAnchor="middle" fill="currentColor" fontSize="13">interval</text>
+      <rect x="384" y="32" width="140" height="52" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="454" y="63" textAnchor="middle" fill="currentColor" fontSize="13">function</text>
+      <text x="280" y="118" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        the riff is a harmonic claim · not only a rhythm
+      </text>
+    </svg>
+  ),
+  "dm-branch-map": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Lineage splitting into stylistic branches">
+      <rect x="24" y="52" width="120" height="40" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      <text x="84" y="77" textAnchor="middle" fill="currentColor" fontSize="12">soil</text>
+      <path d="M144 72 H190" stroke="currentColor" strokeOpacity="0.4" />
+      {["brutal", "tech", "melodic"].map((label, i) => (
+        <g key={label} transform={`translate(${200}, ${16 + i * 40})`}>
+          <path d="M0 20 H36" stroke="currentColor" strokeOpacity="0.35" />
+          <rect x="36" y="4" width="140" height="32" rx="6" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="106" y="25" textAnchor="middle" fill="currentColor" fontSize="12">{label}</text>
+        </g>
+      ))}
+      <text x="460" y="80" fill="currentColor" fontSize="12" fillOpacity="0.55">doctrine, not a ranking</text>
+    </svg>
+  ),
+  "dm-form": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Riff cells assembled into a form">
+      {["A", "A′", "B", "A"].map((label, i) => (
+        <g key={`${label}-${i}`} transform={`translate(${32 + i * 130}, 32)`}>
+          <rect width="112" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+          <text x="56" y="30" textAnchor="middle" fill="currentColor" fontSize="16">{label}</text>
+        </g>
+      ))}
+      <text x="280" y="114" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        form is how cells return · not a chorus by default
+      </text>
+    </svg>
+  ),
+  "dm-displace": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="The same cell starting off the one">
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <rect key={i} x={40 + i * 60} y="32" width="44" height="32" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      ))}
+      <rect x="160" y="32" width="164" height="32" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="280" y="104" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        same cell · later start · the bar line did not move
+      </text>
+    </svg>
+  ),
+  "dm-phrase-group": (
+    <svg viewBox="0 0 560 140" className={svg} aria-label="Odd phrase lengths against a 4-bar grid">
+      <rect x="36" y="28" width="300" height="36" rx="6" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeOpacity="0.45" />
+      <text x="186" y="52" textAnchor="middle" fill="currentColor" fontSize="13">5-bar phrase</text>
+      <rect x="36" y="76" width="488" height="20" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.3" />
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        grouping can refuse the printed four
+      </text>
+    </svg>
+  ),
+  "dm-poly-riff": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Guitar cell against a blast grid">
+      {[0, 1, 2].map((i) => (
+        <rect key={`g-${i}`} x={40 + i * 160} y="28" width="140" height="28" rx="4" fill={i === 0 ? "currentColor" : "none"} fillOpacity={i === 0 ? 0.12 : 0} stroke="currentColor" strokeOpacity="0.4" />
+      ))}
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={`d-${i}`} x={40 + i * 120} y="72" width="100" height="28" rx="4" fill="none" stroke="currentColor" strokeOpacity="0.4" />
+      ))}
+      <text x="280" y="132" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        guitar cycle vs drum grid · they share a pulse, not a bar
+      </text>
+    </svg>
+  ),
+  "dm-arrange": (
+    <svg viewBox="0 0 560 150" className={svg} aria-label="Density, contrast, and return in an arrangement">
+      {["enter", "stack", "cut", "return"].map((label, i) => (
+        <g key={label} transform={`translate(${24 + i * 132}, 36)`}>
+          <rect width="118" height="48" rx="8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+          <text x="59" y="30" textAnchor="middle" fill="currentColor" fontSize="13">{label}</text>
+        </g>
+      ))}
+      <text x="280" y="122" textAnchor="middle" fill="currentColor" fontSize="12" fillOpacity="0.55">
+        arrangement is when density changes · not when a solo starts
+      </text>
     </svg>
   ),
 };

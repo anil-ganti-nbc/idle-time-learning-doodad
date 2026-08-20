@@ -1,0 +1,776 @@
+{
+  "courseId": "cmp-ir",
+  "moduleId": "cmp-ir-opt",
+  "lessons": [
+    {
+      "id": "cmp-const-fold-10",
+      "conceptId": "cmp-const-fold",
+      "title": "Arithmetic the compiler already sees",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ssa"],
+      "goDeeper": "cmp-dce",
+      "explanation": [
+        "Constant operands mean the compiler can finish the arithmetic now. `t1 = 2 + 3` is not a mystery: the result is `5`. Folding replaces the operator with that result, `t1 = 5`, and every use of `t1` can now see a constant. SSA makes the follow-up a graph walk: one def, many uses, all updated.",
+        "Stanford CS143 treats this as the first local rewrite after IR exists. It does not change observable behavior because `2 + 3` and `5` agree on every path, including wrapping rules the IR already chose. You are not inventing a new value. You are writing down the one the operator was going to produce.",
+        "What does not fold is an operand that is not constant yet. `t1 = a + 3` stays an add until some other pass (or a φ that collapsed) makes `a` a constant. Folding does not guess. It only fires when both sides are already literals in the IR."
+      ],
+      "example": "`t1 = 2 + 3; t2 = t1 * 4` becomes `t1 = 5; t2 = 20`, then usually `t2 = 20` with `t1` dead. `t3 = x + 3` is unchanged because `x` is not a constant.",
+      "whyItMatters": "Most later passes are hungrier once a name is a literal. Folding is how `2+3` stops looking like work.",
+      "quiz": [
+        {
+          "id": "ir-constfold10-1",
+          "stem": "Replace `t1 = 2 + 3` when both operands are already constants:",
+          "correctAnswer": "`t1 = 5`, the result of the operator",
+          "distractors": [
+            { "text": "Leave the add, because IR is not allowed to do arithmetic", "kind": "reversed", "rationale": "Folding is exactly doing the arithmetic the IR already named." },
+            { "text": "`t1 = 2` and a separate leftover `+ 3` with no destination", "kind": "nearby", "rationale": "The whole operator is replaced by one result." },
+            { "text": "Rewrite it as a source token stream `2`, `+`, `3`", "kind": "misapplied", "rationale": "Folding rewrites IR, not tokens." }
+          ],
+          "correctExplanation": "Both sides are literals. The add becomes the literal `5`.",
+          "objectiveIds": ["Replace an operator whose operands are already constants with the result"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-constfold10-2",
+          "stem": "Folding `2 + 3` into `5` does not change observable behavior because:",
+          "correctAnswer": "The IR already specified the add; `5` is the value that add produces",
+          "distractors": [
+            { "text": "Constants are never read at run time, so any replacement is legal", "kind": "nearby", "rationale": "The reason is agreement, not that constants are invisible." },
+            { "text": "The parser promised that all adds equal five", "kind": "misapplied", "rationale": "The parser does not evaluate IR arithmetic." },
+            { "text": "SSA forbids constants, so the fold is a no-op by definition", "kind": "reversed", "rationale": "SSA is happy to name a constant; that is the point." }
+          ],
+          "correctExplanation": "Same operator, known inputs, same output. Observation does not change.",
+          "objectiveIds": ["State why folding 2+3 does not change observable behavior"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-constfold10-3",
+          "stem": "`t1 = a + 3` with `a` not constant should:",
+          "correctAnswer": "Stay an add until some other rewrite makes `a` a literal",
+          "distractors": [
+            { "text": "Fold to `t1 = 3`, dropping `a`", "kind": "nearby", "rationale": "That changes the value whenever `a` is not zero." },
+            { "text": "Fold to `t1 = 0` as a conservative default", "kind": "misconception", "rationale": "Folding does not guess; it requires both operands known." },
+            { "text": "Become a φ of `a` and `3` at the next join", "kind": "misapplied", "rationale": "φ merges control-flow names, not addends of one instruction." }
+          ],
+          "correctExplanation": "One operand is still a name. The add is not a constant yet.",
+          "objectiveIds": ["Replace an operator whose operands are already constants with the result"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-dce-10",
+      "conceptId": "cmp-dce",
+      "title": "Delete what nothing uses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-liveness"],
+      "goDeeper": "cmp-cse",
+      "explanation": [
+        "Deleting an instruction whose result nobody needs is the cheapest win. Liveness already said `t9` is not live after `t9 = a + b`. Dead code elimination drops that add. SSA makes the test a missing use-list: a def with no uses, and no other observable effect, is garbage.",
+        "Stores are the usual exception. A store's 'result' is memory, not a name in a use-list. If `store 0, p` might be read later, or might be volatile, or might be the observable effect of the program, it stays even when no SSA name looks live. 'Looks unused' is not enough for memory.",
+        "Pure arithmetic, a load whose value is dead, a φ whose name has no uses: those go. A call that might write through a pointer, throw, or not return does not go just because its return name is dead. DCE reads liveness and a side-effect story, not liveness alone."
+      ],
+      "example": "`t9 = a + b; t1 = 2 + 3; return t1` loses `t9` because nothing uses it. `store 0, p; return t1` keeps the store unless alias says `*p` is never read and the store is not otherwise observable.",
+      "whyItMatters": "Folding creates dead names. DCE is how those names leave. Without it, every fold looks like a wash.",
+      "quiz": [
+        {
+          "id": "ir-dce10-1",
+          "stem": "`t9 = a + b` with `t9` not live should be:",
+          "correctAnswer": "Deleted, because the add's result is not needed",
+          "distractors": [
+            { "text": "Kept, because three-address forbids deleting arithmetic", "kind": "reversed", "rationale": "Dead arithmetic is the first thing DCE removes." },
+            { "text": "Rewritten as a store of `t9` to a fresh alloca", "kind": "misapplied", "rationale": "That invents memory the program never asked for." },
+            { "text": "Converted to a φ so that SSA can keep the name", "kind": "nearby", "rationale": "A dead name does not need a merge; it needs deletion." }
+          ],
+          "correctExplanation": "No live use, no side effect. The instruction goes.",
+          "objectiveIds": ["Delete an instruction whose result is not live"],
+          "prerequisiteConceptIds": ["cmp-liveness"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-dce10-2",
+          "stem": "A store cannot be deleted just because no SSA name looks unused when:",
+          "correctAnswer": "A later load might read that location, or the store is otherwise observable",
+          "distractors": [
+            { "text": "Stores never have SSA names, so DCE is forbidden for all of them", "kind": "nearby", "rationale": "Dead stores exist; you need alias and observability, not a blanket ban." },
+            { "text": "The store's address is a constant, which makes it live forever", "kind": "misconception", "rationale": "A constant address can still be a dead location." },
+            { "text": "Liveness runs forward, so stores are always live-in", "kind": "misapplied", "rationale": "Direction of liveness is not why stores survive." }
+          ],
+          "correctExplanation": "Memory is the result. If someone can read it, or the write is the point, it stays.",
+          "objectiveIds": ["Predict when a store cannot be deleted even if its value looks unused"],
+          "prerequisiteConceptIds": ["cmp-liveness"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-dce10-3",
+          "stem": "A φ whose name has no uses differs from a store with no SSA users because:",
+          "correctAnswer": "The φ is a pure value and can go; the store may still write observable memory",
+          "distractors": [
+            { "text": "Both must stay, because SSA forbids deleting any instruction", "kind": "reversed", "rationale": "Dead pure values are exactly what DCE deletes." },
+            { "text": "Both must go, because neither name is live", "kind": "nearby", "rationale": "The store's effect is not a name; liveness of names is not enough." },
+            { "text": "The φ is a runtime call and the store is a comment", "kind": "misapplied", "rationale": "φ is an IR merge; the store is a memory write." }
+          ],
+          "correctExplanation": "Pure dead values delete. Memory writes need an alias/observability check.",
+          "objectiveIds": ["Predict when a store cannot be deleted even if its value looks unused"],
+          "prerequisiteConceptIds": ["cmp-liveness"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-cse-10",
+      "conceptId": "cmp-cse",
+      "title": "Compute it once",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ssa"],
+      "goDeeper": "cmp-inlining",
+      "explanation": [
+        "The same expression computed twice is a waste if the operands did not change. `t1 = a + b` then later `t2 = a + b` with the same `a` and `b` can become `t2 = t1`. SSA helps: if `a` and `b` still refer to those definitions, the expressions are common. If a store or a redefinition sits between them, they are not.",
+        "Stanford CS143's local CSE is the block-scoped version: a table of available expressions inside one straight-line sequence. Global CSE (or GVN in SSA) walks the graph and asks the same question across blocks, using dominance so the earlier computation is available at the later use.",
+        "Similar-looking is not common. `t1 = a + b` and `t3 = a + c` share an operator and one operand; they are not the same expression. `t1 = load p` and `t2 = load p` with a `store q` in between are not common if `p` and `q` may alias. Diagnosing the miss is usually 'operands changed' or 'memory may have changed', not 'the pass is shy'."
+      ],
+      "example": "`t1 = a + b; t2 = t1 * c; t3 = a + b` rewrites `t3` to `t1`. After `a2 = a + 1`, a later `a2 + b` is a different expression and must not reuse `t1`.",
+      "whyItMatters": "Redundant work is often two identical adds the front end emitted on both sides of a lowering. CSE is how they become one.",
+      "quiz": [
+        {
+          "id": "ir-cse10-1",
+          "stem": "`t1 = a + b` then `t3 = a + b` with `a` and `b` unchanged should:",
+          "correctAnswer": "Reuse `t1` for `t3`, because the expression is still available",
+          "distractors": [
+            { "text": "Keep both adds, because SSA forbids mentioning `t1` twice", "kind": "reversed", "rationale": "SSA wants one def; many uses of that def is the point." },
+            { "text": "Replace both with a φ of `a` and `b`", "kind": "misapplied", "rationale": "φ merges control-flow versions, not identical arithmetic." },
+            { "text": "Delete `t1` and keep only `t3`", "kind": "nearby", "rationale": "The first computation is the one you want to share." }
+          ],
+          "correctExplanation": "Same operands, same operator, still available. One add, two uses.",
+          "objectiveIds": ["Reuse an earlier computation of the same expression when values have not changed"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-cse10-2",
+          "stem": "Which pair is not actually common, despite looking similar?",
+          "correctAnswer": "`t1 = a + b` and `t3 = a + c`, which differ in the second operand",
+          "distractors": [
+            { "text": "`t1 = a + b` and a later `t3 = a + b` with those names unchanged", "kind": "reversed", "rationale": "That pair is the common case CSE should hit." },
+            { "text": "Two uses of the same SSA name `t1` in different blocks", "kind": "nearby", "rationale": "Those are uses, not two computations." },
+            { "text": "`x3 = φ(x1, x2)` and a copy `x4 = x3` of that result", "kind": "subtle", "rationale": "The copy is not a second evaluation of the φ's operands." }
+          ],
+          "correctExplanation": "`b` versus `c` is a different expression. Similarity is not identity.",
+          "objectiveIds": ["Diagnose when two similar expressions are not actually common"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ir-cse10-3",
+          "stem": "`load p` then `store q` then `load p` are not common when:",
+          "correctAnswer": "`p` and `q` may alias, so the store may have changed `*p`",
+          "distractors": [
+            { "text": "Loads are never common, even with no intervening store", "kind": "nearby", "rationale": "Two loads of a proven-invariant location can CSE." },
+            { "text": "SSA names the loads `t1` and `t2`, which forbids reuse", "kind": "reversed", "rationale": "Different names are what CSE rewrites to share." },
+            { "text": "Three-address cannot represent a load at all", "kind": "misapplied", "rationale": "Loads are ordinary IR instructions." }
+          ],
+          "correctExplanation": "A may-alias store in the middle kills availability of the first load.",
+          "objectiveIds": ["Diagnose when two similar expressions are not actually common"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-inlining-10",
+      "conceptId": "cmp-inlining",
+      "title": "The body, for a price",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-call-graph"],
+      "goDeeper": "cmp-loop-inv",
+      "explanation": [
+        "Opening a callee at a call site removes a boundary later passes can then see through. The call is replaced by a copy of `g`'s body, with formals bound to the actuals. SSA names are remapped so the copy does not collide with the caller. The compile-time price is size: the body is now in two places, and every later pass walks more IR.",
+        "Legal is not the same as profitable. A one-line getter is almost always worth it. A huge function called from fifty sites is legal to inline and usually unprofitable: the module grows, compile time grows, and the extra copies can drown the passes that were supposed to benefit. Recursion without a bound is the other unprofitable (and often illegal-in-practice) case.",
+        "The call graph tells you the candidates. A direct `call g` is easy. An indirect call is only a candidate if the graph has narrowed the target. After the copy, alias and the call graph of the caller are dirty — the pass manager's problem, already covered. Here the rewrite is the copy, and the price is size."
+      ],
+      "example": "`f` contains `r = call g(a)` and `g` is `return x + 1`. After inlining: `t1 = a + 1; r = t1` in `f`. Doing the same to a 400-instruction `g` at every call site in a hot header is legal and usually a compile-time loss.",
+      "whyItMatters": "Inlining is the enabling rewrite. The cost is paid in IR volume. Treat it as a budget, not a virtue.",
+      "quiz": [
+        {
+          "id": "ir-inlining10-1",
+          "stem": "Replace `r = call g(a)` when `g` is `return x + 1`:",
+          "correctAnswer": "Copy the add into the caller as `t1 = a + 1; r = t1`, paying extra IR size",
+          "distractors": [
+            { "text": "Leave the call and mark `g` as SSA, which is the same rewrite", "kind": "nearby", "rationale": "SSA form of `g` is not inlining; the body has to move." },
+            { "text": "Delete `g` from the module without copying anything into `f`", "kind": "reversed", "rationale": "The caller still needs the work `g` did." },
+            { "text": "Turn the call into a CFG edge to `g`'s entry and share names", "kind": "misapplied", "rationale": "That would smash two functions' SSA names together without a copy." }
+          ],
+          "correctExplanation": "The body lands at the site, names remapped. The price is the extra instructions.",
+          "objectiveIds": ["Replace a call with the callee body and state the compile-time price"],
+          "prerequisiteConceptIds": ["cmp-call-graph"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-inlining10-2",
+          "stem": "Inlining a 400-instruction `g` at fifty call sites is often unprofitable because:",
+          "correctAnswer": "The module and every later pass grow with fifty copies, for little new information",
+          "distractors": [
+            { "text": "Large callees are illegal to inline even when the call is direct", "kind": "nearby", "rationale": "Size is a profitability question, not a well-formedness ban." },
+            { "text": "The call graph forbids any edge `f → g` after the first copy", "kind": "reversed", "rationale": "Inlining uses the edge; it does not delete the legality of others." },
+            { "text": "Three-address cannot represent more than one copy of an add", "kind": "misapplied", "rationale": "IR can hold many copies; that is the problem." }
+          ],
+          "correctExplanation": "Legal, expensive. Compile-time size is the price the heuristic is supposed to see.",
+          "objectiveIds": ["Predict a case where inlining is legal but unprofitable"],
+          "prerequisiteConceptIds": ["cmp-call-graph"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-inlining10-3",
+          "stem": "A direct call to a one-instruction getter is a good inline because:",
+          "correctAnswer": "The copied body is tiny, so the compile-time price is small and the boundary vanishes",
+          "distractors": [
+            { "text": "Getters are illegal as separate functions once SSA exists", "kind": "misconception", "rationale": "They are legal; inlining is optional and cheap here." },
+            { "text": "The call graph has no edge, so the copy must invent one", "kind": "nearby", "rationale": "The direct call already is the edge." },
+            { "text": "Inlining always shrinks the module, even at fifty huge sites", "kind": "reversed", "rationale": "Inlining copies; it grows the caller." }
+          ],
+          "correctExplanation": "Small body, small price, later folds see the add. That is the profitable case.",
+          "objectiveIds": ["Replace a call with the callee body and state the compile-time price"],
+          "prerequisiteConceptIds": ["cmp-call-graph"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-loop-inv-10",
+      "conceptId": "cmp-loop-inv",
+      "title": "Hoist what the loop does not change",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-cfg-ir"],
+      "goDeeper": "cmp-licm",
+      "explanation": [
+        "Loop bodies that recompute a value the iteration does not change are leaving money on the table. If `t1 = a + b` uses only names defined outside the loop, and the loop never writes `a` or `b`, the add is loop-invariant. The pattern a pass looks for is: operands invariant, instruction pure (or proven safe), and a preheader to park the result in.",
+        "The preheader is a block that runs once, then always enters the header. Hoisting moves `t1 = a + b` there. Each iteration uses `t1` instead of rebuilding it. CMU 15-411 treats this as the first loop rewrite after you can name the CFG's back-edge.",
+        "Control matters. An invariant add that sits on a path the loop rarely takes may still be legal to hoist if it cannot fault. Whether it is profitable is a later LICM question. Here the identification is the pattern: invariant operands, a header, a preheader, a computation the back-edge does not kill."
+      ],
+      "example": "`for (i = 0; i < n; i++) t = a + b; use(t, i);` with `a` and `b` not written in the loop. The add hoists to the preheader; the body uses the one `t1`.",
+      "whyItMatters": "A loop that re-adds two loop-constant names on every iteration is a CFG picture you can already see. Hoist it.",
+      "quiz": [
+        {
+          "id": "ir-loopinv10-1",
+          "stem": "`t1 = a + b` inside a loop that never writes `a` or `b` should:",
+          "correctAnswer": "Move to the preheader, with the body using that one `t1`",
+          "distractors": [
+            { "text": "Stay in the body, because three-address forbids moving adds", "kind": "reversed", "rationale": "Invariant motion is why three-address exists." },
+            { "text": "Become a φ in the header that mixes `a` and `b` each iteration", "kind": "misapplied", "rationale": "Nothing is merging; the value is the same every trip." },
+            { "text": "Be duplicated onto every exiting edge instead of the preheader", "kind": "nearby", "rationale": "That is sinking, and it still redoes the add on paths that stay in." }
+          ],
+          "correctExplanation": "Invariant operands, pure add, preheader. One computation, many uses.",
+          "objectiveIds": ["Hoist a computation the loop does not change to the preheader"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-loopinv10-2",
+          "stem": "The loop-invariant pattern a pass looks for is:",
+          "correctAnswer": "Operands defined outside the loop (or already invariant) and not killed by the body",
+          "distractors": [
+            { "text": "Any instruction in a block that has a back-edge, including `i = i + 1`", "kind": "nearby", "rationale": "The induction add is the opposite of invariant." },
+            { "text": "Any load, because memory is always the same across iterations", "kind": "misconception", "rationale": "Loads need alias; that is the next lesson." },
+            { "text": "A φ in the header, which is invariant by construction", "kind": "reversed", "rationale": "Header φs usually mix the preheader value with a loop-carried one." }
+          ],
+          "correctExplanation": "Invariant operands, not killed. That is the pattern, before you worry about loads.",
+          "objectiveIds": ["Identify the loop-invariant pattern a pass looks for"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-loopinv10-3",
+          "stem": "`t1 = i + 1` where `i` is the induction variable of the same loop is:",
+          "correctAnswer": "Not invariant; each iteration defines a new `i` the add depends on",
+          "distractors": [
+            { "text": "Invariant, because `1` is a constant", "kind": "nearby", "rationale": "One operand is constant; the other changes every trip." },
+            { "text": "Hoistable to the preheader as `t1 = 1` dropping `i`", "kind": "reversed", "rationale": "That changes the value on every iteration after the first." },
+            { "text": "Illegal three-address, because loops cannot add", "kind": "misapplied", "rationale": "The add is fine; it just is not invariant." }
+          ],
+          "correctExplanation": "The induction name changes. The add is work the loop actually needs.",
+          "objectiveIds": ["Identify the loop-invariant pattern a pass looks for"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-licm-10",
+      "conceptId": "cmp-licm",
+      "title": "When a load is not invariant",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-loop-inv", "cmp-alias"],
+      "goDeeper": "cmp-strength-red",
+      "explanation": [
+        "Hoisting a load is only legal when nothing in the loop can write the same location. Loop-invariant code motion for arithmetic was the last lesson. Loads add alias. If the body contains `store q` and `p` may alias `q`, `load p` is not invariant, even if `p` itself is a loop-constant pointer. The pass must refuse that hoist.",
+        "CMU 15-411 and LLVM both treat this as the difference between 'looks invariant' and 'is invariant'. A must-not-alias proof against every store in the loop (and against unknown calls that might write) is what licenses the load in the preheader. 'I have not seen a store to `p` by name' is not a proof.",
+        "Exceptions and faults are the other refusal. A load that can trap, hoisted from a path the loop might not take, can change which fault is observed. That diagnosis belongs with the alias refusal: both are LICM saying no. The twenty-minute unit spends more time on the fault."
+      ],
+      "example": "`t1 = load p; store 0, q; use(t1)` inside a loop. If `p` may alias `q`, `t1` cannot hoist. If they must not alias and the load is known not to fault extra, the load can sit in the preheader.",
+      "whyItMatters": "LICM that ignores alias is a miscompile, not an aggressive win. The load was not invariant.",
+      "quiz": [
+        {
+          "id": "ir-licm10-1",
+          "stem": "A loop contains `t1 = load p` and `store 0, q`. Refuse to hoist the load when:",
+          "correctAnswer": "`p` and `q` may alias, so an iteration's store can change `*p`",
+          "distractors": [
+            { "text": "`p` is a loop-constant pointer, which always makes the load invariant", "kind": "nearby", "rationale": "A constant address can still be written through another pointer." },
+            { "text": "The load is in SSA, so memory is already a register", "kind": "reversed", "rationale": "SSA names the load's result; the location can still be stored to." },
+            { "text": "Every load must hoist, because LICM has no alias query", "kind": "misconception", "rationale": "The alias query is the whole lesson." }
+          ],
+          "correctExplanation": "May-alias store in the body kills invariance of the load. Leave it.",
+          "objectiveIds": ["Refuse to hoist a load that may alias a store in the loop"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cmp-alias"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-licm10-2",
+          "stem": "Which hoist would change which exception or fault is observed?",
+          "correctAnswer": "Moving a potentially trapping `load p` from a rarely taken inner path into the preheader",
+          "distractors": [
+            { "text": "Hoisting `t1 = a + b` of two loop-constant integers that cannot trap", "kind": "nearby", "rationale": "That add does not introduce a new fault." },
+            { "text": "Deleting a dead add whose name is not live", "kind": "misapplied", "rationale": "DCE of pure values does not hoist a fault." },
+            { "text": "Reusing `t1 = a + b` inside one block via CSE", "kind": "subtle", "rationale": "Local CSE does not move a load above a guard." }
+          ],
+          "correctExplanation": "The preheader always runs. The inner path might not. The fault moved.",
+          "objectiveIds": ["Diagnose a hoist that would change which exception or fault is observed"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cmp-alias"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ir-licm10-3",
+          "stem": "`load p` with `p` loop-constant and every in-loop store proven not to alias `p` is:",
+          "correctAnswer": "A candidate to hoist, unlike a may-alias store to the same location",
+          "distractors": [
+            { "text": "Still illegal, because loads are never invariant", "kind": "nearby", "rationale": "Proven must-not-alias loads are the legal case." },
+            { "text": "The same as a load that may alias `q` written in the body", "kind": "reversed", "rationale": "May-alias is the refusal; this is the opposite." },
+            { "text": "A reason to delete the loop's back-edge", "kind": "misapplied", "rationale": "LICM moves the load; it does not dismantle the CFG." }
+          ],
+          "correctExplanation": "Must-not against the body's stores is the alias green light. May-alias is not.",
+          "objectiveIds": ["Refuse to hoist a load that may alias a store in the loop"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cmp-alias"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-licm-20",
+      "conceptId": "cmp-licm",
+      "title": "Faults, aliases, and the preheader",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cmp-loop-inv", "cmp-alias"],
+      "goDeeper": "cmp-strength-red",
+      "explanation": [
+        "Speculating a faulting load into the preheader can change which exception the program observes. The ten-minute unit refused may-alias stores. The other refusal is control: a `load p` that sat behind `if (p != 0)` or behind a bounds check is not free to run on every entry to the loop. The preheader does not have that guard.",
+        "LLVM LangRef's take on undefined behavior and trapping loads is the practical test. If the IR says the load is `noundef` and well-defined on every iteration that reaches it, and you hoist above a path that used not to reach it, you have invented a fault or a poison the original program did not have. That is a changed observation, even if alias was clean.",
+        "Alias and control interact. A store in the `else` of an in-loop branch may alias `p` only on that path. A context-insensitive 'may alias something in the loop' still refuses the hoist. A more precise query might allow it on the `then` path and still refuse to put the load in the preheader, because the preheader is not that path.",
+        "Calls inside the loop are stores you have not listed. An unknown call may write `*p`. Unless the call graph and alias say the callee cannot, the load stays. LICM that only looks at explicit `store` instructions in the same function is incomplete.",
+        "The safe checklist is small. Operands invariant. Instruction cannot introduce a new fault on the preheader's paths. No in-loop store or unknown write may alias the location. Then hoist. Anything fuzzier is a maybe, and LICM's job is to say no."
+      ],
+      "example": "`if (i < n) t = load p; else t = 0;` inside the loop, with `p` otherwise invariant. Hoisting `load p` to the preheader faults even when `n` is 0 and the original body never loaded. Leave it, or hoist only with a matching guard.",
+      "whyItMatters": "A 'faster' loop that now traps on the empty-run is not LICM. It is a different program.",
+      "quiz": [
+        {
+          "id": "ir-licm20-1",
+          "stem": "Hoisting `load p` from behind `if (p != 0)` into the preheader is wrong because:",
+          "correctAnswer": "The preheader always runs, so a null `p` now faults even when the body skipped the load",
+          "distractors": [
+            { "text": "Null pointers are loop-invariant, so the load must hoist", "kind": "reversed", "rationale": "Invariance of `p` is not a license to drop the guard." },
+            { "text": "φ-nodes cannot mention loads, so the hoist is a syntax error", "kind": "nearby", "rationale": "The bug is observable fault order, not a φ rule." },
+            { "text": "The CFG forbids preheaders once a loop has a branch", "kind": "misapplied", "rationale": "Preheaders still exist; the load just should not move there." }
+          ],
+          "correctExplanation": "The guard was the only reason the load was defined. The preheader does not have it.",
+          "objectiveIds": ["Diagnose a hoist that would change which exception or fault is observed"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cmp-alias"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ir-licm20-2",
+          "stem": "An unknown call in the loop compared with an explicit `store q` that may alias `p`:",
+          "correctAnswer": "Both can write `*p`; either one is enough to refuse hoisting `load p`",
+          "distractors": [
+            { "text": "Only explicit stores matter; calls cannot alias", "kind": "nearby", "rationale": "An unknown callee may store through a pointer you passed, or a global." },
+            { "text": "Calls always prove `p` is invariant, because they return", "kind": "reversed", "rationale": "Returning does not mean memory was untouched." },
+            { "text": "The call graph deletes in-loop calls before LICM runs", "kind": "misapplied", "rationale": "LICM must see those calls; they are the writes." }
+          ],
+          "correctExplanation": "Unknown write or may-alias store: the load is not invariant. Refuse both.",
+          "objectiveIds": ["Refuse to hoist a load that may alias a store in the loop"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cmp-alias"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ir-licm20-3",
+          "stem": "A load behind `if (i < n)` with `n` possibly zero, alias-clean against in-loop stores, should:",
+          "correctAnswer": "Stay in the guarded path, or hoist only with an equivalent guard, not naked into the preheader",
+          "distractors": [
+            { "text": "Always hoist, because alias-clean is the only LICM test", "kind": "nearby", "rationale": "Alias was clean; the fault on the empty run is the remaining test." },
+            { "text": "Be deleted, because a guarded load is dead on the other path", "kind": "reversed", "rationale": "The taken path still needs the value." },
+            { "text": "Become a φ of the load and `0` in the preheader without a guard", "kind": "misapplied", "rationale": "That still executes the load in the preheader." }
+          ],
+          "correctExplanation": "Alias was not the issue. Speculating the fault is. Keep the guard.",
+          "objectiveIds": ["Diagnose a hoist that would change which exception or fault is observed"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cmp-alias"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-strength-red-10",
+      "conceptId": "cmp-strength-red",
+      "title": "The multiply that can step",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-loop-inv"],
+      "goDeeper": "cmp-sroa",
+      "explanation": [
+        "Multiplies of an induction variable can become a running add that steps the same sequence. If `i` goes `0, 1, 2, ...` and the body computes `t = i * 4`, the values are `0, 4, 8, ...`. An add that starts at `0` in the preheader and does `t = t + 4` each iteration produces the same names. That is strength reduction: a multiply replaced by a cheaper recurrence.",
+        "The new recurrence still computes the original values because it is the closed form unrolled one step. Base `t0 = start * k` in the preheader, then `t_{n+1} = t_n + k` when `i` increases by 1. If `i` increases by `s`, the step is `k * s` (and `k * s` itself may be invariant and hoisted). Algebra, not a guess.",
+        "The multiply must be of an induction family. `t = a * b` of two loop-invariants is a job for LICM, not for a recurrence. `t = i * i` is not an add of a constant. Strength reduction hunts the linear case: `i * k + b` becoming a pointer or integer that walks by `k` each trip."
+      ],
+      "example": "`t = i * 4` with `i` stepping by 1 from 0 becomes `t0 = 0` in the preheader and `t = t + 4` in the body. Uses of `t` see `0, 4, 8, ...`, the same sequence the multiply produced.",
+      "whyItMatters": "Addressing `base + i * sizeof` is this rewrite. The loop should add, not multiply, each trip.",
+      "quiz": [
+        {
+          "id": "ir-strengthred10-1",
+          "stem": "Replace `t = i * 4` when `i` starts at 0 and steps by 1:",
+          "correctAnswer": "`t0 = 0` in the preheader, then `t = t + 4` each iteration",
+          "distractors": [
+            { "text": "Hoist the multiply as-is to the preheader and use one `t` forever", "kind": "nearby", "rationale": "That would freeze `t` at `0 * 4` and miss later iterations." },
+            { "text": "Delete the multiply because induction variables are not live", "kind": "reversed", "rationale": "The values are needed; they should be added, not dropped." },
+            { "text": "Rewrite it as `t = i + i + i + i` still inside the multiply's block only", "kind": "misapplied", "rationale": "That is still per-iteration work linear in `i`, not a running add." }
+          ],
+          "correctExplanation": "Same sequence, one add per trip. That is the reduced strength.",
+          "objectiveIds": ["Replace an induction multiply with an add that steps the same sequence"],
+          "prerequisiteConceptIds": ["cmp-loop-inv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-strengthred10-2",
+          "stem": "The new recurrence still computes the original values because:",
+          "correctAnswer": "`t0 = start * k` and `t += k` each time `i` increases by 1 matches `i * k`",
+          "distractors": [
+            { "text": "Adds and multiplies are the same operator in three-address", "kind": "misconception", "rationale": "They are different operators; the sequence is what matches." },
+            { "text": "The preheader runs every iteration, so `start * k` is recomputed anyway", "kind": "reversed", "rationale": "The preheader runs once; the add is the per-trip work." },
+            { "text": "SSA φs automatically multiply induction names by the step", "kind": "nearby", "rationale": "The pass inserts the add; φs only merge the carried `t`." }
+          ],
+          "correctExplanation": "Induction: one more `i` means one more `k`. The add is that increment.",
+          "objectiveIds": ["State why the new recurrence still computes the original values"],
+          "prerequisiteConceptIds": ["cmp-loop-inv"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-strengthred10-3",
+          "stem": "Trace `i = 0,1,2` through `t = i * 4` after reduction:",
+          "correctAnswer": "`t` takes `0`, then `4`, then `8`, the same three values as the multiply",
+          "distractors": [
+            { "text": "`t` stays `0` after the preheader, because the add is invariant", "kind": "nearby", "rationale": "The add is the opposite of invariant; it is the induction step." },
+            { "text": "`t` takes `4, 5, 6`, adding one like `i` does", "kind": "reversed", "rationale": "The step is `4`, not `1`." },
+            { "text": "`t` is a φ of `i` and `4` with no add", "kind": "misapplied", "rationale": "φ would pick `i` or `4`, not scale `i` by `4`." }
+          ],
+          "correctExplanation": "Start at 0, add 4 each trip. That is `i * 4` for this induction.",
+          "objectiveIds": ["Replace an induction multiply with an add that steps the same sequence"],
+          "prerequisiteConceptIds": ["cmp-loop-inv"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-sroa-10",
+      "conceptId": "cmp-sroa",
+      "title": "Explode the struct SSA can eat",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-mem2reg"],
+      "goDeeper": "cmp-tailcall",
+      "explanation": [
+        "Aggregates that never escape can be exploded into scalar names SSA already knows how to promote. A local `struct { i32 a; i32 b; }` lowered as one alloca is a blob. SROA splits it into an `a` slot and a `b` slot — or straight into SSA values `a1`, `b1`. mem2reg then sees two non-escaping scalars instead of a struct it cannot name.",
+        "LLVM's SROA is this split. Field-sensitive loads and stores become operations on the pieces. A `load %s.a` is a use of `a1`. A store to `%s.b` is a new `b2`. φs appear at joins per field, not for the whole blob.",
+        "A field still cannot be promoted when its address escapes. `p = &s.b; call f(p)` means `b` is really memory: the callee may load or store it. `a` might still promote if its address never left. Escape is per piece after the split, which is why SROA runs before a second mem2reg, not instead of thinking about pointers."
+      ],
+      "example": "`S s; s.a = 1; s.b = 2; return s.a;` with no `&s`. SROA plus mem2reg yields `a1 = 1; b1 = 2; return a1`, and `b1` is dead. If the body also does `call f(&s.b)`, field `b` stays an alloca (or a slice of one); `a` can still become `a1`.",
+      "whyItMatters": "mem2reg does not look inside a struct. SROA is how the pieces become names.",
+      "quiz": [
+        {
+          "id": "ir-sroa10-1",
+          "stem": "Split a non-escaping `struct { a, b }` local so SSA can name the pieces:",
+          "correctAnswer": "Replace the blob with scalar names (or scalar slots) for `a` and `b`",
+          "distractors": [
+            { "text": "Keep one alloca and hope mem2reg will promote the struct as a single SSA value of struct type", "kind": "nearby", "rationale": "mem2reg wants scalars; the split is the point." },
+            { "text": "Turn the struct into a heap object so the fields can alias", "kind": "misapplied", "rationale": "SROA stays local; it does not allocate on the heap." },
+            { "text": "Delete field `b` because only `a` is returned, before proving `b` is dead", "kind": "reversed", "rationale": "Splitting comes first; DCE of a dead piece comes after." }
+          ],
+          "correctExplanation": "Pieces first. Then mem2reg, then DCE. The blob cannot be one SSA integer.",
+          "objectiveIds": ["Split an aggregate into scalar pieces SSA can name"],
+          "prerequisiteConceptIds": ["cmp-mem2reg"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-sroa10-2",
+          "stem": "After SROA, field `b` still cannot be promoted when:",
+          "correctAnswer": "`&s.b` is passed to a callee, so that field's address escapes",
+          "distractors": [
+            { "text": "`b` is assigned twice, which forbids SSA names", "kind": "nearby", "rationale": "Multiple assignments become φs; they do not force memory." },
+            { "text": "Field `a` was promoted, so `b` must stay in the blob", "kind": "reversed", "rationale": "Escape is per field after the split." },
+            { "text": "The struct type has two fields, which SROA refuses to split", "kind": "misconception", "rationale": "Two fields is the easy split." }
+          ],
+          "correctExplanation": "The escaped piece is memory. The other piece can still be a name.",
+          "objectiveIds": ["Predict when a field still cannot be promoted because its address escapes"],
+          "prerequisiteConceptIds": ["cmp-mem2reg"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-sroa10-3",
+          "stem": "`call f(&s)` compared with `call f(&s.b)` after a split:",
+          "correctAnswer": "The whole struct escaping blocks every field; only `&s.b` can leave `a` promotable",
+          "distractors": [
+            { "text": "Both calls are equivalent, because any escape poisons all fields equally after SROA", "kind": "nearby", "rationale": "SROA's point is per-field escape." },
+            { "text": "Neither call matters; SROA promotes escaped fields too", "kind": "reversed", "rationale": "Escape is why a piece stays in memory." },
+            { "text": "They are parser differences that IR cannot see", "kind": "misapplied", "rationale": "The IR sees a pointer to the blob versus a pointer to one field." }
+          ],
+          "correctExplanation": "Address of the blob leaks everything. Address of `b` leaks `b`. `a` can still go to SSA.",
+          "objectiveIds": ["Predict when a field still cannot be promoted because its address escapes"],
+          "prerequisiteConceptIds": ["cmp-mem2reg"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-tailcall-10",
+      "conceptId": "cmp-tailcall",
+      "title": "A jump, not a call",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-cfg-ir"],
+      "goDeeper": "cmp-vectorize",
+      "explanation": [
+        "A call in tail position can reuse the current frame instead of growing another. Tail position means: after the call returns, the caller does nothing but return that value (or return void). The CFG picture is a call whose result flows straight to the function's exit, with no intervening work. That call can be rewritten as a jump to the callee, reusing the current frame.",
+        "Work after the call kills the rewrite. `t = call g(x); t2 = t + 1; return t2` is not tail: the add remains. `call g(x); return 0` is not tail if `g`'s result is discarded and a different value is returned — and even `call g(x); return` is not tail if `g` is not the last observable effect you can fold into the jump (the usual rule is: the call's result is the caller's result, nothing after).",
+        "Self-recursion in tail position is the famous special case: the jump is back to the current function's entry, a loop in the CFG. That is still the same rewrite. Diagnose the non-tail case by looking for the extra add, store, or φ-using work on the path from the call to the return."
+      ],
+      "example": "`return g(x)` is tail: jump to `g`, reuse the frame. `return g(x) + 1` is not: the add is work after `g` returns, so the frame must stay until that add runs.",
+      "whyItMatters": "A recursive walk that should be a loop is often one extra `+ 1` after the call. That is the diagnosis, not a mysterious stack.",
+      "quiz": [
+        {
+          "id": "ir-tailcall10-1",
+          "stem": "Rewrite `return g(x)` in tail position:",
+          "correctAnswer": "A jump to `g` that reuses the current frame, with `x` as the incoming argument",
+          "distractors": [
+            { "text": "A new frame for `g`, because calls always allocate", "kind": "nearby", "rationale": "Tail position is the case that does not need a new frame." },
+            { "text": "Inline `g`'s body only, which is the same as a tail jump", "kind": "subtle", "rationale": "Inlining copies; tail call reuses a frame without copying." },
+            { "text": "A φ at the caller's exit mixing `g`'s result with `x`", "kind": "misapplied", "rationale": "There is no merge; the result is `g`'s result." }
+          ],
+          "correctExplanation": "Nothing after the call. Jump, reuse the frame, pass `x`.",
+          "objectiveIds": ["Rewrite a call in tail position as a jump that reuses the current frame"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-tailcall10-2",
+          "stem": "`t = call g(x); t2 = t + 1; return t2` is not tail because:",
+          "correctAnswer": "The add remains after `g` returns, so the current frame still has work",
+          "distractors": [
+            { "text": "SSA forbids returning a name defined by a call", "kind": "misconception", "rationale": "Returning `t2` is fine; it is just not a tail call of `g`." },
+            { "text": "The CFG cannot have a call and a return in one function", "kind": "nearby", "rationale": "Ordinary functions do this; they just are not tail." },
+            { "text": "`g` is a direct call, and only indirect calls can be tail", "kind": "reversed", "rationale": "Direct calls are the easy tail-call case." }
+          ],
+          "correctExplanation": "Work after the call. The frame cannot disappear until the add runs.",
+          "objectiveIds": ["Diagnose a call that is not tail because work remains after it returns"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ir-tailcall10-3",
+          "stem": "A self-recursive `return f(x-1)` in tail position becomes:",
+          "correctAnswer": "A jump to `f`'s entry that reuses this frame, which looks like a loop in the CFG",
+          "distractors": [
+            { "text": "A new frame per recursion step, because self-calls cannot be jumps", "kind": "reversed", "rationale": "Self-recursion is the loop-shaped tail call." },
+            { "text": "An infinite unroll of `f`'s body at compile time", "kind": "nearby", "rationale": "The rewrite is a jump, not an unroll." },
+            { "text": "A φ that mixes all future `x-1` values in the preheader", "kind": "misapplied", "rationale": "The next `x` arrives as the jump's argument, not as a static mix." }
+          ],
+          "correctExplanation": "Same function, tail position: jump to entry. The CFG shows a back-edge.",
+          "objectiveIds": ["Rewrite a call in tail position as a jump that reuses the current frame"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-vectorize-10",
+      "conceptId": "cmp-vectorize",
+      "title": "One operator, many iterations",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-loop-inv", "cpu-vector-simd"],
+      "goDeeper": "cmp-ipo",
+      "explanation": [
+        "Independent iterations of a loop can share one packed operator if they do not depend on each other. Vectorization packs consecutive independent iterations into one SIMD instruction: four adds, one opcode, four lanes. The IR picture is a loop `for i in 0..n: c[i] = a[i] + b[i]` becoming a stride-4 loop that does `c[i..i+3] = a[i..i+3] + b[i..i+3]`, plus a scalar remainder.",
+        "Dependence is the legality cut. `a[i] = a[i-1] + 1` carries a value from the previous iteration; those iterations are not independent, and packing them is illegal. Alias is the other cut: `a[i] = b[i] + 1` is illegal to vectorize as non-overlapping loads and stores if `a` and `b` may overlap. Either fact — a loop-carried dependence, or a may-alias pair among the packed accesses — kills the rewrite.",
+        "The hardware story is 'one instruction, many lanes'. You do not need a prior SIMD lecture to see the IR test: can this iteration run without waiting for the last one, and can these addresses be proven distinct? If yes, pack. If not, leave the scalar loop."
+      ],
+      "example": "`for i: c[i] = a[i] + b[i]` with `a`, `b`, `c` must-not-alias packs into a wide add. `for i: a[i] = a[i-1] + 1` does not: iteration `i` reads the store from `i-1`.",
+      "whyItMatters": "A missed vectorization is often a dependence the IR can already name, or an alias the analysis would not sign. Not a missing opcode.",
+      "quiz": [
+        {
+          "id": "ir-vectorize10-1",
+          "stem": "Pack `c[i] = a[i] + b[i]` for consecutive independent `i` into:",
+          "correctAnswer": "One SIMD add that updates several `c` lanes, plus a scalar remainder if needed",
+          "distractors": [
+            { "text": "A φ that mixes `a[i]` and `b[i]` in the loop header", "kind": "nearby", "rationale": "φ merges control-flow names; it does not pack iterations." },
+            { "text": "A single scalar add executed once in the preheader", "kind": "reversed", "rationale": "Each iteration still has its own elements; they run together, not once." },
+            { "text": "An indirect call per lane, because SIMD is a runtime helper", "kind": "misapplied", "rationale": "The rewrite is an IR operator on packed values, not a call." }
+          ],
+          "correctExplanation": "One packed add, many independent iterations. That is the legal case.",
+          "objectiveIds": ["Pack consecutive independent iterations into one SIMD instruction"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cpu-vector-simd"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-vectorize10-2",
+          "stem": "Which fact makes vectorizing `a[i] = a[i-1] + 1` illegal?",
+          "correctAnswer": "A loop-carried dependence: iteration `i` needs the store from `i-1`",
+          "distractors": [
+            { "text": "The add is loop-invariant, so it belongs in the preheader instead", "kind": "nearby", "rationale": "`a[i-1]` changes every trip; this is dependence, not invariance." },
+            { "text": "SSA forbids naming `a[i]` and `a[i-1]` in one function", "kind": "misconception", "rationale": "Both names are fine; they just cannot pack as independent lanes." },
+            { "text": "Three-address cannot represent an add of a load", "kind": "misapplied", "rationale": "The scalar loop is already legal IR." }
+          ],
+          "correctExplanation": "Lanes would have to wait on each other. Independent is the packing rule.",
+          "objectiveIds": ["Name a dependence or alias fact that makes vectorization illegal"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cpu-vector-simd"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-vectorize10-3",
+          "stem": "`c[i] = a[i] + 1` when `a` and `c` may overlap should:",
+          "correctAnswer": "Stay scalar (or use a safe overlapping pack), because may-alias makes independent-lane stores illegal",
+          "distractors": [
+            { "text": "Always pack, because a later DCE will fix overlapping stores", "kind": "reversed", "rationale": "DCE does not repair a dependence the vectorizer invented." },
+            { "text": "Hoist every load to the preheader and store once", "kind": "nearby", "rationale": "That is LICM of a changing `a[i]`, which is not invariant." },
+            { "text": "Replace the loop with a φ of `a` and `c` and delete the body", "kind": "misapplied", "rationale": "φ does not model overlapping arrays." }
+          ],
+          "correctExplanation": "May-alias of `a` and `c` is a dependence between packed loads and stores. Do not pretend they are independent.",
+          "objectiveIds": ["Name a dependence or alias fact that makes vectorization illegal"],
+          "prerequisiteConceptIds": ["cmp-loop-inv", "cpu-vector-simd"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-ipo-10",
+      "conceptId": "cmp-ipo",
+      "title": "Facts that cross the call",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-inlining", "cmp-call-graph"],
+      "goDeeper": "cmp-isel",
+      "explanation": [
+        "Facts that stay true across a call are the ones inlining did not have to erase the boundary to see. Interprocedural optimization propagates a fact from caller to callee, or back, while the call still exists. `g` always returns `0` is a fact you can attach to `g` and then use at every `call g` without copying `g`'s body. The call graph says where that fact is allowed to travel.",
+        "A local fact is true inside one function from that function's IR alone: `t1 = 2 + 3` folds to `5` without looking at callees. A fact that is only true after seeing the callee is different: `t = call g(x)` is a constant only once you inspected `g` (or a summary of `g`) and saw it always returns a literal. That is the comparison: local versus across the edge.",
+        "Inlining is the blunt way to make a cross-boundary fact local. IPO is the way that keeps the boundary and still ships a summary: 'does not write `*p`', 'returns this constant', 'this argument is unused'. Indirect calls make the summary conservative, same as the call graph. A missing callee on the graph means you cannot claim the fact."
+      ],
+      "example": "`g` is `return 0`. Locally, `f` only sees `t = call g(x)`. After IPO, `t` is `0` at the call site without inlining `g`. The same `t` stays unknown if `g` is an unbounded indirect target.",
+      "whyItMatters": "Not every call should be inlined. The facts that still cross are how a module gets smarter without becoming one function.",
+      "quiz": [
+        {
+          "id": "ir-ipo10-1",
+          "stem": "`g` always returns `0`. Propagate that across `t = call g(x)` without inlining by:",
+          "correctAnswer": "Replacing `t` with `0` at the call site, leaving `g` as a separate function",
+          "distractors": [
+            { "text": "Copying `g`'s body into every caller, which is required to see the `0`", "kind": "nearby", "rationale": "That is inlining. IPO can ship the constant without the copy." },
+            { "text": "Deleting the call graph edge `f → g` so the fact cannot leak", "kind": "reversed", "rationale": "The edge is how the fact is allowed to travel." },
+            { "text": "Folding `2+3` in `f`, which is the same interprocedural step", "kind": "misapplied", "rationale": "`2+3` is a local fact; it never needed `g`." }
+          ],
+          "correctExplanation": "A summary of `g` is enough. The call can stay; `t` becomes `0`.",
+          "objectiveIds": ["Propagate a fact across a call boundary the inliner has not removed"],
+          "prerequisiteConceptIds": ["cmp-inlining", "cmp-call-graph"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-ipo10-2",
+          "stem": "Compare `t1 = 2 + 3` in `f` with `t = call g(x)` when `g` returns `0`:",
+          "correctAnswer": "The add is a local fact; the `0` is only true after seeing the callee (or its summary)",
+          "distractors": [
+            { "text": "Both are local, because every constant fold is intra-block", "kind": "nearby", "rationale": "The call's constant is not in `f`'s block until IPO or inlining puts it there." },
+            { "text": "Both are interprocedural, because SSA names always cross functions", "kind": "reversed", "rationale": "SSA names are per function; the add never left `f`." },
+            { "text": "Neither is a fact until the CFG of `g` is inlined into `f`", "kind": "misconception", "rationale": "The add is already foldable; the call is the one that needs `g`." }
+          ],
+          "correctExplanation": "Local versus across the edge. That is the IPO distinction.",
+          "objectiveIds": ["Compare a local fact with one that is only true after seeing the callee"],
+          "prerequisiteConceptIds": ["cmp-inlining", "cmp-call-graph"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ir-ipo10-3",
+          "stem": "An unbounded indirect call, compared with a direct `call g` whose body always returns `0`:",
+          "correctAnswer": "The direct call can take the `0`; the indirect one cannot, because the callee set is not closed",
+          "distractors": [
+            { "text": "Both can take the `0`, because all callees are equivalent in SSA", "kind": "nearby", "rationale": "Unknown targets do not share `g`'s summary." },
+            { "text": "Neither can, because IPO is just another name for inlining", "kind": "reversed", "rationale": "Direct-call IPO is the case that keeps the boundary." },
+            { "text": "The indirect call is a CFG branch, so the `0` is a φ operand", "kind": "misapplied", "rationale": "A function pointer is a call-graph problem, not a φ in `f`." }
+          ],
+          "correctExplanation": "Closed callee set, summary applies. Open set, you cannot claim `0`.",
+          "objectiveIds": ["Compare a local fact with one that is only true after seeing the callee"],
+          "prerequisiteConceptIds": ["cmp-inlining", "cmp-call-graph"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

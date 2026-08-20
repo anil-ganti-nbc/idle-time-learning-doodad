@@ -1,0 +1,519 @@
+{
+  "courseId": "ml-foundations",
+  "moduleId": "ml-f-problem",
+  "lessons": [
+    {
+      "id": "ml-learning-problem-5",
+      "conceptId": "ml-learning-problem",
+      "title": "A rule that must work tomorrow",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "ml-features-targets",
+      "diagram": "ml-learn-loop",
+      "explanation": [
+        "A learning problem is not 'the computer got smarter'. It is this contract: you show examples of inputs paired with the answer you wanted, and you ask for a rule that will still be useful on examples you have not shown. If the rule only recites the spreadsheet, you did not learn. You stored.",
+        "That is why later lessons obsess over a held-out set. The job is a prediction that survives contact with a new row. Neural nets and transformers are later ways to write the rule. They are not the problem."
+      ],
+      "example": "Given house size and a sale price, infer a rule that prices a house that is not in the table. Reciting the training addresses is not that rule.",
+      "whyItMatters": "Every later argument about overfitting, leakage, or 'the model understands' is a fight about this contract. Name the job before you name the architecture.",
+      "quiz": [
+        {
+          "id": "ml-lp5-1",
+          "stem": "A learning problem asks you to infer a rule that:",
+          "correctAnswer": "Works on examples you have not shown the fitter",
+          "distractors": [
+            { "text": "Recites every training row from memory", "kind": "reversed", "rationale": "Memorizing the sheet is storage, not the job." },
+            { "text": "Chooses a transformer before any loss exists", "kind": "nearby", "rationale": "Architecture is a later writing of the rule." },
+            { "text": "Stores the spreadsheet as the deployed product", "kind": "subtle", "rationale": "The product is the rule, not the table." }
+          ],
+          "correctExplanation": "Unseen examples are the point. A recited table is not a rule.",
+          "objectiveIds": ["State a learning problem as inferring a rule from examples that should work on unseen examples"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-lp5-2",
+          "stem": "In this course, a rule that 'works' means:",
+          "correctAnswer": "A prediction job that survives a new row",
+          "distractors": [
+            { "text": "A training loss of exactly zero", "kind": "nearby", "rationale": "Zero train loss can be memorization." },
+            { "text": "A leaderboard win on a leaked test set", "kind": "misapplied", "rationale": "A leaked test is not unseen." },
+            { "text": "A larger parameter count than last year's paper", "kind": "subtle", "rationale": "Size is not the job." }
+          ],
+          "correctExplanation": "Work is a prediction on data the fitter did not use to step.",
+          "objectiveIds": ["Name what 'work' means here: a prediction job, not a memorized spreadsheet"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-lp5-3",
+          "stem": "House prices in a table, then a new address. The learning job is to:",
+          "correctAnswer": "Infer a pricing rule that still applies to the new address",
+          "distractors": [
+            { "text": "Return the nearest training address as the price", "kind": "nearby", "rationale": "A lookup is storage unless you justify the neighbor." },
+            { "text": "Train until every training price is reproduced exactly", "kind": "reversed", "rationale": "That can ignore the new address." },
+            { "text": "Skip a loss and jump to a language model", "kind": "misapplied", "rationale": "The problem is stated before the architecture." }
+          ],
+          "correctExplanation": "The new address is the test. The table is only the evidence.",
+          "objectiveIds": ["State a learning problem as inferring a rule from examples that should work on unseen examples"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-learning-problem-10",
+      "conceptId": "ml-learning-problem",
+      "title": "Examples now, a prediction later",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "ml-features-targets",
+      "diagram": "ml-learn-loop",
+      "explanation": [
+        "Stanford CS229 starts here, not at networks. You have a collection of examples. Each example is an input paired with a target. You pick a family of rules and a number that says how wrong a rule is. You search that family until the number is small. Then you ask the only question that counts: is the number also small on examples that never entered the search?",
+        "Supervised learning is the case where the target came with the example. Unsupervised learning is the case where you asked for structure without a target: clusters, a density, a compression. This course lives in the supervised case long enough to make the split, the loss, and the slope honest. Clustering can wait.",
+        "A spreadsheet that you will never leave is a database. A rule you will apply to a new row is a model. Mixing those two objects is how people report a training score as if it were a product."
+      ],
+      "example": "Spam versus not-spam on last month's mail is the example set. Next month's mail is the job. A filter that quotes last month perfectly and fails next month did not learn. It indexed.",
+      "whyItMatters": "If you cannot state the unseen-example contract, every later lecture about validation and leakage will sound like bureaucracy. It is the job description.",
+      "quiz": [
+        {
+          "id": "ml-lp10-1",
+          "stem": "Supervised learning is the case where:",
+          "correctAnswer": "Each example arrives already paired with the target you wanted",
+          "distractors": [
+            { "text": "The algorithm invents its own labels without data", "kind": "reversed", "rationale": "That is not the supervised setup." },
+            { "text": "You only ever evaluate on the rows you trained on", "kind": "nearby", "rationale": "That skips the unseen-example contract." },
+            { "text": "A transformer is required before any target exists", "kind": "misapplied", "rationale": "Architecture is later." }
+          ],
+          "correctExplanation": "Target in, rule out. That pairing is the supervised setup.",
+          "objectiveIds": ["State a learning problem as inferring a rule from examples that should work on unseen examples"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-lp10-2",
+          "stem": "A filter that quotes last month's mail perfectly and fails next month:",
+          "correctAnswer": "Indexed the sheet; it did not produce a rule for unseen mail",
+          "distractors": [
+            { "text": "Solved the learning problem because training error is zero", "kind": "reversed", "rationale": "Zero train error can be an index." },
+            { "text": "Must be replaced by a larger language model", "kind": "misapplied", "rationale": "Size does not restore the contract." },
+            { "text": "Proves next month's mail is not a prediction job", "kind": "subtle", "rationale": "Next month is exactly the job." }
+          ],
+          "correctExplanation": "The job was next month. Perfect recall of last month is storage.",
+          "objectiveIds": ["Name what 'work' means here: a prediction job, not a memorized spreadsheet"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-lp10-3",
+          "stem": "The number you minimize on the example set is only half the story because:",
+          "correctAnswer": "You still have to ask whether that number stays small on held-out rows",
+          "distractors": [
+            { "text": "Loss numbers are illegal in supervised learning", "kind": "misconception", "rationale": "Loss is how you search." },
+            { "text": "The example set must be thrown away after one look", "kind": "nearby", "rationale": "You train on it; you just do not report it as the product." },
+            { "text": "Only neural nets are allowed to have a loss", "kind": "misapplied", "rationale": "Linear models have losses too." }
+          ],
+          "correctExplanation": "Search on the set you have. Report on the set you hid.",
+          "objectiveIds": ["State a learning problem as inferring a rule from examples that should work on unseen examples"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-features-targets-10",
+      "conceptId": "ml-features-targets",
+      "title": "The columns you chose",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-learning-problem"],
+      "goDeeper": "ml-hypothesis",
+      "explanation": [
+        "Features are the inputs you decided the rule may see. The target is the thing you are trying to predict. That split is a design choice, not a property of the file. Include tomorrow's price as a feature for today's price and you have not built a predictor. You have built a leak.",
+        "A good feature is available at prediction time and carries signal that is not just a renamed target. A timestamp, an ID, a future status flag — those often fail the first test. Raw pixels and bag-of-words often pass it and still need later geometry.",
+        "The target can be a number, a class, or a sequence. The feature can be a vector you wrote or a later embedding someone else trained. This lesson only needs the split: what the rule is allowed to look at, and what it is not allowed to copy."
+      ],
+      "example": "Predicting whether a loan defaults. Using 'days past due at collection time' as a feature for an application-time model is leakage: that number did not exist when you had to decide. Using income and credit age is a feature choice you can defend.",
+      "whyItMatters": "Most 'amazing' first models are a target that snuck into the inputs. Catch that before you tune a learning rate.",
+      "quiz": [
+        {
+          "id": "ml-ft10-1",
+          "stem": "Features are the inputs you chose; the target is:",
+          "correctAnswer": "The thing the rule is trying to predict",
+          "distractors": [
+            { "text": "Any leftover column the spreadsheet still has", "kind": "nearby", "rationale": "Leftovers can be leaks or noise." },
+            { "text": "The learning rate you will pick later", "kind": "misapplied", "rationale": "A hyperparameter is not the target." },
+            { "text": "The set of functions you are willing to consider", "kind": "subtle", "rationale": "That is the hypothesis class." }
+          ],
+          "correctExplanation": "Target is the job. Features are what you allow the rule to see.",
+          "objectiveIds": ["Separate the inputs you chose from the target you are trying to predict"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-ft10-2",
+          "stem": "A future status flag used as an input for an application-time decision is:",
+          "correctAnswer": "Leakage: that number was not available when you had to decide",
+          "distractors": [
+            { "text": "A free improvement to training loss and therefore legal", "kind": "reversed", "rationale": "Train loss loves leaks. The job does not." },
+            { "text": "A hypothesis class that is too small", "kind": "nearby", "rationale": "This is a feature crime, not a class-size crime." },
+            { "text": "Required before any loss can be defined", "kind": "misapplied", "rationale": "You can define a loss on honest features." }
+          ],
+          "correctExplanation": "If it did not exist at prediction time, it is not a feature. It is a spoiler.",
+          "objectiveIds": ["Predict what breaks if the target leaks into the features"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-ft10-3",
+          "stem": "Income and credit age for an application-time default model are features because:",
+          "correctAnswer": "They can be known when you must decide, and they are not the default itself",
+          "distractors": [
+            { "text": "They guarantee a zero validation loss", "kind": "misconception", "rationale": "Availability is not performance." },
+            { "text": "They are the target written twice", "kind": "reversed", "rationale": "Default is the target; these are inputs." },
+            { "text": "They replace the need for a held-out set", "kind": "subtle", "rationale": "Honest features still need unseen rows." }
+          ],
+          "correctExplanation": "Available at decision time, not a renamed target. That is the split.",
+          "objectiveIds": ["Separate the inputs you chose from the target you are trying to predict"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-hypothesis-10",
+      "conceptId": "ml-hypothesis",
+      "title": "The family you are willing to consider",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-features-targets"],
+      "goDeeper": "ml-loss",
+      "explanation": [
+        "A hypothesis class is the family of functions you will search. All straight lines. All depth-2 networks with a given width. All decision stumps. You are not searching 'every possible rule'. You are searching this family, and the family's shape is already a claim about the world.",
+        "Too small a class cannot represent the signal: a line will not fit a spiral. Too large a class can represent the sample's noise as well as its signal. Capacity is that size. You will name it again when bias and variance show up. Here you only need the menu: which functions are even candidates.",
+        "Picking a class is not picking a winner. Gradient descent later picks one member. Regularization later shrinks how far that member may wander. The class is the room you allowed the search to enter."
+      ],
+      "example": "Predicting a binary label from one number. Linear scores through a logistic curve are one class. Arbitrary lookup tables on the training x's are another. The first cannot draw a checkerboard. The second can draw last night's noise.",
+      "whyItMatters": "People blame the optimizer for a room that never contained the answer. Name the room first.",
+      "quiz": [
+        {
+          "id": "ml-hy10-1",
+          "stem": "A hypothesis class is the thing you name before searching:",
+          "correctAnswer": "The family of functions you are willing to search",
+          "distractors": [
+            { "text": "The single function the optimizer happened to return", "kind": "nearby", "rationale": "That is one member, not the family." },
+            { "text": "The held-out set you report on", "kind": "misapplied", "rationale": "The split is not the class." },
+            { "text": "The learning rate schedule", "kind": "subtle", "rationale": "A schedule is how you walk, not the room." }
+          ],
+          "correctExplanation": "The menu of candidates. One member comes later.",
+          "objectiveIds": ["Describe a hypothesis class as the family of functions you are willing to consider"],
+          "prerequisiteConceptIds": ["ml-features-targets"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-hy10-2",
+          "stem": "A class that is too small typically:",
+          "correctAnswer": "Cannot represent the signal, so train and test both stay wrong",
+          "distractors": [
+            { "text": "Memorizes the sample and then fails on new rows", "kind": "reversed", "rationale": "That is the too-large story." },
+            { "text": "Removes the need for a loss", "kind": "misapplied", "rationale": "You still need a loss to pick a member." },
+            { "text": "Guarantees a perfect held-out score", "kind": "misconception", "rationale": "Small is not automatically right." }
+          ],
+          "correctExplanation": "No room, no signal. Both numbers stay bad.",
+          "objectiveIds": ["Predict what a class that is too small or too large will do to the fit"],
+          "prerequisiteConceptIds": ["ml-features-targets"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-hy10-3",
+          "stem": "A lookup table on the training x's, used as the whole class, is dangerous because:",
+          "correctAnswer": "It can represent last night's noise as if it were the rule",
+          "distractors": [
+            { "text": "It cannot fit any training row", "kind": "reversed", "rationale": "It can fit them all." },
+            { "text": "It forbids a later validation split", "kind": "nearby", "rationale": "You can still split; the class is still too free." },
+            { "text": "It is the only legal class in CS229", "kind": "misapplied", "rationale": "CS229 starts with small parametric classes." }
+          ],
+          "correctExplanation": "Too much room. The sample's accidents become the function.",
+          "objectiveIds": ["Predict what a class that is too small or too large will do to the fit"],
+          "prerequisiteConceptIds": ["ml-features-targets"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-loss-10",
+      "conceptId": "ml-loss",
+      "title": "A number that says how wrong",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-hypothesis"],
+      "goDeeper": "ml-baselines",
+      "explanation": [
+        "A loss is a number that says how wrong a prediction is. Squared error for a real-valued target. Cross-entropy later, when the output is a distribution. The search walks downhill on that number. If you pick a loss that does not match the job, you will optimize a stranger's problem.",
+        "The loss on the example set is what the optimizer sees. It is not automatically the metric you will tell a human. Accuracy, recall, and dollar cost can disagree with the loss. You still need a loss the slope can use. You also need the honesty to report a metric the job actually cares about.",
+        "A constant predictor has a loss too. That is the baseline the next lesson will force you to beat. If your clever class cannot beat 'always guess the mean', the loss is telling the truth."
+      ],
+      "example": "Predict a house price. Squared error punishes a $200k miss four times a $100k miss. Absolute error treats them linearly. Neither is 'the' loss. They are different jobs. Classification accuracy is not a drop-in replacement for either.",
+      "whyItMatters": "People tune architectures on a loss they never chose. Name the number before you name the net.",
+      "quiz": [
+        {
+          "id": "ml-lo10-1",
+          "stem": "A loss is the number the search actually walks:",
+          "correctAnswer": "A number that says how wrong a prediction is",
+          "distractors": [
+            { "text": "The family of functions you are willing to search", "kind": "nearby", "rationale": "That is the hypothesis class." },
+            { "text": "The held-out split you must never train on", "kind": "misapplied", "rationale": "The split is not the number." },
+            { "text": "A guarantee the model will work tomorrow", "kind": "subtle", "rationale": "A small train loss is not that guarantee." }
+          ],
+          "correctExplanation": "Wrongness, as a number the search can follow.",
+          "objectiveIds": ["Define a loss as a number that says how wrong a prediction is"],
+          "prerequisiteConceptIds": ["ml-hypothesis"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-lo10-2",
+          "stem": "Squared error versus absolute error on house prices is a choice because:",
+          "correctAnswer": "They punish large misses differently, so they are different jobs",
+          "distractors": [
+            { "text": "Only squared error is legal in supervised learning", "kind": "misconception", "rationale": "Both are legal; they disagree." },
+            { "text": "Neither can be computed until a neural net exists", "kind": "misapplied", "rationale": "A linear rule has both losses." },
+            { "text": "They always produce the same ranking of models", "kind": "reversed", "rationale": "A big miss moves them differently." }
+          ],
+          "correctExplanation": "The number you minimize is the job you accepted.",
+          "objectiveIds": ["Choose a loss that matches the prediction job rather than a leftover default"],
+          "prerequisiteConceptIds": ["ml-hypothesis"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-lo10-3",
+          "stem": "You should still report a human metric because:",
+          "correctAnswer": "The loss the slope uses may not be the cost the job actually cares about",
+          "distractors": [
+            { "text": "Losses are illegal to show to a human", "kind": "misconception", "rationale": "You can show them. They may not be the story." },
+            { "text": "Accuracy is always the number the optimizer sees", "kind": "reversed", "rationale": "Accuracy is often not differentiable the way a loss is." },
+            { "text": "A constant baseline cannot have a metric", "kind": "nearby", "rationale": "Baselines have losses and metrics." }
+          ],
+          "correctExplanation": "Optimize a slope-friendly number. Report the number the job uses.",
+          "objectiveIds": ["Choose a loss that matches the prediction job rather than a leftover default"],
+          "prerequisiteConceptIds": ["ml-hypothesis"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-lin-alg-lite-10",
+      "conceptId": "ml-lin-alg-lite",
+      "title": "A row is a point",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-features-targets"],
+      "goDeeper": "ml-prob-lite",
+      "explanation": [
+        "A feature vector is a point in a space. Two houses are two points. A weighted sum w·x is a geometric act: how much this point sticks out along the direction w. A bias is a shift of the origin. This is not decoration. It is why scaling one column warps the slope, and why a linear rule is a hyperplane.",
+        "You do not need a full linear-algebra course to use the language. You need inner products, addition of vectors, and the idea that a matrix is a stack of those acts. Distance in that space is only as honest as the units you picked.",
+        "When someone later says 'high-dimensional', they mean this space got crowded. Neighbors get farther. A regularizer that shrinks w is shrinking a direction, not a spreadsheet column in isolation."
+      ],
+      "example": "x = (size, rooms). w = (0.3, 2.0). The score w·x is 0.3·size + 2·rooms. If size is in square millimeters, 0.3 is a different direction than if size is in square meters. The geometry changed because the units did.",
+      "whyItMatters": "Feature scaling, margins, and 'the weight vector' are all this picture. If a row is only a pile of columns, those sentences stay mystical.",
+      "quiz": [
+        {
+          "id": "ml-la10-1",
+          "stem": "A feature vector is best treated as:",
+          "correctAnswer": "A point in a space, not a pile of unrelated columns",
+          "distractors": [
+            { "text": "A loss that has already been minimized", "kind": "misapplied", "rationale": "The vector is the input, not the loss." },
+            { "text": "A held-out row you must never inspect", "kind": "nearby", "rationale": "Train rows are points too." },
+            { "text": "A transformer block", "kind": "subtle", "rationale": "Architecture is later." }
+          ],
+          "correctExplanation": "Points. Then weighted sums have a direction.",
+          "objectiveIds": ["Treat a feature vector as a point in a space, not a pile of columns"],
+          "prerequisiteConceptIds": ["ml-features-targets"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-la10-2",
+          "stem": "The score w·x is doing this geometric act:",
+          "correctAnswer": "How far the point x sticks out along the direction w",
+          "distractors": [
+            { "text": "The probability that x is a training row", "kind": "nearby", "rationale": "An inner product is not that probability." },
+            { "text": "The number of columns in the spreadsheet", "kind": "misapplied", "rationale": "Dimension is not the score." },
+            { "text": "A validation split", "kind": "subtle", "rationale": "The split is not a geometric act." }
+          ],
+          "correctExplanation": "Inner product: a length along a chosen direction.",
+          "objectiveIds": ["Read a weighted sum as a geometric operation in that space"],
+          "prerequisiteConceptIds": ["ml-features-targets"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-la10-3",
+          "stem": "Measuring size in mm instead of m changes the geometry because:",
+          "correctAnswer": "The same numeric weight now points a different way in the space",
+          "distractors": [
+            { "text": "Inner products become illegal", "kind": "misconception", "rationale": "They are still defined. They mean something else." },
+            { "text": "The target column disappears", "kind": "reversed", "rationale": "Units on a feature do not delete the target." },
+            { "text": "The hypothesis class becomes empty", "kind": "nearby", "rationale": "The class is still lines. The axes stretched." }
+          ],
+          "correctExplanation": "Units stretch an axis. The direction w is no longer the same claim.",
+          "objectiveIds": ["Read a weighted sum as a geometric operation in that space"],
+          "prerequisiteConceptIds": ["ml-features-targets"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-prob-lite-10",
+      "conceptId": "ml-prob-lite",
+      "title": "Uncertainty you can multiply",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-learning-problem"],
+      "goDeeper": "ml-lin-alg-lite",
+      "explanation": [
+        "Probability is bookkeeping for uncertainty. A number between 0 and 1. Independent events multiply. A condition updates the number when you learn a fact. You do not need measure theory. You need to stop treating 0.91 as a promise and start treating it as a claim that can be calibrated.",
+        "A model that emits probabilities is making a claim about frequencies: among the days it said 0.2, about one in five should happen. A decision — ship the email, deny the loan — is a later threshold on that number plus a cost. The probability is not the decision.",
+        "Bayes' rule is the update. Likelihood is how the data would look if a hypothesis were true. This course will use those words as bookkeeping, not as a personality for the algorithm."
+      ],
+      "example": "A spam score of 0.9 is a claim: nine in ten mails like this are spam, if the model is calibrated. Deleting the mail is a decision that also needs the cost of a false delete. Those are two different objects.",
+      "whyItMatters": "Logistic regression, cross-entropy, and later calibration arguments are this bookkeeping. If 0.9 already 'means yes', you will not hear them.",
+      "quiz": [
+        {
+          "id": "ml-pr10-1",
+          "stem": "A probability in this course is:",
+          "correctAnswer": "A number you can multiply and condition, not a promise",
+          "distractors": [
+            { "text": "A guarantee the event will happen", "kind": "reversed", "rationale": "0.9 is not certainty." },
+            { "text": "The hypothesis class you already chose", "kind": "nearby", "rationale": "The class is the family of functions." },
+            { "text": "The learning rate", "kind": "misapplied", "rationale": "A step size is not a probability." }
+          ],
+          "correctExplanation": "Bookkeeping. Multiply, condition, then decide separately.",
+          "objectiveIds": ["Write uncertainty as numbers you can multiply and condition"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-pr10-2",
+          "stem": "A spam score of 0.9 and the act of deleting the mail are different because:",
+          "correctAnswer": "The score is a claim about frequency; deleting is a decision that also needs a cost",
+          "distractors": [
+            { "text": "0.9 already is the decision, by definition", "kind": "reversed", "rationale": "A threshold plus a cost sits in between." },
+            { "text": "Probabilities cannot be used for mail", "kind": "misapplied", "rationale": "They can. They still are not the click." },
+            { "text": "Deleting the mail updates the hypothesis class", "kind": "nearby", "rationale": "A decision is not a new family of functions." }
+          ],
+          "correctExplanation": "Claim, then threshold. Do not collapse them.",
+          "objectiveIds": ["Distinguish a probability from a decision you still have to make"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-pr10-3",
+          "stem": "If a calibrated model says 0.2 on many days, you should see the event:",
+          "correctAnswer": "On about one day in five of those days",
+          "distractors": [
+            { "text": "On every one of those days", "kind": "reversed", "rationale": "0.2 is not 1." },
+            { "text": "On none of those days, because 0.2 is small", "kind": "nearby", "rationale": "Small is not never." },
+            { "text": "Exactly twice, regardless of how many days you asked", "kind": "misapplied", "rationale": "Frequency scales with the number of claims." }
+          ],
+          "correctExplanation": "Calibration is a frequency claim. 0.2 means about one in five.",
+          "objectiveIds": ["Write uncertainty as numbers you can multiply and condition"],
+          "prerequisiteConceptIds": ["ml-learning-problem"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-baselines-10",
+      "conceptId": "ml-baselines",
+      "title": "Beat the dumb answer first",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["ml-loss"],
+      "goDeeper": "ml-linear-reg",
+      "explanation": [
+        "A baseline is the dumb answer you must beat. Predict the mean for a real-valued target. Predict the majority class for a label. Predict yesterday's value for a series. If your clever rule cannot beat that number on a held-out set, you do not have a result. You have a ritual.",
+        "Baselines are also diagnostics. A majority-class accuracy of 99% on a rare-event problem tells you accuracy is the wrong story. A mean predictor that already has a tiny squared error tells you there was not much signal to find.",
+        "CS229 and every honest shop do this before the clever model. The later linear and neural lessons assume you still have this number on the desk."
+      ],
+      "example": "Fraud is 0.3% of rows. Always say 'not fraud' is 99.7% accurate. A model at 99.6% has lost to the dummy. Recall on the fraud class is the conversation you actually wanted.",
+      "whyItMatters": "Leaderboards and internal demos skip this step. The rest of the course will not.",
+      "quiz": [
+        {
+          "id": "ml-ba10-1",
+          "stem": "A baseline is the dummy you must beat first:",
+          "correctAnswer": "The dumb answer you must beat before claiming a model works",
+          "distractors": [
+            { "text": "The largest network you can afford", "kind": "misapplied", "rationale": "Size is not a baseline." },
+            { "text": "The training loss after the last epoch", "kind": "nearby", "rationale": "That is a fit, not a dummy." },
+            { "text": "A leaked copy of the test labels", "kind": "subtle", "rationale": "That is cheating, not a baseline." }
+          ],
+          "correctExplanation": "Mean, majority, yesterday. Beat that, then talk.",
+          "objectiveIds": ["Name a dumb answer you must beat before claiming a model works"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-ba10-2",
+          "stem": "On a label that is 0.3% positive, always predicting negative:",
+          "correctAnswer": "Wins on accuracy and still fails the job you cared about",
+          "distractors": [
+            { "text": "Is illegal as a baseline", "kind": "misconception", "rationale": "It is the baseline that reveals the metric." },
+            { "text": "Proves no model can ever help", "kind": "reversed", "rationale": "A better metric can still move." },
+            { "text": "Has undefined loss", "kind": "nearby", "rationale": "It has a loss. It may be the one to beat." }
+          ],
+          "correctExplanation": "99.7% accuracy is the dummy. The job was the rare class.",
+          "objectiveIds": ["Predict when a clever model is losing to the mean or the majority class"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-ba10-3",
+          "stem": "A clever model at 99.6% accuracy against a 99.7% majority dummy:",
+          "correctAnswer": "Has lost to the baseline on the number you reported",
+          "distractors": [
+            { "text": "Must be kept because it is more complex", "kind": "reversed", "rationale": "Complexity is not a win." },
+            { "text": "Automatically has better recall on the rare class", "kind": "nearby", "rationale": "You did not measure that yet." },
+            { "text": "Proves the hypothesis class was too small", "kind": "subtle", "rationale": "You only know it lost on accuracy." }
+          ],
+          "correctExplanation": "Dummy 99.7, model 99.6. That is a loss, not a launch.",
+          "objectiveIds": ["Predict when a clever model is losing to the mean or the majority class"],
+          "prerequisiteConceptIds": ["ml-loss"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

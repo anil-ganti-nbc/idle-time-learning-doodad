@@ -1,0 +1,586 @@
+{
+  "courseId": "ml-neural",
+  "moduleId": "ml-n-train",
+  "lessons": [
+    {
+      "id": "ml-backprop-10",
+      "conceptId": "ml-backprop",
+      "title": "The chain rule, run backward",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-gd", "ml-mlp"],
+      "goDeeper": "ml-autodiff",
+      "diagram": "ml-backprop-graph",
+      "explanation": [
+        "Backpropagation is reverse-mode autodiff on a scalar loss, not a separate neural-net theorem. The net is a composition. The chain rule says the derivative of that composition is a product of local Jacobians. Reverse mode seeds dL/dL = 1 and pushes adjoints backward so every weight receives a partial.",
+        "Forward-mode would push a derivative along with each value — cheap when you have one input and many outputs. Training has the opposite shape: millions of parameters, one loss. Reverse mode is the cheap direction. Each op applies a vector-Jacobian product to the incoming adjoint and does not need to materialize the full Jacobian.",
+        "Trace it on one layer. Forward: z = Wx + b, y = φ(z), L from y. Backward: the adjoint at y hits the local Jacobian of φ, then the adjoint at z hits x to produce dL/dW. Every weight on the path gets a partial. Weights off the tape get none."
+      ],
+      "example": "y = ReLU(Wx). Forward: multiply, then zero the negatives. Backward: dL/dW = (dL/dy, masked by the ReLU gate) times x transpose. The mask is the local Jacobian of ReLU. No finite differences, no second algorithm.",
+      "whyItMatters": "If backprop is folklore, a silent zero gradient looks like magic. It is almost always a broken path or a product of tiny local slopes.",
+      "quiz": [
+        {
+          "id": "ml-bp10-1",
+          "stem": "Backpropagation, in the sense this lesson uses, is:",
+          "correctAnswer": "Reverse-mode autodiff of a scalar loss through the composed maps",
+          "distractors": [
+            { "text": "A search that ignores the chain rule and differences the loss by hand", "kind": "reversed", "rationale": "Backprop is the chain rule, booked in reverse. It is not finite differences." },
+            { "text": "A held-out split that replaces the need for a gradient", "kind": "misapplied", "rationale": "The split is not the derivative." },
+            { "text": "Forward-mode autodiff, cheap because there is one parameter and many losses", "kind": "nearby", "rationale": "Training has one loss and many parameters. That is reverse mode's setting." }
+          ],
+          "correctExplanation": "One scalar loss, many weights. Reverse-mode autodiff is backprop.",
+          "objectiveIds": ["Describe backpropagation as reverse-mode autodiff on a scalar loss"],
+          "prerequisiteConceptIds": ["ml-gd", "ml-mlp"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-bp10-2",
+          "stem": "On y = ReLU(Wx), the backward step that gives every weight a partial is:",
+          "correctAnswer": "Mask dL/dy by the ReLU gate, then multiply by x to form dL/dW",
+          "distractors": [
+            { "text": "Materialize the full Jacobian of the whole net, then throw away x", "kind": "nearby", "rationale": "You apply a vector-Jacobian product locally. You do not need the whole matrix." },
+            { "text": "Zero every weight because ReLU has no local Jacobian", "kind": "reversed", "rationale": "ReLU's local Jacobian is a 0/1 mask. Live units still pass adjoints." },
+            { "text": "Replace Wx with a majority-class baseline before any adjoint flows", "kind": "misapplied", "rationale": "A baseline is not the local backward of this op." }
+          ],
+          "correctExplanation": "Local Jacobian of ReLU, then the affine VJP. That is how W receives dL/dW.",
+          "objectiveIds": ["Trace a local Jacobian backward so every weight receives a partial"],
+          "prerequisiteConceptIds": ["ml-gd", "ml-mlp"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-bp10-3",
+          "stem": "A weight that never appears on the forward tape typically receives:",
+          "correctAnswer": "A zero partial, because no local Jacobian connects it to the scalar loss",
+          "distractors": [
+            { "text": "The same partial as every other weight, by symmetry of reverse mode", "kind": "misconception", "rationale": "Reverse mode follows the tape. No path, no partial." },
+            { "text": "A full Jacobian matrix stored for later finite differences", "kind": "nearby", "rationale": "Unused weights are not given a Jacobian as consolation." },
+            { "text": "A guaranteed nonzero update, because gradient descent requires motion", "kind": "reversed", "rationale": "Descent steps the gradient you computed. A missing path is a zero." }
+          ],
+          "correctExplanation": "Adjoints follow the composition. Off the tape means dL/dW = 0.",
+          "objectiveIds": ["Trace a local Jacobian backward so every weight receives a partial"],
+          "prerequisiteConceptIds": ["ml-gd", "ml-mlp"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-backprop-20",
+      "conceptId": "ml-backprop",
+      "title": "Tape, VJP, and a scalar loss",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["ml-gd", "ml-mlp"],
+      "goDeeper": "ml-autodiff",
+      "diagram": "ml-backprop-graph",
+      "explanation": [
+        "Frameworks build a tape of the forward ops and then walk it in reverse. Each recorded op knows one vector-Jacobian product: given the incoming adjoint, produce adjoints for its inputs. The loss is seeded with 1. When the walk finishes, every parameter that sat on the tape has a partial. That walk is backpropagation.",
+        "Reverse-mode autodiff is the cheap direction because the output is a scalar and the inputs are the parameters. Forward-mode would need a sweep per parameter. Reverse mode needs one backward sweep. You never owe the full Jacobian of the net; you owe a VJP per op, which for a matmul or a ReLU is a handful of multiplies and a mask.",
+        "Failures are mechanical. A non-differentiable index, a detached tensor, or an op whose VJP was never written cuts the tape, so adjoints stop. A product of many local derivatives can vanish or explode even when the tape is intact. Those are not a different algorithm. They are the chain rule, honestly computed, on a path that died or blew up.",
+        "Read a small graph as bookkeeping. Forward values are stored because some VJPs need them — the ReLU mask, the softmax probabilities, the input x to a matmul. Backward does not re-run the model. It consumes those saved values, applies each local Jacobian to the incoming adjoint, and writes dL/dW beside every weight."
+      ],
+      "example": "z = Wx, y = ReLU(z), p = softmax(y), L = −log p_k. Forward stores x, the ReLU gate, and p. Backward: dL/dy from the softmax-cross-entropy VJP, masked by the gate, then dL/dW = (that adjoint) xᵀ. Every W_ij on this path gets a number. A sibling branch that never fed L gets zero.",
+      "whyItMatters": "Most training bugs are a tape that does not reach a weight, or a VJP that was not the op you thought you ran. Name those objects and the folklore thins out.",
+      "quiz": [
+        {
+          "id": "ml-bp20-1",
+          "stem": "The tape in reverse-mode autodiff exists so that:",
+          "correctAnswer": "Each forward op can apply its vector-Jacobian product on the way back",
+          "distractors": [
+            { "text": "The optimizer can skip the chain rule and difference the loss by probing", "kind": "reversed", "rationale": "The tape is how the chain rule is booked. It is not a substitute for derivatives." },
+            { "text": "Every layer can emit a separate loss, one per parameter", "kind": "nearby", "rationale": "Training still has one scalar loss. The tape serves that one output." },
+            { "text": "Forward-mode can push one extra scalar through millions of outputs", "kind": "misapplied", "rationale": "The tape walk described here is reverse mode, not forward mode." }
+          ],
+          "correctExplanation": "Record the ops, seed the loss with 1, apply each VJP backward. That is the tape.",
+          "objectiveIds": ["Describe backpropagation as reverse-mode autodiff on a scalar loss"],
+          "prerequisiteConceptIds": ["ml-gd", "ml-mlp"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-bp20-2",
+          "stem": "A vector-Jacobian product, at a single recorded op, is:",
+          "correctAnswer": "The local backward: incoming adjoint in, adjoints for that op's inputs out",
+          "distractors": [
+            { "text": "The full Jacobian of the entire network, always materialized as a dense matrix", "kind": "nearby", "rationale": "You never need that matrix. The VJP is the local action on an adjoint." },
+            { "text": "A learning-rate schedule stored beside the weights", "kind": "misapplied", "rationale": "A step size is not a Jacobian." },
+            { "text": "A forward-only copy of the activation, with no adjoint", "kind": "reversed", "rationale": "The saved forward value may be an input to the VJP. The VJP itself is the backward." }
+          ],
+          "correctExplanation": "Incoming adjoint, local Jacobian, outgoing adjoints. No full matrix required.",
+          "objectiveIds": ["Trace a local Jacobian backward so every weight receives a partial"],
+          "prerequisiteConceptIds": ["ml-gd", "ml-mlp"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-bp20-3",
+          "stem": "If a branch is detached from the tape before the loss, weights on that branch:",
+          "correctAnswer": "Receive no adjoint, so their partial of the scalar loss is zero",
+          "distractors": [
+            { "text": "Receive a larger partial, because reverse mode doubles detached paths", "kind": "reversed", "rationale": "A cut path carries no adjoint. The partial is zero, not doubled." },
+            { "text": "Are converted into a held-out split the optimizer may not touch", "kind": "misapplied", "rationale": "Detaching is a tape cut, not a data split." },
+            { "text": "Must be re-initialized, because a missing VJP deletes the parameter", "kind": "subtle", "rationale": "The weight is still there. It just does not see dL." }
+          ],
+          "correctExplanation": "No path on the tape, no VJP, no partial. The weight sits still.",
+          "objectiveIds": ["Trace a local Jacobian backward so every weight receives a partial"],
+          "prerequisiteConceptIds": ["ml-gd", "ml-mlp"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-autodiff-10",
+      "conceptId": "ml-autodiff",
+      "title": "One backward pass, every partial",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-backprop"],
+      "goDeeper": "ml-init",
+      "explanation": [
+        "Reverse-mode autodiff seeds the scalar loss with 1 and pushes vector-Jacobian products backward. One backward pass yields every partial you need. Forward-mode seeds a single input with 1 and pushes a tangent forward, cheap when there is one input and many outputs.",
+        "Training a net is the reverse-mode setting: one loss, millions of parameters. Forward-mode would cost a sweep per parameter. Reverse-mode costs a sweep per output. With one output, that is one sweep. That is why frameworks walk the tape backward rather than probing each weight.",
+        "The contrast is accounting, not a personality. A Jacobian-vector product is the forward-mode local act. A vector-Jacobian product is the reverse-mode local act. Same chain rule. Different association. Pick the association that matches the shape of the derivative you actually want."
+      ],
+      "example": "A net with 10^7 weights and one cross-entropy. Reverse-mode: one backward pass, 10^7 partials. Forward-mode: 10^7 tangent sweeps to fill the same gradient. Swap the shape — one weight, 10^7 outputs — and forward-mode would have been the cheap one.",
+      "whyItMatters": "If you think backprop is a neural-net special case, you will not notice when a problem's shape should have picked the other mode.",
+      "quiz": [
+        {
+          "id": "ml-ad10-1",
+          "stem": "Reverse-mode autodiff, contrasted with forward-mode, is the algorithm that:",
+          "correctAnswer": "Takes one backward pass and returns every partial of a scalar output",
+          "distractors": [
+            { "text": "Takes one forward tangent sweep and returns every output of many losses", "kind": "reversed", "rationale": "That is forward-mode's cheap shape: one input, many outputs." },
+            { "text": "Avoids the chain rule by replacing derivatives with a held-out split", "kind": "misapplied", "rationale": "Both modes are the chain rule. The split is not a mode." },
+            { "text": "Materializes the full Jacobian of the net on every minibatch, always", "kind": "nearby", "rationale": "Each mode applies a local product. Neither owes you the whole matrix." }
+          ],
+          "correctExplanation": "One output, many inputs: reverse mode. One backward pass, every partial.",
+          "objectiveIds": ["Contrast reverse-mode (one backward, every partial) with forward-mode"],
+          "prerequisiteConceptIds": ["ml-backprop"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-ad10-2",
+          "stem": "One loss and millions of parameters choose reverse mode because:",
+          "correctAnswer": "Reverse mode costs a sweep per output, and you have only one output",
+          "distractors": [
+            { "text": "Forward mode is undefined whenever a ReLU appears in the graph", "kind": "misconception", "rationale": "Both modes handle ReLU. The choice is shape, not legality." },
+            { "text": "Reverse mode costs a sweep per parameter, which is cheaper at this scale", "kind": "reversed", "rationale": "That cost belongs to forward mode. Reverse mode is per output." },
+            { "text": "Millions of parameters forbid a gradient, so you skip autodiff entirely", "kind": "nearby", "rationale": "The gradient is exactly what reverse mode returns in one pass." }
+          ],
+          "correctExplanation": "Per-output sweeps. One loss. One pass. That is the accounting.",
+          "objectiveIds": ["Predict why one loss and millions of parameters choose reverse mode"],
+          "prerequisiteConceptIds": ["ml-backprop"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-ad10-3",
+          "stem": "A problem with one parameter and millions of outputs would typically prefer:",
+          "correctAnswer": "Forward-mode, because a tangent sweep per input is then a single sweep",
+          "distractors": [
+            { "text": "Reverse-mode still, because reverse mode is always cheaper for any shape", "kind": "reversed", "rationale": "Reverse mode is cheaper per output. Millions of outputs would mean millions of sweeps." },
+            { "text": "Neither mode, because the chain rule fails when outputs outnumber inputs", "kind": "misconception", "rationale": "The chain rule does not care about the count. The cost does." },
+            { "text": "A majority-class baseline in place of any derivative", "kind": "misapplied", "rationale": "A baseline is not an autodiff mode." }
+          ],
+          "correctExplanation": "Cheap direction follows the thin side of the Jacobian. One input means forward-mode.",
+          "objectiveIds": ["Contrast reverse-mode (one backward, every partial) with forward-mode"],
+          "prerequisiteConceptIds": ["ml-backprop"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "ml-init-10",
+      "conceptId": "ml-init",
+      "title": "Where the weights start",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-backprop"],
+      "goDeeper": "ml-vanishing",
+      "explanation": [
+        "Scale the random start so activations and gradients begin at a usable size. If incoming weights are huge, a sigmoid sees large |z| and saturates on step one. If they are tiny, each layer shrinks the signal and the product of derivatives dies before any useful step.",
+        "A usable heuristic matches variance to fan-in or fan-out so a unit's weighted sum stays order-one. Xavier-style scaling for saturating units, He-style scaling for ReLU, are that idea with different constants. All zeros is not a scale: symmetric units then receive identical partials and never break the tie.",
+        "Diagnose the start by watching the forward activations and the backward adjoints, not the loss alone. A first minibatch of all 0.0 or all 0.5 on every sigmoid, or adjoints that underflow to zero by layer two, is an initialization crime. The architecture may be fine. The scale was not."
+      ],
+      "example": "Ten sigmoid layers, weights drawn from a wide Gaussian. Hidden units slam to 0 or 1. Local slopes are ~0. The first backward product is already numerically zero. Draw the same weights with variance 1/fan-in and the pre-activations sit near zero, where sigmoid still has slope.",
+      "whyItMatters": "People swap optimizers when the first forward pass already saturated. Check the scale before you blame the step rule.",
+      "quiz": [
+        {
+          "id": "ml-ini10-1",
+          "stem": "A good initialization, on the first forward and backward pass, is one that:",
+          "correctAnswer": "Puts activations and gradients at a usable scale on the first pass",
+          "distractors": [
+            { "text": "Sets every weight to zero so all units start equal and stay equal", "kind": "reversed", "rationale": "All zeros is a symmetry, not a scale. Identical units get identical partials." },
+            { "text": "Maximizes |z| so every sigmoid starts fully saturated", "kind": "nearby", "rationale": "Saturation is the failure mode, not the goal." },
+            { "text": "Deletes the bias terms, because scale only lives in the loss", "kind": "misapplied", "rationale": "Scale lives in the forward map. The loss cannot rescue a dead slope." }
+          ],
+          "correctExplanation": "Order-one pre-activations, living slopes. That is a usable start.",
+          "objectiveIds": ["Choose an initialization so activations and gradients start at a usable scale"],
+          "prerequisiteConceptIds": ["ml-backprop"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-ini10-2",
+          "stem": "Wide-Gaussian weights into a deep stack of sigmoids typically:",
+          "correctAnswer": "Saturate the units, so local slopes vanish and the backward product dies",
+          "distractors": [
+            { "text": "Keep every sigmoid in its linear middle, with slope near one-quarter", "kind": "reversed", "rationale": "Huge |z| is the tail, not the middle." },
+            { "text": "Explode only the loss, while every adjoint stays a comfortable one", "kind": "subtle", "rationale": "The adjoint is the product of those tiny slopes. It dies with them." },
+            { "text": "Convert the stack into a single ReLU, which cannot saturate", "kind": "misapplied", "rationale": "The activation did not change. The scale did." }
+          ],
+          "correctExplanation": "Large |z|, flat tails, zero local derivatives, a dead backward pass.",
+          "objectiveIds": ["Diagnose a start that saturates sigmoids or explodes products"],
+          "prerequisiteConceptIds": ["ml-backprop"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-ini10-3",
+          "stem": "All-zero weights in a multilayer net with identical units typically fail because:",
+          "correctAnswer": "Symmetric units receive identical partials and never break the tie",
+          "distractors": [
+            { "text": "Zero is the unique scale that keeps sigmoids in their linear middle", "kind": "reversed", "rationale": "Zero is a symmetry trap, not a carefully matched variance." },
+            { "text": "Reverse-mode autodiff is undefined at zero, so no tape can be built", "kind": "misconception", "rationale": "The tape still builds. The partials are just the same on tied units." },
+            { "text": "A zero start deletes the loss, so there is nothing to differentiate", "kind": "nearby", "rationale": "The loss still exists. The units just cannot specialize." }
+          ],
+          "correctExplanation": "Tied units, tied gradients. Random scale is how you break the symmetry.",
+          "objectiveIds": ["Diagnose a start that saturates sigmoids or explodes products"],
+          "prerequisiteConceptIds": ["ml-backprop"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-vanishing-10",
+      "conceptId": "ml-vanishing",
+      "title": "A product that dies or blows up",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-backprop", "ml-depth"],
+      "goDeeper": "ml-batchnorm",
+      "diagram": "ml-vanish",
+      "explanation": [
+        "Chain-rule products through many layers can shrink to zero or blow up. Each local derivative is a factor: a sigmoid slope below one, a weight matrix with spectral radius off one, a ReLU gate that is often zero. Depth multiplies those factors. Vanishing is the product going to zero. Exploding is the product going to infinity.",
+        "Saturating activations plus depth are the classic death: ten sigmoids, each with slope 0.2, give 0.2^10 before the matrices even speak. Huge weights plus depth are the classic explosion: spectral radius 2, ten times, is 1024. ReLU avoids saturating live units, but a deep product of matrices can still explode or vanish.",
+        "The diagnosis is the product, not a mood. Watch adjoint norms by layer. If they shrink by orders of magnitude going backward, early layers are not learning. If they overflow, the step is noise. Later lessons will add normalization and better starts. This one names the multiplication."
+      ],
+      "example": "Depth-20 sigmoid net, weights near 1. Forward values slam to 0 or 1 by layer 6. Backward, layer 20 has a healthy adjoint; layer 1 has 10^−12. The early matrices sit still. Swap in ReLU and matched init and the adjoint can survive the walk — unless a matrix product still explodes.",
+      "whyItMatters": "A training curve that never moves the first layers is often this product, not a learning rate that 'needed more epochs'.",
+      "quiz": [
+        {
+          "id": "ml-van10-1",
+          "stem": "Vanishing or exploding gradients, as this lesson uses the terms, are:",
+          "correctAnswer": "A product of many local derivatives that goes to zero or to infinity",
+          "distractors": [
+            { "text": "A held-out split that became too small to estimate the loss", "kind": "misapplied", "rationale": "The split is not a chain-rule product." },
+            { "text": "A single-layer net whose one sigmoid has already been removed", "kind": "nearby", "rationale": "One factor is not a deep product. Depth is the multiplication." },
+            { "text": "A guarantee that reverse-mode autodiff has been disabled", "kind": "reversed", "rationale": "The product is reverse mode, honestly computed, on a hostile path." }
+          ],
+          "correctExplanation": "Many factors. Zero or infinity. That is the failure, not a second algorithm.",
+          "objectiveIds": ["Describe vanishing or exploding gradients as a product of many derivatives"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-depth"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-van10-2",
+          "stem": "Which combination is most likely to make the backward product die?",
+          "correctAnswer": "A deep stack of saturating sigmoids, each with local slope well below one",
+          "distractors": [
+            { "text": "A single live ReLU with slope one and no other factors", "kind": "reversed", "rationale": "One factor of one does not vanish. Depth and saturation do." },
+            { "text": "A depth-1 linear map whose only derivative is the input x", "kind": "nearby", "rationale": "No long product. That is ordinary logistic-style descent." },
+            { "text": "A softmax on two classes with scores that already dominate", "kind": "subtle", "rationale": "A peaked softmax is a distribution, not a twenty-factor chain." }
+          ],
+          "correctExplanation": "Saturation times depth. 0.2 multiplied by itself twenty times is a numerical zero.",
+          "objectiveIds": ["Predict which activation and depth combinations make the product die"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-depth"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-van10-3",
+          "stem": "Adjoint norms that shrink by orders of magnitude going backward usually mean:",
+          "correctAnswer": "Early layers see a vanished product, so their weights barely step",
+          "distractors": [
+            { "text": "Early layers will take huge steps, because a small adjoint is an explosion", "kind": "reversed", "rationale": "Small adjoints are vanishing, not exploding." },
+            { "text": "The tape was never built, so no layer has a defined activation", "kind": "misconception", "rationale": "The tape ran. The product just went to zero along it." },
+            { "text": "Width, not depth, is the only remaining cause of a dead product", "kind": "nearby", "rationale": "The multiplication is across depth. Width is a different axis." }
+          ],
+          "correctExplanation": "The product died on the way back. Early weights get ~0 and sit still.",
+          "objectiveIds": ["Predict which activation and depth combinations make the product die"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-depth"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-sgd-mom-10",
+      "conceptId": "ml-sgd-mom",
+      "title": "Remembering recent slopes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-gd-variants"],
+      "goDeeper": "ml-batchnorm",
+      "explanation": [
+        "Plain SGD follows the latest minibatch slope, then forgets it. Momentum keeps a running velocity: a fraction of the last step plus the current gradient. Adaptive methods keep a per-parameter scale, so a coordinate that has been noisy or steep is stepped more cautiously than a coordinate that has been quiet.",
+        "A ravine — sharp in one direction, long in another — is the picture. Plain SGD oscillates across the sharp walls and crawls along the floor. Momentum averages the wall oscillation toward zero and keeps the floor motion. An adaptive scale shrinks the wall coordinate's step without forcing the floor coordinate to crawl.",
+        "These rules still descend a gradient you already know how to compute. They do not replace the loss, the split, or the chain rule. They remember recent slopes, or they rescale them. That is the whole extra mechanism. Pick them when the curvature is hostile, not because a name appeared on a leaderboard."
+      ],
+      "example": "Loss looks like a taco shell: steep in w1, long valley in w2. SGD with a rate that survives w1 crawls in w2. Momentum builds speed along w2 while the w1 wiggles cancel. An adaptive method divides w1's step by a large running second moment and leaves w2 freer.",
+      "whyItMatters": "If every training stall is 'needs Adam', you will not notice a dead tape or a saturated start. Name the ravine first, then the memory.",
+      "quiz": [
+        {
+          "id": "ml-mom10-1",
+          "stem": "Momentum, as an extra piece of update state, exists to:",
+          "correctAnswer": "Remember recent slopes as a velocity, rather than following only the last minibatch",
+          "distractors": [
+            { "text": "Delete the gradient and replace it with a random walk on the weights", "kind": "reversed", "rationale": "Momentum is a memory of gradients, not an absence of them." },
+            { "text": "Replace the loss with a majority-class baseline on every step", "kind": "misapplied", "rationale": "The loss is still the number. The update is how you walk it." },
+            { "text": "Materialize a full Hessian so each step is an exact Newton move", "kind": "nearby", "rationale": "Velocity is not a Hessian. Adaptive scales are not Newton." }
+          ],
+          "correctExplanation": "A running velocity of recent slopes. That is the extra state.",
+          "objectiveIds": ["Add momentum or a per-parameter scale so recent slopes are remembered"],
+          "prerequisiteConceptIds": ["ml-gd-variants"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-mom10-2",
+          "stem": "On a ravine that is sharp in w1 and long in w2, plain SGD typically:",
+          "correctAnswer": "Oscillates across the sharp walls and crawls along the long floor",
+          "distractors": [
+            { "text": "Takes a single Newton step and sits at the global minimum", "kind": "misconception", "rationale": "SGD has no Hessian. The ravine is why it struggles." },
+            { "text": "Freezes w2 and only moves w1, because long valleys forbid updates", "kind": "reversed", "rationale": "The crawl is along the valley. The oscillation is across the walls." },
+            { "text": "Ignores curvature, so wall and floor steps are always identical in size", "kind": "subtle", "rationale": "The same rate hits a steep wall harder. That is the oscillation." }
+          ],
+          "correctExplanation": "Same rate, hostile curvature. Bounce on the walls, inch along the floor.",
+          "objectiveIds": ["Compare plain SGD with a momentum or adaptive update on a ravine"],
+          "prerequisiteConceptIds": ["ml-gd-variants"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ml-mom10-3",
+          "stem": "An adaptive per-parameter scale helps on that ravine because it:",
+          "correctAnswer": "Shrinks the steep coordinate's step while leaving the quiet coordinate freer",
+          "distractors": [
+            { "text": "Deletes w1 from the model so the ravine cannot exist", "kind": "reversed", "rationale": "The coordinate stays. Its step size is what changes." },
+            { "text": "Forces every coordinate to share one global rate with no memory", "kind": "nearby", "rationale": "That is plain SGD. Adaptive methods are the per-parameter memory." },
+            { "text": "Replaces the gradient with a validation accuracy, which has no slope", "kind": "misapplied", "rationale": "You still step a gradient. You just rescale it per coordinate." }
+          ],
+          "correctExplanation": "Large running second moment on the wall, smaller steps there. The floor can still move.",
+          "objectiveIds": ["Compare plain SGD with a momentum or adaptive update on a ravine"],
+          "prerequisiteConceptIds": ["ml-gd-variants"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-batchnorm-10",
+      "conceptId": "ml-batchnorm",
+      "title": "Stable inputs for the next layer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-mlp"],
+      "goDeeper": "ml-dropout",
+      "explanation": [
+        "Recentering a layer's activations makes the next layer's input less of a moving target. Batch normalization subtracts a minibatch mean, divides by a minibatch standard deviation, then lets a learned scale and shift restore a useful range. The next weight matrix sees a distribution that does not wander every step.",
+        "Training and inference are different passes. Training uses the current minibatch's mean and variance, so the map depends on the other rows in the batch. Inference uses a running average of those statistics, so a single example is not normalized against a random neighbor. Mix the two and you will ship a net that is not the net you trained.",
+        "The extra affine after the normalize is not decoration. It can undo the normalize if the job needs a different scale. What the layer still bought is a gradient path whose input distribution is stabler, which is why deep stacks become easier to start. It is not a replacement for a matched init, and it is not a license to ignore a dead tape."
+      ],
+      "example": "Hidden units in a deep MLP drift toward huge mean and variance by layer 8. The next sigmoid saturates. Insert batch norm before the bend: each minibatch is re-centered to mean ~0 and variance ~1, the sigmoid sees the linear middle, and a learned γ, β can still stretch the axis if the job wants it.",
+      "whyItMatters": "A net that 'only works at batch 32' is often this split: training used batch statistics, inference used a running mean you never populated.",
+      "quiz": [
+        {
+          "id": "ml-bn10-1",
+          "stem": "Batch normalization's job, before the learned scale and shift, is to:",
+          "correctAnswer": "Re-center and re-scale activations so the next layer sees a stable input",
+          "distractors": [
+            { "text": "Replace the loss with the minibatch mean, so no gradient is required", "kind": "misapplied", "rationale": "The mean is a statistic of activations, not a new loss." },
+            { "text": "Delete the next layer, because a stable input makes depth illegal", "kind": "reversed", "rationale": "The point is to feed the next layer, not to remove it." },
+            { "text": "One-hot the hidden units so each minibatch is a class distribution", "kind": "nearby", "rationale": "Normalization is a location-scale map, not a softmax." }
+          ],
+          "correctExplanation": "Subtract mean, divide by std, then γ and β. The next layer sees a less wandering input.",
+          "objectiveIds": ["Re-center and re-scale activations so the next layer sees a stable input"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-bn10-2",
+          "stem": "At inference, batch norm typically uses running averages because:",
+          "correctAnswer": "A single example should not be normalized against a random neighbor's batch",
+          "distractors": [
+            { "text": "Training already forbade minibatches, so no statistic was ever computed", "kind": "reversed", "rationale": "Training used the batch statistic. Inference must not depend on a leftover neighbor." },
+            { "text": "The running average replaces the weights, so γ and β are deleted", "kind": "nearby", "rationale": "γ and β stay. What changes is the mean and variance you normalize with." },
+            { "text": "Inference is the only pass that may look at the held-out labels", "kind": "misapplied", "rationale": "The statistic is of activations, not of labels." }
+          ],
+          "correctExplanation": "Train on batch mean and variance. Predict with the population estimate you accumulated.",
+          "objectiveIds": ["Predict what batch norm does to the training versus inference pass"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-bn10-3",
+          "stem": "A model trained with batch statistics and shipped with empty running means typically:",
+          "correctAnswer": "Normalizes inference inputs against the wrong location-scale, so the net is not the trained map",
+          "distractors": [
+            { "text": "Automatically copies the last minibatch into production, which is always legal", "kind": "reversed", "rationale": "A leftover batch is not a population. That is the bug." },
+            { "text": "Becomes a linear model, because empty means delete every nonlinearity", "kind": "subtle", "rationale": "The bends are still there. The normalize is just using a nonsense statistic." },
+            { "text": "Gains a higher training loss, which is the only number that can move", "kind": "nearby", "rationale": "The training pass is not the one that broke. Inference is." }
+          ],
+          "correctExplanation": "You trained one map and shipped another. Populate the running statistics, or you changed the function.",
+          "objectiveIds": ["Predict what batch norm does to the training versus inference pass"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-dropout-10",
+      "conceptId": "ml-dropout",
+      "title": "Training as a thinned ensemble",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-overfit"],
+      "goDeeper": "ml-overparam",
+      "explanation": [
+        "Masking units at random during training is a regularizer: the net cannot rely on any one co-adapted clique. Dropout trains an ensemble of thinned nets that share weights. Each minibatch keeps each unit with some probability p and zeros the rest. The surviving paths must still do the job.",
+        "At inference the mask is off. You want the average of those thinned nets, not a new random thinning on every customer. The usual accounting is to keep all units and scale the outgoing weights by p (or to scale by 1/p during training and leave inference unscaled). Skip that scale and the test-time activations are the wrong size.",
+        "Dropout is not a bent activation and not a new loss. It is noise on the representation that fights a net which memorized a conspiracy of hidden units. If the model was already underfitting, thinning it further is not a gift. Use it when the overfit story is real."
+      ],
+      "example": "Hidden layer of 256, dropout 0.5. A training step sees about 128 live units; the others are zero. At test, all 256 are live, and each outgoing weight is multiplied by 0.5 so the next layer sees the same expected scale it trained on.",
+      "whyItMatters": "A net that trains with dropout and tests without the scale will look 'mysteriously worse in production' while the weights are fine.",
+      "quiz": [
+        {
+          "id": "ml-do10-1",
+          "stem": "Dropout during training is best described as:",
+          "correctAnswer": "An ensemble of thinned nets, made by dropping units at random",
+          "distractors": [
+            { "text": "A new loss that replaces cross-entropy with the dropout probability", "kind": "misapplied", "rationale": "Dropout is a mask on units, not a replacement loss." },
+            { "text": "A guarantee that every unit stays live, so co-adaptation is required", "kind": "reversed", "rationale": "The point is that units cannot count on their neighbors being live." },
+            { "text": "A held-out split computed by deleting random training rows forever", "kind": "nearby", "rationale": "The mask is on hidden units, per minibatch, not a permanent data split." }
+          ],
+          "correctExplanation": "Random thinning, shared weights. That is the ensemble you trained.",
+          "objectiveIds": ["Train as an ensemble of thinned nets by dropping units at random"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-do10-2",
+          "stem": "Dropout is turned off at inference, and the remaining weights are scaled, because:",
+          "correctAnswer": "You want the average of the thinned nets, at the expected training scale",
+          "distractors": [
+            { "text": "Inference is the only time a random mask is allowed to delete units", "kind": "reversed", "rationale": "The random mask is a training regularizer. Inference should not re-thin." },
+            { "text": "Scaling by p deletes the weights, so the model becomes a baseline", "kind": "nearby", "rationale": "The scale restores expected activation size. It does not delete the net." },
+            { "text": "The mask must stay on, or the overfit you wanted will return as underfit", "kind": "subtle", "rationale": "Leaving the mask on at test injects noise into the product, which is not the ensemble average." }
+          ],
+          "correctExplanation": "All units live, weights times p. That approximates the average of the thinned nets.",
+          "objectiveIds": ["Predict why dropout is off at inference and how the remaining weights are scaled"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-do10-3",
+          "stem": "A net trained with dropout p = 0.5 and tested with all units live, no scale, typically:",
+          "correctAnswer": "Feeds the next layer activations about twice as large as it trained on",
+          "distractors": [
+            { "text": "Sees the same expected scale, because inference always rescales itself", "kind": "reversed", "rationale": "Without the p scale, expected activation doubles when the mask disappears." },
+            { "text": "Cannot run, because dropout forbids a forward pass with every unit live", "kind": "misconception", "rationale": "The forward pass runs. The numbers are just the wrong size." },
+            { "text": "Becomes a linear stack, because a missing scale deletes every nonlinearity", "kind": "misapplied", "rationale": "The bends remain. The bug is scale, not a collapsed line." }
+          ],
+          "correctExplanation": "Training saw half the units. Test sees all of them. Multiply by 0.5 or you changed the map.",
+          "objectiveIds": ["Predict why dropout is off at inference and how the remaining weights are scaled"],
+          "prerequisiteConceptIds": ["ml-overfit"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-overparam-10",
+      "conceptId": "ml-overparam",
+      "title": "More knobs than rows",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-capacity", "ml-mlp"],
+      "goDeeper": "ml-inductive",
+      "explanation": [
+        "Classical capacity stories said more parameters than data points meant interpolation of noise. Overparameterized nets often do interpolate the sample — train loss to zero — and still generalize. Extra knobs are not a license to skip the held-out set. Interpolation of the sample is not a lookup that fails off it.",
+        "Memorization that fails off the sample is the old nightmare: a table of training rows, no geometry, a collapse on a new x. Interpolation with a biased architecture can still be a smooth rule between the rows. Extra parameters make many interpolators available. The architecture, init, and optimizer pick which one you got.",
+        "This is not a claim that bigger is always better, and it is not a claim that regularization became illegal. Dropout, early stopping, and data still move the interpolator you land on. The update to the story is narrower: parameter count exceeding n does not, by itself, prove that the rule is a spreadsheet."
+      ],
+      "example": "A wide MLP with more weights than training images can drive training error to zero. On a new image it may still classify. A literal hash table of those images also drives training error to zero and then fails on a one-pixel shift. Same interpolation of the sample. Different off-sample maps.",
+      "whyItMatters": "If 'too many parameters' is already a guilty verdict, you will not look at which interpolator the net found, and you will not measure the held-out number.",
+      "quiz": [
+        {
+          "id": "ml-op10-1",
+          "stem": "Overparameterization, as this lesson uses the word, means:",
+          "correctAnswer": "More parameters than data points, which can still generalize",
+          "distractors": [
+            { "text": "Fewer parameters than data points, which forbids any interpolation", "kind": "reversed", "rationale": "Over- means more knobs than rows, not fewer." },
+            { "text": "A training loss that is illegal to drive toward zero", "kind": "misconception", "rationale": "Train loss can go to zero. That is interpolation of the sample, not a crime by itself." },
+            { "text": "A held-out set that must be folded into the training sheet", "kind": "misapplied", "rationale": "The held-out set is still how you tell interpolators apart." }
+          ],
+          "correctExplanation": "More knobs than rows, and the held-out number can still be small.",
+          "objectiveIds": ["State that more parameters than data points can still generalize"],
+          "prerequisiteConceptIds": ["ml-capacity", "ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-op10-2",
+          "stem": "Interpolating the training sample differs from memorization that fails off-sample in that:",
+          "correctAnswer": "Many interpolators exist; a biased net may be a smooth rule, a table may not",
+          "distractors": [
+            { "text": "Any interpolator is a hash table, so off-sample failure is guaranteed", "kind": "reversed", "rationale": "That collapse is one interpolator. It is not the only one the extra knobs allow." },
+            { "text": "Interpolation forbids a held-out set, so there is no off-sample to discuss", "kind": "nearby", "rationale": "The held-out set is how you see which interpolator you got." },
+            { "text": "Only underparameterized models can interpolate, by the classical count", "kind": "subtle", "rationale": "The classical count is what this lesson is correcting." }
+          ],
+          "correctExplanation": "Zero train loss is interpolation. Off-sample behavior depends on which interpolator you landed on.",
+          "objectiveIds": ["Contrast interpolation of the sample with memorization that fails off the sample"],
+          "prerequisiteConceptIds": ["ml-capacity", "ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-op10-3",
+          "stem": "A wide MLP and a hash table of the training images both hit zero train error. The honest next question is:",
+          "correctAnswer": "Whether the map still works on a new image, not whether n was smaller than the parameter count",
+          "distractors": [
+            { "text": "Whether you can delete the held-out set, since interpolation already proved the job", "kind": "reversed", "rationale": "Interpolation of the sample is not the job. The new image is." },
+            { "text": "Whether the MLP used fewer parameters than the hash table, which would forbid generalization", "kind": "nearby", "rationale": "Count is not the verdict. The off-sample map is." },
+            { "text": "Whether dropout became illegal the moment train loss hit zero", "kind": "misapplied", "rationale": "Regularizers still pick among interpolators. They did not become illegal." }
+          ],
+          "correctExplanation": "Both interpolated the sample. Only one of them might be a rule. Measure the new image.",
+          "objectiveIds": ["Contrast interpolation of the sample with memorization that fails off the sample"],
+          "prerequisiteConceptIds": ["ml-capacity", "ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    }
+  ]
+}

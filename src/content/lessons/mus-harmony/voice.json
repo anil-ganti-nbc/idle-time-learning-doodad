@@ -1,0 +1,794 @@
+{
+  "courseId": "mus-harmony",
+  "moduleId": "mus-h-voice",
+  "lessons": [
+    {
+      "id": "mus-voice-lead-10",
+      "conceptId": "mus-voice-lead",
+      "title": "Each part as a line",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-species",
+      "diagram": "mus-voice-lead",
+      "explanation": [
+        "Move each voice as a line, not as a stack of chord names that jump. Keep a common tone. Step the others. The smallest honest step is the one that is actually in the part: a held letter, a neighbor, a second. MIT 21M.301 treats that economy as the craft that makes function audible.",
+        "Leaps happen. They are honest when the line needs a new register or when no common tone exists. They are lazy when two chords share a letter and you still jumped. Rewrite that leap: park the shared pitch and let another voice take the motion.",
+        "A guitar grip that jumps as a block is still voice leading — a thick unison of the same shape. Name it. If you want independence, split the grip into parts and walk them. If you want the jump, keep it and do not call it four-part writing."
+      ],
+      "example": "C major to F major: keep C, walk E to F, walk G to A. Same letters as a barre that hopped. The held C was the rewrite the leap did not need.",
+      "whyItMatters": "If parts are only names, you will jump over common tones and then wonder why the choir (or the overdub) thrashes.",
+      "quiz": [
+        {
+          "id": "mus-vl10-1",
+          "stem": "Honest voice leading in this lesson means each part should:",
+          "correctAnswer": "Move by the smallest step that is actually available, including a hold",
+          "distractors": [
+            {"text": "Leap to a new chord tone on every change so the line stays exciting", "kind": "reversed", "rationale": "Leaps are for when a step or common tone is not there."},
+            {"text": "Copy the bass an octave up, which counts as four independent parts", "kind": "nearby", "rationale": "A doubling is not independence and not the smallest step."},
+            {"text": "Ignore pitch and only match duration so the stack looks aligned", "kind": "misapplied", "rationale": "Voice leading is pitch motion in each part, not barline alignment."}
+          ],
+          "correctExplanation": "Hold or step first. Leap when that is the honest remaining move.",
+          "objectiveIds": [
+            "Move each voice by the smallest honest step"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-vl10-2",
+          "stem": "Two chords share a C and the upper part leaps off it. The rewrite is:",
+          "correctAnswer": "Keep C as a common tone and let a different voice take the motion",
+          "distractors": [
+            {"text": "Delete C from both chords so the leap has nothing left to hold", "kind": "reversed", "rationale": "The shared letter is the one you keep, not the one you erase."},
+            {"text": "Rename the second chord so the leap becomes a new root on paper", "kind": "nearby", "rationale": "Respelling hides the leap. It does not walk the part."},
+            {"text": "Move every voice by a fifth, matching the guitar-barre jump", "kind": "misapplied", "rationale": "A barre jump is a texture choice, not the rewrite of a common tone."}
+          ],
+          "correctExplanation": "Shared C stays. Another part moves. That is the rewrite.",
+          "objectiveIds": [
+            "Rewrite a leap that could have been a common tone"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-vl10-3",
+          "stem": "A barre shape jumps I to IV as a block. You should predict the parts did:",
+          "correctAnswer": "The same leap together: legal as a grip, not four independent lines",
+          "distractors": [
+            {"text": "Perfect species contrary motion, because barres hide inner steps", "kind": "reversed", "rationale": "A block jump is parallel motion of the shape, not contrary lines."},
+            {"text": "Nothing, because guitar cannot voice-lead until a choir is added", "kind": "nearby", "rationale": "The grip is already voice leading — just a thick doubled leap."},
+            {"text": "A cadence, because any jump of a shape is defined as V-I", "kind": "misapplied", "rationale": "A shape jump is motion. Cadence is a function job."}
+          ],
+          "correctExplanation": "Block leap is a texture. Independent lines would have kept the common tone.",
+          "objectiveIds": [
+            "Move each voice by the smallest honest step"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-voice-lead-20",
+      "conceptId": "mus-voice-lead",
+      "title": "Common tones before leaps",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-species",
+      "diagram": "mus-voice-lead",
+      "explanation": [
+        "Rewrite the inventory. For two stacks, list every shared pitch class. Those are holds unless a line has a reason to leave. Remaining voices take the leftover chord tones by step if a step exists. What is left after that may leap. MIT 21M.301 is this inventory, repeated until it is a reflex.",
+        "Contrary and oblique motion keep parts from fusing. If the bass rises, let an inner voice fall or sit. Parallel thirds and sixths can still be independent. Parallel fifths and octaves fuse in that craft — later lessons name when a riff wants the fuse. Here, prefer the motion that keeps the line countable.",
+        "Leaps are honest in three cases: the part is crossing into a new register on purpose, no step exists to the remaining tone, or you are doubling a new bass. They are dishonest when a common tone was sitting in that same part. Circle those leaps and park the shared letter.",
+        "Apply the inventory to a riff. A power-chord wall that slides as a shape is one doubled part, not four. A verse that needs a singing inner line has to be rewritten: keep the pedal or the common string, walk the others. Heavy music reuses this craft whenever more than one part is actually independent."
+      ],
+      "example": "C-E-G to G-B-D: hold G, walk E to D, walk C to B (or leap C to D if you are in a hurry — then rewrite). The held G was the common tone the barre jump threw away.",
+      "whyItMatters": "Once the inventory is a habit, 'the chords jump' splits into a doubled shape versus a line you have not written yet.",
+      "quiz": [
+        {
+          "id": "mus-vl20-1",
+          "stem": "Before leaping between two chords, the first inventory step is to:",
+          "correctAnswer": "List shared pitch classes and hold them unless a part must leave",
+          "distractors": [
+            {"text": "Leap every voice first, then search for a common tone that survived", "kind": "reversed", "rationale": "The hold is the first move, not the leftover after the jump."},
+            {"text": "Delete inner voices so only the bass is allowed to move by step", "kind": "nearby", "rationale": "Inner voices are parts. They get the inventory too."},
+            {"text": "Rename both chords as I so common tones appear by definition", "kind": "misapplied", "rationale": "Function labels do not create shared letters. Spelling does."}
+          ],
+          "correctExplanation": "Shared letters first. Steps second. Leaps last. That is the inventory.",
+          "objectiveIds": [
+            "Rewrite a leap that could have been a common tone"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-vl20-2",
+          "stem": "A soprano leaps C to G while C is also a chord tone of the next stack. Diagnose:",
+          "correctAnswer": "The leap could have been a common tone; park C and move another voice",
+          "distractors": [
+            {"text": "The leap is required, because sopranos are forbidden from holding a letter", "kind": "reversed", "rationale": "A hold is a legal, often better, soprano move."},
+            {"text": "The next chord must be respelled so C is no longer a chord tone", "kind": "nearby", "rationale": "Do not respell to justify a lazy leap. Rewrite the part."},
+            {"text": "The bass should copy the leap at the octave to legalize it", "kind": "misapplied", "rationale": "Doubling the leap fuses parts; it does not fix the missed hold."}
+          ],
+          "correctExplanation": "C was available as a hold. The leap was optional. Rewrite it.",
+          "objectiveIds": [
+            "Rewrite a leap that could have been a common tone"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-vl20-3",
+          "stem": "Bass rises C to F while an inner voice sits on C, then steps to D. This is:",
+          "correctAnswer": "Oblique then stepwise motion: one part held, another moved small",
+          "distractors": [
+            {"text": "Illegal, because two parts may never share a letter even for a beat", "kind": "reversed", "rationale": "Sharing C for a beat is a common tone, the point of the inventory."},
+            {"text": "A parallel octave, because any held C counts as doubling the bass leap", "kind": "nearby", "rationale": "The inner voice sat, then stepped to D. It did not leap with the bass."},
+            {"text": "A cadence by definition, since contrary-looking motion always closes", "kind": "misapplied", "rationale": "This is voice leading. Cadence still needs a function job."}
+          ],
+          "correctExplanation": "Hold, then a second. Smallest honest steps. The bass took the leap.",
+          "objectiveIds": [
+            "Move each voice by the smallest honest step"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "mus-species-10",
+      "conceptId": "mus-species",
+      "title": "Species as a constraint",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-voice-lead"
+      ],
+      "goDeeper": "mus-parallel",
+      "explanation": [
+        "Species counterpoint is a constraint set that teaches what a line can do. First species: one note against one note, mostly consonance, independence of rhythm later. It is a gym, not a Palestrina costume. MIT 21M.301 uses it so you feel a line before you stack Roman numerals.",
+        "Write a first-species pair that keeps independence. Start and end on stable intervals. Prefer contrary or oblique motion. Do not fuse into parallel fifths or octaves. Repeated notes are a hold, which is legal. The cantus is the given line; the counterpoint is the one you are training.",
+        "Carry the craft into riffs. A bass ostinato plus a vocal line is species if they stay independent. A doubled guitar fifth is not a failed species exercise — it declined the independence constraint. Use the gym to hear that choice, then write the texture you actually want."
+      ],
+      "example": "Cantus: C-D-E-F-E-D-C. Counterpoint above: G-A-G-A-B-G-C, mostly contrary, no parallel fifths. Same two lines on bass and voice in a verse: still the craft.",
+      "whyItMatters": "Treating species as a museum piece is how people skip the gym and then cannot write a line that survives without the chord names.",
+      "quiz": [
+        {
+          "id": "mus-spc10-1",
+          "stem": "Species counterpoint is used in this course as which kind of tool?",
+          "correctAnswer": "A craft of constraints that teaches what an independent line can do",
+          "distractors": [
+            {"text": "A museum rule that forbids any music written after Palestrina", "kind": "misconception", "rationale": "The point is the gym, not a costume ban on later music."},
+            {"text": "A chord-label system that replaces Roman numerals in every riff", "kind": "nearby", "rationale": "Species trains lines. Function labels are a different grammar."},
+            {"text": "A tuning method that forces every fifth to beat until it is just", "kind": "misapplied", "rationale": "Species is motion and interval choice, not a temperament drill."}
+          ],
+          "correctExplanation": "Constraints, not a museum. The line is what you are training.",
+          "objectiveIds": [
+            "Use species counterpoint as a craft that teaches what a line can do"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-spc10-2",
+          "stem": "A first-species pair that keeps independence should mostly:",
+          "correctAnswer": "Move note against note, prefer contrary or oblique, avoid fused fifths",
+          "distractors": [
+            {"text": "Jump in parallel octaves so both parts stay easy to sing in unison", "kind": "reversed", "rationale": "Parallel octaves fuse the pair. Independence is what you are writing."},
+            {"text": "Fill every interval with a run of dissonant passing tones on the beat", "kind": "nearby", "rationale": "First species is consonant, on the beat. Dissonance is later species."},
+            {"text": "Copy the cantus at the unison and call the doubling a second part", "kind": "misapplied", "rationale": "A unison copy is one part, not a pair."}
+          ],
+          "correctExplanation": "One against one, independent motion, fifths and octaves not fused.",
+          "objectiveIds": [
+            "Write a first-species pair that keeps independence"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-spc10-3",
+          "stem": "A bass ostinato under an independent vocal line, versus a doubled E5 wall, differs how?",
+          "correctAnswer": "The first keeps two lines; the wall declined independence on purpose",
+          "distractors": [
+            {"text": "The wall is better species, because parallel fifths score extra craft points", "kind": "reversed", "rationale": "Parallel fifths are the fuse species trains you to hear."},
+            {"text": "Neither is music, because species may only be written on a cantus firmus staff", "kind": "misconception", "rationale": "The craft travels. The staff was the gym equipment."},
+            {"text": "The vocal line must be respelled as chords until no melody remains", "kind": "nearby", "rationale": "Species protects the line. It does not dissolve it into stacks."}
+          ],
+          "correctExplanation": "Independence versus a doubled lock. Species is how you hear the difference.",
+          "objectiveIds": [
+            "Use species counterpoint as a craft that teaches what a line can do"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "mus-parallel-10",
+      "conceptId": "mus-parallel",
+      "title": "Parallel fifths fuse",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-voice-lead"
+      ],
+      "goDeeper": "mus-texture",
+      "explanation": [
+        "Two voices that move in parallel fifths or octaves fuse: the ear hears one part doubled, not two parts. That is why the species craft banned them. Independence was the goal. The ban is a tool for that goal, not a moral law about fifths.",
+        "State the mechanism before the style fight. Parallel thirds still sound like two lines. Parallel fifths lock the overtone series so the upper part rides as a doubling. MIT 21M.301 marks those fifths because the exercise is counting parts. Lose a part and the exercise failed.",
+        "Decide when a riff does not owe the ban. A power-chord wall wants the fuse. Planing a fifth-stack is the harmony, not a grading error. Write independent inner lines, and the ban comes back. The riff does not have to pretend it is a chorale in order to be allowed."
+      ],
+      "example": "Choir: soprano and bass both leap G-D to A-E, a parallel fifth — independence dropped. Guitar: the same two notes as a sliding E5-F#5 wall — the lock is the point.",
+      "whyItMatters": "If the ban is only a superstition, you will either fear every fifth or ignore every fused part. Name the goal first.",
+      "quiz": [
+        {
+          "id": "mus-par10-1",
+          "stem": "Why were parallel fifths and octaves banned in the species craft?",
+          "correctAnswer": "They fuse two voices into a doubling, so independence is lost",
+          "distractors": [
+            {"text": "Fifths are immoral intervals that must never sound even as a leap", "kind": "misconception", "rationale": "The ban is about parallel motion of those intervals, not the interval itself."},
+            {"text": "Octaves destroy pitch class, so the letters become unnameable", "kind": "nearby", "rationale": "The letters stay. What dies is the second independent part."},
+            {"text": "Teachers needed a random rule to make counterpoint take longer", "kind": "misapplied", "rationale": "The mechanism is fusion of parts, which the exercise is measuring."}
+          ],
+          "correctExplanation": "Fused doubling. Lost part. That is the ban's job in the gym.",
+          "objectiveIds": [
+            "State why parallel fifths and octaves were banned in that craft"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-par10-2",
+          "stem": "A sliding E5-F#5-G5 guitar wall should be decided as which case?",
+          "correctAnswer": "The riff wants the lock, so it does not owe the species ban",
+          "distractors": [
+            {"text": "An automatic fail, because every fifth on guitar must be rewritten as thirds", "kind": "reversed", "rationale": "The wall is using fusion. Species is not grading this texture."},
+            {"text": "A first-species masterpiece, scoring extra points for parallel fifths", "kind": "nearby", "rationale": "Species would mark those fifths. The riff is not taking that exam."},
+            {"text": "Non-harmony, because fused fifths cannot be a harmonic object", "kind": "misapplied", "rationale": "The fifth-stack is the object. Fusion is the texture."}
+          ],
+          "correctExplanation": "Want the lock? Keep the parallels. Want two parts? Break them.",
+          "objectiveIds": [
+            "Decide when a riff does not owe that ban anything"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-par10-3",
+          "stem": "You need an independent inner line under a bass. Parallel octaves with the bass would:",
+          "correctAnswer": "Erase the inner part; write contrary or oblique motion instead if you want two lines",
+          "distractors": [
+            {"text": "Make the inner line more independent by reinforcing the bass letter", "kind": "reversed", "rationale": "Reinforcing is doubling. Independence needs different motion."},
+            {"text": "Be required by power-chord grammar even when the inner line must sing", "kind": "nearby", "rationale": "Power-chord walls can double. An inner line that must sing cannot."},
+            {"text": "Convert the phrase into a cadence regardless of function jobs", "kind": "misapplied", "rationale": "Octaves are a texture fact. Cadence is still a function job."}
+          ],
+          "correctExplanation": "Two parts or one doubled part. Parallel octaves pick the second.",
+          "objectiveIds": [
+            "Decide when a riff does not owe that ban anything"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "mus-tension-tone-10",
+      "conceptId": "mus-tension-tone",
+      "title": "Pitches that want a landing",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-voice-lead",
+        "mus-major"
+      ],
+      "goDeeper": "mus-dissonance",
+      "explanation": [
+        "Leading tones and chordal sevenths are tendency tones: pitches that want a resolution. In major, scale degree 7 wants 1. The seventh of V7 wants to step down. Name the pitch and the landing. MIT 21M.301 treats those two leans as the inner motion of dominant function.",
+        "Resolve one on purpose. In C, B goes to C, F goes to E, and the V7-I click is mostly those two steps plus the bass. Leave one hanging on purpose and you keep the lean sounding: a riff that parks on B over C, or a melody that sits on F after G7, is using the want without paying it.",
+        "Do both in the same piece if you want. Chorus resolves the leading tone; the bridge hangs it. That is a choice, not a broken rule. Heavy music reuses the hang as tension. The name still has to be the pitch that wanted the landing."
+      ],
+      "example": "G7 to C: B-C in the top line, F-E in an inner line. Same chorus later ends on G7 with B hanging. First ending resolved; second left the want in the air.",
+      "whyItMatters": "If tendency is only a vibe, you will resolve the wrong letter or 'fix' a hang that was the hook.",
+      "quiz": [
+        {
+          "id": "mus-ttn10-1",
+          "stem": "A leading tone or chordal seventh is named here as which kind of pitch?",
+          "correctAnswer": "A tendency tone: a pitch that wants a specific step of resolution",
+          "distractors": [
+            {"text": "A rest: tendency tones delete duration until the next downbeat", "kind": "misapplied", "rationale": "They are pitches with a lean, not rests."},
+            {"text": "A new tonic: any leaning pitch immediately becomes the key note", "kind": "reversed", "rationale": "The lean is toward a landing, not a rekeying by itself."},
+            {"text": "A quality name: seventh and leading tone are two triad qualities", "kind": "nearby", "rationale": "Quality is major/minor/dim/aug. Tendency is a lean."}
+          ],
+          "correctExplanation": "7 wants 1. Chordal seventh wants down. That want is the name.",
+          "objectiveIds": [
+            "Name a leading tone or chordal seventh as a pitch that wants a resolution"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead",
+            "mus-major"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-ttn10-2",
+          "stem": "In C major, resolving V7 to I on purpose typically walks which pair?",
+          "correctAnswer": "B up to C, and F down to E: both tendency tones taking their landings",
+          "distractors": [
+            {"text": "B down to A, and F up to G, so both leans reverse on principle", "kind": "reversed", "rationale": "The default leans are B to C and F to E, not the opposite steps."},
+            {"text": "G up to A, and D down to C, ignoring 7 and the chordal seventh", "kind": "nearby", "rationale": "Those can move, but they are not the named tendency pair."},
+            {"text": "Every voice to rest, because resolution means the phrase becomes silent", "kind": "misapplied", "rationale": "Resolution is a pitch landing, not a mute."}
+          ],
+          "correctExplanation": "B-C and F-E. That is the on-purpose resolution in this key.",
+          "objectiveIds": [
+            "Resolve one on purpose and leave one hanging on purpose"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead",
+            "mus-major"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-ttn10-3",
+          "stem": "A melody sits on B over a C-major landing. You should predict the effect is:",
+          "correctAnswer": "The leading tone is left hanging on purpose; the want stays in the air",
+          "distractors": [
+            {"text": "A spelling error, because B cannot sound once C major has arrived", "kind": "misconception", "rationale": "Hanging is a choice. The letter is still B wanting C."},
+            {"text": "An automatic modulation to B, because hanging tones rename the tonic", "kind": "nearby", "rationale": "A hang is not a new key. It is an unpaid lean."},
+            {"text": "A plagal cadence, because any unpaid lean is redefined as IV-I", "kind": "misapplied", "rationale": "Plagal is a cadence type. This is a tendency tone left unpaid."}
+          ],
+          "correctExplanation": "B still wants C. Leaving it is the move. Name the hang.",
+          "objectiveIds": [
+            "Resolve one on purpose and leave one hanging on purpose"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead",
+            "mus-major"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-dissonance-10",
+      "conceptId": "mus-dissonance",
+      "title": "Prepared, struck, then left",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "goDeeper": "mus-nonchord",
+      "explanation": [
+        "Clash is a timed event: prepared, struck, left. Prepare the pitch as a consonance against the other part. Strike by holding it while the other part moves, so the interval goes tense. Leave by stepping to a consonance. A suspension is that three-stroke shape, not a wrong note you forgot to edit.",
+        "Write one on purpose. Upper part holds G while the bass moves from C to D: G against D is the strike (a fourth or a ninth depending on octave). G then steps to F# or F, and the clash leaves. Accent the strike. Do not hide it as a misprint.",
+        "Riffs use the same clock. A hung major seventh, a minor second grind, a tritone that sits: those are strikes. If they never prepare or leave, you still can name the clash as a timed object — it just occupies more of the bar. MIT 21M.301's suspension drill is the clean version of that clock."
+      ],
+      "example": "C-E-G, then bass to F while G holds (strike), then G to F (leave) against F-A-C. The held G was prepared as a fifth, struck as a ninth/second, left by step.",
+      "whyItMatters": "If dissonance is only 'ugly,' you will either ban every grind or never know when a suspension is the line working.",
+      "quiz": [
+        {
+          "id": "mus-dsn10-1",
+          "stem": "A clash in this lesson is treated as which kind of object?",
+          "correctAnswer": "A timed event: prepared as a consonance, struck, then left by step",
+          "distractors": [
+            {"text": "A moral failure that must be deleted before the phrase may continue", "kind": "misconception", "rationale": "The strike is the point of the event, not a stain to bleach."},
+            {"text": "A new chord name you must respell so the clash becomes a triad", "kind": "nearby", "rationale": "Do not rename the harmony to hide the timing of the clash."},
+            {"text": "A loudness spike, because dissonance is defined as extra energy", "kind": "misapplied", "rationale": "Dissonance here is an interval event, not a fader move."}
+          ],
+          "correctExplanation": "Prepare, strike, leave. That clock is the object.",
+          "objectiveIds": [
+            "Treat a clash as a timed event: prepared, struck, left"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-dsn10-2",
+          "stem": "Holding a consonant pitch while the other part moves, then stepping, writes:",
+          "correctAnswer": "A suspension: the held tone is struck as a clash, then left honestly",
+          "distractors": [
+            {"text": "A wrong note: any held pitch after a bass change is illegal to keep", "kind": "reversed", "rationale": "The hold is the preparation becoming a strike. That is the device."},
+            {"text": "A power chord: suspensions are defined as fifths without thirds", "kind": "nearby", "rationale": "A power chord is a dyad object. A suspension is a timed clash."},
+            {"text": "A cadence, because every prepared clash closes the phrase by law", "kind": "misapplied", "rationale": "A suspension can sit inside a phrase. Cadence is a function ending."}
+          ],
+          "correctExplanation": "Hold, clash, step. That is a suspension, not a misprint.",
+          "objectiveIds": [
+            "Write a suspension that is not just a wrong note"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-dsn10-3",
+          "stem": "A grind of two adjacent pitches sits for a whole bar with no leave. Trace the clock:",
+          "correctAnswer": "The strike occupies the bar; preparation or leave may be missing on purpose",
+          "distractors": [
+            {"text": "The clock is broken, so the grind cannot be called a clash at all", "kind": "reversed", "rationale": "It is still a clash. The timing is just all strike."},
+            {"text": "It secretly resolved, because long clashes become consonances by waiting", "kind": "nearby", "rationale": "Waiting does not turn a second into a third. Leaving does."},
+            {"text": "It became a rest, because unprepared clashes cancel both pitches", "kind": "misapplied", "rationale": "Both pitches still sound. The event is extended, not erased."}
+          ],
+          "correctExplanation": "All strike is still a timed clash. Name the missing prepare/leave as a choice.",
+          "objectiveIds": [
+            "Treat a clash as a timed event: prepared, struck, left"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "mus-nonchord-10",
+      "conceptId": "mus-nonchord",
+      "title": "Names for how you arrived",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-dissonance"
+      ],
+      "goDeeper": "mus-texture",
+      "explanation": [
+        "Passing, neighbor, and suspension are names for how a non-chord tone arrived. Passing steps between two chord tones. Neighbor steps away from a chord tone and back. Suspension is the held-then-left clash you already timed. The harmony under them can stay the same stack.",
+        "Label the visitor instead of respelling the chord. C major with a D in the melody on the way to E is still C, plus a passing tone. Calling it a Cadd9 for one eighth note hides the line. MIT 21M.301 wants the line named, not a new Roman numeral every time someone walks.",
+        "Riffs do this constantly. A chromatic walk into a power chord is passing. A hammer-on off a chord tone and back is a neighbor. A held string against a new bass is a suspension. Keep the harmonic object stable and name the extra letter's path."
+      ],
+      "example": "C-E-G while a voice sings C-D-E: D is passing, chord still C. Same grip, hammer E-F-E: F is a neighbor. Do not relabel either bar as a new seventh chord for one attack.",
+      "whyItMatters": "Respelling every visitor as a new chord is how analyses become unreadable and lines disappear.",
+      "quiz": [
+        {
+          "id": "mus-nct10-1",
+          "stem": "Passing, neighbor, and suspension name which fact about an extra pitch?",
+          "correctAnswer": "How you arrived: step-through, step-and-back, or hold-then-leave",
+          "distractors": [
+            {"text": "Three new chord qualities that replace the triad under the extra pitch", "kind": "reversed", "rationale": "The point is to keep the chord and name the visitor's path."},
+            {"text": "Three dynamic marks that say how loud a non-chord tone must be", "kind": "misapplied", "rationale": "These are arrival paths, not loudness instructions."},
+            {"text": "Three clefs you must switch to whenever a visitor appears", "kind": "nearby", "rationale": "A clef assigns lines. A non-chord tone is a path on those lines."}
+          ],
+          "correctExplanation": "Path names. Passing, neighbor, suspension. The stack can sit still.",
+          "objectiveIds": [
+            "Name passing, neighbor, and suspension as ways you arrived"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-dissonance"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-nct10-2",
+          "stem": "A melody walks G-A-B over a G-major triad. A is best labeled as:",
+          "correctAnswer": "A passing tone: it steps between two chord tones, harmony still G",
+          "distractors": [
+            {"text": "A new chord, Gadd9, that must replace G for the whole bar", "kind": "reversed", "rationale": "One walking eighth is a visitor, not a harmonic rewrite."},
+            {"text": "A neighbor tone, because any extra letter must leave and return to G", "kind": "nearby", "rationale": "A neighbor would go G-A-G. This walk continues to B."},
+            {"text": "A suspension, because A was obviously held from a previous D chord", "kind": "misapplied", "rationale": "Nothing was held. A was approached and left by step."}
+          ],
+          "correctExplanation": "G to A to B is a pass through A. Chord remains G.",
+          "objectiveIds": [
+            "Label a non-chord tone instead of respelling the harmony"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-dissonance"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-nct10-3",
+          "stem": "A guitar hammers B-C-B over G-B-D. You should label C as which visitor?",
+          "correctAnswer": "A neighbor: it left a chord tone and came back, stack still G major",
+          "distractors": [
+            {"text": "A new C-major harmony, because C is always a root when it sounds", "kind": "reversed", "rationale": "C is the visitor. G-B-D is still the stack."},
+            {"text": "A passing tone into D, even though the line returned to B", "kind": "nearby", "rationale": "Return to B is the neighbor signature. Passing would continue."},
+            {"text": "A cadence tone, because neighbors are defined as phrase endings", "kind": "misapplied", "rationale": "A neighbor is a path. Cadence is a function ending."}
+          ],
+          "correctExplanation": "Away and back. Neighbor. Do not respell G as C.",
+          "objectiveIds": [
+            "Label a non-chord tone instead of respelling the harmony"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-dissonance"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-texture-10",
+      "conceptId": "mus-texture",
+      "title": "Count the parts, then the rhythm",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-voice-lead"
+      ],
+      "goDeeper": "mus-drop",
+      "explanation": [
+        "Texture is a count: how many parts, and whether they share a rhythm. One part is unison or monophony, even if twenty guitars double it. Several parts on the same rhythm are homophony. Several parts on different rhythms are independent lines. Count before you praise density.",
+        "Contrast them in a short excerpt. A vocal melody over block chords is homophony. Two riffs that lock different subdivisions are independent. A whole band on one fifth-stack is still one part. MIT 21M.301's four-part writing is a texture choice, not a moral ceiling.",
+        "Heavy music lives on these switches. Verse: doubled guitar, one part. Bridge: bass ostinato against a vocal line, two parts. Chorus: chords under a melody, homophony. If you cannot count, you will call every loud section 'full' and miss that the parts collapsed into one."
+      ],
+      "example": "Same E5 riff: four guitars, one rhythm — one part. Add a vocal in even quarters over it — homophony. Let the vocal run triplets against the guitar eighths — two independent lines.",
+      "whyItMatters": "Miscounting parts is how a doubled wall gets analyzed as four-voice counterpoint, or a real inner line gets ignored.",
+      "quiz": [
+        {
+          "id": "mus-txt10-1",
+          "stem": "To name a texture you first count which pair of facts?",
+          "correctAnswer": "How many parts there are, and whether those parts share a rhythm",
+          "distractors": [
+            {"text": "How loud the mix is, and whether distortion is more than unity gain", "kind": "misapplied", "rationale": "Energy and timbre are knobs. Texture is parts and shared rhythm."},
+            {"text": "How many bars the phrase lasts, and whether the cadence was authentic", "kind": "nearby", "rationale": "Phrase and cadence are form. Texture can sit inside any of those."},
+            {"text": "How many flats are in the key, and whether the tonic is minor", "kind": "reversed", "rationale": "Key is a pitch collection. Texture is how parts are deployed."}
+          ],
+          "correctExplanation": "Part count, then shared or independent rhythm. That is the texture.",
+          "objectiveIds": [
+            "Count the parts and say whether they share a rhythm"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-txt10-2",
+          "stem": "Unison doubling, block chords under a melody, and two freely timed lines are:",
+          "correctAnswer": "One part, homophony, and independent lines — three different textures",
+          "distractors": [
+            {"text": "Three names for four-part chorale writing, which is the only legal texture", "kind": "misconception", "rationale": "Four-part writing is one texture among these, not the definition of all three."},
+            {"text": "Three cadences: authentic, half, and plagal relabeled as density", "kind": "misapplied", "rationale": "Cadence is how a phrase ends. Texture is how parts are counted."},
+            {"text": "One part in every case, because extra instruments never add a part", "kind": "reversed", "rationale": "Extra instruments add a part only if they are actually independent."}
+          ],
+          "correctExplanation": "Doubling is one part. Shared rhythm is homophony. Free rhythms are independent.",
+          "objectiveIds": [
+            "Contrast unison, homophony, and independent lines in a short excerpt"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "mus-txt10-3",
+          "stem": "Four guitars play the same E5 eighths. A singer holds long notes against them. Texture is:",
+          "correctAnswer": "Two parts in homophony if the singer shares the harmonic rhythm, else independent",
+          "distractors": [
+            {"text": "Five independent species lines, because five bodies are on stage", "kind": "nearby", "rationale": "Bodies are not parts. The guitars are one doubled part."},
+            {"text": "Unison only, because a singer cannot count as a part over guitars", "kind": "reversed", "rationale": "The vocal is a second part if it is actually a second line."},
+            {"text": "A cadence texture, which replaces part-count whenever someone sings", "kind": "misapplied", "rationale": "Singing does not rename texture as cadence."}
+          ],
+          "correctExplanation": "Guitars collapsed to one part. The voice is the second. Then check shared rhythm.",
+          "objectiveIds": [
+            "Contrast unison, homophony, and independent lines in a short excerpt"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "mus-drop-10",
+      "conceptId": "mus-drop",
+      "title": "Spread by dropping an octave",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-inversion"
+      ],
+      "goDeeper": "mus-pedal",
+      "explanation": [
+        "Drop a voice an octave to spread a close-position stack. Close position packs the inner letters within an octave. Drop-2 takes the second voice from the top and sends it down an octave. The pitch classes stay; the spacing opens. Guitar and horn voicings live on this move.",
+        "Write a drop-2 from a close triad. Close C-E-G with G on top: second-from-top is E, so drop E an octave — E below, then C and G. From a close seventh, the same rule: drop the second-from-top letter. You still have to name inversion from the bass, not from how spread it looks.",
+        "Spreading is not a new chord. It is a register choice that later heavy voicings reuse: a low fifth, a high third, a gap in the mud. MIT 21M.301's close SATB is the packed version. Drop is how you open it without changing the letters."
+      ],
+      "example": "Close G-B-D-F, D on top. Second from top is B; drop B an octave. Bass can still be G (root) or B (first inversion). Same four letters, wider spacing.",
+      "whyItMatters": "If spread looks like a new harmony, you will analyze voicing as progression and miss that only a register moved.",
+      "quiz": [
+        {
+          "id": "mus-drp10-1",
+          "stem": "A drop voicing spreads a close position by doing which move?",
+          "correctAnswer": "Dropping one voice an octave so the letters stay and the spacing opens",
+          "distractors": [
+            {"text": "Deleting a chord tone so the remaining dyad counts as drop-2", "kind": "reversed", "rationale": "Dropping is a register shift, not a deletion of a letter."},
+            {"text": "Raising the bass a seventh so inversion is cancelled on paper", "kind": "nearby", "rationale": "Inversion is still read from the bass. Drop is spacing."},
+            {"text": "Adding distortion until close triads feel wider in the mix", "kind": "misapplied", "rationale": "Timbre is not an octave transposition of a voice."}
+          ],
+          "correctExplanation": "One part down an octave. Same pitch classes. Wider stack.",
+          "objectiveIds": [
+            "Drop a voice an octave to spread a close position"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-inversion"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-drp10-2",
+          "stem": "Close C-E-G with G on top: which drop-2 voicing do you write?",
+          "correctAnswer": "E dropped an octave, C and G remaining above: E-C-G spread",
+          "distractors": [
+            {"text": "G dropped an octave, which is drop-1, leaving C-E packed on top", "kind": "nearby", "rationale": "Drop-2 is the second voice from the top. That is E, not G."},
+            {"text": "C deleted, leaving E-G as a power chord renamed drop-2", "kind": "reversed", "rationale": "You do not delete the root to make a drop voicing."},
+            {"text": "All three notes raised an octave, which spreads by leaving the staff", "kind": "misapplied", "rationale": "A global octave shift is a register change of the whole stack, not drop-2."}
+          ],
+          "correctExplanation": "Second from the top is E. Drop E. Close C-E-G becomes spread E-C-G.",
+          "objectiveIds": [
+            "Write a drop-2 voicing from a close triad"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-inversion"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-drp10-3",
+          "stem": "After a drop-2, the bass is E under letters C-E-G. Trace inversion as:",
+          "correctAnswer": "First inversion still: the bass letter, not the new spacing, names it",
+          "distractors": [
+            {"text": "Root position, because spreading a triad always resets the bass to the root", "kind": "reversed", "rationale": "Bass E is still the third of C. Spacing did not rename inversion."},
+            {"text": "A new chord on E, because any dropped voice becomes the root", "kind": "nearby", "rationale": "The dropped voice is a register choice. The chord is still C."},
+            {"text": "No inversion possible, because drop voicings forbid figured bass", "kind": "misapplied", "rationale": "You still read inversion from the bass after the drop."}
+          ],
+          "correctExplanation": "Drop changed spacing. E in the bass still means first inversion of C.",
+          "objectiveIds": [
+            "Drop a voice an octave to spread a close position"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-inversion"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "mus-pedal-10",
+      "conceptId": "mus-pedal",
+      "title": "Held bass, moving chords",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-secondary",
+      "diagram": "mus-pedal",
+      "explanation": [
+        "Hold a bass against changing harmony. That held letter is a pedal point, usually tonic or dominant. Upper parts take new stacks over it. The bass is not obliged to be a chord tone of every stack it underwrites. Clash then release is the device.",
+        "Predict the clash. A tonic C pedal under F is consonant. Under G7 it may still agree (C is in G7). Under D major it will grind (C against D-F#-A) until the upper parts return to a stack that includes C, or the pedal finally moves. MIT 21M.301 writes that grind on purpose.",
+        "Treat the pedal as first-class in riffs. An E that never leaves while guitars plane D5 and C5 is not a bass player who forgot the changes. It is a tonic pedal. Later heavy music lives here. Do not 'correct' it into a walking bass just to satisfy T-PD-D on every beat."
+      ],
+      "example": "Bass holds E. Guitars move E5-G5-A5-C5-E5. E against A5 is tense (no E in A-E fifth? A5 is A-E, consonant). E against C5 (C-G) grinds. Release when the wall returns to E5.",
+      "whyItMatters": "If a held bass is only a mistake, you will rewrite the one device metal, organ, and chorales actually share.",
+      "quiz": [
+        {
+          "id": "mus-pdl10-1",
+          "stem": "A pedal point is which bass behavior against the chords above it?",
+          "correctAnswer": "A held bass letter while the upper harmony is allowed to change",
+          "distractors": [
+            {"text": "A bass that must jump to every new root so no clash can form", "kind": "reversed", "rationale": "The hold is the point. Walking to every root is not a pedal."},
+            {"text": "A rest in the bass, because pedals are defined as missing low notes", "kind": "nearby", "rationale": "A pedal sounds. It is held, not omitted."},
+            {"text": "A cadence formula that rewrites every held bass as V-I", "kind": "misapplied", "rationale": "A pedal can sit under several functions. It is not itself a cadence."}
+          ],
+          "correctExplanation": "Hold the bass. Let the stacks above move. That is the pedal.",
+          "objectiveIds": [
+            "Hold a bass against changing harmony"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-pdl10-2",
+          "stem": "Tonic pedal C under a D-major stack should be predicted to:",
+          "correctAnswer": "Clash (C against D-F#-A), then release when a stack containing C returns",
+          "distractors": [
+            {"text": "Cancel D major into C major instantly, because pedals rename any stack", "kind": "reversed", "rationale": "The upper stack stays D. The bass C is the visitor that grinds."},
+            {"text": "Be silent in the low end, because dissonant pedals are auto-muted", "kind": "nearby", "rationale": "The grind is audible. That is the device working."},
+            {"text": "Modulate, because any clash under a pedal is a new tonic by law", "kind": "misapplied", "rationale": "Clash is the timed event. A new tonic needs a modulation."}
+          ],
+          "correctExplanation": "C versus D-F#-A is the grind. Release is when C belongs again.",
+          "objectiveIds": [
+            "Predict the clash a pedal is supposed to create and then release"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-pdl10-3",
+          "stem": "A metal verse holds low E while guitars plane C5 and D5. Diagnose the bass as:",
+          "correctAnswer": "A tonic pedal doing its job, not a bass line that forgot T-PD-D",
+          "distractors": [
+            {"text": "A voice-leading error that must walk E-F-G to satisfy species fifths", "kind": "misapplied", "rationale": "The riff hired a pedal. Walking it away deletes the device."},
+            {"text": "A modulation to C, because the first guitar fifth always wins the key", "kind": "nearby", "rationale": "Upper fifths moving over E do not automatically rekey the bass."},
+            {"text": "Non-harmony, because a held E cannot count as a harmonic object", "kind": "reversed", "rationale": "The held E is the harmonic object the changes grind against."}
+          ],
+          "correctExplanation": "Held E, moving fifths. Pedal, clash, release. First-class, not a mistake.",
+          "objectiveIds": [
+            "Hold a bass against changing harmony"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

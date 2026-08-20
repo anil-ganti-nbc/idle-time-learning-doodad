@@ -10,7 +10,8 @@ export function JournalistToggle({ className }: { className?: string }) {
       <div className="min-w-0">
         <p className="text-sm font-medium text-fg">Journalist depth</p>
         <p className="mt-0.5 text-sm leading-snug text-muted">
-          Skip introductions you already meet at work. Prefer mechanisms: NA, overlay, stochastics, windows.
+          Prefer mechanisms over introductions. Foundations still come first — this does not skip
+          prerequisites.
         </p>
       </div>
       <button

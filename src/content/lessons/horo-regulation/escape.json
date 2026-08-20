@@ -1,0 +1,786 @@
+{
+  "courseId": "horo-regulation",
+  "moduleId": "horo-r-escape",
+  "lessons": [
+    {
+      "id": "horo-escape-5",
+      "conceptId": "horo-escape",
+      "title": "Ticks, not a dump",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["horo-gear-train"],
+      "goDeeper": "horo-lever",
+      "diagram": "horo-escape-cycle",
+      "explanation": [
+        "Stored work in the barrel wants to dump through the train in one rush. The escapement lets one tooth go at a time. Each unlock is a tick. Each tick also gives the oscillator a small push so friction does not kill the next swing.",
+        "Timekeeping lives in the oscillator period, not in the gears. The train only counts how many unlocks happened. Disturb that period with a dirty impulse or a dragging lock and the day gains or loses, even if every tooth is still there."
+      ],
+      "example": "On a Swiss lever the escape wheel locks on a pallet stone, then unlocks and slides the impulse face. The fork kicks the roller jewel. That pair of events is one tick.",
+      "whyItMatters": "Name the two jobs now or later timing talk will treat the gears as the clock.",
+      "quiz": [
+        {
+          "id": "horo-esc5-1",
+          "stem": "What two jobs does the escapement actually perform in this machine?",
+          "correctAnswer": "Release the train in ticks and give the oscillator an impulse",
+          "distractors": [
+            { "text": "Store the work and display the count on the dial hands", "kind": "nearby", "rationale": "Those are the barrel and the hands." },
+            { "text": "Set the period by itself, with the oscillator left idle", "kind": "reversed", "rationale": "The oscillator is the timebase. The escapement feeds it." },
+            { "text": "Magnetize the hairspring so the day can be regulated later", "kind": "misapplied", "rationale": "Magnetism is a later fault, not a job of the escapement." }
+          ],
+          "correctExplanation": "Ticks and a push. Release the train, feed the oscillator.",
+          "objectiveIds": ["Release the train in ticks and give the oscillator an impulse"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-esc5-2",
+          "stem": "Where does timekeeping actually live, if the train is only a count?",
+          "correctAnswer": "In the oscillator period, not in the gear ratios of the train",
+          "distractors": [
+            { "text": "In the tooth count of the centre wheel, which is the second", "kind": "reversed", "rationale": "The train counts. It does not know a second." },
+            { "text": "In the case metal, which is how a movement is graded", "kind": "misapplied", "rationale": "Housing is not a timebase." },
+            { "text": "In the mainspring barrel, whose turns are already seconds", "kind": "nearby", "rationale": "The barrel stores work. Period is still the oscillator." }
+          ],
+          "correctExplanation": "Period first. The gears only report how many periods ran.",
+          "objectiveIds": ["State that timekeeping lives in the oscillator period, not in the gears"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-esc5-3",
+          "stem": "If the escape wheel never unlocks, the hands on a going watch typically:",
+          "correctAnswer": "Stay put, because no counted ticks are leaving the train",
+          "distractors": [
+            { "text": "Run at a true rate, because the train already knows seconds", "kind": "reversed", "rationale": "Without unlocks the train is a locked pile of wheels." },
+            { "text": "Gain one hour, which is the barrel's natural period of unwind", "kind": "subtle", "rationale": "The barrel has no period that replaces the oscillator." },
+            { "text": "Set themselves from the stem without any winding at all", "kind": "misapplied", "rationale": "Setting is a different path. It is not the going path." }
+          ],
+          "correctExplanation": "No unlock, no tick, no new count for the hands to show.",
+          "objectiveIds": ["Release the train in ticks and give the oscillator an impulse"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-escape-10",
+      "conceptId": "horo-escape",
+      "title": "Counted unlocks, one impulse",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-gear-train"],
+      "goDeeper": "horo-recoil-vs-detached",
+      "diagram": "horo-escape-cycle",
+      "explanation": [
+        "Energy leaves the fourth wheel as torque on the escape wheel. That wheel cannot free-run. A pallet locks a tooth, then unlocks it in time with the oscillator. The train advances one counted step. That is the first job: release in ticks.",
+        "The same unlock delivers an impulse to the oscillator. Without that push, friction at the pivots and the air would kill the swing in a few beats. The escapement is a meter and a feeder, not a second timebase sitting beside the balance.",
+        "HSNY 101 and WOSTEP both put the period in the sprung balance, not in the tooth count. Change the hairspring and the day moves. Change a wheel ratio and you change how many ticks make a displayed second, not the period itself."
+      ],
+      "example": "A 28,800 bph train is a ratio from barrel to escape. The 4 Hz period is the balance and hairspring. Swap the fourth wheel and the seconds hand lies; the oscillator has not changed its mind.",
+      "whyItMatters": "Diagnose the oscillator when the day is wrong. The train only reported the count.",
+      "quiz": [
+        {
+          "id": "horo-esc10-1",
+          "stem": "How does the escapement differ from the going train in this machine?",
+          "correctAnswer": "The train counts the unwind; the escapement meters it and feeds the oscillator",
+          "distractors": [
+            { "text": "The train keeps time by itself; the escapement only moves the hands", "kind": "reversed", "rationale": "The train counts. The oscillator, fed by the escapement, meters." },
+            { "text": "The train stores the work; the escapement is the mainspring barrel", "kind": "misconception", "rationale": "Stored work is the spring. The escapement is lock and impulse." },
+            { "text": "They are two names for the same wheel sitting under the dial", "kind": "nearby", "rationale": "Train and escapement are different jobs." }
+          ],
+          "correctExplanation": "Count versus meter-and-feed. Period still lives in the oscillator.",
+          "objectiveIds": ["Release the train in ticks and give the oscillator an impulse"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-esc10-2",
+          "stem": "Trace torque from the fourth wheel to a counted tick. After the escape wheel locks, the next event is:",
+          "correctAnswer": "An unlock timed to the oscillator, with an impulse delivered on that beat",
+          "distractors": [
+            { "text": "A free dump of the whole train, because the lock was only decorative", "kind": "reversed", "rationale": "The lock is the count. A dump is the failure mode." },
+            { "text": "A hand-set through the stem, which is how ticks are supposed to start", "kind": "misapplied", "rationale": "Setting is a different path." },
+            { "text": "A change of wheel ratio, which is what actually meters the second", "kind": "subtle", "rationale": "Ratio sets how many ticks make a displayed second, not the period." }
+          ],
+          "correctExplanation": "Lock, then a timed unlock plus impulse. That pair is one tick.",
+          "objectiveIds": ["Release the train in ticks and give the oscillator an impulse"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-esc10-3",
+          "stem": "You change a train ratio but leave the balance and hairspring alone. The period typically:",
+          "correctAnswer": "Stays put; only how many ticks make a displayed second has moved",
+          "distractors": [
+            { "text": "Moves with the ratio, because the gears are the true timebase", "kind": "reversed", "rationale": "Period lives in the oscillator, not in the tooth count." },
+            { "text": "Becomes a quartz crystal until the fourth wheel is oiled", "kind": "misapplied", "rationale": "A ratio change is still a mechanical count." },
+            { "text": "Doubles, which is the barrel's natural period after any mesh change", "kind": "subtle", "rationale": "The barrel has no period that replaces the sprung balance." }
+          ],
+          "correctExplanation": "Same oscillator, same period. The display count is what the ratio changed.",
+          "objectiveIds": ["State that timekeeping lives in the oscillator period, not in the gears"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-recoil-vs-detached-10",
+      "conceptId": "horo-recoil-vs-detached",
+      "title": "Left alone between kicks",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-escape"],
+      "goDeeper": "horo-lever",
+      "diagram": "horo-escape-cycle",
+      "explanation": [
+        "Recoil escapements keep the oscillator in contact with the train between impulses. The verge and the cylinder drag the balance or the pendulum on the return. That drag is state-dependent, so the period moves with amplitude and with oil.",
+        "A detached escapement finishes the impulse and then leaves the oscillator alone until the next unlock. The Swiss lever is that family. Most of the swing happens with the fork parked on a banking pin and the impulse pin free of the horns.",
+        "Detached became the modern default because a free oscillator keeps a cleaner period. Recoil is not a moral failure. It is a coupling that writes train friction into the timebase on every return swing, which a wrist cannot hide."
+      ],
+      "example": "On a cylinder watch the escape-wheel tooth stays on the cylinder wall through much of the swing. On a lever the tooth is locked, the fork is banked, and the balance swings free until the pin returns.",
+      "whyItMatters": "A dragged oscillator writes oil and amplitude into the day. That is why the lever won the bench.",
+      "quiz": [
+        {
+          "id": "horo-rvd10-1",
+          "stem": "What distinguishes a recoil oscillator from a detached one between impulses?",
+          "correctAnswer": "Recoil stays dragged by the train; detached is left alone until the next kick",
+          "distractors": [
+            { "text": "Recoil is left alone; detached stays meshed with the fourth wheel", "kind": "reversed", "rationale": "Recoil is the dragged family. Detached is the free one." },
+            { "text": "Both are quartz crystals; only the case metal is different", "kind": "misapplied", "rationale": "This contrast is mechanical coupling, not a resonator swap." },
+            { "text": "Recoil stores the work; detached is only a display pinion", "kind": "nearby", "rationale": "Neither family is the barrel or the hands." }
+          ],
+          "correctExplanation": "Dragged versus left alone. That is the whole contrast.",
+          "objectiveIds": ["Contrast an oscillator that is dragged between impulses with one left alone"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "horo-rvd10-2",
+          "stem": "On a detached lever, most of the balance swing happens while:",
+          "correctAnswer": "The fork sits on a banking pin and the impulse pin is free of the horns",
+          "distractors": [
+            { "text": "The escape tooth stays on the cylinder wall and drags the return", "kind": "nearby", "rationale": "That is recoil contact, not a detached lever." },
+            { "text": "The oscillator stays meshed with the fourth wheel the whole way", "kind": "reversed", "rationale": "Detached means that mesh is broken between kicks." },
+            { "text": "The mainspring is let down through the hands on every beat", "kind": "misapplied", "rationale": "Hands are display. Detachment is at the fork and roller." }
+          ],
+          "correctExplanation": "Fork banked, pin free. That is the detached interval.",
+          "objectiveIds": ["Contrast an oscillator that is dragged between impulses with one left alone"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-rvd10-3",
+          "stem": "A detached lever became the modern default mainly because:",
+          "correctAnswer": "A free oscillator keeps a cleaner period than one dragged by the train",
+          "distractors": [
+            { "text": "Recoil stores more work, so detached had to win on jewel count", "kind": "misconception", "rationale": "The win is a cleaner period, not a storage or jewel story." },
+            { "text": "Detached locks the hands, which is how a modern watch displays", "kind": "misapplied", "rationale": "Hands still display a count. Detachment is at the oscillator." },
+            { "text": "Recoil cannot tick at all, so no other family was ever built", "kind": "nearby", "rationale": "Verge and cylinder ran for centuries. They just drag." }
+          ],
+          "correctExplanation": "Leave the oscillator alone and the period is less a function of oil and swing.",
+          "objectiveIds": ["Predict why a detached lever became the modern default"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-lever-10",
+      "conceptId": "horo-lever",
+      "title": "Two stones, one fork",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-escape"],
+      "goDeeper": "horo-escape-wheel",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Swiss lever means a detached fork with two pallet stones, entry and exit. The escape wheel tooth lands on the locking face of one stone. The fork sits on a banking pin. The oscillator is free until the impulse pin comes back into the horns.",
+        "Unlock starts when the pin enters the fork slot and turns the fork off the banking. The tooth slides from the locking face onto the impulse face and pushes the stone. That push is the impulse, sent through the fork to the roller.",
+        "Drop is the free hop of the tooth after it leaves one stone and before it lands on the other. Then the other stone locks, draw seats the fork, and the pin leaves the horns. One beat is lock, impulse, drop, in that order."
+      ],
+      "example": "Watch one club tooth: it locks on the entry stone, slides the impulse plane as the pin unlocks, then drops onto the exit stone. The fork has thrown. That is one beat of the lever.",
+      "whyItMatters": "If you cannot name lock, impulse, and drop on one beat, you will oil the wrong face later.",
+      "quiz": [
+        {
+          "id": "horo-lvr10-1",
+          "stem": "The Swiss lever, in the sense this lesson uses, is:",
+          "correctAnswer": "A detached escapement whose fork carries two pallet stones",
+          "distractors": [
+            { "text": "A recoil cylinder that keeps the tooth on the wall all swing", "kind": "nearby", "rationale": "The cylinder is recoil. The lever leaves the oscillator alone." },
+            { "text": "A quartz stepper that hides two stones under a circuit", "kind": "misapplied", "rationale": "No crystal. Two stones on a fork." },
+            { "text": "A going train whose fourth wheel is itself the timebase", "kind": "misconception", "rationale": "The lever meters with the oscillator. It is not the train." }
+          ],
+          "correctExplanation": "Detached fork, entry and exit stones. That is the Swiss lever.",
+          "objectiveIds": ["Describe the Swiss lever as a detached escapement with two pallet stones"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-lvr10-2",
+          "stem": "Trace one beat of the lever after a tooth has locked. The next events are:",
+          "correctAnswer": "Unlock and impulse on the stone, then drop onto the other stone",
+          "distractors": [
+            { "text": "Drop first, then a lock, with impulse saved for the next day", "kind": "reversed", "rationale": "Order is lock, impulse, drop. Impulse is not postponed." },
+            { "text": "A free dump of the train, because the lock was only decorative", "kind": "misconception", "rationale": "The lock holds until the pin unlocks it." },
+            { "text": "A hand-set through the stem, which is how a beat is supposed to start", "kind": "misapplied", "rationale": "Setting is not a beat of the lever." }
+          ],
+          "correctExplanation": "Lock, then unlock-plus-impulse, then drop. That is one beat.",
+          "objectiveIds": ["Trace lock, impulse, and drop on one beat of the lever"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-lvr10-3",
+          "stem": "On a running Swiss lever the impulse reaches the balance when:",
+          "correctAnswer": "The tooth slides the impulse face and the fork pushes the roller pin",
+          "distractors": [
+            { "text": "The tooth stays locked and the fork never leaves the banking pin", "kind": "reversed", "rationale": "A parked fork is the detached interval, not the impulse." },
+            { "text": "The fourth wheel skips the escape and drives the hands directly", "kind": "misapplied", "rationale": "Impulse is at the stones and the roller, not a skipped train." },
+            { "text": "The regulator index shortens the spring, which is the impulse", "kind": "nearby", "rationale": "The index is a later length knob, not this beat." }
+          ],
+          "correctExplanation": "Impulse face, then fork, then pin. That is how the kick arrives.",
+          "objectiveIds": ["Trace lock, impulse, and drop on one beat of the lever"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-lever-20",
+      "conceptId": "horo-lever",
+      "title": "Lock, impulse, drop on one beat",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["horo-escape"],
+      "goDeeper": "horo-pallet",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Follow one tooth onto the entry stone. It lands with a measured lock on the locking face. Draw then adds a little slide that pulls the fork onto the banking. The balance is already free. Nothing else should move until the impulse pin returns.",
+        "The pin enters the entry horn, lifts the lock, and the tooth runs the impulse plane. Impulse ends when the tooth leaves the stone. Drop follows: a short, free flight onto the exit stone. Too little drop and the next lock is unsafe or the tooth banks.",
+        "The exit beat is the same three events on the other stone, with the fork thrown the other way. Banking pins stop the fork so the departing pin clears the horn. A fork that over-travels can rebank: the pin hits a horn on the return and knocks amplitude down.",
+        "WOSTEP times this geometry under a microscope before anyone talks rate. Lock, drop, and inside and outside slide are measured freedoms. A pretty fork that fails those numbers will not keep a day, no matter how the regulator is set."
+      ],
+      "example": "Under the glass you see the entry lock, the impulse slide, then a small drop onto the exit stone. Reverse the fork and the exit beat repeats the three events. A tooth that banks instead of dropping is a drop that was set too small.",
+      "whyItMatters": "Rate talk that skips lock, impulse, and drop is decorating a geometry you have not yet measured.",
+      "quiz": [
+        {
+          "id": "horo-lvr20-1",
+          "stem": "On the entry beat, after the tooth has locked and draw has seated the fork, the next useful event is:",
+          "correctAnswer": "The impulse pin enters the horn, unlocks, and the tooth runs the impulse plane",
+          "distractors": [
+            { "text": "The tooth dumps the whole train, because lock was only a first landing", "kind": "reversed", "rationale": "Lock holds until the pin unlocks it. A dump is the failure." },
+            { "text": "The regulator index moves by itself, which is how a beat is finished", "kind": "misapplied", "rationale": "The index is not in the beat. The pin is." },
+            { "text": "The exit stone locks first, so entry impulse can be skipped entirely", "kind": "nearby", "rationale": "Entry beat finishes on the entry stone before the exit locks." }
+          ],
+          "correctExplanation": "Pin in, unlock, impulse plane. Then drop. That is still the entry beat.",
+          "objectiveIds": ["Trace lock, impulse, and drop on one beat of the lever"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-lvr20-2",
+          "stem": "A fork that over-travels the banking will typically:",
+          "correctAnswer": "Rebank: the returning pin hits a horn and knocks amplitude down",
+          "distractors": [
+            { "text": "Improve drop, because extra travel is how drop is supposed to grow", "kind": "reversed", "rationale": "Over-travel is a banking problem, not a gift of drop." },
+            { "text": "Convert the lever into a recoil cylinder until the next service", "kind": "misapplied", "rationale": "Over-travel is still a lever fault." },
+            { "text": "Raise jewel count, which is how a long fork is graded", "kind": "subtle", "rationale": "A long throw is not a jewel. It is a rebanking risk." }
+          ],
+          "correctExplanation": "Over-travel, returning pin, horn strike. Amplitude dies. That is rebanking.",
+          "objectiveIds": ["Trace lock, impulse, and drop on one beat of the lever"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-lvr20-3",
+          "stem": "A pretty lever that still will not hold a day, with stones that fail lock and drop under the glass, should be treated as:",
+          "correctAnswer": "A geometry fault: measure the freedoms before you touch the regulator",
+          "distractors": [
+            { "text": "A finished calibre, because polish is what WOSTEP times first", "kind": "reversed", "rationale": "WOSTEP times lock and drop, not the polish." },
+            { "text": "A quartz problem, best fixed by fitting a crystal under the fork", "kind": "misapplied", "rationale": "This is still a lever. Measure the stones." },
+            { "text": "Proof the train, not the escapement, is the timebase after all", "kind": "misconception", "rationale": "Failed lock and drop disturb the oscillator. The train still only counts." }
+          ],
+          "correctExplanation": "Failed numbers, failed day. The regulator will not invent lock and drop.",
+          "objectiveIds": ["Describe the Swiss lever as a detached escapement with two pallet stones"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-escape-wheel-10",
+      "conceptId": "horo-escape-wheel",
+      "title": "Last wheel of the count",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-lever"],
+      "goDeeper": "horo-impulse",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Club teeth on a Swiss escape wheel are the last of the going train. Each tooth has a locking corner and an impulse plane. The wheel delivers impulse; it does not meter the second. That job still sits in the sprung balance.",
+        "A bent tooth changes the lock on that beat and then the impulse. One landing comes early or late. The timing-machine line forks or the amplitude pumps once per revolution. The rest of the train can be clean and the day still moves.",
+        "Look at the wheel in the flat before you chase the hairspring. A tooth that leans, a tip that is chipped, or a wheel that is out of true will write a once-per-turn error into lock and impulse that no regulator pin can cancel."
+      ],
+      "example": "One club tooth leans. Every time that tooth arrives, lock is short and impulse is thin. The trace shows a dip once per escape-wheel turn. The index cannot hide a dip that comes around again.",
+      "whyItMatters": "A bent tooth is a lock-and-impulse fault that looks like a mystery rate until you look at the wheel.",
+      "quiz": [
+        {
+          "id": "horo-ew10-1",
+          "stem": "The escape wheel, in this course, is named as:",
+          "correctAnswer": "The last wheel of the train, delivering impulse to the stones",
+          "distractors": [
+            { "text": "The oscillating mass whose inertia sets the period alone", "kind": "nearby", "rationale": "That is the balance. The escape wheel is still train." },
+            { "text": "The restoring spring that returns the rim after each impulse", "kind": "misapplied", "rationale": "That is the hairspring." },
+            { "text": "A display pinion that reports counted unlocks on the dial", "kind": "misconception", "rationale": "Hands display. This wheel still delivers impulse." }
+          ],
+          "correctExplanation": "Last of the count, first of the impulse. Not the timebase.",
+          "objectiveIds": ["Name the escape wheel as the last wheel of the train, delivering impulse"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-ew10-2",
+          "stem": "A single bent escape-wheel tooth will typically:",
+          "correctAnswer": "Ruin lock and impulse on that beat, once per turn of the wheel",
+          "distractors": [
+            { "text": "Improve both lock and impulse, because a lean is extra draw", "kind": "reversed", "rationale": "A lean is a geometry error, not extra draw." },
+            { "text": "Leave lock and impulse alone and only colour the plates", "kind": "misconception", "rationale": "The tooth is the locking and impulse face." },
+            { "text": "Convert the lever into a quartz stepper until the tooth is oiled", "kind": "misapplied", "rationale": "A bent tooth is still a mechanical fault." }
+          ],
+          "correctExplanation": "One bad landing, once per turn. Lock and impulse both move.",
+          "objectiveIds": ["Predict what a bent tooth does to lock and impulse"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ew10-3",
+          "stem": "A timing-machine line that dips once per escape-wheel turn, spring looking round, first suspect is:",
+          "correctAnswer": "A bent or chipped tooth that is rewriting lock and impulse on one beat",
+          "distractors": [
+            { "text": "A regulator index that only acts once per escape-wheel turn", "kind": "nearby", "rationale": "The index is always in the coil. It does not pulse once a turn." },
+            { "text": "A quartz cell that is dying in step with the escape wheel", "kind": "misapplied", "rationale": "This is a lever watch. Look at the wheel." },
+            { "text": "Proof the hairspring is the last wheel of the train after all", "kind": "subtle", "rationale": "The spring can be round and the tooth still bent." }
+          ],
+          "correctExplanation": "Once per turn is the wheel talking. Inspect the teeth before the coil.",
+          "objectiveIds": ["Predict what a bent tooth does to lock and impulse"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-pallet-10",
+      "conceptId": "horo-pallet",
+      "title": "Entry and exit jewels",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-lever"],
+      "goDeeper": "horo-impulse",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Pallet stones, entry and exit, lock the wheel and then take the impulse. The entry stone meets a tooth as the wheel turns toward it. The exit stone meets a tooth as the wheel turns away. Both faces do both jobs, in turn.",
+        "Push a stone too far in and the lock goes short. The tooth may not land safely, or it may clip the impulse corner. A short lock looks like a light, fast beat until a knock or a drop in amplitude lets the tooth skip.",
+        "A stone too far out lengthens the lock and steals impulse travel. The watch can stall on that pallet, or run with low amplitude and a wide drop on the other side. Depth is a measured seat, not a press-until-it-ticks habit."
+      ],
+      "example": "An entry stone pressed a hair too deep shows almost no lock under the glass. One shock and that tooth skips. Backing the stone out a measured amount restores lock without killing the impulse plane.",
+      "whyItMatters": "A short lock from a stone in too far is an unsafe beat, not a crisp one.",
+      "quiz": [
+        {
+          "id": "horo-pal10-1",
+          "stem": "Entry and exit jewels on the fork are there to:",
+          "correctAnswer": "Lock the escape wheel and then take the impulse, each in turn",
+          "distractors": [
+            { "text": "Store the work that the barrel later releases as torque", "kind": "nearby", "rationale": "Stored work is the mainspring." },
+            { "text": "Set the period by changing effective length of the hairspring", "kind": "misapplied", "rationale": "That is the regulator. Stones lock and impulse." },
+            { "text": "Display the count, which is why they are polished like hands", "kind": "misconception", "rationale": "Polish is a bearing and sliding face, not a display." }
+          ],
+          "correctExplanation": "Lock, then impulse. Entry and exit take turns at both jobs.",
+          "objectiveIds": ["Give entry and exit jewels the jobs of locking and impulsing"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-pal10-2",
+          "stem": "A pallet stone pushed too far in will typically:",
+          "correctAnswer": "Shorten the lock, so a knock or a low swing can let the tooth skip",
+          "distractors": [
+            { "text": "Lengthen the lock, which always makes the beat safer", "kind": "reversed", "rationale": "In is short lock. Out is long lock." },
+            { "text": "Demagnetize the hairspring, which is the hidden job of depth", "kind": "misapplied", "rationale": "Stone depth is geometry, not a degausser." },
+            { "text": "Convert drop into draw, which is how a deep stone is supposed to run", "kind": "subtle", "rationale": "A deep stone steals lock. It does not invent draw from drop." }
+          ],
+          "correctExplanation": "Too far in, short lock, unsafe landing. That is the prediction.",
+          "objectiveIds": ["Predict a short lock if a stone is pushed too far in"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-pal10-3",
+          "stem": "You are seating an exit stone. To keep lock safe without killing impulse you should:",
+          "correctAnswer": "Set a measured depth so lock is present and the impulse plane still runs",
+          "distractors": [
+            { "text": "Press until it ticks, because any depth that unlocks is a correct seat", "kind": "misconception", "rationale": "A tick can be a short, unsafe lock." },
+            { "text": "Push it all the way in, so lock vanishes and drop becomes the beat", "kind": "reversed", "rationale": "All the way in is the short-lock fault." },
+            { "text": "Oil the locking face heavily, which replaces the need for depth", "kind": "misapplied", "rationale": "Oil on the lock is a later fault. Depth is still geometry." }
+          ],
+          "correctExplanation": "Measured seat. Lock you can see, impulse that still travels.",
+          "objectiveIds": ["Give entry and exit jewels the jobs of locking and impulsing"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-impulse-10",
+      "conceptId": "horo-impulse",
+      "title": "Push and lock stay separate",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-pallet", "horo-escape-wheel"],
+      "goDeeper": "horo-draw",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Locking holds the train. Impulse feeds the oscillator. Blur those jobs and you will oil a lock face to help the beat, or chase a low-amplitude trace by opening the regulator. The two events happen on different faces, in sequence.",
+        "A beat that unlocks without a clean impulse is a common fault. The tooth leaves the lock but the impulse plane is dry, chipped, or oiled into a skid. The fork throws, the pin gets a weak kick, and amplitude falls on that side.",
+        "Diagnose from the sound and the trace before you move a stone. A sharp lock click with a dull impulse, or a line that drops every other beat, points at the impulse face. The lock still did its job. The feed did not."
+      ],
+      "example": "Entry lock sounds crisp; the entry impulse is a scrape. Amplitude is down on that beat only. The locking face is fine. The impulse plane is dry or burred. Oiling the lock would have made draw worse and left the scrape.",
+      "whyItMatters": "A beat that unlocks but does not feed is a timing fault you will not index away.",
+      "quiz": [
+        {
+          "id": "horo-imp10-1",
+          "stem": "Why must impulse and locking stay two jobs that do not blur?",
+          "correctAnswer": "Lock holds the train; impulse feeds the oscillator, on different faces",
+          "distractors": [
+            { "text": "They are two names for the same face, so oiling either is identical", "kind": "misconception", "rationale": "Different faces, different jobs. Oil on the lock is a fault." },
+            { "text": "Lock feeds the oscillator; impulse is only a display of the hands", "kind": "reversed", "rationale": "Impulse is the feed. Lock is the hold." },
+            { "text": "Both are regulator-index jobs, so the stones can be ignored", "kind": "misapplied", "rationale": "The index is a later length knob. These faces are now." }
+          ],
+          "correctExplanation": "Hold versus feed. Sequence, two faces. Do not oil them as one.",
+          "objectiveIds": ["Keep impulse and locking as two jobs that must not blur"],
+          "prerequisiteConceptIds": ["horo-pallet", "horo-escape-wheel"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-imp10-2",
+          "stem": "A beat that unlocks but delivers no clean impulse typically shows as:",
+          "correctAnswer": "A weak kick to the pin and amplitude that falls on that side",
+          "distractors": [
+            { "text": "A stronger kick and a higher swing, because skip is extra energy", "kind": "reversed", "rationale": "No impulse is a missing feed, not extra energy." },
+            { "text": "A quartz stepper take-over until the lock face is polished", "kind": "misapplied", "rationale": "This is still a lever. Look at the impulse plane." },
+            { "text": "A perfect rate, because unlock alone is what the day requires", "kind": "subtle", "rationale": "Unlock without feed lets friction kill the next swing." }
+          ],
+          "correctExplanation": "Unlocked, underfed. The pin got a shrug. Amplitude dies on that beat.",
+          "objectiveIds": ["Diagnose a beat that unlocks without delivering a clean impulse"],
+          "prerequisiteConceptIds": ["horo-pallet", "horo-escape-wheel"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "horo-imp10-3",
+          "stem": "You hear a sharp lock and a dull impulse on alternate beats. Before moving a stone you should:",
+          "correctAnswer": "Treat the impulse face as the suspect and inspect that plane first",
+          "distractors": [
+            { "text": "Oil the locking face generously, since lock and impulse are one job", "kind": "misconception", "rationale": "That blur is the fault the lesson forbids." },
+            { "text": "Open the regulator, because a dull impulse is always a long spring", "kind": "misapplied", "rationale": "The index will not restore a dry or burred plane." },
+            { "text": "Ignore the sound, because only jewel count grades the beat", "kind": "nearby", "rationale": "The sound is the diagnosis. Count is not." }
+          ],
+          "correctExplanation": "Sharp lock, dull feed. The impulse plane is talking. Look there.",
+          "objectiveIds": ["Diagnose a beat that unlocks without delivering a clean impulse"],
+          "prerequisiteConceptIds": ["horo-pallet", "horo-escape-wheel"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-draw-10",
+      "conceptId": "horo-draw",
+      "title": "Geometry that seats the lever",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-impulse"],
+      "goDeeper": "horo-lock-drop",
+      "diagram": "horo-lever",
+      "explanation": [
+        "After impulse, the next tooth should land and then pull the pallet inward. That pull is draw. The locking face is angled so torque on the wheel seats the fork against the banking and keeps it there until the pin comes back.",
+        "Missing draw leaves the fork free to flutter. A knock, or even the departing impulse pin, can throw the lever off the banking. The next arrival of the pin then finds the slot in the wrong place, or unlocks the wrong stone.",
+        "Check draw by easing the fork off the banking with the power on. The wheel should pull it back. If it sits wherever you leave it, the lock angle is wrong or the stone is in too far. Do not regulate a flutter. Restore the geometry."
+      ],
+      "example": "Power on, you ease the fork a hair off the banking. Draw snaps it home. On the other stone the fork stays where you left it. That side has no draw: the lock angle is too upright, or the stone is deep.",
+      "whyItMatters": "A fluttering lever is a missing-draw problem. The index will not seat a fork.",
+      "quiz": [
+        {
+          "id": "horo-drw10-1",
+          "stem": "After impulse, draw is used on the lever to:",
+          "correctAnswer": "Pull the lever onto the banking and keep it seated until the pin returns",
+          "distractors": [
+            { "text": "Push the lever off the banking so the next unlock can start early", "kind": "reversed", "rationale": "Draw seats the fork. It does not throw it off." },
+            { "text": "Shorten the hairspring, which is how draw actually changes rate", "kind": "misapplied", "rationale": "Draw is pallet geometry, not a regulator." },
+            { "text": "Oil the lock face, because draw is just another name for that film", "kind": "nearby", "rationale": "Oil on the lock kills draw. It is not draw." }
+          ],
+          "correctExplanation": "Angled lock, inward pull, fork on the banking. That is draw.",
+          "objectiveIds": ["Use draw to pull the lever onto the banking after impulse"],
+          "prerequisiteConceptIds": ["horo-impulse"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-drw10-2",
+          "stem": "If draw is missing, the lever will typically:",
+          "correctAnswer": "Flutter off the banking, so the next pin arrival can miss or unlock wrong",
+          "distractors": [
+            { "text": "Seat harder, because no draw is how a modern fork is supposed to rest", "kind": "reversed", "rationale": "No draw is a free, unsafe fork." },
+            { "text": "Raise amplitude, because a flutter is extra impulse on every beat", "kind": "subtle", "rationale": "Flutter wastes the next arrival. It is not extra feed." },
+            { "text": "Turn the movement into a quartz stepper until the lock is oiled", "kind": "misapplied", "rationale": "Missing draw is still a lever geometry fault." }
+          ],
+          "correctExplanation": "No pull, fork wanders, next unlock is a lottery. That is the flutter.",
+          "objectiveIds": ["Predict a fluttering lever if draw is missing"],
+          "prerequisiteConceptIds": ["horo-impulse"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-drw10-3",
+          "stem": "Power on, you ease the fork off the banking and it stays put. You should treat that as:",
+          "correctAnswer": "Missing draw: restore lock angle or stone depth, do not index the flutter",
+          "distractors": [
+            { "text": "Healthy draw, because a fork that stays put is fully detached", "kind": "reversed", "rationale": "Detached is the free oscillator. The fork still needs to sit on the banking." },
+            { "text": "A rate error, best cancelled by sliding the regulator toward the stud", "kind": "misapplied", "rationale": "The index will not invent an angled lock face." },
+            { "text": "Proof the escape wheel is no longer the last wheel of the train", "kind": "nearby", "rationale": "The wheel is still last. Its lock angle is what failed." }
+          ],
+          "correctExplanation": "It should snap back. Sitting put is no draw. Fix geometry, not the index.",
+          "objectiveIds": ["Predict a fluttering lever if draw is missing"],
+          "prerequisiteConceptIds": ["horo-impulse"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-lock-drop-10",
+      "conceptId": "horo-lock-drop",
+      "title": "Measured freedoms, not vibes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-impulse"],
+      "goDeeper": "horo-impulse-pin",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Three numbers keep the lever safe. Lock is how much of the locking face is engaged at first landing. Drop is the free travel of the tooth between stones. Slide is the extra lock draw adds as it seats the fork on the banking.",
+        "Too little drop and the arriving tooth banks on a stone that has not yet unlocked, or the departing tooth cannot clear. The watch stalls or the fork rebanks. Too much drop wastes impulse, makes a noisy beat, and can let a tooth skip the lock.",
+        "WOSTEP measures these under the glass in both directions. A it-sounds-crisp habit will not catch a short lock on one stone and a long drop on the other. The freedoms are paired. Change one stone and you have to re-read both drops."
+      ],
+      "example": "Entry drop looks tight: the tooth almost banks on the exit stone. You ease the exit stone out a hair. Exit lock grows, entry drop opens, and the stall on that beat disappears. The other drop now needs a fresh look.",
+      "whyItMatters": "Wrong drop is a stall or a rebank. Crisp is not a measurement.",
+      "quiz": [
+        {
+          "id": "horo-ld10-1",
+          "stem": "Lock, drop, and slide are best treated as:",
+          "correctAnswer": "Measured freedoms that keep the escapement safe on both stones",
+          "distractors": [
+            { "text": "Three names for how the watch feels when the case is shaken", "kind": "misconception", "rationale": "They are geometry numbers, not vibes." },
+            { "text": "Regulator-index settings that replace the need for pallet depth", "kind": "misapplied", "rationale": "The index does not measure lock or drop." },
+            { "text": "Quartz-divider counts that a lever borrows from the crystal", "kind": "nearby", "rationale": "These freedoms are lever geometry." }
+          ],
+          "correctExplanation": "Lock, drop, slide. Measure them. That is how the lever stays safe.",
+          "objectiveIds": ["Measure lock, drop, and slide as the freedoms that keep the escapement safe"],
+          "prerequisiteConceptIds": ["horo-impulse"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-ld10-2",
+          "stem": "Drop set too small will typically cause:",
+          "correctAnswer": "A stall or a rebank, because a tooth cannot clear or lands too soon",
+          "distractors": [
+            { "text": "A quieter, safer beat, because less drop is always more lock", "kind": "reversed", "rationale": "Too little drop banks the tooth. That is not safety." },
+            { "text": "A quartz take-over, because small drop is how a stepper starts", "kind": "misapplied", "rationale": "Drop is still a lever number." },
+            { "text": "A longer hairspring, which is the hidden meaning of a tight drop", "kind": "subtle", "rationale": "Drop is tooth travel between stones, not spring length." }
+          ],
+          "correctExplanation": "No clearance, banked tooth, stall or rebank. That is small drop.",
+          "objectiveIds": ["Predict a rebanking or a stall from the wrong drop"],
+          "prerequisiteConceptIds": ["horo-impulse"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ld10-3",
+          "stem": "A noisy beat with a tooth that sometimes skips the next lock, drop looking wide, is typically:",
+          "correctAnswer": "Too much drop: wasted impulse and a landing that can miss the lock",
+          "distractors": [
+            { "text": "Too little drop: the classic stall, which always sounds noisy", "kind": "reversed", "rationale": "Wide drop is the skip-and-waste side, not the stall." },
+            { "text": "Perfect drop, because noise is how WOSTEP confirms the number", "kind": "misconception", "rationale": "WOSTEP measures. Noise is a clue, not a confirmation." },
+            { "text": "A magnetized spring, which is the only source of a skipped lock", "kind": "nearby", "rationale": "Magnetism is later. Wide drop can skip a lock on its own." }
+          ],
+          "correctExplanation": "Wide drop, wasted feed, landing that can miss. Opposite of the stall.",
+          "objectiveIds": ["Predict a rebanking or a stall from the wrong drop"],
+          "prerequisiteConceptIds": ["horo-impulse"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-impulse-pin-10",
+      "conceptId": "horo-impulse-pin",
+      "title": "How the fork talks to the roller",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-lever"],
+      "goDeeper": "horo-safety",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Impulse reaches the balance through a pin in a roller. The pin enters the fork slot, unlocks, takes the push, and leaves through the other horn. The roller table carries that pin. No other part of the balance should touch the fork.",
+        "A pin that does not enter the horn cleanly misses the beat. The fork is on the banking, the slot is waiting, and the pin passes outside or hits the horn tip. Amplitude collapses on that side. The next arrival may catch or may stall.",
+        "Shake, a bent pin, a roller that has slipped on the staff, or horns that are not equidistant will all produce a miss. Look at the entry before you accuse the hairspring. The conversation between fork and roller has to complete every beat."
+      ],
+      "example": "The roller has slipped a few degrees on the staff. The pin now kisses one horn and misses the slot on the return. One beat is a scrape, the other is a silence. Amplitude is a sawtooth until the roller is reset.",
+      "whyItMatters": "A missed entry is a dead beat. The spring did not fail; the pin never went in.",
+      "quiz": [
+        {
+          "id": "horo-ipn10-1",
+          "stem": "The lever talks to the balance through which pair of parts?",
+          "correctAnswer": "The impulse pin and the roller that carries it into the fork slot",
+          "distractors": [
+            { "text": "The regulator pins and the boot that pinches the outer coil", "kind": "nearby", "rationale": "Those parts talk to the hairspring, not to the fork." },
+            { "text": "The fourth wheel and the cannon pinion on the centre arbor", "kind": "misapplied", "rationale": "That pair is train and display, not fork-to-balance." },
+            { "text": "The barrel arbor and the click, which is how impulse is stored", "kind": "misconception", "rationale": "The click holds the wind. Impulse is at the roller." }
+          ],
+          "correctExplanation": "Pin in the roller, slot in the fork. That is the conversation.",
+          "objectiveIds": ["Let the lever talk to the balance through the impulse pin and roller"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-ipn10-2",
+          "stem": "If the impulse pin does not enter the fork horn cleanly, the beat will typically:",
+          "correctAnswer": "Be missed: amplitude falls on that side and the next arrival may stall",
+          "distractors": [
+            { "text": "Be stronger, because a horn strike is extra impulse on that side", "kind": "reversed", "rationale": "A miss is a missing kick, not extra feed." },
+            { "text": "Become a quartz step, which is how a missed pin is supposed to recover", "kind": "misapplied", "rationale": "A missed pin is still a lever fault." },
+            { "text": "Leave amplitude alone, because only the hairspring can change swing", "kind": "subtle", "rationale": "No entry, no impulse. Swing dies on that beat." }
+          ],
+          "correctExplanation": "No entry, no unlock, no kick. That side of the pair goes quiet.",
+          "objectiveIds": ["Predict a missed beat if the pin does not enter the fork horn cleanly"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ipn10-3",
+          "stem": "Amplitude sawtooths and one horn shows a scrape. Before blaming the spring you should:",
+          "correctAnswer": "Inspect pin entry, roller seat, and horn symmetry for a missed beat",
+          "distractors": [
+            { "text": "Slide the index, because a scrape is always a long hairspring", "kind": "misapplied", "rationale": "The index will not seat a pin in a horn." },
+            { "text": "Oil the lock faces, because a scrape means lock and impulse have blurred", "kind": "nearby", "rationale": "A horn scrape is a roller conversation, not a lock-face oil job." },
+            { "text": "Ignore the horn, because only jewel count grades a missed entry", "kind": "subtle", "rationale": "The horn is the evidence. Look at the entry." }
+          ],
+          "correctExplanation": "Scrape on a horn is a pin that did not go in. Check that conversation.",
+          "objectiveIds": ["Predict a missed beat if the pin does not enter the fork horn cleanly"],
+          "prerequisiteConceptIds": ["horo-lever"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-safety-10",
+      "conceptId": "horo-safety",
+      "title": "Guard pin, dart, and a knock",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-impulse-pin"],
+      "goDeeper": "horo-balance",
+      "diagram": "horo-lever",
+      "explanation": [
+        "Knock a running watch and the fork can try to leave the banking while the impulse pin is away. If it does, the wrong pallet unlocks and the train dumps a tooth. Safety action is the geometry that stops that unlock.",
+        "The guard pin, or dart, on the fork runs against the safety roller. A crescent in that roller lets the dart pass only when the impulse pin is in the horns, which is the only moment unlock is allowed. Outside that window the dart hits the roller body.",
+        "Name the dart and the safety roller as the pair that saves the lock. Horns are a second line: they catch a pin that arrives slightly off. If both are wrong, a shock becomes a skip. Do not open the banking to free a dart that is doing its job."
+      ],
+      "example": "You flick the running calibre. The dart kisses the safety roller and the fork stays banked. File the dart too short and the same flick lets the fork pass; the wrong stone drops and a tooth is gone.",
+      "whyItMatters": "A knock that unlocks the wrong pallet is a dumped tooth. The dart is why that dump does not happen.",
+      "quiz": [
+        {
+          "id": "horo-saf10-1",
+          "stem": "Safety action on a running lever is there to:",
+          "correctAnswer": "Stop a knock from unlocking the wrong pallet while the pin is away",
+          "distractors": [
+            { "text": "Oil the impulse faces so a knock can be used as extra draw", "kind": "misapplied", "rationale": "Safety is geometry, not a lubrication trick." },
+            { "text": "Unlock both pallets at once, which is how a modern lever recovers", "kind": "reversed", "rationale": "Unlocking the wrong pallet is the failure safety prevents." },
+            { "text": "Shorten the hairspring after a shock, which is the dart's second job", "kind": "nearby", "rationale": "The dart does not regulate. It guards the lock." }
+          ],
+          "correctExplanation": "Pin away, fork tempted, dart says no. The wrong pallet stays locked.",
+          "objectiveIds": ["Stop a knock from unlocking the wrong pallet"],
+          "prerequisiteConceptIds": ["horo-impulse-pin"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-saf10-2",
+          "stem": "Which pair is the geometry that saves the lock on a knock?",
+          "correctAnswer": "The guard pin, or dart, running against the safety roller and its crescent",
+          "distractors": [
+            { "text": "The regulator pins running against the outer coil of the spring", "kind": "nearby", "rationale": "Those pins set length. They do not guard a pallet lock." },
+            { "text": "The cannon pinion running against the hour wheel under the dial", "kind": "misapplied", "rationale": "That pair is display gearing." },
+            { "text": "The fourth wheel running against the barrel, taken as a safety dart", "kind": "misconception", "rationale": "Train mesh is not safety action." }
+          ],
+          "correctExplanation": "Dart plus safety roller. Crescent when the pin is in; body when it is not.",
+          "objectiveIds": ["Name guard pin and safety dart as the geometry that saves the lock"],
+          "prerequisiteConceptIds": ["horo-impulse-pin"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-saf10-3",
+          "stem": "A dart that is too short, with the impulse pin away, will typically allow:",
+          "correctAnswer": "The fork to pass on a knock and unlock the wrong pallet",
+          "distractors": [
+            { "text": "A safer lock, because a short dart is extra clearance on every beat", "kind": "reversed", "rationale": "Short dart is missing safety, not extra clearance." },
+            { "text": "A quartz take-over, which is how a short dart is supposed to recover", "kind": "misapplied", "rationale": "A short dart is still a lever fault." },
+            { "text": "A longer period, because the dart is a hidden regulator pin", "kind": "subtle", "rationale": "The dart guards the lock. It does not set period." }
+          ],
+          "correctExplanation": "Short dart, fork passes, wrong stone drops. That is the dumped tooth.",
+          "objectiveIds": ["Stop a knock from unlocking the wrong pallet"],
+          "prerequisiteConceptIds": ["horo-impulse-pin"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

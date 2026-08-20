@@ -1,0 +1,647 @@
+{
+  "courseId": "os-concurrency",
+  "moduleId": "os-c-sync",
+  "lessons": [
+    {
+      "id": "os-lock-5",
+      "conceptId": "os-lock",
+      "title": "Only one thread is the holder",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-sleep-lock",
+      "explanation": [
+        "A lock is mutual exclusion. At most one thread holds it. acquire waits until the lock is free, then this thread becomes the holder. release makes it free. The code between those two calls is the only place that thread may touch the protected structure.",
+        "Two threads that both update the same structure without a lock can overwrite each other. One increment can disappear. A list insert can leave a half-linked node. The lock does not make the update clever. It makes the update exclusive: one holder at a time."
+      ],
+      "example": "Two threads both do n = n + 1 on a shared counter that started at 0. Each reads 0. Each writes 1. The counter ends at 1. With a lock around the increment, one thread finishes 0→1 before the other is allowed to read, and the counter ends at 2.",
+      "whyItMatters": "Shared kernel structures — run queues, process tables, open-file lists — are updated from more than one thread. Mutual exclusion is how those updates stay one-at-a-time.",
+      "quiz": [
+        {
+          "id": "lk5-1",
+          "stem": "A lock's mutual-exclusion rule is:",
+          "correctAnswer": "At most one thread holds it at a time",
+          "distractors": [
+            { "text": "Every thread that wants it holds it at once", "kind": "reversed", "rationale": "That is the situation the lock exists to forbid." },
+            { "text": "Data-race undefined behavior means a lock is unnecessary", "kind": "misapplied", "rationale": "A data race is undefined in some languages. It does not make mutual exclusion free." },
+            { "text": "The machine may run only one process ever", "kind": "nearby", "rationale": "Many threads run. Only one is the holder of this lock." }
+          ],
+          "correctExplanation": "One holder. That is the whole contract.",
+          "objectiveIds": ["Describe a lock as mutual exclusion: one holder at a time"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "lk5-2",
+          "stem": "Two threads each add one to the same counter with no lock. A likely result is:",
+          "correctAnswer": "One increment disappears and the counter is short by one",
+          "distractors": [
+            { "text": "Both increments are applied twice, so the counter is too large", "kind": "reversed", "rationale": "The usual failure is a lost update, not a double update." },
+            { "text": "The kernel deletes both threads as a precaution", "kind": "misapplied", "rationale": "The structure is wrong. The threads keep running." },
+            { "text": "The counter becomes a private copy in each thread automatically", "kind": "nearby", "rationale": "They share the word. That is why the overwrite happens." }
+          ],
+          "correctExplanation": "Both load the old value. The last store wins. One add is gone.",
+          "objectiveIds": ["Predict what goes wrong if two threads update the same structure without a lock"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "lk5-3",
+          "stem": "The holder of a lock is:",
+          "correctAnswer": "The thread that acquired it and has not yet released it",
+          "distractors": [
+            { "text": "Every thread that will ever call acquire", "kind": "reversed", "rationale": "Wanting the lock is not holding it." },
+            { "text": "Any thread that is currently inside the critical section, even if it never acquired", "kind": "misapplied", "rationale": "The holder is the thread that acquired and has not released. Presence in the section is not enough." },
+            { "text": "The process, even after every thread has released", "kind": "subtle", "rationale": "Release frees the lock. There is then no holder." }
+          ],
+          "correctExplanation": "Acquire makes you the holder. Release ends that. One at a time.",
+          "objectiveIds": ["Describe a lock as mutual exclusion: one holder at a time"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-lock-10",
+      "conceptId": "os-lock",
+      "title": "Acquire, then the list is yours",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-sleep-lock",
+      "explanation": [
+        "A lock is a token. xv6's acquire waits until the token is free and then this CPU is the holder. release gives the token back. The instructions between those two calls are the critical section: the only window in which this thread may read or write the protected structure. Mutual exclusion is that window having one tenant.",
+        "Without the lock, two threads can load the same old list head, each swing their own node into place, and store. The second store wins. One node is no longer on the list. The same shape bites a shared counter: both load 0, both store 1, two increments become one. The structure is not 'a bit stale'. It is wrong.",
+        "The lock does not make the update smarter and it does not decide who runs next. A thread that never calls acquire is not excluded. A thread that acquires, updates, and releases has been the only holder for that stretch. That is the whole primitive. Later units will ask how you wait, and what happens if you wait in a cycle. This unit is only the closed door."
+      ],
+      "example": "Two xv6 CPUs splice a buffer onto the same list. Both read the old head. Both write themselves as the new head. One buffer is lost. acquire around the pointer updates; release after both pointers are consistent. The second CPU waits, then sees the first node already linked.",
+      "whyItMatters": "A list two threads rewrite without a holder is already wrong. Later waiting stories assume you can already say what a lock excludes: one holder, then the structure.",
+      "quiz": [
+        {
+          "id": "lk10-1",
+          "stem": "The code between acquire and release is allowed to touch the structure because:",
+          "correctAnswer": "This thread is the one holder for that stretch",
+          "distractors": [
+            { "text": "Acquire copies the structure into a private address space", "kind": "nearby", "rationale": "The structure stays shared. The lock serializes access to it." },
+            { "text": "Release is optional once acquire has been called", "kind": "reversed", "rationale": "Without release there is no next holder." },
+            { "text": "The lock converts the structure into thread-local storage for the rest of the process", "kind": "misapplied", "rationale": "The lock does not privatize the bytes. It only serializes who may touch them." }
+          ],
+          "correctExplanation": "One holder. That is why the section is safe to update.",
+          "objectiveIds": ["Describe a lock as mutual exclusion: one holder at a time"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "lk10-2",
+          "stem": "Two threads insert at the same list head with no lock. The usual damage is:",
+          "correctAnswer": "One node is lost: both stored a new head over the same old one",
+          "distractors": [
+            { "text": "The list grows by two extra copies of each node", "kind": "reversed", "rationale": "The failure is a lost node, not a duplicated one." },
+            { "text": "The kernel unmaps both threads' entire address spaces", "kind": "misapplied", "rationale": "The list is wrong. Isolation of the process is not the issue." },
+            { "text": "The two nodes become a single fused address", "kind": "subtle", "rationale": "The nodes still exist. One is just not linked." }
+          ],
+          "correctExplanation": "Two stores to the same head. The last one wins. The other insert vanishes.",
+          "objectiveIds": ["Predict what goes wrong if two threads update the same structure without a lock"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "lk10-3",
+          "stem": "Both threads take the same lock around n = n + 1. The counter:",
+          "correctAnswer": "Sees the increments one after the other and ends two larger",
+          "distractors": [
+            { "text": "Still loses an increment, because locks do not cover adds", "kind": "reversed", "rationale": "The add sits inside the hold. That is the point of the section." },
+            { "text": "Becomes a different variable in each thread", "kind": "nearby", "rationale": "They still share n. The lock orders the updates." },
+            { "text": "Is frozen at zero until the process exits", "kind": "misapplied", "rationale": "A lock serializes updates. It does not forbid them." }
+          ],
+          "correctExplanation": "One holder finishes 0→1. The next holder reads 1. The word ends at 2.",
+          "objectiveIds": ["Predict what goes wrong if two threads update the same structure without a lock"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-sleep-lock-10",
+      "conceptId": "os-sleep-lock",
+      "title": "Sleep instead of watching the holder",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-lock"],
+      "goDeeper": "os-condvar",
+      "diagram": "lock-sleep",
+      "explanation": [
+        "A spinning waiter keeps the core in a loop until the lock is free. The holder may be running on another core for a few instructions. The spinner's cycles then buy a short wait. A sleeping lock does the other thing: the waiter stops running, the core can run someone else, and a wakeup later makes the waiter try again. xv6 has both. Spinlocks for short holds. Sleeplocks for long ones.",
+        "Spinning is a bet that the holder will release soon, while still running. When the holder is in a disk read, or is not running at all, the spinner burns a core that produces no release. Those cycles are stolen from every other thread that could have used the core.",
+        "Sleeping costs a switch out and a switch back. That is cheaper than spinning through a millisecond of I/O, and more expensive than spinning through a dozen instructions. xv6's sleeplock uses a short spinlock only to look at a locked flag: if the flag is set, the waiter sleeps; if not, it becomes the holder and drops the spinlock. The long wait is the sleep, not the spin."
+      ],
+      "example": "A sleeplock around a disk read. The holder may wait for the device. A spinner on another core would waste that whole I/O. The waiter sleeps. The core runs other work. release clears the flag and wakes the waiter, who then becomes the holder.",
+      "whyItMatters": "A spin that lasts an I/O is a stolen core. Sleeping locks exist because some holds last as long as a device wait.",
+      "quiz": [
+        {
+          "id": "slk10-1",
+          "stem": "A sleeping lock differs from spinning in that the waiter:",
+          "correctAnswer": "Stops running so the core can do other work until the lock is free",
+          "distractors": [
+            { "text": "Keeps the core in a tight loop watching the holder", "kind": "reversed", "rationale": "That is spinning. Sleeping gives the core back." },
+            { "text": "Copies the locked structure into a new process", "kind": "misapplied", "rationale": "The wait is about the core, not about cloning the object." },
+            { "text": "Holds the lock the whole time it is waiting", "kind": "subtle", "rationale": "The waiter is waiting because it does not hold it." }
+          ],
+          "correctExplanation": "Sleep: not running. Spin: running, watching. That is the contrast.",
+          "objectiveIds": ["Contrast a sleeping lock with spinning while the holder runs"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "slk10-2",
+          "stem": "The holder of a sleeplock is reading a disk block. A spinner on another core:",
+          "correctAnswer": "Burns that core for the whole I/O and produces no release",
+          "distractors": [
+            { "text": "Finishes the disk read on the holder's behalf", "kind": "misapplied", "rationale": "Spinning does not perform the holder's I/O." },
+            { "text": "Is cheaper than sleeping, because I/O is always short", "kind": "reversed", "rationale": "Disk I/O is the long hold. Sleeping is the cheaper wait." },
+            { "text": "Becomes the holder without the first thread releasing", "kind": "subtle", "rationale": "There is still one holder. The spinner is only watching." }
+          ],
+          "correctExplanation": "The holder is not about to release. Spinning buys nothing. Sleep and reuse the core.",
+          "objectiveIds": ["Predict when spinning wastes the core and sleeping is cheaper"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "slk10-3",
+          "stem": "The holder is running on another core and will release in a few instructions. The cheaper wait is usually:",
+          "correctAnswer": "Spinning: sleep-and-wakeup costs more than those few instructions",
+          "distractors": [
+            { "text": "Sleeping, because any wait at all must leave the core", "kind": "reversed", "rationale": "A tiny hold is the case where spinning wins." },
+            { "text": "Neither; the lock becomes free without anyone waiting", "kind": "nearby", "rationale": "The waiter still has to wait. The question is how." },
+            { "text": "Deleting the lock so both threads hold it", "kind": "misapplied", "rationale": "The lock still has one holder. The wait is the issue." }
+          ],
+          "correctExplanation": "Short hold, holder running: spin. Long hold or holder stuck: sleep.",
+          "objectiveIds": ["Predict when spinning wastes the core and sleeping is cheaper"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-deadlock-10",
+      "conceptId": "os-deadlock",
+      "title": "Crossed acquires, no one runs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-lock"],
+      "goDeeper": "os-semaphore",
+      "explanation": [
+        "Deadlock is everyone waiting for someone who is waiting for them. No holder will release, because every holder is stuck in acquire. The system is not slow. It is stuck.",
+        "The two-lock cycle is the usual picture. Thread 1 acquires A and then wants B. Thread 2 acquires B and then wants A. Each is the holder the other needs. Both acquires wait forever. The locks are fine. The order is the cycle.",
+        "The same two locks taken in the same order do not build that cycle. Thread 2 will wait for A, then take B, then release both; thread 1 can then proceed. xv6 writes lock order down for this reason: a documented sequence is a cycle you refused to close. Two locks are not a deadlock. Opposite order is."
+      ],
+      "example": "Thread 1: acquire(ida); acquire(idb). Thread 2: acquire(idb); acquire(ida). After each has its first lock, each sits in the second acquire. Neither release will run. Reverse thread 2 to ida then idb and the hang goes away.",
+      "whyItMatters": "A hang where every thread sits in acquire is a cycle, not a slow device. The order two threads take two locks is enough to build one.",
+      "quiz": [
+        {
+          "id": "dlk10-1",
+          "stem": "Deadlock is the situation in which:",
+          "correctAnswer": "Everyone is waiting for someone who is waiting for them",
+          "distractors": [
+            { "text": "Every thread runs at once on the same core", "kind": "reversed", "rationale": "Deadlock is no one running, not everyone running." },
+            { "text": "A lock is held for a long but finite time", "kind": "nearby", "rationale": "A long hold is slow. A cycle never releases." },
+            { "text": "A lock whose holder crashed, so the waiters will run after reboot", "kind": "misapplied", "rationale": "Deadlock is a cycle of waiters. A crashed holder is a different failure." }
+          ],
+          "correctExplanation": "A cycle of waits. No release will ever run.",
+          "objectiveIds": ["Describe deadlock as everyone waiting for someone who is waiting for them"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dlk10-2",
+          "stem": "Thread 1 holds A and waits for B. Thread 2 holds B and waits for A. This is a deadlock because:",
+          "correctAnswer": "Each holds the lock the other acquire needs; neither release runs",
+          "distractors": [
+            { "text": "A lock may only be acquired by one thread in the life of the machine", "kind": "misconception", "rationale": "Locks are acquired and released many times. The cycle is the bug." },
+            { "text": "The two locks have fused into one address", "kind": "nearby", "rationale": "There are still two locks. The wait order is the cycle." },
+            { "text": "Both threads released too early", "kind": "reversed", "rationale": "They cannot release. That is the problem." }
+          ],
+          "correctExplanation": "Crossed holds. Each acquire waits for the other holder.",
+          "objectiveIds": ["Diagnose a two-lock cycle from the order two threads acquire"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "dlk10-3",
+          "stem": "Both threads acquire A then B, never the reverse. The two-lock cycle:",
+          "correctAnswer": "Does not form: the second thread waits for A before it holds B",
+          "distractors": [
+            { "text": "Still forms, because any two locks deadlock", "kind": "misconception", "rationale": "Two locks in one order are not a cycle." },
+            { "text": "Forms only if the threads share an address space", "kind": "nearby", "rationale": "Sharing is why they need the locks. The cycle is the order." },
+            { "text": "Is required so that release can run", "kind": "reversed", "rationale": "A cycle prevents release. Same order avoids the cycle." }
+          ],
+          "correctExplanation": "Same order: the second waiter never holds B while wanting A. No cycle.",
+          "objectiveIds": ["Diagnose a two-lock cycle from the order two threads acquire"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-race-10",
+      "conceptId": "os-race",
+      "title": "Who ran first is the answer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-thread-vs-proc"],
+      "goDeeper": "os-atomic",
+      "diagram": "race-interleave",
+      "explanation": [
+        "A race is a result that depends on who ran first. Same two threads, same instructions, two different answers depending on the interleaving. Threads in one process share the address space, so they really do load and store the same word. The word does not pick a winner. The order does.",
+        "The textbook damage is a lost update. Each increment is three steps: load the word, add one, store the word. Two threads both load 0, both add 1, both store 1. Two increments happened. The word is 1. The add that used the older load was overwritten.",
+        "Those three steps are not one occupancy of the word. An interleaving that lets both loads see the same old value is a legal execution, not bad luck. Something must make the update exclusive. This unit names the problem. The tool is a later unit."
+      ],
+      "example": "n starts at 0. Thread A loads 0 and adds 1. Thread B loads 0 and adds 1. A stores 1. B stores 1. n is 1. The interleavings where one thread finishes the whole update before the other loads are the ones that give 2. Same source. Two answers.",
+      "whyItMatters": "A shared counter that is usually right is not a correct counter. The wrong answer is a legal execution, not a fluke.",
+      "quiz": [
+        {
+          "id": "rce10-1",
+          "stem": "A race is:",
+          "correctAnswer": "A result that depends on which thread ran first",
+          "distractors": [
+            { "text": "A result that is the same in every interleaving", "kind": "reversed", "rationale": "Independence of order is the opposite of a race." },
+            { "text": "A cache miss on a cold core", "kind": "nearby", "rationale": "A miss is latency. A race is order-dependent meaning." },
+            { "text": "A compile error when two files share a name", "kind": "misapplied", "rationale": "A race is a runtime interleaving, not a build clash." }
+          ],
+          "correctExplanation": "Same code, two answers, depending on who went first.",
+          "objectiveIds": ["Describe a race as a result that depends on who ran first"],
+          "prerequisiteConceptIds": ["os-thread-vs-proc"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "rce10-2",
+          "stem": "Both threads load 0, add 1, and store 1 into the same word. The lost update is that:",
+          "correctAnswer": "Two increments occurred and the word still holds 1",
+          "distractors": [
+            { "text": "The word holds 2, so both increments landed", "kind": "reversed", "rationale": "That is the interleaving that did not lose an update." },
+            { "text": "The word is unmapped and both stores fault", "kind": "nearby", "rationale": "The word is shared and writable. The store succeeds. It overwrites." },
+            { "text": "The second store is buffered and never becomes visible", "kind": "misapplied", "rationale": "The lost update is both increments occurring and the word still holding 1." }
+          ],
+          "correctExplanation": "Last store wins with the value from an old load. One add is gone.",
+          "objectiveIds": ["Diagnose a lost update when two threads read-modify-write the same word"],
+          "prerequisiteConceptIds": ["os-thread-vs-proc"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "rce10-3",
+          "stem": "Two threads each do a load-add-store on the same counter. The increment is lost when:",
+          "correctAnswer": "Both loads see the same old value before either store lands",
+          "distractors": [
+            { "text": "One thread finishes the whole update before the other loads", "kind": "reversed", "rationale": "That interleaving keeps both increments." },
+            { "text": "The threads run in two different processes with two maps", "kind": "nearby", "rationale": "Separate maps are not the same word. This race needs a shared word." },
+            { "text": "The add is written in a comment instead of an instruction", "kind": "misapplied", "rationale": "The add ran. The store of the older result erased it." }
+          ],
+          "correctExplanation": "Two loads of the same old value, two stores of the same new value. One increment missing.",
+          "objectiveIds": ["Diagnose a lost update when two threads read-modify-write the same word"],
+          "prerequisiteConceptIds": ["os-thread-vs-proc"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-race-20",
+      "conceptId": "os-race",
+      "title": "Every interleaving of the same two adds",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["os-thread-vs-proc"],
+      "goDeeper": "os-atomic",
+      "diagram": "race-interleave",
+      "explanation": [
+        "Each increment is three steps that must stay in program order inside that thread: load, add, store. Two threads give six steps. The interleavings of those six steps are the whole story. The word has no opinion.",
+        "Serial families first. A does load-add-store, then B does load-add-store. Start at 5; A stores 6; B loads 6 and stores 7. Both increments land. B then A is the same shape. Any interleaving where one thread's store happens before the other thread's load is in this family. The second load sees the first add. The word ends two larger.",
+        "The lost-update family is the one where both loads see the same old value. A loads 5. B loads 5. Then the stores land in either order. Both stores write 6. Two increments, result 6. A mixed cousin is also a loss: A loads 5, B runs to completion and stores 6, then A stores 6 from its stale add. A's store clobbers B. The word is 6 again. The add that used the later load is the one that vanished.",
+        "Not every interleaving is wrong. The ones that keep a happens-before from one store to the other load are fine. The ones that let both loads observe the same snapshot are not. Counting those families is the diagnosis. Something must make the three steps one occupancy of the word. This unit does not pick the tool. It lists the executions the tool has to forbid."
+      ],
+      "example": "Start at 5. A loads 5. B loads 5. A stores 6. B stores 6. Two customers each added one item. The word says 6. The interleaving where A completes (load 5, store 6) before B loads gives 7. Same six kinds of step. Two answers. Write the loads and stores down and the missing increment is on the page.",
+      "whyItMatters": "A 'sometimes short' counter is an unlisted interleaving, not a possessed compiler. The missing increment is sitting in an order you have not written down.",
+      "quiz": [
+        {
+          "id": "rce20-1",
+          "stem": "A loads 5, B loads 5, A stores 6, B stores 6. The lost update is:",
+          "correctAnswer": "Both increments ran and the word holds 6 from an old add",
+          "distractors": [
+            { "text": "The word holds 7, so both increments landed", "kind": "reversed", "rationale": "Both stores wrote 6. One add is gone." },
+            { "text": "The word holds 5, because stores are forbidden during a race", "kind": "nearby", "rationale": "The stores happened. They overwrote each other." },
+            { "text": "Both stores were ignored and the word stayed at 5", "kind": "subtle", "rationale": "The stores landed. They wrote 6 over 6." }
+          ],
+          "correctExplanation": "Two loads of 5, two stores of 6. Last store wins. One add missing.",
+          "objectiveIds": ["Diagnose a lost update when two threads read-modify-write the same word"],
+          "prerequisiteConceptIds": ["os-thread-vs-proc"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "rce20-2",
+          "stem": "The interleavings that keep both increments are the ones where:",
+          "correctAnswer": "One thread's store lands before the other thread's load",
+          "distractors": [
+            { "text": "Both loads happen before either store", "kind": "reversed", "rationale": "That is the lost-update family." },
+            { "text": "The two threads run in separate address spaces", "kind": "nearby", "rationale": "Then they are not updating the same word at all." },
+            { "text": "The add is replaced by a comment so no store occurs", "kind": "misapplied", "rationale": "Both stores must occur, in an order that sees the other add." }
+          ],
+          "correctExplanation": "Second load must observe the first add. That needs the first store first.",
+          "objectiveIds": ["Diagnose a lost update when two threads read-modify-write the same word"],
+          "prerequisiteConceptIds": ["os-thread-vs-proc"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "rce20-3",
+          "stem": "n starts at 0. Both threads increment. A loads, B runs to completion, A stores. n is:",
+          "correctAnswer": "1, because A's store writes the add of the old 0 over B's 1",
+          "distractors": [
+            { "text": "2, because B finished and A also ran", "kind": "reversed", "rationale": "A never saw B's store. A's stale 1 clobbers it." },
+            { "text": "0, because a race rolls the word back", "kind": "nearby", "rationale": "The last store wrote 1. The word moved. It moved to the wrong value." },
+            { "text": "3, because each step of the increment adds one", "kind": "misapplied", "rationale": "Load, add, store is one increment, not three." }
+          ],
+          "correctExplanation": "B stored 1. A then stored 1 from a load of 0. The later, stale store wins.",
+          "objectiveIds": ["Describe a race as a result that depends on who ran first"],
+          "prerequisiteConceptIds": ["os-thread-vs-proc"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-atomic-10",
+      "conceptId": "os-atomic",
+      "title": "One word, one step, no tear",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-race"],
+      "goDeeper": "os-seqcst",
+      "explanation": [
+        "An atomic read-modify-write is a load, a modify, and a store that other threads cannot split. RISC-V amoadd increments a word as one step. You do not observe a half-written word, and you do not lose the add of one counter the way a three-instruction increment can. The word does not tear. That one update occupies the location.",
+        "Atomic is not 'the whole program is exclusive'. Two atomic stores to two fields can still interleave. A thread can see x new and y old. Each store was atomic. The pair was not. The race moved from 'torn word' to 'torn pair'.",
+        "Check-then-act still races. Both threads load flag == 0. Both decide they won. Both store flag = 1. Each load was atomic. Each store was atomic. The decision spanned two accesses, so both threads passed the test. An atomic increment of one word would not have saved that handshake."
+      ],
+      "example": "Two threads amoadd 1 on n: both increments happen and n ends at 2. The same threads do atomic x++ then atomic y++: another thread can see x == 1 and y == 0. And if (slot == 0) slot = me, with atomic loads and stores, still lets two threads both pass the test.",
+      "whyItMatters": "A torn word is one bug. A check and a later store are another. Calling both 'atomics' hides which one you fixed.",
+      "quiz": [
+        {
+          "id": "atm10-1",
+          "stem": "An atomic read-modify-write on one word means:",
+          "correctAnswer": "The load, modify, and store occupy the word as one step and do not tear",
+          "distractors": [
+            { "text": "Other threads may observe a half-old, half-new word", "kind": "reversed", "rationale": "No tear is the point of the atomic step." },
+            { "text": "Every variable in the process is updated as a group", "kind": "nearby", "rationale": "Atomic names one access, not the whole program." },
+            { "text": "Other cores still see the modify as two separate memory ops", "kind": "misapplied", "rationale": "An atomic RMW occupies the word as one step. Other cores must not see a torn modify." }
+          ],
+          "correctExplanation": "One word, one step. That is all an atomic promises.",
+          "objectiveIds": ["Describe an atomic as a read-modify-write that does not tear"],
+          "prerequisiteConceptIds": ["os-race"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "atm10-2",
+          "stem": "x and y are each incremented with an atomic RMW. Another thread can still:",
+          "correctAnswer": "See the new x and the old y, because the two updates are two steps",
+          "distractors": [
+            { "text": "Never see a mixed pair, because atomic means the whole program is exclusive", "kind": "misconception", "rationale": "Each increment is atomic. The pair is not one step." },
+            { "text": "See a torn byte inside x, half old and half new", "kind": "reversed", "rationale": "x itself does not tear. The mix is across fields." },
+            { "text": "See neither increment, because atomics discard stores", "kind": "misapplied", "rationale": "The stores happen. Their pairing is the race that remains." }
+          ],
+          "correctExplanation": "Two atomic steps, one interleaving between them. Mixed pair is legal.",
+          "objectiveIds": ["Predict which updates still race even if each store is atomic"],
+          "prerequisiteConceptIds": ["os-race"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "atm10-3",
+          "stem": "Both threads do if (flag == 0) flag = 1 with atomic loads and stores. Both can still pass because:",
+          "correctAnswer": "The check and the store are two accesses; both can see 0 before either stores",
+          "distractors": [
+            { "text": "An atomic load is illegal, so both checks are skipped", "kind": "misapplied", "rationale": "The loads ran. They just were not glued to the stores." },
+            { "text": "Atomic stores tear the flag, so each thread sees a half-written 1", "kind": "nearby", "rationale": "The flag word does not tear. The race is check-then-act." },
+            { "text": "The second thread is required to see the first store", "kind": "reversed", "rationale": "Nothing made the pair one step. Both checks can win." }
+          ],
+          "correctExplanation": "Two atomic accesses are still two accesses. Both loads of 0 are a lost decision.",
+          "objectiveIds": ["Predict which updates still race even if each store is atomic"],
+          "prerequisiteConceptIds": ["os-race"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-seqcst-10",
+      "conceptId": "os-seqcst",
+      "title": "Visible here is not visible there",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-atomic", "cpu-consistency"],
+      "explanation": [
+        "Sequential consistency is the programmer's usual story: one global order of all operations, and each thread's ops appear in program order inside it. A store that retires on this core is then a load on that one, in that order. Real machines do not give you that for free. This core's store may still sit in a store buffer. That core's load may still see the old value. The store happened here. It is not yet a load there.",
+        "Flag-plus-data is the surprise. This core writes data = 1 then ready = 1. That core reads ready and then data. Coherence still says each address has one truth. A machine weaker than sequential consistency can let the other core see ready == 1 and data == 0. The two addresses did not become visible as a pair. The program treated the flag as a time machine. It is not one.",
+        "Dekker's handshake is the same hole with two flags. Each core writes its own flag and reads the other's. Sequential consistency says they cannot both read 0: one of the two stores became globally visible first. A store buffer on each core lets both loads pass a store that is not yet visible. Both enter. The program assumed a single global order. The machine allowed a reordering. Coherence is not the missing piece. Visibility order is."
+      ],
+      "example": "Core 0: x = 1; y = 1. Core 1: r1 = y; r2 = x. Sequential consistency forbids r1 == 1 and r2 == 0. A store buffer on core 0 can make y visible first. The program that treated y as 'x is published' is surprised. Same shape as ready/data, and as both Dekker flags reading 0.",
+      "whyItMatters": "A handshake that assumed one global order fails when this store is not yet that load. Coherence kept each address honest. The pair still arrived in the wrong order.",
+      "quiz": [
+        {
+          "id": "seq10-1",
+          "stem": "A store that has retired on this core is not yet a load on that core because:",
+          "correctAnswer": "The store may still be buffered here; the other core can still load the old value",
+          "distractors": [
+            { "text": "The other core is forbidden to load any address after a store exists", "kind": "reversed", "rationale": "The other core loads constantly. It may just load too early." },
+            { "text": "Coherence has failed and the two cores hold two values of the same address", "kind": "nearby", "rationale": "Each address can still have one writer. Visibility of this store is late." },
+            { "text": "The ISA deleted the store once it left the pipeline", "kind": "misapplied", "rationale": "The store will drain. It has not become their load yet." }
+          ],
+          "correctExplanation": "Happened here is a local event. Their load is a different event, possibly still stale.",
+          "objectiveIds": ["Explain why a store on this core is not yet a load on that one"],
+          "prerequisiteConceptIds": ["os-atomic", "cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "seq10-2",
+          "stem": "This core stores data = 1 then ready = 1. That core can see ready == 1 and data == 0 when:",
+          "correctAnswer": "The two stores become visible out of order, so the flag arrives before the data",
+          "distractors": [
+            { "text": "Coherence allowed two different values of ready at once", "kind": "nearby", "rationale": "Ready has one writer. The surprise is the order of two addresses." },
+            { "text": "Sequential consistency requires that pair, so the program is wrong to complain", "kind": "reversed", "rationale": "Sequential consistency forbids seeing the later store and missing the earlier one." },
+            { "text": "Atomic stores are illegal on a flag word", "kind": "misapplied", "rationale": "The stores happened. Their visibility order is the hole." }
+          ],
+          "correctExplanation": "The program assumed one global order. The flag is not a publication of the data.",
+          "objectiveIds": ["Predict a reordering that surprises a program that assumed a single global order"],
+          "prerequisiteConceptIds": ["os-atomic", "cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "seq10-3",
+          "stem": "Each core writes its own flag and reads the other's. Both reading 0 is possible because:",
+          "correctAnswer": "Each load can pass a local store that is not yet visible to the other core",
+          "distractors": [
+            { "text": "Both cores hold writable copies of the same flag", "kind": "nearby", "rationale": "Each flag has one writer. The loads were early, not double-written." },
+            { "text": "Sequential consistency requires both flags to read 0", "kind": "reversed", "rationale": "Sequential consistency says one store became global first, so one load sees 1." },
+            { "text": "The flags live in a file the kernel has not yet written", "kind": "misapplied", "rationale": "This is a memory-order hole, not a filesystem." }
+          ],
+          "correctExplanation": "Dekker both-see-zero. Each store is local. Each load missed the other store.",
+          "objectiveIds": ["Predict a reordering that surprises a program that assumed a single global order"],
+          "prerequisiteConceptIds": ["os-atomic", "cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "os-semaphore-10",
+      "conceptId": "os-semaphore",
+      "title": "Wait on the count, not on a name",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-lock"],
+      "goDeeper": "os-condvar",
+      "explanation": [
+        "A semaphore is a counter you can wait on. down waits until the count is positive, then decrements. up increments, and wakes a thread that was waiting if there is one. The state is the integer. There is no separate named holder beyond 'how many downs have not yet been matched by ups'.",
+        "Initial count N lets N threads through before the next down waits. Three workers and a semaphore of 3: all three down and proceed. A fourth down sleeps until someone ups. The N holders are concurrent. The (N+1)st is the first waiter.",
+        "N = 1 is mutual exclusion: one holder at a time, the lock you already know, written as a count. N = 0 is a signal: down waits until someone else ups. The same two operations cover both. The integer is the whole state."
+      ],
+      "example": "A pool of 3 disk buffers. The semaphore starts at 3. Each getter downs; each releaser ups. The fourth getter sleeps. When any buffer is returned, up lets one sleeper through. Never more than three getters hold a buffer.",
+      "whyItMatters": "A lock is the count-of-one case. Three holders, or a signal with no holder, need the counter you already had.",
+      "quiz": [
+        {
+          "id": "sema10-1",
+          "stem": "A semaphore is:",
+          "correctAnswer": "A counter you can wait on, with down and up",
+          "distractors": [
+            { "text": "A lock that cannot be counted", "kind": "nearby", "rationale": "A lock is the N = 1 case of this counter, not a different object." },
+            { "text": "A page table the hardware walks", "kind": "misapplied", "rationale": "A semaphore is a waitable integer, not a translation." },
+            { "text": "A thread that never blocks", "kind": "reversed", "rationale": "down is exactly the operation that can wait." }
+          ],
+          "correctExplanation": "The integer is the state. down waits and decrements. up increments and wakes.",
+          "objectiveIds": ["Describe a semaphore as a counter you can wait on"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "sema10-2",
+          "stem": "down is called when the count is already 0. The caller:",
+          "correctAnswer": "Waits until some other thread ups and the count is positive",
+          "distractors": [
+            { "text": "Decrements through zero and proceeds immediately", "kind": "reversed", "rationale": "down does not go negative and continue. It waits." },
+            { "text": "Becomes the lock holder of every other semaphore", "kind": "nearby", "rationale": "This is one counter. Waiting is local to it." },
+            { "text": "Deletes the semaphore so no one else can wait", "kind": "misapplied", "rationale": "The counter stays. The caller sleeps on it." }
+          ],
+          "correctExplanation": "Count 0 means no ticket. down waits for an up.",
+          "objectiveIds": ["Describe a semaphore as a counter you can wait on"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "sema10-3",
+          "stem": "A semaphore starts at 3. Four threads down. The fourth:",
+          "correctAnswer": "Waits; the first three are the N holders the count allowed through",
+          "distractors": [
+            { "text": "Proceeds with the others, because a semaphore never waits", "kind": "reversed", "rationale": "N = 3 lets three through. The fourth down waits." },
+            { "text": "Takes the lock away from all three holders", "kind": "nearby", "rationale": "The three holders stay. The count is spent." },
+            { "text": "Increments the count to 4 so it can pass", "kind": "misapplied", "rationale": "down decrements or waits. It does not invent tickets." }
+          ],
+          "correctExplanation": "Count N is N tickets. Ticket four is not there until an up.",
+          "objectiveIds": ["Predict how a semaphore of count N lets N holders through"],
+          "prerequisiteConceptIds": ["os-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-condvar-10",
+      "conceptId": "os-condvar",
+      "title": "Look again after the wakeup",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-sleep-lock"],
+      "explanation": [
+        "A condition variable is how a thread sleeps until someone says the world changed. You hold a sleeping lock, notice the condition is false — buffer empty, list has no node — and wait. Wait drops the lock and sleeps as one step. The producer fills the buffer, signals, and releases. The waiter wakes, reacquires the lock, and looks at the world again.",
+        "The wakeup is not a proof that the condition is still true. Mesa semantics: signal is a hint. Between the signal and the waiter's reacquire, another thread can take the lock and steal the buffer. A wakeup can also arrive with no matching signal. The condition you went to sleep for may be gone, or may never have been true when you opened your eyes.",
+        "That is why wait sits in a loop: while (empty) wait(...). One check before sleep is not enough. After wakeup you re-check under the lock. xv6's sleep/wakeup is the same shape. sleep on a channel while holding the lock that protects the condition. After wakeup, look again. A stolen or stale condition is the normal case, not a glitch."
+      ],
+      "example": "Consumer sees empty and waits. Producer puts one item and signals. A second consumer that already held the lock takes the item first. The first consumer wakes, reacquires, and sees empty again. Without the re-check it would pop an empty queue. The loop sends it back to sleep.",
+      "whyItMatters": "A waiter that treats wakeup as proof will run on a stolen or stale condition. The loop is the contract, not a style.",
+      "quiz": [
+        {
+          "id": "cvar10-1",
+          "stem": "A condition variable lets a thread:",
+          "correctAnswer": "Sleep until someone signals that the world may have changed",
+          "distractors": [
+            { "text": "Hold the sleeping lock forever without waiting", "kind": "reversed", "rationale": "Wait drops the lock and sleeps. That is the point." },
+            { "text": "Increment a ticket count and proceed if the count is positive", "kind": "nearby", "rationale": "That waits on a count. A condvar waits on a condition someone else announces." },
+            { "text": "Compile the predicate into a kernel trap table", "kind": "misapplied", "rationale": "The condition is ordinary shared state the lock already protects." }
+          ],
+          "correctExplanation": "Sleep, signal, look again. The condvar is the sleep-until-news primitive.",
+          "objectiveIds": ["Describe a condition variable as sleeping until someone says the world changed"],
+          "prerequisiteConceptIds": ["os-sleep-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cvar10-2",
+          "stem": "After a condvar wakeup the waiter must re-check the condition because:",
+          "correctAnswer": "The condition may already be false again by the time the lock is reacquired",
+          "distractors": [
+            { "text": "Wakeup is a proof the predicate is still true, so the check would be wasted", "kind": "reversed", "rationale": "Mesa wakeup is a hint, not a proof." },
+            { "text": "The lock is thrown away on wakeup and never comes back", "kind": "nearby", "rationale": "Wait reacquires the lock. That is when you look again." },
+            { "text": "Signal is a queued count, so a later waiter can skip the predicate", "kind": "misapplied", "rationale": "After wakeup the waiter must re-check. A signal is not a ticket to skip the predicate." }
+          ],
+          "correctExplanation": "Signal, then a gap, then reacquire. The world can change in the gap.",
+          "objectiveIds": ["Predict why waiting on a condvar must re-check the condition after wakeup"],
+          "prerequisiteConceptIds": ["os-sleep-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cvar10-3",
+          "stem": "A second consumer takes the item after the signal and before the first waiter reacquires. This is:",
+          "correctAnswer": "A stolen condition: the wakeup was real and the predicate is false again",
+          "distractors": [
+            { "text": "Proof the first waiter now owns the item without looking", "kind": "reversed", "rationale": "The item is gone. That is why the first waiter must loop." },
+            { "text": "A lock bug, because two threads cannot wait on one condvar", "kind": "nearby", "rationale": "Many waiters are normal. Mesa does not hand the condition over." },
+            { "text": "Impossible, because signal freezes the buffer until the waiter runs", "kind": "subtle", "rationale": "Signal does not freeze the world. It only wakes someone." }
+          ],
+          "correctExplanation": "Mesa: wakeup means 'look'. Another holder already took the thing.",
+          "objectiveIds": ["Predict why waiting on a condvar must re-check the condition after wakeup"],
+          "prerequisiteConceptIds": ["os-sleep-lock"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

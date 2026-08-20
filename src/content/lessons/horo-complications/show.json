@@ -1,0 +1,650 @@
+{
+  "courseId": "horo-complications",
+  "moduleId": "horo-c-show",
+  "lessons": [
+    {
+      "id": "horo-tourbillon-10",
+      "conceptId": "horo-tourbillon",
+      "title": "A cage that averages a positional error",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-escape", "horo-positional"],
+      "goDeeper": "horo-tourbillon-honest",
+      "diagram": "horo-tourbillon-cage",
+      "explanation": [
+        "Gravity biases a balance differently as 'up' changes relative to the oscillator. A tourbillon puts the escapement and balance in a rotating cage so that vertical positional error is walked around a circle and averaged, typically once a minute.",
+        "Opposite signs can cancel in that mean: a gain at crown-left and a loss at crown-right of the same size fall toward zero over a full turn. The cage does not make the oscillator a better spring. It samples positions.",
+        "Same-sign error will not cancel. A rate that is fast in every vertical position — poise, magnetism, isochronism that does not change sign with orientation — still leaves a fast mean. Predict that leftover. Rotation is not a rinse."
+      ],
+      "example": "A 60-second cage: +8 s/d at crown-left and −8 s/d at crown-right can mean near zero. +8 s/d in every vertical position still means +8. The cage turned. The sign never flipped.",
+      "whyItMatters": "Name the positional error the cage averages, and the errors whose sign does not flip, or a rotating frame will sound like a better timebase.",
+      "quiz": [
+        {
+          "id": "horo-tb10-1",
+          "stem": "What does a tourbillon cage do to gravitational positional error of the oscillator?",
+          "correctAnswer": "It rotates the escapement and balance so that error is sampled and averaged",
+          "distractors": [
+            { "text": "It replaces the hairspring with a rotating spring that cannot have rate", "kind": "misconception", "rationale": "The hairspring is still the timebase. The cage only carries it around." },
+            { "text": "It couples a chronograph register so elapsed time cancels position", "kind": "nearby", "rationale": "A chrono is a clutched register. A cage is a rotating frame for the oscillator." },
+            { "text": "It stores a second mainspring whose unwind is the average of gravity", "kind": "misapplied", "rationale": "A second spring is an alarm or strike. Averaging is rotation of the oscillator." }
+          ],
+          "correctExplanation": "Cage turns, positions cycle, opposite signs can cancel in the mean. The oscillator is still the spring.",
+          "objectiveIds": ["State that a tourbillon averages gravitational positional error by rotating the cage"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-positional"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-tb10-2",
+          "stem": "A calibre is +8 s/d in every vertical position. After a full cage turn, predict the mean:",
+          "correctAnswer": "Still about +8 s/d, because an error of one sign in every position will not cancel",
+          "distractors": [
+            { "text": "Zero, because any rotating cage is defined as a perfect positional average", "kind": "reversed", "rationale": "The mean of +8 and +8 is +8. Rotation does not flip a same-sign error." },
+            { "text": "−8 s/d, because the cage inverts the sign of every rate it samples", "kind": "misapplied", "rationale": "The cage samples positions. It does not invert a rate that never changed sign." },
+            { "text": "Unmeasurable, because COSC forbids timing a watch that has a cage", "kind": "subtle", "rationale": "You can still time it. The leftover mean is the point." }
+          ],
+          "correctExplanation": "Same sign in every position survives the average. Only opposite signs cancel.",
+          "objectiveIds": ["Predict an error that has the same sign in every position and will not cancel"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-positional"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-tb10-3",
+          "stem": "Crown-left is +8 s/d and crown-right is −8 s/d on a one-minute cage. The averaged vertical error is:",
+          "correctAnswer": "Near zero over a full turn, because those positional errors have opposite signs",
+          "distractors": [
+            { "text": "Still +8, because cages cannot average; they only decorate the oscillator", "kind": "reversed", "rationale": "Opposite signs are exactly what a rotating sample can cancel in the mean." },
+            { "text": "A day off, because a 59-tooth moon disc is what cages actually drive", "kind": "nearby", "rationale": "Moonphase is a lunation ratio. The cage carries the escapement." },
+            { "text": "Magnetism, which a cage is designed to flip off the hairspring", "kind": "misapplied", "rationale": "Magnetism does not change sign with crown-left versus crown-right." }
+          ],
+          "correctExplanation": "Opposite signs, equal size, full turn. That is the average the cage can actually do.",
+          "objectiveIds": ["State that a tourbillon averages gravitational positional error by rotating the cage"],
+          "prerequisiteConceptIds": ["horo-escape", "horo-positional"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-tourbillon-honest-10",
+      "conceptId": "horo-tourbillon-honest",
+      "title": "When rotation does not change the mean",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-tourbillon", "horo-isochronism"],
+      "goDeeper": "horo-repeater",
+      "diagram": "horo-tourbillon-cage",
+      "explanation": [
+        "Pocket watches sat vertical in a vest for hours. The cage was an answer to that long stay in one orientation. A wrist already turns the watch through a set of positions every few minutes, which is its own crude average.",
+        "Isochronism — rate that depends on amplitude — has the same sign whether the cage has turned or not. Magnetism and a worn jewel are the same. A rotating frame that does not change those means is theater on a wrist that was already moving.",
+        "Compare honestly: a fixed escapement, well poise-regulated in the positions you actually wear, can beat a cage whose mean never moved. The cage still has inertia and a load on the train. Those are costs. They are not a certificate."
+      ],
+      "example": "Two watches, same hairspring alloy, timed in six positions. The fixed one is regulated to +2 s/d mean. The caged one, poorly poise-regulated, is +2 s/d mean as well. The cage rotated. The mean did not improve.",
+      "whyItMatters": "On a wrist the averaging argument is weaker. Say that, or a rotating cage will be treated as automatically more accurate.",
+      "quiz": [
+        {
+          "id": "horo-th10-1",
+          "stem": "When is a rotating cage theater rather than an averaging tool on a modern wrist?",
+          "correctAnswer": "When the wrist already changes position, and the cage does not change the mean rate",
+          "distractors": [
+            { "text": "Never; any cage is an averaging tool because rotation is defined as accuracy", "kind": "misconception", "rationale": "Rotation averages opposite-sign positional error. It is not a definition of accuracy." },
+            { "text": "Only when the date disc is missing, because cages need a 31-tooth average", "kind": "nearby", "rationale": "Date is a daily display. Theater is a cage that does not move the mean." },
+            { "text": "When the chronograph is running, which is the only time a cage can work", "kind": "misapplied", "rationale": "A chrono clutch is unrelated. The cage carries the oscillator." }
+          ],
+          "correctExplanation": "A moving wrist already samples positions. A cage that leaves the mean put is display of rotation.",
+          "objectiveIds": ["Say when a rotating cage is theater on a wrist that already changes position"],
+          "prerequisiteConceptIds": ["horo-tourbillon", "horo-isochronism"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-th10-2",
+          "stem": "A well-regulated fixed escapement and a cage that does not change the mean. Compare them:",
+          "correctAnswer": "The fixed one can match or beat the cage on mean rate; rotation alone is not the win",
+          "distractors": [
+            { "text": "The cage must win, because a rotating oscillator is always the better timebase", "kind": "reversed", "rationale": "The timebase is still the spring. A mean that did not move did not win." },
+            { "text": "They cannot be compared, because fixed escapements have no rate", "kind": "misconception", "rationale": "Fixed escapements are what most watches use. They have a rate you can time." },
+            { "text": "The cage always loses on amplitude, so comparison is forbidden in six positions", "kind": "subtle", "rationale": "You can compare means. Inertia is a cost, not a ban on the measurement." }
+          ],
+          "correctExplanation": "Same mean, extra inertia on the caged side. Regulation of the oscillator still decides.",
+          "objectiveIds": ["Compare a well-regulated fixed escapement with a cage that does not change the mean"],
+          "prerequisiteConceptIds": ["horo-tourbillon", "horo-isochronism"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "horo-th10-3",
+          "stem": "Isochronism error is fast at low amplitude in every position. Adding a cage typically:",
+          "correctAnswer": "Leaves that mean in place, because amplitude error does not flip sign with orientation",
+          "distractors": [
+            { "text": "Cancels it, because a one-minute turn is defined as an isochronism rinse", "kind": "reversed", "rationale": "Isochronism is amplitude, not position. The cage does not flip its sign." },
+            { "text": "Converts it into a date residual of 0.03 days, which cages are for", "kind": "nearby", "rationale": "Moonphase residual is a tooth count. Isochronism is a rate-versus-swing curve." },
+            { "text": "Stores it in the bridle, which is how cages protect the mainspring", "kind": "misapplied", "rationale": "A bridle is overwind safety. It does not absorb isochronism." }
+          ],
+          "correctExplanation": "Same-sign, amplitude-dependent, every position. The average cannot wash it out.",
+          "objectiveIds": ["Say when a rotating cage is theater on a wrist that already changes position"],
+          "prerequisiteConceptIds": ["horo-tourbillon", "horo-isochronism"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "horo-tourbillon-honest-20",
+      "conceptId": "horo-tourbillon-honest",
+      "title": "Wrist motion already does the averaging",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["horo-tourbillon", "horo-isochronism"],
+      "goDeeper": "horo-repeater",
+      "diagram": "horo-tourbillon-cage",
+      "explanation": [
+        "Isochronism is the honest limit most people skip. Rate that depends on amplitude sits in every position with the same sign. A cage that turns once a minute still sees that curve. The mean of a family of fast-at-low-swing readings is still fast at low swing.",
+        "Pocket vertical for hours was the original averaging problem. A wrist is a random walk through those positions. You already sample crown-up, crown-down, and dial-up in a morning. The extra sample the cage adds is real only if you sit still, in one vertical, for longer than the cage period.",
+        "Well-regulated fixed versus caged-but-unmoved-mean is a comparison you can run on a timing machine. Six positions, same amplitude band, report the means. If they match, the cage did not buy rate. It bought a rotating mass, extra jewels, and a train that must carry that mass.",
+        "Magnetism, temperature, and a scored hole jewel are the same class of leftover. None of them flips sign because a cage turned. Treat those with alloys, shielding, geometry, and a clean bearing. Treat the cage as a positional sampler with a known leftover, not as a personality of the watch."
+      ],
+      "example": "Desk-bound wearer, watch crown-left for three hours: a one-minute cage will average that vertical. Same wearer on a walk: positions already mix, both watches show similar daily means, and the caged one still carries extra inertia.",
+      "whyItMatters": "The leftover mean is the story. If rotation did not move it, the cage was not the timing tool in that wear.",
+      "quiz": [
+        {
+          "id": "horo-th20-1",
+          "stem": "A wrist already changes orientation many times an hour. The cage's averaging argument weakens because:",
+          "correctAnswer": "The wear is already sampling positions; extra rotation may not move the daily mean",
+          "distractors": [
+            { "text": "Gravity turns off on a wrist, so cages become the only remaining timebase", "kind": "misconception", "rationale": "Gravity still acts. The wrist already mixes the positions gravity cares about." },
+            { "text": "A wrist forbids timing machines, so no mean exists to compare", "kind": "nearby", "rationale": "You can still time in positions. The question is whether the cage moved that mean." },
+            { "text": "Isochronism becomes positional only on a wrist, which cages then cancel", "kind": "reversed", "rationale": "Isochronism stays amplitude-dependent. A wrist does not convert it into opposite signs." }
+          ],
+          "correctExplanation": "Random-walk positions already average. The cage adds a sample only if you stay put.",
+          "objectiveIds": ["Say when a rotating cage is theater on a wrist that already changes position"],
+          "prerequisiteConceptIds": ["horo-tourbillon", "horo-isochronism"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "horo-th20-2",
+          "stem": "On a timing machine, a fixed escapement and a cage print the same six-position mean. Compare them as timing tools:",
+          "correctAnswer": "The cage did not improve the mean; it still adds inertia the train must carry",
+          "distractors": [
+            { "text": "The cage improved the mean by definition, even if the print matches", "kind": "reversed", "rationale": "A matching print is a mean that did not move. Definition does not override the number." },
+            { "text": "The fixed escapement cannot have a mean, so the comparison is empty", "kind": "misconception", "rationale": "Fixed escapements are timed in positions every day. They have a mean." },
+            { "text": "Matching means prove the cage is also a chronograph couple", "kind": "misapplied", "rationale": "A couple is a clutch on a register. A cage carries the oscillator." }
+          ],
+          "correctExplanation": "Same mean, extra rotating mass. Regulation still did the timing work.",
+          "objectiveIds": ["Compare a well-regulated fixed escapement with a cage that does not change the mean"],
+          "prerequisiteConceptIds": ["horo-tourbillon", "horo-isochronism"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "horo-th20-3",
+          "stem": "Magnetism, a scored jewel, and low-amplitude isochronism share which relation to a cage?",
+          "correctAnswer": "They keep their sign in every position, so a rotating average will not cancel them",
+          "distractors": [
+            { "text": "They all reverse sign once a minute, which is why cages exist", "kind": "reversed", "rationale": "None of those errors is a crown-left versus crown-right flip." },
+            { "text": "They are date-changeover faults, which a cage's finger is meant to absorb", "kind": "nearby", "rationale": "A cage has no date finger. These are oscillator and bearing faults." },
+            { "text": "They are solved by a second barrel, which every cage must carry", "kind": "misapplied", "rationale": "A second barrel is strike or alarm. It does not cancel same-sign rate error." }
+          ],
+          "correctExplanation": "Same sign, every position. Alloys, oil, and a round hole address them. Rotation does not.",
+          "objectiveIds": ["Compare a well-regulated fixed escapement with a cage that does not change the mean"],
+          "prerequisiteConceptIds": ["horo-tourbillon", "horo-isochronism"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "horo-repeater-10",
+      "conceptId": "horo-repeater",
+      "title": "Racks that read snails, then hammers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-cannon"],
+      "goDeeper": "horo-striking",
+      "explanation": [
+        "Slide or bolt winds a small spring, or releases a strike barrel, and lets racks fall onto snails that sit on the motion works. The hour snail's step is how many hour blows. The quarter snail and minute snail set the rest. Hammers then hit gongs for that count.",
+        "Hours, quarters, and minutes are three readings of those snails, not a second timebase. The cannon and hour wheel still carry local time. The racks only copy that time into a number of blows when you demand the strike.",
+        "A surprise-piece fills the hour snail at exact hours so phantom quarters do not sound. An all-or-nothing piece holds the racks until the slide is fully home, so a short push cannot release a half-count. Both are releases, not decoration."
+      ],
+      "example": "At 3:47 the hour rack reads three steps, the quarter rack reads three, the minute rack reads two. Three low blows, three pairs, two high blows. The snails decided; the hammers only struck.",
+      "whyItMatters": "A minute repeater is racks on snails plus hammers on gongs. If you cannot trace the snails, the sound is just a trick.",
+      "quiz": [
+        {
+          "id": "horo-rp10-1",
+          "stem": "Trace a minute repeater from a demanded strike to the blows you hear. After the snails comes:",
+          "correctAnswer": "Racks whose tooth counts become hammer blows on the gongs",
+          "distractors": [
+            { "text": "The going pallet, which prints each second as a strike on the case", "kind": "misapplied", "rationale": "The pallet belongs to the timebase. Strike count comes from racks on snails." },
+            { "text": "A 59-tooth moon disc, which is how repeaters store the hour", "kind": "nearby", "rationale": "Moonphase is a lunation ratio. Hours are an hour snail." },
+            { "text": "The chrono clutch, which couples the gongs to the fourth wheel", "kind": "subtle", "rationale": "A clutch copies seconds to a register. A repeater copies time to racks." }
+          ],
+          "correctExplanation": "Snails on the motion works, racks that fall onto them, hammers that strike that count.",
+          "objectiveIds": ["Trace the snail and rack that decide how many blows to strike"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 5,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-rp10-2",
+          "stem": "At 3:47, hours, quarters, and minutes on a minute repeater should sound as:",
+          "correctAnswer": "Three hour blows, three quarter blows, then two minute blows, as the snails dictate",
+          "distractors": [
+            { "text": "Forty-seven identical blows, because minutes are the only snail a repeater reads", "kind": "reversed", "rationale": "Three snails, three counts. Minutes alone would ignore hours and quarters." },
+            { "text": "A continuous ring until you stop the slide, with no counted blows", "kind": "misconception", "rationale": "A repeater counts. An uncounted ring is not a rack reading a snail." },
+            { "text": "Twelve blows always, because the hour wheel has twelve teeth for strike", "kind": "nearby", "rationale": "The hour snail has steps for the current hour, not a fixed twelve." }
+          ],
+          "correctExplanation": "Hour snail 3, quarter snail 3, minute snail 2. Hammers only play that score.",
+          "objectiveIds": ["Read hours, quarters, and minutes by hammers on gongs"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-rp10-3",
+          "stem": "What do the snails and racks decide in a minute repeater?",
+          "correctAnswer": "How many hour, quarter, and minute blows the hammers are allowed to strike",
+          "distractors": [
+            { "text": "The beat rate of the balance, which repeaters reset with each slide", "kind": "misapplied", "rationale": "The oscillator still meters. Racks do not set beat rate." },
+            { "text": "Which city is local, because world-time discs are the repeater's snails", "kind": "nearby", "rationale": "A city disc is a zone display. Snails sit on the motion works." },
+            { "text": "Whether the chronograph clutch is open, which is a repeater's real job", "kind": "subtle", "rationale": "Clutch state is chrono logic. Repeater logic is snails and racks." }
+          ],
+          "correctExplanation": "Snails are the time as steps. Racks copy those steps into hammer blows.",
+          "objectiveIds": ["Trace the snail and rack that decide how many blows to strike"],
+          "prerequisiteConceptIds": ["horo-cannon"],
+          "difficultyTier": 5,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "horo-striking-10",
+      "conceptId": "horo-striking",
+      "title": "Sound the clock makes without being asked",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-repeater"],
+      "goDeeper": "horo-equation",
+      "explanation": [
+        "Demand is the repeater: you slide a bolt, racks fall, hammers strike now. Striking work is a second gear train that sounds on its own — hours, or hours and quarters — when the going train reaches a trip. You did not ask. The clock did.",
+        "Power for that train must not empty the going barrel. A second barrel, or a dedicated strike spring, stores the blows. Grande sonnerie repeats hours and quarters at each quarter; petite sonnerie drops the hour at the quarters. Both are still a second train whose product is sound.",
+        "Steal from the going train and amplitude sags at each strike, which pulls the rate on the hour. Keep the strike on its own spring so the timebase does not pay for the bell. The racks and snails can be cousins of the repeater's; the release schedule is what changed."
+      ],
+      "example": "A clock with a strike barrel trips at 3:00, the hour rack reads three, hammers blow three, and the going train's swing never left its band. A repeater in the same case stays silent until you move the slide.",
+      "whyItMatters": "Repeater versus striking is who asks. Shared going power is the failure both must not make.",
+      "quiz": [
+        {
+          "id": "horo-st10-1",
+          "stem": "How does striking work differ from a repeater you demand with a slide?",
+          "correctAnswer": "Striking sounds itself at the hours or quarters; a repeater waits for you to ask",
+          "distractors": [
+            { "text": "They are the same train; only the gong metal changes the name", "kind": "misconception", "rationale": "The release schedule differs. One trips itself. One waits on a slide." },
+            { "text": "Striking is a chronograph; a repeater is a date jumper that rings", "kind": "nearby", "rationale": "Both are sound trains. Chrono and date are other extras." },
+            { "text": "A repeater always steals the going barrel; striking never needs a spring", "kind": "reversed", "rationale": "Both need stored work. Neither should empty the going barrel." }
+          ],
+          "correctExplanation": "Who releases the racks: a trip on the going train, or your slide. That is the split.",
+          "objectiveIds": ["Distinguish a repeater you demand from a clock that strikes itself"],
+          "prerequisiteConceptIds": ["horo-repeater"],
+          "difficultyTier": 5,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-st10-2",
+          "stem": "If striking work takes its blows from the going barrel, predict the timekeeping cost:",
+          "correctAnswer": "Amplitude sags at each strike, so the rate pulls whenever the clock sounds",
+          "distractors": [
+            { "text": "Rate improves, because a ringing case is extra impulse to the balance", "kind": "reversed", "rationale": "A sagging train is less impulse, not more. The case is not the oscillator." },
+            { "text": "Nothing, because gongs are tuned to cancel positional error as they ring", "kind": "misapplied", "rationale": "Gongs are sound. They do not average a positional error." },
+            { "text": "The date jumps, which is how striking trains are supposed to pay", "kind": "nearby", "rationale": "A date jump is a daily extra. The cost here is lost swing on the going train." }
+          ],
+          "correctExplanation": "Blows cost torque. Taken from the going spring, that cost is amplitude and rate.",
+          "objectiveIds": ["Predict the power a striking work must not steal from the going train"],
+          "prerequisiteConceptIds": ["horo-repeater"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-st10-3",
+          "stem": "A clock that strikes itself at each hour, versus a watch you slide to hear 3:47. Compare the releases:",
+          "correctAnswer": "The clock trips a second train on schedule; the watch releases racks only when you ask",
+          "distractors": [
+            { "text": "Both wait on a slide; clocks just hide that slide under the dial", "kind": "reversed", "rationale": "Striking trips itself. Hiding a slide would still be a repeater." },
+            { "text": "The clock uses the chrono clutch; the watch uses the date finger as a hammer", "kind": "misapplied", "rationale": "Neither extra is a strike release. Racks and a trip or a slide are." },
+            { "text": "They share one barrel by law, so the comparison is only about gong length", "kind": "subtle", "rationale": "Separate barrels are the usual protection. Gong length is not the split." }
+          ],
+          "correctExplanation": "Schedule versus demand. Second train versus racks you release. Keep both off the going spring.",
+          "objectiveIds": ["Distinguish a repeater you demand from a clock that strikes itself"],
+          "prerequisiteConceptIds": ["horo-repeater"],
+          "difficultyTier": 5,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "horo-equation-10",
+      "conceptId": "horo-equation",
+      "title": "Sundial noon minus mean noon",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-calendar"],
+      "goDeeper": "horo-finishing",
+      "explanation": [
+        "Apparent solar time is what a sundial reads: noon when the sun crosses the meridian. Mean solar time is the clock average of that day length over a year. The difference is the equation of time, a curve that swings about plus or minus sixteen minutes.",
+        "Display that difference with a cam cut to the curve, typically one turn per year, driven from the calendar train. A feeler on the cam moves a hand, or feeds a differential that sets apparent time next to mean time.",
+        "Name the cam. Without it you have only mean time, which is what the going train already counts. The sky's noon is not a second oscillator. It is a yearly contour the calendar already has the ratio to turn."
+      ],
+      "example": "In mid-February the equation cam is near its minus-fourteen-minute lobe. A feeler there sets a hand that reads 'sundial noon is still fourteen minutes after clock noon'. In early November the lobe is the other way.",
+      "whyItMatters": "Equation of time is a yearly cam on a calendar ratio, not a mystic extra hour. The going train still counts mean time.",
+      "quiz": [
+        {
+          "id": "horo-eq10-1",
+          "stem": "What does an equation-of-time display actually show?",
+          "correctAnswer": "The difference between mean solar time and apparent solar time",
+          "distractors": [
+            { "text": "The difference between GMT and a city disc, read as sundial noon", "kind": "nearby", "rationale": "GMT is a second hour. Equation of time is sun versus mean clock." },
+            { "text": "The amplitude of the balance, printed in minutes as a reserve", "kind": "misapplied", "rationale": "Amplitude is a timing-machine number. Equation of time is a yearly curve." },
+            { "text": "A second timebase that replaces the hairspring when the sun is up", "kind": "misconception", "rationale": "The oscillator still meters mean time. The cam only plots the sun's offset." }
+          ],
+          "correctExplanation": "Clock noon versus sundial noon. The cam stores that offset over the year.",
+          "objectiveIds": ["Display the difference between mean solar time and apparent solar time"],
+          "prerequisiteConceptIds": ["horo-calendar"],
+          "difficultyTier": 5,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-eq10-2",
+          "stem": "Which part approximates the equation of time so a hand can show it?",
+          "correctAnswer": "A yearly cam, driven from the calendar, whose contour is the equation curve",
+          "distractors": [
+            { "text": "The column wheel, whose pillars are cut to plus or minus sixteen minutes", "kind": "nearby", "rationale": "A column wheel sequences a chronograph. It is not a yearly sun cam." },
+            { "text": "The 59-tooth moon disc, which already stores the sun's equation", "kind": "misapplied", "rationale": "Moonphase approximates a lunation. The sun's equation is a different curve." },
+            { "text": "The going train's fourth wheel, whose once-a-minute turn is already mean solar time", "kind": "subtle", "rationale": "The equation of time is a yearly cam. A fourth wheel is mean time, not the equation." }
+          ],
+          "correctExplanation": "Calendar ratio, one turn a year, cam cut to the equation. Feeler to a hand.",
+          "objectiveIds": ["Name the cam that approximates the equation of time"],
+          "prerequisiteConceptIds": ["horo-calendar"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-eq10-3",
+          "stem": "Mean solar time in this display is still counted by which machine?",
+          "correctAnswer": "The going train and oscillator; the cam only adds the sun's offset to that count",
+          "distractors": [
+            { "text": "The cam itself, which is a second timebase that replaces the balance in daylight", "kind": "reversed", "rationale": "The cam is a yearly contour. It does not meter a second." },
+            { "text": "The strike barrel, whose blows are the true mean of the year", "kind": "nearby", "rationale": "Strike is sound. Mean time is still the going train." },
+            { "text": "The date jumper, clicking mean noon each time it parks the disc", "kind": "misapplied", "rationale": "A jumper parks a date. It does not count mean solar time." }
+          ],
+          "correctExplanation": "Mean time is the watch you already have. Apparent time is that count plus the cam.",
+          "objectiveIds": ["Display the difference between mean solar time and apparent solar time"],
+          "prerequisiteConceptIds": ["horo-calendar"],
+          "difficultyTier": 5,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "horo-finishing-10",
+      "conceptId": "horo-finishing",
+      "title": "Decoration, surface prep, and oil are different jobs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-bridges"],
+      "goDeeper": "horo-service",
+      "explanation": [
+        "Anglage is a bevelled, polished edge. Perlage is circular graining on a plate or bridge. Côtes de Genève are stripes on a bridge face. In the WOSTEP finishing and service language this course can actually source, those names are decorative finishing and the removal of tool marks. They are not oil-management mechanisms.",
+        "Oil management is a different job: oil sinks around a jewel, a measured drop on an impulse plane or in a cup, and barriers (including epilame where it is used) that stop a film from walking. A raw burr on a jewel chaton can give oil a ledge to climb. Cleaning that burr is surface preparation. Calling the decorative bevel functional anglage because oil exists somewhere on the calibre invents a mechanism WOSTEP does not teach.",
+        "Distinguish the three by job, not by shine. A stripe on a dry bridge face does not change amplitude. A greedy drop on a locking face does. A bevel that only shows in a display window is display. Finish can be well made and still not be lubrication."
+      ],
+      "example": "Côtes on the outer train-bridge face, above a dry surface, are display. The oil cup around a train jewel is lubrication. Deburring the chaton so a later drop cannot climb a milling mark is surface prep. Three jobs. The same gloss does not make them one.",
+      "whyItMatters": "Finishing, preparation, and oil are surfaces with different jobs. Rate cares about the oil. Do not promote a decorative grammar into a lubrication theory.",
+      "quiz": [
+        {
+          "id": "horo-fn10-1",
+          "stem": "How should finishing be treated in this course, before anyone talks about shine?",
+          "correctAnswer": "As decorative work and mark removal, distinct from oil cups and from lubrication",
+          "distractors": [
+            { "text": "As a grade of the calibre equal to jewel count and to price", "kind": "misconception", "rationale": "Jewel count and price are not oil cups. Surfaces are jobs." },
+            { "text": "As a second timebase that polishes the hairspring into a better rate", "kind": "misapplied", "rationale": "The oscillator is still the spring. Finish does not replace it." },
+            { "text": "As the oil-management system: anglage sheds film and perlage holds it", "kind": "nearby", "rationale": "That invents a lubrication job WOSTEP does not assign to decorative grain." }
+          ],
+          "correctExplanation": "Anglage and perlage are finish. Cups and measured drops are oil. Burrs are prep.",
+          "objectiveIds": ["Treat decorative finishing, surface preparation, and lubrication as distinct jobs"],
+          "prerequisiteConceptIds": ["horo-bridges"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-fn10-2",
+          "stem": "A polished bevel on a bridge edge that never sits in an oil cup is:",
+          "correctAnswer": "Decorative anglage: display and mark removal, not a lubrication mechanism",
+          "distractors": [
+            { "text": "Functional oil management, because any bevel sheds film by definition", "kind": "reversed", "rationale": "A dry display edge is not an oil cup. Shine is not lubrication." },
+            { "text": "Côtes on the outer dry face of the same bridge, which is the same job as the bevel", "kind": "misapplied", "rationale": "A dry-face bevel is decorative anglage. Côtes on a dry face are the same display job, not oil management." },
+            { "text": "Overwind safety, which is what anglage is for on a barrel wall", "kind": "nearby", "rationale": "Overwind safety is a bridle. Anglage is an edge." }
+          ],
+          "correctExplanation": "No cup, no film job. Call it display. Leave lubrication to the cup and the drop.",
+          "objectiveIds": ["Refuse to treat anglage or perlage as an oil-management mechanism without a sourced claim"],
+          "prerequisiteConceptIds": ["horo-bridges"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-fn10-3",
+          "stem": "Stripes on a bridge face that never sees oil or a pivot. What do they do to rate?",
+          "correctAnswer": "Nothing the timebase can feel; they are display on a dry surface",
+          "distractors": [
+            { "text": "They raise amplitude by polishing the balance from across the plate", "kind": "reversed", "rationale": "A dry outer face does not impulse the oscillator." },
+            { "text": "They hold a designed oil film, which is why perlage and côtes are lubrication", "kind": "subtle", "rationale": "A dry face is not an oil cup. Grain is not a lubrication system." },
+            { "text": "They meter the unwind, which is why striped bridges are a second escape", "kind": "misapplied", "rationale": "The escapement meters. A stripe is grain on a bridge." }
+          ],
+          "correctExplanation": "Off the cup, off the rate. Call it display. Leave the timebase out of the sentence.",
+          "objectiveIds": ["Refuse to treat anglage or perlage as an oil-management mechanism without a sourced claim"],
+          "prerequisiteConceptIds": ["horo-bridges"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "horo-service-10",
+      "conceptId": "horo-service",
+      "title": "Take down, clean, oil, check freedoms",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-lubrication", "horo-disassembly"],
+      "goDeeper": "horo-accuracy-claim",
+      "explanation": [
+        "Dried oil and brass dust do not leave through a caseback hole. A service is a reversible takedown, a clean of the parts, fresh oil in the cups that need it, and a check of endshake, mesh, and amplitude. It is not a battery, and it is not a drop through the back.",
+        "Order is the same discipline as the first disassembly: power down, balance, pallet, train, barrel, then reverse. Skip that order and you score a pivot while claiming you 'just oiled it'. The oil you inject onto dirty jewels sits on sludge.",
+        "What the caseback shot leaves dirty is everything you did not take apart: the scored hole, the packed pivot, the pallet that still carries a cake of old grease. Predict that leftover. Then do the reversible work, or send it to someone who will."
+      ],
+      "example": "A watch 'oiled' through the back still stops after a day. On the bench the fourth-wheel jewel is black, the pivot is scored, and the fresh oil is a ring around that dirt. Cleaning starts after the train is actually out.",
+      "whyItMatters": "Service is reversibility plus clean plus oil plus freedoms. A squirt through the back is none of those.",
+      "quiz": [
+        {
+          "id": "horo-sv10-1",
+          "stem": "In this course, a service of a mechanical movement is which sequence?",
+          "correctAnswer": "Disassembly, cleaning, oil, and a check of freedoms such as endshake and swing",
+          "distractors": [
+            { "text": "A battery change, because mechanical watches store work in a cell now", "kind": "misconception", "rationale": "Stored work is the mainspring. A service is not a cell swap." },
+            { "text": "A drop of oil through the caseback, which is the whole reversible method", "kind": "reversed", "rationale": "A drop through the back is the thing this lesson rejects as a service." },
+            { "text": "Polishing the case and fitting a new strap, timed on a machine afterward", "kind": "nearby", "rationale": "Housing and strap are not the calibre. Freedoms live in the jewels." }
+          ],
+          "correctExplanation": "Take down, clean, oil, check. That is the service. The caseback is not a port.",
+          "objectiveIds": ["Name a service as disassembly, cleaning, oil, and a check of freedoms"],
+          "prerequisiteConceptIds": ["horo-lubrication", "horo-disassembly"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-sv10-2",
+          "stem": "You oil through the caseback and skip the takedown. Predict what stays dirty:",
+          "correctAnswer": "Scored jewels, packed pivots, and old grease on the pallet, now sitting under fresh oil",
+          "distractors": [
+            { "text": "Nothing; fresh oil always dissolves a scored hole into a new round bearing", "kind": "reversed", "rationale": "Oil on sludge is still sludge. A scored hole stays a cutter." },
+            { "text": "Only the strap, which is where dried oil actually collects in a movement", "kind": "nearby", "rationale": "Dried oil collects in cups and on pivots. The strap is outside." },
+            { "text": "The hairspring coils, which caseback oil is designed to rinse as a service", "kind": "misapplied", "rationale": "Oil on a hairspring is a fault. A service does not rinse the spring through the back." }
+          ],
+          "correctExplanation": "What you did not take out stays dirty. Fresh oil on that dirt is not a clean.",
+          "objectiveIds": ["Predict what 'just oil it through the caseback' leaves dirty"],
+          "prerequisiteConceptIds": ["horo-lubrication", "horo-disassembly"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-sv10-3",
+          "stem": "A movement stops a week after a caseback oiling. The first suspect is:",
+          "correctAnswer": "A dirty or scored bearing that was never cleaned, now gummy under the new oil",
+          "distractors": [
+            { "text": "A successful service, because a stop after oiling means the timebase reset", "kind": "reversed", "rationale": "A stop is a fault. A timebase does not reset because you squirted the back." },
+            { "text": "A missing city disc, which caseback oil is known to dissolve", "kind": "nearby", "rationale": "World time is a display. A stop after a squirt is a dirty train." },
+            { "text": "The hairspring coils, which caseback oil is designed to rinse as a service", "kind": "subtle", "rationale": "The first suspect is a dirty bearing under fresh oil. Caseback oil is not a coil rinse." }
+          ],
+          "correctExplanation": "Gummy scored hole, still assembled. That is what the caseback shot left in place.",
+          "objectiveIds": ["Predict what 'just oil it through the caseback' leaves dirty"],
+          "prerequisiteConceptIds": ["horo-lubrication", "horo-disassembly"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-accuracy-claim-10",
+      "conceptId": "horo-accuracy-claim",
+      "title": "A protocol, not a personality",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-positional", "horo-rate"],
+      "goDeeper": "horo-silicon",
+      "explanation": [
+        "Fifteen days, several positions, more than one temperature: a COSC or similar certificate is a protocol run on a movement, often uncased. Mean daily rate in a band, maximum variation, a few other numbers. It is a test script, not a character of the brand.",
+        "Positions and isochronism are what that script can see. Magnetism after you walk through a speaker, a jewel that scores a year later, a case that then squeezes a stem — the paper does not speak to those. Predict the silence.",
+        "Read the band: a mechanical COSC mean around −4 to +6 s/d is a passed protocol, not 'perfect'. A watch that passed and then sat on a magnet is a different machine. The certificate stayed in the drawer."
+      ],
+      "example": "A movement passes COSC in five positions at three temperatures. In a steel case on a speaker it gains two minutes a day. The paper did not fail. Magnetism was never that paper's question.",
+      "whyItMatters": "Certificates are scripts. Positions and isochronism they may capture. Magnetism and wear they do not.",
+      "quiz": [
+        {
+          "id": "horo-ac10-1",
+          "stem": "How should a COSC or similar certificate be read in this course?",
+          "correctAnswer": "As a protocol of timed positions and temperatures, not as a personality of the watch",
+          "distractors": [
+            { "text": "As proof the brand cannot magnetize, wear, or squeeze a stem later", "kind": "misconception", "rationale": "The script does not certify those later faults. It timed a movement." },
+            { "text": "As a second timebase that replaces the hairspring once the paper is filed", "kind": "misapplied", "rationale": "Paper is a record. The oscillator is still the spring." },
+            { "text": "As a city-disc rating, because world time is what COSC actually times", "kind": "nearby", "rationale": "COSC times rate in positions. It does not time a city disc." }
+          ],
+          "correctExplanation": "A script, a band, a movement on a machine. Not a character.",
+          "objectiveIds": ["Read a COSC or similar certificate as a protocol, not a personality"],
+          "prerequisiteConceptIds": ["horo-positional", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-ac10-2",
+          "stem": "A certified movement later sits on a speaker and then runs a scored fourth-wheel jewel. The certificate typically:",
+          "correctAnswer": "Says nothing about that magnetism or that worn jewel; those were not the protocol",
+          "distractors": [
+            { "text": "Voids itself automatically, because COSC watches cannot magnetize or wear", "kind": "reversed", "rationale": "The paper does not police later faults. It recorded an earlier script." },
+            { "text": "Guarantees the jewel will round itself, which is a COSC wear clause", "kind": "misapplied", "rationale": "There is no wear clause that heals a scored hole." },
+            { "text": "Converts the error into a date residual, which certificates always absorb", "kind": "subtle", "rationale": "A certificate does not talk to the date disc. Magnetism and wear stay." }
+          ],
+          "correctExplanation": "Positions and temperatures then. Magnetism and a cutter now. The paper is silent.",
+          "objectiveIds": ["Predict what a certificate does not say about magnetism or a worn jewel"],
+          "prerequisiteConceptIds": ["horo-positional", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ac10-3",
+          "stem": "How does a certificate's view of accuracy differ from isochronism and positions on the wrist?",
+          "correctAnswer": "The protocol samples set positions and temperatures; the wrist adds amplitude changes the paper may miss",
+          "distractors": [
+            { "text": "They are identical; a passed protocol is the wrist's rate in every life", "kind": "reversed", "rationale": "A script is not a life. Amplitude on the wrist still moves isochronism." },
+            { "text": "The wrist has no positions, which is why certificates ignore the oscillator", "kind": "misapplied", "rationale": "The wrist has positions. The oscillator is what the protocol timed." },
+            { "text": "Certificates time the date disc; isochronism is only a moonphase residual", "kind": "nearby", "rationale": "Rate in positions is the script. Date and moon are other extras." }
+          ],
+          "correctExplanation": "Script versus wear. Positions the lab set, versus amplitude and insults the wrist adds.",
+          "objectiveIds": ["Read a COSC or similar certificate as a protocol, not a personality"],
+          "prerequisiteConceptIds": ["horo-positional", "horo-rate"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "horo-silicon-10",
+      "conceptId": "horo-silicon",
+      "title": "Material reasons, not a slogan",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["horo-hairspring", "horo-magnet"],
+      "goDeeper": "horo-temp",
+      "explanation": [
+        "Steel hairsprings magnetize and then run fast. They also rust, and they need geometry or alloy tricks for temperature. Silicon does not magnetize in the same way, does not rust, and can be shaped so its thermal coefficient is a designed number rather than an accident of carbon steel.",
+        "Escape pallets and wheels in silicon can run with little or no oil on the impulse faces, because the material is hard and the surfaces are dry-stable. That is a lubrication reason you can name, not a slogan about the future.",
+        "Contrast is three axes: magnetism, temperature, oil. Steel loses on magnetism and rust, and needs oil. Silicon wins those, and is brittle in shock. A silicon hairspring still needs a well-regulated balance. The material is an answer to those three, not a replacement for poise and isochronism work."
+      ],
+      "example": "Same balance, steel spring versus silicon spring, after a speaker: the steel is fast and stays fast until you demagnetize. The silicon rate barely moved. Drop both on a bench: the silicon part can chip; the steel may bend.",
+      "whyItMatters": "Silicon is a material with magnetism, temperature, and oil reasons. Without those three, the word is an advertisement.",
+      "quiz": [
+        {
+          "id": "horo-si10-1",
+          "stem": "On magnetism, temperature, and lubrication, how does a silicon hairspring contrast with a steel one?",
+          "correctAnswer": "Silicon does not magnetize like steel, can be shaped for temperature, and can run with less oil",
+          "distractors": [
+            { "text": "Silicon magnetizes more, rusts faster, and always needs more oil than steel", "kind": "reversed", "rationale": "Those three are the axes steel loses. Silicon is the material answer to them." },
+            { "text": "They are identical on all three; silicon is only a finishing name for steel", "kind": "misconception", "rationale": "The materials differ on magnetism, rust, and dry running." },
+            { "text": "Silicon is a second oscillator; steel is a date disc alloy", "kind": "nearby", "rationale": "Both are hairspring materials. Neither is a date disc or a second timebase." }
+          ],
+          "correctExplanation": "Three axes: magnetism, temperature, oil. Silicon is an answer on those, not a slogan.",
+          "objectiveIds": ["Contrast a silicon hairspring with a steel one on those three axes"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-magnet"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "horo-si10-2",
+          "stem": "You choose silicon for an escape wheel. The lubrication reason you can name is:",
+          "correctAnswer": "Hard, dry-stable faces can run with little or no oil on the impulse surfaces",
+          "distractors": [
+            { "text": "Silicon soaks extra oil, which is how it stores a week of reserve", "kind": "reversed", "rationale": "The point is less oil, not a hidden reservoir. Reserve is still the barrel." },
+            { "text": "Silicon is magnetic, so oil is required to shield the pallet from speakers", "kind": "misapplied", "rationale": "Silicon is the non-magnetic choice. Oil is not a magnetic shield here." },
+            { "text": "Silicon replaces the going train, so lubrication of wheels no longer exists", "kind": "nearby", "rationale": "Train pivots still need jewels and oil. The dry argument is about impulse faces." }
+          ],
+          "correctExplanation": "Dry impulse faces. Named lubrication reason. Pivots elsewhere still want their cups.",
+          "objectiveIds": ["Use silicon for temperature, magnetism, and lubrication reasons you can name"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-magnet"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-si10-3",
+          "stem": "After a strong magnet, a steel hairspring and a silicon hairspring. Distinguish the usual rates:",
+          "correctAnswer": "Steel often runs fast until demagnetized; silicon's rate barely moves on that insult",
+          "distractors": [
+            { "text": "Silicon runs fast; steel is immune, which is why steel is the magnetic answer", "kind": "reversed", "rationale": "Steel is the one that magnetizes. Silicon is the material answer to that." },
+            { "text": "Both stop, because magnets always lock the escape wheel regardless of material", "kind": "subtle", "rationale": "A magnetized steel spring changes rate. It does not always lock the train." },
+            { "text": "Both improve, because magnetism is how isochronism is certified", "kind": "misapplied", "rationale": "Magnetism is an insult to rate. It is not a certificate of isochronism." }
+          ],
+          "correctExplanation": "Steel magnetizes and goes fast. Silicon does not pick up that field. That is one named axis.",
+          "objectiveIds": ["Contrast a silicon hairspring with a steel one on those three axes"],
+          "prerequisiteConceptIds": ["horo-hairspring", "horo-magnet"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}

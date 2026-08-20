@@ -1,0 +1,520 @@
+{
+  "id": "horo-complications",
+  "title": "Complications and Advanced Watchmaking",
+  "categoryId": "horology",
+  "description": "After the simple movement is honest: calendars, chronographs, automatic winding, tourbillons, and the finishing a service actually protects.",
+  "curriculumVersion": 1,
+  "orderHint": 2,
+  "difficultyRange": [
+    2,
+    5
+  ],
+  "entryRequirements": [
+    "horo-escape",
+    "horo-setting"
+  ],
+  "sourceReferences": [
+    {
+      "id": "wostep-chrono",
+      "title": "WOSTEP Chronograph / Chronometry",
+      "url": "https://www.wostep.ch/index.php/en/training/chronograph",
+      "kind": "syllabus",
+      "notes": "Chronograph as a later specialization. Timing remains a discipline. Tourbillon is not a beginner object."
+    },
+    {
+      "id": "hsny-edu",
+      "title": "HSNY education ladder",
+      "url": "https://hs-ny.org/nyc-education",
+      "kind": "syllabus",
+      "notes": "Complications sit after 101\u2013104, not inside them."
+    }
+  ],
+  "modules": [
+    {
+      "id": "horo-c-time",
+      "title": "Timekeeping extras",
+      "blurb": "Date, GMT, automatic winding.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "horo-date",
+        "horo-auto-winding"
+      ],
+      "learningObjectives": [
+        "Add calendar, GMT, winding, or reserve indication without rewriting the timebase",
+        "Trace which wheel actually drives the extra hand or disc"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-c-chrono",
+      "title": "Chronograph",
+      "blurb": "A stopwatch grafted onto a watch.",
+      "order": 1,
+      "prerequisites": [
+        "horo-c-time"
+      ],
+      "spineIds": [
+        "horo-chrono"
+      ],
+      "learningObjectives": [
+        "Start, stop, and reset a seconds register coupled to the going train",
+        "Distinguish column-wheel, cam, flyback, and rattrapante by what they add"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-c-show",
+      "title": "High complications and finishing",
+      "blurb": "Tourbillon, striking, what a service is.",
+      "order": 2,
+      "prerequisites": [
+        "horo-c-chrono"
+      ],
+      "spineIds": [
+        "horo-tourbillon",
+        "horo-service"
+      ],
+      "learningObjectives": [
+        "State the positional error a tourbillon averages, and when it does not",
+        "Treat finishing, service, certificates, and silicon as mechanisms or claims, not luxury"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "horo-date",
+      "name": "Simple date",
+      "moduleId": "horo-c-time",
+      "tier": 2,
+      "prerequisites": [
+        "horo-cannon"
+      ],
+      "summary": "A 31-tooth wheel the motion works advances once a day.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Advance a date disc once a day from the motion works",
+        "Predict a jammed setting if you force the date near the changeover"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-calendar",
+      "name": "Annual and perpetual calendars",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-date"
+      ],
+      "summary": "Remembering months, and sometimes leap years.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish simple, annual, and perpetual calendars by what they remember",
+        "Predict which one needs a human in February"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-moon",
+      "name": "Moonphase",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-date"
+      ],
+      "summary": "A 59-tooth compromise with the sky.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Drive a moon disc from a reduction that approximates the lunation",
+        "State the error a 59-tooth disc accepts on purpose"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-gmt",
+      "name": "GMT and world time",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-setting"
+      ],
+      "summary": "A second hour hand, or a disc of cities.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Add a 24-hour hand that can be set independently of local time",
+        "Distinguish a true GMT from a world-time disc that only shows cities"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-alarm",
+      "name": "Alarm",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-mainspring"
+      ],
+      "summary": "A second barrel whose job is noise.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Store a second spring or a second release so a hammer can strike",
+        "Predict what the alarm must not do to the going train's rate"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-auto-winding",
+      "name": "Automatic winding",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-winding"
+      ],
+      "summary": "A rotor that winds so the wearer does not have to.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Convert a rotor's motion into winding without letting the spring overwind",
+        "Trace a reversing gear or a slipping bridle as the safety"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-rotor",
+      "name": "The rotor",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-auto-winding"
+      ],
+      "summary": "A weight that turns, and the reverser that makes both ways count.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name the rotor as the mass that turns with the wearer's motion",
+        "Predict unidirectional versus bidirectional winding from the reverser"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-power-reserve-ind",
+      "name": "Power-reserve indication",
+      "moduleId": "horo-c-time",
+      "tier": 3,
+      "prerequisites": [
+        "horo-power-reserve"
+      ],
+      "summary": "A hand that tracks the barrel, not the time.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Indicate remaining spring without stealing the timebase",
+        "Trace the differential or cone that turns reserve into a hand"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-chrono",
+      "name": "Chronograph",
+      "moduleId": "horo-c-chrono",
+      "tier": 3,
+      "prerequisites": [
+        "horo-escape",
+        "horo-setting"
+      ],
+      "summary": "Start, stop, reset \u2014 a second train clutched in.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Couple a seconds register to the going train, then uncouple it",
+        "Predict what a dragging clutch does to amplitude while the chrono runs"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-column-wheel",
+      "name": "Column wheel versus cam",
+      "moduleId": "horo-c-chrono",
+      "tier": 4,
+      "prerequisites": [
+        "horo-chrono"
+      ],
+      "summary": "How the pusher's logic is remembered.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast a column wheel with a cam as the sequencer of start, stop, reset",
+        "Predict a sloppy pusher feel when the cam's edges are worn"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-chrono-reset",
+      "name": "Reset and hammers",
+      "moduleId": "horo-c-chrono",
+      "tier": 4,
+      "prerequisites": [
+        "horo-chrono"
+      ],
+      "summary": "Hearts on the chronograph wheels, and the hammers that find them.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Drop hammers onto hearts so the hands return to zero",
+        "Predict a hand that does not zero if a heart or hammer is bent"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-flyback",
+      "name": "Flyback",
+      "moduleId": "horo-c-chrono",
+      "tier": 4,
+      "prerequisites": [
+        "horo-chrono-reset"
+      ],
+      "summary": "Reset that restarts without a separate stop.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Reset and restart in one pusher action while the chrono is running",
+        "State the extra clutch work a flyback demands"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-rattrapante",
+      "name": "Rattrapante",
+      "moduleId": "horo-c-chrono",
+      "tier": 5,
+      "prerequisites": [
+        "horo-chrono"
+      ],
+      "summary": "A split seconds hand that can wait.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Split a seconds hand so one can freeze while the other runs",
+        "Predict the clamp that holds the split hand and then lets it catch up"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-tourbillon",
+      "name": "The tourbillon",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-escape",
+        "horo-positional"
+      ],
+      "summary": "Averaging positional error, and when it is theater.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State that a tourbillon averages gravitational positional error by rotating the cage",
+        "Predict an error that has the same sign in every position and will not cancel"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-tourbillon-honest",
+      "name": "When a tourbillon is theater",
+      "moduleId": "horo-c-show",
+      "tier": 4,
+      "prerequisites": [
+        "horo-tourbillon",
+        "horo-isochronism"
+      ],
+      "summary": "A wrist is not a pocket. Rotation does not cancel every error.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Say when a rotating cage is theater on a wrist that already changes position",
+        "Compare a well-regulated fixed escapement with a cage that does not change the mean"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-repeater",
+      "name": "Minute repeater",
+      "moduleId": "horo-c-show",
+      "tier": 5,
+      "prerequisites": [
+        "horo-cannon"
+      ],
+      "summary": "Sounding the time with racks and snails.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read hours, quarters, and minutes by hammers on gongs",
+        "Trace the snail and rack that decide how many blows to strike"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-striking",
+      "name": "Striking work",
+      "moduleId": "horo-c-show",
+      "tier": 5,
+      "prerequisites": [
+        "horo-repeater"
+      ],
+      "summary": "A second gear train whose product is sound.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish a repeater you demand from a clock that strikes itself",
+        "Predict the power a striking work must not steal from the going train"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-equation",
+      "name": "Equation of time",
+      "moduleId": "horo-c-show",
+      "tier": 5,
+      "prerequisites": [
+        "horo-calendar"
+      ],
+      "summary": "The difference between sundial noon and mean noon.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Display the difference between mean solar time and apparent solar time",
+        "Name the cam that approximates the equation of time"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-finishing",
+      "name": "Finishing",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-bridges"
+      ],
+      "summary": "Decorative finishing, surface preparation, and lubrication as distinct jobs.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat decorative finishing, surface preparation, and lubrication as distinct jobs",
+        "Refuse to treat anglage or perlage as an oil-management mechanism without a sourced claim"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-service",
+      "name": "What a service actually does",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-lubrication",
+        "horo-disassembly"
+      ],
+      "summary": "Clean, oil, adjust \u2014 not a battery.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name a service as disassembly, cleaning, oil, and a check of freedoms",
+        "Predict what 'just oil it through the caseback' leaves dirty"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-accuracy-claim",
+      "name": "COSC and certificates",
+      "moduleId": "horo-c-show",
+      "tier": 3,
+      "prerequisites": [
+        "horo-positional",
+        "horo-rate"
+      ],
+      "summary": "A protocol, not a personality.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read a COSC or similar certificate as a protocol, not a personality",
+        "Predict what a certificate does not say about magnetism or a worn jewel"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    },
+    {
+      "id": "horo-silicon",
+      "name": "Silicon hairsprings and escapes",
+      "moduleId": "horo-c-show",
+      "tier": 4,
+      "prerequisites": [
+        "horo-hairspring",
+        "horo-magnet"
+      ],
+      "summary": "A material that does not magnetize and does not rust.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use silicon for temperature, magnetism, and lubrication reasons you can name",
+        "Contrast a silicon hairspring with a steel one on those three axes"
+      ],
+      "sourceIds": [
+        "wostep-training",
+        "wostep-chrono"
+      ]
+    }
+  ]
+}

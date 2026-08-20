@@ -1,0 +1,578 @@
+{
+  "id": "semi-litho",
+  "title": "Lithography and Patterning",
+  "categoryId": "semiconductors",
+  "description": "How a pattern becomes a feature: resists, exposure, Rayleigh, DUV, multiple patterning, then EUV as a later light source — not the first word.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    1,
+    5
+  ],
+  "entryRequirements": [
+    "semi-wafer",
+    "semi-planarity"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-6152j",
+      "title": "MIT 6.152J",
+      "url": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Photolithography as a unit process after the wafer exists."
+    },
+    {
+      "id": "asml-optics",
+      "title": "ASML lenses and mirrors",
+      "url": "https://www.asml.com/en/technology/lithography-principles/lenses-and-mirrors",
+      "kind": "vendor",
+      "notes": "Rayleigh, NA, refractive DUV vs reflective EUV."
+    },
+    {
+      "id": "asml-euv",
+      "title": "ASML EUV systems",
+      "url": "https://www.asml.com/en/products/euv-lithography-systems",
+      "kind": "vendor",
+      "notes": "Source, mirrors, vacuum. High-NA is a later platform."
+    }
+  ],
+  "modules": [
+    {
+      "id": "semi-l-basics",
+      "title": "Printing a layer",
+      "blurb": "Mask, resist, exposure, develop.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "semi-litho",
+        "semi-resist"
+      ],
+      "learningObjectives": [
+        "Treat lithography as a stencil for later etch or implant",
+        "Walk coat, expose, and develop before naming a scanner"
+      ]
+    },
+    {
+      "id": "semi-l-limits",
+      "title": "What sets resolution",
+      "blurb": "Rayleigh, k1, process window.",
+      "order": 1,
+      "prerequisites": [
+        "semi-l-basics"
+      ],
+      "spineIds": [
+        "semi-rayleigh"
+      ],
+      "learningObjectives": [
+        "Name wavelength, NA, and k1 as the three Rayleigh knobs",
+        "Treat focus and dose as a window, not a slogan"
+      ]
+    },
+    {
+      "id": "semi-l-duv",
+      "title": "DUV and tricks that extend it",
+      "blurb": "Immersion, OPC, multiple patterning.",
+      "order": 2,
+      "prerequisites": [
+        "semi-l-limits"
+      ],
+      "spineIds": [
+        "semi-duv",
+        "semi-multi-pattern"
+      ],
+      "learningObjectives": [
+        "Identify 193 nm as the workhorse that still prints most layers",
+        "Explain why one exposure is split when Rayleigh says no"
+      ]
+    },
+    {
+      "id": "semi-l-euv",
+      "title": "EUV as a light source",
+      "blurb": "13.5 nm, mirrors, stochastics.",
+      "order": 3,
+      "prerequisites": [
+        "semi-l-duv"
+      ],
+      "spineIds": [
+        "semi-euv",
+        "semi-stochastics"
+      ],
+      "learningObjectives": [
+        "Treat EUV as a later light source after DUV, not the first word",
+        "Name mirrors, vacuum, and photon noise as the new physics"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "semi-litho",
+      "name": "Photolithography",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-wafer",
+        "semi-planarity"
+      ],
+      "summary": "Projecting patterns into resist to define features.",
+      "objectives": [
+        "State photolithography as projecting a mask image into resist so later etch or implant has a stencil",
+        "Trace coat, expose, develop, and pattern transfer as the unit-process loop"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-resist",
+      "name": "Photoresists",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "A film that changes solubility where the light hit.",
+      "parentId": "semi-litho",
+      "objectives": [
+        "Explain photoresist as a film whose solubility changes where light landed",
+        "Contrast a positive resist (exposed leaves) with a negative resist (exposed stays)"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-mask",
+      "name": "Masks and reticles",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "The chrome (or multilayer) original the stepper reduces.",
+      "objectives": [
+        "Describe a mask or reticle as the original the projection optic reduces onto the wafer",
+        "Explain why the wafer pattern is a reduced image of the reticle, not a contact print of chrome"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-exposure",
+      "name": "Exposure and develop",
+      "moduleId": "semi-l-basics",
+      "tier": 1,
+      "prerequisites": [
+        "semi-resist"
+      ],
+      "summary": "Dose as the thing you can miss in either direction.",
+      "objectives": [
+        "Treat dose as a knob you can miss by underexposing or overexposing",
+        "Predict what happens to a feature when develop follows a wrong dose"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-alignment",
+      "name": "Alignment marks",
+      "moduleId": "semi-l-basics",
+      "tier": 2,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "How this layer finds the last one.",
+      "objectives": [
+        "Explain alignment marks as how this layer finds the last one",
+        "Predict a miss when this layer is printed without locking to the previous marks"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-rayleigh",
+      "name": "The Rayleigh criterion",
+      "moduleId": "semi-l-limits",
+      "tier": 2,
+      "prerequisites": [
+        "semi-litho"
+      ],
+      "summary": "Resolution as k1 · λ / NA — three knobs, not one slogan.",
+      "parentId": "semi-litho",
+      "objectives": [
+        "State resolution as k1 · λ / NA and name what each symbol is",
+        "Predict the direction resolution moves when wavelength or NA changes"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics",
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-k1",
+      "name": "The k1 factor",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-rayleigh"
+      ],
+      "summary": "Process and illumination cleverness packed into a dimensionless number.",
+      "objectives": [
+        "Treat k1 as process and illumination cleverness packed into a dimensionless number",
+        "Predict why shrinking k1 is not a free substitute for a shorter wavelength"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-process-window",
+      "name": "The process window",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-exposure",
+        "semi-rayleigh"
+      ],
+      "summary": "Focus and dose ranges that still print a legal CD.",
+      "objectives": [
+        "Define the process window as the focus and dose ranges that still print a legal CD",
+        "Predict a CD miss when you leave the window in focus or in dose"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j",
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-focus-expose",
+      "name": "Focus-exposure matrices",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-process-window"
+      ],
+      "summary": "The bossung plot as a lab object.",
+      "objectives": [
+        "Describe a focus-exposure matrix as the lab object that maps the process window",
+        "Read a Bossung plot as CD versus focus at several doses"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-ler",
+      "name": "Line-edge roughness",
+      "moduleId": "semi-l-limits",
+      "tier": 3,
+      "prerequisites": [
+        "semi-resist"
+      ],
+      "summary": "The wall is not a straight line.",
+      "objectives": [
+        "Define line-edge roughness as the wall not being a straight line",
+        "Predict why a rough edge becomes a CD or device problem as features shrink"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-duv",
+      "name": "Deep ultraviolet lithography",
+      "moduleId": "semi-l-duv",
+      "tier": 2,
+      "prerequisites": [
+        "semi-rayleigh"
+      ],
+      "summary": "248 and 193 nm as the workhorses that still print most layers.",
+      "objectives": [
+        "Identify 248 nm and 193 nm as the workhorse wavelengths that still print most layers",
+        "Explain why DUV uses refractive lenses and why that path has a wavelength floor"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics",
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-immersion",
+      "name": "Immersion lithography",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-duv"
+      ],
+      "summary": "Water between lens and wafer to raise NA.",
+      "objectives": [
+        "Explain putting water between lens and wafer as a way to raise NA",
+        "Predict the resolution gain and the new process risks water introduces"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-opc",
+      "name": "Optical proximity correction",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-duv"
+      ],
+      "summary": "Distorting the mask so the wafer looks like the drawing.",
+      "objectives": [
+        "Describe OPC as distorting the mask so the wafer looks like the drawing",
+        "Predict what an uncorrected dense feature does compared with an isolated one"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-pec",
+      "name": "Proximity and flare",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-opc"
+      ],
+      "summary": "Neighbors and stray light changing the dose you thought you set.",
+      "objectives": [
+        "Explain proximity and flare as neighbors and stray light changing the dose you thought you set",
+        "Diagnose a CD miss that tracks nearby pattern density rather than the scanner recipe"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-multi-pattern",
+      "name": "Multiple patterning",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-duv",
+        "semi-etch-plasma"
+      ],
+      "summary": "Splitting one drawn layer across several litho-etch passes.",
+      "objectives": [
+        "Explain multiple patterning as splitting one drawn layer across several litho-etch passes",
+        "Predict why a single 193 nm exposure cannot print a pitch the Rayleigh limit forbids"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics",
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-pitch-split",
+      "name": "Pitch splitting",
+      "moduleId": "semi-l-duv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-multi-pattern"
+      ],
+      "summary": "Why a 20 nm pitch is not a 20 nm exposure.",
+      "objectives": [
+        "State why a 20 nm pitch is not a 20 nm exposure",
+        "Trace a pitch-split sequence as two or more sparser exposures whose union is the drawn pitch"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-overlay-basics",
+      "name": "Overlay as a lithography budget",
+      "moduleId": "semi-l-duv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-alignment",
+        "semi-litho"
+      ],
+      "summary": "Layer-to-layer error before anyone says EUV.",
+      "objectives": [
+        "Define overlay as layer-to-layer placement error before anyone says EUV",
+        "Predict a via or contact fail when overlay eats the landing pad"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "mit-6152j"
+      ]
+    },
+    {
+      "id": "semi-euv",
+      "name": "EUV lithography",
+      "moduleId": "semi-l-euv",
+      "tier": 3,
+      "prerequisites": [
+        "semi-litho",
+        "semi-duv"
+      ],
+      "summary": "13.5 nm light, mirrors, and why refractive optics die.",
+      "parentId": "semi-litho",
+      "objectives": [
+        "Identify 13.5 nm as the light and mirrors as the optic because refractive materials absorb it",
+        "Contrast an EUV reflective path with a DUV refractive lens path"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv",
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-euv-source",
+      "name": "The EUV source",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "A CO2 laser on tin droplets, tens of thousands of times a second.",
+      "parentId": "semi-euv",
+      "objectives": [
+        "Describe the source as a CO2 laser hitting tin droplets tens of thousands of times a second",
+        "Explain why source power is a throughput and dose budget, not a brochure number"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
+    },
+    {
+      "id": "semi-euv-mirrors",
+      "name": "Multilayer mirrors",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Bragg reflectors as the practical HVM projection optic at 13.5 nm.",
+      "parentId": "semi-euv",
+      "objectives": [
+        "Explain multilayer Bragg mirrors as the practical HVM projection optic once glass dies",
+        "Predict why each bounce costs photons and why the column is a chain of mirrors"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv",
+        "asml-optics"
+      ]
+    },
+    {
+      "id": "semi-euv-vacuum",
+      "name": "Vacuum beam path",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Air eats EUV. The whole column is a chamber.",
+      "objectives": [
+        "Explain why air absorbs EUV so the whole column is a vacuum chamber",
+        "Predict what a vented or leaking beam path does to the dose at the wafer"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
+    },
+    {
+      "id": "semi-pellicle",
+      "name": "EUV pellicles",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "A membrane that must protect the mask without eating the photons.",
+      "objectives": [
+        "Describe an EUV pellicle as a membrane that must protect the mask without eating the photons",
+        "Predict the dose or throughput cost of a pellicle that is not optically free"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
+    },
+    {
+      "id": "semi-stochastics",
+      "name": "Stochastic defects",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Photon and photoacid shot noise at EUV doses.",
+      "parentId": "semi-euv",
+      "objectives": [
+        "Explain stochastic defects as photon and photoacid shot noise at EUV doses",
+        "Predict why raising dose fights noise and spends throughput"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
+    },
+    {
+      "id": "semi-na",
+      "name": "Numerical aperture",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "NA as a knob at EUV: resolution as 1/NA, depth of focus as ~1/NA².",
+      "parentId": "semi-euv",
+      "objectives": [
+        "State numerical aperture as the sine of the half-angle the optic can accept",
+        "Predict that raising NA buys resolution and spends depth of focus roughly as 1/NA²"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-optics",
+        "asml-euv"
+      ]
+    },
+    {
+      "id": "semi-overlay",
+      "name": "Overlay",
+      "moduleId": "semi-l-euv",
+      "tier": 4,
+      "prerequisites": [
+        "semi-euv"
+      ],
+      "summary": "Layer-to-layer alignment as a yield budget, not a slogan.",
+      "parentId": "semi-euv",
+      "objectives": [
+        "Treat overlay as a layer-to-layer yield budget, not a slogan",
+        "Diagnose an open or short as a tail of the overlay distribution eating the landing"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "asml-euv"
+      ]
+    }
+  ]
+}

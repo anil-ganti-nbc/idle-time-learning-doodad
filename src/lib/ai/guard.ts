@@ -3,6 +3,27 @@ import type { AiPolicy, AiSettings } from "@/lib/learning/types";
 export type GuardOk = { ok: true };
 export type GuardFail = { ok: false; error: string };
 
+const BANNED_PROGRESS_KEYS = new Set([
+  "mastery",
+  "progress",
+  "ease",
+  "intervalDays",
+  "interval_days",
+  "nextReviewAt",
+  "next_review_at",
+  "understanding",
+  "lapseCount",
+  "lapse_count",
+  "lastQuizScore",
+  "last_quiz_score",
+  "readiness",
+  "courseProgress",
+  "waivedConceptIds",
+  "waived_concept_ids",
+  "placement",
+  "recommendedTier",
+]);
+
 export function assertAiAllowed(
   settings: AiSettings,
   generatedToday: number,
@@ -27,10 +48,42 @@ export function assertMissingOnly(policy: AiPolicy, hasLocalMatch: boolean): Gua
   return { ok: true };
 }
 
-/** AI output may never mutate mastery. Progress writes go only through recordSession. */
-export function stripProgressFields<T extends Record<string, unknown>>(obj: T): T {
-  const banned = ["mastery", "progress", "ease", "intervalDays", "nextReviewAt", "understanding"];
-  const next = { ...obj };
-  for (const key of banned) delete next[key];
+export function findProgressFields(value: unknown, path = ""): string[] {
+  if (Array.isArray(value)) {
+    return value.flatMap((item, i) => findProgressFields(item, path ? `${path}[${i}]` : `[${i}]`));
+  }
+  if (!value || typeof value !== "object") return [];
+  const hits: string[] = [];
+  for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+    const next = path ? `${path}.${key}` : key;
+    if (BANNED_PROGRESS_KEYS.has(key)) hits.push(next);
+    hits.push(...findProgressFields(child, next));
+  }
+  return hits;
+}
+
+/** Schema validation is the accept/reject boundary. This walk only detects leaks. */
+export function assertNoProgressFields(raw: unknown): GuardOk | GuardFail {
+  const hits = findProgressFields(raw);
+  if (hits.length === 0) return { ok: true };
+  return {
+    ok: false,
+    error: `Generated output included forbidden progress fields (${hits.slice(0, 4).join(", ")}). Rejected.`,
+  };
+}
+
+/** Recursive strip for diagnostics / defensive copies. Parsing still rejects leaks. */
+export function stripProgressFields<T>(obj: T): T {
+  return stripValue(obj) as T;
+}
+
+function stripValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripValue);
+  if (!value || typeof value !== "object") return value;
+  const next: Record<string, unknown> = {};
+  for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+    if (BANNED_PROGRESS_KEYS.has(key)) continue;
+    next[key] = stripValue(child);
+  }
   return next;
 }

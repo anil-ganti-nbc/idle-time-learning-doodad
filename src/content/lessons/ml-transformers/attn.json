@@ -1,0 +1,586 @@
+{
+  "courseId": "ml-transformers",
+  "moduleId": "ml-t-attn",
+  "lessons": [
+    {
+      "id": "ml-seq-problem-10",
+      "conceptId": "ml-seq-problem",
+      "title": "Mapping one sequence onto another",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-seq-rnn"],
+      "goDeeper": "ml-tokenizer",
+      "explanation": [
+        "Sequence transduction is a map from one variable-length string onto another: English to French, a question to an answer, a document to a summary. The lengths need not match. There is no promise that token i of the output lines up with token i of the input.",
+        "A fixed window — n-grams, a convolution of width k — never sees past its kernel. A distant subject and a later verb sit outside that box. The window can be widened, but the cost is paid on every position, and anything still farther stays invisible.",
+        "A recurrent state walks the sequence and can, in principle, carry a long past. What it actually carries is one vector that must compress everything so far. That bottleneck, and the sequential walk, are the problems a later mixer is hired to leave behind."
+      ],
+      "example": "Translating 'The keys to the cabinet are on the table.' A width-3 window on 'are' never sees 'keys'. A recurrent state must still be holding 'keys' when it reaches 'are', or the number agreement is a guess.",
+      "whyItMatters": "If you cannot name what the window cannot see, attention will sound like a fashion instead of a mixer that is allowed to look farther.",
+      "quiz": [
+        {
+          "id": "ml-seq10-1",
+          "stem": "Sequence transduction, as this lesson uses it, is which of these jobs?",
+          "correctAnswer": "Mapping one variable-length sequence onto another without a fixed window",
+          "distractors": [
+            { "text": "Classifying a fixed-length vector into one of k labels", "kind": "nearby", "rationale": "That is a standard classifier, not a sequence map." },
+            { "text": "Storing the input string and reciting it as the output", "kind": "reversed", "rationale": "Recitation is storage. Transduction is a map." },
+            { "text": "Choosing a learning rate before any sequence exists", "kind": "misapplied", "rationale": "A hyperparameter is not the job." }
+          ],
+          "correctExplanation": "One sequence in, another out, lengths free. That is the map.",
+          "objectiveIds": ["State sequence transduction as mapping one sequence onto another without a fixed window"],
+          "prerequisiteConceptIds": ["ml-seq-rnn"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-seq10-2",
+          "stem": "A convolution of width three on a sentence cannot see which of these?",
+          "correctAnswer": "A subject that sits more than a kernel away from the verb it must agree with",
+          "distractors": [
+            { "text": "The three tokens that currently sit inside its kernel", "kind": "reversed", "rationale": "Those three are exactly what it can see." },
+            { "text": "The learning rate used to train the kernel weights", "kind": "misapplied", "rationale": "A hyperparameter is not a token the kernel missed." },
+            { "text": "The bias term on the linear layer after the convolution", "kind": "nearby", "rationale": "A bias is a parameter, not a distant token." }
+          ],
+          "correctExplanation": "The kernel is local. Agreement across a long gap is outside the box.",
+          "objectiveIds": ["Name what a fixed-window model cannot see that a longer mixer can"],
+          "prerequisiteConceptIds": ["ml-seq-rnn"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-seq10-3",
+          "stem": "A recurrent walk can see farther than a fixed window, but it still leaves this problem:",
+          "correctAnswer": "Everything so far must fit through one state vector at each step",
+          "distractors": [
+            { "text": "The window width grows automatically with every new token", "kind": "reversed", "rationale": "The recurrent model has no window; it has a bottleneck." },
+            { "text": "The output length is forced to equal the input length", "kind": "nearby", "rationale": "Transduction does not require equal lengths." },
+            { "text": "The loss cannot be defined on a sequence of tokens", "kind": "misapplied", "rationale": "Sequence losses exist. The issue is the state, not the loss." }
+          ],
+          "correctExplanation": "One vector is the entire past. That compression is the leftover problem.",
+          "objectiveIds": ["Name what a fixed-window model cannot see that a longer mixer can"],
+          "prerequisiteConceptIds": ["ml-seq-rnn"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-tokenizer-5",
+      "conceptId": "ml-tokenizer",
+      "title": "The units the model actually sees",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["ml-emb-intro"],
+      "goDeeper": "ml-attention",
+      "explanation": [
+        "Most production LLMs do not consume raw characters. A tokenizer is a map from a string onto a sequence of discrete IDs. Each ID is a row in an embedding table. Spaces, punctuation, and rare spellings are decisions in that map, not facts about English. Byte-level and character models exist; they are a different map, not a proof that 'tokens are words'.",
+        "If the map splits a word the training table never saw as a unit, the model cannot attend to 'that word'. It can only mix the pieces it was given. A bad split is a different sequence, not a cosmetic detail."
+      ],
+      "example": "The string 'unhappiness' might become one ID, or un + happiness, or un + happy + ness. Each choice is a different sequence of vectors the mixer is allowed to look at.",
+      "whyItMatters": "Every later claim about 'the model read the word' assumes a tokenizer that emitted that word as a unit, or as pieces that still compose.",
+      "quiz": [
+        {
+          "id": "ml-tok5-1",
+          "stem": "Tokenization, in this course, is best described as which of these?",
+          "correctAnswer": "A map from a string onto the discrete IDs the model actually consumes",
+          "distractors": [
+            { "text": "A loss that scores how fluent the next character is", "kind": "nearby", "rationale": "A loss is later. Tokenization is the map into IDs." },
+            { "text": "A rule that the model must see every Unicode code point as itself", "kind": "reversed", "rationale": "The whole point is that the units are chosen, not given." },
+            { "text": "A ranking of which language is morally easier to model", "kind": "misapplied", "rationale": "The map is a design choice, not a virtue ladder." }
+          ],
+          "correctExplanation": "String in, discrete IDs out. Those IDs are what later layers see.",
+          "objectiveIds": ["Describe tokenization as the discrete units a model actually sees"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-tok5-2",
+          "stem": "Each token ID the tokenizer emits is used, immediately after, as:",
+          "correctAnswer": "An index into an embedding table that returns a vector",
+          "distractors": [
+            { "text": "A learning rate for the next gradient step", "kind": "misapplied", "rationale": "An ID is not a step size." },
+            { "text": "A guarantee that the string will be copied as the output", "kind": "reversed", "rationale": "IDs are inputs. Copying the string is not the map." },
+            { "text": "A label that replaces the need for any later mixer", "kind": "nearby", "rationale": "Embeddings start the representation. Mixing still happens." }
+          ],
+          "correctExplanation": "The ID is a row index. The vector is what the rest of the net sees.",
+          "objectiveIds": ["Describe tokenization as the discrete units a model actually sees"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-tok5-3",
+          "stem": "If a tokenizer never emits 'unhappiness' as one ID, the model cannot:",
+          "correctAnswer": "Attend to that spelling as a single unit, only to the pieces it was given",
+          "distractors": [
+            { "text": "Use any vector at all for any piece of the string", "kind": "reversed", "rationale": "The pieces still have embeddings. The unit is what was lost." },
+            { "text": "Train, because a loss cannot be defined on pieces", "kind": "misapplied", "rationale": "Training does not require that particular whole-word ID." },
+            { "text": "Count characters, because IDs forbid length", "kind": "subtle", "rationale": "Length still exists. The missing object is the whole-word unit." }
+          ],
+          "correctExplanation": "No ID, no unit. The mixer only sees the split it was handed.",
+          "objectiveIds": ["Predict how a bad split changes what 'word' the model can attend to"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-tokenizer-10",
+      "conceptId": "ml-tokenizer",
+      "title": "A map from text onto discrete pieces",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-emb-intro"],
+      "goDeeper": "ml-attention",
+      "explanation": [
+        "A tokenizer is a map: text in, a sequence of discrete IDs out. Byte-pair and word-piece maps grow a vocabulary by merging frequent neighbor pairs. Unigram / SentencePiece and a leftover byte alphabet are other first-class maps. Whitespace, lowercasing, and that byte fallback are part of the map, not a property of the language.",
+        "Rare spellings and new compounds get cut into pieces the table already has. That is the point of a subword map: avoid an unknown token, pay for it with a longer sequence. The mixer later attends to those pieces, not to a word you still have in your head.",
+        "A split that severs a stem from a negation, or a name from its usual unit, changes which vectors sit next to each other. Attention cannot attend to a single key that was never an ID; it can still assemble meaning from the pieces. The map you chose is the sequence the rest of the net is allowed to see."
+      ],
+      "example": "A merge table that never joined 'New' and 'York' will emit two IDs. A later lookup that wants the city as one key has to assemble it from pieces, or fail. The city did not vanish. The unit did.",
+      "whyItMatters": "People argue about 'the model does not know that word' when they mean the tokenizer never emitted it as a unit. Name the map before you blame the mixer.",
+      "quiz": [
+        {
+          "id": "ml-tok10-1",
+          "stem": "Byte-pair and word-piece tokenizers grow a vocabulary primarily by:",
+          "correctAnswer": "Merging frequent neighbor pairs into larger discrete units",
+          "distractors": [
+            { "text": "Scoring every character with a separate next-token loss", "kind": "nearby", "rationale": "The map is built from counts and merges, not from that loss." },
+            { "text": "Forcing every whitespace-separated word to be one ID", "kind": "reversed", "rationale": "Subword maps exist specifically so that is not required." },
+            { "text": "Ranking languages so rare scripts get no units at all", "kind": "misapplied", "rationale": "A leftover byte alphabet is how rare scripts still get pieces." }
+          ],
+          "correctExplanation": "Frequent neighbors merge. That is how the discrete units are chosen.",
+          "objectiveIds": ["Describe tokenization as the discrete units a model actually sees"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-tok10-2",
+          "stem": "A new compound that the merge table never joined will typically:",
+          "correctAnswer": "Be cut into pieces the table already has, making a longer sequence",
+          "distractors": [
+            { "text": "Crash training because an unknown string is illegal", "kind": "misconception", "rationale": "Subword maps exist so the leftover pieces still have IDs." },
+            { "text": "Be stored as one new row that the mixer is guaranteed to know", "kind": "reversed", "rationale": "A new row is not free. The usual move is to split." },
+            { "text": "Skip the embedding table and enter the mixer as raw bytes only", "kind": "nearby", "rationale": "Bytes may be the leftover alphabet, but they still become IDs." }
+          ],
+          "correctExplanation": "Split to known pieces. Longer sequence, no mystery token.",
+          "objectiveIds": ["Predict how a bad split changes what 'word' the model can attend to"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-tok10-3",
+          "stem": "A split that severs a negation from its stem changes later mixing because:",
+          "correctAnswer": "The mixer can only attend to the pieces emitted, not to a word that was never a unit",
+          "distractors": [
+            { "text": "Attention secretly reattaches any split before scoring keys", "kind": "reversed", "rationale": "The mixer does not undo the tokenizer." },
+            { "text": "The embedding table refuses to return a vector for a piece", "kind": "nearby", "rationale": "Pieces have rows. The missing object is the whole-word unit." },
+            { "text": "The loss cannot be computed unless every stem is one ID", "kind": "misapplied", "rationale": "The loss is on the IDs you have, not on a preferred split." }
+          ],
+          "correctExplanation": "No emitted unit, no unit to attend to. The split is the sequence.",
+          "objectiveIds": ["Predict how a bad split changes what 'word' the model can attend to"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-attention-5",
+      "conceptId": "ml-attention",
+      "title": "Scoring keys, then mixing values",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["ml-backprop", "ml-seq-problem"],
+      "goDeeper": "ml-qkv",
+      "diagram": "ml-qkv",
+      "explanation": [
+        "Score every key with a query, turn those scores into weights that sum to one, and mix the values with those weights. That is a content-addressable read: find things like this query, then average what they carry. It is not a hard address into a table.",
+        "Doing that for every position against every other position costs the square of the length. The mixer can look farther than a window, and it pays all-pairs work for the privilege. That square is the bill, not a mystery."
+      ],
+      "example": "Query for 'it' scores keys for 'trophy' and 'suitcase'. Softmax turns those scores into masses. The value mix is a soft choice of which noun the pronoun should carry forward.",
+      "whyItMatters": "Later fights about context length and inference cost are fights about how many of those pairs you score. Name the lookup first.",
+      "quiz": [
+        {
+          "id": "ml-att5-1",
+          "stem": "Attention, as a content-addressable lookup, does which of these?",
+          "correctAnswer": "Scores keys with a query, then mixes values with those weights",
+          "distractors": [
+            { "text": "Writes a hard address into a fixed slot of a hash table", "kind": "reversed", "rationale": "The read is soft. There is no single slot." },
+            { "text": "Walks a hidden state one token at a time and never scores", "kind": "nearby", "rationale": "That is the recurrent walk this mixer is replacing." },
+            { "text": "Picks a learning rate from the length of the sequence", "kind": "misapplied", "rationale": "A step size is not a lookup." }
+          ],
+          "correctExplanation": "Query against keys, weights from scores, mix the values. That is the read.",
+          "objectiveIds": ["Score keys with a query and mix the values as a content-addressable lookup"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-att5-2",
+          "stem": "The weights that mix the values in attention come from:",
+          "correctAnswer": "A normalized score of the query against each key",
+          "distractors": [
+            { "text": "A coin flip that ignores the query and the keys", "kind": "reversed", "rationale": "The scores are content. A coin flip is not a lookup." },
+            { "text": "The position index alone, with no content comparison", "kind": "nearby", "rationale": "Position can be added later. The lookup is content." },
+            { "text": "The loss value from the previous training step", "kind": "misapplied", "rationale": "A scalar loss is not a per-key score." }
+          ],
+          "correctExplanation": "Scores are query-key similarities. Softmax turns them into a mix.",
+          "objectiveIds": ["Score keys with a query and mix the values as a content-addressable lookup"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-att5-3",
+          "stem": "Naive all-pairs attention costs the square of the length because:",
+          "correctAnswer": "Every query has to score every key in the sequence",
+          "distractors": [
+            { "text": "The embedding table is always square in the vocabulary", "kind": "nearby", "rationale": "Vocabulary size is not the n in n² here." },
+            { "text": "Softmax is quadratic in the width of each vector", "kind": "misconception", "rationale": "The square is over sequence length, not over d." },
+            { "text": "The backward pass squares every weight independently", "kind": "misapplied", "rationale": "Backprop follows the forward scores. The square is the pairs." }
+          ],
+          "correctExplanation": "All queries, all keys. Length times length is the pair count.",
+          "objectiveIds": ["State why naive all-pairs scoring costs the square of the length"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-attention-10",
+      "conceptId": "ml-attention",
+      "title": "Content-addressable lookup over a sequence",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-backprop", "ml-seq-problem"],
+      "goDeeper": "ml-qkv",
+      "diagram": "ml-qkv",
+      "explanation": [
+        "Given a query vector, attention scores every key, usually with a scaled dot product, turns those scores into a distribution, and uses that distribution to mix the values. The read is soft: several keys can contribute. Nothing in the arithmetic knows a pronoun or a noun. Training finds a geometry where the mix is useful.",
+        "That lookup is how a mixer reaches across a sentence in one layer without stuffing the whole past into one recurrent state. Each position asks, each position offers a key, each position contributes a value. The recurrent bottleneck is gone. The pair count is the new cost.",
+        "Naive all-pairs scoring is length times length, times the width of the vectors. Double the sequence and you roughly quadruple the score work. That square is why later systems cache, tile, or skip pairs. It is not a tax on 'understanding'."
+      ],
+      "example": "In 'The trophy does not fit in the suitcase because it is too big', a query at 'it' can put mass on 'trophy' rather than 'suitcase'. The mix is a weighted read of values, not a parse tree the layer stored.",
+      "whyItMatters": "Context-window prices and later sparse bets all reduce to: how many of those pairs do you score, and where. The lookup is the mechanism.",
+      "quiz": [
+        {
+          "id": "ml-att10-1",
+          "stem": "A content-addressable attention step is which of these computations?",
+          "correctAnswer": "Score keys with a query, normalize, and mix the values with those weights",
+          "distractors": [
+            { "text": "Replace every token with the mean of the embedding table", "kind": "nearby", "rationale": "A global mean ignores the query. That is not a lookup." },
+            { "text": "Walk a recurrent state and never compare a query to a key", "kind": "reversed", "rationale": "The recurrent walk is what this mixer is not." },
+            { "text": "Pick the next token by drawing uniformly from the vocabulary", "kind": "misapplied", "rationale": "A uniform draw is not scoring keys." }
+          ],
+          "correctExplanation": "Query against keys, then a weighted read of values. That is the step.",
+          "objectiveIds": ["Score keys with a query and mix the values as a content-addressable lookup"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-att10-2",
+          "stem": "Trace one query through attention: after the scores exist, the next honest step is to:",
+          "correctAnswer": "Turn the scores into weights and take a weighted mix of the values",
+          "distractors": [
+            { "text": "Throw the values away and return the largest key vector", "kind": "reversed", "rationale": "The payload is the values. The keys only score." },
+            { "text": "Add the loss into the query and skip the mix", "kind": "misapplied", "rationale": "The loss is not a value vector." },
+            { "text": "Concatenate every unused embedding row as extra keys", "kind": "nearby", "rationale": "The table is not the sequence. You score the keys you have." }
+          ],
+          "correctExplanation": "Scores choose. Values contribute. The mix is the output of the read.",
+          "objectiveIds": ["Score keys with a query and mix the values as a content-addressable lookup"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-att10-3",
+          "stem": "Doubling sequence length in naive all-pairs attention does which of these to the score work?",
+          "correctAnswer": "Roughly quadruples it, because every query still scores every key",
+          "distractors": [
+            { "text": "Leaves it unchanged, because softmax hides the extra pairs", "kind": "reversed", "rationale": "Softmax does not delete pairs. It normalizes them." },
+            { "text": "Cuts it in half, because longer sequences share a single key", "kind": "misconception", "rationale": "Each position still has its own key." },
+            { "text": "Moves the square onto vocabulary size instead of length", "kind": "nearby", "rationale": "The n in n² is sequence length." }
+          ],
+          "correctExplanation": "Pairs scale as length squared. Double n, about four times the scores.",
+          "objectiveIds": ["State why naive all-pairs scoring costs the square of the length"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-attention-20",
+      "conceptId": "ml-attention",
+      "title": "Softmax over keys is a weighted read",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["ml-backprop", "ml-seq-problem"],
+      "goDeeper": "ml-qkv",
+      "diagram": "ml-causal-mask",
+      "explanation": [
+        "For each query, the mixer computes a similarity with every key — usually a dot product divided by the square root of the key width so the logits do not explode with dimension — then softmaxes those logits into masses that sum to one. The output is those masses times the values. A hard argmax would pick one slot. Softmax keeps a blend.",
+        "That blend is why a layer can move information across a sentence without a recurrent bottleneck. It is also why the work is all-pairs: n queries, n keys, n² scores, then another n×d mix with the values. Tiling the matmul in fast memory does not change the pair count. It changes whether you pay it in slow reads.",
+        "A causal mask sets the illegal future logits to a large negative before softmax, so their mass is ~0. The mask is the autoregressive contract, not a property of softmax. Without it, a position writing token t can read token t+1. With it, the read is only the past and the present.",
+        "Training still only sees a scalar loss on whatever job you attached. Nothing in the lookup 'knows' coreference. A useful geometry is whatever made next-token or translation loss small. The mechanism is the scores, the mask, and the mix — not a claim that the layer parsed the sentence."
+      ],
+      "example": "Four tokens, a lower-triangular mask. Position 3 scores keys 1–3 and must not score key 4. Softmax on the unmasked logits yields a mix of values 1–3. Recompute from scratch on a longer prefix and the old legal scores are the same numbers — the future never entered them.",
+      "whyItMatters": "Generation rules, later caches, and sparse bets all hang on this: which keys are legal, and that the mix is a weighted read of values, not a hash slot.",
+      "quiz": [
+        {
+          "id": "ml-att20-1",
+          "stem": "Dividing query-key dots by the square root of the key width is there so that:",
+          "correctAnswer": "Logits stay a reasonable size as the key width grows, before softmax",
+          "distractors": [
+            { "text": "The pair count drops from n² to n, deleting the square", "kind": "reversed", "rationale": "Scaling logits does not skip pairs." },
+            { "text": "Values become one-hot addresses into the embedding table", "kind": "nearby", "rationale": "The mix stays soft. Scaling is not a hard address." },
+            { "text": "The backward pass can skip every key that lost the softmax", "kind": "misapplied", "rationale": "Softmax still has a gradient through the scores." }
+          ],
+          "correctExplanation": "Dot products grow with dimension. The scale keeps softmax from saturating for free.",
+          "objectiveIds": ["Score keys with a query and mix the values as a content-addressable lookup"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ml-att20-2",
+          "stem": "A causal mask that zeros future keys is doing which job in the lookup?",
+          "correctAnswer": "Making illegal future logits unused so a position cannot read the answer it is writing",
+          "distractors": [
+            { "text": "Replacing softmax with a hard hash so each query picks one key", "kind": "nearby", "rationale": "The mask is about which keys are legal, not about hardness." },
+            { "text": "Deleting the square of the length by skipping all past keys", "kind": "reversed", "rationale": "Past keys are the ones you keep. The square is only halved in a triangle." },
+            { "text": "Copying the loss into every value so the mix is supervised", "kind": "misapplied", "rationale": "The loss is not injected into values by the mask." }
+          ],
+          "correctExplanation": "Future keys get ~0 mass. That is the autoregressive contract on the read.",
+          "objectiveIds": ["Score keys with a query and mix the values as a content-addressable lookup"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-att20-3",
+          "stem": "Compare naive all-pairs scoring with a width-k window: the all-pairs mixer pays extra because:",
+          "correctAnswer": "Every query still scores every key, so work grows with length squared",
+          "distractors": [
+            { "text": "Softmax is more expensive than a convolution in d, not in n", "kind": "subtle", "rationale": "The extra bill is the pair count in n, not a softmax-in-d tax." },
+            { "text": "A window of width k already scores every pair in the sequence", "kind": "reversed", "rationale": "A window scores k keys, not n." },
+            { "text": "The vocabulary size is squared in both mixers equally", "kind": "nearby", "rationale": "Vocabulary is not the n that squared." }
+          ],
+          "correctExplanation": "All pairs versus a local kernel. The square is the extra pairs.",
+          "objectiveIds": ["State why naive all-pairs scoring costs the square of the length"],
+          "prerequisiteConceptIds": ["ml-backprop", "ml-seq-problem"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "ml-qkv-10",
+      "conceptId": "ml-qkv",
+      "title": "Three roles for the same tokens",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-attention"],
+      "goDeeper": "ml-self-attn",
+      "diagram": "ml-qkv",
+      "explanation": [
+        "Queries ask. Keys advertise. Values carry the payload. The same token sequence is projected three ways so a position can look for something, offer a handle to be found, and contribute content if it is chosen. Those are roles, not three different sentences.",
+        "Scores must come from queries against keys. The mix must be of values. Swap those jobs and the lookup is a different machine: you would be averaging the wrong object, or scoring the payload as if it were a handle. Linear maps Wq, Wk, Wv are how the net learns the three roles.",
+        "Nothing requires the three widths to match the model width. Keys and queries share a scoring width. Values can be wider or narrower. What cannot change is the pairing: the mass on value j came from the score of query i with key j, not from some other index."
+      ],
+      "example": "Token 'bank' can key as a financial sense for a query about money, and still contribute a value that is useful to mix into 'account'. If you mixed values using scores computed from the values themselves, the handle and the payload would be the same vector, and the lookup would collapse.",
+      "whyItMatters": "People say 'attention weights' as if they floated free. They are scores of queries against keys, applied to values. Name the three roles or the mix is a slogan.",
+      "quiz": [
+        {
+          "id": "ml-qkv10-1",
+          "stem": "In this lookup, the same tokens are given three roles. Which assignment is the honest one?",
+          "correctAnswer": "Query asks, key advertises, value is the payload that gets mixed",
+          "distractors": [
+            { "text": "Query is the payload, key asks, value only stores the loss", "kind": "reversed", "rationale": "The payload is the value. The query does the asking." },
+            { "text": "All three roles are the raw token ID with no projection", "kind": "nearby", "rationale": "The IDs index embeddings. The three roles are learned maps." },
+            { "text": "Key and value are dropped; only the query is a vector", "kind": "misapplied", "rationale": "Without keys and values there is no lookup." }
+          ],
+          "correctExplanation": "Ask, advertise, carry. Three projections of the same tokens.",
+          "objectiveIds": ["Give the same tokens three roles: query, key, and value"],
+          "prerequisiteConceptIds": ["ml-attention"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-qkv10-2",
+          "stem": "If you mix values with scores that were not computed from keys, the lookup breaks because:",
+          "correctAnswer": "The masses no longer select values by how their keys matched the query",
+          "distractors": [
+            { "text": "Softmax refuses to run unless the scores came from keys", "kind": "misconception", "rationale": "Softmax will normalize anything. The contract is what broke." },
+            { "text": "The sequence length becomes undefined without a key vector", "kind": "nearby", "rationale": "Length is still the number of positions. The pairing is the failure." },
+            { "text": "The embedding table can no longer return a row for a token", "kind": "misapplied", "rationale": "Embeddings still exist. The mix is the broken object." }
+          ],
+          "correctExplanation": "Mass on value j has to come from key j versus the query. Anything else is a different mix.",
+          "objectiveIds": ["Predict what breaks if you mix values with scores that were not computed from keys"],
+          "prerequisiteConceptIds": ["ml-attention"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-qkv10-3",
+          "stem": "Learned maps Wq, Wk, and Wv exist so that a position can:",
+          "correctAnswer": "Ask, advertise, and contribute with three different linear views of itself",
+          "distractors": [
+            { "text": "Skip scoring entirely and copy the raw embedding to the output", "kind": "reversed", "rationale": "The maps set up the lookup. They do not skip it." },
+            { "text": "Share one vector for all three roles with no projection at all", "kind": "nearby", "rationale": "You can share, but then the roles cannot specialize." },
+            { "text": "Replace the loss with a product of the three matrices", "kind": "misapplied", "rationale": "The loss is still on the job. The maps are not a loss." }
+          ],
+          "correctExplanation": "Three views, one sequence. That is how the roles are learned.",
+          "objectiveIds": ["Give the same tokens three roles: query, key, and value"],
+          "prerequisiteConceptIds": ["ml-attention"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-self-attn-10",
+      "conceptId": "ml-self-attn",
+      "title": "Every position looking at the others",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-qkv"],
+      "goDeeper": "ml-multihead",
+      "diagram": "ml-qkv",
+      "explanation": [
+        "When Q, K, and V are projections of the same sequence, every position can look at every other position in that sequence. That is self-attention: the mixer is not reading a second memory. It is rereading itself. Cross-attention, later, is the case where the keys and values come from somewhere else.",
+        "Trace one token. Its query scores every key, including its own. Softmax turns those scores into masses. Its new vector is a weighted mix of the other tokens' values (and its own). Information from a distant token enters in one mix, not after a long recurrent walk.",
+        "Without a mask, the mix is bidirectional: later tokens can update earlier ones. With a causal mask, a position may only mix the past and itself. Either way the arithmetic is the same lookup. The mask only decides which keys exist."
+      ],
+      "example": "Sequence 'the cat sat'. The query at 'sat' can put mass on 'cat' in one layer. An RNN would have had to still be carrying 'cat' in its state after 'the' and after whatever came in between.",
+      "whyItMatters": "Stacking this mixer is the transformer. If you cannot trace one token's update as a mix of the others, the block diagram is just boxes.",
+      "quiz": [
+        {
+          "id": "ml-sa10-1",
+          "stem": "Self-attention means which of these about the keys and values?",
+          "correctAnswer": "They are projections of the same sequence the queries came from",
+          "distractors": [
+            { "text": "They must come from a second sequence the model is translating", "kind": "nearby", "rationale": "That is cross-attention, a later layout." },
+            { "text": "They are copied from the loss rather than from tokens", "kind": "misapplied", "rationale": "The loss is not a sequence of keys." },
+            { "text": "Each position may look only at a random other position", "kind": "reversed", "rationale": "The default is all positions, not a random sample." }
+          ],
+          "correctExplanation": "Same sequence, three roles. That is the 'self' in self-attention.",
+          "objectiveIds": ["Let every position look at every other position in the same sequence"],
+          "prerequisiteConceptIds": ["ml-qkv"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-sa10-2",
+          "stem": "Trace one token's update in self-attention: the new vector is:",
+          "correctAnswer": "A weighted mix of the sequence's values, weights from that token's query against the keys",
+          "distractors": [
+            { "text": "The token's embedding with the rest of the sequence deleted", "kind": "reversed", "rationale": "The point is the mix of the others, not a solo copy." },
+            { "text": "A recurrent state that walked from the left, with no scores", "kind": "nearby", "rationale": "That is the RNN update, not this mixer." },
+            { "text": "The row of the embedding table whose ID equals the position index", "kind": "misapplied", "rationale": "Position is not an embedding-table lookup of the index." }
+          ],
+          "correctExplanation": "Query of this token, keys of the sequence, mix of the values. That is the update.",
+          "objectiveIds": ["Trace one token's update as a weighted mix of the other tokens"],
+          "prerequisiteConceptIds": ["ml-qkv"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-sa10-3",
+          "stem": "A causal mask on self-attention changes the mix by:",
+          "correctAnswer": "Letting a position mix only the past and itself, not later tokens",
+          "distractors": [
+            { "text": "Forcing every position to mix the entire future before the past", "kind": "reversed", "rationale": "The mask hides the future. It does not prefer it." },
+            { "text": "Replacing values with keys so the payload is the handle", "kind": "nearby", "rationale": "The roles stay. The mask only zeros illegal keys." },
+            { "text": "Deleting the query so each position copies a random value", "kind": "misapplied", "rationale": "The query still scores the legal keys." }
+          ],
+          "correctExplanation": "Illegal future keys get no mass. The update is a mix of what is allowed.",
+          "objectiveIds": ["Let every position look at every other position in the same sequence"],
+          "prerequisiteConceptIds": ["ml-qkv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-multihead-10",
+      "conceptId": "ml-multihead",
+      "title": "Several lookups, each free to specialize",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-self-attn"],
+      "goDeeper": "ml-positional",
+      "explanation": [
+        "One average over values smears every job into a single mix. Multi-head attention runs several lookups in parallel, each with its own Wq, Wk, Wv, usually on a slice of the width. Concatenate the heads, map back with Wo, and you have one vector again — built from several independent reads.",
+        "A head can specialize: one mix for a nearby syntactic subject, another for a longer coreference, another for a delimiter. Nothing schedules those jobs in advance. Training finds projections where different heads put mass in different places because that split reduced the loss.",
+        "The pair count is still n² per head, but each head is cheaper in d. Eight heads of width d/8 cost about the same matmul as one head of width d, and they are allowed to disagree. A single head cannot keep two incompatible mixes at once."
+      ],
+      "example": "On 'The trophy does not fit in the suitcase because it is too big', one head can put mass from 'it' onto 'trophy' while another keeps a short-range mix on 'too big'. A single average would have to blend those two jobs into one set of masses.",
+      "whyItMatters": "Head count is not a quality slogan. It is extra lookups that can disagree. If they all copy each other, you paid for parallelism you did not use.",
+      "quiz": [
+        {
+          "id": "ml-mh10-1",
+          "stem": "Multi-head attention runs several lookups in parallel so that:",
+          "correctAnswer": "Heads can specialize instead of smearing every job into one average",
+          "distractors": [
+            { "text": "The n² pair count is deleted and replaced by a single score", "kind": "reversed", "rationale": "Each head still scores pairs. You did not escape n²." },
+            { "text": "Only one token in the sequence is allowed to have a query", "kind": "nearby", "rationale": "Every position still queries. The split is across heads." },
+            { "text": "The loss can be computed without any values at all", "kind": "misapplied", "rationale": "Each head still mixes values." }
+          ],
+          "correctExplanation": "Several independent reads, then a concat. Specialization is the point.",
+          "objectiveIds": ["Run several lookups in parallel so heads can specialize"],
+          "prerequisiteConceptIds": ["ml-self-attn"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-mh10-2",
+          "stem": "A job one head can take that a single average would smear is:",
+          "correctAnswer": "Putting mass on a long-range referent while another head keeps a short-range mix",
+          "distractors": [
+            { "text": "Scoring the loss twice so the backward pass is optional", "kind": "misapplied", "rationale": "Heads are lookups, not a skip of backprop." },
+            { "text": "Forcing every head to copy the same masses as the others", "kind": "reversed", "rationale": "Copying each other is a wasted split, not a job." },
+            { "text": "Deleting the key vectors so only values remain in the mix", "kind": "nearby", "rationale": "Each head still has keys. The split is not a deletion." }
+          ],
+          "correctExplanation": "Two incompatible mixes need two heads. One average has to blend them.",
+          "objectiveIds": ["Predict a job one head can take that a single average would smear"],
+          "prerequisiteConceptIds": ["ml-self-attn"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-mh10-3",
+          "stem": "Compare eight heads of width d/8 with one head of width d: the usual point is that:",
+          "correctAnswer": "The matmul cost is similar, but the heads are free to disagree in their mixes",
+          "distractors": [
+            { "text": "Eight heads always cost eight times the work with no sharing of d", "kind": "nearby", "rationale": "The width is split. That is why the cost can match." },
+            { "text": "One wide head is the only layout that can mix values at all", "kind": "reversed", "rationale": "Each small head still mixes values." },
+            { "text": "Head count replaces the need for queries, keys, and values", "kind": "misapplied", "rationale": "Each head is still a QKV lookup." }
+          ],
+          "correctExplanation": "Same budget, several mixes. Disagreement is the extra capacity.",
+          "objectiveIds": ["Run several lookups in parallel so heads can specialize"],
+          "prerequisiteConceptIds": ["ml-self-attn"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    }
+  ]
+}

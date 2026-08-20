@@ -1,0 +1,519 @@
+{
+  "id": "cmp-ir",
+  "title": "Intermediate Representations and Optimisation",
+  "categoryId": "compilers",
+  "description": "SSA, dataflow, and the passes that change the program without changing what it means.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "cmp-typecheck",
+    "cmp-ast"
+  ],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs143",
+      "title": "Stanford CS143",
+      "url": "https://web.stanford.edu/class/cs143/",
+      "kind": "syllabus",
+      "notes": "IR and local/global optimization after the front-end exists."
+    },
+    {
+      "id": "cmu-15411",
+      "title": "CMU 15-411/611 Compiler Design",
+      "url": "https://csd.cs.cmu.edu/15411611-compiler-design",
+      "kind": "syllabus",
+      "notes": "IR and dataflow as the intellectual center."
+    },
+    {
+      "id": "llvm-langref",
+      "title": "LLVM Language Reference Manual",
+      "url": "https://llvm.org/docs/LangRef.html",
+      "kind": "vendor",
+      "notes": "SSA, φ-nodes, and IR well-formedness as a contract."
+    }
+  ],
+  "modules": [
+    {
+      "id": "cmp-ir-form",
+      "title": "IR shapes",
+      "blurb": "Three-address, CFG, SSA.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "cmp-ssa"
+      ],
+      "learningObjectives": [
+        "Name values so each assignment happens once",
+        "Split a program into blocks and edges"
+      ]
+    },
+    {
+      "id": "cmp-ir-flow",
+      "title": "Dataflow",
+      "blurb": "Liveness and friends.",
+      "order": 1,
+      "prerequisites": [
+        "cmp-ir-form"
+      ],
+      "spineIds": [
+        "cmp-dataflow"
+      ],
+      "learningObjectives": [
+        "Compute a fact that flows until it settles",
+        "Say which values are still needed"
+      ]
+    },
+    {
+      "id": "cmp-ir-opt",
+      "title": "Transformations",
+      "blurb": "The useful rewrites.",
+      "order": 2,
+      "prerequisites": [
+        "cmp-ir-flow"
+      ],
+      "spineIds": [
+        "cmp-dce",
+        "cmp-inlining"
+      ],
+      "learningObjectives": [
+        "Delete work nothing uses",
+        "Replace a call with a body only when the price is worth it"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "cmp-three-addr",
+      "name": "Three-address code",
+      "moduleId": "cmp-ir-form",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-ir-lower-intro"
+      ],
+      "summary": "One operator, a few operands, easy to move.",
+      "objectives": [
+        "Rewrite a nested expression into three-address instructions with temporary names",
+        "Explain why one operator and a few operands make later motion easy"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411",
+        "dragon-book"
+      ]
+    },
+    {
+      "id": "cmp-cfg-ir",
+      "name": "Control-flow graphs",
+      "moduleId": "cmp-ir-form",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-three-addr"
+      ],
+      "summary": "Basic blocks and the edges between them.",
+      "parentId": "cmp-three-addr",
+      "objectives": [
+        "Split three-address code into basic blocks and the edges between them",
+        "Identify a basic block as a straight-line sequence with one entry and one exit"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-ssa",
+      "name": "SSA form",
+      "moduleId": "cmp-ir-form",
+      "tier": 2,
+      "prerequisites": [
+        "cmp-three-addr"
+      ],
+      "summary": "Single assignment so dataflow becomes a graph problem.",
+      "objectives": [
+        "Rewrite assignments so each name is defined exactly once",
+        "Explain why a single definition per name turns use-def into a graph walk"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-phi",
+      "name": "φ-nodes",
+      "moduleId": "cmp-ir-form",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa",
+        "cmp-cfg-ir"
+      ],
+      "summary": "A merge of names at a join point.",
+      "objectives": [
+        "Place a φ at a join so one name records which predecessor's value arrives",
+        "Predict the φ operands for a variable assigned on two incoming edges"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-mem2reg",
+      "name": "Memory to registers",
+      "moduleId": "cmp-ir-form",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Promoting allocas so SSA can see them.",
+      "parentId": "cmp-ssa",
+      "objectives": [
+        "Promote an alloca that never escapes into an SSA value",
+        "Name a reason a stack slot must stay in memory instead of becoming a register"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-ir-verify",
+      "name": "IR verification",
+      "moduleId": "cmp-ir-form",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Types and dominance as a checker, not a hope.",
+      "parentId": "cmp-ssa",
+      "objectives": [
+        "Check that every use is dominated by its definition and that types agree",
+        "Diagnose an ill-formed SSA fragment the verifier should reject"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-dataflow",
+      "name": "Dataflow analysis",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "Facts that flow forward or backward until they settle.",
+      "objectives": [
+        "Describe a dataflow fact as something that flows until a fixed point",
+        "Predict whether a given analysis must run forward or backward"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "dragon-book"
+      ]
+    },
+    {
+      "id": "cmp-liveness",
+      "name": "Liveness",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-dataflow"
+      ],
+      "summary": "Which values are still needed.",
+      "parentId": "cmp-dataflow",
+      "objectives": [
+        "Compute which names are live on entry to a short block",
+        "Predict why a value that is never used is not live"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "dragon-book"
+      ]
+    },
+    {
+      "id": "cmp-alias",
+      "name": "Alias analysis",
+      "moduleId": "cmp-ir-flow",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-dataflow"
+      ],
+      "summary": "May these two pointers be the same.",
+      "parentId": "cmp-dataflow",
+      "objectives": [
+        "Decide whether two pointers may designate the same location",
+        "Name a transformation that becomes illegal if they may alias"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-call-graph",
+      "name": "Call graphs",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "Who might call whom.",
+      "parentId": "cmp-cfg-ir",
+      "objectives": [
+        "Build a call graph from the calls that might execute",
+        "Predict how an indirect call makes the graph conservative"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-pass-manager",
+      "name": "Pass managers",
+      "moduleId": "cmp-ir-flow",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ir-verify"
+      ],
+      "summary": "Order, invalidation, and why passes fight.",
+      "parentId": "cmp-ir-verify",
+      "objectives": [
+        "Explain why one pass can invalidate another pass's analysis",
+        "Predict a safe order when a transform dirties SSA or alias facts"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "llvm-langref",
+        "gcc-internals"
+      ]
+    },
+    {
+      "id": "cmp-const-fold",
+      "name": "Constant folding",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Doing arithmetic the compiler can already see.",
+      "parentId": "cmp-ssa",
+      "objectives": [
+        "Replace an operator whose operands are already constants with the result",
+        "State why folding 2+3 does not change observable behavior"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-dce",
+      "name": "Dead code elimination",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-liveness"
+      ],
+      "summary": "Deleting what nothing uses.",
+      "parentId": "cmp-liveness",
+      "objectives": [
+        "Delete an instruction whose result is not live",
+        "Predict when a store cannot be deleted even if its value looks unused"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-cse",
+      "name": "Common-subexpression elimination",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-ssa"
+      ],
+      "summary": "Computing a thing once.",
+      "parentId": "cmp-ssa",
+      "objectives": [
+        "Reuse an earlier computation of the same expression when values have not changed",
+        "Diagnose when two similar expressions are not actually common"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "stanford-cs143",
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-inlining",
+      "name": "Inlining",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-call-graph"
+      ],
+      "summary": "Replacing a call with the body, for a price.",
+      "parentId": "cmp-call-graph",
+      "objectives": [
+        "Replace a call with the callee body and state the compile-time price",
+        "Predict a case where inlining is legal but unprofitable"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-loop-inv",
+      "name": "Loop-invariant code motion",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "Hoisting work the loop does not change.",
+      "parentId": "cmp-cfg-ir",
+      "objectives": [
+        "Hoist a computation the loop does not change to the preheader",
+        "Identify the loop-invariant pattern a pass looks for"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-licm",
+      "name": "LICM carefully",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-loop-inv",
+        "cmp-alias"
+      ],
+      "summary": "When a load is not actually invariant.",
+      "objectives": [
+        "Refuse to hoist a load that may alias a store in the loop",
+        "Diagnose a hoist that would change which exception or fault is observed"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-strength-red",
+      "name": "Strength reduction",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-loop-inv"
+      ],
+      "summary": "A multiply becoming an add.",
+      "parentId": "cmp-loop-inv",
+      "objectives": [
+        "Replace an induction multiply with an add that steps the same sequence",
+        "State why the new recurrence still computes the original values"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411",
+        "dragon-book"
+      ]
+    },
+    {
+      "id": "cmp-sroa",
+      "name": "Scalar replacement of aggregates",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-mem2reg"
+      ],
+      "summary": "Exploding a struct into pieces SSA can eat.",
+      "parentId": "cmp-mem2reg",
+      "objectives": [
+        "Split an aggregate into scalar pieces SSA can name",
+        "Predict when a field still cannot be promoted because its address escapes"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "llvm-langref"
+      ]
+    },
+    {
+      "id": "cmp-tailcall",
+      "name": "Tail calls",
+      "moduleId": "cmp-ir-opt",
+      "tier": 3,
+      "prerequisites": [
+        "cmp-cfg-ir"
+      ],
+      "summary": "A call that can be a jump.",
+      "parentId": "cmp-cfg-ir",
+      "objectives": [
+        "Rewrite a call in tail position as a jump that reuses the current frame",
+        "Diagnose a call that is not tail because work remains after it returns"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-vectorize",
+      "name": "Vectorization",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-loop-inv",
+        "cpu-vector-simd"
+      ],
+      "summary": "One instruction, many loop iterations.",
+      "objectives": [
+        "Pack consecutive independent iterations into one SIMD instruction",
+        "Name a dependence or alias fact that makes vectorization illegal"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
+    },
+    {
+      "id": "cmp-ipo",
+      "name": "Interprocedural optimization",
+      "moduleId": "cmp-ir-opt",
+      "tier": 4,
+      "prerequisites": [
+        "cmp-inlining",
+        "cmp-call-graph"
+      ],
+      "summary": "Facts that cross function boundaries.",
+      "objectives": [
+        "Propagate a fact across a call boundary the inliner has not removed",
+        "Compare a local fact with one that is only true after seeing the callee"
+      ],
+      "estimatedMinutes": 10,
+      "sourceIds": [
+        "cmu-15411"
+      ]
+    }
+  ]
+}

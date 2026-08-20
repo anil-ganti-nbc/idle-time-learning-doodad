@@ -1,0 +1,778 @@
+{
+  "courseId": "net-transport",
+  "moduleId": "net-t-rel",
+  "lessons": [
+    {
+      "id": "net-reliable-5",
+      "conceptId": "net-reliable",
+      "title": "Lost datagrams come back, approximately once",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["net-udp"],
+      "goDeeper": "net-tcp-state",
+      "explanation": [
+        "UDP gives a port and no delivery promise. A datagram can vanish, arrive twice, or show up after a later one. Reliable delivery is the sender's job of noticing the hole and sending the missing bytes again until the receiver can rebuild a stream that is in order and, approximately, once.",
+        "Approximately, because a delayed copy can still land after a retransmit. Sequence numbers let the receiver drop the extra. The contract is not physics. It is a protocol that treats loss as ordinary and repairs it at the ends."
+      ],
+      "example": "A sender emits datagrams numbered 1, 2, and 3. Packet 2 is dropped. The receiver acknowledges 1. The sender times out on 2 and sends it again. The receiver now has 1, 2, 3 and delivers them in order, discarding a late duplicate of 2 if it appears.",
+      "whyItMatters": "Without retransmission, every later window and timer is ritual around a problem you refused to name.",
+      "quiz": [
+        {
+          "id": "nt-rel5-1",
+          "stem": "Reliable delivery, on top of a datagram that can vanish, is:",
+          "correctAnswer": "Retransmitting what was lost so the receiver sees each byte once, in order — approximately",
+          "distractors": [
+            { "text": "Promising the network will never drop a datagram again", "kind": "misconception", "rationale": "The path still drops. Reliability is repair at the ends." },
+            { "text": "Putting a port number on a packet and hoping it arrives", "kind": "nearby", "rationale": "That is UDP. Reliability is the extra loop." },
+            { "text": "Delivering bytes in any order as long as something arrives", "kind": "reversed", "rationale": "Order is part of the contract, not a leftover." }
+          ],
+          "correctExplanation": "Retransmit the hole. Deliver in order. Drop the extra copy. That is the loop.",
+          "objectiveIds": ["Explain reliable delivery as retransmitting what was lost so the receiver sees each byte once, in order — approximately"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nt-rel5-2",
+          "stem": "Packet 2 of 1, 2, 3 is dropped and never acknowledged. The sender should:",
+          "correctAnswer": "Send packet 2 again and keep 1 and 3 from being delivered out of order",
+          "distractors": [
+            { "text": "Give up on the conversation because UDP forbids a second try", "kind": "reversed", "rationale": "UDP will not retry. The reliable sender will." },
+            { "text": "Deliver packet 3 to the application and skip the hole forever", "kind": "misconception", "rationale": "In-order delivery waits for the hole, then fills it." },
+            { "text": "Ask the path to rewind and un-drop the original datagram", "kind": "misapplied", "rationale": "The path does not rewind. The sender retransmits." }
+          ],
+          "correctExplanation": "The missing packet is sent again. The receiver holds later data until the hole fills.",
+          "objectiveIds": ["Explain reliable delivery as retransmitting what was lost so the receiver sees each byte once, in order — approximately"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-rel5-3",
+          "stem": "A retransmit of packet 2 arrives after the receiver already accepted packet 2. The receiver:",
+          "correctAnswer": "Drops the extra copy using the sequence number, so the stream stays once-only",
+          "distractors": [
+            { "text": "Appends the duplicate so the application reads packet 2 twice", "kind": "reversed", "rationale": "Once-only is the point of numbering. Duplicates are discarded." },
+            { "text": "Treats the duplicate as proof that UDP now guarantees delivery", "kind": "nearby", "rationale": "UDP still does not guarantee. The extra copy is a repair artifact." },
+            { "text": "Rewinds the whole stream to byte zero and starts over", "kind": "misapplied", "rationale": "A late copy is dropped. The stream does not reset." }
+          ],
+          "correctExplanation": "Two copies on the wire; one byte in the stream. The number made the second copy harmless.",
+          "objectiveIds": ["Predict what sequence numbers and acknowledgements let a sender decide to retransmit"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-reliable-10",
+      "conceptId": "net-reliable",
+      "title": "Sequence and ACK decide what to send again",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-udp"],
+      "goDeeper": "net-tcp-state",
+      "diagram": "net-tcp-ack",
+      "explanation": [
+        "A datagram can be lost, duplicated, or reordered. UDP will not fix that. A reliable sender numbers what it sends. A reliable receiver names the next byte it still needs. That name, coming back as an acknowledgement, is how the sender decides what is still outstanding and what may be discarded from its copy.",
+        "The sender keeps a copy until an ACK covers it. Silence, or an ACK that still names an old next-byte, means the copy must go out again. The receiver delivers in order: a later packet that arrives early sits until the hole fills. A duplicate of an already-accepted byte is dropped.",
+        "Exactly-once is the application's view after this loop. On the wire there were two copies. The sequence number made the second one harmless. Stanford CS144's reliable-transport lab is this feedback, not a catalogue of header bits."
+      ],
+      "example": "Bytes 0–999 go out in two packets. The packet carrying 500–999 is lost. The receiver acknowledges up to 500. The sender still has 500–999 in its copy, sends them again, and only then sees an ACK covering 1000. The application reads a continuous stream.",
+      "whyItMatters": "The ACK is not a courtesy. It is the only signal that tells the sender which copy it may forget.",
+      "quiz": [
+        {
+          "id": "nt-rel10-1",
+          "stem": "A sender decides whether to retransmit a segment by looking at:",
+          "correctAnswer": "Sequence numbers it assigned and acknowledgements of the next byte still needed",
+          "distractors": [
+            { "text": "Whether the path promised never to drop that datagram", "kind": "misconception", "rationale": "The path makes no such promise. Numbers and ACKs are the evidence." },
+            { "text": "Whether the application already printed the bytes locally", "kind": "nearby", "rationale": "Local print is not an ACK from the other end." },
+            { "text": "A hop count that rewinds when a packet is lost", "kind": "misapplied", "rationale": "TTL is not a retransmit signal." }
+          ],
+          "correctExplanation": "The sender numbered the bytes. The ACK names what is still missing. That pair decides the retry.",
+          "objectiveIds": ["Predict what sequence numbers and acknowledgements let a sender decide to retransmit"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "nt-rel10-2",
+          "stem": "Bytes 0–999 are sent; the ACK that returns still names 500 as next. The sender should:",
+          "correctAnswer": "Keep 500–999 and send that range again; 0–499 may be forgotten",
+          "distractors": [
+            { "text": "Forget 500–999, because any ACK means the whole send succeeded", "kind": "reversed", "rationale": "The ACK covers only up to 500. The rest is still outstanding." },
+            { "text": "Resend 0–499 as well, because every ACK restarts the stream", "kind": "misconception", "rationale": "Covered bytes are done. Only the hole is resent." },
+            { "text": "Wait for the path to reconstruct 500–999 from the ACK number alone", "kind": "misapplied", "rationale": "An ACK does not carry the missing payload." }
+          ],
+          "correctExplanation": "Covered bytes leave the copy. Uncovered bytes go out again.",
+          "objectiveIds": ["Predict what sequence numbers and acknowledgements let a sender decide to retransmit"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-rel10-3",
+          "stem": "A later packet arrives before the missing one in front of it. The receiver:",
+          "correctAnswer": "Holds the later bytes and does not deliver the stream past the hole",
+          "distractors": [
+            { "text": "Delivers the later bytes now and leaves a gap in the application stream", "kind": "reversed", "rationale": "In-order delivery waits. Gaps are not handed up." },
+            { "text": "Deletes the later packet because reordering is illegal on every path", "kind": "misconception", "rationale": "Reordering happens. Buffering until the hole fills is the repair." },
+            { "text": "Acknowledges the later packet as if the hole had already been filled", "kind": "subtle", "rationale": "The ACK still names the missing next byte, not the later arrival." }
+          ],
+          "correctExplanation": "Later data sits. The stream is delivered only once the missing byte is in place.",
+          "objectiveIds": ["Explain reliable delivery as retransmitting what was lost so the receiver sees each byte once, in order — approximately"],
+          "prerequisiteConceptIds": ["net-udp"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-tcp-state-10",
+      "conceptId": "net-tcp-state",
+      "title": "The connection is a protocol, not a picture",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-reliable"],
+      "goDeeper": "net-handshake",
+      "explanation": [
+        "A TCP connection is not a cable. It is per-side state that names what this end may send and what it still owes the other. LISTEN will accept a new sequence. ESTABLISHED will carry data. FIN-WAIT has announced it is done sending. TIME_WAIT has seen the other side finish and is waiting out stragglers.",
+        "The names are rules, not a diagram to recite. Each state answers a recovery question: may I still accept a SYN, must I still retransmit a FIN, am I allowed to forget this 4-tuple. Skip a state and a delayed packet from an old conversation lands on a new one, or a lost last ACK leaves the other side hanging.",
+        "The machine does not 'have a connection' the way it has a socket. Two hosts each keep a record. Those records agree, for a while, on starting sequences and on who has closed. When the records disagree, the protocol's job is to notice — not to pretend the picture was the truth."
+      ],
+      "example": "A client sends a FIN. The server ACKs and later sends its own FIN. The client ACKs that FIN and enters TIME_WAIT. A delayed copy of an old data segment for this 4-tuple can still be in flight. TIME_WAIT holds the record so that copy is not delivered to a brand-new conversation that reused the ports.",
+      "whyItMatters": "States exist so a close, a retry, and a reused port do not collide. Memorizing the arrows misses the debt each state still tracks.",
+      "quiz": [
+        {
+          "id": "nt-tcp10-1",
+          "stem": "TCP connection states are best treated as:",
+          "correctAnswer": "Protocol rules for what this side may send and what it still owes",
+          "distractors": [
+            { "text": "A diagram whose arrows must be recited in exam order", "kind": "misconception", "rationale": "The picture is a mnemonic. The rules are the protocol." },
+            { "text": "A list of header flags with no memory of prior packets", "kind": "nearby", "rationale": "Flags arrive in packets. State is what the host remembers between them." },
+            { "text": "A physical circuit the network reserves until both hosts reboot", "kind": "misapplied", "rationale": "There is no reserved circuit. There are two records that can disagree." }
+          ],
+          "correctExplanation": "Each state names remaining debt and allowed next packets. That is the protocol.",
+          "objectiveIds": ["Describe TCP connection states as protocol rules, not a diagram to memorize"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nt-tcp10-2",
+          "stem": "TIME_WAIT exists after an active close so that:",
+          "correctAnswer": "Delayed packets from this conversation cannot land on a new reuse of the same 4-tuple",
+          "distractors": [
+            { "text": "The host can forget the connection the instant the last ACK is sent", "kind": "reversed", "rationale": "Forgetting immediately is the failure TIME_WAIT prevents." },
+            { "text": "The path can rewind and un-send every byte of the session", "kind": "misapplied", "rationale": "The network does not rewind. The record waits out stragglers." },
+            { "text": "LISTEN can accept a SYN before the other side has finished closing", "kind": "nearby", "rationale": "LISTEN is a different rule. TIME_WAIT is about the just-closed record." }
+          ],
+          "correctExplanation": "Old segments can still be in flight. The record stays until they are stale.",
+          "objectiveIds": ["Predict why TIME_WAIT exists after a close"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-tcp10-3",
+          "stem": "ESTABLISHED, compared with LISTEN, is the rule that:",
+          "correctAnswer": "Data may be sent and sequenced; a new handshake is not what this record is for",
+          "distractors": [
+            { "text": "The host must refuse all data and wait only for a SYN", "kind": "reversed", "rationale": "That is closer to LISTEN. ESTABLISHED already agreed sequences." },
+            { "text": "The connection has no sequence numbers yet, so any byte is legal", "kind": "misconception", "rationale": "ESTABLISHED means the sequences were already agreed." },
+            { "text": "The host must sit in TIME_WAIT until the application calls listen again", "kind": "nearby", "rationale": "TIME_WAIT is a close rule, not the data-transfer rule." }
+          ],
+          "correctExplanation": "LISTEN waits for a new sequence. ESTABLISHED carries data on sequences already agreed.",
+          "objectiveIds": ["Describe TCP connection states as protocol rules, not a diagram to memorize"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-tcp-state-20",
+      "conceptId": "net-tcp-state",
+      "title": "TIME_WAIT is how a close stays honest",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-reliable"],
+      "goDeeper": "net-handshake",
+      "diagram": "net-tcp-ack",
+      "explanation": [
+        "Closing is not one packet. Each side still owes an announcement that it will send no more, and an ACK of the other side's announcement. FIN-WAIT means this side has said it is done and is waiting for the other FIN, or for the ACK of its own. LAST-ACK means this side has seen the peer finish and has sent its last ACK of that FIN. Skip any of those debts and one host still believes data may arrive.",
+        "TIME_WAIT is the active closer's extra wait after it has sent that last ACK. Two failures hide here. A delayed data or FIN from the old 4-tuple can arrive after a new conversation has reused the ports; without the old record, those bytes look legitimate. The last ACK can also be lost, so the other side retransmits its FIN; TIME_WAIT can ACK again instead of answering with a reset to a stranger.",
+        "The wait is on the order of twice the maximum segment lifetime, long enough that stragglers die. A host that skips TIME_WAIT to free a port faster is betting that no delayed copy is still in flight. That bet fails as brief connections churn on the same local port.",
+        "Half-open is a different disagreement: one side still has ESTABLISHED, the other has forgotten. A keep-alive or a data segment then gets a reset. The protocol's answer is still a rule about remaining debt, not a picture of a cable that either exists or does not."
+      ],
+      "example": "A client on port 51234 closes. It ACKs the server's FIN and enters TIME_WAIT. Two seconds later a new client process binds 51234 and connects to the same server port. A delayed segment from the old conversation, sequence 9000, is still in the network. TIME_WAIT on the old record, or the 4-tuple still being held, is what stops sequence 9000 from being accepted as the new stream's byte 9000.",
+      "whyItMatters": "Port reuse after a short conversation is common. TIME_WAIT is the protocol's memory that the previous conversation is not yet dead in the network.",
+      "quiz": [
+        {
+          "id": "nt-tcp20-1",
+          "stem": "The last ACK of a close is lost, and the peer retransmits its FIN. TIME_WAIT lets this side:",
+          "correctAnswer": "ACK the retransmitted FIN again instead of treating it as a new conversation",
+          "distractors": [
+            { "text": "Forget the 4-tuple immediately so the FIN opens a fresh stream", "kind": "reversed", "rationale": "Forgetting is what would mis-deliver the FIN. TIME_WAIT keeps the record." },
+            { "text": "Deliver the FIN's payload as the first bytes of a new application read", "kind": "misapplied", "rationale": "A close FIN is not a new byte stream." },
+            { "text": "Rewind both hosts to LISTEN without acknowledging anything", "kind": "nearby", "rationale": "LISTEN is for a new handshake. The debt here is the last ACK." }
+          ],
+          "correctExplanation": "The closer still knows this FIN. It can ACK. A forgotten record cannot.",
+          "objectiveIds": ["Predict why TIME_WAIT exists after a close"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-tcp20-2",
+          "stem": "A host that skips TIME_WAIT to reuse a local port immediately risks:",
+          "correctAnswer": "A delayed segment from the old 4-tuple being accepted by the new conversation",
+          "distractors": [
+            { "text": "The path refusing to forward any packet until the next reboot", "kind": "misapplied", "rationale": "The path does not lock the port. The record at the host does." },
+            { "text": "Sequence numbers wrapping in a way that makes loss impossible", "kind": "reversed", "rationale": "Skipping the wait does not improve loss handling; it invites a mix-up." },
+            { "text": "LISTEN being unable to accept SYNs on any other port", "kind": "nearby", "rationale": "The risk is this 4-tuple, not every listener on the machine." }
+          ],
+          "correctExplanation": "Old packets can still be in flight. The new record would have no reason to reject them.",
+          "objectiveIds": ["Predict why TIME_WAIT exists after a close"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-tcp20-3",
+          "stem": "FIN-WAIT, as a protocol rule rather than a diagram cell, means:",
+          "correctAnswer": "This side has announced it will send no more and still owes a wait for the peer's close",
+          "distractors": [
+            { "text": "This side has forgotten the connection and may reuse the 4-tuple now", "kind": "reversed", "rationale": "Forgetting is later. FIN-WAIT still tracks the close." },
+            { "text": "This side is still ESTABLISHED and may send a full window of new data", "kind": "nearby", "rationale": "FIN said no more data. ESTABLISHED is the earlier rule." },
+            { "text": "This side is LISTEN and will treat the next SYN as a brand-new handshake", "kind": "misapplied", "rationale": "LISTEN is a different record. FIN-WAIT is a closing one." }
+          ],
+          "correctExplanation": "The FIN was sent. The peer's FIN and its ACK are still debts. That is the state.",
+          "objectiveIds": ["Describe TCP connection states as protocol rules, not a diagram to memorize"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "net-handshake-10",
+      "conceptId": "net-handshake",
+      "title": "Three packets to agree a starting sequence",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-tcp-state"],
+      "diagram": "net-tcp-ack",
+      "explanation": [
+        "A reliable stream needs a starting sequence in each direction before data is honest. The handshake is three packets that agree those two numbers. The client sends SYN with its initial sequence. The server answers SYN-ACK: it acknowledges the client's number and proposes its own. The client ACKs the server's number. Only then do both sides know both starts.",
+        "After the SYN, only one side has proposed. After the SYN-ACK, both have proposed but only the client has seen the server's number confirmed. After the third ACK, each side has heard the other. That third packet is not politeness. It is the server's evidence that its own sequence is live, so a duplicate SYN from an old attempt does not reopen with a stale number.",
+        "Lost handshake packets just retry. A SYN that arrives at a listener creates embryonic state; a SYN-ACK that never comes back leaves that state until a timer. The failure mode is not a missing flag. It is two hosts that do not yet share starting sequences trying to number data anyway."
+      ],
+      "example": "Client proposes sequence 1000 in a SYN. Server proposes 5000 in a SYN-ACK that also acknowledges 1001. Client ACKs 5001. Data the client now sends is numbered from 1001; data the server sends is numbered from 5001. Swap any of those three packets for silence and one side is still guessing.",
+      "whyItMatters": "Every later ACK is relative to these two starts. Agree them badly and 'in order' has no origin.",
+      "quiz": [
+        {
+          "id": "nt-hs10-1",
+          "stem": "The three-way handshake exists to:",
+          "correctAnswer": "Agree a starting sequence number in each direction before data is numbered",
+          "distractors": [
+            { "text": "Reserve a physical circuit so no other host may use the path", "kind": "misapplied", "rationale": "No circuit is reserved. Two sequence origins are agreed." },
+            { "text": "Tell the path never to drop packets for this conversation", "kind": "misconception", "rationale": "The handshake does not change loss. It agrees numbers." },
+            { "text": "Exchange every header flag so later packets need no state", "kind": "nearby", "rationale": "Flags ride along. The job is the two starting sequences." }
+          ],
+          "correctExplanation": "Each side proposes a start. Each side hears the other. Then data can be numbered.",
+          "objectiveIds": ["Explain the three-way handshake as agreeing a starting sequence in each direction"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nt-hs10-2",
+          "stem": "After SYN and SYN-ACK, before the third ACK, what is not yet known?",
+          "correctAnswer": "The server has not seen confirmation that its own starting sequence was heard",
+          "distractors": [
+            { "text": "The client has not yet proposed any sequence at all", "kind": "reversed", "rationale": "The client's SYN already proposed. The gap is the server's confirmation." },
+            { "text": "Both sides already share both starts and may forget the handshake", "kind": "misconception", "rationale": "The server still needs the third packet as evidence." },
+            { "text": "The path has committed to delivering every later byte without loss", "kind": "misapplied", "rationale": "Nothing in the handshake removes loss." }
+          ],
+          "correctExplanation": "Client has both numbers. Server has proposed but not yet heard its number echoed.",
+          "objectiveIds": ["Predict what is known after SYN, SYN-ACK, and ACK that was not known before"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-hs10-3",
+          "stem": "Client SYN proposes 1000; server SYN-ACK proposes 5000 and ACKs 1001. After the client's ACK of 5001:",
+          "correctAnswer": "Client data starts at 1001 and server data starts at 5001",
+          "distractors": [
+            { "text": "Both sides must restart at sequence 0 because the handshake consumed the numbers", "kind": "reversed", "rationale": "The agreed starts are the origins. Data continues from them." },
+            { "text": "Only the client's sequence exists; the server will number nothing", "kind": "nearby", "rationale": "The handshake agrees two starts, one each way." },
+            { "text": "The next byte either way is 1000, because SYN-ACK overwrote 5000", "kind": "subtle", "rationale": "Each direction keeps its own origin. They are not a single counter." }
+          ],
+          "correctExplanation": "Two origins, independently. The third ACK is what made the server's origin live.",
+          "objectiveIds": ["Predict what is known after SYN, SYN-ACK, and ACK that was not known before"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-sliding-window-10",
+      "conceptId": "net-sliding-window",
+      "title": "Many packets in flight, one bound",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-reliable", "net-bandwidth-delay"],
+      "goDeeper": "net-flow-control",
+      "diagram": "net-slide-win",
+      "explanation": [
+        "Stop-and-wait sends one packet and sits until its ACK. On a long fat path that wastes the pipe: the bandwidth-delay product is how much data fits in flight, and one packet is not that much. A sliding window lets the sender have many unacknowledged packets outstanding, up to a bound.",
+        "The bound is a window of sequence space. The left edge is the oldest byte not yet covered by an ACK. The right edge is left plus the window size. The sender may emit anything in between. An ACK that covers the left edge slides the window forward; new sequence space opens on the right. A hole that does not cover the left edge does not slide it.",
+        "The window is the only thing keeping the sender from flooding. Too small and the path stays empty. Too large and the sender dumps more than the pipe plus the receiver can hold. The next lesson splits those two limits. This one is the bound itself."
+      ],
+      "example": "Window of 3000 bytes, packets of 1000. The sender puts three packets in flight and stops. An ACK covers the first 1000. The left edge moves, the right edge opens 1000 more, and a fourth packet goes out while two remain unacknowledged.",
+      "whyItMatters": "Throughput on a long path is a window question. A correct retry loop that never pipelines still crawls.",
+      "quiz": [
+        {
+          "id": "nt-sw10-1",
+          "stem": "A sliding window is:",
+          "correctAnswer": "A bound on how many unacknowledged packets may be in flight at once",
+          "distractors": [
+            { "text": "A rule that only one packet may be outstanding until its ACK returns", "kind": "reversed", "rationale": "That is stop-and-wait. The window exists to allow many in flight." },
+            { "text": "A promise that the path will hold every packet forever", "kind": "misapplied", "rationale": "The window bounds the sender. It does not enlarge the network." },
+            { "text": "A list of header flags that replace sequence numbers", "kind": "nearby", "rationale": "The window is sequence space, not a flag list." }
+          ],
+          "correctExplanation": "Many in flight, one bound. ACKs slide the bound forward.",
+          "objectiveIds": ["Describe a sliding window as many packets in flight bounded by one window"],
+          "prerequisiteConceptIds": ["net-reliable", "net-bandwidth-delay"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-sw10-2",
+          "stem": "An ACK covers the left edge of a 3000-byte window after 1000 bytes. The sender may:",
+          "correctAnswer": "Advance the left edge 1000 bytes and emit up to 1000 new bytes on the right",
+          "distractors": [
+            { "text": "Keep the left edge fixed and refuse to send until the whole window ACKs at once", "kind": "reversed", "rationale": "Covering the left edge is exactly what slides the window." },
+            { "text": "Shrink the path's delay so the bandwidth-delay product becomes one packet", "kind": "misapplied", "rationale": "The ACK does not change the pipe. It opens send credit." },
+            { "text": "Retransmit the covered 1000 bytes because every ACK restarts the stream", "kind": "misconception", "rationale": "Covered bytes are done. New space opens on the right." }
+          ],
+          "correctExplanation": "Left edge moves. Right edge opens. That is the slide.",
+          "objectiveIds": ["Describe a sliding window as many packets in flight bounded by one window"],
+          "prerequisiteConceptIds": ["net-reliable", "net-bandwidth-delay"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-sw10-3",
+          "stem": "Stop-and-wait on a path whose bandwidth-delay product is many packets will:",
+          "correctAnswer": "Leave the pipe mostly empty, because only one packet is in flight at a time",
+          "distractors": [
+            { "text": "Fill the pipe automatically, because one ACK carries the whole product", "kind": "reversed", "rationale": "One packet in flight cannot fill a fat pipe." },
+            { "text": "Remove the need for sequence numbers, because nothing is ever outstanding", "kind": "nearby", "rationale": "Stop-and-wait still numbers. It just never pipelines." },
+            { "text": "Force the receiver to advertise a window of zero forever", "kind": "misapplied", "rationale": "Receiver credit is a later limit. This is the sender's pipelining choice." }
+          ],
+          "correctExplanation": "The product is how much fits. One outstanding packet is not that much.",
+          "objectiveIds": ["Predict how much data can be in flight given a window and a bandwidth-delay product"],
+          "prerequisiteConceptIds": ["net-reliable", "net-bandwidth-delay"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-sliding-window-20",
+      "conceptId": "net-sliding-window",
+      "title": "The left edge moves only when it is covered",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-reliable", "net-bandwidth-delay"],
+      "goDeeper": "net-flow-control",
+      "diagram": "net-slide-win",
+      "explanation": [
+        "Filling a path means keeping about one bandwidth-delay product in flight. A window smaller than that product leaves idle time after each burst. A window equal to the product, with ACKs returning steadily, lets a new packet enter as an old one is leaving — a full pipe, not a stop-and-wait trickle.",
+        "Cumulative ACKs cover a prefix. The left edge is that prefix. Packet 2 lost, packets 3 and 4 sitting at the receiver: the ACK still names the start of packet 2. The window does not slide. Those later packets occupy receiver buffer, but they do not open send credit on the left. Fast recovery later uses the duplicates as a hint; the window rule itself is unchanged: uncovered left edge, no slide.",
+        "A sender that bursts the whole window at once can overflow a small hop even when the window matched the product on paper. Spreading the window over the RTT — pacing — is how the in-flight bound becomes a rate. The bound is still the window. The failure is treating the window as permission to dump.",
+        "When the product is 10 packets and the window is 3, throughput caps at about three tenths of the path. Growing the window toward the product is the mechanical fix. Growing it past the product plus buffers is how the next unit's congestion signals start firing. This unit stops at the bound and the slide."
+      ],
+      "example": "A 100 Mbit/s path with 40 ms RTT holds about 500 KB in flight. Window of 50 KB: the sender spends most of each RTT idle after five 10 KB packets. Window of 500 KB: it keeps fifty packets outstanding, and each ACK of 10 KB lets another 10 KB go. Packet 20 is lost; ACKs still name 20, so the left edge stays put until 20 is repaired even though 21–25 have arrived.",
+      "whyItMatters": "A correct retry that never fills the product wastes the path; a window that will not slide on a hole stalls the fill.",
+      "quiz": [
+        {
+          "id": "nt-sw20-1",
+          "stem": "To keep a long fat path full, the sender's window should be about:",
+          "correctAnswer": "The bandwidth-delay product, so roughly that much data stays in flight",
+          "distractors": [
+            { "text": "One packet, because ACKs make a larger window unnecessary", "kind": "reversed", "rationale": "One packet is stop-and-wait. The product is many packets on a fat path." },
+            { "text": "Infinite, because the path will queue whatever is sent", "kind": "misconception", "rationale": "Unbounded send is a flood. The window is the bound." },
+            { "text": "Zero until the receiver closes the connection", "kind": "misapplied", "rationale": "Zero would send nothing. Filling the pipe needs in-flight data." }
+          ],
+          "correctExplanation": "The product is what fits. Match the window to it, and the pipe stays busy.",
+          "objectiveIds": ["Predict how much data can be in flight given a window and a bandwidth-delay product"],
+          "prerequisiteConceptIds": ["net-reliable", "net-bandwidth-delay"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-sw20-2",
+          "stem": "Packet 2 is lost; packets 3 and 4 have arrived. The left edge of the window:",
+          "correctAnswer": "Stays at packet 2 until an ACK covers it; later arrivals do not slide it",
+          "distractors": [
+            { "text": "Jumps to packet 5 because the newest arrival is what the window tracks", "kind": "reversed", "rationale": "The left edge is the oldest uncovered byte, not the newest arrival." },
+            { "text": "Disappears, because a hole means the window idea no longer applies", "kind": "misconception", "rationale": "The hole is why the window exists as a bound on outstanding data." },
+            { "text": "Moves backward so the sender must restart the stream at byte zero", "kind": "misapplied", "rationale": "Sequence space does not rewind to zero on a loss." }
+          ],
+          "correctExplanation": "Cumulative coverage is a prefix. A hole at the left edge freezes the slide.",
+          "objectiveIds": ["Describe a sliding window as many packets in flight bounded by one window"],
+          "prerequisiteConceptIds": ["net-reliable", "net-bandwidth-delay"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-sw20-3",
+          "stem": "Window of 3 packets on a path whose product is 10 packets typically yields:",
+          "correctAnswer": "About three tenths of the path's throughput, with idle time each RTT",
+          "distractors": [
+            { "text": "Full-path throughput, because any window fills a fat pipe", "kind": "reversed", "rationale": "In-flight data cannot exceed the window. 3 is not 10." },
+            { "text": "Zero throughput, because a window smaller than the product is illegal", "kind": "misconception", "rationale": "Small windows still send. They just underfill." },
+            { "text": "Ten times the path rate, because each ACK multiplies the window", "kind": "nearby", "rationale": "ACKs slide the window; they do not multiply capacity." }
+          ],
+          "correctExplanation": "In flight is min(window, product). Here the window is the cap, so most of the pipe stays empty.",
+          "objectiveIds": ["Predict how much data can be in flight given a window and a bandwidth-delay product"],
+          "prerequisiteConceptIds": ["net-reliable", "net-bandwidth-delay"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "net-flow-control-10",
+      "conceptId": "net-flow-control",
+      "title": "The receiver, not the path, is full",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-sliding-window"],
+      "diagram": "net-slide-win",
+      "explanation": [
+        "The sliding window in the last unit bounded in-flight data. Flow control is a different bound: the receiver advertising how many more bytes it can still accept into its buffer. That advertisement rides back with ACKs. When the application is slow to read, the advertised window shrinks. At zero, the sender must stop even if the path is idle.",
+        "Congestion is the path being full — queues at a hop, loss or delay as a signal. Flow control is the destination being full. A sender that treats a zero window as 'the network dropped everything' will retransmit into a buffer that still cannot take the bytes. A sender that treats a path drop as 'the receiver is full' will pause for the wrong reason.",
+        "A zero-window probe exists because the update that re-opens the window can itself be lost. The sender occasionally asks, with a tiny segment, whether credit has returned. The mechanism is still the receiver's advertisement, not a guess about a queue the sender cannot see."
+      ],
+      "example": "Receiver buffer is 8 KB, application stopped reading. Advertised window falls to 0. The path to that host is empty. The sender's next 1 KB would fit in the network and would be dropped at the socket. A later read of 4 KB advertises 4 KB; only then does the sender put data in flight again.",
+      "whyItMatters": "Stopping for a full receiver is correct. Stopping for the wrong full — path versus host — makes the recovery worse.",
+      "quiz": [
+        {
+          "id": "nt-fc10-1",
+          "stem": "Flow control is:",
+          "correctAnswer": "The receiver advertising how many more bytes its buffer can still take",
+          "distractors": [
+            { "text": "The path dropping packets to tell senders the hop is full", "kind": "nearby", "rationale": "That is congestion on the path, not the receiver's buffer." },
+            { "text": "The sender ignoring ACKs and sending at line rate forever", "kind": "reversed", "rationale": "Flow control is a stop from the receiver, not a blast." },
+            { "text": "A handshake that agrees starting sequences before any buffer exists", "kind": "misapplied", "rationale": "Sequences are the handshake. Credit is a later advertisement." }
+          ],
+          "correctExplanation": "The destination names remaining buffer. That number is the flow-control window.",
+          "objectiveIds": ["Explain flow control as the receiver advertising how much it can still take"],
+          "prerequisiteConceptIds": ["net-sliding-window"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-fc10-2",
+          "stem": "The advertised window is zero and the path is idle. The sender should:",
+          "correctAnswer": "Stop new data; the receiver is full, not the path",
+          "distractors": [
+            { "text": "Halve its sending rate because a zero window means the hop is congested", "kind": "misapplied", "rationale": "Zero window is receiver credit, not a congestion signal." },
+            { "text": "Keep blasting; an idle path is permission to ignore the advertisement", "kind": "reversed", "rationale": "Idle path does not create buffer at the destination." },
+            { "text": "Close the connection, because a zero window is a handshake failure", "kind": "nearby", "rationale": "Credit can return when the application reads. It is not a close." }
+          ],
+          "correctExplanation": "The host is full. The pipe being empty does not change that.",
+          "objectiveIds": ["Distinguish a receiver that is full from a path that is congested"],
+          "prerequisiteConceptIds": ["net-sliding-window"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "nt-fc10-3",
+          "stem": "Packets are being dropped at a busy hop while the receiver still advertises a large window. That is:",
+          "correctAnswer": "Path congestion; the destination still has room",
+          "distractors": [
+            { "text": "Flow control, because any drop means the receiver's buffer filled", "kind": "misconception", "rationale": "The advertisement says there is room. The hop is the full place." },
+            { "text": "A zero-window probe succeeding, so the sender must stop", "kind": "nearby", "rationale": "A large advertisement is the opposite of a zero window." },
+            { "text": "Proof that sequence numbers have wrapped and credit no longer applies", "kind": "misapplied", "rationale": "Drops at a hop are not a wrap of the receiver's credit." }
+          ],
+          "correctExplanation": "Large advertised window: receiver is fine. Loss at a hop: the path is not.",
+          "objectiveIds": ["Distinguish a receiver that is full from a path that is congested"],
+          "prerequisiteConceptIds": ["net-sliding-window"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-timeout-10",
+      "conceptId": "net-timeout",
+      "title": "Silence after a wait means loss",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-reliable"],
+      "goDeeper": "net-fast-retransmit",
+      "explanation": [
+        "An ACK is the usual evidence that a segment arrived. Sometimes no ACK comes: the packet was dropped, or the ACK was. A retransmit timer is the sender treating that silence as loss after a wait. When the timer fires, the outstanding segment goes out again and the wait is typically lengthened, because the path may be slower than hoped.",
+        "The wait has to be longer than a normal round trip, or a slow ACK is mistaken for a drop and the sender injects a duplicate into a healthy path. The wait must not be enormous, or a real drop sits unrepaired while the application stalls. Both errors are timing errors. The protocol cannot see the queue; it only sees the clock.",
+        "A timeout is a coarse signal. It says 'nothing came back' without saying whether later packets got through. The next unit uses those later packets as an earlier hint. This unit is the silence rule, and the cost of setting the silence too short or too long."
+      ],
+      "example": "A sender puts sequence 4000 in flight and starts a timer. No ACK arrives. At 300 ms the timer fires and 4000 goes out again. On a 80 ms path that was only briefly busy, the original ACK was about to land — now a duplicate is in the air. On a 400 ms path, 300 ms was too early and the same false duplicate happens every send.",
+      "whyItMatters": "Every later RTT estimator exists because a wrong wait either floods the path with copies or leaves a hole sitting.",
+      "quiz": [
+        {
+          "id": "nt-to10-1",
+          "stem": "A retransmit timer treats silence as:",
+          "correctAnswer": "Loss, once a wait longer than a plausible round trip has expired",
+          "distractors": [
+            { "text": "Permission to forget the segment without sending it again", "kind": "reversed", "rationale": "Silence is the cue to retransmit, not to give up the copy." },
+            { "text": "Proof the receiver's application has closed its buffer forever", "kind": "nearby", "rationale": "A missing ACK is not a flow-control advertisement." },
+            { "text": "A handshake that agrees new starting sequences from zero", "kind": "misapplied", "rationale": "A timeout retries the outstanding segment. It does not renumber the stream." }
+          ],
+          "correctExplanation": "Nothing came back in time. The sender calls that loss and sends again.",
+          "objectiveIds": ["Explain a retransmit timer as treating silence as loss"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-to10-2",
+          "stem": "A timer much shorter than the real RTT typically:",
+          "correctAnswer": "Fires while the ACK is still in flight and injects a needless duplicate",
+          "distractors": [
+            { "text": "Waits so long that a real drop sits unrepaired for many round trips", "kind": "reversed", "rationale": "That is the too-long timer. Too short fires early." },
+            { "text": "Removes the need for sequence numbers, because every send is unique", "kind": "misapplied", "rationale": "Early copies make duplicates. Numbers are more necessary, not less." },
+            { "text": "Forces the receiver to advertise a zero window on every ACK", "kind": "nearby", "rationale": "Timer length is not flow control." }
+          ],
+          "correctExplanation": "The ACK was late, not lost. The extra copy is the cost of impatience.",
+          "objectiveIds": ["Predict the cost of a timer that is much shorter or much longer than the real RTT"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-to10-3",
+          "stem": "No later packets are arriving and the ACK for sequence 4000 never comes. A timer much longer than the RTT means:",
+          "correctAnswer": "The hole sits unrepaired while the application waits out the extra silence",
+          "distractors": [
+            { "text": "The sender retransmits immediately, because a long timer fires first", "kind": "reversed", "rationale": "Longer wait means later retry. The hole stays." },
+            { "text": "The original packet is reconstructed from the timer's duration alone", "kind": "misapplied", "rationale": "A clock does not carry payload." },
+            { "text": "Duplicate ACKs will slide the window even without a retransmit", "kind": "nearby", "rationale": "This case has silence, not duplicates. That hint is the next unit." }
+          ],
+          "correctExplanation": "Silence is the only signal. Stretching the wait stretches the stall.",
+          "objectiveIds": ["Predict the cost of a timer that is much shorter or much longer than the real RTT"],
+          "prerequisiteConceptIds": ["net-reliable"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-fast-retransmit-10",
+      "conceptId": "net-fast-retransmit",
+      "title": "Three copies of the same ACK beat the timer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-timeout"],
+      "diagram": "net-tcp-ack",
+      "explanation": [
+        "A timeout waits through silence. Often the path is not silent. Packet 2 is lost; packets 3, 4, and 5 arrive. Each of those arrivals makes the receiver announce the same next byte — the start of the hole. Those repeated ACKs are duplicates. They are evidence that later data got through and that a specific sequence did not.",
+        "Fast retransmit treats a triple-duplicate ACK as that evidence, and sends the missing segment without waiting for the timer. The sender still has a copy. It does not need a new handshake. It needs an earlier hint than silence. Three duplicates, not one, because a single reorder can produce one or two repeats without a loss.",
+        "The timer remains the fallback when nothing later arrives — a lost tail, a lost ACK of the last segment, a path that went quiet. Fast retransmit is for the hole with traffic behind it. Using the timer there would add a full wait to a loss the duplicates already named."
+      ],
+      "example": "Sender emits 10, 11, 12, 13. Packet 11 is dropped. Receiver ACKs 11 as next for the original 10, then again for 12, again for 13, again for a later 14. After three duplicate ACKs naming 11, the sender retransmits 11 immediately. The timer had 200 ms left. The hole fills on the next RTT instead of at the deadline.",
+      "whyItMatters": "Most losses on a busy path are holes with later packets behind them. Waiting out silence there is a stall you already had the evidence to skip.",
+      "quiz": [
+        {
+          "id": "nt-fr10-1",
+          "stem": "Fast retransmit uses triple-duplicate ACKs as:",
+          "correctAnswer": "An earlier loss hint than a timeout, naming the hole while later packets still arrive",
+          "distractors": [
+            { "text": "A replacement for sequence numbers, so ACKs no longer name a next byte", "kind": "misapplied", "rationale": "The duplicate ACK still names the missing next byte." },
+            { "text": "Proof that silence has already lasted a full retransmit wait", "kind": "reversed", "rationale": "The point is not to wait. The duplicates fire before the timer." },
+            { "text": "A signal that the receiver's buffer is zero and sending must stop", "kind": "nearby", "rationale": "Duplicates are about a hole, not advertised credit." }
+          ],
+          "correctExplanation": "Later packets got through. The repeated next-byte is the hole. Retry now.",
+          "objectiveIds": ["Describe fast retransmit as using triple-duplicate ACKs as an earlier loss hint than a timeout"],
+          "prerequisiteConceptIds": ["net-timeout"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-fr10-2",
+          "stem": "Packet 11 is lost; packets 12, 13, and 14 arrive. Duplicate ACKs appear because:",
+          "correctAnswer": "Each later packet still makes the receiver announce the same missing next byte",
+          "distractors": [
+            { "text": "The receiver rewinds its sequence space to zero on every arrival", "kind": "misapplied", "rationale": "The next-byte stays at the hole. It does not rewind the stream." },
+            { "text": "The sender stopped numbering, so every ACK is identical by accident", "kind": "misconception", "rationale": "Numbering continues. The identical ACK is the uncovered hole." },
+            { "text": "The timer already fired, and duplicates are how timeouts are advertised", "kind": "reversed", "rationale": "Duplicates are the earlier hint. They are not the timeout itself." }
+          ],
+          "correctExplanation": "Cumulative ACK names the hole. Later arrivals repeat that name. That repetition is the signal.",
+          "objectiveIds": ["Predict why duplicate ACKs appear when a packet is lost but later packets arrive"],
+          "prerequisiteConceptIds": ["net-timeout"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-fr10-3",
+          "stem": "The last segment in a burst is lost and nothing follows it. Fast retransmit typically:",
+          "correctAnswer": "Cannot fire, because no later arrivals generate duplicate ACKs; the timer is the fallback",
+          "distractors": [
+            { "text": "Always fires first, because every loss produces three duplicates by law", "kind": "misconception", "rationale": "Duplicates need later packets. A lost tail is silent." },
+            { "text": "Closes the connection, because a lost tail means the peer has reset", "kind": "nearby", "rationale": "A lost last segment is a timeout case, not a reset." },
+            { "text": "Treats the missing tail as a zero window and stops the clock", "kind": "misapplied", "rationale": "Flow control is an advertisement. This is a missing packet." }
+          ],
+          "correctExplanation": "No traffic behind the hole, no duplicates. Silence, then the timer.",
+          "objectiveIds": ["Describe fast retransmit as using triple-duplicate ACKs as an earlier loss hint than a timeout"],
+          "prerequisiteConceptIds": ["net-timeout"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-nagle-10",
+      "conceptId": "net-nagle",
+      "title": "Two waits that stall each other",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-tcp-state"],
+      "explanation": [
+        "Nagle holds a small send if unacknowledged data is already in flight, waiting until an ACK arrives or a full segment can be packed. The aim is fewer tiny packets on a stream of short writes. Delayed ACK, on the other side, holds the ACK itself for a short time, hoping a reverse data segment will carry it or a second packet will arrive to ACK together.",
+        "Together they can wait on each other. The sender will not emit the next small write until an ACK. The receiver will not emit the ACK until more data arrives or its delay timer fires. A request-response that writes 40 bytes and waits for 40 bytes back sits for the delayed-ACK timer, often tens to hundreds of milliseconds, on every round.",
+        "Either optimization is reasonable alone. The stall is the interaction. Turning Nagle off on a chatty interactive stream, or ACKing every full-sized segment promptly, breaks the deadlock. Leaving both on for a one-write-then-read RPC is a timing bug that looks like a slow network."
+      ],
+      "example": "A client writes 40 bytes and blocks for a reply. Nagle holds a follow-on write because 40 bytes are unacked. The server's delayed ACK waits 40 ms for a second packet that will not come. At 40 ms the ACK finally leaves, Nagle releases, and the reply can start. The 40-byte RPC paid a delay-ACK wait it did not need.",
+      "whyItMatters": "Interactive stalls that vanish when Nagle is disabled are this deadlock, not a congested path.",
+      "quiz": [
+        {
+          "id": "nt-nag10-1",
+          "stem": "Nagle and delayed ACK together can stall because:",
+          "correctAnswer": "Each waits for the other: a small send waits for an ACK, and the ACK waits for more data",
+          "distractors": [
+            { "text": "Each forces the window to zero until the application exits", "kind": "misapplied", "rationale": "This is a timing interaction, not a closed receive buffer." },
+            { "text": "Together they forbid sequence numbers, so nothing can be acknowledged", "kind": "nearby", "rationale": "Numbers still exist. The packets that would carry them are being held." },
+            { "text": "They double the bandwidth-delay product on every path", "kind": "reversed", "rationale": "The stall is idle waiting, not extra in-flight data." }
+          ],
+          "correctExplanation": "Two holds, one on the small send, one on the ACK. Neither unblocks the other.",
+          "objectiveIds": ["Explain Nagle and delayed ACK as two optimizations that can stall each other"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-nag10-2",
+          "stem": "A 40-byte write waits for a 40-byte reply, with Nagle and delayed ACK both on. A likely pause is:",
+          "correctAnswer": "The delayed-ACK timer, because no second packet arrives to carry or trigger the ACK",
+          "distractors": [
+            { "text": "A retransmit timeout, because 40-byte writes are illegal and must be dropped", "kind": "misapplied", "rationale": "Small writes are legal. They are what Nagle holds." },
+            { "text": "TIME_WAIT, because every small write closes the connection", "kind": "nearby", "rationale": "The connection stays ESTABLISHED. The stall is an ACK hold." },
+            { "text": "Slow-start doubling, because small writes always take an exponential number of RTTs", "kind": "misconception", "rationale": "This pause is the delay-ACK interval, not a congestion window." }
+          ],
+          "correctExplanation": "One small segment, no follow-on. Delayed ACK waits. Nagle waits on that ACK.",
+          "objectiveIds": ["Predict a deadlock-like pause when both a small send and a delayed ACK wait for the other"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-nag10-3",
+          "stem": "An interactive RPC that is always one small write then a read, sitting ~40 ms extra each time, is likely:",
+          "correctAnswer": "Nagle holding the next send while delayed ACK holds the ACK of the last small segment",
+          "distractors": [
+            { "text": "A receiver window of zero, because 40 bytes fill every buffer", "kind": "nearby", "rationale": "40 bytes do not fill the buffer. The hold is the ACK delay." },
+            { "text": "A missing handshake, because small writes cannot use ESTABLISHED", "kind": "misapplied", "rationale": "The connection is already up. This is a data-path stall." },
+            { "text": "Fast retransmit firing on every 40-byte write as if it were a loss", "kind": "reversed", "rationale": "Nothing is lost. Packets are being delayed on purpose." }
+          ],
+          "correctExplanation": "The two optimizations are waiting on each other. Disable one and the pause vanishes.",
+          "objectiveIds": ["Predict a deadlock-like pause when both a small send and a delayed ACK wait for the other"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-keepalive-10",
+      "conceptId": "net-keepalive",
+      "title": "A quiet connection still needs a probe",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-tcp-state"],
+      "goDeeper": "net-middlebox",
+      "explanation": [
+        "ESTABLISHED with no data looks idle to everyone on the path. NAT boxes and filters keep a mapping only while they see traffic. After minutes of silence they forget. The next real packet then hits a host or a mapping that no longer exists, and the application discovers the death late.",
+        "A keepalive is a probe on that quiet connection: a tiny segment with no new payload, or a sequence the peer must ACK, sent after a long idle. A reply means the record still exists. Silence, or a reset, means it does not. The probe is not a payload. It is a liveness question the protocol would not otherwise ask.",
+        "Without keepalives, a laptop that slept, a phone that changed networks, or a middlebox that expired the mapping all look the same: a socket that still says ESTABLISHED until a write fails. The failure mode is an application that thinks it has a session while the path has already forgotten it."
+      ],
+      "example": "A database connection sits idle for two hours. The NAT between the app and the server expired the mapping at 30 minutes. The app writes a query. The packet reaches the NAT with no table entry and is dropped, or a reset comes back. A keepalive every 15 minutes would have refreshed the mapping, or would have failed the socket when the mapping first died.",
+      "whyItMatters": "Idle is not the same as alive. The path forgets quiet 4-tuples; the socket will not notice until it speaks.",
+      "quiz": [
+        {
+          "id": "nt-ka10-1",
+          "stem": "A keepalive on a quiet connection is:",
+          "correctAnswer": "A probe so the path and the peer still remember the conversation",
+          "distractors": [
+            { "text": "A full retransmission of the entire byte stream from sequence zero", "kind": "misapplied", "rationale": "The probe is tiny. It does not replay the session." },
+            { "text": "A handshake that agrees new starting sequences on every idle minute", "kind": "nearby", "rationale": "The connection stays ESTABLISHED. The probe does not renumber it." },
+            { "text": "A promise that NAT mappings never expire if any socket exists", "kind": "reversed", "rationale": "Mappings expire without traffic. The probe is the traffic." }
+          ],
+          "correctExplanation": "Idle looks dead to the path. The probe is the reminder, or the discovery that it is gone.",
+          "objectiveIds": ["Describe a keepalive as probing a quiet connection so the path does not forget it"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nt-ka10-2",
+          "stem": "A connection idle for hours with no keepalive, behind a NAT that expires mappings at 30 minutes, typically:",
+          "correctAnswer": "Looks ESTABLISHED locally until a later write fails on a mapping that is already gone",
+          "distractors": [
+            { "text": "Stays reachable forever, because ESTABLISHED forbids a NAT to forget", "kind": "reversed", "rationale": "The NAT does not read TCP state. It ages the mapping." },
+            { "text": "Renegotiates starting sequences automatically when the mapping dies", "kind": "nearby", "rationale": "Nothing renegotiates. The next packet just misses." },
+            { "text": "Fills the receiver window with keepalives the application did not send", "kind": "misapplied", "rationale": "Without keepalives there is no probe traffic at all." }
+          ],
+          "correctExplanation": "The socket still says up. The path already forgot. The next write is how you find out.",
+          "objectiveIds": ["Predict why a long-idle connection can vanish without keepalives"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-ka10-3",
+          "stem": "A keepalive that gets no reply after retries should:",
+          "correctAnswer": "Treat the connection as dead rather than leave the socket ESTABLISHED forever",
+          "distractors": [
+            { "text": "Enter TIME_WAIT, because a missed probe is a graceful close", "kind": "nearby", "rationale": "A missed probe is liveness failure, not an agreed FIN exchange." },
+            { "text": "Advertise a zero window so the peer stops sending application data", "kind": "misapplied", "rationale": "The peer may already be unreachable. Credit is not the issue." },
+            { "text": "Assume the mapping was refreshed by the silence itself", "kind": "reversed", "rationale": "Silence is what expired the mapping. The missing reply confirms it." }
+          ],
+          "correctExplanation": "The probe asked if anyone is home. No answer is the answer.",
+          "objectiveIds": ["Predict why a long-idle connection can vanish without keepalives"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

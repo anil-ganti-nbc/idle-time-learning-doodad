@@ -1,68 +1,62 @@
-import { isReady } from "./state";
+import { courseForCategory, courseForConcept, isCategoryOpenForSelection } from "./curriculum";
+import {
+  frontierConcepts,
+  isConceptUnlocked,
+  isDemonstrated,
+  isLessonUnlocked,
+  makeReadinessContext,
+  pickCourseForLearner,
+  type ReadinessContext,
+} from "./readiness";
 import { isDue } from "./srs";
 import type {
   Catalog,
   CategoryId,
+  Concept,
   ConceptProgress,
-  Lesson,
+  Course,
   LocalProfile,
+  SelectOptions,
   SelectionResult,
   SessionRequest,
 } from "./types";
 
-export function lessonsForConcept(catalog: Catalog, conceptId: string): Lesson[] {
+export function lessonsForConcept(catalog: Catalog, conceptId: string) {
   return catalog.lessons.filter((l) => l.conceptId === conceptId);
 }
 
-export function lessonById(catalog: Catalog, id: string): Lesson | undefined {
+export function lessonById(catalog: Catalog, id: string) {
   return catalog.lessonMap[id];
 }
 
-function introIds(catalog: Catalog): Set<string> {
-  return new Set(catalog.concepts.filter((c) => c.level === "intro").map((c) => c.id));
-}
-
-function knownEnough(
-  conceptId: string,
-  progress: Record<string, ConceptProgress>,
-  journalist: boolean,
+function ctxOf(
   catalog: Catalog,
-  knownIds: string[],
-): boolean {
-  return isReady(conceptId, progress, journalist, knownIds, introIds(catalog));
-}
-
-function prereqsMet(
-  lesson: Lesson,
   progress: Record<string, ConceptProgress>,
-  journalist: boolean,
-  catalog: Catalog,
-  knownIds: string[],
-): boolean {
-  return lesson.prerequisites.every((id) => knownEnough(id, progress, journalist, catalog, knownIds));
+  profile: LocalProfile | undefined,
+  options: SelectOptions,
+): ReadinessContext {
+  return makeReadinessContext(catalog, progress, profile, options.courses);
 }
 
-function missingPrereqs(
-  lesson: Lesson,
-  progress: Record<string, ConceptProgress>,
-  journalist: boolean,
-  catalog: Catalog,
-  knownIds: string[],
-) {
-  return lesson.prerequisites.filter((id) => !knownEnough(id, progress, journalist, catalog, knownIds));
+/** Hours since last encounter. Used so the same unit does not win every gap. */
+export function recencyPenalty(progress: ConceptProgress | undefined, now: Date): number {
+  if (!progress?.lastStudiedAt) return 0;
+  const hours = (now.getTime() - new Date(progress.lastStudiedAt).getTime()) / 3_600_000;
+  if (hours < 1) return 12;
+  if (hours < 6) return 8;
+  if (hours < 24) return 5;
+  if (hours < 72) return 2;
+  return 0;
 }
 
-function durationFits(lesson: Lesson, minutes: number): boolean {
-  if (minutes >= 30) return lesson.durationMin <= 30;
-  return lesson.durationMin <= minutes;
-}
-
-function scoreLesson(
-  lesson: Lesson,
+export function scoreLesson(
+  lesson: import("./types").Lesson,
   req: SessionRequest,
-  seen: boolean,
+  progress: ConceptProgress | undefined,
   catalog: Catalog,
-  profile?: LocalProfile,
+  profile: LocalProfile | undefined,
+  now: Date,
+  ctx?: ReadinessContext,
 ): number {
   let score = 0;
   const target = req.minutes >= 30 ? 30 : req.minutes;
@@ -71,54 +65,147 @@ function scoreLesson(
   if (req.journalistDepth && lesson.level === "journalist") score += 6;
   if (req.journalistDepth && lesson.level === "intro") score -= 5;
   if (!req.journalistDepth && lesson.level === "journalist") score -= 2;
-  if (!seen) score += 4;
-  const cat = catalog.conceptMap[lesson.conceptId]?.category;
+  if (!progress?.encountered) score += 4;
+  score -= recencyPenalty(progress, now);
+  if (progress?.understanding === "didnt_get_it") score += 1;
+  const concept = catalog.conceptMap[lesson.conceptId];
+  const cat = concept?.category;
   if (profile && cat) {
     if (profile.preferredTopics.includes(cat) && (!req.category || req.category === "random")) score += 2;
     if (profile.avoidTopics.includes(cat)) score -= 20;
   }
+  if (ctx && concept) {
+    const course = courseForConcept(catalog, concept.id);
+    if (course) {
+      const frontier = frontierConcepts(course, ctx).map((c) => c.id);
+      if (frontier[0] === concept.id) score += 8;
+      else if (frontier.includes(concept.id)) score += 5;
+      const tier = inferTierSafe(concept);
+      if (req.journalistDepth) score += Math.min(tier, 3);
+      else score -= Math.max(0, tier - 2);
+    }
+  }
   return score;
 }
 
+function inferTierSafe(concept: Concept): import("./types").Tier {
+  if (typeof concept.tier === "number") return concept.tier;
+  if (concept.level === "intro") return 1;
+  if (concept.level === "core") return 2;
+  return 4;
+}
+
+export function pickFromScored<T>(
+  scored: { item: T; score: number }[],
+  rng: () => number = Math.random,
+  opts?: { topN?: number; decisiveGap?: number },
+): T | undefined {
+  if (scored.length === 0) return undefined;
+  const sorted = [...scored].sort((a, b) => b.score - a.score);
+  if (sorted.length === 1) return sorted[0].item;
+  const decisiveGap = opts?.decisiveGap ?? 4;
+  if (sorted[0].score - sorted[1].score >= decisiveGap) return sorted[0].item;
+  const top = sorted.slice(0, opts?.topN ?? 4);
+  const floor = top[top.length - 1].score;
+  const weights = top.map((row) => Math.pow(2, (row.score - floor) / 2));
+  const total = weights.reduce((sum, w) => sum + w, 0);
+  let ticket = rng() * total;
+  for (let i = 0; i < top.length; i++) {
+    ticket -= weights[i];
+    if (ticket <= 0) return top[i].item;
+  }
+  return top[0].item;
+}
+
 function pickBest(
-  pool: Lesson[],
+  pool: import("./types").Lesson[],
   req: SessionRequest,
   progress: Record<string, ConceptProgress>,
   catalog: Catalog,
-  profile?: LocalProfile,
+  profile: LocalProfile | undefined,
+  options: SelectOptions,
+  ctx: ReadinessContext,
 ) {
-  if (pool.length === 0) return undefined;
-  return [...pool].sort((a, b) => {
-    const sa = scoreLesson(a, req, Boolean(progress[a.conceptId]?.encountered), catalog, profile);
-    const sb = scoreLesson(b, req, Boolean(progress[b.conceptId]?.encountered), catalog, profile);
-    return sb - sa;
-  })[0];
+  const now = options.now ?? new Date();
+  const rng = options.rng ?? Math.random;
+  const scored = pool.map((lesson) => ({
+    item: lesson,
+    score: scoreLesson(lesson, req, progress[lesson.conceptId], catalog, profile, now, ctx),
+  }));
+  const surprise = req.mode === "surprise";
+  return pickFromScored(scored, rng, {
+    topN: surprise ? 5 : 4,
+    decisiveGap: surprise ? 2.5 : 4,
+  });
 }
 
-function inCategory(lesson: Lesson, category: CategoryId | "random" | null, catalog: Catalog): boolean {
+function durationFits(lesson: { durationMin: number }, minutes: number): boolean {
+  if (minutes >= 30) return lesson.durationMin <= 30;
+  return lesson.durationMin <= minutes;
+}
+
+function inCategory(
+  lesson: { conceptId: string },
+  category: CategoryId | "random" | null,
+  catalog: Catalog,
+): boolean {
   if (!category || category === "random") return true;
   return catalog.conceptMap[lesson.conceptId]?.category === category;
 }
 
-function notAvoided(lesson: Lesson, catalog: Catalog, profile?: LocalProfile): boolean {
+function notAvoided(lesson: { conceptId: string }, catalog: Catalog, profile?: LocalProfile): boolean {
   if (!profile || profile.avoidTopics.length === 0) return true;
   const cat = catalog.conceptMap[lesson.conceptId]?.category;
   return !cat || !profile.avoidTopics.includes(cat);
 }
 
-function foundationFor(
-  missing: string[],
-  req: SessionRequest,
-  progress: Record<string, ConceptProgress>,
+function allowedByRetirement(
+  lesson: { conceptId: string },
   catalog: Catalog,
-  profile?: LocalProfile,
-): Lesson | undefined {
-  const knownIds = profile?.knownConceptIds ?? [];
-  const candidates = missing.flatMap((id) =>
-    lessonsForConcept(catalog, id).filter((l) => durationFits(l, req.minutes)),
-  );
-  const ready = candidates.filter((l) => prereqsMet(l, progress, req.journalistDepth, catalog, knownIds));
-  return pickBest(ready.length ? ready : candidates, req, progress, catalog, profile);
+  req: SessionRequest,
+): boolean {
+  const cat = catalog.conceptMap[lesson.conceptId]?.category;
+  return isCategoryOpenForSelection(catalog, cat, req.category);
+}
+
+function restrictToFrontier(
+  pool: import("./types").Lesson[],
+  course: Course | undefined,
+  ctx: ReadinessContext,
+): import("./types").Lesson[] {
+  if (!course) return pool;
+  const frontier = new Set(frontierConcepts(course, ctx).map((c) => c.id));
+  if (frontier.size === 0) return pool;
+  const hit = pool.filter((l) => frontier.has(l.conceptId));
+  return hit.length ? hit : pool;
+}
+
+function pickSurpriseCourse(
+  ready: import("./types").Lesson[],
+  recentCategories: CategoryId[],
+  catalog: Catalog,
+  rng: () => number,
+  ctx: ReadinessContext,
+): { course?: Course; categoryId?: string } {
+  const buckets = new Map<string, { categoryId: string; course?: Course; away: boolean }>();
+  for (const lesson of ready) {
+    const categoryId = catalog.conceptMap[lesson.conceptId]?.category;
+    if (!categoryId) continue;
+    const course = courseForConcept(catalog, lesson.conceptId) ?? pickCourseForLearner(catalog, categoryId, ctx);
+    const key = course?.id ?? categoryId;
+    if (buckets.has(key)) continue;
+    buckets.set(key, {
+      categoryId,
+      course,
+      away: !recentCategories.includes(categoryId),
+    });
+  }
+  const all = [...buckets.values()];
+  const preferred = all.filter((b) => b.away);
+  const pool = preferred.length ? preferred : all;
+  if (pool.length === 0) return {};
+  const pick = pool[Math.floor(rng() * pool.length)];
+  return { course: pick.course, categoryId: pick.categoryId };
 }
 
 export function selectLesson(
@@ -127,21 +214,27 @@ export function selectLesson(
   recentCategories: CategoryId[],
   catalog: Catalog,
   profile?: LocalProfile,
+  options: SelectOptions = {},
 ): SelectionResult | null {
-  const knownIds = profile?.knownConceptIds ?? [];
+  const ctx = ctxOf(catalog, progress, profile, options);
   const fitting = catalog.lessons.filter(
-    (l) => durationFits(l, req.minutes) && inCategory(l, req.category, catalog) && notAvoided(l, catalog, profile),
+    (l) =>
+      durationFits(l, req.minutes) &&
+      inCategory(l, req.category, catalog) &&
+      notAvoided(l, catalog, profile) &&
+      allowedByRetirement(l, catalog, req),
   );
-  const ready = fitting.filter((l) => prereqsMet(l, progress, req.journalistDepth, catalog, knownIds));
+  const ready = fitting.filter((l) => isLessonUnlocked(l, ctx));
+  const rng = options.rng ?? Math.random;
 
   if (req.mode === "reinforce") {
-    const due = ready.filter((l) => isDue(progress[l.conceptId]));
+    const due = ready.filter((l) => isDue(progress[l.conceptId], options.now));
     const seen = ready.filter((l) => progress[l.conceptId]?.encountered);
     const pick =
-      pickBest(due, req, progress, catalog, profile) ??
+      pickBest(due, req, progress, catalog, profile, options, ctx) ??
       pickWeakest(seen, progress) ??
-      pickBest(ready, req, progress, catalog, profile);
-    if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile);
+      pickBest(ready, req, progress, catalog, profile, options, ctx);
+    if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile, options, ctx);
     return {
       lesson: pick,
       reason: due.some((l) => l.id === pick.id)
@@ -151,65 +244,92 @@ export function selectLesson(
   }
 
   if (req.mode === "surprise") {
-    const unseen = ready.filter((l) => !progress[l.conceptId]?.encountered);
-    const away = unseen.filter((l) => {
-      const cat = catalog.conceptMap[l.conceptId]?.category;
-      return cat ? !recentCategories.includes(cat) : true;
+    const targeted = req.category && req.category !== "random" ? pickCourseForLearner(catalog, req.category, ctx) : undefined;
+    const bucket = targeted
+      ? { course: targeted, categoryId: targeted.categoryId }
+      : pickSurpriseCourse(ready, recentCategories, catalog, rng, ctx);
+    const inBucket = ready.filter((l) => {
+      if (bucket.course) return courseForConcept(catalog, l.conceptId)?.id === bucket.course.id;
+      if (bucket.categoryId) return catalog.conceptMap[l.conceptId]?.category === bucket.categoryId;
+      return true;
     });
-    const pick = pickBest(away.length ? away : unseen.length ? unseen : ready, req, progress, catalog, profile);
-    if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile);
+    const unseen = inBucket.filter((l) => !progress[l.conceptId]?.encountered);
+    const positioned = restrictToFrontier(unseen.length ? unseen : inBucket, bucket.course, ctx);
+    const pick =
+      pickBest(positioned, req, progress, catalog, profile, options, ctx) ??
+      pickBest(ready, req, progress, catalog, profile, options, ctx);
+    if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile, options, ctx);
+    const course = courseForConcept(catalog, pick.conceptId);
     return {
       lesson: pick,
-      reason:
-        away.length > 0
-          ? "Outside the topics you have been studying lately."
-          : "A concept you have not opened yet.",
+      reason: course
+        ? `A ${bucket.course ? "fresh field" : "different course"}, at the next unit you can actually hold.`
+        : recentCategories.includes(catalog.conceptMap[pick.conceptId]?.category ?? "")
+          ? "A concept you have not opened yet."
+          : "Outside the topics you have been studying lately.",
     };
   }
 
-  const unseen = ready.filter((l) => !progress[l.conceptId]?.encountered);
-  const pick = pickBest(unseen.length ? unseen : ready, req, progress, catalog, profile);
-  if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile);
+  const course = pickCourseForLearner(catalog, req.category, ctx) ?? courseForCategory(catalog, req.category);
+  const inCourse = course
+    ? ready.filter((l) => courseForConcept(catalog, l.conceptId)?.id === course.id)
+    : ready;
+  const pool = inCourse.length ? inCourse : ready;
+  const unseen = pool.filter((l) => !progress[l.conceptId]?.encountered);
+  const positioned = restrictToFrontier(unseen.length ? unseen : pool, course, ctx);
+  const pick = pickBest(positioned, req, progress, catalog, profile, options, ctx);
+  if (!pick) return fallbackUnready(fitting, req, progress, catalog, profile, options, ctx);
   return {
     lesson: pick,
-    reason: unseen.length
-      ? "A new concept whose prerequisites you already hold."
-      : "You have seen the new units that fit. Revisiting the best match.",
+    reason: course
+      ? unseen.length
+        ? "Next unit in this course whose prerequisites you already hold."
+        : "You have seen the open units that fit. Revisiting the best match."
+      : unseen.length
+        ? "A new concept whose prerequisites you already hold."
+        : "You have seen the new units that fit. Revisiting the best match.",
   };
 }
 
 function pickWeakest(
-  pool: Lesson[],
+  pool: import("./types").Lesson[],
   progress: Record<string, ConceptProgress>,
-): Lesson | undefined {
+) {
   if (pool.length === 0) return undefined;
   const rank = (u: ConceptProgress | undefined) => {
     if (!u) return 0;
     if (u.understanding === "didnt_get_it") return 0;
     if (u.understanding === "mostly") return 1;
-    if (u.lastQuizScore !== null && u.quizTotal > 0) return 1 + u.lastQuizScore;
+    if (u.lastQuizScore !== null) return 1 + u.lastQuizScore;
     return 3;
   };
   return [...pool].sort((a, b) => rank(progress[a.conceptId]) - rank(progress[b.conceptId]))[0];
 }
 
 function fallbackUnready(
-  fitting: Lesson[],
+  fitting: import("./types").Lesson[],
   req: SessionRequest,
   progress: Record<string, ConceptProgress>,
   catalog: Catalog,
-  profile?: LocalProfile,
+  profile: LocalProfile | undefined,
+  options: SelectOptions,
+  ctx: ReadinessContext,
 ): SelectionResult | null {
-  const knownIds = profile?.knownConceptIds ?? [];
-  const blocked = fitting.find((l) => missingPrereqs(l, progress, req.journalistDepth, catalog, knownIds).length > 0);
+  const blocked = fitting.find((l) => !isLessonUnlocked(l, ctx));
   if (!blocked) {
-    const any = pickBest(fitting, req, progress, catalog, profile);
+    const any = pickBest(fitting, req, progress, catalog, profile, options, ctx);
     return any ? { lesson: any, reason: "Best available unit for this time." } : null;
   }
-  const missing = missingPrereqs(blocked, progress, req.journalistDepth, catalog, knownIds);
-  const foundation = foundationFor(missing, req, progress, catalog, profile);
+  const concept = catalog.conceptMap[blocked.conceptId];
+  const missing = (concept?.prerequisites ?? blocked.prerequisites).filter(
+    (id) => !isDemonstrated(id, ctx, inferTierSafe(concept ?? { id: "", name: "", category: "", prerequisites: [], level: "intro", summary: "" })),
+  );
+  const candidates = missing.flatMap((id) =>
+    lessonsForConcept(catalog, id).filter((l) => durationFits(l, req.minutes) && isLessonUnlocked(l, ctx)),
+  );
+  const foundation = pickBest(candidates, req, progress, catalog, profile, options, ctx);
   if (!foundation) {
-    const any = pickBest(fitting, req, progress, catalog, profile);
+    const any = pickBest(fitting.filter((l) => isLessonUnlocked(l, ctx)), req, progress, catalog, profile, options, ctx);
     return any ? { lesson: any, reason: "Best available unit for this time." } : null;
   }
   return {
@@ -219,24 +339,89 @@ function fallbackUnready(
   };
 }
 
+export function scoreMissingConcept(
+  concept: Concept,
+  req: SessionRequest,
+  progress: Record<string, ConceptProgress>,
+  recentCategories: CategoryId[],
+  catalog: Catalog,
+  profile?: LocalProfile,
+  options: SelectOptions = {},
+): number {
+  const ctx = ctxOf(catalog, progress, profile, options);
+  let score = 0;
+  const readyPrereqs = concept.prerequisites.filter((id) => isDemonstrated(id, ctx, inferTierSafe(concept)));
+  score += readyPrereqs.length * 2;
+  if (concept.prerequisites.length === 0) score += 1;
+
+  if (profile?.preferredTopics.includes(concept.category)) score += 5;
+  if (profile?.avoidTopics.includes(concept.category)) score -= 20;
+  if (req.category && req.category !== "random" && concept.category === req.category) score += 3;
+
+  const parent = concept.parentId ? progress[concept.parentId] : undefined;
+  if (parent?.understanding === "didnt_get_it" || (parent && (parent.lastQuizScore ?? 1) < 0.67)) {
+    score += 4;
+  }
+  if (parent?.understanding === "got_it" || parent?.understanding === "mostly") score += 3;
+
+  if (!progress[concept.id]?.encountered) score += 4;
+  if (recentCategories.includes(concept.category)) score -= 3;
+
+  const tier = inferTierSafe(concept);
+  if (tier <= 1) score += 2;
+  if (tier === 2) score += 2;
+  if (req.journalistDepth) score += Math.min(tier, 3);
+  else if (tier >= 4) score -= 6;
+
+  const course = courseForConcept(catalog, concept.id);
+  if (course) {
+    const frontier = frontierConcepts(course, ctx).map((c) => c.id);
+    if (frontier.includes(concept.id)) score += 6;
+    if (tier >= 4 && frontier.every((id) => inferTierSafe(catalog.conceptMap[id] ?? concept) <= 1)) score -= 20;
+  }
+
+  const siblings = catalog.concepts.filter(
+    (c) => c.parentId === concept.parentId && c.category === concept.category && c.id !== concept.id,
+  );
+  const siblingLessons = siblings.flatMap((c) => lessonsForConcept(catalog, c.id));
+  if (siblings.length > 0 && siblingLessons.length <= siblings.length) score += 2;
+
+  let depth = 0;
+  let walk = concept.parentId;
+  while (walk) {
+    depth += 1;
+    walk = catalog.conceptMap[walk]?.parentId;
+  }
+  if (depth === 1) score += 1;
+
+  return score;
+}
+
 export function missingConceptForGeneration(
   req: SessionRequest,
   progress: Record<string, ConceptProgress>,
+  recentCategories: CategoryId[],
   catalog: Catalog,
   profile?: LocalProfile,
+  options: SelectOptions = {},
 ): { conceptId: string; reason: string } | null {
-  const knownIds = profile?.knownConceptIds ?? [];
+  const ctx = ctxOf(catalog, progress, profile, options);
   const concepts = catalog.concepts.filter((c) => {
     if (req.category && req.category !== "random" && c.category !== req.category) return false;
     if (profile?.avoidTopics.includes(c.category)) return false;
-    return c.prerequisites.every((id) => knownEnough(id, progress, req.journalistDepth, catalog, knownIds));
+    if (!isCategoryOpenForSelection(catalog, c.category, req.category)) return false;
+    return isConceptUnlocked(c, ctx);
   });
   const withoutFit = concepts.filter((c) => {
     const units = lessonsForConcept(catalog, c.id).filter((l) => durationFits(l, req.minutes));
     return units.length === 0;
   });
-  const unseen = withoutFit.filter((c) => !progress[c.id]?.encountered);
-  const pick = unseen[0] ?? withoutFit[0];
+  if (withoutFit.length === 0) return null;
+  const scored = withoutFit.map((concept) => ({
+    item: concept,
+    score: scoreMissingConcept(concept, req, progress, recentCategories, catalog, profile, options),
+  }));
+  const pick = pickFromScored(scored, options.rng ?? Math.random, { topN: 4, decisiveGap: 3 });
   if (!pick) return null;
   return { conceptId: pick.id, reason: `No ${req.minutes}-minute unit exists for ${pick.name}.` };
 }
@@ -252,11 +437,17 @@ export function categoryConcepts(catalog: Catalog, category: CategoryId) {
 export function nextConcepts(
   catalog: Catalog,
   progress: Record<string, ConceptProgress>,
-  journalist: boolean,
+  _journalist: boolean,
   knownIds: string[],
+  courses?: SelectOptions["courses"],
 ) {
+  const profile = { displayName: "", preferredTopics: [], knownConceptIds: knownIds, avoidTopics: [], customInterests: [] };
+  const ctx = makeReadinessContext(catalog, progress, profile, courses);
   return catalog.concepts.filter((c) => {
     if (progress[c.id]?.encountered) return false;
-    return c.prerequisites.every((id) => knownEnough(id, progress, journalist, catalog, knownIds));
+    if (!isCategoryOpenForSelection(catalog, c.category, null)) return false;
+    return isConceptUnlocked(c, ctx);
   });
 }
+
+export { lessonsInCourse } from "./curriculum";

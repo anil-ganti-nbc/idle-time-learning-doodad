@@ -1,0 +1,582 @@
+{
+  "courseId": "os-concurrency",
+  "moduleId": "os-c-sched",
+  "lessons": [
+    {
+      "id": "os-sched-10",
+      "conceptId": "os-sched",
+      "title": "The next owner of a core",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-fairness",
+      "diagram": "sched-queues",
+      "explanation": [
+        "Several threads can be runnable at once. A core runs one. The scheduler is the kernel code that chooses which runnable thread owns that core next. Runnable means ready to execute: not waiting on I/O, not stopped. The programs do not grab the core. They sit in the runnable set until the policy names a winner.",
+        "That policy is a rule over the same set. A fair-share rule tries to give each task a slice of the core in proportion to a weight. A deadline rule tries to run a task before a named time, even if a neighbor is behind on average. A general-purpose fair-share scheduler is the first rule with more bookkeeping. Both rules still pick one owner.",
+        "A teaching kernel implements the pick as a loop over the runnable set: find a ready thread, let it occupy the core until it blocks or its slice ends. MIT 6.1810 starts from that loop, not from a catalog of vendor names. The failure mode is a ready thread sitting while a less deserving one burns the core."
+      ],
+      "example": "A compiler and an editor are both runnable. The core is free. The scheduler, not either program, decides which one executes the next slice. The editor does not take the core by calling a library. It remains runnable until the policy names it.",
+      "whyItMatters": "Every later claim about fairness, latency, or missing a deadline is a claim about this pick.",
+      "quiz": [
+        {
+          "id": "c-sched-1",
+          "stem": "The scheduler's job on a core is:",
+          "correctAnswer": "Choosing which runnable thread owns that core next",
+          "distractors": [
+            { "text": "Compiling the next program so it can start", "kind": "misapplied", "rationale": "A compiler is a guest program, not the pick." },
+            { "text": "Allocating a new address space for whoever asked", "kind": "nearby", "rationale": "Maps are process setup. The scheduler picks a runner." },
+            { "text": "Running every blocked thread at the same time", "kind": "reversed", "rationale": "Blocked threads are not runnable. A core still runs one." }
+          ],
+          "correctExplanation": "One core, one owner, chosen from the runnable set. That is the job.",
+          "objectiveIds": ["Describe the scheduler as choosing which runnable thread owns a core next"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "c-sched-2",
+          "stem": "A compiler and an editor are both runnable when a core becomes free. The next owner is:",
+          "correctAnswer": "Whichever runnable thread the scheduler's policy names",
+          "distractors": [
+            { "text": "Both threads, because one core executes two programs together", "kind": "reversed", "rationale": "A core runs one thread. Overlap is not a second owner." },
+            { "text": "The compiler, because the first starter keeps the core until exit", "kind": "misconception", "rationale": "Keeping the core until exit is batch, not a scheduler pick." },
+            { "text": "The process that allocated the larger address space", "kind": "nearby", "rationale": "Map size is not who sits on the core." }
+          ],
+          "correctExplanation": "Both are eligible. The policy names one. The programs do not grab it.",
+          "objectiveIds": ["Describe the scheduler as choosing which runnable thread owns a core next"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-sched-3",
+          "stem": "A fair-share policy and a deadline policy differ in that:",
+          "correctAnswer": "Fair-share splits by weight; a deadline policy tries to hit a named time",
+          "distractors": [
+            { "text": "Fair-share always hits every deadline; a deadline policy only balances averages", "kind": "reversed", "rationale": "Those jobs are swapped. Fair-share equalizes; a deadline names an instant." },
+            { "text": "They pick from different hardware, one using memory and the other the disk", "kind": "nearby", "rationale": "Both pick a thread for a core. The rule differs, not the device." },
+            { "text": "Deadline rules exist only as compile-time flags, not a run-time pick", "kind": "misapplied", "rationale": "The deadline is a run-time constraint on who runs next." }
+          ],
+          "correctExplanation": "Same runnable set, different winners. Weight versus a named instant.",
+          "objectiveIds": ["Contrast a fair-share policy with one that tries to meet a deadline"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "os-fairness-10",
+      "conceptId": "os-fairness",
+      "title": "Behind on a share, first in line",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-sched"],
+      "goDeeper": "os-latency-sched",
+      "explanation": [
+        "Fair-share scheduling treats the core as a resource each runnable task is owed. A share is a weight. Two tasks with equal weight are owed equal time. A task with twice the weight is owed twice the time. The scheduler's state is how much each has already consumed, scaled by that weight.",
+        "When a task has consumed more than its share, it is ahead. The next slice goes to a runnable task that is behind. Ahead does not mean finished. It means that, relative to its weight, it has had more of the core than the others. The policy leaves it off the core until the others draw even.",
+        "A task that stays runnable and greedy still gets only its weighted slice while others are runnable too. A task that blocked is not owed time it was not runnable to receive. Shares account over the runnable set, not over wall-clock equality with a sleeper."
+      ],
+      "example": "Task A and task B have equal shares. A has just run for a long slice. B has been runnable the whole time and has run less. The scheduler owes B the next slice. A sits, still runnable, until its consumed time is no longer ahead of B's.",
+      "whyItMatters": "Who runs next is an accounting question on the runnable set, not a race among the programs to grab the core.",
+      "quiz": [
+        {
+          "id": "c-fair-1",
+          "stem": "Under a fair-share policy, each runnable task is owed:",
+          "correctAnswer": "A slice of the core in proportion to its weight",
+          "distractors": [
+            { "text": "The entire core until that task exits the system", "kind": "nearby", "rationale": "Until-exit is a batch rule, not a weighted slice." },
+            { "text": "No time at all if any other task is also runnable", "kind": "reversed", "rationale": "Runnable neighbors share the core; they do not zero it." },
+            { "text": "A private core that other tasks are forbidden to use", "kind": "misapplied", "rationale": "A share is a weight on a shared core, not a second machine." }
+          ],
+          "correctExplanation": "Weight names the fraction. The core is still shared.",
+          "objectiveIds": ["Explain fair-share as each task being owed a slice weighted by its share"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-fair-2",
+          "stem": "Task A and task B have equal shares. A has already run longer while both stayed runnable. The next slice goes to:",
+          "correctAnswer": "B, because A has consumed more than its share",
+          "distractors": [
+            { "text": "A, because a running task keeps the core until it finishes", "kind": "reversed", "rationale": "Ahead means it waits. Finishing is not the rule." },
+            { "text": "Neither, because equal shares require both to idle together", "kind": "misconception", "rationale": "Equal shares split time. They do not demand a double idle." },
+            { "text": "Whichever task allocated the larger address space", "kind": "nearby", "rationale": "Map size is not consumed time." }
+          ],
+          "correctExplanation": "A is ahead on the books. B is behind. Behind runs.",
+          "objectiveIds": ["Predict who runs next when one task has consumed more than its share"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-fair-3",
+          "stem": "A task whose weight is twice another's is owed, while both stay runnable:",
+          "correctAnswer": "About twice the core time of the lighter task",
+          "distractors": [
+            { "text": "The same core time, because weight only names the process", "kind": "misconception", "rationale": "Weight scales the owed slice. It is not a label." },
+            { "text": "No core time until the lighter task has exited", "kind": "reversed", "rationale": "Both are owed time now. Exit is not the gate." },
+            { "text": "A second physical core that the kernel must invent", "kind": "misapplied", "rationale": "A double share is a bigger fraction of the same core." }
+          ],
+          "correctExplanation": "Twice the weight, twice the owed time, while both remain runnable.",
+          "objectiveIds": ["Explain fair-share as each task being owed a slice weighted by its share"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-latency-sched-10",
+      "conceptId": "os-latency-sched",
+      "title": "A prompt wakeup or a packed core",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-sched", "arch-latency-throughput"],
+      "goDeeper": "os-realtime",
+      "explanation": [
+        "Scheduler latency here is wakeup latency: the time from a thread becoming runnable to the time it sits on a core. Throughput is how much useful work the cores finish per second. Short slices and a preference for the just-woken thread cut wakeup latency. Long slices mean the core changes hands less often and a cache stays hot, which raises throughput.",
+        "Those knobs move different numbers. A fair average share can still leave a just-woken editor waiting through a long batch slice. The editor's tail — the slow keystroke — is a latency number. The compiler's jobs-per-hour is a throughput number. The same pick cannot maximize both.",
+        "The failure mode is packing the core for the batch job. The interactive thread is runnable, even owed time, but the current slice is long and the policy will not break it. Throughput looks fine. The tail does not."
+      ],
+      "example": "A compiler is in a twenty-millisecond slice. A keystroke makes the editor runnable at the start of that slice. If the scheduler will not break the slice, the key waits twenty milliseconds. Average fairness over a second may still look even. The click did not.",
+      "whyItMatters": "Interactive tails die on long slices even when the averages still look fair.",
+      "quiz": [
+        {
+          "id": "c-lats-1",
+          "stem": "Scheduler choices that cut wakeup latency, versus those that maximize throughput, differ in that:",
+          "correctAnswer": "The first breaks slices for a just-woken thread; the second keeps a job on the core",
+          "distractors": [
+            { "text": "The first maximizes jobs per hour; the second minimizes time to a wakeup", "kind": "reversed", "rationale": "Those effects are swapped. Short slices cut wait; long slices pack work." },
+            { "text": "They control disk rotation speed rather than who sits on a core", "kind": "nearby", "rationale": "This is a CPU-pick trade, not a device RPM knob." },
+            { "text": "Wakeup latency and throughput are the same number, so the choices cannot differ", "kind": "misconception", "rationale": "Per-wakeup wait and completions per second are different quantities." }
+          ],
+          "correctExplanation": "Break the slice to sit soon, or keep the job to finish more work. Different numbers.",
+          "objectiveIds": ["Contrast scheduler choices that cut wakeup latency with those that maximize throughput"],
+          "prerequisiteConceptIds": ["os-sched", "arch-latency-throughput"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "c-lats-2",
+          "stem": "Cutting wakeup latency rather than packing the core means:",
+          "correctAnswer": "Giving the just-woken thread a core soon, even if a batch job is mid-slice",
+          "distractors": [
+            { "text": "Lengthening the batch slice so caches stay hot and jobs finish faster", "kind": "reversed", "rationale": "That is the throughput choice. It lengthens the wait." },
+            { "text": "Deleting the runnable set so only the batch job can exist", "kind": "misapplied", "rationale": "The editor is supposed to remain runnable. The pick changes." },
+            { "text": "Raising clock frequency so every wait counts as throughput", "kind": "nearby", "rationale": "A hotter clock is not the scheduler's latency knob." }
+          ],
+          "correctExplanation": "Sooner ownership for the woken thread. The batch job loses the core earlier.",
+          "objectiveIds": ["Contrast scheduler choices that cut wakeup latency with those that maximize throughput"],
+          "prerequisiteConceptIds": ["os-sched", "arch-latency-throughput"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-lats-3",
+          "stem": "A batch compiler can wreck an interactive tail because:",
+          "correctAnswer": "The editor's wakeup sits behind a long slice even if its average share is fair",
+          "distractors": [
+            { "text": "Fair averages already bound the slowest keystroke, so tails cannot move", "kind": "reversed", "rationale": "Averages hide the wait inside one long slice." },
+            { "text": "Compilers are forbidden from sharing a core with an editor", "kind": "misapplied", "rationale": "They share. The slice length is the problem." },
+            { "text": "The editor's address space is larger, so every wakeup is a disk read", "kind": "nearby", "rationale": "The stall is a scheduling wait, not a map-size tax." }
+          ],
+          "correctExplanation": "The click is a latency sample. A long slice delays it without spoiling the average.",
+          "objectiveIds": ["Predict why a batch job can wreck an interactive tail"],
+          "prerequisiteConceptIds": ["os-sched", "arch-latency-throughput"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-realtime-10",
+      "conceptId": "os-realtime",
+      "title": "The named time, not the average",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-sched"],
+      "goDeeper": "os-scheduler-class",
+      "explanation": [
+        "Real-time scheduling is a contract on a named time. A task is given a deadline: finish this job before that instant. Success is meeting the deadline. An average share over a second is a different number. Averages hide a miss. The miss is the failure.",
+        "A fair-share policy tracks how much of the core each task has consumed and pays back whoever is behind. That equalizes over an interval. A deadline sitting inside that interval is missed even if the task later receives its share. Later is after the instant. Fair-share is the wrong tool for that contract.",
+        "The tradeoff is protecting the named time versus sharing the core evenly. A deadline policy will run the urgent task even if a fair-share neighbor is behind. Average fairness and batch throughput can suffer. Missing the instant is treated as worse than looking unfair."
+      ],
+      "example": "A motor-control loop must run every 2 ms. A fair-share scheduler also has a compiler. Over a second the loop gets its two percent. In one 10 ms window the compiler runs first and the loop's job starts at 6 ms. The average was fine. The 2 ms deadline was not.",
+      "whyItMatters": "A missed deadline is a failed job, even when the fair-share plot still looks even.",
+      "quiz": [
+        {
+          "id": "c-rt-1",
+          "stem": "Real-time scheduling treats success as:",
+          "correctAnswer": "Meeting a named deadline, not looking even on average",
+          "distractors": [
+            { "text": "Equalizing consumed time across tasks over a long interval", "kind": "nearby", "rationale": "That is fair-share accounting, not a deadline contract." },
+            { "text": "Maximizing jobs finished per hour, ignoring any named instant", "kind": "misapplied", "rationale": "Throughput is a different number. The instant is the contract." },
+            { "text": "Deleting averages so that no task is allowed to have a share", "kind": "reversed", "rationale": "Shares can still exist. They are not the success test." }
+          ],
+          "correctExplanation": "The instant is the test. A pretty average can still hide a miss.",
+          "objectiveIds": ["Describe real-time scheduling as meeting deadlines, not averages"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "c-rt-2",
+          "stem": "A fair-share scheduler is the wrong tool for a deadline because:",
+          "correctAnswer": "Catching a task up later does not unmiss an instant that already passed",
+          "distractors": [
+            { "text": "Fair-share never runs a periodic task, so deadlines cannot exist", "kind": "reversed", "rationale": "It will run the task. It may run it too late." },
+            { "text": "Deadlines are compile-time flags and never constrain a run-time pick", "kind": "misapplied", "rationale": "The named time is a run-time constraint on who runs now." },
+            { "text": "Averages already bound every instant, so later catch-up is the same as on-time", "kind": "misconception", "rationale": "An average over a window can hide a miss inside the window." }
+          ],
+          "correctExplanation": "Payback is after the instant. The deadline needed the core before that.",
+          "objectiveIds": ["Predict why a fair-share scheduler is the wrong tool for a deadline"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-rt-3",
+          "stem": "Protecting a named time instead of equalizing shares typically:",
+          "correctAnswer": "Runs the urgent job now, at the cost of a neighbor's average share",
+          "distractors": [
+            { "text": "Forces the urgent job to wait until every other task has been caught up", "kind": "reversed", "rationale": "Waiting for catch-up is the fair-share move. It misses the instant." },
+            { "text": "Raises every task's average share, which is the same as meeting the instant", "kind": "misconception", "rationale": "Averages and instants are different tests. One can pass while the other fails." },
+            { "text": "Replaces the core with a second machine dedicated to that one job", "kind": "nearby", "rationale": "The kernel still picks among threads on the same core." }
+          ],
+          "correctExplanation": "The urgent job cuts the line. Someone else's even split is what you spent.",
+          "objectiveIds": ["Predict why a fair-share scheduler is the wrong tool for a deadline"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "os-scheduler-class-10",
+      "conceptId": "os-scheduler-class",
+      "title": "One kernel, more than one pick",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-sched"],
+      "goDeeper": "os-preempt",
+      "explanation": [
+        "A kernel can keep more than one scheduling policy. Each policy is a class: a rule for picking among the threads enrolled in it. One class might try to meet a named time. Another might split the core by share. The runnable set is partitioned by class. The kernel still has to decide which class owns the core when both have a runnable thread.",
+        "When a real-time class and a fair-share class both have a runnable thread, the real-time class wins. The named time is why that class exists. Letting the fair-share thread run would make the named time a suggestion. The fair-share thread sits, still runnable, until the real-time class is idle.",
+        "A real-time thread that stays runnable and greedy starves the fair-share class. Classes are a ranking of policies, not fairness across the whole machine. Enrolling the wrong thread in the higher class is how everyone else's work stops."
+      ],
+      "example": "A control loop in the real-time class and a compiler in the fair-share class are both runnable. The core is free. The kernel runs the control loop. The compiler's share accounting can wait. When the loop blocks, the compiler gets the core.",
+      "whyItMatters": "Two policies in one kernel still need a rule for which policy speaks first.",
+      "quiz": [
+        {
+          "id": "c-scls-1",
+          "stem": "Scheduling classes in one kernel are:",
+          "correctAnswer": "More than one policy, each picking among the threads enrolled in it",
+          "distractors": [
+            { "text": "A single fair-share rule that every thread is forced to use", "kind": "reversed", "rationale": "A class exists because the kernel kept more than one rule." },
+            { "text": "Separate kernels, one per program, that never share a core", "kind": "nearby", "rationale": "One kernel. Several policies. The core is still shared." },
+            { "text": "Nice values stored in the binary, which the kernel cannot override", "kind": "misapplied", "rationale": "Scheduling classes are kernel policies. Nice is a hint, not a baked-in class the kernel cannot change." }
+          ],
+          "correctExplanation": "Several rules live in one kernel. Each rule has its own enrolled set.",
+          "objectiveIds": ["Describe scheduling classes as more than one policy living in one kernel"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-scls-2",
+          "stem": "A real-time task and a fair-share task are both runnable. The core goes to:",
+          "correctAnswer": "The real-time task; the fair-share task waits until that class is idle",
+          "distractors": [
+            { "text": "The fair-share task, because averages outrank a named time", "kind": "reversed", "rationale": "The real-time class exists so the named time is not a suggestion." },
+            { "text": "Both at once, because classes pin each task to its own physical core", "kind": "misconception", "rationale": "Classes rank policies. They do not invent a core per class." },
+            { "text": "Whichever task has consumed less than its share, ignoring class", "kind": "nearby", "rationale": "Share accounting is the fair-share class's rule, not the ranking." }
+          ],
+          "correctExplanation": "The higher class speaks first. Fair-share runs when that class has no one ready.",
+          "objectiveIds": ["Predict which class wins when a real-time task and a fair-share task are both runnable"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-scls-3",
+          "stem": "A real-time class that stays runnable and greedy typically:",
+          "correctAnswer": "Starves the fair-share class, because the ranking never hands the core down",
+          "distractors": [
+            { "text": "Raises every fair-share task into the real-time class automatically", "kind": "misapplied", "rationale": "Enrollment is not a consolation prize. The ranking holds." },
+            { "text": "Yields first, because a higher class is required to run last", "kind": "reversed", "rationale": "Higher class runs first. That is the starvation path." },
+            { "text": "Merges both policies into one weight so nobody can starve", "kind": "nearby", "rationale": "Classes are a ranking, not a blended share across the machine." }
+          ],
+          "correctExplanation": "The lower class only runs when the higher class is idle. Greedy idle-never starves it.",
+          "objectiveIds": ["Describe scheduling classes as more than one policy living in one kernel"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-load-balance-10",
+      "conceptId": "os-load-balance",
+      "title": "An idle core is not a free move",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-sched"],
+      "goDeeper": "os-numa",
+      "explanation": [
+        "A machine has several cores. Each can run one thread. Load balancing is moving a runnable thread from a busy core's queue onto an idle or less-loaded core so work is not piled on one while another sits empty. The per-core queues are the state. The move is the decision.",
+        "The move is not free. The thread's instructions and data were in the old core's caches. The new core's caches are colder for that working set. The first slice after the bounce misses more. Chasing a one-tick idle can cost more than leaving the thread where its lines already live.",
+        "The tradeoff is idle cores versus cache warmth. Leave a thread on a busy core and an idle core wastes cycles. Bounce it too eagerly and you pay a burst of misses for a short run. The failure mode is a thread that ping-pongs: every bounce undoes the last warmup."
+      ],
+      "example": "Core 0 has two runnable threads. Core 1 is idle. The balancer moves the waiting thread to core 1. That thread's hot lines are still in core 0's cache. The first milliseconds on core 1 refill them. If the balancer soon moves it back, both caches stay cold.",
+      "whyItMatters": "Spreading work and keeping a cache warm are different goods, and a bounce spends one to buy the other.",
+      "quiz": [
+        {
+          "id": "c-lbal-1",
+          "stem": "Load balancing is:",
+          "correctAnswer": "Moving runnable work from a busy core onto a less-loaded one",
+          "distractors": [
+            { "text": "Giving every thread its own private core that never shares", "kind": "misconception", "rationale": "Balance moves work among shared cores. It does not pin one-to-one forever." },
+            { "text": "Deleting a thread on a busy core so the idle core has nothing to steal", "kind": "reversed", "rationale": "The point is to run the work, not to discard it." },
+            { "text": "Compiling both programs into one binary so one core can finish them", "kind": "misapplied", "rationale": "Balance is a run-time move of threads, not a link step." }
+          ],
+          "correctExplanation": "Work moves. Queues are the state. An empty core is why you bother.",
+          "objectiveIds": ["Describe load balancing as moving work across cores"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-lbal-2",
+          "stem": "Bouncing a thread onto a core whose caches do not hold its lines typically:",
+          "correctAnswer": "Pays a burst of misses while that working set is refilled from farther away",
+          "distractors": [
+            { "text": "Makes every later miss cheaper than staying on the warm core", "kind": "reversed", "rationale": "The new core is colder. Warmth was what you left." },
+            { "text": "Moves the old core's cache tags with the thread, so nothing refills", "kind": "nearby", "rationale": "Caches are per core. The thread does not carry the lines." },
+            { "text": "Has no cache cost, because runnable queues store the working set", "kind": "misapplied", "rationale": "A queue holds a thread record, not the hot lines." }
+          ],
+          "correctExplanation": "The lines stayed behind. The first slice on the cold core refills them.",
+          "objectiveIds": ["Predict the cache cost of bouncing a thread to a colder core"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-lbal-3",
+          "stem": "Leaving a thread on a busy core versus moving it to an idle one is a trade between:",
+          "correctAnswer": "Cache warmth on the busy core and unused cycles on the idle core",
+          "distractors": [
+            { "text": "Address-space size and the number of open handles", "kind": "nearby", "rationale": "Those are process records. The bounce is about queues and caches." },
+            { "text": "Guaranteeing zero misses and guaranteeing zero idle cores at once", "kind": "misconception", "rationale": "Neither side of the trade is a guarantee. Both costs remain." },
+            { "text": "Deleting the busy core so only the idle one can run", "kind": "reversed", "rationale": "Both cores stay. You choose whether the work moves." }
+          ],
+          "correctExplanation": "Stay warm and leave a core idle, or fill the idle and miss while it warms.",
+          "objectiveIds": ["Predict the cache cost of bouncing a thread to a colder core"],
+          "prerequisiteConceptIds": ["os-sched"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-numa-10",
+      "conceptId": "os-numa",
+      "title": "Pages that live next to some cores",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-load-balance", "os-vm"],
+      "explanation": [
+        "On a NUMA machine, DRAM is not one pool with one latency. Memory is attached to nodes. Cores on a node reach that node's DRAM on a short path. Cores on another node reach it over an interconnect. The same physical page is close to some cores and far from others.",
+        "A thread's pages are frames the VM system placed somewhere. A local miss is a cache miss that fills from nearby DRAM. Run the thread on a far core and the fill is a remote access: still a miss, then a trip. That remote fill costs more than the local miss, and it keeps costing until the pages or the thread move.",
+        "Load balancing that ignores nodes will bounce a thread onto a cold far core because that core is idle. Idle was the wrong number. The failure mode is a balanced-looking machine whose threads miss across the interconnect."
+      ],
+      "example": "A process's heap was allocated on node 0. Load balancing moves the thread to an idle core on node 1. Every heap miss now crosses to node 0. A miss that used to fill from local DRAM now pays the interconnect. The idle core was not the cheap core.",
+      "whyItMatters": "An idle far core can be the expensive place to run, because the pages did not move with the thread.",
+      "quiz": [
+        {
+          "id": "c-numa-1",
+          "stem": "NUMA means:",
+          "correctAnswer": "Memory is closer to some cores than to others",
+          "distractors": [
+            { "text": "Every core sees every DRAM byte at the same latency", "kind": "reversed", "rationale": "Same latency would be uniform memory. NUMA is the opposite." },
+            { "text": "Virtual addresses no longer translate to physical frames", "kind": "nearby", "rationale": "VM still translates. The frames have a home node." },
+            { "text": "Idle cores are forbidden, so load balancing cannot move work", "kind": "misapplied", "rationale": "Work still moves. The cost of a far move is the NUMA part." }
+          ],
+          "correctExplanation": "Frames sit on a node. Some cores have a short path there. Others do not.",
+          "objectiveIds": ["Explain NUMA as memory that is closer to some cores than others"],
+          "prerequisiteConceptIds": ["os-load-balance", "os-vm"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-numa-2",
+          "stem": "A thread running far from the frames that hold its pages typically pays:",
+          "correctAnswer": "A miss plus an interconnect trip, which costs more than a local DRAM fill",
+          "distractors": [
+            { "text": "Only a local cache miss, because remote DRAM is as cheap as local L1", "kind": "reversed", "rationale": "Remote DRAM is the long path. L1 is not involved as a substitute." },
+            { "text": "No memory cost, because load balancing already moved the pages with the thread", "kind": "misconception", "rationale": "Moving the thread does not move the frames. That is the trap." },
+            { "text": "Only a TLB refill on the original core, which the far core never repeats", "kind": "nearby", "rationale": "The far core still translates, then still fills from far DRAM." }
+          ],
+          "correctExplanation": "Still a miss, then a trip. Local DRAM was the cheaper fill.",
+          "objectiveIds": ["Predict why running a thread far from its pages costs more than a local miss"],
+          "prerequisiteConceptIds": ["os-load-balance", "os-vm"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-numa-3",
+          "stem": "A local cache miss that fills from nearby DRAM, compared with running on a far core from those pages:",
+          "correctAnswer": "Is the cheaper miss; the far core adds the interconnect after the miss",
+          "distractors": [
+            { "text": "Is always more expensive, because local DRAM is farther than any remote node", "kind": "reversed", "rationale": "Local DRAM is the short path. Remote is the trip." },
+            { "text": "Cannot happen, because NUMA machines have no caches", "kind": "misapplied", "rationale": "Caches remain. NUMA is about where the fill comes from after a miss." },
+            { "text": "Is the same cost, because a miss is a miss regardless of which node holds the frame", "kind": "subtle", "rationale": "The miss is the same event. The fill path is not the same length." }
+          ],
+          "correctExplanation": "Same kind of miss, longer fill. Distance after the miss is the NUMA tax.",
+          "objectiveIds": ["Predict why running a thread far from its pages costs more than a local miss"],
+          "prerequisiteConceptIds": ["os-load-balance", "os-vm"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-preempt-10",
+      "conceptId": "os-preempt",
+      "title": "The running thread did not volunteer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-context-switch", "os-sched"],
+      "goDeeper": "os-priority-inv",
+      "diagram": "sched-queues",
+      "explanation": [
+        "Preemption is the kernel taking a core back from a thread that did not yield. The thread is running. A timer, or a wake-up of something the policy prefers, transfers into the kernel. The kernel then picks a different runnable thread for that core. The outgoing thread is still runnable. It just no longer owns the core.",
+        "Because the thread did not stop at a voluntary call, its user-visible life is still in the register file: program counter, stack pointer, general registers. Those must be saved in the thread record before another thread's registers are loaded. Miss one and resume is a different computation.",
+        "A cooperative kernel only switches when the running thread asks. Preemption is how a greedy loop loses the core anyway. The cost is the interrupted save, plus whatever the scheduler does with the newly free core. The failure mode is a kernel that cannot take the core back: one spinning thread owns the machine."
+      ],
+      "example": "A compiler is in a tight add loop. It never calls yield. The timer fires. The kernel writes the compiler's registers into its thread record, marks it runnable, and runs the editor. Later the compiler resumes at the next add with the same operands, because those registers came back.",
+      "whyItMatters": "A policy that names a different winner is fiction unless the kernel can interrupt the current one and save its life.",
+      "quiz": [
+        {
+          "id": "c-pre-1",
+          "stem": "Preemption is:",
+          "correctAnswer": "The kernel taking the CPU back from a running thread that did not yield",
+          "distractors": [
+            { "text": "A thread volunteering the core by calling into the kernel on purpose", "kind": "reversed", "rationale": "That is a yield. Preemption is the case where it did not ask." },
+            { "text": "Deleting the running thread so it cannot resume later", "kind": "nearby", "rationale": "The thread stays runnable. Taking the core is not destroying it." },
+            { "text": "Compiling the running program again so the next slice is a new binary", "kind": "misapplied", "rationale": "Preemption is a run-time interrupt, not a rebuild." }
+          ],
+          "correctExplanation": "The kernel interrupted a tenant that did not leave. The tenant is still runnable.",
+          "objectiveIds": ["Describe preemption as taking the CPU back from a running thread"],
+          "prerequisiteConceptIds": ["os-context-switch", "os-sched"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "c-pre-2",
+          "stem": "The kernel interrupts a thread that did not yield. Before another thread can run, the kernel must have saved:",
+          "correctAnswer": "The interrupted thread's registers, including the program counter and stack pointer",
+          "distractors": [
+            { "text": "Nothing, because a thread that did not yield has no state worth saving", "kind": "reversed", "rationale": "Not yielding is why the life is still in the register file." },
+            { "text": "Only the name of the source file the thread was compiled from", "kind": "misapplied", "rationale": "A file name does not resume an add." },
+            { "text": "A new kernel image dedicated to that one thread", "kind": "nearby", "rationale": "There is still one kernel. The thread record is the saved life." }
+          ],
+          "correctExplanation": "The register file is the life. Save it, then load the incoming thread.",
+          "objectiveIds": ["Predict what must be saved when the kernel interrupts a thread that did not yield"],
+          "prerequisiteConceptIds": ["os-context-switch", "os-sched"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-pre-3",
+          "stem": "A thread that never calls yield still loses the core when:",
+          "correctAnswer": "The kernel interrupts it and names a different runnable owner",
+          "distractors": [
+            { "text": "Hardware forbids more than one thread from existing, so it must exit", "kind": "reversed", "rationale": "Several threads exist. Preemption is how they share without asking." },
+            { "text": "Hardware forbids loops longer than one timeslice, so it must yield", "kind": "misapplied", "rationale": "Preemption is the kernel interrupting a thread that never called yield." },
+            { "text": "Its address space is unmapped as soon as it starts a tight loop", "kind": "nearby", "rationale": "The map stays. The owner of the core changes." }
+          ],
+          "correctExplanation": "Asking is optional. Taking the core back is how a greedy loop shares.",
+          "objectiveIds": ["Describe preemption as taking the CPU back from a running thread"],
+          "prerequisiteConceptIds": ["os-context-switch", "os-sched"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-priority-inv-10",
+      "conceptId": "os-priority-inv",
+      "title": "The high task waits behind the middle",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-sched", "os-lock"],
+      "explanation": [
+        "Priority inversion is a specific wait. A low-priority task holds a lock. A high-priority task needs that lock and blocks. A middle-priority task is runnable and does not need the lock. The scheduler, obeying priorities, runs the middle task. The low task cannot finish and release. The high task waits, not on the lock holder, but on an unrelated middle runner.",
+        "The state is three tasks and one lock. The high task is not runnable. The low task is runnable but loses the core. The middle task is the one the policy asked for. Nothing is deadlocked: the holder will release if it ever runs. The inversion is that high priority did not mean runs soon. It meant runs soon unless a lock and a middle task intervene.",
+        "A fix is priority inheritance: while the low task holds the lock the high task wants, the low task runs at the high task's priority. The middle task no longer outranks the holder, so the holder keeps the core, finishes, and drops the lock. The high task acquires and runs. The middle task still beats the low task once the lock is free. The high task no longer waits behind the middle one."
+      ],
+      "example": "A logging thread (low) holds a lock on a buffer. A control loop (high) needs that buffer and blocks. A compiler (middle) is runnable. Without inheritance the compiler runs, the logger does not, the loop stays blocked. With inheritance the logger runs at the loop's priority until it unlocks, then the loop runs, and the compiler waits its turn.",
+      "whyItMatters": "A lock plus three priorities can make the high task wait on work it never knew about.",
+      "quiz": [
+        {
+          "id": "c-pinv-1",
+          "stem": "A low logger holds a lock. A high control loop blocks on it. A middle compiler is runnable. The inversion is:",
+          "correctAnswer": "The compiler runs, so the logger cannot release, so the loop waits behind the compiler",
+          "distractors": [
+            { "text": "The loop and the logger each hold the lock, so neither can proceed", "kind": "nearby", "rationale": "That would be a two-holder story. Here only the low task holds it." },
+            { "text": "The compiler is blocked on the lock too, so all three are waiting", "kind": "reversed", "rationale": "The middle task does not need the lock. That is why it gets the core." },
+            { "text": "The loop runs immediately because high priority always owns the core", "kind": "misconception", "rationale": "The loop is blocked. High priority does not run a waiter." }
+          ],
+          "correctExplanation": "Low holds, high waits, middle runs. The high task is queued behind work it does not need.",
+          "objectiveIds": ["Diagnose priority inversion as a low task holding a lock a high task needs"],
+          "prerequisiteConceptIds": ["os-sched", "os-lock"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "c-pinv-2",
+          "stem": "A fix that lets the low holder finish without the high waiter sitting behind a middle runner is:",
+          "correctAnswer": "Priority inheritance: run the holder at the waiter's priority until it unlocks",
+          "distractors": [
+            { "text": "Drop the high task below the middle one so the holder can be ignored", "kind": "reversed", "rationale": "That makes the inversion worse. The high task should not lose rank." },
+            { "text": "Give the middle task the same lock so all three can hold it at once", "kind": "nearby", "rationale": "A lock is one holder. Sharing it is not the fix." },
+            { "text": "Boost the middle task further so it finishes before the holder ever runs", "kind": "misapplied", "rationale": "That is the inversion, not the cure. The holder needs the core now." }
+          ],
+          "correctExplanation": "The holder borrows the waiter's rank, finishes, unlocks. The waiter no longer sits behind the middle.",
+          "objectiveIds": ["Predict a fix that lets the low task finish without the high task waiting behind a middle one"],
+          "prerequisiteConceptIds": ["os-sched", "os-lock"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "c-pinv-3",
+          "stem": "Raising the lock holder to the waiter's priority until the lock is dropped is meant to:",
+          "correctAnswer": "Let the holder finish and release so the high task does not wait behind the middle one",
+          "distractors": [
+            { "text": "Keep the middle task on the core until the high task gives up on the lock", "kind": "reversed", "rationale": "The middle task is what you are pushing out of the way." },
+            { "text": "Remove the lock so the high task never has to wait on anyone", "kind": "misapplied", "rationale": "The lock stays. The holder's rank is what changed." },
+            { "text": "Freeze the high task's priority below the low task for the rest of the run", "kind": "subtle", "rationale": "Inheritance is temporary and upward for the holder, not a demotion of the waiter." }
+          ],
+          "correctExplanation": "Borrow rank, drop the lock, drop the rank. The waiter is next, not the middle task.",
+          "objectiveIds": ["Predict a fix that lets the low task finish without the high task waiting behind a middle one"],
+          "prerequisiteConceptIds": ["os-sched", "os-lock"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

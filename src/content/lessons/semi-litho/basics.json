@@ -1,0 +1,331 @@
+{
+  "courseId": "semi-litho",
+  "moduleId": "semi-l-basics",
+  "lessons": [
+    {
+      "id": "semi-litho-10",
+      "conceptId": "semi-litho",
+      "title": "Lithography is a stencil, not a slogan",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-wafer", "semi-planarity"],
+      "goDeeper": "semi-resist",
+      "diagram": "litho-sequence",
+      "explanation": [
+        "A chip layer is a decision about where material should stay, go, or be implanted. Photolithography does not make that material. It paints a temporary stencil: a film of photoresist is coated on a wafer that is already flat enough for the lens, a reduced image of a mask is projected into that film, and a develop step leaves resist only where you intended. Later etch or implant reads the stencil. Then the resist is stripped. The device is the transfer, not the photograph.",
+        "The loop is coat, expose, develop, transfer. Coat puts a uniform film on the plane CMP just handed you. Expose dumps a controlled dose of light through projection optics so the film's solubility changes where the image landed. Develop washes away the soluble parts. Transfer — plasma etch, implant, or a lift-off — is the step that actually changes the wafer. If you stop at 'the pattern is printed', you have named the photograph and skipped the device.",
+        "This course assumes the previous one. A wafer exists. It is one crystal, cleaned, and planarized because depth of focus will not forgive leftover hills. Lithography does not invent a better starting plane. It spends a focus and dose budget on the plane it is given, then hands a stencil to the next unit process."
+      ],
+      "example": "A contact layer is drawn as holes in a dielectric. Resist is coated, the mask image opens those holes in the resist, develop clears them, and a plasma etch transfers the openings into the oxide. Strip the resist and you have contacts. Print the same image on an unplanarized stack and half the holes sit outside the focus slice — the stencil was fine; the incoming height was not.",
+      "whyItMatters": "Every later trick in this course — Rayleigh, immersion, multipatterning, EUV — is still this loop. If you think lithography is 'drawing transistors with light', you will misread every scanner slide.",
+      "quiz": [
+        {
+          "id": "li10-1",
+          "stem": "Photolithography’s job in the process flow is to:",
+          "correctAnswer": "Project a mask image into resist so later etch or implant has a stencil",
+          "distractors": [
+            { "text": "Grow the gate oxide from the silicon wafer", "kind": "nearby", "rationale": "Oxidation is a different unit process." },
+            { "text": "Be the metal that carries current in the transistor", "kind": "misapplied", "rationale": "Resist is temporary. Metal is a later film." },
+            { "text": "Polish the wafer flat after deposition", "kind": "reversed", "rationale": "Planarity is an input this course inherits, not a lithography output." }
+          ],
+          "correctExplanation": "Light writes a temporary stencil. Transfer makes the device.",
+          "objectiveIds": ["State photolithography as projecting a mask image into resist so later etch or implant has a stencil"],
+          "prerequisiteConceptIds": ["semi-wafer", "semi-planarity"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "li10-2",
+          "stem": "The unit-process loop after a flat wafer exists is:",
+          "correctAnswer": "Coat resist, expose the image, develop the stencil, then transfer it",
+          "distractors": [
+            { "text": "Saw the boule, then implant, then grow the crystal", "kind": "reversed", "rationale": "Those are wafer-start steps, already done." },
+            { "text": "Deposit copper, then oxidize it into the gate", "kind": "misapplied", "rationale": "That is not a lithography sequence." },
+            { "text": "Skip develop and let the lamp etch the silicon directly", "kind": "subtle", "rationale": "Light changes resist solubility. Etch is a later transfer." }
+          ],
+          "correctExplanation": "Coat, expose, develop, transfer. The last one is the device.",
+          "objectiveIds": ["Trace coat, expose, develop, and pattern transfer as the unit-process loop"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "li10-3",
+          "stem": "Planarity is a lithography input rather than a later cleanup because:",
+          "correctAnswer": "The lens has one thin focus slice and will print whatever height you hand it",
+          "distractors": [
+            { "text": "Resists refuse to coat a polished wafer", "kind": "reversed", "rationale": "Resists coat planes. Hills are the problem." },
+            { "text": "CMP is only a cosmetic shine for the brochure", "kind": "nearby", "rationale": "The last course treated flatness as a budget, not shine." },
+            { "text": "Etch tools cannot load an unpatterned wafer", "kind": "subtle", "rationale": "Etch is the transfer after the stencil exists." }
+          ],
+          "correctExplanation": "You inherited a plane. The exposure spends focus on that plane.",
+          "objectiveIds": ["State photolithography as projecting a mask image into resist so later etch or implant has a stencil"],
+          "prerequisiteConceptIds": ["semi-planarity"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-resist-10",
+      "conceptId": "semi-resist",
+      "title": "Resist is a solubility switch",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-litho"],
+      "goDeeper": "semi-exposure",
+      "diagram": "resist-tone",
+      "explanation": [
+        "Photoresist is a coated film whose solubility in developer changes where light landed. That is the whole job. It is not the transistor, not the metal, and not the dielectric. After transfer, it is stripped. If you remember one sentence: the film records an optical image as a chemical solubility map.",
+        "Tone is the first fork. A positive resist becomes more soluble where it was exposed, so develop removes the bright regions and leaves the dark ones. A negative resist does the opposite: exposure cross-links or otherwise locks the film, so develop removes the unexposed parts. The mask polarity has to match the tone. Drawing a dark chrome feature on a positive resist is not the same stencil as the same chrome on a negative resist.",
+        "A spin coat and a soft bake set thickness and drive out solvent so the film is a solid, not a puddle, when the scanner fires. Thickness is a knob: too thin and the etch has no mask; too thick and the image will not stay vertical through the film. The next unit is dose. This unit is the medium dose writes on."
+      ],
+      "example": "A positive resist on a contact layer is exposed in the hole locations. Develop opens those holes. The same mask on a negative resist would leave plugs where the holes should be and you would etch the field instead of the contacts — a polarity error, not a scanner error.",
+      "whyItMatters": "Every later sentence about dose, roughness, or EUV photons assumes this film. If resist is 'the plastic that gets printed', you cannot diagnose a scummed hole or a washed-away line.",
+      "quiz": [
+        {
+          "id": "re10-1",
+          "stem": "Photoresist’s role is to:",
+          "correctAnswer": "Change solubility where the light hit, recording the image as a stencil",
+          "distractors": [
+            { "text": "Be the copper that carries current after etch", "kind": "nearby", "rationale": "Resist is stripped. Metal is a different film." },
+            { "text": "Grow a thermal oxide from the wafer", "kind": "misapplied", "rationale": "Oxide is grown silicon, not a coated polymer." },
+            { "text": "Cool the scanner lamp so the wafer does not melt", "kind": "subtle", "rationale": "The film is a chemical recorder, not a heat sink." }
+          ],
+          "correctExplanation": "Light writes solubility. Develop reads it. Transfer uses it.",
+          "objectiveIds": ["Explain photoresist as a film whose solubility changes where light landed"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "re10-2",
+          "stem": "After develop, a positive resist has typically:",
+          "correctAnswer": "Left the unexposed film and washed away the exposed regions",
+          "distractors": [
+            { "text": "Left the exposed film and washed away the dark regions", "kind": "reversed", "rationale": "That is negative tone." },
+            { "text": "Turned into the gate dielectric", "kind": "nearby", "rationale": "Resist is not oxide." },
+            { "text": "Implanted boron wherever the lamp was brightest", "kind": "misapplied", "rationale": "Implant is a later transfer, not develop." }
+          ],
+          "correctExplanation": "Positive: exposed leaves. Negative: exposed stays.",
+          "objectiveIds": ["Contrast a positive resist (exposed leaves) with a negative resist (exposed stays)"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "re10-3",
+          "stem": "A contact mask printed on the wrong resist tone usually:",
+          "correctAnswer": "Opens the field instead of the holes, or the other way around",
+          "distractors": [
+            { "text": "Automatically flips the scanner wavelength", "kind": "subtle", "rationale": "Tone is chemistry, not λ." },
+            { "text": "Makes the wafer single-crystal again", "kind": "nearby", "rationale": "The crystal was already decided." },
+            { "text": "Removes the need for a develop step", "kind": "reversed", "rationale": "Wrong tone still develops — it just builds the inverse stencil." }
+          ],
+          "correctExplanation": "Tone and mask polarity are one pair. Swap one and the stencil inverts.",
+          "objectiveIds": ["Contrast a positive resist (exposed leaves) with a negative resist (exposed stays)"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-mask-10",
+      "conceptId": "semi-mask",
+      "title": "The reticle is the original, not the wafer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-litho"],
+      "goDeeper": "semi-alignment",
+      "diagram": "litho",
+      "explanation": [
+        "The pattern does not start on the wafer. It starts on a reticle: a plate the projection optic reduces, typically four times, onto the resist. For DUV the plate is usually chrome on glass — opaque chrome where you want darkness, clear glass where you want light. The scanner steps that reduced image across the wafer. The chrome original is much larger than the die. That is the point: writing a 4×-larger original is easier than writing the wafer at final pitch.",
+        "A contact print — laying chrome against resist and flashing — is not how a modern layer is made. The optic stands off, reduces, and can only pass the spatial frequencies its numerical aperture allows. The wafer never sees the chrome at 1:1. What it sees is an image the lens could form.",
+        "EUV will later replace the transmissive chrome plate with a reflective multilayer and an absorber. The job does not change: there is still an original, and the tool still reduces it. Do not treat 'mask' as a synonym for 'the chip drawing'. The drawing is intent. The reticle is a physical object the optic can image."
+      ],
+      "example": "A 40 nm wafer half-pitch is a 160 nm feature on a 4× reticle. The mask shop writes the 160 nm chrome. The scanner shrinks it. A particle on that reticle, reduced by four, is still a killer if it sits in a clear opening — which is why a pellicle, later, is a membrane over the original, not a sticker on the wafer.",
+      "whyItMatters": "OPC, flare, and EUV mask-3D talk all assume you know the wafer is looking at a reduced image of a plate. If the mask 'is the wafer', those sentences have nowhere to land.",
+      "quiz": [
+        {
+          "id": "mk10-1",
+          "stem": "A mask or reticle in projection lithography is:",
+          "correctAnswer": "The original the projection optic reduces onto the wafer",
+          "distractors": [
+            { "text": "The finished die after the last metal is probed", "kind": "nearby", "rationale": "The reticle is an input, not the product." },
+            { "text": "The photoresist film after develop", "kind": "misapplied", "rationale": "Resist is the recording medium, not the original." },
+            { "text": "The CMP pad that flattens the incoming wafer", "kind": "subtle", "rationale": "Planarity is a different object." }
+          ],
+          "correctExplanation": "The plate is the original. The wafer sees a reduced image of it.",
+          "objectiveIds": ["Describe a mask or reticle as the original the projection optic reduces onto the wafer"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mk10-2",
+          "stem": "A 4× reduction stepper means a 40 nm wafer feature was typically written as:",
+          "correctAnswer": "A 160 nm feature on the reticle, then reduced by the optic",
+          "distractors": [
+            { "text": "A 10 nm feature on the reticle, then enlarged", "kind": "reversed", "rationale": "The optic shrinks the original." },
+            { "text": "Chrome pressed against the wafer at 1:1", "kind": "nearby", "rationale": "That is a contact print, not a stepper." },
+            { "text": "A grain boundary the Czochralski puller left behind", "kind": "misapplied", "rationale": "The crystal is not the mask." }
+          ],
+          "correctExplanation": "Write large, image small. That is why the original is a reticle.",
+          "objectiveIds": ["Explain why the wafer pattern is a reduced image of the reticle, not a contact print of chrome"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mk10-3",
+          "stem": "Projection lithography is not a contact print because:",
+          "correctAnswer": "The optic stands off and forms a reduced image; the wafer never touches the chrome",
+          "distractors": [
+            { "text": "Chrome cannot block any wavelength of light", "kind": "reversed", "rationale": "Chrome is the usual DUV absorber." },
+            { "text": "Wafers are too small to hold a reticle", "kind": "subtle", "rationale": "Size is not why the optic exists." },
+            { "text": "Develop would dissolve the chrome plate", "kind": "nearby", "rationale": "Develop acts on resist, not on the reticle." }
+          ],
+          "correctExplanation": "Stand-off plus reduction. The wafer sees an image, not a pressed plate.",
+          "objectiveIds": ["Explain why the wafer pattern is a reduced image of the reticle, not a contact print of chrome"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-exposure-10",
+      "conceptId": "semi-exposure",
+      "title": "Dose is a knob you can miss both ways",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-resist"],
+      "goDeeper": "semi-process-window",
+      "diagram": "litho-sequence",
+      "explanation": [
+        "Exposure is a dose: energy per area delivered to the resist, usually quoted in mJ/cm². The scanner sets it with source brightness and how long the slit dwells. After a post-exposure bake on many modern resists, develop reads the solubility map. Dose is not 'on or off'. It is a number you can miss in either direction.",
+        "Underexpose a positive resist and the intended clear regions do not quite switch. Develop leaves scum in a contact or a necked line that should have been open. Overexpose and the bright regions eat into the dark ones: a line thins, a hole blooms, a space you needed as a mask is gone. The same stem exists in negative tone with the polarity flipped. The failure is not 'the lamp was off'. The failure is a number on the wrong side of a threshold.",
+        "Focus rides along. Even a perfect dose prints garbage if the image plane misses the resist. This unit owns dose. The process-window unit will put dose and focus on the same plot. Here, remember the sequence: coat and soft-bake, expose a number, develop, inspect the stencil, then transfer. The controllable variable you just met is that number."
+      ],
+      "example": "A contact hole at 30 mJ/cm² opens clean. At 22 mJ/cm² the hole scums and the etch never sees oxide. At 40 mJ/cm² the hole blooms into its neighbor. The recipe did not 'fail to print'. It left the dose the resist was designed for.",
+      "whyItMatters": "CD control starts as a dose-and-focus budget, not as a brand of scanner. If you cannot say what over- and under-dose do to a line, later process-window talk is vocabulary.",
+      "quiz": [
+        {
+          "id": "ex10-1",
+          "stem": "Exposure dose is best treated as:",
+          "correctAnswer": "A number you can miss by underexposing or overexposing",
+          "distractors": [
+            { "text": "A binary switch that is either lamp-on or lamp-off", "kind": "reversed", "rationale": "Dose is a continuum with a legal band." },
+            { "text": "The thickness of the incoming wafer crystal", "kind": "nearby", "rationale": "The wafer is already decided." },
+            { "text": "The chrome coverage on the reticle shop floor", "kind": "subtle", "rationale": "The mask is the original. Dose is what the wafer collects." }
+          ],
+          "correctExplanation": "mJ/cm² is a knob. Both sides of the target are misses.",
+          "objectiveIds": ["Treat dose as a knob you can miss by underexposing or overexposing"],
+          "prerequisiteConceptIds": ["semi-resist"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ex10-2",
+          "stem": "Underexposing a positive-resist contact hole typically:",
+          "correctAnswer": "Leaves scum in the opening so the later etch never sees the dielectric",
+          "distractors": [
+            { "text": "Blooms the hole into its neighbor", "kind": "reversed", "rationale": "Blooming is the overdose direction." },
+            { "text": "Grows a thicker gate oxide in the hole", "kind": "misapplied", "rationale": "No oxidation step ran." },
+            { "text": "Automatically aligns the layer to the previous marks", "kind": "nearby", "rationale": "Dose is not alignment." }
+          ],
+          "correctExplanation": "Not enough energy, solubility does not switch, develop cannot clear the hole.",
+          "objectiveIds": ["Predict what happens to a feature when develop follows a wrong dose"],
+          "prerequisiteConceptIds": ["semi-resist"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ex10-3",
+          "stem": "Overexposing a positive-resist line typically:",
+          "correctAnswer": "Thins the line as the bright field eats into the intended dark feature",
+          "distractors": [
+            { "text": "Makes the line wider than drawn", "kind": "reversed", "rationale": "Overdose on a positive line removes more resist." },
+            { "text": "Turns the resist into a silicide", "kind": "misapplied", "rationale": "Silicide is a later metal–silicon reaction." },
+            { "text": "Removes the need for a mask", "kind": "subtle", "rationale": "Dose does not retire the reticle." }
+          ],
+          "correctExplanation": "Too much energy, the edge walks inward, CD goes thin.",
+          "objectiveIds": ["Predict what happens to a feature when develop follows a wrong dose"],
+          "prerequisiteConceptIds": ["semi-resist"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-alignment-10",
+      "conceptId": "semi-alignment",
+      "title": "This layer has to find the last one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-litho"],
+      "goDeeper": "semi-overlay-basics",
+      "diagram": "overlay-marks",
+      "explanation": [
+        "A second layer is useless if it does not sit on the first. Alignment marks are dedicated patterns left by an earlier lithography (or etch) so this exposure can find that layer. The scanner images those marks, computes a shift, rotation, and magnification, then prints. The marks are not decoration. They are how layer N knows where layer N−1 went.",
+        "You do not 'aim at the die'. You lock to marks at the field or wafer edge and trust a model to place the rest. If the marks are damaged, buried, or in the wrong process layer, the model is fitting noise. If you skip alignment and fire the exposure on the stage coordinates alone, you are hoping the wafer sat down in the same place it did last time. Wafers do not.",
+        "Alignment is the act. Overlay, later, is the budget: how well the act actually landed, including every leftover error the marks could not see. This unit is the act. A contact that misses the gate is often an alignment miss before it is an optics miss."
+      ],
+      "example": "A via layer is aligned to metal-1 marks. A lot whose marks were smeared by an aggressive CMP polish locks to junk and prints 40 nm off. Every via sits on dielectric instead of metal. The dose and focus were perfect. The layer never found the last one.",
+      "whyItMatters": "Stacking twenty layers is a sequence of finds. If alignment is 'the tool knows', you will blame Rayleigh for a via that missed a wire.",
+      "quiz": [
+        {
+          "id": "al10-1",
+          "stem": "Alignment marks exist so that:",
+          "correctAnswer": "This layer can find the last one before the exposure fires",
+          "distractors": [
+            { "text": "The resist can change solubility without light", "kind": "nearby", "rationale": "Marks are for placement, not chemistry." },
+            { "text": "The crystal orientation can be grown in the scanner", "kind": "misapplied", "rationale": "Orientation was decided at the puller." },
+            { "text": "Dose can be raised without a source", "kind": "subtle", "rationale": "Marks do not make photons." }
+          ],
+          "correctExplanation": "Marks are how layer N locates layer N−1.",
+          "objectiveIds": ["Explain alignment marks as how this layer finds the last one"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "al10-2",
+          "stem": "Printing a via layer without locking to the previous metal marks typically:",
+          "correctAnswer": "Places the vias wherever the stage happened to sit, not on the wires",
+          "distractors": [
+            { "text": "Automatically recenters every via on its landing", "kind": "reversed", "rationale": "Skipping the find does not invent placement." },
+            { "text": "Grows a thicker resist in the field", "kind": "nearby", "rationale": "Coat already happened. This is a placement miss." },
+            { "text": "Converts the exposure into an implant", "kind": "misapplied", "rationale": "Alignment is not a transfer step." }
+          ],
+          "correctExplanation": "No find, no lock. The image lands on stage coordinates, not on the last pattern.",
+          "objectiveIds": ["Predict a miss when this layer is printed without locking to the previous marks"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "al10-3",
+          "stem": "Damaged or buried alignment marks usually cause:",
+          "correctAnswer": "A bad fit to noise, so the whole field prints shifted or rotated",
+          "distractors": [
+            { "text": "A shorter wavelength in the illuminator", "kind": "subtle", "rationale": "Marks do not set λ." },
+            { "text": "A cleaner CMP incoming surface", "kind": "nearby", "rationale": "Buried marks are often a polish problem, not a benefit." },
+            { "text": "The resist tone to flip from positive to negative", "kind": "misapplied", "rationale": "Tone is chemistry, not metrology." }
+          ],
+          "correctExplanation": "The model fits what it sees. Garbage marks, garbage placement.",
+          "objectiveIds": ["Predict a miss when this layer is printed without locking to the previous marks"],
+          "prerequisiteConceptIds": ["semi-litho"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

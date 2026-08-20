@@ -1,0 +1,394 @@
+{
+  "courseId": "cmp-ir",
+  "moduleId": "cmp-ir-flow",
+  "lessons": [
+    {
+      "id": "cmp-dataflow-10",
+      "conceptId": "cmp-dataflow",
+      "title": "Until the fact stops changing",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-cfg-ir"],
+      "goDeeper": "cmp-liveness",
+      "diagram": "cmp-dataflow",
+      "explanation": [
+        "Facts attached to a block can flow along CFG edges until nothing new appears. A dataflow fact is a statement about the program at a program point: 'these names are live', 'this pointer may alias that one', 'this name holds a constant'. Each block has an in-set, a transfer (gen/kill), and an out-set. Edges copy the out of a predecessor into the in of a successor, or the reverse for a backward analysis.",
+        "CMU 15-411 treats the fixed point as the whole idea. You recompute a block when an incoming fact changed. When a round adds nothing, the fact has settled. Direction is part of the analysis: reaching definitions and available expressions flow forward, from defs toward uses. Liveness flows backward, from uses toward defs.",
+        "The worklist is the practical engine. Start with blocks that have a seed fact. When a block's out changes, put its successors (forward) or predecessors (backward) on the list. Do not rescan the whole CFG every time. The diagram's in / gen / kill / out is one step of that loop."
+      ],
+      "example": "Available-expression analysis seeds `t1 = a + b` as generated in its block. Forward flow carries 'a+b is available' into successors until a kill (a redefinition of `a` or `b`) or the fact stops changing. A later CSE pass reads that settled fact.",
+      "whyItMatters": "Global rewrites are only as honest as the fact that reached a fixed point. A one-shot scan of the CFG is not an analysis.",
+      "quiz": [
+        {
+          "id": "ir-dataflow10-1",
+          "stem": "A dataflow fact is best described as:",
+          "correctAnswer": "Something that flows along CFG edges until a fixed point",
+          "distractors": [
+            { "text": "A source comment the parser copies into the AST", "kind": "misapplied", "rationale": "Facts live on the CFG, after three-address exists." },
+            { "text": "A one-time annotation that never updates at joins", "kind": "nearby", "rationale": "Joins mix incoming facts; the analysis iterates." },
+            { "text": "A machine opcode selected for the current operator", "kind": "subtle", "rationale": "This is an analysis on IR, not a later selection." }
+          ],
+          "correctExplanation": "In, transfer, out, repeat until nothing moves. That is the fact.",
+          "objectiveIds": ["Describe a dataflow fact as something that flows until a fixed point"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-dataflow10-2",
+          "stem": "Liveness must run backward because:",
+          "correctAnswer": "A name is live from a use back toward the definition that feeds it",
+          "distractors": [
+            { "text": "Uses are always written before definitions in a block", "kind": "reversed", "rationale": "Defs precede uses in a block; liveness still walks against the edges." },
+            { "text": "Forward flow cannot represent any fact on a CFG", "kind": "nearby", "rationale": "Reaching definitions are a forward analysis; direction depends on the question." },
+            { "text": "The CFG has no predecessors, only successors", "kind": "misconception", "rationale": "Edges have both ends; backward means follow predecessors." }
+          ],
+          "correctExplanation": "Need is discovered at the use and pushed toward the def. That is backward.",
+          "objectiveIds": ["Predict whether a given analysis must run forward or backward"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-dataflow10-3",
+          "stem": "Reaching definitions should be computed:",
+          "correctAnswer": "Forward, from each definition toward the uses it can reach",
+          "distractors": [
+            { "text": "Backward, because every analysis on a CFG is backward", "kind": "nearby", "rationale": "Only questions about future uses (liveness) need backward flow." },
+            { "text": "In the lexer, before any block exists", "kind": "misapplied", "rationale": "The fact rides CFG edges, which exist after three-address." },
+            { "text": "Once per function, ignoring joins and loops", "kind": "reversed", "rationale": "Loops and joins are why you iterate to a fixed point." }
+          ],
+          "correctExplanation": "A def sends a fact downstream. Successors receive it until the fact settles.",
+          "objectiveIds": ["Predict whether a given analysis must run forward or backward"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-dataflow-20",
+      "conceptId": "cmp-dataflow",
+      "title": "A worklist, not a full sweep",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cmp-cfg-ir"],
+      "goDeeper": "cmp-liveness",
+      "diagram": "cmp-dataflow",
+      "explanation": [
+        "Worklist algorithms keep only the blocks whose facts still moved. Seed the list with every block, or with the ones that have a gen. Pop a block, recompute its out from in and the transfer. If out changed, enqueue the successors (forward) or the predecessors (backward). When the list is empty, every edge has a consistent fact. That is the fixed point.",
+        "Direction is still the first design choice. Available expressions and reaching definitions generate a fact at a def and push it along successor edges; a kill stops it. Liveness generates a fact at a use and pushes it along predecessor edges; a def kills it. Mixing the two — running liveness forward — produces a set that does not mean 'still needed'.",
+        "Joins need a meet. Forward may-facts usually union the incoming outs: if either predecessor says `t1 = a + b` may be available, the join records the weaker claim, or you take intersection for a must-fact such as 'definitely available on every path'. The meet is part of the analysis, not an afterthought. Loops just make the worklist revisit a block when the back-edge carries a new value.",
+        "Monotone frameworks are why this terminates. If each transfer only adds (or only removes) information in a finite lattice, the fact cannot climb forever. Bitvector analyses — liveness, reaching defs — are the usual exhibit. You do not need the lattice lecture to run the worklist; you need to know that 'changed' is well-defined.",
+        "The picture of in / gen / kill / out is one block's step. The algorithm is the queue around it. A pass that walks the CFG once and writes an answer has not done dataflow; it has done a local scan and hoped the joins were simple."
+      ],
+      "example": "Block B gens `{t1}` and kills nothing. After the first visit, out(B) = `{t1}`. Successors go on the worklist. A loop back-edge later brings a larger in-set; B is enqueued again. When out(B) stops growing, B stays off the list.",
+      "whyItMatters": "Compile time in a global pass is 'how many times did the worklist wake this block', not 'how pretty is the lattice slide'.",
+      "quiz": [
+        {
+          "id": "ir-dataflow20-1",
+          "stem": "A worklist dataflow step, when a block's out-set changes, should:",
+          "correctAnswer": "Enqueue the block's successors (forward) or predecessors (backward)",
+          "distractors": [
+            { "text": "Delete the CFG and rebuild it from source tokens", "kind": "misapplied", "rationale": "The graph stays; only the fact moved." },
+            { "text": "Stop immediately, because one change means the analysis failed", "kind": "reversed", "rationale": "Change is the signal to propagate, not to abort." },
+            { "text": "Always rescan every block in the function, ignoring the queue", "kind": "nearby", "rationale": "That is a full sweep. The worklist exists to avoid it." }
+          ],
+          "correctExplanation": "Only neighbors of a changed out can have a new in. That is the queue.",
+          "objectiveIds": ["Describe a dataflow fact as something that flows until a fixed point"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-dataflow20-2",
+          "stem": "Available expressions run forward; liveness runs backward. Mixing them would:",
+          "correctAnswer": "Compute a set that no longer means 'available' or 'still needed'",
+          "distractors": [
+            { "text": "Always produce the same bitvectors, because CFG edges are undirected", "kind": "reversed", "rationale": "Edges are directed; direction is the analysis." },
+            { "text": "Be required, because every fact must travel both ways", "kind": "nearby", "rationale": "Each question has one honest direction." },
+            { "text": "Move the analysis into the parser, where direction does not matter", "kind": "misapplied", "rationale": "These facts live on the CFG of three-address code." }
+          ],
+          "correctExplanation": "Forward gens at defs. Backward gens at uses. Swap them and the bits lose their meaning.",
+          "objectiveIds": ["Predict whether a given analysis must run forward or backward"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-dataflow20-3",
+          "stem": "A one-shot walk of the CFG that never requeues a block after a join is not dataflow because:",
+          "correctAnswer": "A later incoming fact from a loop or second predecessor can still change the result",
+          "distractors": [
+            { "text": "Dataflow forbids using the CFG at all", "kind": "reversed", "rationale": "The CFG is the highway the fact travels." },
+            { "text": "One-shot walks are how liveness is defined in the literature", "kind": "nearby", "rationale": "Liveness iterates; a single reverse sweep is only a starting heuristic." },
+            { "text": "Joins are parsed as tokens and never appear as edges", "kind": "misapplied", "rationale": "Joins are CFG edges after three-address exists." }
+          ],
+          "correctExplanation": "Fixed point means 'no incoming fact can still move the out-set'. One walk cannot promise that.",
+          "objectiveIds": ["Describe a dataflow fact as something that flows until a fixed point"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cmp-liveness-10",
+      "conceptId": "cmp-liveness",
+      "title": "Still needed on the way out",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-dataflow"],
+      "goDeeper": "cmp-alias",
+      "explanation": [
+        "Live names are the ones a later instruction still needs. A name is live at a point if there is a path from that point to a use that does not redefine it first. The analysis is backward: a use gens the name; a def kills it. Live-out of a block is the union of live-in of successors. Live-in is (live-out minus defs) plus uses.",
+        "A short block `t2 = t1 * c; return t2` has `t2` used at the return, so `t2` is live just before the return and dead before its def. `t1` and `c` are live on entry because the multiply uses them. A name that is written and never used is not live anywhere after the write: there is no path to a use.",
+        "That last fact is why dead-code elimination reads liveness. If `t9 = a + b` has no live use of `t9`, the add is dead. A later pass deletes it. Here the job is the sets: what is live on entry to this block, and why a never-used name does not appear."
+      ],
+      "example": "Block: `t1 = a + b; t2 = t1 * c; return t2`. Live-in is `{a, b, c}`. `t1` is live between its def and the multiply, not on entry. `t9` defined in another block and never used is not in any live set.",
+      "whyItMatters": "A pass that keeps a value 'just in case' is paying for a name that liveness already proved nobody reads.",
+      "quiz": [
+        {
+          "id": "ir-liveness10-1",
+          "stem": "In `t1 = a + b; t2 = t1 * c; return t2`, which names are live on entry?",
+          "correctAnswer": "`a`, `b`, and `c`; `t1` and `t2` are defined in the block",
+          "distractors": [
+            { "text": "`t1` and `t2` only, because those are the temporaries", "kind": "nearby", "rationale": "They are defined here; live-in cares about uses of names not yet defined." },
+            { "text": "No names, because a backward analysis starts empty and stays empty", "kind": "reversed", "rationale": "The return uses `t2`, which pulls `t1` and then `a,b,c` backward." },
+            { "text": "Every name in the function, including unused `t9`", "kind": "misconception", "rationale": "Unused names have no path to a use, so they are not live." }
+          ],
+          "correctExplanation": "Walk backward from `return t2`. Kill `t2` at its def, kill `t1` at its def, leave `{a,b,c}`.",
+          "objectiveIds": ["Compute which names are live on entry to a short block"],
+          "prerequisiteConceptIds": ["cmp-dataflow"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-liveness10-2",
+          "stem": "A value that is never used is not live because:",
+          "correctAnswer": "There is no path from its definition to a use that still needs it",
+          "distractors": [
+            { "text": "The verifier rejects any unused name as ill-formed SSA", "kind": "nearby", "rationale": "Unused SSA names can be well-formed; they are just dead." },
+            { "text": "Forward reaching-defs already deleted it", "kind": "misapplied", "rationale": "Liveness, not reaching defs, is the 'still needed' fact." },
+            { "text": "Three-address forbids naming a result you might not read", "kind": "reversed", "rationale": "You can name it; liveness then shows nobody reads it." }
+          ],
+          "correctExplanation": "Live means a future use. No use, not live, anywhere after the write.",
+          "objectiveIds": ["Predict why a value that is never used is not live"],
+          "prerequisiteConceptIds": ["cmp-dataflow"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-liveness10-3",
+          "stem": "`t9 = a + b` with no later use of `t9` contributes to liveness how?",
+          "correctAnswer": "It does not make `t9` live; `a` and `b` are live just before the add",
+          "distractors": [
+            { "text": "`t9` is live throughout the function as a result name", "kind": "nearby", "rationale": "Without a use, `t9` is dead after the def." },
+            { "text": "The add is live-out of every successor, so `t9` stays live", "kind": "reversed", "rationale": "Live-out comes from successor uses, and there are none of `t9`." },
+            { "text": "Liveness cannot see names invented by three-address", "kind": "misapplied", "rationale": "Temporaries are exactly the names the sets hold." }
+          ],
+          "correctExplanation": "`t9` has no use, so it is not live. The operands are live at the add.",
+          "objectiveIds": ["Predict why a value that is never used is not live"],
+          "prerequisiteConceptIds": ["cmp-dataflow"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-alias-10",
+      "conceptId": "cmp-alias",
+      "title": "May these two pointers meet",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-dataflow"],
+      "goDeeper": "cmp-call-graph",
+      "explanation": [
+        "Pointers that might designate the same location are a may-alias pair. Alias analysis answers that question conservatively: 'must not', 'must', or the usual 'may'. Two allocas in the same function with no pointer arithmetic that could overlap must not alias. A pointer argument and a global may alias unless provenance says otherwise. 'Don't know' is may.",
+        "The fact is a dataflow (and interprocedural) product because stores and pointer copies move the relationship around. A `store p, q` can make later loads through `q` see what `p` wrote. If the analysis says they may alias, a pass that wants to reorder a load past a store cannot. That reorder is the transformation that becomes illegal.",
+        "Must-alias is rarer and stronger: the two pointers are the same location on every path. Most clients only need the may/must-not cut. LLVM's alias queries are this cut. Over-approximating may-alias is safe and pessimistic; under-approximating it (claiming must-not when they might meet) is a miscompile."
+      ],
+      "example": "`t1 = load p; store 0, q; t2 = load p`. If `p` and `q` may alias, `t2` might not equal `t1`; CSE of the loads is illegal. If they must not alias, the store cannot touch `*p` and the second load can reuse `t1`.",
+      "whyItMatters": "Almost every load-store rewrite is an alias question in disguise. Wrong must-not is a silent miscompile.",
+      "quiz": [
+        {
+          "id": "ir-alias10-1",
+          "stem": "Two pointers may alias when:",
+          "correctAnswer": "They might designate the same location on some path the analysis cannot rule out",
+          "distractors": [
+            { "text": "They have the same SSA name, so they are the same value", "kind": "nearby", "rationale": "Equal names are must-alias of a trivial kind; may-alias is about possibly distinct pointers." },
+            { "text": "They appear in different functions, which always share storage", "kind": "misconception", "rationale": "Different functions do not by themselves prove overlap." },
+            { "text": "The CFG has a join, which merges all pointers into one location", "kind": "misapplied", "rationale": "Joins merge control, not pointer identity." }
+          ],
+          "correctExplanation": "May means 'the analysis cannot prove they are distinct'. That is the conservative yes.",
+          "objectiveIds": ["Decide whether two pointers may designate the same location"],
+          "prerequisiteConceptIds": ["cmp-dataflow"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-alias10-2",
+          "stem": "When `p` and `q` may alias, which rewrite becomes illegal?",
+          "correctAnswer": "Reusing `t1 = load p` after `store 0, q` as if `*p` could not have changed",
+          "distractors": [
+            { "text": "Deleting a never-used add of two constants in another block", "kind": "nearby", "rationale": "That add does not touch memory; alias does not apply." },
+            { "text": "Renaming `x1` to `x2` in SSA inside a single block", "kind": "misapplied", "rationale": "Pure SSA renaming does not need alias." },
+            { "text": "Splitting a basic block at a branch, keeping the same loads", "kind": "subtle", "rationale": "The CFG split does not reorder a load past a store." }
+          ],
+          "correctExplanation": "The store might write `*p`. The second load is not the same value.",
+          "objectiveIds": ["Name a transformation that becomes illegal if they may alias"],
+          "prerequisiteConceptIds": ["cmp-dataflow"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-alias10-3",
+          "stem": "`p` points at a non-escaping alloca and `q` is a different alloca. They:",
+          "correctAnswer": "Must not alias, so a store through `q` cannot invalidate `load p`",
+          "distractors": [
+            { "text": "May alias, because all allocas share one anonymous stack slot", "kind": "nearby", "rationale": "Distinct allocas are distinct locations unless a derived pointer mixes them." },
+            { "text": "Must alias, because both live in the same function", "kind": "reversed", "rationale": "Same function is not same location." },
+            { "text": "Are not pointers, so alias analysis refuses the query", "kind": "misapplied", "rationale": "Allocas produce addresses; the query is exactly about those." }
+          ],
+          "correctExplanation": "Two private slots, no derived mix. Must-not. The load can stay.",
+          "objectiveIds": ["Decide whether two pointers may designate the same location"],
+          "prerequisiteConceptIds": ["cmp-dataflow"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-call-graph-10",
+      "conceptId": "cmp-call-graph",
+      "title": "Who might call whom",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-cfg-ir"],
+      "goDeeper": "cmp-pass-manager",
+      "explanation": [
+        "Who might call whom is a graph the interprocedural passes walk. Nodes are functions. An edge `f → g` means some call in `f` might execute `g`. Direct calls `call g` add a precise edge. The graph is built from the calls that might run, not from the source include graph and not from the CFG inside one function — though each call sits in some block of that CFG.",
+        "An indirect call `call t4` where `t4` is a function pointer makes the graph conservative. If the analysis cannot bound `t4`, the node gains edges to every address-taken function of a matching type, or to an unknown node that poisons callees. That over-approximation is why inlining and interprocedural constant prop suddenly go quiet around callbacks.",
+        "Recursion is a cycle. A call graph with a cycle is still a call graph; it just means 'do not assume a finite unroll of g from f'. CMU 15-411 treats the call graph as the CFG's cousin across functions. Later inlining reads it. Here the job is to draw the edges you can defend."
+      ],
+      "example": "`f` contains `call g` and `call t` where `t` is a parameter. The graph has a precise `f → g` and a conservative bundle `f → {every matching address-taken function}` unless a prior analysis narrowed `t`.",
+      "whyItMatters": "A missing edge is a miscompile waiting for IPA. An extra edge is only pessimism. Draw the extra one.",
+      "quiz": [
+        {
+          "id": "ir-callgraph10-1",
+          "stem": "Build the call graph for `f` with a direct `call g` and no other calls:",
+          "correctAnswer": "A node `f`, a node `g`, and a single edge `f → g`",
+          "distractors": [
+            { "text": "A CFG of `f`'s basic blocks, with `g` as a join node", "kind": "nearby", "rationale": "That is `f`'s control-flow graph, not the call graph." },
+            { "text": "An edge from every function in the module to `g`", "kind": "misconception", "rationale": "Only callers of `g` get the edge." },
+            { "text": "No edges, because calls are not three-address instructions", "kind": "misapplied", "rationale": "Calls are IR instructions; they are exactly the edges." }
+          ],
+          "correctExplanation": "One direct call, one edge. The CFG inside `f` is a different graph.",
+          "objectiveIds": ["Build a call graph from the calls that might execute"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-callgraph10-2",
+          "stem": "An indirect `call t4` with no bound on `t4` makes the graph conservative because:",
+          "correctAnswer": "`f` may need edges to every matching address-taken function, or to unknown",
+          "distractors": [
+            { "text": "Indirect calls are deleted before the call graph is built", "kind": "reversed", "rationale": "They are the hard case; they stay and widen the graph." },
+            { "text": "The CFG already named the unique callee at the branch", "kind": "nearby", "rationale": "A function pointer is not a CFG successor." },
+            { "text": "The lexer treated `t4` as a keyword, so no edge is required", "kind": "misapplied", "rationale": "This is IR, not tokens." }
+          ],
+          "correctExplanation": "Unknown target means extra edges. Missing one would hide a real callee.",
+          "objectiveIds": ["Predict how an indirect call makes the graph conservative"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-callgraph10-3",
+          "stem": "A cycle `f → g → f` in the call graph means:",
+          "correctAnswer": "The functions may recurse; the graph is still well-formed",
+          "distractors": [
+            { "text": "The call graph is illegal and must be flattened into a CFG", "kind": "nearby", "rationale": "Cycles are ordinary recursion, not a malformed graph." },
+            { "text": "Every indirect call has been resolved to a unique callee", "kind": "reversed", "rationale": "A cycle says nothing about indirect-call precision." },
+            { "text": "Three-address form has been lost and must be rebuilt", "kind": "misapplied", "rationale": "The call graph sits on top of IR; it does not undo it." }
+          ],
+          "correctExplanation": "Recursion is a cycle. Draw it. Do not pretend the callees form a tree.",
+          "objectiveIds": ["Build a call graph from the calls that might execute"],
+          "prerequisiteConceptIds": ["cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-pass-manager-10",
+      "conceptId": "cmp-pass-manager",
+      "title": "Order, dirt, and invalidation",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ir-verify"],
+      "goDeeper": "cmp-const-fold",
+      "explanation": [
+        "Pass order is a schedule, and a rewrite can trash the analysis the next pass wanted. A pass manager runs transforms and analyses in sequence, records which analyses are still valid, and reruns a checker when a transform might have broken SSA or types. LLVM and GCC both spend real code on this bookkeeping. The IR verifier after a dirtying pass is not optional taste.",
+        "One pass invalidates another pass's analysis when it changes the facts that analysis cached. Inlining adds blocks and calls; the old call graph and the old alias set for the caller are stale. mem2reg deletes loads; a memory-dependence analysis computed before it is a lie. Constant folding rarely dirties dominance; a CFG-restructuring pass always does.",
+        "A safe order when a transform dirties SSA or alias facts is: rewrite, verify, then recompute the analyses the next pass will read. Running CSE on alias facts from before a batch of stores were inserted is how you 'prove' two loads are common when a store now sits between them. The manager's job is to refuse that stale read."
+      ],
+      "example": "mem2reg then CSE is a sane pair: promotion exposes SSA names, then CSE walks use-def. CSE then mem2reg wastes the first CSE on loads that promotion is about to delete. After inlining, alias and the call graph are dirty until recomputed.",
+      "whyItMatters": "A 'missed optimization' is often a stale analysis, not a missing idea. The manager is where that staleness is supposed to be named.",
+      "quiz": [
+        {
+          "id": "ir-passmgr10-1",
+          "stem": "Inlining invalidates a prior alias analysis of the caller because:",
+          "correctAnswer": "The callee body injects new loads, stores, and pointers the old facts never saw",
+          "distractors": [
+            { "text": "Inlining is a parser rewrite and cannot touch IR facts", "kind": "misapplied", "rationale": "Inlining is an IR transform; it changes the function." },
+            { "text": "Alias facts are immutable once SSA form exists", "kind": "reversed", "rationale": "SSA does not freeze alias; new memory ops still matter." },
+            { "text": "The verifier deletes alias analysis as illegal IR", "kind": "nearby", "rationale": "The verifier checks well-formedness; it does not store alias sets." }
+          ],
+          "correctExplanation": "New memory operations, new pointers. The cached may-alias set is stale.",
+          "objectiveIds": ["Explain why one pass can invalidate another pass's analysis"],
+          "prerequisiteConceptIds": ["cmp-ir-verify"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ir-passmgr10-2",
+          "stem": "A transform that rewrites φs and may break dominance should be followed by:",
+          "correctAnswer": "IR verification, then a fresh dominance (and SSA) analysis before the next client",
+          "distractors": [
+            { "text": "CSE immediately, using the pre-transform dominance tree", "kind": "nearby", "rationale": "That tree may no longer describe the CFG." },
+            { "text": "Deleting the CFG, because φs are now illegal", "kind": "reversed", "rationale": "φs are SSA; you check them, you do not throw the graph away." },
+            { "text": "A lexer rerun on the original source file", "kind": "misapplied", "rationale": "The dirt is in IR, not in tokens." }
+          ],
+          "correctExplanation": "Dirty SSA wants a verifier, then new analyses. Stale dominance is a miscompile seed.",
+          "objectiveIds": ["Predict a safe order when a transform dirties SSA or alias facts"],
+          "prerequisiteConceptIds": ["cmp-ir-verify"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-passmgr10-3",
+          "stem": "CSE that reused a load across a store the previous pass just inserted is a failure of:",
+          "correctAnswer": "Invalidation: CSE read alias or memory facts that the store-inserting pass dirtied",
+          "distractors": [
+            { "text": "Three-address form, which cannot represent loads", "kind": "misapplied", "rationale": "Loads are ordinary IR; the bug is stale facts." },
+            { "text": "Verification, which should have rejected well-typed loads", "kind": "nearby", "rationale": "The IR can be well-formed and still have a stale analysis." },
+            { "text": "Liveness, which must run forward after every store", "kind": "subtle", "rationale": "The missing update is alias/memory, not liveness direction." }
+          ],
+          "correctExplanation": "The transform dirtied memory facts. CSE needed a rerun, not the old cache.",
+          "objectiveIds": ["Explain why one pass can invalidate another pass's analysis"],
+          "prerequisiteConceptIds": ["cmp-ir-verify"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

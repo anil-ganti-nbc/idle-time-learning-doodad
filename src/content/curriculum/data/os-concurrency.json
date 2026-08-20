@@ -1,0 +1,567 @@
+{
+  "id": "os-concurrency",
+  "title": "Memory, Concurrency, and Scheduling",
+  "categoryId": "os",
+  "description": "Page tables, the TLB, locks, races, and the scheduler that lies about how many CPUs you have.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "os-process",
+    "os-syscall"
+  ],
+  "sourceReferences": [
+    {
+      "id": "mit-xv6",
+      "title": "xv6 book",
+      "url": "https://pdos.csail.mit.edu/6.1810/2025/xv6.html",
+      "kind": "notes",
+      "notes": "Page tables, then locks, then scheduling."
+    },
+    {
+      "id": "mit-61810",
+      "title": "MIT 6.1810",
+      "url": "https://ocw.mit.edu/courses/6-1810-operating-system-engineering-fall-2023/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Labs extend VM and concurrency after the kernel is thinkable."
+    }
+  ],
+  "modules": [
+    {
+      "id": "os-c-vm",
+      "title": "Virtual memory",
+      "blurb": "Pages, tables, faults.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "os-vm"
+      ],
+      "learningObjectives": [
+        "Treat an address as a translation the hardware walks",
+        "Treat a missing translation as a request, not only a crash"
+      ]
+    },
+    {
+      "id": "os-c-sched",
+      "title": "Scheduling",
+      "blurb": "Fairness, latency, and classes.",
+      "order": 1,
+      "prerequisites": [
+        "os-c-vm"
+      ],
+      "spineIds": [
+        "os-sched"
+      ],
+      "learningObjectives": [
+        "Choose which runnable thread owns a core next",
+        "Separate fair share from deadlines"
+      ]
+    },
+    {
+      "id": "os-c-sync",
+      "title": "Synchronization",
+      "blurb": "Locks, races, atomics.",
+      "order": 2,
+      "prerequisites": [
+        "os-c-sched"
+      ],
+      "spineIds": [
+        "os-lock",
+        "os-race"
+      ],
+      "learningObjectives": [
+        "Name a race as order-dependent results",
+        "Use a lock as one holder at a time"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "os-vm",
+      "name": "Virtual memory",
+      "moduleId": "os-c-vm",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Pages, page tables, and the TLB as a cache of translations.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe virtual memory as translating process addresses to physical frames",
+        "Predict what a program sees when two processes use the same virtual address"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
+    },
+    {
+      "id": "os-page-table",
+      "name": "Page tables",
+      "moduleId": "os-c-vm",
+      "tier": 2,
+      "prerequisites": [
+        "os-vm"
+      ],
+      "summary": "A tree of translations the hardware walks.",
+      "parentId": "os-vm",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a page table as the tree the hardware walks to translate a page",
+        "Predict why a multi-level table can stay sparse"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
+    },
+    {
+      "id": "os-tlb-os",
+      "name": "TLB shootdown",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-vm",
+        "cpu-tlb"
+      ],
+      "summary": "When one core changes a mapping, the others must forget.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain a TLB shootdown as forcing other cores to drop a stale translation",
+        "Predict what happens if one core changes a mapping and the others keep the old TLB entry"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-vm"
+    },
+    {
+      "id": "os-page-fault",
+      "name": "Page faults",
+      "moduleId": "os-c-vm",
+      "tier": 2,
+      "prerequisites": [
+        "os-vm",
+        "os-trap"
+      ],
+      "summary": "A missing translation as a request, not only a crash.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a page fault as a missing translation that transfers into the kernel",
+        "Distinguish a fault that should fill a page from one that should kill the process"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-vm"
+    },
+    {
+      "id": "os-swap",
+      "name": "Paging to disk",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-page-fault"
+      ],
+      "summary": "The illusion of more RAM than you bought.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain paging to disk as evicting a frame and bringing it back on the next fault",
+        "Predict the cost of treating the disk as extra RAM when many processes miss"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-page-fault"
+    },
+    {
+      "id": "os-cow",
+      "name": "Copy-on-write",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-fork",
+        "os-page-fault"
+      ],
+      "summary": "fork that does not copy until a write.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe copy-on-write as sharing frames after fork until a write",
+        "Predict which mapping changes when one side writes a shared page"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-page-fault"
+    },
+    {
+      "id": "os-mmap",
+      "name": "mmap",
+      "moduleId": "os-c-vm",
+      "tier": 3,
+      "prerequisites": [
+        "os-vm"
+      ],
+      "summary": "A file, or anonymous memory, appearing as a range of addresses.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe mmap as making a file or anonymous memory appear as a range of addresses",
+        "Predict what a load from that range does before the bytes are in RAM"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-vm"
+    },
+    {
+      "id": "os-sched",
+      "name": "CPU scheduling",
+      "moduleId": "os-c-sched",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Fairness, latency, and why CFS is not a real-time scheduler.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the scheduler as choosing which runnable thread owns a core next",
+        "Contrast a fair-share policy with one that tries to meet a deadline"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
+    },
+    {
+      "id": "os-fairness",
+      "name": "Fair-share scheduling",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Who is owed the next slice.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain fair-share as each task being owed a slice weighted by its share",
+        "Predict who runs next when one task has consumed more than its share"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-latency-sched",
+      "name": "Latency versus throughput in the scheduler",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched",
+        "arch-latency-throughput"
+      ],
+      "summary": "Interactive tails versus batch work.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast scheduler choices that cut wakeup latency with those that maximize throughput",
+        "Predict why a batch job can wreck an interactive tail"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-realtime",
+      "name": "Real-time scheduling",
+      "moduleId": "os-c-sched",
+      "tier": 4,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Deadlines, not averages.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe real-time scheduling as meeting deadlines, not averages",
+        "Predict why a fair-share scheduler is the wrong tool for a deadline"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-scheduler-class",
+      "name": "Scheduling classes",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "More than one policy living in one kernel.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe scheduling classes as more than one policy living in one kernel",
+        "Predict which class wins when a real-time task and a fair-share task are both runnable"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-load-balance",
+      "name": "Load balancing",
+      "moduleId": "os-c-sched",
+      "tier": 3,
+      "prerequisites": [
+        "os-sched"
+      ],
+      "summary": "Moving work across cores without wrecking caches.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe load balancing as moving work across cores",
+        "Predict the cache cost of bouncing a thread to a colder core"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-numa",
+      "name": "NUMA awareness",
+      "moduleId": "os-c-sched",
+      "tier": 4,
+      "prerequisites": [
+        "os-load-balance",
+        "os-vm"
+      ],
+      "summary": "Memory that is closer to some cores than others.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain NUMA as memory that is closer to some cores than others",
+        "Predict why running a thread far from its pages costs more than a local miss"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-load-balance"
+    },
+    {
+      "id": "os-preempt",
+      "name": "Preemption",
+      "moduleId": "os-c-sched",
+      "tier": 2,
+      "prerequisites": [
+        "os-context-switch",
+        "os-sched"
+      ],
+      "summary": "Taking the CPU back.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe preemption as taking the CPU back from a running thread",
+        "Predict what must be saved when the kernel interrupts a thread that did not yield"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-priority-inv",
+      "name": "Priority inversion",
+      "moduleId": "os-c-sched",
+      "tier": 4,
+      "prerequisites": [
+        "os-sched",
+        "os-lock"
+      ],
+      "summary": "A low task holding a lock a high task needs.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Diagnose priority inversion as a low task holding a lock a high task needs",
+        "Predict a fix that lets the low task finish without the high task waiting behind a middle one"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sched"
+    },
+    {
+      "id": "os-lock",
+      "name": "Locks",
+      "moduleId": "os-c-sync",
+      "tier": 2,
+      "prerequisites": [
+        "os-process"
+      ],
+      "summary": "Mutual exclusion as a primitive, not a vibe.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a lock as mutual exclusion: one holder at a time",
+        "Predict what goes wrong if two threads update the same structure without a lock"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
+    },
+    {
+      "id": "os-sleep-lock",
+      "name": "Sleeping locks",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-lock"
+      ],
+      "summary": "Blocking instead of spinning when the hold is long.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast a sleeping lock with spinning while the holder runs",
+        "Predict when spinning wastes the core and sleeping is cheaper"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-lock"
+    },
+    {
+      "id": "os-deadlock",
+      "name": "Deadlock",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-lock"
+      ],
+      "summary": "Everyone waiting for someone who is waiting for them.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe deadlock as everyone waiting for someone who is waiting for them",
+        "Diagnose a two-lock cycle from the order two threads acquire"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-lock"
+    },
+    {
+      "id": "os-race",
+      "name": "Races",
+      "moduleId": "os-c-sync",
+      "tier": 2,
+      "prerequisites": [
+        "os-thread-vs-proc"
+      ],
+      "summary": "A result that depends on who ran first.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a race as a result that depends on who ran first",
+        "Diagnose a lost update when two threads read-modify-write the same word"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ]
+    },
+    {
+      "id": "os-atomic",
+      "name": "Atomics",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-race"
+      ],
+      "summary": "Read-modify-write that does not tear.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an atomic as a read-modify-write that does not tear",
+        "Predict which updates still race even if each store is atomic"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-race"
+    },
+    {
+      "id": "os-seqcst",
+      "name": "Memory ordering for programmers",
+      "moduleId": "os-c-sync",
+      "tier": 4,
+      "prerequisites": [
+        "os-atomic",
+        "cpu-consistency"
+      ],
+      "summary": "Why a store on this core is not yet a load on that one.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain why a store on this core is not yet a load on that one",
+        "Predict a reordering that surprises a program that assumed a single global order"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-atomic"
+    },
+    {
+      "id": "os-semaphore",
+      "name": "Semaphores",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-lock"
+      ],
+      "summary": "A counter you can wait on.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a semaphore as a counter you can wait on",
+        "Predict how a semaphore of count N lets N holders through"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-lock"
+    },
+    {
+      "id": "os-condvar",
+      "name": "Condition variables",
+      "moduleId": "os-c-sync",
+      "tier": 3,
+      "prerequisites": [
+        "os-sleep-lock"
+      ],
+      "summary": "Sleep until someone says the world changed.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a condition variable as sleeping until someone says the world changed",
+        "Predict why waiting on a condvar must re-check the condition after wakeup"
+      ],
+      "sourceIds": [
+        "mit-61810",
+        "mit-xv6"
+      ],
+      "parentId": "os-sleep-lock"
+    }
+  ]
+}

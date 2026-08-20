@@ -1,0 +1,323 @@
+{
+  "courseId": "arch-gpu",
+  "moduleId": "arch-gpu-systems",
+  "lessons": [
+    {
+      "id": "gpu-atomics-10",
+      "conceptId": "gpu-atomics",
+      "title": "One address, many writers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-memory-hierarchy"],
+      "goDeeper": "gpu-unified-mem",
+      "explanation": [
+        "An atomic is a read-modify-write the memory system promises will not tear when many threads hit the same address. Add-to-a-counter, min, swap: the location moves from A to f(A) as if one writer at a time. Without that promise, two threads can both read 7, both add one, and both write 8. The third increment vanished.",
+        "Correctness is not free throughput. Threads that collide on one location serialize on that location. A million threads incrementing one global counter spend most of their time in a queue, not in ALUs. The hierarchy you already know still applies: an atomic on a hot device-memory word is a long trip plus a queue; an atomic on a value that lives in a closer space is a shorter queue.",
+        "The architectural move, when you can make it, is to stop sharing the word. Partial sums per thread or per block, then a tree of combines, turn one hot address into many cold ones plus a small reduction. The atomic did not get faster. You asked it to do less."
+      ],
+      "example": "Histogramming with one global bin array: every thread atomics into bins[x[i]]. A popular bin becomes a single-address queue and the kernel crawls. Private partial histograms combined once at the end keep the atomics, and keep them off the popular global word.",
+      "whyItMatters": "People treat atomics as 'the GPU lock'. They are a correctness primitive with a contention bill. If the algorithm needs one hot location, no memory space will make that location wide.",
+      "quiz": [
+        {
+          "id": "at10-1",
+          "stem": "An atomic read-modify-write exists so that:",
+          "correctAnswer": "Many threads hitting one address still produce one correct update sequence",
+          "distractors": [
+            { "text": "Device memory becomes as cheap as a register", "kind": "reversed", "rationale": "Atomics do not change the hierarchy's costs." },
+            { "text": "The host performs every increment", "kind": "nearby", "rationale": "The device still does the update. The promise is about tearing." },
+            { "text": "Threads can no longer read the location", "kind": "subtle", "rationale": "They read-modify-write it. That is the point." }
+          ],
+          "correctExplanation": "One address, many writers, no lost update. That is the promise.",
+          "objectiveIds": ["Explain a read-modify-write that stays correct when many threads hit one address"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "at10-2",
+          "stem": "A million threads incrementing one global counter typically:",
+          "correctAnswer": "Serialize on that address, so most of the machine waits in a queue",
+          "distractors": [
+            { "text": "Complete in one cycle because atomics are free", "kind": "reversed", "rationale": "The whole point of contention is that they are not free." },
+            { "text": "Each get a private copy of the counter in the ISA", "kind": "nearby", "rationale": "A single address is one location. Copies would be a different algorithm." },
+            { "text": "Move the counter into the host's page table", "kind": "subtle", "rationale": "This is a device-memory contention story." }
+          ],
+          "correctExplanation": "Correct, and slow. One location cannot absorb a million writers at once.",
+          "objectiveIds": ["Predict why contention on one location serializes throughput"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "at10-3",
+          "stem": "Replacing a hot global atomic with per-block partials plus a reduce is a bet that:",
+          "correctAnswer": "Many cold addresses plus a small combine beat one contended word",
+          "distractors": [
+            { "text": "Atomics will be deleted from the ISA", "kind": "reversed", "rationale": "You still use them. You just aim them at less-shared words." },
+            { "text": "Device memory has no addresses any more", "kind": "nearby", "rationale": "You added addresses. That is the point." },
+            { "text": "The hierarchy inverts so DRAM beats registers", "kind": "subtle", "rationale": "The hierarchy did not flip. Sharing did." }
+          ],
+          "correctExplanation": "Less sharing, less queue. The primitive stayed. The algorithm changed.",
+          "objectiveIds": ["Predict why contention on one location serializes throughput"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-unified-mem-10",
+      "conceptId": "gpu-unified-mem",
+      "title": "One address space, migrating pages",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-memory-hierarchy", "cpu-virtual-addr"],
+      "goDeeper": "gpu-multi-gpu",
+      "explanation": [
+        "Foundations already gave you virtual addresses: a name that is not a physical location, translated through a page table. Unified virtual memory applies that idea across host and device. The program sees one address space. A page can live in host DRAM or in device memory, and the system migrates it when the other side first touches it.",
+        "The convenience is real. You can allocate once and dereference on either side. The cost is also real. A first-touch on the device of a page that still lives on the host is a fault: walk, migrate, resume. That is not a cheap load. It is a page move, often 4 KiB or more, plus the resume. A kernel that sprinkles first touches across many pages pays many migrations in the inner loop.",
+        "Oversubscription — a working set larger than device memory — keeps migrating. Prefetch and advice APIs exist because the automatic policy is a guess. Unified memory did not delete the hierarchy. It hid the copies behind the same virtual-address machinery you already know, and it charges you when the guess is late."
+      ],
+      "example": "Allocating a 2 GB array once, touching it on the host to fill, then launching a kernel that streams it on the device: the first kernel wave faults and migrates page by page unless you prefetched. An explicit copy before launch pays one bulk transfer and no inner-loop faults.",
+      "whyItMatters": "Marketing says 'one pointer'. Architecture says 'pages that move'. If you cannot tell a first-touch fault from a device-memory load, you will blame the ALUs for a migration storm.",
+      "quiz": [
+        {
+          "id": "um10-1",
+          "stem": "Unified virtual memory is primarily:",
+          "correctAnswer": "A single address space whose pages can migrate between host and device",
+          "distractors": [
+            { "text": "A promise that device DRAM and registers are the same file", "kind": "reversed", "rationale": "The hierarchy remains. Only the name is shared." },
+            { "text": "A discrete copy the programmer memcpy's; pages never migrate", "kind": "nearby", "rationale": "Unified virtual memory is one address space whose pages can migrate. A permanent discrete copy is the older model." },
+            { "text": "Removing virtual addresses from the host", "kind": "subtle", "rationale": "It extends the VA idea. It does not delete it." }
+          ],
+          "correctExplanation": "One name, two homes, pages that move. That is the contract.",
+          "objectiveIds": ["Describe a single address space whose pages migrate"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy", "cpu-virtual-addr"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "um10-2",
+          "stem": "A device first-touch of a page that still lives on the host typically:",
+          "correctAnswer": "Faults, migrates the page, then resumes — far more than a local device load",
+          "distractors": [
+            { "text": "Hits in a register, because unified means on-chip", "kind": "reversed", "rationale": "Unified is a name space, not a register file." },
+            { "text": "Is free, because the page table already translated it", "kind": "nearby", "rationale": "Translation found the page. The page was in the wrong memory." },
+            { "text": "Rewrites the kernel to use only host loads", "kind": "subtle", "rationale": "The kernel still runs on the device after the page moves." }
+          ],
+          "correctExplanation": "Fault plus migrate plus resume. That is the first-touch bill.",
+          "objectiveIds": ["Predict the cost of a first-touch page fault on the device"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy", "cpu-virtual-addr"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "um10-3",
+          "stem": "Prefetching or copying before a kernel is a bet that:",
+          "correctAnswer": "One bulk move beats a storm of first-touch faults inside the launch",
+          "distractors": [
+            { "text": "Pages should stay on the host forever", "kind": "reversed", "rationale": "You are moving them earlier, not refusing to move them." },
+            { "text": "Virtual addresses will be abandoned", "kind": "nearby", "rationale": "You still use the same names. You changed when the pages travel." },
+            { "text": "Device memory has no latency once unified", "kind": "subtle", "rationale": "Local device loads still cost. You just avoided the migration." }
+          ],
+          "correctExplanation": "The hierarchy is still there. You chose when to pay the copy.",
+          "objectiveIds": ["Predict the cost of a first-touch page fault on the device"],
+          "prerequisiteConceptIds": ["cpu-virtual-addr", "gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-tensor-core-10",
+      "conceptId": "gpu-tensor-core",
+      "title": "A pipe that eats matrix fragments",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-exec-resources", "cpu-vector-simd"],
+      "explanation": [
+        "An SM's general ALUs do one operation per lane, in the SIMT sense you already know. A tensor or matrix unit is a different pipe. It consumes small dense fragments — a tile of A, a tile of B — and produces a tile of C, typically a fused multiply-add over those fragments in one issue. The fragment shapes are fixed (for example 16×16×16 at a given precision). You do not feed it an arbitrary scalar.",
+        "That is closer to packed SIMD, which you met on the CPU, than to a scalar thread add — except the pack is a matrix fragment, not a 4-wide float vector you named in a register. The compiler or a library has to stage the fragments. A kernel that is not dense matrix arithmetic cannot use the pipe. The general ALUs are still there for everything else.",
+        "Precision is part of the contract. Many of these units are fastest at reduced types and accumulate into a wider type. Mixing them with a SIMT path that expected full precision is a numerical decision, not just a throughput one. The pipe is specialized. Treating it as 'more CUDA cores' hides both the shape constraint and the precision constraint."
+      ],
+      "example": "A dense 16×16×16 multiply-add tile can retire on a tensor pipe in a handful of issues. The same math written as scalar SIMT multiplies and adds uses the general ALUs and many more issues. A gather-heavy sparse update cannot fill the tensor pipe at all: there is no dense fragment to feed it.",
+      "whyItMatters": "Microarchitecture already taught you SIMD as a pack you named. This unit is a pack the matrix pipe named. If a launch claims 'AI performance' from these units, ask whether the work was dense fragments at the type the pipe actually wants.",
+      "quiz": [
+        {
+          "id": "tc10-1",
+          "stem": "A tensor or matrix unit is:",
+          "correctAnswer": "A specialized pipe that consumes dense matrix fragments, not a general SIMT ALU",
+          "distractors": [
+            { "text": "Another name for the load/store pipe", "kind": "nearby", "rationale": "Loads feed it. They are not it." },
+            { "text": "The host's SIMD unit borrowed for the launch", "kind": "misapplied", "rationale": "This is on-device silicon." },
+            { "text": "A page table for matrix-shaped addresses", "kind": "subtle", "rationale": "It is an arithmetic pipe, not translation." }
+          ],
+          "correctExplanation": "Fixed-shape fragments in, tile of C out. That is a different pipe.",
+          "objectiveIds": ["Describe specialized pipes that consume dense matrix fragments"],
+          "prerequisiteConceptIds": ["gpu-exec-resources"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "tc10-2",
+          "stem": "A gather-heavy sparse update typically cannot fill a tensor pipe because:",
+          "correctAnswer": "There is no dense fragment for the unit to consume",
+          "distractors": [
+            { "text": "Sparse math is illegal in IEEE", "kind": "reversed", "rationale": "The math is legal. The pipe wants a dense tile." },
+            { "text": "The general ALUs have been removed", "kind": "nearby", "rationale": "They are still there. This work belongs on them." },
+            { "text": "Packed SIMD on the CPU forbids gathers", "kind": "subtle", "rationale": "CPU SIMD is a different pack. This diagnosis is about the matrix pipe's input shape." }
+          ],
+          "correctExplanation": "No tile, no issue. Specialization is a shape constraint.",
+          "objectiveIds": ["Contrast a tensor/matrix unit with a general SIMT ALU"],
+          "prerequisiteConceptIds": ["gpu-exec-resources", "cpu-vector-simd"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "tc10-3",
+          "stem": "Using a matrix pipe at a reduced precision is a trade because:",
+          "correctAnswer": "You may gain fragment throughput and lose the numeric width the SIMT path had",
+          "distractors": [
+            { "text": "The pipe always matches full-precision SIMT arithmetic", "kind": "reversed", "rationale": "Reduced types are often the fast path. That is the numeric bet." },
+            { "text": "Fragment shapes become arbitrary at low precision", "kind": "nearby", "rationale": "Shapes stay discrete. Precision is the other axis." },
+            { "text": "General ALUs disappear when the pipe is used", "kind": "subtle", "rationale": "Both pipes remain. You chose which one issued." }
+          ],
+          "correctExplanation": "Shape plus type. The pipe is not a free wider ALU.",
+          "objectiveIds": ["Contrast a tensor/matrix unit with a general SIMT ALU"],
+          "prerequisiteConceptIds": ["gpu-exec-resources", "cpu-vector-simd"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-multi-gpu-10",
+      "conceptId": "gpu-multi-gpu",
+      "title": "The GPU is often several",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-memory-hierarchy"],
+      "explanation": [
+        "A launch runs on one device unless you say otherwise. A node that 'has a GPU' in a paper often has several, each with its own device memory. A pointer on GPU 0 is not a pointer on GPU 1. Moving a tile between them is a copy over a link, not a load from the hierarchy you already know inside one device.",
+        "The links are not equal. A device-to-device interconnect (NVLink and its peers) can move data without parking it in host DRAM. PCIe through the host is the slower, more common path: device to host memory to the other device. Bandwidth and latency differ by a large factor. 'We scaled to eight GPUs' is unfinished until you say which link carried the halo.",
+        "Algorithms that look data-parallel inside one device become communication-bound across devices when each step needs a neighbour's border. Overlap — moving the next halo while computing this tile — is the usual cover, and it only works if the link and the device memory pipe can run together. Multi-GPU is a small cluster, not a larger SM."
+      ],
+      "example": "A stencil on a grid split across two devices needs a halo exchange every step. Over NVLink the halo can move while the interior computes. Over host-bounced PCIe the same halo can dominate the step. The kernel source on each device did not change. The link did.",
+      "whyItMatters": "Single-device hierarchy thinking stops at HBM. The next tax is the cable. If you cannot name the path, you cannot read a scaling plot.",
+      "quiz": [
+        {
+          "id": "mg10-1",
+          "stem": "On a node with several GPUs, a device pointer on GPU 0 typically:",
+          "correctAnswer": "Names memory on that device, not a location the neighbour can load as local",
+          "distractors": [
+            { "text": "Is automatically valid on every device as a register", "kind": "reversed", "rationale": "Each device has its own memory. A name is not a teleport." },
+            { "text": "Lives only in the host's L1", "kind": "nearby", "rationale": "The payload is device memory. The question is which device." },
+            { "text": "Deletes the other GPU's address space", "kind": "subtle", "rationale": "Both spaces exist. They are not one load." }
+          ],
+          "correctExplanation": "Several devices, several memories. A pointer does not cross by wishing.",
+          "objectiveIds": ["Explain that 'the GPU' is often several devices with a link between them"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "mg10-2",
+          "stem": "A halo exchange that bounces through host memory rather than a device-to-device link typically:",
+          "correctAnswer": "Pays two copies and host DRAM, so it is the slower path",
+          "distractors": [
+            { "text": "Is faster because the host has the largest caches", "kind": "reversed", "rationale": "The extra hop is the tax, not a shortcut." },
+            { "text": "Turns both devices into one SM", "kind": "nearby", "rationale": "The devices stay separate. The path got longer." },
+            { "text": "Removes the need for device memory on either GPU", "kind": "subtle", "rationale": "Both still hold their tiles. Only the halo travelled the long way." }
+          ],
+          "correctExplanation": "Device–host–device is two copies. A peer link is one.",
+          "objectiveIds": ["Contrast a fast device-to-device link with going through host memory"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mg10-3",
+          "stem": "Overlapping a halo move with interior compute is a bet that:",
+          "correctAnswer": "The link and the device memory pipe can run together, hiding the exchange",
+          "distractors": [
+            { "text": "Communication has become free on every interconnect", "kind": "reversed", "rationale": "Overlap hides a cost. It does not delete the link." },
+            { "text": "All eight GPUs share one register file", "kind": "nearby", "rationale": "They do not. That is why the halo exists." },
+            { "text": "PCIe and a peer link have identical bandwidth", "kind": "subtle", "rationale": "If they did, the path would not be the question." }
+          ],
+          "correctExplanation": "Cover the copy, do not pretend the copy vanished. The link still has a rate.",
+          "objectiveIds": ["Contrast a fast device-to-device link with going through host memory"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-graph-capture-10",
+      "conceptId": "gpu-graph-capture",
+      "title": "Record the launches, replay the graph",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-kernel-launch"],
+      "explanation": [
+        "A kernel launch is a host decision that creates an index space. When the device work is a short kernel, the host's decision can cost more than the kernel. Doing that in a loop — launch, wait, launch, wait — puts the host in the inner loop. Capture records a sequence of launches (and the dependencies between them) once, then replays the recorded graph without the host re-describing every launch.",
+        "The graph is not a new programming model for threads. It is a recording of launches you already know how to write. Geometry, kernel identity, and the edges between launches are frozen at capture time. Changing the grid every iteration, or rebuilding the graph every iteration, gives the cost back. Capture helps when the sequence is stable and the individual kernels are short.",
+        "Work graphs and similar device-side launchers push the same idea further: the device is allowed to spawn the next launch without returning to the host. The architectural point is identical. The host created the first index space. After that, you would like it to stop talking until the whole pipeline is done."
+      ],
+      "example": "A post-process chain of six 50-microsecond kernels launched from a CPU loop can spend more time in launch than in ALUs. Capturing the six as a graph and replaying it each frame pays the description once. Rebuilding the graph every frame because the grid size changed every frame does not.",
+      "whyItMatters": "People blame the device when the host was the inner loop. You already know launch creates the index space. This unit is what you do when creating it, over and over, is the program.",
+      "quiz": [
+        {
+          "id": "gc10-1",
+          "stem": "Graph capture is primarily:",
+          "correctAnswer": "Recording a launch sequence so the host is not in the inner loop on replay",
+          "distractors": [
+            { "text": "A new per-thread programming model that replaces kernels", "kind": "reversed", "rationale": "The kernels are the same. The host stopped re-describing them." },
+            { "text": "Compiling the kernel from source on every replay", "kind": "nearby", "rationale": "Capture avoids repeated host work. It does not add a compile." },
+            { "text": "A page-table walk the device performs instead of a launch", "kind": "subtle", "rationale": "This is about launch description, not translation." }
+          ],
+          "correctExplanation": "Record the launches, replay the graph. The host steps out of the loop.",
+          "objectiveIds": ["Describe recording a launch sequence so the host is not in the inner loop"],
+          "prerequisiteConceptIds": ["gpu-kernel-launch"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "gc10-2",
+          "stem": "Capture helps a chain of short kernels when:",
+          "correctAnswer": "The sequence is stable, so replay avoids paying launch description every time",
+          "distractors": [
+            { "text": "The sequence changes every iteration and you rebuild the graph each time", "kind": "reversed", "rationale": "Rebuilding gives the host cost back." },
+            { "text": "There is only one thread in the whole program", "kind": "nearby", "rationale": "The issue is host launch overhead, not thread count." },
+            { "text": "The host must single-step each kernel body", "kind": "subtle", "rationale": "The host is not in the kernel body. It was in the launch loop." }
+          ],
+          "correctExplanation": "Stable sequence, short kernels, replay. That is the win.",
+          "objectiveIds": ["Predict when capture helps a short kernel that would otherwise pay launch latency"],
+          "prerequisiteConceptIds": ["gpu-kernel-launch"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "gc10-3",
+          "stem": "Rebuilding a captured graph every iteration because geometry changed is a sign that:",
+          "correctAnswer": "You are paying the description cost again, so capture is not hiding launch latency",
+          "distractors": [
+            { "text": "Capture has made every launch free forever", "kind": "reversed", "rationale": "Rebuild is a recapture. The cost returned." },
+            { "text": "The device no longer needs an index space", "kind": "nearby", "rationale": "Every replay still creates the spaces you recorded." },
+            { "text": "The host has moved into each kernel body", "kind": "subtle", "rationale": "The host is back in the launch loop, not in the body." }
+          ],
+          "correctExplanation": "Capture is a recording. A recording you remake every time is just a slower launch.",
+          "objectiveIds": ["Predict when capture helps a short kernel that would otherwise pay launch latency"],
+          "prerequisiteConceptIds": ["gpu-kernel-launch"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

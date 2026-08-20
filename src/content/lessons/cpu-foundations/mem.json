@@ -1,0 +1,585 @@
+{
+  "courseId": "cpu-foundations",
+  "moduleId": "cpu-f-mem",
+  "lessons": [
+    {
+      "id": "cpu-locality-5",
+      "conceptId": "cpu-locality",
+      "title": "The next access is usually nearby",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-cache-levels",
+      "diagram": "locality",
+      "explanation": [
+        "Memory is large and slow. The working set of a running loop is usually small. Temporal locality: you will touch the same address again soon. Spatial locality: you will touch a nearby address soon. Those two regularities are why a small fast memory in front of a large slow one works.",
+        "A cache is not a moral improvement on DRAM. It is a bet that the next miss is rare because of those two habits. A program that jumps uniformly across a huge array has little of either. No cache policy invents a habit the code does not have."
+      ],
+      "example": "A loop reading `a[i]` then `a[i+1]` is spatial: consecutive addresses. A loop that reuses a running sum in the same stack slot is temporal: the same address. A pointer chase through a large heap can have neither.",
+      "whyItMatters": "Caches only pay rent if the next access is the same or nearby. If you cannot name which kind of locality you are counting on, you cannot say why a cache would help.",
+      "quiz": [
+        {
+          "id": "loc5-1",
+          "stem": "Temporal locality means:",
+          "correctAnswer": "The same address is likely to be used again soon",
+          "distractors": [
+            { "text": "A nearby address is likely to be used soon", "kind": "nearby", "rationale": "That is spatial locality." },
+            { "text": "The clock is about to speed up", "kind": "subtle", "rationale": "Frequency is not an access habit." },
+            { "text": "DRAM has become as fast as a register", "kind": "reversed", "rationale": "Locality is why we hide DRAM, not a claim that DRAM got fast." }
+          ],
+          "correctExplanation": "Same location, soon. Nearby-but-different is the other word.",
+          "objectiveIds": ["Distinguish temporal from spatial locality"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "loc5-2",
+          "stem": "Walking `a[0]`, `a[1]`, `a[2]` in order is mainly:",
+          "correctAnswer": "Spatial locality",
+          "distractors": [
+            { "text": "Temporal locality on three different addresses", "kind": "nearby", "rationale": "You have not reused an address yet; you have used neighbours." },
+            { "text": "A proof that caches are unnecessary", "kind": "reversed", "rationale": "Neighbours are exactly what a cache line is for." },
+            { "text": "A change to the ISA", "kind": "misapplied", "rationale": "Access order is not a contract change." }
+          ],
+          "correctExplanation": "Consecutive addresses. That is spatial.",
+          "objectiveIds": ["Distinguish temporal from spatial locality"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "loc5-3",
+          "stem": "A small fast memory helps when:",
+          "correctAnswer": "Most accesses hit in a working set that fits, because of locality",
+          "distractors": [
+            { "text": "Every program touches memory uniformly at random", "kind": "reversed", "rationale": "Uniform random traffic has no habit to cache." },
+            { "text": "The clock is turned off", "kind": "subtle", "rationale": "A stopped machine does not need a cache." },
+            { "text": "Addresses are no longer used", "kind": "nearby", "rationale": "Caches still name locations." }
+          ],
+          "correctExplanation": "The small memory only wins if the next access is already there, or in the same line.",
+          "objectiveIds": ["Use locality to explain why a small fast memory helps"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-locality-10",
+      "conceptId": "cpu-locality",
+      "title": "Two habits that make a cache possible",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-cache-levels",
+      "diagram": "locality",
+      "explanation": [
+        "DRAM latency is tens to hundreds of nanoseconds. A core that waits honestly for every access is empty most of the time. Programs are not honest in that way. They reuse the same variables (temporal locality) and they walk neighbouring addresses (spatial locality). Those habits are empirical, not guaranteed. They are common enough to build on.",
+        "A cache is a small, fast memory that holds recently used lines — aligned blocks of bytes, not single words — so a hit returns in a handful of cycles. Temporal locality says the same line will be asked for again. Spatial locality says the next word is probably already on that line. A 64-byte line is a spatial bet: one miss pays for several nearby words.",
+        "When the habit is absent, the cache is a small random sample of a large space. Misses stay frequent, and you have added a lookup on the hit path for nothing. Blocking a matrix multiply to fit a tile, or packing a struct so hot fields share a line, is software manufacturing locality the naive loop did not have."
+      ],
+      "example": "A 4 KiB inner-loop working set in a 32 KiB cache hits temporally after warmup. Streaming a 64 MiB array once is mostly spatial: each line is used and then left. A hash table whose buckets sit far apart can miss on almost every lookup; the addresses have no neighbour relationship and little reuse.",
+      "whyItMatters": "The rest of the memory system is machinery for exploiting these two habits, or for surviving when they fail. If you skip this, L1/L2/L3 will look like three brand names.",
+      "quiz": [
+        {
+          "id": "loc10-1",
+          "stem": "Spatial locality is the claim that:",
+          "correctAnswer": "A nearby address is likely to be used soon",
+          "distractors": [
+            { "text": "The same address will be used again soon", "kind": "nearby", "rationale": "That is temporal locality." },
+            { "text": "DRAM has no latency", "kind": "reversed", "rationale": "Locality is how we live with latency." },
+            { "text": "The ISA names only one address", "kind": "subtle", "rationale": "Addressing and locality are different clauses." }
+          ],
+          "correctExplanation": "Neighbours, soon. Reuse of the exact address is the other habit.",
+          "objectiveIds": ["Distinguish temporal from spatial locality"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "loc10-2",
+          "stem": "A cache line of many bytes is mainly a bet on:",
+          "correctAnswer": "Spatial locality: the next word is probably already in the block",
+          "distractors": [
+            { "text": "The clock being slower than DRAM", "kind": "reversed", "rationale": "The clock is faster; that is the problem." },
+            { "text": "Instructions no longer using addresses", "kind": "subtle", "rationale": "Lines are still addressed." },
+            { "text": "Every program fitting in registers", "kind": "nearby", "rationale": "Registers are a different small memory." }
+          ],
+          "correctExplanation": "One miss, several nearby words. That only pays if you use the neighbours.",
+          "objectiveIds": ["Use locality to explain why a small fast memory helps"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "loc10-3",
+          "stem": "Tiling a matrix multiply so a block fits in the fast memory is:",
+          "correctAnswer": "Manufacturing temporal reuse the naive loop did not have",
+          "distractors": [
+            { "text": "Deleting DRAM", "kind": "reversed", "rationale": "The large array is still in DRAM; you visit it in tiles." },
+            { "text": "A new endianness", "kind": "nearby", "rationale": "Byte order is not a working-set transform." },
+            { "text": "Raising the miss rate on purpose", "kind": "misapplied", "rationale": "The point is more hits from reuse." }
+          ],
+          "correctExplanation": "You changed the access order so the same addresses come back while they still sit in the small memory.",
+          "objectiveIds": ["Use locality to explain why a small fast memory helps"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-cache-levels-10",
+      "conceptId": "cpu-cache-levels",
+      "title": "L1, L2, L3 are one trade, three points",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-locality"],
+      "goDeeper": "cpu-cache-miss",
+      "diagram": "hierarchy",
+      "explanation": [
+        "A single cache cannot be both the largest and the fastest. Bigger memories are slower: more silicon to index, longer wires, more energy. The hierarchy is that trade drawn as a staircase. L1 is the smallest and closest — a few tens of kilobytes, a handful of cycles — so a hit does not stall execute. L2 is larger and a bit slower. L3 is larger still, often shared, and slower again. DRAM sits under all of them.",
+        "Each level exists to catch a working set the level above cannot hold, at a latency the level below cannot match. The closest cache is smallest because that is the only way to keep its hit time in the same breath as the pipeline. A 32 MiB L1 would not be an L1. It would be a slow memory with an L1 name.",
+        "Inclusion and sharing policies vary. The idea does not: you are buying several points on the same latency-capacity curve, not three unrelated boxes from three vendors."
+      ],
+      "example": "A tight inner loop's instructions and scalars live in L1 after warmup. A larger tile spills to L2 and still beats DRAM. A working set of tens of megabytes may live in L3 on a laptop and miss to DRAM on a microcontroller that has no L3. Same program, different point on the curve.",
+      "whyItMatters": "Reviews that quote 'the cache' as one number are mixing hit times. If you cannot say which level moved, you cannot say which working set just got cheaper.",
+      "quiz": [
+        {
+          "id": "cl10-1",
+          "stem": "L1, L2, and L3 are best read as:",
+          "correctAnswer": "Several points on a latency-versus-capacity trade",
+          "distractors": [
+            { "text": "Three unrelated memories with no shared idea", "kind": "reversed", "rationale": "They are the same idea at three sizes." },
+            { "text": "Three names for the register file", "kind": "nearby", "rationale": "Registers are architected; cache levels usually are not." },
+            { "text": "The three hazard classes", "kind": "misapplied", "rationale": "Hazards are pipeline stalls, not hierarchy levels." }
+          ],
+          "correctExplanation": "Closer is smaller and faster. Farther is larger and slower. That is one curve.",
+          "objectiveIds": ["Explain L1/L2/L3 as a latency-capacity trade"],
+          "prerequisiteConceptIds": ["cpu-locality"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cl10-2",
+          "stem": "The closest cache is smallest because:",
+          "correctAnswer": "Only a small array can stay fast enough to feed the pipeline",
+          "distractors": [
+            { "text": "Large SRAMs are illegal", "kind": "reversed", "rationale": "They exist; they are just slower, and they sit farther out." },
+            { "text": "The ISA only has 32 addresses", "kind": "nearby", "rationale": "Address size is not why L1 is 32 KiB." },
+            { "text": "DRAM already has no latency", "kind": "subtle", "rationale": "If DRAM were free, the staircase would not exist." }
+          ],
+          "correctExplanation": "Hit time is the product you bought at L1. Capacity would wreck it.",
+          "objectiveIds": ["Say why the closest cache is smallest"],
+          "prerequisiteConceptIds": ["cpu-locality"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cl10-3",
+          "stem": "A 32 MiB structure with an L1 hit time is not something vendors ship as L1 because:",
+          "correctAnswer": "That capacity would not have an L1 hit time; it would be a farther, slower level",
+          "distractors": [
+            { "text": "Programs never need 32 MiB", "kind": "reversed", "rationale": "They do; that is why L3 exists." },
+            { "text": "Bytes cannot be stored twice", "kind": "nearby", "rationale": "Hierarchies store copies on purpose." },
+            { "text": "The clock cannot tick near SRAM", "kind": "subtle", "rationale": "The clock ticks; the array delay is the problem." }
+          ],
+          "correctExplanation": "The name L1 means the fast point on the curve, not a marketing size.",
+          "objectiveIds": ["Say why the closest cache is smallest"],
+          "prerequisiteConceptIds": ["cpu-locality"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-cache-levels-20",
+      "conceptId": "cpu-cache-levels",
+      "title": "Why the staircase has more than two steps",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cpu-locality"],
+      "goDeeper": "cpu-cache-miss",
+      "diagram": "hierarchy",
+      "explanation": [
+        "Two levels — a tiny L1 and DRAM — already express the latency-capacity idea. Extra levels exist because the gap between those two points grew. An L1 that can answer in three cycles cannot hold a megabyte-class working set. DRAM that can hold the working set cannot answer in three cycles. L2 and L3 are intermediate products: miss penalties you are willing to pay for working sets L1 cannot hold.",
+        "Private versus shared is a second axis, not a third kind of cache. L1 is almost always private per core so two cores do not fight over the fastest SRAM. L3 is often shared so a large working set can be reached by any core that needs it, at a latency still better than DRAM. L2 sits wherever the designer put the next private or shared step. The names are conventional. The curve is the thing.",
+        "Hit time, miss penalty, and miss rate multiply. Growing L1 a little can raise hit time for everyone. Growing L3 a lot can cut DRAM traffic for a few workloads and add lookup delay for all of them. Inclusive designs waste some capacity keeping copies; exclusive designs spend extra traffic moving lines. Those are later knobs. This unit only needs why several sizes exist on one machine.",
+        "When a slide says '50 MB of cache', ask which level, whether it is shared, and which working set that number is for. A shared last-level cache is not fifty megabytes of L1."
+      ],
+      "example": "A compiler's hot instruction loop fits in a 32 KiB L1-I. Its intermediate IR graph does not, but may fit in a 256 KiB L2. Linking a large binary may miss L2 and live in a multi-megabyte L3, or spill to DRAM on a small chip. Same binary, three working sets, three levels.",
+      "whyItMatters": "Hierarchy is how the industry answered a growing DRAM gap without pretending one SRAM could be both huge and instant. Later miss-type and write-policy units assume this staircase, not a single box called 'the cache'.",
+      "quiz": [
+        {
+          "id": "cl20-1",
+          "stem": "Extra cache levels exist mainly because:",
+          "correctAnswer": "The gap between a fast tiny array and DRAM is too wide for two points",
+          "distractors": [
+            { "text": "Vendors needed more brand names", "kind": "subtle", "rationale": "The names are conventional; the gap is physical." },
+            { "text": "L1 hit time improves as the array grows", "kind": "reversed", "rationale": "Larger arrays are slower; that is the trade." },
+            { "text": "The ISA requires three caches", "kind": "nearby", "rationale": "Hierarchy is usually not in the programmer contract." }
+          ],
+          "correctExplanation": "Intermediate sizes catch working sets L1 cannot hold, at a latency DRAM cannot match.",
+          "objectiveIds": ["Explain L1/L2/L3 as a latency-capacity trade"],
+          "prerequisiteConceptIds": ["cpu-locality"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cl20-2",
+          "stem": "Making L1 private per core is trying to protect:",
+          "correctAnswer": "The fastest hit time, by not sharing the smallest SRAM",
+          "distractors": [
+            { "text": "DRAM capacity", "kind": "nearby", "rationale": "Privacy of L1 is not a DRAM-size knob." },
+            { "text": "The idea of spatial locality", "kind": "misapplied", "rationale": "Locality still exists on a shared cache." },
+            { "text": "The need for any farther level", "kind": "reversed", "rationale": "Private L1 is why you still need larger shared or private outer levels." }
+          ],
+          "correctExplanation": "The closest array is too precious to turn into a contended larger memory.",
+          "objectiveIds": ["Say why the closest cache is smallest"],
+          "prerequisiteConceptIds": ["cpu-locality"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cl20-3",
+          "stem": "Quoting '50 MB of cache' without a level is misleading because:",
+          "correctAnswer": "That number is almost certainly a farther, slower level, not L1 hit-time SRAM",
+          "distractors": [
+            { "text": "Caches cannot be larger than 1 MB", "kind": "reversed", "rationale": "Last-level caches are often tens of megabytes." },
+            { "text": "Bytes are not used in caches", "kind": "subtle", "rationale": "They are; the question is which hit time they have." },
+            { "text": "All levels have the same latency", "kind": "misconception", "rationale": "If they did, one level would suffice." }
+          ],
+          "correctExplanation": "Capacity without a level is a missing axis of the trade.",
+          "objectiveIds": ["Explain L1/L2/L3 as a latency-capacity trade"],
+          "prerequisiteConceptIds": ["cpu-locality"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-cache-miss-10",
+      "conceptId": "cpu-cache-miss",
+      "title": "Three ways a lookup fails",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-cache-levels"],
+      "goDeeper": "cpu-write-policy",
+      "explanation": [
+        "A hit means the line is already in this cache. A miss means it is not, and you pay the next level. The three-C vocabulary names why. Compulsory (cold): this line has never been seen; the first touch must miss. Capacity: the working set is larger than the cache; even a fully associative array would spill. Conflict: the working set would fit, but too many lines map to the same set, so they evict each other.",
+        "The fix depends on the class. Compulsory misses shrink with prefetch or larger lines if the next touch is spatial — or they just get paid once. Capacity misses ask for a larger cache or a smaller working set. Conflict misses ask for more associativity, a better index hash, or a layout that stops colliding.",
+        "Mixing the classes is how people 'fix' a capacity problem with associativity, or blame the compiler for a compulsory first-touch. Name the failure before you name the knob."
+      ],
+      "example": "First read of a cold array: compulsory. A 2 MiB working set in a 256 KiB cache: capacity, even with infinite associativity. Two arrays whose indices land in the same two-way set and evict each other, even though both would fit: conflict. Doubling associativity helps the third and does nothing to the second.",
+      "whyItMatters": "Miss counters without a class are a complaint, not a diagnosis. The next design change only makes sense after you know which C you are in.",
+      "quiz": [
+        {
+          "id": "cm10-1",
+          "stem": "A compulsory miss is:",
+          "correctAnswer": "The first reference to a line this cache has never held",
+          "distractors": [
+            { "text": "A miss caused by two lines fighting one set", "kind": "nearby", "rationale": "That is a conflict miss." },
+            { "text": "A miss caused by a working set larger than the cache", "kind": "misapplied", "rationale": "That is a capacity miss." },
+            { "text": "A hit that took an extra cycle", "kind": "reversed", "rationale": "A hit is not a miss." }
+          ],
+          "correctExplanation": "Cold start. The line was never there. No associativity trick creates history.",
+          "objectiveIds": ["Name compulsory, capacity, and conflict misses"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "cm10-2",
+          "stem": "A working set that cannot fit even in a fully associative cache of this size is causing:",
+          "correctAnswer": "Capacity misses",
+          "distractors": [
+            { "text": "Only compulsory misses, forever", "kind": "nearby", "rationale": "After warmup you are still spilling; that is capacity." },
+            { "text": "Only conflict misses", "kind": "misapplied", "rationale": "Conflict assumes the set would fit if mapping were kinder." },
+            { "text": "Hits, by definition", "kind": "reversed", "rationale": "Not fitting is the miss." }
+          ],
+          "correctExplanation": "If infinite associativity would still spill, the cache is too small. That is capacity.",
+          "objectiveIds": ["Name compulsory, capacity, and conflict misses"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cm10-3",
+          "stem": "Two arrays that fit together but evict each other from one set want:",
+          "correctAnswer": "More associativity, or a layout that stops colliding — a conflict fix",
+          "distractors": [
+            { "text": "Only a larger last-level cache, never a mapping change", "kind": "nearby", "rationale": "Capacity is the wrong class if they already fit." },
+            { "text": "Deleting the first touch", "kind": "misapplied", "rationale": "The first touch is compulsory; the fight after warmup is not." },
+            { "text": "A slower clock so misses become hits", "kind": "reversed", "rationale": "Frequency does not change whether a line is present." }
+          ],
+          "correctExplanation": "They would fit. The index made them share a set. That is conflict.",
+          "objectiveIds": ["Match a miss type to a plausible fix"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-write-policy-10",
+      "conceptId": "cpu-write-policy",
+      "title": "When a store updates memory",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-cache-levels"],
+      "goDeeper": "cpu-memory-wall",
+      "explanation": [
+        "A store has to change the architected value. Write-through sends that change to the next level on every store, and usually keeps a copy in this cache. The next level always agrees. Traffic is high. Write-back only updates this cache and marks the line dirty. The next level is updated later, when the line is evicted. Traffic is lower. The cache now holds the only up-to-date copy.",
+        "A dirty bit is the bookkeeping for write-back: this line has stores that memory has not seen. Evicting a dirty line means a write of the whole line, not a silent drop. Evicting a clean line is just a forget. Write-allocate (on a store miss, fetch the line, then store into it) is the usual partner of write-back, because you expect more stores or loads to that line. Write-no-allocate (send the store past this cache) often partners write-through.",
+        "Neither policy makes DRAM fast. They choose when the next level is told. Write-through is simpler and easier to reason about. Write-back is how you stop a loop of stores from becoming a loop of memory writes."
+      ],
+      "example": "A loop storing to `a[i]` for i in 0..n on a write-through L1 generates a store to L2 on every iteration. The same loop on write-back dirties each line once and writes it back when it leaves. If you then evict that line, the dirty bit is why a whole 64-byte write appears on the bus, not a one-word store.",
+      "whyItMatters": "Dirty bits and allocate-on-write are not extra trivia. They are what write-back costs you for the traffic it saves. If you cannot say when memory is told, you cannot read a store-heavy benchmark.",
+      "quiz": [
+        {
+          "id": "wp10-1",
+          "stem": "Write-back differs from write-through in that:",
+          "correctAnswer": "The store updates this cache immediately and memory later, on eviction",
+          "distractors": [
+            { "text": "The store never changes any memory in the system", "kind": "reversed", "rationale": "Memory is updated on eviction, not never." },
+            { "text": "Every store immediately updates the next level", "kind": "nearby", "rationale": "That is write-through." },
+            { "text": "Stores become illegal", "kind": "subtle", "rationale": "Stores still happen; the policy names when the next level hears." }
+          ],
+          "correctExplanation": "Write-back delays the next-level update. Write-through does not.",
+          "objectiveIds": ["Contrast write-through with write-back"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "wp10-2",
+          "stem": "A dirty bit is needed because:",
+          "correctAnswer": "A write-back cache must know which lines have stores memory has not seen",
+          "distractors": [
+            { "text": "Hits would otherwise be impossible", "kind": "nearby", "rationale": "Hits care whether the line is present, not whether it is dirty." },
+            { "text": "Write-through cannot function without one", "kind": "misapplied", "rationale": "Write-through already told the next level." },
+            { "text": "The clock uses it as a frequency bit", "kind": "subtle", "rationale": "It is bookkeeping for a line, not a PLL." }
+          ],
+          "correctExplanation": "Evict clean: drop. Evict dirty: write the line back. That bit is the decision.",
+          "objectiveIds": ["Explain dirty bits and write-allocate as consequences"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "wp10-3",
+          "stem": "Write-allocate on a store miss is the usual partner of write-back because:",
+          "correctAnswer": "You fetch the line so later stores and loads can hit the same block",
+          "distractors": [
+            { "text": "It makes every store miss forever", "kind": "reversed", "rationale": "Allocate is how the next access can hit." },
+            { "text": "It deletes the dirty bit", "kind": "nearby", "rationale": "Allocate and dirty bits work together." },
+            { "text": "It turns the cache into DRAM", "kind": "subtle", "rationale": "You still have a small fast array." }
+          ],
+          "correctExplanation": "If you expect reuse, bring the line in and store into it. That is the write-back habit.",
+          "objectiveIds": ["Explain dirty bits and write-allocate as consequences"],
+          "prerequisiteConceptIds": ["cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-virtual-addr-10",
+      "conceptId": "cpu-virtual-addr",
+      "title": "The names a process uses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-isa"],
+      "goDeeper": "cpu-tlb",
+      "explanation": [
+        "A program does not name physical DRAM rows. It names virtual addresses: a process-private namespace the ISA exposes through loads, stores, and the program counter. The machine later translates those names to physical addresses that select real lines. The translation is a table the operating system writes and the hardware walks.",
+        "Two processes can both use virtual address `0x4000`. They do not smash each other because those names map to different physical pages — or one mapping is missing and the access faults. Isolation is a consequence of a private namespace plus a checked translation, not of different ISAs.",
+        "The virtual address is also how a process can have a hole-filled, large space while the machine has less DRAM than the space implies. Unmapped pages simply do not translate. That is the beginning of virtual memory. This unit only needs the split: the name the program uses versus the physical line the array actually holds."
+      ],
+      "example": "Process A and process B both load from `0x7fff_ff00`. A's page table maps that page to physical frame 12. B's maps it to frame 80, or not at all. Same number in the load instruction. Different physical lines — or a fault. The binary did not mention frames.",
+      "whyItMatters": "Caches, I/O, and kernels all have to say whether they are talking about a process name or a physical line. If you mix the two, every later TLB and page-fault story will look like a cache bug.",
+      "quiz": [
+        {
+          "id": "va10-1",
+          "stem": "A virtual address is:",
+          "correctAnswer": "A process-private name that must be translated to a physical line",
+          "distractors": [
+            { "text": "The row decoder inside DRAM itself", "kind": "nearby", "rationale": "That is the physical side, after translation." },
+            { "text": "A second timebase the core uses while translating", "kind": "subtle", "rationale": "A virtual address is a process-private name, not a timebase." },
+            { "text": "The opcode of the load that produced this address", "kind": "misapplied", "rationale": "The address is a name for a location. The opcode is a different field." }
+          ],
+          "correctExplanation": "The program names a location in its space. Hardware plus the OS map it.",
+          "objectiveIds": ["Separate a process virtual address from a physical line"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "va10-2",
+          "stem": "Two processes can both use virtual address 0x4000 because:",
+          "correctAnswer": "Each process has its own translation; the names need not be the same physical line",
+          "distractors": [
+            { "text": "The ISA forbids two processes", "kind": "reversed", "rationale": "Multiple processes are the usual case." },
+            { "text": "Physical memory has only one byte", "kind": "subtle", "rationale": "The point is two mappings, not one cell." },
+            { "text": "Caches delete addresses", "kind": "nearby", "rationale": "Caches still use addresses; they do not create isolation." }
+          ],
+          "correctExplanation": "Private namespaces. The collision is only of names, not of frames — unless the OS mapped them that way on purpose.",
+          "objectiveIds": ["Explain why two processes can use the same virtual address"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "va10-3",
+          "stem": "A load whose virtual page has no translation:",
+          "correctAnswer": "Cannot become a physical access; the machine must fault or wait for a mapping",
+          "distractors": [
+            { "text": "Silently reads a random DRAM row", "kind": "reversed", "rationale": "An unchecked fall-through would smash isolation." },
+            { "text": "Changes the ISA encodings", "kind": "nearby", "rationale": "A missing map is not a new opcode." },
+            { "text": "Speeds up the clock as a side effect", "kind": "subtle", "rationale": "Faults are not a frequency knob." }
+          ],
+          "correctExplanation": "No physical line was named. That is why a page fault exists.",
+          "objectiveIds": ["Separate a process virtual address from a physical line"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-tlb-10",
+      "conceptId": "cpu-tlb",
+      "title": "A cache of translations, not of bytes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-virtual-addr", "cpu-cache-levels"],
+      "goDeeper": "cpu-memory-wall",
+      "explanation": [
+        "Every load, store, and instruction fetch names a virtual address. Walking a multi-level page table on every one of those would turn a three-cycle L1 into a memory-bound crawl. The TLB (translation lookaside buffer) is a cache of recent translations: virtual page → physical frame, plus permission bits. A TLB hit means you already know the physical address. A TLB miss means you do not, and you must walk the tables — even if the data bytes are sitting in L1.",
+        "That last sentence is the usual confusion. A data-cache miss is 'I do not have these bytes.' A TLB miss is 'I do not have this page's map.' You can have a TLB miss and then a data hit, or a TLB hit and then a data miss, or both. They are different arrays with different keys.",
+        "A small, highly associative TLB is another latency-capacity bet, this time on page-level temporal locality. Programs that jump across many pages miss the TLB even when their bytes would fit in the data cache. Superpages are one way to make each TLB entry cover more of the space."
+      ],
+      "example": "A loop touches one byte in each of 4096 different pages. The data cache may hold those bytes if they fit. The TLB, with a few dozen entries, thrashes: every iteration is a translation miss and a walk, then a data hit. The stall counter that moved is the TLB, not L1-D.",
+      "whyItMatters": "If you treat every memory stall as a cache miss, you will prefetch data when you needed a translation, and you will misread every OS story about shootdowns and superpages.",
+      "quiz": [
+        {
+          "id": "tlb10-1",
+          "stem": "The TLB caches:",
+          "correctAnswer": "Recent virtual-to-physical translations, not the program's data bytes",
+          "distractors": [
+            { "text": "The DRAM row contents the last load returned", "kind": "nearby", "rationale": "The TLB caches translations, not the data the load returned." },
+            { "text": "Recently fetched instruction bytes, tagged by PC", "kind": "subtle", "rationale": "That would be an instruction cache or decode buffer, not the TLB." },
+            { "text": "Clock configurations the firmware last programmed", "kind": "misapplied", "rationale": "The TLB does not cache clock settings." }
+          ],
+          "correctExplanation": "Page → frame, plus permissions. Different array, different key.",
+          "objectiveIds": ["Describe the TLB as a cache of translations, not data"],
+          "prerequisiteConceptIds": ["cpu-virtual-addr", "cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "tlb10-2",
+          "stem": "A TLB miss with a later data-cache hit means:",
+          "correctAnswer": "The map was missing; the bytes were already in the data cache once translated",
+          "distractors": [
+            { "text": "The data cache was empty and the TLB was full", "kind": "reversed", "rationale": "You had the bytes; you lacked the translation." },
+            { "text": "Virtual addresses have been abolished", "kind": "nearby", "rationale": "You still translated; you just had to walk first." },
+            { "text": "The two misses are the same event", "kind": "misconception", "rationale": "They are different arrays." }
+          ],
+          "correctExplanation": "Two lookups, two outcomes. The expensive one was the walk.",
+          "objectiveIds": ["Distinguish a TLB miss from a data-cache miss"],
+          "prerequisiteConceptIds": ["cpu-virtual-addr", "cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "tlb10-3",
+          "stem": "Touching one byte in each of thousands of pages often stalls on the TLB because:",
+          "correctAnswer": "Each page needs its own translation entry, and the TLB is small",
+          "distractors": [
+            { "text": "Data caches refuse single-byte accesses", "kind": "nearby", "rationale": "The data cache can hold the bytes; the map file cannot hold that many pages." },
+            { "text": "The ISA has no loads", "kind": "reversed", "rationale": "The loads happened; the translations missed." },
+            { "text": "Write-through is illegal", "kind": "subtle", "rationale": "Write policy is a different lesson." }
+          ],
+          "correctExplanation": "Page-level working set versus a small translation cache. That is not an L1-D story.",
+          "objectiveIds": ["Distinguish a TLB miss from a data-cache miss"],
+          "prerequisiteConceptIds": ["cpu-virtual-addr", "cpu-cache-levels"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-memory-wall-10",
+      "conceptId": "cpu-memory-wall",
+      "title": "Processors outran the DRAM they wait on",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-cache-levels", "cpu-perf-metrics"],
+      "explanation": [
+        "For a few decades, processor cycle time improved faster than DRAM latency. The number of core cycles spent waiting for one memory access grew. That gap is the memory wall. It is not a claim that DRAM stopped improving. It is a claim that the core's tick shrank faster than the wait, so honest waits started to dominate CPI.",
+        "Caches do not delete that wait. They hide it when locality makes the wait rare. A hit is a short trip to SRAM. A miss still pays DRAM, now an even larger multiple of the core's cycle. Prefetch, extra levels, and later out-of-order windows are the same idea in different clothes: keep useful work happening while the long access is in flight.",
+        "Clock-only stories collide with the wall. A hotter core that misses just as often spends more ticks per miss. IPC falls even as frequency rises. Time is still instruction count × CPI × period. The wall is how CPI inflates when the period shrinks and the miss does not."
+      ],
+      "example": "A 100 ns DRAM access is 100 cycles at 1 GHz and 400 cycles at 4 GHz. The DRAM did not get worse. The accounting unit got smaller. A cache that hits 96% of the time still leaves 4% of accesses paying those 400 cycles, which is enough to own the average CPI.",
+      "whyItMatters": "This is why the course spent a module on locality and hierarchy before anyone said out-of-order. The wall is the problem. Caches are the first hide, not a repeal.",
+      "quiz": [
+        {
+          "id": "mw10-1",
+          "stem": "The memory wall is the observation that:",
+          "correctAnswer": "Processor cycle time improved faster than DRAM latency, so waits grew in cycles",
+          "distractors": [
+            { "text": "DRAM stopped existing", "kind": "reversed", "rationale": "DRAM is still there; it just did not keep up in latency." },
+            { "text": "Caches made processors slower than memory", "kind": "nearby", "rationale": "Caches are the response, not the cause." },
+            { "text": "Instruction count became zero", "kind": "subtle", "rationale": "The identity still has three factors." }
+          ],
+          "correctExplanation": "The tick shrank. The wait did not shrink as fast. CPI absorbed the difference.",
+          "objectiveIds": ["State the memory wall as processors outrunning DRAM latency"],
+          "prerequisiteConceptIds": ["cpu-cache-levels", "cpu-perf-metrics"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mw10-2",
+          "stem": "A cache hit hides DRAM latency rather than deleting it because:",
+          "correctAnswer": "The long access is avoided this time; a miss still pays the full wait",
+          "distractors": [
+            { "text": "DRAM latency becomes zero for the rest of time", "kind": "reversed", "rationale": "The next miss still sees DRAM." },
+            { "text": "The ISA no longer has loads", "kind": "nearby", "rationale": "Loads still exist; some of them hit." },
+            { "text": "Frequency falls to match DRAM", "kind": "misapplied", "rationale": "The usual response was not to slow the core back down." }
+          ],
+          "correctExplanation": "Hiding is a hit-rate story. Deleting would mean DRAM got as fast as the core. It did not.",
+          "objectiveIds": ["Explain why caches hide latency rather than deleting it"],
+          "prerequisiteConceptIds": ["cpu-cache-levels", "cpu-perf-metrics"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mw10-3",
+          "stem": "Raising clock frequency against an unchanged DRAM miss can raise CPI because:",
+          "correctAnswer": "The same wait is more ticks, so average cycles per instruction inflate",
+          "distractors": [
+            { "text": "Instruction count grows with frequency", "kind": "nearby", "rationale": "The binary did not get longer because the clock did." },
+            { "text": "Hits become illegal at high clocks", "kind": "reversed", "rationale": "Hits still happen; misses cost more ticks." },
+            { "text": "Period and CPI are the same factor", "kind": "subtle", "rationale": "They are different factors in the same product." }
+          ],
+          "correctExplanation": "Time = count × CPI × period. A smaller period and a fatter miss-CPI can cancel, or worse.",
+          "objectiveIds": ["Explain why caches hide latency rather than deleting it"],
+          "prerequisiteConceptIds": ["cpu-cache-levels", "cpu-perf-metrics"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

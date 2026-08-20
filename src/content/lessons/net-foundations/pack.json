@@ -1,0 +1,462 @@
+{
+  "courseId": "net-foundations",
+  "moduleId": "net-f-pack",
+  "lessons": [
+    {
+      "id": "net-stack-5",
+      "conceptId": "net-stack",
+      "title": "The layer above does not have to know",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "net-packet",
+      "diagram": "net-encap",
+      "explanation": [
+        "Talking across a room and talking across a continent are different jobs. One needs a local medium and a hardware name. The other needs a path of hops and an address that still makes sense after the first switch. A program that wants to send bytes should not have to solve both at once.",
+        "A layer is a contract about what the layer above does not have to know. The link hides how frames get to the next box. The internet hides which networks sit between two hosts. A later transport hides which program on this host owns the conversation. Change Ethernet and the application does not rewrite its payload."
+      ],
+      "example": "Host A at 10.0.0.7 sends a short note to 10.0.0.9 on the same LAN. Application bytes sit inside an IP packet, which sits inside an Ethernet frame. A strips the frame; the IP header still names 10.0.0.9. The note never mentioned a MAC.",
+      "whyItMatters": "If layers are just a list of names, every later header looks like trivia instead of a contract.",
+      "quiz": [
+        {
+          "id": "nf-stack5-1",
+          "stem": "A layer in the network stack is best treated as:",
+          "correctAnswer": "A contract about what the layer above does not have to know",
+          "distractors": [
+            { "text": "A ranking of which protocol is morally more important", "kind": "misconception", "rationale": "The stack is not a virtue ladder." },
+            { "text": "A list of every wire gauge used in the building", "kind": "misapplied", "rationale": "Physical plant is not the contract." },
+            { "text": "A hop count the application hard-codes so Ethernet can be skipped", "kind": "nearby", "rationale": "A layer is a contract about what the layer above does not have to know." }
+          ],
+          "correctExplanation": "Each layer hides a job so the one above can ignore it. That is the contract.",
+          "objectiveIds": ["Explain a layer as a contract about what the layer above does not have to know"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-stack5-2",
+          "stem": "Which job belongs to the link layer, not the internet layer?",
+          "correctAnswer": "Delivering a frame on one local medium to the next box",
+          "distractors": [
+            { "text": "Choosing a path of networks across the public Internet", "kind": "nearby", "rationale": "Crossing networks is the internet layer's job." },
+            { "text": "Naming which program on the host owns the bytes", "kind": "misapplied", "rationale": "Ports are a transport job." },
+            { "text": "Deciding the meaning of the application payload", "kind": "subtle", "rationale": "The application owns meaning." }
+          ],
+          "correctExplanation": "Link is local delivery. Internet is across networks. Transport names the program.",
+          "objectiveIds": [
+            "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+          ],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "nf-stack5-3",
+          "stem": "An application can keep the same payload when Ethernet changes because:",
+          "correctAnswer": "The internet and transport contracts hide the local delivery mechanism",
+          "distractors": [
+            { "text": "Every application must hard-code the new MAC format", "kind": "reversed", "rationale": "That is what layering exists to avoid." },
+            { "text": "The link layer ranks higher than the application", "kind": "misconception", "rationale": "Layers are contracts, not a ranking." },
+            { "text": "IP addresses stop working the moment a frame is used", "kind": "nearby", "rationale": "The packet sits inside the frame; both exist." }
+          ],
+          "correctExplanation": "The upper layers promised not to know the medium. Changing the medium should not rewrite the note.",
+          "objectiveIds": ["Explain a layer as a contract about what the layer above does not have to know"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-stack-10",
+      "conceptId": "net-stack",
+      "title": "Contracts, not a morality play",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "net-packet",
+      "diagram": "net-encap",
+      "explanation": [
+        "The stack is a set of contracts stacked so each one can change without rewriting the others. Stanford CS144 starts here: packets and a path before any routing politics. The names — link, internet, transport — are job descriptions, not a ranking of virtue.",
+        "The link's job is local delivery on one medium: put this frame on the wire or the radio so the next box hears it. The internet's job is to carry a packet across networks using a hierarchical address; each hop peels the local envelope and wraps a new one. Transport's job is to name which program on a host owns the bytes, and later to add reliability if the endpoints need it. None of those jobs is 'better'. They are different.",
+        "Encapsulation is how the contracts nest. Application data becomes a payload. Each layer below adds a header the layer above does not read. Decapsulation is the reverse at the far side, and at each hop for the local envelope. Mix the jobs and a Wi-Fi swap becomes an application rewrite."
+      ],
+      "example": "Ada at 10.0.0.7 talks to 93.184.216.34 through router 10.0.0.1. Her NIC wraps an IP packet in a frame destined for the router's MAC. The router strips that frame, keeps the same destination IP, and emits a new frame toward the next hop. Ada's program never named a MAC.",
+      "whyItMatters": "Treat the stack as a morality play and you will put routing in Ethernet and ports in IP, then spend the rest of the course unmixing them.",
+      "quiz": [
+        {
+          "id": "nf-stack10-1",
+          "stem": "Link, internet, and transport differ because they:",
+          "correctAnswer": "Own different jobs: local delivery, crossing networks, naming a program",
+          "distractors": [
+            { "text": "Form a ranking from least important up to most important", "kind": "misconception", "rationale": "Jobs, not a virtue ladder." },
+            { "text": "Are three names for the same Ethernet header", "kind": "nearby", "rationale": "Each layer writes its own header." },
+            { "text": "Exist only to draw the OSI seven-layer poster", "kind": "misapplied", "rationale": "The poster is not the mechanism." }
+          ],
+          "correctExplanation": "Three jobs, three contracts. Importance is not the split.",
+          "objectiveIds": [
+            "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+          ],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "nf-stack10-2",
+          "stem": "When a router forwards Ada's packet toward 93.184.216.34, it typically:",
+          "correctAnswer": "Strips the local frame and wraps a new one, keeping the destination IP",
+          "distractors": [
+            { "text": "Rewrites the application payload to name the next MAC", "kind": "reversed", "rationale": "The payload is not the local envelope." },
+            { "text": "Deletes the IP address so only Ethernet remains", "kind": "nearby", "rationale": "The internet header is why the next network is chosen." },
+            { "text": "Asks the application which switch port to use", "kind": "misapplied", "rationale": "The program is not in the forwarding path." }
+          ],
+          "correctExplanation": "Local envelope changes each hop. The internet name stays.",
+          "objectiveIds": ["Explain a layer as a contract about what the layer above does not have to know"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nf-stack10-3",
+          "stem": "Naming which program on a host should receive the bytes is:",
+          "correctAnswer": "A transport job, not a link or internet job",
+          "distractors": [
+            { "text": "A link job, because MACs already name programs", "kind": "nearby", "rationale": "A MAC names an interface, not a process." },
+            { "text": "An internet job, because IP addresses include port numbers", "kind": "misconception", "rationale": "An IPv4 address does not name a program." },
+            { "text": "An application job that routers must also perform", "kind": "subtle", "rationale": "Routers forward packets; they do not demux processes." }
+          ],
+          "correctExplanation": "Ports live above IP. The link and the internet do not own the program name.",
+          "objectiveIds": [
+            "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+          ],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "net-packet-5",
+      "conceptId": "net-packet",
+      "title": "A header plus a payload that can vanish alone",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["net-stack"],
+      "goDeeper": "net-ethernet",
+      "explanation": [
+        "The unit the network actually moves is not a file and not a stream. It is a packet: a header the hops need, plus a payload they mostly ignore. Neighbors on the wire are separate units. Losing this one does not automatically lose the next.",
+        "The header names where the packet is going and enough other facts to forward it. The payload is cargo. A receiver that got packet 3 has no promise that packet 2 arrived, or that packet 4 will."
+      ],
+      "example": "Ada at 10.0.0.7 sends three small packets to Bea at 10.0.0.9. The middle one is dropped on a busy switch. Bea still receives the first and the third. Nothing in those two headers reconstructs the missing payload.",
+      "whyItMatters": "If you treat the network as a pipe that delivers files, every later loss and reorder story will look like a bug instead of the model.",
+      "quiz": [
+        {
+          "id": "nf-pkt5-1",
+          "stem": "A packet is best described as:",
+          "correctAnswer": "A header plus a payload that can be lost independently of its neighbors",
+          "distractors": [
+            { "text": "A whole file that must arrive before any byte is usable", "kind": "misconception", "rationale": "The network moves packets, not files." },
+            { "text": "A stream that cannot be cut without destroying every other stream", "kind": "nearby", "rationale": "Neighbors are separate units." },
+            { "text": "A MAC address with no payload attached", "kind": "misapplied", "rationale": "A name is not the packet." }
+          ],
+          "correctExplanation": "Header plus cargo, lost on its own. That is the unit.",
+          "objectiveIds": ["Describe a packet as a header plus a payload that can be lost independently of its neighbors"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-pkt5-2",
+          "stem": "Bea receives packet 1 and packet 3 from Ada. She can assume:",
+          "correctAnswer": "Packet 2 might be lost, delayed, or still in flight — nothing is promised",
+          "distractors": [
+            { "text": "Packet 2 must already sit in her buffer in order", "kind": "reversed", "rationale": "Arrival of neighbors does not reconstruct the missing one." },
+            { "text": "The network will replay packet 2 from Ethernet automatically", "kind": "nearby", "rationale": "The link does not owe a retransmission here." },
+            { "text": "Packet 3's payload contains packet 2 as a backup copy", "kind": "misapplied", "rationale": "Each payload is its own cargo." }
+          ],
+          "correctExplanation": "Each packet is independent. Neighbors prove nothing about the gap.",
+          "objectiveIds": ["Predict what a receiver can and cannot assume about the next packet"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-pkt5-3",
+          "stem": "The header of a packet exists so that:",
+          "correctAnswer": "Hops can forward it without reading the meaning of the payload",
+          "distractors": [
+            { "text": "The payload can be deleted once the header is written", "kind": "reversed", "rationale": "The payload is the cargo the header is escorting." },
+            { "text": "Every neighboring packet must share one combined header", "kind": "nearby", "rationale": "Each packet carries its own header." },
+            { "text": "The application can skip naming a destination", "kind": "subtle", "rationale": "Someone still has to fill the destination field." }
+          ],
+          "correctExplanation": "Hops read the header. The payload can be opaque.",
+          "objectiveIds": ["Describe a packet as a header plus a payload that can be lost independently of its neighbors"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "net-packet-10",
+      "conceptId": "net-packet",
+      "title": "The next packet owes you nothing",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-stack"],
+      "goDeeper": "net-ethernet",
+      "diagram": "net-encap",
+      "explanation": [
+        "Arrival of one datagram tells you nothing about the next. The network's native service is independent packets: each has a header and a payload, each can be dropped, delayed, duplicated, or reordered without consulting its neighbors. A stream is something endpoints may build later on top of that service.",
+        "What a receiver can assume is only what this packet's header asserts, plus whatever the payload happens to contain. It cannot assume the previous packet arrived, that the next one will, that sequence is preserved, or that a missing payload will be regenerated by a switch in the middle. Best effort means the hop forwards if it can and otherwise discards.",
+        "That independence is the point of slicing traffic into packets. A huge file does not hog the path as one indivisible blob. The cost is that loss is per packet. If you needed the whole file, you still need a later reliability layer at the endpoints — not a promise from the packet itself."
+      ],
+      "example": "Ada sends five packets toward 93.184.216.34. Packet 4 takes a longer path and arrives after packet 5. Packet 2 is dropped at a busy router. The server sees 1, 3, 5, then 4. Nothing in those headers puts 2 back. The server must not treat '4 arrived' as '2 is coming'.",
+      "whyItMatters": "Every later reliability story starts from this gap: the network did not promise order, completeness, or a retry.",
+      "quiz": [
+        {
+          "id": "nf-pkt10-1",
+          "stem": "A receiver that just got packet 5 can safely assume:",
+          "correctAnswer": "Only what this packet's header and payload actually contain",
+          "distractors": [
+            { "text": "Packets 1 through 4 have already arrived in order", "kind": "reversed", "rationale": "Independence means no such promise." },
+            { "text": "The next packet is already reserved on every hop", "kind": "nearby", "rationale": "Hops do not pre-book the next datagram." },
+            { "text": "A dropped neighbor will be rebuilt from this header", "kind": "misapplied", "rationale": "A header does not carry its neighbors' cargo." }
+          ],
+          "correctExplanation": "This packet is the evidence. Neighbors are a separate question.",
+          "objectiveIds": ["Predict what a receiver can and cannot assume about the next packet"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-pkt10-2",
+          "stem": "Slicing a transfer into packets means that:",
+          "correctAnswer": "Each header-plus-payload unit can be lost without taking its neighbors",
+          "distractors": [
+            { "text": "Loss of one packet erases every other packet on the path", "kind": "reversed", "rationale": "Independence is the reason we slice." },
+            { "text": "The network now delivers whole files as a single unit", "kind": "misconception", "rationale": "Files are not the native unit." },
+            { "text": "Switches are required to store the entire conversation", "kind": "nearby", "rationale": "Hops forward; they do not keep the stream." }
+          ],
+          "correctExplanation": "Independent units. That is both the gain and the loss model.",
+          "objectiveIds": ["Describe a packet as a header plus a payload that can be lost independently of its neighbors"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nf-pkt10-3",
+          "stem": "Best-effort forwarding at a hop means:",
+          "correctAnswer": "The hop sends the packet on if it can, and otherwise discards it",
+          "distractors": [
+            { "text": "The hop must reconstruct any missing neighbor before forwarding", "kind": "reversed", "rationale": "A hop does not owe a complete stream." },
+            { "text": "The hop waits until the whole file is buffered", "kind": "nearby", "rationale": "Packets are forwarded one by one." },
+            { "text": "The hop rewrites the payload into an in-order archive", "kind": "misapplied", "rationale": "Payload meaning is not the hop's job." }
+          ],
+          "correctExplanation": "Forward or drop. No promise about the next packet.",
+          "objectiveIds": ["Predict what a receiver can and cannot assume about the next packet"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-layering-10",
+      "conceptId": "net-layering",
+      "title": "A service, not the insides",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["net-stack"],
+      "goDeeper": "net-end-to-end",
+      "diagram": "net-encap",
+      "explanation": [
+        "A layer is useful only if the caller can ignore how the promise is kept. The service is what the layer above may rely on. The mechanism is how this layer actually does it — headers, addresses, timers, tables — and the caller is not supposed to reach into that.",
+        "Ethernet's service is local delivery of a frame to a MAC on this link. The mechanism is the frame format, the addresses, and however the medium actually moves bits. IP's service is a best-effort packet toward an internet address. The mechanism is the header, hop-by-hop forwarding, and whatever the next link happens to be. Swap the mechanism and the service can stay.",
+        "The failure mode is leaking the mechanism upward. If an application hard-codes a frame size or a MAC, the internet contract was never used. Layering is not decoration. It is the rule that lets you change Wi-Fi without rewriting the payload parser."
+      ],
+      "example": "Bea at 10.0.0.9 receives Ada's packet. Her IP layer promised 'here is a datagram for you' and hid that it arrived in an Ethernet frame from Ada's MAC. If they later move the same IP conversation onto a different local medium, the IP service is unchanged. The frame mechanism is not.",
+      "whyItMatters": "If you cannot name the promise separately from the machinery, you will couple applications to Ethernet and call it architecture.",
+      "quiz": [
+        {
+          "id": "nf-layer10-1",
+          "stem": "A layer's service is:",
+          "correctAnswer": "The promise the layer above may rely on, without seeing the mechanism",
+          "distractors": [
+            { "text": "The exact header layout the caller must parse bit by bit", "kind": "reversed", "rationale": "That layout is mechanism, which the caller should not need." },
+            { "text": "A ranking of how important the layer is compared to others", "kind": "misconception", "rationale": "Service is a contract, not a score." },
+            { "text": "The brand of switch installed in the closet", "kind": "misapplied", "rationale": "Hardware brands are not the promise." }
+          ],
+          "correctExplanation": "Promise up. Machinery down. That is the split.",
+          "objectiveIds": ["Explain that each layer offers a service and hides a mechanism"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-layer10-2",
+          "stem": "Ethernet's service, as distinct from its mechanism, is:",
+          "correctAnswer": "Local delivery of a frame to a MAC on this link",
+          "distractors": [
+            { "text": "Choosing a path of networks to 93.184.216.34", "kind": "nearby", "rationale": "Crossing networks is an internet service." },
+            { "text": "The precise bit pattern of the preamble and FCS", "kind": "reversed", "rationale": "Those are mechanism details." },
+            { "text": "Naming which process on the host owns the payload", "kind": "misapplied", "rationale": "That is a transport service." }
+          ],
+          "correctExplanation": "Deliver locally to a MAC. How the bits wiggle is mechanism.",
+          "objectiveIds": ["Distinguish a service a layer promises from the mechanism it uses to keep that promise"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "nf-layer10-3",
+          "stem": "An application that hard-codes a neighbor's MAC has:",
+          "correctAnswer": "Leaked a link mechanism past the internet service",
+          "distractors": [
+            { "text": "Correctly used IP as the only local delivery envelope", "kind": "reversed", "rationale": "A MAC is the local envelope, not the internet name." },
+            { "text": "Improved layering by skipping unused contracts", "kind": "subtle", "rationale": "Skipping the contract couples the app to the medium." },
+            { "text": "Forced every router to parse the application payload", "kind": "nearby", "rationale": "Routers still forward on IP; the leak is at the host." }
+          ],
+          "correctExplanation": "The caller reached into the link. The internet service was meant to hide that.",
+          "objectiveIds": ["Distinguish a service a layer promises from the mechanism it uses to keep that promise"],
+          "prerequisiteConceptIds": ["net-stack"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-end-to-end-10",
+      "conceptId": "net-end-to-end",
+      "title": "Only the endpoints can finish the job",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-layering"],
+      "goDeeper": "net-reliable",
+      "explanation": [
+        "Some checks are worthless unless the people who care perform them. The end-to-end argument says that functions whose correctness depends on the ultimate sender and receiver — 'did the bytes I meant arrive intact for the application that will use them?' — cannot be implemented correctly only in the network. The endpoints still have to check.",
+        "A hop can checksum a header, retransmit a frame, or promise a quiet link. That helps performance. It does not close the argument. The disk at the receiver can still scramble the file. A middlebox can still drop the last packet. The application that needed the whole object is the only place that knows the object is complete.",
+        "Putting reliability only in the network therefore still leaves the endpoints checking. You may keep a cheap hop-by-hop assist. You may not skip the end-to-end check and call the job done. A later reliability layer at the hosts is that check, not a confession that the network failed its morality test."
+      ],
+      "example": "Ada writes a file to a server at 93.184.216.34. Every link on the path checksums its frames and a busy router even retries a local transmission. The last hop delivers a packet whose payload was flipped in the server's memory after arrival. Only Ada and the server can detect that the stored object is wrong. The network already 'succeeded'.",
+      "whyItMatters": "If you believe the network can finish correctness for you, you will skip the endpoint check and ship a file you never actually verified.",
+      "quiz": [
+        {
+          "id": "nf-e2e10-1",
+          "stem": "The end-to-end argument says that some functions:",
+          "correctAnswer": "Can only be implemented correctly at the endpoints that care about the result",
+          "distractors": [
+            { "text": "Must be implemented in every switch or they do not count", "kind": "reversed", "rationale": "Hop-by-hop cannot close an endpoint-correctness job." },
+            { "text": "Are illegal unless Ethernet performs them first", "kind": "nearby", "rationale": "The link is an assist, not the authority." },
+            { "text": "Exist only as names on an OSI poster", "kind": "misapplied", "rationale": "The argument is about where correctness lives." }
+          ],
+          "correctExplanation": "Correctness for the application sits with the application’s ends.",
+          "objectiveIds": ["State the end-to-end argument: some functions can only be implemented correctly at the endpoints"],
+          "prerequisiteConceptIds": ["net-layering"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-e2e10-2",
+          "stem": "If every hop on Ada's path checksums and retries locally, the endpoints still check because:",
+          "correctAnswer": "Hop success does not prove the application object is intact at the far end",
+          "distractors": [
+            { "text": "Endpoints are forbidden from trusting any delivered packet", "kind": "subtle", "rationale": "They may use the data; they still verify completeness and integrity." },
+            { "text": "Switches already stored a perfect copy of the whole file", "kind": "reversed", "rationale": "Hops do not keep the object the application meant." },
+            { "text": "IP addresses become invalid once a frame is checksummed", "kind": "misapplied", "rationale": "Local checks do not retire the internet name." }
+          ],
+          "correctExplanation": "The network can succeed hop by hop and still leave a broken object. Only the ends know.",
+          "objectiveIds": ["Predict why putting reliability only in the network still leaves the endpoints checking"],
+          "prerequisiteConceptIds": ["net-layering"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-e2e10-3",
+          "stem": "A cheap hop-by-hop retry is consistent with the argument when it:",
+          "correctAnswer": "Improves performance but does not replace the endpoint check",
+          "distractors": [
+            { "text": "Lets the endpoints skip verifying the object they care about", "kind": "reversed", "rationale": "That skip is what the argument forbids." },
+            { "text": "Moves correctness entirely into the first switch", "kind": "nearby", "rationale": "The first switch is not the application." },
+            { "text": "Converts every packet into a guaranteed file at each hop", "kind": "misapplied", "rationale": "Packets stay packets; files stay an endpoint concern." }
+          ],
+          "correctExplanation": "Assists are allowed. Substitutes for the end-to-end check are not.",
+          "objectiveIds": ["Predict why putting reliability only in the network still leaves the endpoints checking"],
+          "prerequisiteConceptIds": ["net-layering"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-bandwidth-delay-10",
+      "conceptId": "net-bandwidth-delay",
+      "title": "How much data fits in the pipe",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-packet", "arch-latency-throughput"],
+      "goDeeper": "net-sliding-window",
+      "explanation": [
+        "A fat pipe that is also long still holds a surprising amount of data. Bandwidth is how many bits per second the path can accept. Delay is how long a bit takes to appear at the far end. Their product — the bandwidth-delay product — is how much data is in flight when the pipe is full: the volume of the hose, not the speed of the pump.",
+        "To keep a long fat path busy, a sender must have that much data outstanding. If Ada only sends one small packet and waits a round trip for any sign of life, the pipe sits empty for most of the delay. Throughput collapses toward 'one packet per RTT', which is latency talking, not capacity.",
+        "The number is just bandwidth times delay. A 100 Mbit/s path with a 40 ms round trip holds about 0.5 MB. That is not a buffer the sender is required to own in one socket. It is how much has to be on the wire, or the path will not fill. A later reliability layer may keep that much in flight. The pipe does not fill itself."
+      ],
+      "example": "Ada at 10.0.0.7 fetches from 93.184.216.34. The path is 100 Mbit/s and 40 ms round trip. She sends one 1 KB packet and waits. The pipe can hold hundreds of such packets. Most of the 40 ms the path is idle. Until she keeps on the order of 0.5 MB in flight, the fetch cannot use the advertised rate.",
+      "whyItMatters": "If you confuse bandwidth with 'how fast my one packet arrives', you will underfill long paths and blame the network for a sender that never loaded the hose.",
+      "quiz": [
+        {
+          "id": "nf-bdp10-1",
+          "stem": "The bandwidth-delay product is:",
+          "correctAnswer": "How much data fits in the pipe when it is full",
+          "distractors": [
+            { "text": "The time one packet spends in a single switch queue", "kind": "nearby", "rationale": "Queueing is not the volume of the path." },
+            { "text": "The size of the Ethernet header on the first hop", "kind": "misapplied", "rationale": "A header is not the pipe's volume." },
+            { "text": "A promise that every packet arrives in order", "kind": "misconception", "rationale": "BDP is capacity in flight, not a delivery contract." }
+          ],
+          "correctExplanation": "Bandwidth times delay. That product is the volume in flight.",
+          "objectiveIds": ["Define the bandwidth-delay product as how much data fits in the pipe"],
+          "prerequisiteConceptIds": ["net-packet", "arch-latency-throughput"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "nf-bdp10-2",
+          "stem": "Ada sends one small packet per round trip on a long fat path. Throughput is low because:",
+          "correctAnswer": "Most of the pipe is empty; she has not kept the volume in flight",
+          "distractors": [
+            { "text": "Bandwidth became zero the moment delay was nonzero", "kind": "reversed", "rationale": "The path still has capacity. She is not using it." },
+            { "text": "IP forbids more than one packet on any network", "kind": "misapplied", "rationale": "Packets are independent; many may be in flight." },
+            { "text": "The destination MAC cannot hold more than one frame ever", "kind": "nearby", "rationale": "A NIC is not the pipe's volume." }
+          ],
+          "correctExplanation": "One packet per RTT is latency-limited. Filling the hose needs the product in flight.",
+          "objectiveIds": ["Predict why a sender must keep that much data in flight to fill a long fat path"],
+          "prerequisiteConceptIds": ["net-packet", "arch-latency-throughput"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nf-bdp10-3",
+          "stem": "A 100 Mbit/s path with a 40 ms round trip holds about 0.5 MB. That number is:",
+          "correctAnswer": "The in-flight volume needed to keep the path full",
+          "distractors": [
+            { "text": "The maximum payload a single IP packet may ever carry", "kind": "nearby", "rationale": "Packet size is not the pipe volume." },
+            { "text": "A hard cap on how many files the server may store", "kind": "misapplied", "rationale": "Disk capacity is a different quantity." },
+            { "text": "The delay until Ethernet learns a MAC address", "kind": "subtle", "rationale": "Learning a MAC is not the bandwidth-delay product." }
+          ],
+          "correctExplanation": "Product of rate and delay. Send that much, or the hose stays partly empty.",
+          "objectiveIds": ["Predict why a sender must keep that much data in flight to fill a long fat path"],
+          "prerequisiteConceptIds": ["net-packet", "arch-latency-throughput"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,480 @@
+{
+  "id": "dm-history",
+  "title": "Death Metal History and Vocabulary",
+  "categoryId": "death-metal",
+  "description": "Listening literacy: lineage, the thrash transition, Florida and Stockholm as production doctrines, then the branches. Scenes, not celebrity lists.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "mit-metal101",
+      "title": "MIT Heavy Metal 101",
+      "url": "https://ocw.mit.edu/courses/res-21m-001-heavy-metal-101-january-iap-2025/",
+      "kind": "ocw",
+      "notes": "History, listening, culture, songwriting tropes, harsh vocals \u2014 not celebrity lists. Extreme metal is a sound and a construction problem."
+    }
+  ],
+  "modules": [
+    {
+      "id": "dm-h-lineage",
+      "title": "Before it was named",
+      "blurb": "Lineage and the thrash/extreme cut.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "dm-lineage",
+        "dm-listening"
+      ],
+      "learningObjectives": [
+        "Place death metal in thrash, hardcore, and tape-trading soil",
+        "Listen for riff, kit, and vocal as equal parts"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-h-scenes",
+      "title": "Two early scenes",
+      "blurb": "Florida and Stockholm as two production doctrines, not a two-city origin myth.",
+      "order": 1,
+      "prerequisites": [
+        "dm-h-lineage"
+      ],
+      "spineIds": [
+        "dm-history",
+        "dm-production-doctrine"
+      ],
+      "learningObjectives": [
+        "Contrast Florida and Stockholm as two production doctrines",
+        "Treat the mix as part of the composition"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-h-branches",
+      "title": "Branches",
+      "blurb": "Brutal, technical, progressive, dissonant.",
+      "order": 2,
+      "prerequisites": [
+        "dm-h-scenes"
+      ],
+      "spineIds": [
+        "dm-brutal",
+        "dm-tech-hist"
+      ],
+      "learningObjectives": [
+        "Name a branch by construction, not by compliment or insult",
+        "Keep brutal, technical, progressive, dissonant, and melodic as different contracts"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "dm-lineage",
+      "name": "Pre-death-metal lineage",
+      "moduleId": "dm-h-lineage",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Hardcore, thrash, and extreme metal as the soil, not a name-drop.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Place death metal in hardcore, thrash, and extreme-metal soil without a name-drop list",
+        "Name what changed when weight took the job speed had been doing"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-listening",
+      "name": "How to listen to a death-metal record",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-lineage"
+      ],
+      "summary": "Riff, kit, vocal as equal parts. The mix is an argument.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Listen for riff, kit, and vocal as equal parts",
+        "Treat the mix as an argument you can describe, not as fog"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-thrash-bridge",
+      "name": "The thrash/extreme transition",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-lineage"
+      ],
+      "summary": "When speed stopped being the point and weight took over.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Mark the transition where speed stopped being the point",
+        "Contrast a thrash d-beat section with a death-metal blast as grammars"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-vocal-hist",
+      "name": "Harsh vocals as a lineage",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "A technique with a history, not a personality.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat harsh vocals as a technique with a history",
+        "Describe a vocal as rhythm and register, not as a personality"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-scene-not-celeb",
+      "name": "Scenes, not celebrity lists",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-lineage"
+      ],
+      "summary": "A city, a studio, a tape network.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a scene as a city, a studio, and a tape network",
+        "Refuse a celebrity list as a substitute for that description"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-tape-trading",
+      "name": "How the style spread",
+      "moduleId": "dm-h-lineage",
+      "tier": 1,
+      "prerequisites": [
+        "dm-scene-not-celeb"
+      ],
+      "summary": "Tapes, zines, and the fact that scenes were postal.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain how the style spread through tapes and zines",
+        "Predict why two cities could finish the same move without a single capital"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-history",
+      "name": "Florida and Stockholm",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "Two early scenes, two production doctrines, one genre name used later.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast Florida and Stockholm as two production doctrines under one genre name",
+        "Hear Morrisound versus Sunlight as engineering decisions, not fashion"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-florida",
+      "name": "The Florida sound",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Clarity, palm-mute punctuation, a particular drum sound.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name clarity, palm-mute punctuation, and a particular drum sound as the Florida doctrine",
+        "Point at those facts on a record instead of naming a roster"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-stockholm",
+      "name": "The Stockholm sound",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Buzzsaw guitars and a drier, dirtier midrange.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name buzzsaw guitars and a dirtier midrange as the Stockholm doctrine",
+        "Describe the HM-2 wall as spectrum, not as a brand sticker"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-production-doctrine",
+      "name": "Production as a stylistic fact",
+      "moduleId": "dm-h-scenes",
+      "tier": 2,
+      "prerequisites": [
+        "dm-florida",
+        "dm-stockholm"
+      ],
+      "summary": "The mix is part of the composition.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat the mix as part of the composition",
+        "Predict how a drier or wetter guitar changes whether cells fuse or stay separate"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-gore-vs-occult",
+      "name": "Lyrical domains",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "Gore, occult, and social disgust as registers \u2014 not trivia.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat gore, occult, and social disgust as lyrical registers",
+        "Refuse trivia about lyrics as a substitute for musical construction"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-double-kick-hist",
+      "name": "Double-kick as a historical marker",
+      "moduleId": "dm-h-scenes",
+      "tier": 1,
+      "prerequisites": [
+        "dm-listening"
+      ],
+      "summary": "When the right foot stopped being enough.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Mark when the right foot stopped being enough",
+        "Hear double-kick as a historical subdivision, not as sport"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-brutal",
+      "name": "Brutal death metal",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Lower, thicker, less interested in a sung interval.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe brutal death metal as lower, thicker, less interested in a sung interval",
+        "Keep 'brutal' as a construction contract, not a compliment"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-tech-hist",
+      "name": "Technical death metal as a branch",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Density and odd grouping as a scene, not a compliment.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe technical death metal as density and odd grouping as a scene",
+        "Refuse 'technical' as a synonym for good"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-prog-hist",
+      "name": "Progressive death metal as a branch",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Longer forms and borrowed jazz/fusion grammar.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe progressive death metal as longer forms and borrowed grammar",
+        "Name what the form borrowed without requiring a jazz exam"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-dissonant-hist",
+      "name": "Dissonant and avant-garde branches",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "When the riff stops agreeing with itself.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Mark the branch where the riff stops agreeing with itself",
+        "Distinguish dissonant construction from 'they played wrong notes'"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-melodeath",
+      "name": "Melodic death metal as a fork",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-stockholm"
+      ],
+      "summary": "Harmony that wants to be sung, still under distortion.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe melodic death metal as harmony that wants to be sung, still under distortion",
+        "Keep it as a fork, not as a purity test"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-grind-border",
+      "name": "The grind border",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-brutal"
+      ],
+      "summary": "Duration and blast as a different contract.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat grind's contract as duration and blast, not as failed death metal",
+        "Predict why a forty-second song is a different form problem"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-ossuary",
+      "name": "A second wave of brutality",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-brutal"
+      ],
+      "summary": "What 'brutal' meant a decade later.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Say what 'brutal' meant a decade later",
+        "Contrast early thickness with a later slam or ossuary vocabulary"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-tech-90s",
+      "name": "1990s technicality",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-tech-hist"
+      ],
+      "summary": "The first records that treated odd grouping as normal.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name the first records that treated odd grouping as normal",
+        "Hear 1990s technicality as grammar, not as a later fashion"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-modern-wave",
+      "name": "The later technical/dissonant wave",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-dissonant-hist",
+        "dm-tech-hist"
+      ],
+      "summary": "2000s onward: triggers, tighter grids, colder harmony.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the later technical and dissonant wave as tighter grids and colder harmony",
+        "Predict what triggers and edits do to that grammar"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    },
+    {
+      "id": "dm-regional",
+      "name": "Regional dialects after the two capitals",
+      "moduleId": "dm-h-branches",
+      "tier": 2,
+      "prerequisites": [
+        "dm-history"
+      ],
+      "summary": "Quebec, Poland, the American south, and why the accent is the riff.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Hear a regional dialect in the riff, not in the passport",
+        "Compare two later scenes by construction rather than by map trivia"
+      ],
+      "sourceIds": [
+        "mit-metal101"
+      ]
+    }
+  ]
+}

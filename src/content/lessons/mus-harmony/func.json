@@ -1,0 +1,798 @@
+{
+  "courseId": "mus-harmony",
+  "moduleId": "mus-h-func",
+  "lessons": [
+    {
+      "id": "mus-triad-5",
+      "conceptId": "mus-triad",
+      "title": "Three notes, stacked thirds",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [
+        "mus-interval",
+        "mus-scale"
+      ],
+      "goDeeper": "mus-seventh",
+      "diagram": "mus-triad-stack",
+      "explanation": [
+        "Stack three pitches in thirds and you have a triad: a root, the third above it, and the fifth above the root. From a scale degree, spell those three letters. C-E-G is I in C major. The stack is the object before you name a quality.",
+        "Quality waits one step. Major, minor, diminished, and augmented are four sizes of the same stack. Hear them as four different gaps, not as moods. MIT 21M.301 starts here because later function is a job those stacks can hold."
+      ],
+      "example": "From C major: I is C-E-G, ii is D-F-A, V is G-B-D. Same stacking rule, different degrees. Spell root, third, fifth before you argue about a riff's job.",
+      "whyItMatters": "Later talk of function or a missing third still assumes you can spell the three letters. Name the stack first.",
+      "quiz": [
+        {
+          "id": "mus-trd5-1",
+          "stem": "A triad spelled from a scale degree is which stack of pitches?",
+          "correctAnswer": "Root, the third above it, and the fifth above the root",
+          "distractors": [
+            {"text": "Root, the fourth above it, and the octave of that root", "kind": "nearby", "rationale": "Fourths and octaves are other gaps. The triad stacks thirds."},
+            {"text": "Fifth first, then a passing tone, then a new root letter", "kind": "reversed", "rationale": "The root is the bottom of the stack, not a leftover."},
+            {"text": "Loudness, duration, and timbre stacked as one named chord", "kind": "misapplied", "rationale": "Those are dimensions of an event, not chord tones."}
+          ],
+          "correctExplanation": "Root, third, fifth. That is the triad spelled from a degree.",
+          "objectiveIds": [
+            "Spell a triad as root, third, and fifth from a scale degree"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-scale"
+          ],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-trd5-2",
+          "stem": "In C major, the triad built on scale degree V uses which letters?",
+          "correctAnswer": "G, B, and D: root, third, and fifth of V",
+          "distractors": [
+            {"text": "C, E, and G: those letters belong to I, not to V", "kind": "nearby", "rationale": "I is the tonic stack. V starts on G."},
+            {"text": "B, D, and F: that stack sits on vii rather than on V", "kind": "reversed", "rationale": "vii is the leading-tone triad. V is G-B-D."},
+            {"text": "G and D only, because a triad is forbidden to hold a third", "kind": "misapplied", "rationale": "The third is the middle letter of the stack."}
+          ],
+          "correctExplanation": "V in C is G. Stack two thirds: G-B-D.",
+          "objectiveIds": [
+            "Spell a triad as root, third, and fifth from a scale degree"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-scale"
+          ],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-trd5-3",
+          "stem": "You play C-E-G, then C-Eb-G, then C-Eb-Gb. What changed in the stack?",
+          "correctAnswer": "Quality: major, then minor, then diminished, same root",
+          "distractors": [
+            {"text": "The root: each new accidental secretly renames the bass letter", "kind": "reversed", "rationale": "C stayed the root. The gaps inside the stack moved."},
+            {"text": "The scale: those three stacks cannot share one tonic pitch", "kind": "nearby", "rationale": "Same tonic C. The third and fifth sizes changed."},
+            {"text": "The duration: quality is only a name for how long C is held", "kind": "misapplied", "rationale": "Quality is gap size, not hold time."}
+          ],
+          "correctExplanation": "Same root C. The inner gaps moved through three of the four qualities.",
+          "objectiveIds": [
+            "Hear major, minor, diminished, and augmented as four qualities"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-scale"
+          ],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-triad-10",
+      "conceptId": "mus-triad",
+      "title": "Four qualities from one stack",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval",
+        "mus-scale"
+      ],
+      "goDeeper": "mus-seventh",
+      "diagram": "mus-triad-stack",
+      "explanation": [
+        "Quality is the size of the two thirds. Major is a major third plus a minor third (C-E-G). Minor flips that (C-Eb-G). Diminished stacks two minor thirds (C-Eb-Gb). Augmented stacks two major thirds (C-E-G#). Four qualities, one stacking rule.",
+        "Hearing them is a gap job, not a mood job. A major stack sits more open than a minor stack on the same root. Diminished compresses. Augmented stretches. Distortion and volume can paint over that; they do not rename the gaps. Name the quality from the letters.",
+        "Spell from any degree of a scale you already know. In C major, I and IV and V are major; ii, iii, and vi are minor; vii is diminished. The collection did that. You still have to count the semitones if an accidental shows up."
+      ],
+      "example": "Play C-E-G, then C-Eb-G, then C-Eb-Gb, then C-E-G#. Same root, four gap-sizes. A riff that only uses C and G has not chosen among these yet.",
+      "whyItMatters": "Function talk later will borrow these stacks. If you cannot hear which quality you grabbed, you will assign a job to the wrong object.",
+      "quiz": [
+        {
+          "id": "mus-trd10-1",
+          "stem": "Major, minor, diminished, and augmented name which fact about a triad?",
+          "correctAnswer": "Four qualities: four sizes of the same root-third-fifth stack",
+          "distractors": [
+            {"text": "Four moods that rank how moral each stack is allowed to feel", "kind": "misapplied", "rationale": "Quality is gap size rather than an ethic."},
+            {"text": "Four durations that a triad must last before it may resolve", "kind": "nearby", "rationale": "Hold time is a different knob from interval size."},
+            {"text": "Four clefs that retitle the same three letters on a staff", "kind": "reversed", "rationale": "A clef names lines. Quality names the gaps."}
+          ],
+          "correctExplanation": "Four sizes of one stack. That is all quality means here.",
+          "objectiveIds": [
+            "Hear major, minor, diminished, and augmented as four qualities"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-scale"
+          ],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-trd10-2",
+          "stem": "Spell the triad on scale degree ii in C major as root, third, and fifth.",
+          "correctAnswer": "D, F, and A: a minor stack built on the second degree",
+          "distractors": [
+            {"text": "C, E, and G: that is I, the tonic stack, not the second degree", "kind": "nearby", "rationale": "I starts on C. ii starts on D."},
+            {"text": "D, F#, and A: that would raise the third and make ii major", "kind": "reversed", "rationale": "C major's second degree takes F natural, a minor third."},
+            {"text": "G, B, and D: that stack is V, five degrees above the tonic", "kind": "misapplied", "rationale": "V is the dominant stack. ii is D-F-A."}
+          ],
+          "correctExplanation": "ii in C starts on D. Two thirds up: D-F-A, minor.",
+          "objectiveIds": [
+            "Spell a triad as root, third, and fifth from a scale degree"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-scale"
+          ],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-trd10-3",
+          "stem": "C-E-G# is played after C-E-G. You should hear which quality change?",
+          "correctAnswer": "Major to augmented: the fifth rose, the third stayed major",
+          "distractors": [
+            {"text": "Major to diminished: both inner gaps must shrink together", "kind": "reversed", "rationale": "Diminished shrinks both thirds. This fifth rose."},
+            {"text": "Minor to major: the third fell even though E never moved", "kind": "nearby", "rationale": "E stayed. The change was the fifth, G to G#."},
+            {"text": "No quality change, because one accidental cannot rename a stack", "kind": "misconception", "rationale": "G# stretches the upper third. That is augmented."}
+          ],
+          "correctExplanation": "C-E is still a major third. G# makes the upper third major too: augmented.",
+          "objectiveIds": [
+            "Hear major, minor, diminished, and augmented as four qualities"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval",
+            "mus-scale"
+          ],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-seventh-10",
+      "conceptId": "mus-seventh",
+      "title": "Fourth pitch, new tendency",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-triad"
+      ],
+      "goDeeper": "mus-function",
+      "explanation": [
+        "Add a fourth pitch a third above the fifth and the triad becomes a seventh chord. Name the quality from both the triad and that new gap: major-major, dominant (major triad plus minor seventh), minor-minor, half-diminished, fully diminished. The extra letter is not decoration.",
+        "Common-practice writing treats the chordal seventh as a tendency tone: it wants to step down. In C, the F in G7 leans to E. MIT 21M.301 drills that lean until it is a habit. A riff can refuse the habit. The lean is still the default in that grammar.",
+        "Predict the quality before you write the resolution. V7 in a major key is dominant seventh. ii7 is minor-minor. viiø7 is half-diminished. Spell the four letters, name the quality, then decide whether this music owes the downward step."
+      ],
+      "example": "G-B-D-F in C major: dominant seventh on V. In a chorale, F wants E. A guitar riff that hammers G5 to F5 has not promised that resolution, and you should not invent one on the page.",
+      "whyItMatters": "Sevenths add a lean. If you cannot name the extra letter, you will treat every four-note grab as a thicker triad and miss the tendency.",
+      "quiz": [
+        {
+          "id": "mus-7th10-1",
+          "stem": "How do you turn a triad into a seventh chord and then name it?",
+          "correctAnswer": "Add a third above the fifth, then name triad quality plus seventh",
+          "distractors": [
+            {"text": "Drop the fifth, then rename the leftover dyad as a seventh", "kind": "reversed", "rationale": "You add a pitch. You do not delete the fifth to get a seventh."},
+            {"text": "Double the root at the unison and call the doubling a quality", "kind": "nearby", "rationale": "A doubling is not a new chord tone and not a quality name."},
+            {"text": "Change only the duration until the triad feels like it resolved", "kind": "misapplied", "rationale": "Quality is pitch spelling, not how long the stack is held."}
+          ],
+          "correctExplanation": "Fourth pitch, a third above the fifth. Then name both gaps.",
+          "objectiveIds": [
+            "Add a seventh to a triad and name the quality"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-7th10-2",
+          "stem": "In common-practice writing, a chordal seventh is predicted to do what?",
+          "correctAnswer": "Step down: the extra letter is a tendency tone with a lean",
+          "distractors": [
+            {"text": "Leap up an octave so the seventh can become a new root", "kind": "reversed", "rationale": "The default lean is down by step, not a promotion to root."},
+            {"text": "Stay put forever, because sevenths are defined as pedals", "kind": "nearby", "rationale": "A pedal is a held bass. The seventh is a chord tone with a lean."},
+            {"text": "Erase the triad under it so only the seventh remains sounding", "kind": "misapplied", "rationale": "The seventh is added to the triad; it does not delete the stack."}
+          ],
+          "correctExplanation": "Down by step is the CP habit. A riff may refuse it; name the habit first.",
+          "objectiveIds": [
+            "Predict the tendency of a chordal seventh in common-practice writing"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-7th10-3",
+          "stem": "G-B-D-F is V7 in C major. If you write a chorale resolution, F should:",
+          "correctAnswer": "Step to E, the chordal seventh taking its common-practice lean",
+          "distractors": [
+            {"text": "Leap to C, because every extra letter must become the tonic", "kind": "nearby", "rationale": "C can arrive from other voices. F's own lean is to E."},
+            {"text": "Rise to G, doubling the root so the seventh is cancelled", "kind": "reversed", "rationale": "Rising to G ignores the downward tendency of the seventh."},
+            {"text": "Sit through the next chord as a pedal that never resolves", "kind": "misapplied", "rationale": "A chorale resolution uses the lean. Sitting is a different choice."}
+          ],
+          "correctExplanation": "F in G7 wants E. That is the tendency this grammar predicts.",
+          "objectiveIds": [
+            "Predict the tendency of a chordal seventh in common-practice writing"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-inversion-10",
+      "conceptId": "mus-inversion",
+      "title": "Inversion keeps the root",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-triad"
+      ],
+      "goDeeper": "mus-drop",
+      "explanation": [
+        "Leave the pitch classes alone and put a chord tone other than the root in the bass. That is inversion. C-E-G with E in the bass is still C major, first inversion. G in the bass is second inversion. The letters did not become a new chord.",
+        "Slash notation and figured bass are two maps of the same fact. C/E means C major over E. Figured 6 (or 6/3) means a third and a sixth above the bass, which is first inversion. 6/4 is second inversion. Read the figure or the slash as bass position, not as a renamed stack.",
+        "Guitarists already write slashes. C/G is still C. It is not a G chord that borrowed two extra letters. MIT 21M.301 cares because bass motion is a line of its own. Invert on purpose when the bass needs that letter, not because the grip was easier."
+      ],
+      "example": "C-E-G on a staff with E in the bass, labeled C/E or 6. Same three letters as root-position C. The bass moved. The chord name did not.",
+      "whyItMatters": "Misreading a slash as a new chord invents progressions that were only bass motion. Invert, then name.",
+      "quiz": [
+        {
+          "id": "mus-inv10-1",
+          "stem": "Putting E in the bass under the letters C, E, and G is which move?",
+          "correctAnswer": "First inversion: a chord tone other than the root is in the bass",
+          "distractors": [
+            {"text": "A new chord on E, because the lowest pitch always renames the stack", "kind": "reversed", "rationale": "The letters are still C major. The bass is not the name."},
+            {"text": "Second inversion, which is defined as the third sitting in the bass", "kind": "nearby", "rationale": "Second inversion puts the fifth in the bass. E is the third."},
+            {"text": "A power chord, because any non-root bass deletes the third", "kind": "misapplied", "rationale": "The third is still in the stack. Only the bass letter changed."}
+          ],
+          "correctExplanation": "Third in the bass is first inversion. Same C major letters.",
+          "objectiveIds": [
+            "Put a chord tone other than the root in the bass"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-inv10-2",
+          "stem": "The symbol C/G on a chart should be read as which of these?",
+          "correctAnswer": "C major in second inversion: slash names the bass, not a new chord",
+          "distractors": [
+            {"text": "A G chord that borrowed C's letters and should be labeled G6", "kind": "reversed", "rationale": "The name before the slash is the chord. G is the bass."},
+            {"text": "A new triad whose root is the slash itself rather than C or G", "kind": "misconception", "rationale": "A slash is bass notation, not a third root."},
+            {"text": "Proof that figured bass cannot be used once a slash appears", "kind": "nearby", "rationale": "C/G and a 6/4 on G are two maps of the same inversion."}
+          ],
+          "correctExplanation": "C/G is C with G in the bass. Second inversion, not a G chord.",
+          "objectiveIds": [
+            "Read a figured bass or a slash as an inversion, not a new chord"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-inv10-3",
+          "stem": "A bass figure 6/4 under a G, with B and E above, is best labeled as:",
+          "correctAnswer": "C major, second inversion: the fifth is in the bass, letters still C-E-G",
+          "distractors": [
+            {"text": "G major, root position, because the bass letter is always the root", "kind": "reversed", "rationale": "Figured 6/4 says the bass is the fifth of the chord."},
+            {"text": "E minor, first inversion, ignoring that G is the fifth of C", "kind": "nearby", "rationale": "E-G-B would be E minor. The letters here are C-E-G."},
+            {"text": "A slash-free new chord that figured bass is forbidden to name", "kind": "misapplied", "rationale": "The figure is exactly how you read the inversion."}
+          ],
+          "correctExplanation": "Bass G with 6/4: G is the fifth of C. Still C major.",
+          "objectiveIds": [
+            "Read a figured bass or a slash as an inversion, not a new chord"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-function-10",
+      "conceptId": "mus-function",
+      "title": "Jobs a chord can hold",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-triad",
+        "mus-key"
+      ],
+      "goDeeper": "mus-cadence",
+      "explanation": [
+        "Assign a job in a key. Tonic (T) sits as home: I, often vi. Predominant (PD) prepares the dominant: ii, IV. Dominant (D) wants home: V, vii°. The same triad can hold different jobs if the key changes. Function is the job in this key.",
+        "Predict from the progression, not from the Roman numeral alone. ii going to V is PD to D. V going to I is D to T. A vi after V can still be tonic-ish, which is why deceptive moves work. MIT 21M.301 uses T-PD-D as a grammar for phrases that cadence.",
+        "Refuse to pretend every riff is a chorale. An E5–G5–E5 guitar cell may never report to a V-I. Say that. Function is available when the music uses it. It is not a law you paste onto a dyad that never took a dominant job."
+      ],
+      "example": "In C: F (IV) to G (V) to C (I) is PD-D-T. A verse that only rocks E5 and D5 in E minor has not hired a predominant. Do not invent one to complete the worksheet.",
+      "whyItMatters": "Name the job or you will call every loud I a tonic cadence and every riff a failed chorale.",
+      "quiz": [
+        {
+          "id": "mus-fnc10-1",
+          "stem": "Tonic, predominant, and dominant name which kind of fact in a key?",
+          "correctAnswer": "Three jobs a chord can hold: home, prepare, or pull toward home",
+          "distractors": [
+            {"text": "Three qualities a triad is required to cycle through on every downbeat", "kind": "nearby", "rationale": "Quality is major/minor/dim/aug. Function is a job in a key."},
+            {"text": "Three bass inversions that rewrite the letters into a new chord", "kind": "misapplied", "rationale": "Inversion is bass position. Function is the job those letters do."},
+            {"text": "Three moods that rank how heavy a riff is allowed to feel", "kind": "misconception", "rationale": "Function is not a heaviness ethic. It is a job in a key."}
+          ],
+          "correctExplanation": "T, PD, D are jobs. Home, prepare, pull. Not moods.",
+          "objectiveIds": [
+            "Assign tonic, predominant, or dominant function in a key"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad",
+            "mus-key"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-fnc10-2",
+          "stem": "In a short C-major phrase, ii going to V is doing which pair of jobs?",
+          "correctAnswer": "Predominant then dominant: ii prepares, V pulls toward I",
+          "distractors": [
+            {"text": "Tonic then tonic: both numerals are home because they are diatonic", "kind": "reversed", "rationale": "Diatonic is not the same as tonic function. ii is PD; V is D."},
+            {"text": "Dominant then predominant: V prepares ii, which then sits as home", "kind": "nearby", "rationale": "That order is backwards. ii prepares V, not the other way."},
+            {"text": "No function at all, because only I is allowed to hold a job", "kind": "misapplied", "rationale": "ii and V are the usual PD and D. I is not the only employee."}
+          ],
+          "correctExplanation": "ii is the usual PD. V is the usual D. That is the short-progression read.",
+          "objectiveIds": [
+            "Predict which function a ii or a V is doing in a short progression"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad",
+            "mus-key"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-fnc10-3",
+          "stem": "A riff rocks E5 to G5 to E5 and never takes a V chord. The honest report is:",
+          "correctAnswer": "It may have no T-PD-D job; do not invent a V-I the riff never played",
+          "distractors": [
+            {"text": "It secretly cadenced, because every riff owes a chorale V-I", "kind": "misconception", "rationale": "Function is a grammar you use when the music uses it."},
+            {"text": "G5 is always dominant function, even with no third and no key job", "kind": "nearby", "rationale": "A G dyad is not automatically V. Function needs a key and a job."},
+            {"text": "E5 is predominant because power chords cannot sit as tonic", "kind": "reversed", "rationale": "If anything is home here, it is E. Predominant was never hired."}
+          ],
+          "correctExplanation": "No V-I on the tape means no V-I in the analysis. Say so.",
+          "objectiveIds": [
+            "Assign tonic, predominant, or dominant function in a key"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-triad",
+            "mus-key"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-cadence-10",
+      "conceptId": "mus-cadence",
+      "title": "How a phrase decides it is over",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-phrase",
+      "explanation": [
+        "End a phrase with a cadence you can name. A cadence is how the phrase decides it is over, not how the song ends. Authentic is D to T (V-I). Half stops on V. Plagal is IV-I. Deceptive is V to vi, which leaves home unopened. Name what is still open.",
+        "Distinguish them by leftover tension, not by Latin nicknames. Authentic closes. Half leaves the dominant hanging. Plagal closes without the leading-tone pull. Deceptive promised T and delivered vi. MIT 21M.301 treats that leftover as the point of the label.",
+        "A riff that stops is not automatically a cadence. If there was no dominant job and no phrase breath, you do not owe PAC, HC, plagal, or deceptive. Endings that just cut are cuts. Save the cadence name for a phrase that actually cadenced."
+      ],
+      "example": "Chorale: G7 to C, soprano on C, both roots in the bass — authentic, closed. Same band later slams E5 and cuts. That cut is not a half cadence unless V was the job.",
+      "whyItMatters": "Wrong cadence names invent leftover tension the phrase never had, or hide a half ending that still wants to go.",
+      "quiz": [
+        {
+          "id": "mus-cad10-1",
+          "stem": "Ending a phrase with V-I, versus stopping on V, should be named as:",
+          "correctAnswer": "Authentic versus half: one closes to tonic, the other leaves V open",
+          "distractors": [
+            {"text": "Plagal versus deceptive: both of those moves also start on V", "kind": "nearby", "rationale": "Plagal is IV-I. Deceptive is V-vi. Neither is V versus V-I."},
+            {"text": "Two authentic cadences, because any stop on a chord is closure", "kind": "reversed", "rationale": "Stopping on V leaves the dominant open. That is half, not authentic."},
+            {"text": "Two inversions of I, because cadence names only track the bass letter", "kind": "misapplied", "rationale": "Cadence names track leftover function, not bass position alone."}
+          ],
+          "correctExplanation": "V-I closes. Stop on V and the phrase still wants home.",
+          "objectiveIds": [
+            "Distinguish authentic, half, plagal, and deceptive by what they leave open"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-cad10-2",
+          "stem": "V going to vi at a phrase end is which cadence, and what does it leave open?",
+          "correctAnswer": "Deceptive: tonic was promised, vi arrived, home is still not fully shut",
+          "distractors": [
+            {"text": "Authentic: vi is close enough to I that the phrase has fully closed", "kind": "reversed", "rationale": "vi is tonic-ish, not I. The promise of home was sidestepped."},
+            {"text": "Half: any move that is not V-I must be named as stopping on V", "kind": "nearby", "rationale": "This phrase left V. It went to vi. Half would have stayed on V."},
+            {"text": "Plagal: vi is a subdominant cousin, so the label switches to IV-I", "kind": "misapplied", "rationale": "Plagal is IV-I. Deceptive is the V-vi dodge."}
+          ],
+          "correctExplanation": "Deceptive leaves I unopened. That leftover is the name.",
+          "objectiveIds": [
+            "Distinguish authentic, half, plagal, and deceptive by what they leave open"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-cad10-3",
+          "stem": "A guitar phrase rocks E5 and cuts with no V job. You should name the ending as:",
+          "correctAnswer": "A cut, not a cadence, unless a dominant job actually ended the phrase",
+          "distractors": [
+            {"text": "A half cadence, because every loud stop is secretly a hanging V", "kind": "misconception", "rationale": "Half cadence requires a dominant job. A cut is a cut."},
+            {"text": "An authentic cadence, because E5 is always I and I always closes", "kind": "reversed", "rationale": "Even a tonic dyad is not a cadence without the phrase grammar."},
+            {"text": "A plagal cadence, because missing thirds convert every riff to IV-I", "kind": "nearby", "rationale": "Plagal is IV-I. A fifth-stack cut did not hire IV."}
+          ],
+          "correctExplanation": "Cadence names need a phrase that cadenced. This one stopped.",
+          "objectiveIds": [
+            "End a phrase with a cadence you can name"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-progress-10",
+      "conceptId": "mus-progress",
+      "title": "Function is a job",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-seq-harm",
+      "explanation": [
+        "Write a short common-practice progression that prepares and resolves: T, then PD, then D, then T. I-IV-V-I and I-ii-V-I are the drill. The grammar is: do not leap to D without preparing it, and do not leave D hanging if you claimed a close. MIT 21M.301 treats that order as craft.",
+        "Predict a weak move when two functions are skipped or repeated without a reason. I to V to IV to I backs up. I to V to I with no PD can still cadence, but repeating PD-PD-PD while never taking D is stalling. Weak means the grammar did not get its jobs; it does not mean the riff is illegal.",
+        "Keep the grammar off the riff that never hired it. Power-chord loops, pedals, and modal vamps can sit in one job or in none. This lesson teaches the chorale order so you can use it, and so you can hear when later heavy music is doing something else on purpose."
+      ],
+      "example": "Write I-vi-ii-V-I in C: C, Am, Dm, G, C. Then write E5-G5-A5-G5 and refuse to label it T-PD-D-T. The second cell never took those jobs.",
+      "whyItMatters": "If every loop must be I-V-I, you will 'fix' riffs that were never speaking this grammar.",
+      "quiz": [
+        {
+          "id": "mus-prg10-1",
+          "stem": "A short common-practice progression that prepares and resolves typically:",
+          "correctAnswer": "Takes tonic, then predominant, then dominant, then tonic again",
+          "distractors": [
+            {"text": "Takes dominant first, then tonic, then predominant as a close", "kind": "reversed", "rationale": "PD prepares D. Starting on D and closing with PD backs up."},
+            {"text": "Repeats one function four times so the grammar cannot be skipped", "kind": "nearby", "rationale": "Repetition without a reason is stalling, not preparing."},
+            {"text": "Avoids V entirely, because common-practice forbids a dominant job", "kind": "misapplied", "rationale": "The grammar uses D. Avoiding V is a different style."}
+          ],
+          "correctExplanation": "T, PD, D, T. Prepare, then resolve. That is the short drill.",
+          "objectiveIds": [
+            "Write a short common-practice progression that prepares and resolves"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-prg10-2",
+          "stem": "I to V to IV to I in this grammar is predicted to feel weak because:",
+          "correctAnswer": "Dominant went backward to predominant instead of resolving to tonic",
+          "distractors": [
+            {"text": "IV can never follow anything, so the letters themselves are illegal", "kind": "misconception", "rationale": "IV is a legal PD. The weak move is D backing up into PD."},
+            {"text": "The phrase skipped inversion, which this grammar treats as the cadence", "kind": "nearby", "rationale": "Inversion is bass position. The weak job-order is D then PD."},
+            {"text": "Repeating tonic at both ends is forbidden in any phrase that cadences", "kind": "reversed", "rationale": "T at both ends is normal. The middle order is the problem."}
+          ],
+          "correctExplanation": "D then PD is a backup. The grammar wanted D to T.",
+          "objectiveIds": [
+            "Predict a weak move if two functions are skipped or repeated without reason"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-prg10-3",
+          "stem": "A verse that only loops E5 and D5 should be diagnosed as which of these?",
+          "correctAnswer": "A riff that may not be using T-PD-D; do not force the chorale order on it",
+          "distractors": [
+            {"text": "A failed I-IV-V-I that must be rewritten until a predominant appears", "kind": "misapplied", "rationale": "The grammar is a craft, not a law you paste onto every loop."},
+            {"text": "A perfect authentic cadence, because two fifths always close a phrase", "kind": "reversed", "rationale": "Two dyads looping are not a cadence grammar."},
+            {"text": "A deceptive cadence loop, because D5 is secretly vi in every key", "kind": "nearby", "rationale": "D5 is not automatically vi. Function needs a hired job."}
+          ],
+          "correctExplanation": "No hired PD or D means you report the loop, not a fake chorale.",
+          "objectiveIds": [
+            "Predict a weak move if two functions are skipped or repeated without reason"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-phrase-10",
+      "conceptId": "mus-phrase",
+      "title": "Breath, then an answer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-cadence"
+      ],
+      "goDeeper": "mus-voice-lead",
+      "explanation": [
+        "Group bars into a phrase that breathes. A phrase is a span that ends in a cadence, not a bar-count law. Four bars is common. Two can be a phrase if it cadences. Eight can be one phrase if the breath waits. Mark the breath where the cadence sits.",
+        "A period is a small form: antecedent plus consequent. The first phrase asks, often with a half cadence. The second answers, often with an authentic cadence. Same opening idea is typical. MIT 21M.301 uses that pair as the smallest complete sentence.",
+        "Mark a phrase ending that is not yet a section ending. A half cadence can close a phrase and still leave the verse going. A PAC can close a period without ending the song. Riff music still breathes; it just may not borrow this period shape. Name the breath you actually hear."
+      ],
+      "example": "Eight bars: four that land on V, four that restart the riff and land on I. That is a period. A 16-bar verse that never cadences is still a section; it is not automatically one phrase.",
+      "whyItMatters": "If phrase and section are one word, you will hear every cutoff as a form boundary and miss the smaller breath.",
+      "quiz": [
+        {
+          "id": "mus-phs10-1",
+          "stem": "A phrase in this lesson is grouped as which kind of span?",
+          "correctAnswer": "A breath unit that ends in a cadence, not a fixed bar-count law",
+          "distractors": [
+            {"text": "Any four bars, even when no cadence and no breath is present", "kind": "nearby", "rationale": "Four is common, not required. The cadence is the ending."},
+            {"text": "A whole song, because phrase and section must share one boundary", "kind": "reversed", "rationale": "A phrase can end while the section continues."},
+            {"text": "A single chord name, since function already is the phrase", "kind": "misapplied", "rationale": "Function is a job. A phrase is a span that cadences."}
+          ],
+          "correctExplanation": "Phrase: a breath that cadences. Bar count is a habit, not the definition.",
+          "objectiveIds": [
+            "Group bars into a phrase that breathes, and a period that answers"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-cadence"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-phs10-2",
+          "stem": "Antecedent then consequent, weaker cadence then stronger, is which small form?",
+          "correctAnswer": "A period: the first phrase asks, the second phrase answers",
+          "distractors": [
+            {"text": "A single half cadence stretched across eight bars with no answer", "kind": "nearby", "rationale": "A period needs the answering phrase, not only the ask."},
+            {"text": "A section ending that forbids any later verse from starting", "kind": "reversed", "rationale": "A period can close while a larger section still continues."},
+            {"text": "A plagal pair, because IV-I is the only legal consequent move", "kind": "misapplied", "rationale": "Consequents often take authentic cadences. Plagal is a different label."}
+          ],
+          "correctExplanation": "Ask, then answer. Weaker, then stronger. That pair is a period.",
+          "objectiveIds": [
+            "Group bars into a phrase that breathes, and a period that answers"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-cadence"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-phs10-3",
+          "stem": "A verse lands on V at bar 4 and keeps riffing to bar 16. You should mark bar 4 as:",
+          "correctAnswer": "A phrase ending that is not yet a section ending; the verse is still going",
+          "distractors": [
+            {"text": "The end of the piece, because any cadence deletes the remaining bars", "kind": "reversed", "rationale": "A phrase can cadence inside a verse that continues."},
+            {"text": "Not a phrase ending, because only I is allowed to end anything", "kind": "nearby", "rationale": "A half cadence is a legal phrase ending. It just leaves V open."},
+            {"text": "A new key, because a mid-verse V is defined as a modulation", "kind": "misapplied", "rationale": "Stopping on V is a cadence choice, not a new tonic by itself."}
+          ],
+          "correctExplanation": "Phrase ended. Section did not. Mark both facts.",
+          "objectiveIds": [
+            "Mark a phrase ending that is not yet a section ending"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-cadence"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-power-chord-5",
+      "conceptId": "mus-power-chord",
+      "title": "Root and fifth, no third",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "goDeeper": "mus-parallel",
+      "explanation": [
+        "Play a fifth without a third and treat that dyad as a harmonic object. Root plus fifth, often doubled at the octave, is a power chord. It refuses major and minor because the letter that would decide quality is missing. The stack is an interval, not a failed triad.",
+        "Do not apologize for it. Distortion thickens the same fifth by adding harmonics of those two pitches; it does not insert a third. A riff of E5 and G5 has harmony. It still has no quality and no V-I unless those actually happen."
+      ],
+      "example": "Fret a low E and the B above it. Mute the string that would have supplied G or G#. The object is E5. Adding the G later would choose minor; leaving it out keeps the dyad undecided.",
+      "whyItMatters": "If a fifth-stack is only a 'triad with a hole,' you will keep stuffing thirds into riffs that were built to lock without them.",
+      "quiz": [
+        {
+          "id": "mus-pwr5-1",
+          "stem": "A power chord is best treated as which harmonic object?",
+          "correctAnswer": "A fifth without a third: a dyad that refuses major and minor",
+          "distractors": [
+            {"text": "A broken triad that must be completed before it may be named", "kind": "misconception", "rationale": "The missing third is the design, not a hole to fill."},
+            {"text": "A duration mark that replaces pitch whenever distortion is on", "kind": "misapplied", "rationale": "The object is still a pitch interval: root plus fifth."},
+            {"text": "A major triad in inversion, because the bass always hides the third", "kind": "reversed", "rationale": "Inversion rearranges chord tones. Here the third is absent."}
+          ],
+          "correctExplanation": "Root and fifth. No third. That dyad is the chord.",
+          "objectiveIds": [
+            "Play a fifth without a third and treat it as a harmonic object"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mus-pwr5-2",
+          "stem": "You drive a clean fifth into clipping. What should happen to its partials?",
+          "correctAnswer": "Extra harmonics thicken the same fifth; no third is inserted",
+          "distractors": [
+            {"text": "A minor third appears, because gain is defined as completing the triad", "kind": "reversed", "rationale": "Clipping adds harmonics of the two pitches. It does not fret a third."},
+            {"text": "The fifth vanishes, leaving only the root's fundamental to sound", "kind": "nearby", "rationale": "The fifth stays. Extra partials stack on that lock."},
+            {"text": "Duration doubles, because distortion is only a hold-time effect", "kind": "misapplied", "rationale": "Distortion is a waveshape change, not a duration rule."}
+          ],
+          "correctExplanation": "Clipping adds harmonics of what you played. The dyad stays a fifth.",
+          "objectiveIds": [
+            "Predict what distortion does to that fifth's partials"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-pwr5-3",
+          "stem": "An E5-G5-E5 riff never plays a B major chord. You should treat that cell as:",
+          "correctAnswer": "Harmony without a V-I: a pair of fifths, not a missing chorale",
+          "distractors": [
+            {"text": "A secret V-I, because every fifth-stack riff cadences once gain is on", "kind": "misconception", "rationale": "Gain does not hire a dominant job the riff never played."},
+            {"text": "Illegal until someone adds a third and writes G-B-D on the page", "kind": "nearby", "rationale": "G5 is already a harmonic object. The third is optional."},
+            {"text": "A rest, because dyads are forbidden from starting a guitar riff", "kind": "reversed", "rationale": "The dyad can sit as the home sound. It still is not a chorale."}
+          ],
+          "correctExplanation": "Harmony without V-I is allowed. Report the fifths you actually played.",
+          "objectiveIds": [
+            "Play a fifth without a third and treat it as a harmonic object"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "mus-power-chord-10",
+      "conceptId": "mus-power-chord",
+      "title": "Distortion locks the fifth",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "goDeeper": "mus-parallel",
+      "explanation": [
+        "Drive a fifth through clipping and the extra partials stack on the same lock. Distortion is a waveshaper: it adds harmonics of whatever you fed it. A just-ish fifth has partials that agree. The object gets thicker without choosing major or minor. That is why the dyad is first-class under gain.",
+        "Predict the clash if you then add a third. The root already carries a major third in its overtone series. A minor third you fret will beat against that built-in partial once clipping has made both loud. A major third is closer, still not free. The missing third is a mix decision, not a theory failure.",
+        "Keep function off the object until the riff hires it. Parallel fifths as a guitar wall are the point of the texture. 21M.301 bans those fifths in species for independence. A power-chord riff does not owe that ban. Name the fifth-stack, name what gain did to its partials, and stop."
+      ],
+      "example": "Same E5, clean then saturated. The fifth gets hair. Add G natural and the midrange warbles against the root's overtone E-G#. Leave the G out and the wall sits.",
+      "whyItMatters": "If distortion is only 'loud,' you will add thirds to 'complete' a chord whose whole job was to lock without them.",
+      "quiz": [
+        {
+          "id": "mus-pwr10-1",
+          "stem": "What does distortion typically do to a sounded fifth's partials?",
+          "correctAnswer": "Clipping adds harmonics that thicken the same fifth lock",
+          "distractors": [
+            {"text": "It inserts a minor third so the dyad is forced to become a triad", "kind": "reversed", "rationale": "Gain does not supply the missing chord tone. You would have to fret it."},
+            {"text": "It deletes the fifth and leaves only the root's fundamental", "kind": "nearby", "rationale": "The fifth stays. Extra partials stack on the lock."},
+            {"text": "It converts duration into pitch so the riff becomes a rest", "kind": "misapplied", "rationale": "Distortion is a timbre/energy shaper, not a rest."}
+          ],
+          "correctExplanation": "More harmonics, same interval. The fifth gets thicker, not major.",
+          "objectiveIds": [
+            "Predict what distortion does to that fifth's partials"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-pwr10-2",
+          "stem": "Adding a fretted minor third under heavy clipping is predicted to:",
+          "correctAnswer": "Beat against the root's overtone major third once both are loud",
+          "distractors": [
+            {"text": "Cancel all partials so the power chord becomes silence", "kind": "reversed", "rationale": "You get clash and mud, not a mute switch."},
+            {"text": "Lock more tightly than the bare fifth, because thirds always help", "kind": "nearby", "rationale": "The bare fifth agreed. The extra minor third fights an overtone."},
+            {"text": "Rename the dyad as a cadence, because thirds hire a V-I job", "kind": "misapplied", "rationale": "A third chooses quality. It does not create a cadence."}
+          ],
+          "correctExplanation": "Root overtones already include a major third. A fretted minor third fights them.",
+          "objectiveIds": [
+            "Predict what distortion does to that fifth's partials"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-pwr10-3",
+          "stem": "A saturated E5-B5 wall with no third should still be treated as:",
+          "correctAnswer": "A harmonic object: a fifth-stack, not a triad that failed the exam",
+          "distractors": [
+            {"text": "An illegal parallel, because species bans every doubled fifth on sight", "kind": "misapplied", "rationale": "Species bans them for independence. This texture wants the lock."},
+            {"text": "A major triad, because overtones secretly write G# into the score", "kind": "nearby", "rationale": "Partials are not a fretted third. The chord still has no third tone."},
+            {"text": "Non-harmony, because only three-letter stacks may be named chords", "kind": "misconception", "rationale": "A dyad is a harmonic object. This course treats it as one."}
+          ],
+          "correctExplanation": "Root plus fifth, thickened by gain. That is the chord.",
+          "objectiveIds": [
+            "Play a fifth without a third and treat it as a harmonic object"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-interval"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,522 @@
+{
+  "id": "mus-foundations",
+  "title": "Music Theory Foundations",
+  "categoryId": "music-theory",
+  "description": "Sound as elements, then intervals, scales, modes, rhythm, and meter. Harmony as a craft waits until these names are honest. Built to support later heavy-music work, not a conservatory recital track.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "mit-21m051",
+      "title": "MIT 21M.051 Fundamentals of Music",
+      "url": "https://ocw.mit.edu/courses/21m-051-fundamentals-of-music-spring-2007/pages/syllabus/",
+      "kind": "ocw",
+      "notes": "Elements and rhythm/pitch before major/minor, then functional harmony last. Ear and notation travel with the theory."
+    },
+    {
+      "id": "berklee-guitar",
+      "title": "Berklee Guitar Fundamentals",
+      "url": "https://online.berklee.edu/courses/guitar-fundamentals",
+      "kind": "syllabus",
+      "notes": "Technique and basic harmonic literacy that death-metal construction should assume, not duplicate."
+    }
+  ],
+  "modules": [
+    {
+      "id": "mus-f-elem",
+      "title": "Sound as elements",
+      "blurb": "Pitch, duration, loudness, notation.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "mus-sound",
+        "mus-interval"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ],
+      "learningObjectives": [
+        "Name pitch, duration, loudness, and timbre as independent dimensions",
+        "Measure an interval as a ratio you can hear beating"
+      ]
+    },
+    {
+      "id": "mus-f-pitch",
+      "title": "Pitch collections",
+      "blurb": "Scales, keys, modes.",
+      "order": 1,
+      "prerequisites": [
+        "mus-f-elem"
+      ],
+      "spineIds": [
+        "mus-scale",
+        "mus-modes"
+      ],
+      "learningObjectives": [
+        "Build a scale from a tonic and a collection of steps",
+        "Distinguish mode, key, and pitch set so gravity is not just inventory"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-f-rhythm",
+      "title": "Rhythm and meter",
+      "blurb": "Pulse, bars, and the off-beat.",
+      "order": 2,
+      "prerequisites": [
+        "mus-f-elem"
+      ],
+      "spineIds": [
+        "mus-meter",
+        "mus-rhythm"
+      ],
+      "learningObjectives": [
+        "Group pulse into meter and subdivide the beat",
+        "Displace or stack pulses without changing the written pitch"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "mus-sound",
+      "name": "Pitch, duration, loudness, timbre",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "The four things a note can be before it is a theory problem.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name pitch, duration, loudness, and timbre as independent dimensions of a sound",
+        "Change one dimension without claiming the others moved"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-notation",
+      "name": "Notation as a map",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [
+        "mus-sound"
+      ],
+      "summary": "A staff is a diagram, not the music.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat notation as a map of sound, not as the music itself",
+        "Predict what a score leaves out that the ear still has to hear"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-clef",
+      "name": "Staves and clefs",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [
+        "mus-notation"
+      ],
+      "summary": "Where a pitch sits depends on the clef.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Read a staff and clef as a decision about which pitches sit on the lines",
+        "Predict why a bass riff written in treble is a translation, not a different piece"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-octave",
+      "name": "Octave equivalence",
+      "moduleId": "mus-f-elem",
+      "tier": 0,
+      "prerequisites": [
+        "mus-sound"
+      ],
+      "summary": "The same letter, a doubling of frequency.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State octave equivalence as the same pitch class at a 2:1 ratio",
+        "Hear two notes an octave apart as the same letter with a register change"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-semitone",
+      "name": "Semitones and the chromatic collection",
+      "moduleId": "mus-f-elem",
+      "tier": 1,
+      "prerequisites": [
+        "mus-octave"
+      ],
+      "summary": "Twelve named steps in the common tuning.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Build the chromatic collection from twelve equal semitones",
+        "Count the semitones in a written interval instead of guessing from the staff"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-interval",
+      "name": "Intervals and consonance",
+      "moduleId": "mus-f-elem",
+      "tier": 1,
+      "prerequisites": [
+        "mus-semitone"
+      ],
+      "summary": "Ratios, beating, and why a fifth sits still.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Measure an interval as a ratio or a semitone count you can hear beating",
+        "Distinguish a just fifth from its equal-tempered stand-in"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-ear-interval",
+      "name": "Hearing an interval",
+      "moduleId": "mus-f-elem",
+      "tier": 1,
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "summary": "A name that has to survive without the page.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Identify a sung or played interval without looking at a staff",
+        "Predict the beat you hear when two close partials disagree"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-scale",
+      "name": "Scales",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-interval"
+      ],
+      "summary": "An ordered pitch collection with a tonic.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Build a scale as a tonic plus a chosen collection of steps",
+        "Write the same pitch set starting on a different tonic and say what changed"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-major",
+      "name": "The major scale",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-scale"
+      ],
+      "summary": "W-W-H-W-W-W-H as a pattern, not a mood.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Spell a major scale from WWHWWWH",
+        "Hear the major third as the color that is not the minor third"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-minor",
+      "name": "Minor scales",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-major"
+      ],
+      "summary": "Natural, harmonic, melodic \u2014 three answers to one tonic.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish natural, harmonic, and melodic minor by the sixth and seventh",
+        "Predict which raised degree a cadence in minor usually wants"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-key",
+      "name": "Key and tonic",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-scale"
+      ],
+      "summary": "The pitch everything else is measured from.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name a key as a tonic plus a collection that treats that tonic as home",
+        "Predict what a piece is doing if the collection stays and the tonic moves"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-modes",
+      "name": "Modes",
+      "moduleId": "mus-f-pitch",
+      "tier": 2,
+      "prerequisites": [
+        "mus-interval",
+        "mus-scale"
+      ],
+      "summary": "Same pitch set, different tonic gravity.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat a mode as a tonic and a hierarchy, not a scale shape",
+        "Contrast parallel and relative mode change"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-circle",
+      "name": "Circle of fifths",
+      "moduleId": "mus-f-pitch",
+      "tier": 2,
+      "prerequisites": [
+        "mus-key"
+      ],
+      "summary": "Near keys share almost all their pitches.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Walk the circle of fifths as a map of key signatures and close relations",
+        "Predict the next key a fifth away and the accidental that appears"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-enharmonic",
+      "name": "Enharmonic spelling",
+      "moduleId": "mus-f-pitch",
+      "tier": 2,
+      "prerequisites": [
+        "mus-semitone"
+      ],
+      "summary": "F\u266f and G\u266d are the same key and a different claim.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Spell the same pitch two ways when the job in the key is different",
+        "Predict why G\u266f and A\u266d lead in different directions"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-pentatonic",
+      "name": "Pentatonic collections",
+      "moduleId": "mus-f-pitch",
+      "tier": 1,
+      "prerequisites": [
+        "mus-scale"
+      ],
+      "summary": "A reduced set that still implies a tonic.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Build a pentatonic collection by leaving out the half-steps of a heptatonic scale",
+        "Predict why a pentatonic riff has fewer tendency tones"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-rhythm",
+      "name": "Pulse and rhythm",
+      "moduleId": "mus-f-rhythm",
+      "tier": 0,
+      "prerequisites": [
+        "mus-sound"
+      ],
+      "summary": "When events happen, independent of which pitch.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Separate pulse from the pattern of attacks that sit on it",
+        "Clap a rhythm that is not just the pulse"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-rest",
+      "name": "Silence as rhythm",
+      "moduleId": "mus-f-rhythm",
+      "tier": 0,
+      "prerequisites": [
+        "mus-rhythm"
+      ],
+      "summary": "A rest is an event.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat silence as a rhythmic event with a duration",
+        "Write a rest that is the point of the bar, not an empty leftover"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-meter",
+      "name": "Meter",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-rhythm"
+      ],
+      "summary": "A repeating accent pattern you can count.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Group pulse into a repeating bar with a downbeat",
+        "Distinguish simple and compound division of the beat"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-beat-div",
+      "name": "Beat subdivision",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Twos and threes inside the beat.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Subdivide a beat into two, three, or four without changing the bar",
+        "Notate a triplet against a binary beat"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-tempo",
+      "name": "Tempo",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "How fast the pulse is, not how busy the surface is.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State tempo as the speed of the pulse, independent of the written subdivision",
+        "Predict why the same figure feels different at half the marking"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-tie-dot",
+      "name": "Ties and dots",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-rhythm"
+      ],
+      "summary": "Ways of writing a duration that crosses a beat.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Extend a duration with a tie or a dot instead of writing a new attack",
+        "Read a dotted quarter plus eighth as a long-short pair"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-anacrusis",
+      "name": "Pickup and downbeat",
+      "moduleId": "mus-f-rhythm",
+      "tier": 1,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Starting before the barline.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Start a phrase before the downbeat without moving the barline",
+        "Predict where the ear still hears 'one'"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-syncopation",
+      "name": "Syncopation",
+      "moduleId": "mus-f-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "mus-meter"
+      ],
+      "summary": "Accent where the meter did not ask for one.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Accent a weak part of the bar so the attack fights the meter",
+        "Write a syncopation that is still countable"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    },
+    {
+      "id": "mus-polyrhythm-intro",
+      "name": "Polyrhythm, first look",
+      "moduleId": "mus-f-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "mus-beat-div"
+      ],
+      "summary": "Two subdivisions at once.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Stack two pulse groupings that share a longer coincidence",
+        "Clap 3:2 as three in the time of two"
+      ],
+      "sourceIds": [
+        "mit-21m051"
+      ]
+    }
+  ]
+}

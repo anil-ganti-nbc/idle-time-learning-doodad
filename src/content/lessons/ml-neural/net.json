@@ -1,0 +1,456 @@
+{
+  "courseId": "ml-neural",
+  "moduleId": "ml-n-net",
+  "lessons": [
+    {
+      "id": "ml-neuron-5",
+      "conceptId": "ml-neuron",
+      "title": "A sum, a shift, a bend",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["ml-logistic"],
+      "goDeeper": "ml-activation",
+      "diagram": "ml-neuron",
+      "explanation": [
+        "An artificial neuron is three acts in order: a weighted sum of the inputs, a bias that shifts the threshold, and a nonlinearity that bends the result. Logistic regression already did this once. The neuron is that map named as a reusable part.",
+        "Strip the nonlinearity and the remaining map is affine: still a hyperplane, just with a different slope and intercept. Stack those and you still have one hyperplane. The bend is what makes a second neuron a new function rather than a rewritten line."
+      ],
+      "example": "x = (2, 1), w = (0.5, −1), b = 0.3. The pre-activation is 0.5·2 + (−1)·1 + 0.3 = 0.3. A ReLU returns 0.3. Remove the ReLU and the output is still 0.3 — and the next layer can only rescale that same line.",
+      "whyItMatters": "Every later diagram of a network is this part, stacked. If the neuron is 'a little brain', the rest of the course will sound like folklore.",
+      "quiz": [
+        {
+          "id": "ml-nr5-1",
+          "stem": "An artificial neuron, written as a map from an input vector, is:",
+          "correctAnswer": "A weighted sum, plus a bias, then a nonlinearity",
+          "distractors": [
+            { "text": "A lookup table that stores every training row", "kind": "nearby", "rationale": "A neuron is a parametric map, not a stored sheet." },
+            { "text": "A bias alone, with no weights and no bend", "kind": "reversed", "rationale": "The weighted sum and the nonlinearity are the other two acts." },
+            { "text": "A held-out split you report after training", "kind": "misapplied", "rationale": "The split is not the neuron." }
+          ],
+          "correctExplanation": "Three acts: inner product, shift, bend. That is the brick.",
+          "objectiveIds": ["Write an artificial neuron as a weighted sum, a bias, and a nonlinearity"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-nr5-2",
+          "stem": "If you remove the nonlinearity from one neuron, the remaining map is:",
+          "correctAnswer": "Affine: a hyperplane with a new slope and intercept",
+          "distractors": [
+            { "text": "A distribution over classes, already normalized", "kind": "nearby", "rationale": "Softmax is a later map on scores, not this brick." },
+            { "text": "Undefined, because a neuron cannot run without a bend", "kind": "misconception", "rationale": "The affine part still runs. It is just still a line." },
+            { "text": "A deeper composition than the original neuron", "kind": "reversed", "rationale": "Removing the bend removes the only new function." }
+          ],
+          "correctExplanation": "w·x + b is a hyperplane. The bend was the extra function.",
+          "objectiveIds": ["Predict the output when the nonlinearity is removed"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-nr5-3",
+          "stem": "Two neurons stacked, each with the nonlinearity stripped, compute:",
+          "correctAnswer": "One affine map, because affine maps compose into an affine map",
+          "distractors": [
+            { "text": "A checkerboard decision that no line can draw", "kind": "reversed", "rationale": "Without a bend, you never leave the family of hyperplanes." },
+            { "text": "A probability, because stacking always means softmax", "kind": "misapplied", "rationale": "Softmax is a separate map. Stacking affine maps is still affine." },
+            { "text": "Nothing, because a neuron must see the raw spreadsheet", "kind": "subtle", "rationale": "The second neuron can see the first. Both are still lines." }
+          ],
+          "correctExplanation": "Affine after affine is affine. The stack collapsed to one line.",
+          "objectiveIds": ["Predict the output when the nonlinearity is removed"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-neuron-10",
+      "conceptId": "ml-neuron",
+      "title": "Weighted sum, then a bend",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-logistic"],
+      "goDeeper": "ml-activation",
+      "diagram": "ml-neuron",
+      "explanation": [
+        "Logistic regression already computed σ(w·x + b). An artificial neuron is that same object, treated as a brick: form the inner product, add a bias, then apply a nonlinearity that need not be a sigmoid. The brick can be reused, stacked, and given a different bend.",
+        "The weighted sum is a direction in feature space. The bias slides the decision threshold along that direction. Until the nonlinearity fires, those two acts are still one linear classifier. CS229 names the neuron here so the multilayer map is not a mystery box.",
+        "Remove the nonlinearity and the output is w·x + b, an affine scalar. A later layer that also lacks a bend can only rescale and shift that scalar. The stack collapses to one line. The bend is the only new function the second layer can see."
+      ],
+      "example": "A house-size input of 12, weight 0.4, bias −2. The pre-activation is 2.8. Sigmoid saturates near one. ReLU returns 2.8. Identity returns 2.8 and hands the next layer the same line, waiting to be rewritten as one weight.",
+      "whyItMatters": "If you cannot write the three acts, 'deep' will mean 'many mysterious boxes' instead of composed maps.",
+      "quiz": [
+        {
+          "id": "ml-nr10-1",
+          "stem": "Compared with logistic regression, an artificial neuron is:",
+          "correctAnswer": "The same weighted sum and bias, with a bend that need not be a sigmoid",
+          "distractors": [
+            { "text": "A stored copy of the training labels, with no weights", "kind": "reversed", "rationale": "The neuron is a parametric map, not a label table." },
+            { "text": "A validation split that replaces the need for a loss", "kind": "misapplied", "rationale": "The split is not the brick." },
+            { "text": "A different geometry in which inner products are illegal", "kind": "misconception", "rationale": "The weighted sum is still an inner product." }
+          ],
+          "correctExplanation": "Logistic regression was one neuron with a sigmoid. The brick generalizes the bend.",
+          "objectiveIds": ["Write an artificial neuron as a weighted sum, a bias, and a nonlinearity"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-nr10-2",
+          "stem": "In the map z = w·x + b, then y = φ(z), the three pieces are:",
+          "correctAnswer": "Weighted sum, bias shift, then the nonlinearity φ",
+          "distractors": [
+            { "text": "A softmax, a held-out set, then a learning rate", "kind": "nearby", "rationale": "Those are later objects. They are not the neuron." },
+            { "text": "Only the bias, because the weights cancel in every net", "kind": "reversed", "rationale": "The weights pick the direction. They do not cancel by default." },
+            { "text": "A convolution, a pool, then a recurrence", "kind": "misapplied", "rationale": "Those are later architectures built from this brick." }
+          ],
+          "correctExplanation": "Inner product, shift, bend. Write that before you stack.",
+          "objectiveIds": ["Write an artificial neuron as a weighted sum, a bias, and a nonlinearity"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-nr10-3",
+          "stem": "A second neuron that sees y = w·x + b, with no φ on either layer, outputs:",
+          "correctAnswer": "An affine function of x, because two affine maps compose into one",
+          "distractors": [
+            { "text": "A spiral decision that a line could never draw", "kind": "reversed", "rationale": "No bend means you never leave hyperplanes." },
+            { "text": "A probability that already sums to one across classes", "kind": "nearby", "rationale": "That would require a later normalizing map." },
+            { "text": "Undefined, because CS229 forbids stacking linear maps", "kind": "misapplied", "rationale": "You can stack them. They just collapse." }
+          ],
+          "correctExplanation": "The second layer rewrites the first line. The stack is still one line.",
+          "objectiveIds": ["Predict the output when the nonlinearity is removed"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-activation-10",
+      "conceptId": "ml-activation",
+      "title": "The bend that makes depth real",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-neuron"],
+      "goDeeper": "ml-mlp",
+      "explanation": [
+        "Matrix-multiply, add a bias, repeat: each layer is affine. The composition of affine maps is affine. A stack of linear layers, no nonlinearity between them, is exactly one linear layer with a product of the weight matrices. Depth bought you a factored line.",
+        "A sigmoid squashes to (0, 1) and saturates at both ends, so its local slope dies on large |z|. Tanh saturates too, on (−1, 1), with a slightly steeper middle. ReLU is max(0, z): a dead half-line, but slope one on the positive side, so a live unit does not shrink the gradient by saturating.",
+        "That is why later nets reach for ReLU-like bends after early experiments with sigmoids. Saturation is a training problem, not a fashion. You still need some bend: without one, the multilayer map never leaves the family of hyperplanes."
+      ],
+      "example": "Three layers, weights about size one, no activation: the whole net is W3 W2 W1 x plus a folded bias — one matrix. Insert ReLU between them and the same x can fold into a piecewise-linear surface no single matrix writes.",
+      "whyItMatters": "People stack layers and forget the bend, then wonder why a 'deep' net matches a linear baseline.",
+      "quiz": [
+        {
+          "id": "ml-act10-1",
+          "stem": "A stack of linear layers with no nonlinearity between them is:",
+          "correctAnswer": "Still one linear map, because affine maps compose into one affine map",
+          "distractors": [
+            { "text": "A universal approximator the moment you add a third matrix", "kind": "misconception", "rationale": "Extra matrices without a bend still multiply into one matrix." },
+            { "text": "Illegal in CS229, which forbids more than one weight matrix", "kind": "nearby", "rationale": "You may stack them. They just collapse." },
+            { "text": "A softmax distribution over the hidden coordinates", "kind": "misapplied", "rationale": "Softmax is a later normalizing map, not this collapse." }
+          ],
+          "correctExplanation": "W3 W2 W1 is one matrix. Depth without a bend is a factored line.",
+          "objectiveIds": ["Explain why a stack of linear layers without a nonlinearity is still one line"],
+          "prerequisiteConceptIds": ["ml-neuron"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-act10-2",
+          "stem": "On saturation and gradient flow, ReLU differs from sigmoid and tanh because:",
+          "correctAnswer": "Live ReLU units keep slope one, while sigmoid and tanh flatten at the ends",
+          "distractors": [
+            { "text": "ReLU saturates at both +∞ and −∞, unlike sigmoid", "kind": "reversed", "rationale": "Sigmoid and tanh saturate at both ends. ReLU is linear on the positive side." },
+            { "text": "Sigmoid has slope one everywhere, so it never needs a bend", "kind": "misapplied", "rationale": "Sigmoid's slope dies in the tails. That is the saturation story." },
+            { "text": "Tanh outputs probabilities that already sum to one", "kind": "nearby", "rationale": "Tanh is a coordinatewise squashing, not a distribution over classes." }
+          ],
+          "correctExplanation": "Saturation kills slope. ReLU avoids that on the positive half-line.",
+          "objectiveIds": ["Compare ReLU, sigmoid, and tanh on saturation and gradient flow"],
+          "prerequisiteConceptIds": ["ml-neuron"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ml-act10-3",
+          "stem": "A deep stack of sigmoids, each seeing large |z|, typically:",
+          "correctAnswer": "Saturates, so local slopes shrink and the product of derivatives dies",
+          "distractors": [
+            { "text": "Keeps slope one on every unit, like a live ReLU", "kind": "reversed", "rationale": "Sigmoid's tails have near-zero slope. That is the opposite of live ReLU." },
+            { "text": "Becomes one linear layer even with the sigmoids present", "kind": "subtle", "rationale": "The sigmoids are bends. The failure here is saturation, not collapse to a line." },
+            { "text": "Turns the scores into a uniform distribution automatically", "kind": "misapplied", "rationale": "A coordinatewise sigmoid is not a softmax." }
+          ],
+          "correctExplanation": "Large |z| puts sigmoid in its flat tails. The chain-rule product then vanishes.",
+          "objectiveIds": ["Compare ReLU, sigmoid, and tanh on saturation and gradient flow"],
+          "prerequisiteConceptIds": ["ml-neuron"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-mlp-10",
+      "conceptId": "ml-mlp",
+      "title": "Each layer is a function of the last",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-activation"],
+      "goDeeper": "ml-depth",
+      "diagram": "ml-mlp-forward",
+      "explanation": [
+        "Layers of neurons make a multilayer perceptron: each layer is a function of the last. Layer one takes the input vector, applies a weight matrix, a bias, and a nonlinearity, and emits a hidden vector. Layer two does the same to that hidden vector. The score at the end is a look at a transformed x.",
+        "The forward pass is that composition, evaluated once. You write h = φ(W1 x + b1), then s = W2 h + b2. Every number you will later differentiate was produced by this walk. There is no separate thinking step. There is a chain of maps.",
+        "Width is how many neurons sit in a hidden layer. Depth is how many such maps you composed. CS229 treats the MLP as the first nonlinear class that is still a parametric function you can write down, not as a slogan about brains."
+      ],
+      "example": "x = (1, 0). W1 has rows (1, 1) and (0, 1), b1 = (0, 0), ReLU. Hidden = (1, 0). W2 = (2, −1), b2 = 0. Score = 2. The second layer never saw the original (1, 0) except through that hidden vector.",
+      "whyItMatters": "If you cannot trace the forward numbers, backprop later will look like a second algorithm instead of the chain rule on this walk.",
+      "quiz": [
+        {
+          "id": "ml-mlp10-1",
+          "stem": "In an MLP, a hidden layer is best described as:",
+          "correctAnswer": "A function of the previous layer's output, not a fresh look at raw x",
+          "distractors": [
+            { "text": "A stored copy of the training spreadsheet, replayed as output", "kind": "nearby", "rationale": "The hidden vector is computed, not recited from the sheet." },
+            { "text": "A held-out split that the first layer is forbidden to see", "kind": "misapplied", "rationale": "The split is not a layer." },
+            { "text": "An independent classifier that ignores every earlier layer", "kind": "reversed", "rationale": "Each layer is a function of the last. That is the composition." }
+          ],
+          "correctExplanation": "h = φ(W1 x + b1). The next map sees h, not a second copy of x.",
+          "objectiveIds": ["Compose layers of neurons so each layer is a function of the last"],
+          "prerequisiteConceptIds": ["ml-activation"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-mlp10-2",
+          "stem": "x = (1, 0), W1 rows (1, 1) and (0, 1), ReLU, W2 = (2, −1), biases zero. The score is:",
+          "correctAnswer": "2, because the hidden vector is (1, 0) and 2·1 + (−1)·0 = 2",
+          "distractors": [
+            { "text": "0, because ReLU zeros every coordinate of (1, 0)", "kind": "reversed", "rationale": "ReLU keeps the positive 1. It does not zero the whole vector." },
+            { "text": "3, because you add the raw input (1, 0) onto W2's row", "kind": "nearby", "rationale": "The second layer sees the hidden vector, not a skip of raw x here." },
+            { "text": "Undefined, because an MLP cannot run on a two-dimensional x", "kind": "misapplied", "rationale": "The forward pass is defined. Trace the two maps." }
+          ],
+          "correctExplanation": "h = ReLU((1, 0)) = (1, 0). s = 2·1 − 1·0 = 2. That is the walk.",
+          "objectiveIds": ["Trace a small forward pass from input vector to output score"],
+          "prerequisiteConceptIds": ["ml-activation"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-mlp10-3",
+          "stem": "You write h = φ(W1 x + b1) and s = W2 h + b2. A correct reading is:",
+          "correctAnswer": "s is a function of a transformed x, produced by composing the two layers",
+          "distractors": [
+            { "text": "s is computed from x while h is thrown away before the second layer", "kind": "reversed", "rationale": "The second layer's input is h. That is the composition." },
+            { "text": "s is a validation metric, not a score the model emits", "kind": "misapplied", "rationale": "s is the forward score. Metrics come later." },
+            { "text": "W2 must equal W1, or the composition is illegal", "kind": "subtle", "rationale": "The matrices can differ. That is the point of two maps." }
+          ],
+          "correctExplanation": "Forward is composition. The score is a look at h, and h is a look at x.",
+          "objectiveIds": ["Compose layers of neurons so each layer is a function of the last"],
+          "prerequisiteConceptIds": ["ml-activation"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-softmax-10",
+      "conceptId": "ml-softmax",
+      "title": "Scores become a distribution",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-logistic"],
+      "goDeeper": "ml-ce-loss",
+      "explanation": [
+        "Softmax turns a vector of scores into a distribution over classes. Exponentiate each score, then divide by the sum of those exponentials. Every coordinate is positive. They add to one. The map is the multiclass sibling of the logistic curve, which was the two-class case.",
+        "If one score dominates — much larger than the rest — its exponential dwarfs the others and its probability approaches one. The rest approach zero. Softmax does not invent a new winner; it sharpens an already separated argmax into a point on the simplex.",
+        "The scores are not probabilities until this map. A raw 4.0 versus 3.9 is still a close call after softmax. A raw 10 versus 0 is a near-certainty. Logistic regression already did the two-class version; softmax is the same idea with more than two bins."
+      ],
+      "example": "Scores (2, 1, 0). Exponentials about (7.39, 2.72, 1). Probabilities about (0.67, 0.24, 0.09). Raise the first score to 8 and the first probability sits near one; the other two nearly vanish.",
+      "whyItMatters": "A classifier that emits a distribution needs this map before a loss can treat the output as a probability.",
+      "quiz": [
+        {
+          "id": "ml-smx10-1",
+          "stem": "Softmax turns a vector of class scores into:",
+          "correctAnswer": "A distribution: nonnegative numbers that add to one",
+          "distractors": [
+            { "text": "A single binary label, with all other classes deleted", "kind": "nearby", "rationale": "Argmax would pick a label. Softmax keeps a distribution." },
+            { "text": "The same scores, because exponentiation cancels the sum", "kind": "reversed", "rationale": "You divide by the sum of exponentials. The scores change." },
+            { "text": "A hypothesis class of straight lines through the origin", "kind": "misapplied", "rationale": "The class is not the normalizing map." }
+          ],
+          "correctExplanation": "Exp, then normalize. That is a distribution over classes.",
+          "objectiveIds": ["Turn a vector of scores into a distribution over classes"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-smx10-2",
+          "stem": "If one score is much larger than the others, softmax probabilities typically:",
+          "correctAnswer": "Put almost all mass on that class, and near-zero on the rest",
+          "distractors": [
+            { "text": "Stay uniform, because softmax ignores the size of scores", "kind": "reversed", "rationale": "A dominant exponential takes the mass. Softmax does not ignore size." },
+            { "text": "Become negative on the losing classes, to keep a zero sum", "kind": "misconception", "rationale": "Exponentials are positive. The output is a distribution, not a signed contrast." },
+            { "text": "Collapse back into the raw scores, undoing the exponentials", "kind": "subtle", "rationale": "The map still normalizes. Dominance shows up as a peak, not as raw scores." }
+          ],
+          "correctExplanation": "A huge exponential dwarfs the sum. Its coordinate approaches one.",
+          "objectiveIds": ["Predict what happens to the probabilities if one score dominates"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-smx10-3",
+          "stem": "Scores (2, 1, 0) versus scores (8, 1, 0) after softmax differ in that:",
+          "correctAnswer": "The (8, 1, 0) case puts nearly all probability on the first class",
+          "distractors": [
+            { "text": "Both stay uniform, because three scores always share mass equally", "kind": "reversed", "rationale": "Equal mass would require equal scores. These are not equal." },
+            { "text": "The (2, 1, 0) case is already a one-hot vector, unlike (8, 1, 0)", "kind": "nearby", "rationale": "(2, 1, 0) is a mild peak. (8, 1, 0) is the near-one-hot." },
+            { "text": "Softmax is undefined on three coordinates, so neither is a distribution", "kind": "misapplied", "rationale": "Softmax is defined for any finite score vector." }
+          ],
+          "correctExplanation": "Raising one score separates it. The distribution sharpens onto that class.",
+          "objectiveIds": ["Predict what happens to the probabilities if one score dominates"],
+          "prerequisiteConceptIds": ["ml-logistic"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-ce-loss-10",
+      "conceptId": "ml-ce-loss",
+      "title": "The pair that trains a classifier",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-softmax", "ml-loss"],
+      "goDeeper": "ml-backprop",
+      "explanation": [
+        "Cross-entropy is the usual loss when the output is a distribution over classes. If the model emitted probabilities p and the true class is k, the loss is −log p_k. It is small when the true class got most of the mass, and it grows without bound as p_k goes to zero.",
+        "Paired with softmax, the slope on the scores is simple: predicted probability minus one-hot target. That is why the pair is the default classifier, not because of a contest. Other losses exist. This pair matches a distribution-valued output to a class-valued target with a slope the search can use.",
+        "A loss that ignores confidence can make a slightly-wrong class look cheap. Cross-entropy punishes a near-zero probability on the true class without requiring you to threshold first. You still report accuracy or dollar cost separately; those may not be the number the slope followed."
+      ],
+      "example": "True class is cat. Softmax emitted (0.7, 0.2, 0.1) on cat, dog, bird. Cross-entropy is −log 0.7. If the model had emitted 0.01 on cat, the same wrong ranking is now a much larger number — the loss saw the confidence, not just the argmax.",
+      "whyItMatters": "People train classifiers on a leftover squared error. Name the distribution, then name the loss that matches it.",
+      "quiz": [
+        {
+          "id": "ml-ce10-1",
+          "stem": "When the model output is a distribution over classes, the usual loss is:",
+          "correctAnswer": "Cross-entropy: minus the log probability of the true class",
+          "distractors": [
+            { "text": "Squared error on the raw scores, ignoring the distribution", "kind": "nearby", "rationale": "Squared error on scores is a different job. The output here is a distribution." },
+            { "text": "Accuracy, because the slope of accuracy is always defined", "kind": "misapplied", "rationale": "Accuracy is a report, not a slope-friendly loss." },
+            { "text": "A constant baseline that always guesses the majority class", "kind": "subtle", "rationale": "A baseline is a competitor, not the loss on a distribution." }
+          ],
+          "correctExplanation": "−log p_true. That is the number you minimize on a distribution-valued output.",
+          "objectiveIds": ["Use cross-entropy when the output is a distribution over classes"],
+          "prerequisiteConceptIds": ["ml-softmax", "ml-loss"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-ce10-2",
+          "stem": "Cross-entropy plus softmax is the usual classification pair because:",
+          "correctAnswer": "The output is a distribution, and the slope on the scores is predicted minus one-hot",
+          "distractors": [
+            { "text": "Softmax already is the loss, so cross-entropy is redundant", "kind": "reversed", "rationale": "Softmax is the output map. Cross-entropy is the number that says how wrong." },
+            { "text": "Squared error on one-hot vectors has an even simpler undefined slope", "kind": "nearby", "rationale": "Squared error is legal and different. The pair is usual because the gradient is p − y." },
+            { "text": "Accuracy plus a majority baseline replaces any need for a loss", "kind": "misapplied", "rationale": "You still need a number the search can follow." }
+          ],
+          "correctExplanation": "Distribution out, −log p_true in. The score-gradient is p minus the target.",
+          "objectiveIds": ["State why cross-entropy plus softmax is the usual classification pair"],
+          "prerequisiteConceptIds": ["ml-softmax", "ml-loss"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-ce10-3",
+          "stem": "True class cat, softmax (0.01, 0.90, 0.09). Cross-entropy is large because:",
+          "correctAnswer": "The probability on the true class is near zero, and −log of that is large",
+          "distractors": [
+            { "text": "The argmax is already cat, so the loss must be zero", "kind": "reversed", "rationale": "Argmax here is not cat. Even if it were, a tiny p_true is still expensive." },
+            { "text": "Softmax forbids a loss until every coordinate equals one", "kind": "misconception", "rationale": "A distribution already sums to one. The loss still applies." },
+            { "text": "Cross-entropy only runs on two-class logistic problems", "kind": "nearby", "rationale": "The multiclass case is exactly this pair." }
+          ],
+          "correctExplanation": "−log 0.01 is large. The loss saw a confident miss, not a close call.",
+          "objectiveIds": ["Use cross-entropy when the output is a distribution over classes"],
+          "prerequisiteConceptIds": ["ml-softmax", "ml-loss"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-depth-10",
+      "conceptId": "ml-depth",
+      "title": "Why you stack the maps",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-mlp"],
+      "goDeeper": "ml-backprop",
+      "explanation": [
+        "Depth is composition of simple functions, not a fashion for more matrices. Each layer is a cheap nonlinearity after an affine map. Stacking them builds a hierarchical feature: first local combinations, then combinations of those. One wide shallow map can approximate many functions, but it spends width as a lookup table.",
+        "A classic example is parity of many bits, or a deeply nested decision: a deep net can reuse intermediate predicates, while a shallow net must enumerate combinations with far more hidden units. Circuit arguments make the same claim. The MLP lesson gave you the composition; this one names why you stack rather than fatten.",
+        "Depth is not free. Each extra map is another product in a later gradient, and another chance to waste capacity on a transform nobody asked for. The argument here is representational: some functions are cheap to compose and expensive to write as one wide layer."
+      ],
+      "example": "XOR of many input bits. A deep stack can compute pairwise XORs, then XOR those results. A single hidden layer must devote a unit to many combinations, so the width blows up with the number of bits while the deep version reuses the pairwise maps.",
+      "whyItMatters": "If depth is only 'more layers on the slide', you will not know which functions a shallow fat net is paying for twice.",
+      "quiz": [
+        {
+          "id": "ml-dep10-1",
+          "stem": "Depth in a network is best explained as:",
+          "correctAnswer": "Composing simple functions, rather than writing one wide shallow map",
+          "distractors": [
+            { "text": "Adding width until every training row has its own hidden unit", "kind": "nearby", "rationale": "That is a fat shallow lookup, not composition." },
+            { "text": "Deleting nonlinearities so the stack collapses to one line", "kind": "reversed", "rationale": "Without a bend, depth was already fake. This lesson assumes the bends." },
+            { "text": "Replacing the loss with a majority-class baseline", "kind": "misapplied", "rationale": "The baseline is not depth." }
+          ],
+          "correctExplanation": "Stack cheap maps. Do not buy a giant lookup and call it depth.",
+          "objectiveIds": ["Explain depth as composing simple functions instead of one wide shallow map"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-dep10-2",
+          "stem": "A function a shallow net typically needs far more width to match is:",
+          "correctAnswer": "Parity of many bits, which a deep stack can build from reused pairwise maps",
+          "distractors": [
+            { "text": "A single weighted sum with no nonlinearity at all", "kind": "reversed", "rationale": "That function is already one line. Width does not enter." },
+            { "text": "The identity map from one coordinate to itself", "kind": "nearby", "rationale": "Identity is cheap for both shallow and deep maps." },
+            { "text": "A constant predictor that always emits the training mean", "kind": "misapplied", "rationale": "A constant is a baseline, not a nested predicate." }
+          ],
+          "correctExplanation": "Parity (or a nested decision) reuses intermediate predicates. Shallow width enumerates them.",
+          "objectiveIds": ["Name a function that a shallow net needs far more width to match"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-dep10-3",
+          "stem": "A one-hidden-layer net asked to compute nested pairwise XORs will typically:",
+          "correctAnswer": "Spend far more hidden units enumerating combinations the deep stack reused",
+          "distractors": [
+            { "text": "Need fewer units than the deep stack, because shallow is always cheaper", "kind": "reversed", "rationale": "The representational claim is the opposite for nested functions." },
+            { "text": "Refuse to run, because an MLP cannot take a binary vector", "kind": "misapplied", "rationale": "The forward pass is defined. The cost is width, not legality." },
+            { "text": "Collapse to logistic regression even with a nonlinearity present", "kind": "subtle", "rationale": "A wide shallow net is still nonlinear. It is just an expensive table." }
+          ],
+          "correctExplanation": "Nested XOR is cheap to compose and expensive to write as one wide hidden layer.",
+          "objectiveIds": ["Name a function that a shallow net needs far more width to match"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

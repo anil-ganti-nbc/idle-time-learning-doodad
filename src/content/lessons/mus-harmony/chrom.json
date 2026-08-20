@@ -1,0 +1,482 @@
+{
+  "courseId": "mus-harmony",
+  "moduleId": "mus-h-chrom",
+  "lessons": [
+    {
+      "id": "mus-secondary-10",
+      "conceptId": "mus-secondary",
+      "title": "Secondary dominants",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-function"
+      ],
+      "goDeeper": "mus-modulation",
+      "explanation": [
+        "Treat another chord as a brief tonic by giving it its own dominant. V/V in C is D major (or D7): the dominant of G, which is V. The F# is the leading tone of G, not a decorative sharp. MIT 21M.302 calls that tonicization: a visit, not a move of house.",
+        "Write a V/V that actually tonicizes. The next chord should be the one you treated as tonic — V, or a deceptive stand-in for it. A random D major that goes to F, or to E5, did not tonicize G. It was just a major triad. The accidental has to pay the visit.",
+        "Riffs reuse this as a chromatic shove into a goal chord. D-D7-G-C is still the grammar. A metal cell that throws a C# in to lean on D, then stays on D, is tonicizing D. If the C# never aims at a landing, it is not V of anything. Name the target or drop the label."
+      ],
+      "example": "In C: D7 to G to C. F# leaned to G; G then did its dominant job toward C. Swap the G for an E5 that never arrives and you wrote a major chord, not a V/V.",
+      "whyItMatters": "Secondary dominants are how chromaticism gets a job. Without a target, the sharp is only paint.",
+      "quiz": [
+        {
+          "id": "mus-sec10-1",
+          "stem": "A secondary dominant does which temporary job in a key?",
+          "correctAnswer": "Treats another chord as a tonic by giving that chord its own dominant",
+          "distractors": [
+            {"text": "Replaces the real tonic forever, which is already a modulation", "kind": "reversed", "rationale": "Temporary is the point. A stay would be modulation."},
+            {"text": "Deletes all accidentals so every triad must remain diatonic", "kind": "nearby", "rationale": "The accidental is how the borrowed dominant is spelled."},
+            {"text": "Names a power chord, because V/V is defined as a fifth without a third", "kind": "misapplied", "rationale": "V/V is a function label for a tonicizing dominant, not a dyad."}
+          ],
+          "correctExplanation": "Someone else's dominant, briefly. That is tonicization.",
+          "objectiveIds": [
+            "Temporarily treat another chord as a tonic with its own dominant"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-sec10-2",
+          "stem": "In C major, which spelling actually tonicizes V rather than adding a random major?",
+          "correctAnswer": "D-F#-A-(C) going to G: F# is the leading tone of the target G",
+          "distractors": [
+            {"text": "D-F-A going to E, with no F# and no G landing to confirm the visit", "kind": "nearby", "rationale": "No leading tone of G, and no G. That D minor/major did not tonicize V."},
+            {"text": "E-G#-B going to C, which would be V/vi at best, not V/V", "kind": "reversed", "rationale": "G# leans to A, not to G. Different target."},
+            {"text": "B-D-F with no accidental, because vii° already counts as V/V", "kind": "misapplied", "rationale": "vii° in C tonicizes C, not G. V/V needs the F# lean into G."}
+          ],
+          "correctExplanation": "F# toward G, then G. That is a V/V that paid the visit.",
+          "objectiveIds": [
+            "Write a V/V that actually tonicizes, not a random major chord"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-sec10-3",
+          "stem": "A riff throws C# then never lands on D. Diagnose the C# as:",
+          "correctAnswer": "Not a V/V of D unless some D (or a stand-in) actually receives the lean",
+          "distractors": [
+            {"text": "Automatically V/V, because any sharp is a secondary dominant by law", "kind": "misconception", "rationale": "The label needs a target. A stray sharp is not V of something."},
+            {"text": "A modulation to C#, because hanging accidentals always move house", "kind": "nearby", "rationale": "Hanging is not a new tonic. Modulation has to stay in a new key."},
+            {"text": "A plagal cadence, which is how secondary dominants are required to resolve", "kind": "misapplied", "rationale": "Plagal is IV-I. Secondary dominants resolve as dominants."}
+          ],
+          "correctExplanation": "No landing, no tonicization. Do not print V/D on a stray C#.",
+          "objectiveIds": [
+            "Write a V/V that actually tonicizes, not a random major chord"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-mixture-10",
+      "conceptId": "mus-mixture",
+      "title": "Borrowed from the parallel",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-function",
+        "mus-modes"
+      ],
+      "goDeeper": "mus-chromatic",
+      "explanation": [
+        "Borrow a chord from the parallel mode. In C major, take iv (F minor), bVI (Ab major), bIII (Eb), or bVII (Bb) from C minor. The tonic letter stays C. The color comes from the borrowed third or sixth. MIT 21M.302 treats that as mixture, not as a new key.",
+        "Predict the color. bVI in major is the dark slide a third below tonic: Ab in C, often as a chorus lift that feels heavier, not brighter. Minor iv under a major melody is the same borrow with a smaller footprint. Neither chord is a mistake that needs correcting back to IV or vi.",
+        "Riffs already do this. A major-key verse that hits Ab and Bb before C is mixing, not failing diatonicism. If the piece then stays in Ab, you have modulated. Mixture comes home. Name the borrow, name the return, and leave the color on the tape."
+      ],
+      "example": "C major verse, chorus on Ab-Bb-C. Ab is bVI, Bb is bVII, C is still tonic. Same band's bridge that cadences in Ab and stays there is no longer mixture.",
+      "whyItMatters": "Without mixture as a name, every borrowed iv looks like a wrong chord or a fake modulation.",
+      "quiz": [
+        {
+          "id": "mus-mix10-1",
+          "stem": "Modal mixture is the move of borrowing a chord from where?",
+          "correctAnswer": "The parallel mode: same tonic, the other major or minor collection",
+          "distractors": [
+            {"text": "A random distant key, which is already a modulation of tonic", "kind": "reversed", "rationale": "Parallel keeps the tonic letter. A new tonic would be modulation."},
+            {"text": "The next species exercise, which supplies mixture as a cantus rule", "kind": "nearby", "rationale": "Mixture is a harmonic borrow, not a counterpoint species."},
+            {"text": "The power-chord dictionary, because only dyads can be borrowed", "kind": "misapplied", "rationale": "You can borrow full triads and sevenths from the parallel."}
+          ],
+          "correctExplanation": "Same tonic, other mode. That is the borrow.",
+          "objectiveIds": [
+            "Borrow a chord from the parallel mode"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function",
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-mix10-2",
+          "stem": "In C major, a bVI or a minor iv is predicted to color the phrase how?",
+          "correctAnswer": "Darker borrowed color from C minor, tonic still C, not a new home",
+          "distractors": [
+            {"text": "Brighter, because any accidental raises the mood of the major key", "kind": "reversed", "rationale": "bVI and iv lower pitches. The usual color is darker, not brighter."},
+            {"text": "As an automatic V/V, because Ab always tonicizes G in major", "kind": "nearby", "rationale": "Ab as bVI is a borrowed triad, not by itself V of G."},
+            {"text": "As silence, because mixture is defined as deleting the tonic letter", "kind": "misapplied", "rationale": "The tonic stays. The borrowed chord is extra color on it."}
+          ],
+          "correctExplanation": "Ab or Fm in C major: parallel minor color, still C.",
+          "objectiveIds": [
+            "Predict the color of a bVI or a minor iv in a major key"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function",
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-mix10-3",
+          "stem": "A chorus in G major hits Eb then C minor then G. The honest label is:",
+          "correctAnswer": "Mixture: bVI and iv borrowed from G minor, then a return to G",
+          "distractors": [
+            {"text": "Modulation to Eb, because the first borrowed chord always becomes tonic", "kind": "nearby", "rationale": "A visit to Eb color is not a stay in Eb unless the tonic actually moves."},
+            {"text": "A failed G major that must be rewritten as diatonic IV and vi", "kind": "misconception", "rationale": "The borrow is the device. 'Fixing' it deletes the color."},
+            {"text": "Secondary dominants of G, which is what every flat triad means", "kind": "misapplied", "rationale": "Eb and Cm are mixture from G minor, not V/V machinery."}
+          ],
+          "correctExplanation": "Borrowed from the parallel, then home. Mixture, not a new key.",
+          "objectiveIds": [
+            "Borrow a chord from the parallel mode"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-function",
+            "mus-modes"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "mus-modulation-10",
+      "conceptId": "mus-modulation",
+      "title": "Changing tonic for good",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-secondary",
+        "mus-key"
+      ],
+      "goDeeper": "mus-chromatic",
+      "explanation": [
+        "Change tonic and mean it. A pivot chord belongs to both keys and lets you reassign jobs. A direct shift just starts writing in the new key. Either way, cadences and later phrases treat the new letter as home. MIT 21M.302 wants that stay, not a single chromatic shove.",
+        "Distinguish tonicization from modulation by what happens after the visit. V/V to V to I came home. A passage that cadences in G, writes new phrases in G, and does not treat C as tonic anymore has modulated. One secondary dominant is a visit. A stay is a move of house.",
+        "Riffs modulate too, often by direct shift: a half-step bump of the whole cell, or a chorus that lives a minor third away and never comes back. Do not invent a pivot that is not there. Do not call a four-bar tonicization a new key just to make the worksheet look chromatic."
+      ],
+      "example": "Song in C: D7-G-C is tonicization of G, then home. Later the solo cadences in E minor and the next verse stays in E minor. That is a modulation. The D7 was not.",
+      "whyItMatters": "If visit and stay use one word, you will rekey a song every time a secondary dominant winks.",
+      "quiz": [
+        {
+          "id": "mus-mod10-1",
+          "stem": "To modulate in the sense of this lesson you must:",
+          "correctAnswer": "Change tonic and mean it, using a pivot or a direct shift that stays",
+          "distractors": [
+            {"text": "Add one sharp as a secondary dominant, then cadence back in the old tonic", "kind": "reversed", "rationale": "That is tonicization coming home, not a stay in a new key."},
+            {"text": "Borrow iv once, which is already defined as leaving the tonic forever", "kind": "nearby", "rationale": "Mixture comes home. Modulation is the stay."},
+            {"text": "Delete the bass, because keys cannot change while a pedal is held", "kind": "misapplied", "rationale": "A pedal can sit under a key change. The tonic is the job, not the mute."}
+          ],
+          "correctExplanation": "New home, and later phrases treat it as home. Pivot or shove.",
+          "objectiveIds": [
+            "Change tonic and mean it, with a pivot or a direct shift"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-secondary",
+            "mus-key"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-mod10-2",
+          "stem": "V/V to V to I, versus a passage that cadences in V and stays there, differs how?",
+          "correctAnswer": "The first is a tonicization that comes home; the second is a modulation that stays",
+          "distractors": [
+            {"text": "They are two names for mixture, which never involves a dominant at all", "kind": "misapplied", "rationale": "Mixture is a parallel borrow. This contrast is visit versus stay."},
+            {"text": "The first is already a modulation, because any F# rekeys the piece", "kind": "reversed", "rationale": "F# in V/V is a visit to V, paid off by returning to I."},
+            {"text": "The second is only a pedal, because staying on V cannot be a tonic", "kind": "nearby", "rationale": "If phrases treat V's letter as home, that letter is the new tonic."}
+          ],
+          "correctExplanation": "Come home versus stay. That is tonicization versus modulation.",
+          "objectiveIds": [
+            "Distinguish a tonicization that comes home from a modulation that stays"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-secondary",
+            "mus-key"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "mus-mod10-3",
+          "stem": "A chorus bumps the whole riff up a minor third and the rest of the song lives there. Diagnose:",
+          "correctAnswer": "A direct-shift modulation: new tonic, meant, with no pivot required",
+          "distractors": [
+            {"text": "Mixture, because a minor third is always a borrowed bIII that must return", "kind": "nearby", "rationale": "If it never returns, the bIII color became the new home."},
+            {"text": "A failed V/V, which is the only legal way chromatic music may move", "kind": "misconception", "rationale": "Direct shift is a legal modulation. It does not owe a secondary dominant."},
+            {"text": "Still the old key, because riffs are forbidden from changing tonic", "kind": "reversed", "rationale": "Riffs modulate when later phrases treat the new letter as home."}
+          ],
+          "correctExplanation": "The song stayed in the new letter. That is modulation, pivot or not.",
+          "objectiveIds": [
+            "Change tonic and mean it, with a pivot or a direct shift"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-secondary",
+            "mus-key"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "mus-chromatic-10",
+      "conceptId": "mus-chromatic",
+      "title": "Outside pitches with jobs",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-mixture"
+      ],
+      "goDeeper": "mus-neapolitan",
+      "explanation": [
+        "Give an outside pitch a job: approach, color, or new tonic. Approach is a chromatic step into a chord tone. Color is mixture or a chromatic mediant that still sits in the old key. New tonic is modulation. MIT 21M.302 wants the job named before anyone says 'color' as a shrug.",
+        "Rewrite a chromatic line that is only filling space. If the extra letters do not approach, do not color a stack, and do not aim at a stay, they are filler. Keep one job per letter. A walk C-C#-D is approach. Ab in C major as bVI is color. A cadence in E that stays is a new tonic.",
+        "Heavy riffs reuse all three jobs, often in one verse. A chromatic pickup into a power chord is approach. A borrowed bVI wall is color. A chorus that never returns is a new tonic. Do not flatten those into one word. The outside pitch still has to work for a living."
+      ],
+      "example": "Fill: E-F-F#-G as a guitar run into G5 — F and F# approach. Color: the next chord is C minor in E major. New tonic: the bridge cadences in G and the outro stays there.",
+      "whyItMatters": "Calling every accidental 'color' is how chromaticism becomes weather instead of voice leading.",
+      "quiz": [
+        {
+          "id": "mus-chr10-1",
+          "stem": "An outside pitch in this lesson should be given which kind of job?",
+          "correctAnswer": "Approach a chord tone, color the present key, or become a new tonic",
+          "distractors": [
+            {"text": "Any job at random, because accidentals are exempt from function talk", "kind": "misconception", "rationale": "The point is to hire the pitch, not to waive analysis."},
+            {"text": "Only a rest, because pitches outside the key must not sound", "kind": "reversed", "rationale": "They sound. They need a job: approach, color, or new tonic."},
+            {"text": "Only a power chord, because chromatic letters cannot join triads", "kind": "misapplied", "rationale": "Outside pitches join lines and stacks constantly. Name the job."}
+          ],
+          "correctExplanation": "Three jobs. Approach, color, new tonic. Pick one.",
+          "objectiveIds": [
+            "Give an outside pitch a job: approach, color, or new tonic"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-mixture"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-chr10-2",
+          "stem": "A guitar fills a bar with C-Db-D-Eb-E and none of those letters aim at a stack. Diagnose:",
+          "correctAnswer": "Filler: rewrite so each chromatic letter approaches, colors, or rekeys",
+          "distractors": [
+            {"text": "Perfect mixture, because any run of flats is a borrowed parallel chord", "kind": "nearby", "rationale": "Mixture is a borrowed stack with a tonic that stays, not a shapeless run."},
+            {"text": "A modulation to Db, which every run that starts on C must perform", "kind": "reversed", "rationale": "A run is not a stay. Modulation needs a new home that later phrases keep."},
+            {"text": "Species first-species, which requires chromatic filling on every beat", "kind": "misapplied", "rationale": "First species is mostly diatonic consonance, not a chromatic dump."}
+          ],
+          "correctExplanation": "No approach, no color stack, no new tonic. Rewrite the filler.",
+          "objectiveIds": [
+            "Rewrite a chromatic line that is only filling space"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-mixture"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mus-chr10-3",
+          "stem": "F# as a pickup into G5, Ab as bVI in C, and a verse that stays in E after a cadence: assign jobs.",
+          "correctAnswer": "Approach, color, and new tonic — three different outside-pitch jobs",
+          "distractors": [
+            {"text": "All color, which is the only legal word for any accidental in a riff", "kind": "misconception", "rationale": "Color is one job. Approach and new tonic are the other two."},
+            {"text": "All V/V, because every sharp or flat is a secondary dominant of G", "kind": "nearby", "rationale": "Ab as bVI is mixture. A stay in E is modulation. Only some F#s tonicize."},
+            {"text": "All passing tones, because chromatic letters may only walk by step", "kind": "misapplied", "rationale": "Passing is one approach path. Color chords and new tonics are other jobs."}
+          ],
+          "correctExplanation": "Pickup approaches. bVI colors. Stay rekeys. Three jobs, three labels.",
+          "objectiveIds": [
+            "Give an outside pitch a job: approach, color, or new tonic"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-mixture"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "mus-neapolitan-10",
+      "conceptId": "mus-neapolitan",
+      "title": "Lowered second as a color",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": [
+        "mus-chromatic"
+      ],
+      "goDeeper": "mus-seq-harm",
+      "explanation": [
+        "Approach the dominant from the side. A Neapolitan is a major triad on the lowered second, often in first inversion (N6): in C, Db-F-Ab with F in the bass, going to G. An Italian augmented sixth (It+6) is typically Ab-C-F# in C, the outer gap an augmented sixth that wants to open to G-G.",
+        "Spell so the resolution is honest. Neapolitan: Db is the lowered 2, not C# (which would lean up as a leading tone). It+6: write Ab and F#, not G#, so the two letters can slide outward to G. MIT 21M.302 cares about those spellings because the lean is in the letters.",
+        "Treat both as color that later music can steal without the whole grammar. A riff that hits Db major before a G wall is using Neapolitan color even if no chorale inner voice is present. If there is no dominant to approach, say so: then Db is just a neighboring major, not N6."
+      ],
+      "example": "In C: F in the bass, Db and Ab above, then G-B-D. N6 to V. Same chorus later slams Db5 to C5 with no G: neighboring color, not a Neapolitan approach.",
+      "whyItMatters": "Wrong spelling hides the lean. Fake N6 labels hide that no dominant was ever approached.",
+      "quiz": [
+        {
+          "id": "mus-nea10-1",
+          "stem": "A Neapolitan or an Italian augmented sixth is used here to:",
+          "correctAnswer": "Approach the dominant from a lowered second or an augmented sixth",
+          "distractors": [
+            {"text": "Replace the tonic forever, which already names a modulation to bII", "kind": "reversed", "rationale": "These are predominants into V, not a new home by default."},
+            {"text": "Delete the fifth from every chord so only power chords remain", "kind": "misapplied", "rationale": "They are spelled triads or sixth-chords, not a ban on fifths."},
+            {"text": "Name any chromatic mediant, because all flat chords are Neapolitan", "kind": "nearby", "rationale": "Neapolitan is specifically bII. Mediants are a different relation."}
+          ],
+          "correctExplanation": "Side door into V. Lowered 2, or the augmented-sixth stretch.",
+          "objectiveIds": [
+            "Approach the dominant from a lowered second or an augmented sixth"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-chromatic"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-nea10-2",
+          "stem": "In C, which spelling of N6 or It+6 keeps the resolution honest?",
+          "correctAnswer": "Db-F-Ab (F in bass) to G, or Ab-C-F# opening outward to G-G",
+          "distractors": [
+            {"text": "C#-E-G# to G, using C# so the lowered second leans up as a leading tone", "kind": "reversed", "rationale": "C# would want D. Neapolitan is Db, a lowered 2 that is a color into V."},
+            {"text": "Ab-C-G# to G, writing G# instead of F# so both letters share a name", "kind": "nearby", "rationale": "G# would lean to A. The augmented sixth needs F# sliding to G."},
+            {"text": "D-F-Ab to C, which is ii diminished, not a side-door predominant", "kind": "misapplied", "rationale": "That stack does not approach V as N6 or It+6."}
+          ],
+          "correctExplanation": "Db not C#, F# not G#. The letters have to be able to lean into V.",
+          "objectiveIds": [
+            "Spell a Neapolitan or It+6 so the resolution is honest"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-chromatic"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "mus-nea10-3",
+          "stem": "A riff hits Db5 then C5 and never takes G. You should predict the label is:",
+          "correctAnswer": "Neighbor color, not N6, because no dominant was approached",
+          "distractors": [
+            {"text": "N6 anyway, because any Db in C major is Neapolitan by worksheet law", "kind": "misconception", "rationale": "N6 is a predominant into V. No V, no N6."},
+            {"text": "It+6, because power chords automatically spell augmented sixths", "kind": "nearby", "rationale": "A fifth-stack is not Ab-C-F#. Different object."},
+            {"text": "A modulation to G that the missing G still somehow confirms", "kind": "misapplied", "rationale": "You cannot confirm a dominant that never sounded."}
+          ],
+          "correctExplanation": "No V, no Neapolitan job. Db5-C5 is color next door.",
+          "objectiveIds": [
+            "Approach the dominant from a lowered second or an augmented sixth"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-chromatic"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "mus-seq-harm-10",
+      "conceptId": "mus-seq-harm",
+      "title": "Pattern that transposes itself",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "mus-progress"
+      ],
+      "goDeeper": "mus-chromatic",
+      "explanation": [
+        "Transpose a pattern so the sequence is the form. A two-chord cell, or a bass step plus a sixth, repeats at a fixed interval: down a second, down a fifth, up a step. The pattern is the story. MIT 21M.301/302 drills falling-fifth sequences because they walk function without a new idea every bar.",
+        "Predict where it must break to cadence. Sequences do not close; they carry. To cadence you stop transposing, take a real PD-D-T (or whatever close this music uses), and let a phrase end. If you sequence all the way into the double bar, you wrote a tunnel, not a close.",
+        "Riffs sequence constantly. A guitar cell that drops two frets three times is a sequence. It still has to break for a chorus landing. Do not force each transposing copy to be a new T-PD-D. The copy is the form. Save function talk for the break."
+      ],
+      "example": "C-Am-F-Dm-Bb-Gm, then stop: G-C. The copies fell by a step. The G-C is the break that cadences. Keep copying into Bb-Gm-Ab-Fm and you never land.",
+      "whyItMatters": "If the copy is treated as a new progression every bar, you will 'fix' the sequence and destroy the form.",
+      "quiz": [
+        {
+          "id": "mus-seq10-1",
+          "stem": "A harmonic sequence is formed when you do which operation to a cell?",
+          "correctAnswer": "Transpose the pattern so the copy-and-shift is the form itself",
+          "distractors": [
+            {"text": "Cadence after every bar so each copy is a closed authentic pair", "kind": "reversed", "rationale": "Cadence is what breaks a sequence. The copies carry, they do not close."},
+            {"text": "Delete the bass so only upper parts may repeat a shape", "kind": "nearby", "rationale": "Bass often carries the interval of transposition. Do not mute it."},
+            {"text": "Borrow one parallel chord and call that single borrow a sequence", "kind": "misapplied", "rationale": "Mixture is one borrow. Sequence is a transposed repetition."}
+          ],
+          "correctExplanation": "Copy the cell at a fixed interval. The copies are the form.",
+          "objectiveIds": [
+            "Transpose a pattern so the sequence is the form"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-progress"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mus-seq10-2",
+          "stem": "Where must a sequence break if the phrase is going to cadence?",
+          "correctAnswer": "Stop transposing, take a real close, and let the copies end",
+          "distractors": [
+            {"text": "Never: a true sequence is defined as cadencing on every copy", "kind": "reversed", "rationale": "Copies carry. Cadence is the break, not the repetition."},
+            {"text": "After exactly one bar, because sequences are illegal past a single cell", "kind": "nearby", "rationale": "Sequences can run several copies. They still have to break to close."},
+            {"text": "By inventing a V-I under each copy so function never has to stop", "kind": "misapplied", "rationale": "Pasting V-I on every copy hides the sequence and still may not close."}
+          ],
+          "correctExplanation": "Break the copy. Then cadence. The tunnel does not close itself.",
+          "objectiveIds": [
+            "Predict where a sequence must break to cadence"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-progress"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "mus-seq10-3",
+          "stem": "A riff drops a two-fret cell three times then slams a G5-C5 landing. Diagnose the G5-C5 as:",
+          "correctAnswer": "The break where the sequence stopped transposing so a close could happen",
+          "distractors": [
+            {"text": "Just another copy, because landings are forbidden to leave the pattern", "kind": "reversed", "rationale": "The landing is the break. That is how sequences cadence."},
+            {"text": "A modulation to a new tonic on every dropped copy of the cell", "kind": "nearby", "rationale": "Transposition of a cell is not automatically a key change."},
+            {"text": "A species error, because sequences may only be written in first species", "kind": "misapplied", "rationale": "Sequence is a harmonic form. Species is a line gym."}
+          ],
+          "correctExplanation": "Three copies, then a close. The G5-C5 is the predicted break.",
+          "objectiveIds": [
+            "Predict where a sequence must break to cadence"
+          ],
+          "prerequisiteConceptIds": [
+            "mus-progress"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

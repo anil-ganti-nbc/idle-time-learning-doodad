@@ -1,0 +1,397 @@
+{
+  "courseId": "semi-process",
+  "moduleId": "semi-p-front",
+  "lessons": [
+    {
+      "id": "semi-oxide-10",
+      "conceptId": "semi-oxide",
+      "title": "The oxide is grown from the wafer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-wafer"],
+      "goDeeper": "semi-cvd",
+      "diagram": "oxide-growth",
+      "explanation": [
+        "Thermal silicon dioxide is not painted on. Dry oxygen or water vapour at high temperature reacts with the silicon lattice. Silicon atoms leave the crystal and become part of the SiO2 network. About 44% of the final oxide thickness was silicon that used to be the wafer. The surface sinks as the film grows. A deposited film sits on top and does not consume the substrate that way.",
+        "Dry oxidation (O2) is slow and makes a denser film with a cleaner Si/SiO2 interface — the usual choice for a thin gate dielectric. Wet oxidation (H2O) is much faster and is how you grow a thick field oxide in a time a factory can afford. The water molecule supplies oxidant more readily; it also leaves a wetter, more hydroxylated film. Rate and quality trade. You do not pick 'oxide' as one button.",
+        "Because the oxidant must travel through oxide that already exists, thick films slow down. Thin films are limited by the surface reaction; thick films are limited by diffusion through the grown layer. That is why a process recipe quotes both temperature and whether the ambient is dry or wet, not just 'grow 20 nm'."
+      ],
+      "example": "A 500 nm field oxide grown wet at 1000 °C in a few hours would take an unusable time dry. The same furnace on a 10 nm dry gate oxide at lower temperature gives the interface a transistor can live with. Swap the ambients and you get either a slow thick film or a wet gate you did not want.",
+      "whyItMatters": "Later deposition, etch, and the gate stack all assume you know this film came out of the wafer. If you say 'oxide is deposited', you will misread every front-end cross-section.",
+      "quiz": [
+        {
+          "id": "ox10-1",
+          "stem": "Thermal SiO2 differs from a deposited film mainly because:",
+          "correctAnswer": "It is grown by oxidizing the wafer, so silicon is consumed",
+          "distractors": [
+            { "text": "It arrives as a gas and sits on top without reacting", "kind": "reversed", "rationale": "That is closer to a deposited coating." },
+            { "text": "It can only form on copper", "kind": "subtle", "rationale": "Thermal SiO2 grows on silicon." },
+            { "text": "It is a photoresist that changes solubility in light", "kind": "misapplied", "rationale": "Resist is a later patterning film, not a grown oxide." }
+          ],
+          "correctExplanation": "The wafer is the silicon source. A deposited film brings its own atoms.",
+          "objectiveIds": ["Contrast growing SiO2 from the wafer with depositing a film onto it"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ox10-2",
+          "stem": "Choosing wet oxidation instead of dry, at the same temperature, typically:",
+          "correctAnswer": "Grows faster and makes a wetter, less ideal interface",
+          "distractors": [
+            { "text": "Stops all growth because water cannot oxidize silicon", "kind": "reversed", "rationale": "Water is the faster oxidant." },
+            { "text": "Consumes no silicon at all", "kind": "nearby", "rationale": "Wet or dry, the wafer is still the silicon source." },
+            { "text": "Turns the film into a metal barrier", "kind": "subtle", "rationale": "Barriers are later metallization layers." }
+          ],
+          "correctExplanation": "Wet for thick field oxides. Dry when the interface has to be a gate.",
+          "objectiveIds": ["Predict how dry versus wet oxidation changes rate and film quality"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ox10-3",
+          "stem": "After a thermal oxide is grown, the original silicon surface has:",
+          "correctAnswer": "Moved down, because part of the oxide thickness used to be silicon",
+          "distractors": [
+            { "text": "Stayed put, because oxide only stacks on top", "kind": "reversed", "rationale": "That is the deposited-film picture." },
+            { "text": "Turned into a grain boundary on purpose", "kind": "nearby", "rationale": "Oxidation does not add grains as its job." },
+            { "text": "Been replaced by a sputtered copper film", "kind": "subtle", "rationale": "No metal arrives in a dry or wet oxidant." }
+          ],
+          "correctExplanation": "Roughly 44% of the oxide thickness was wafer silicon. The surface sinks.",
+          "objectiveIds": ["Contrast growing SiO2 from the wafer with depositing a film onto it"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-oxide-20",
+      "conceptId": "semi-oxide",
+      "title": "Dry, wet, and the film that slows itself",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["semi-wafer"],
+      "goDeeper": "semi-cvd",
+      "diagram": "oxide-growth",
+      "explanation": [
+        "The ten-minute unit said the oxide is grown from the wafer. This one is the rate law that makes dry and wet different jobs. Oxidant dissolves at the outer surface, walks through already-grown SiO2, and reacts at the Si/SiO2 interface. When the film is thin, the walk is short and the surface reaction sets the rate — a linear regime. When the film is thick, the walk dominates — a parabolic regime. A recipe that ignores which regime it is in will miss thickness on one lot and overgrow the next.",
+        "Dry O2 has a smaller linear rate and a cleaner interface. Wet H2O has a much larger linear rate because the oxidant supply at the interface is richer. That is why field oxides are wet and thin gates are dry, not because someone prefers the word 'wet'. Orientation matters too: (111) oxidizes faster than (100). The (100) wafer you saw notched in the last module is partly a gate-interface choice.",
+        "Consumption is geometry, not trivia. If 44% of the oxide thickness came from silicon, a 200 nm oxide eats about 90 nm of Si. Isolation birds-beaks and later trench corners move because of this, not because the mask 'slipped'. A deposited oxide of the same thickness would leave the silicon surface where it was.",
+        "Chlorine in the oxidant and a post-oxidation anneal in N2 or Ar are how factories mop residual metals and reduce interface traps. They do not repeal Deal–Grove. They make the grown film something a MOSFET can sit under."
+      ],
+      "example": "A 15-minute dry oxidation at 900 °C might grow ~10 nm on (100) Si. The same time wet grows several times that and a worse interface. Extending the dry process to grow 500 nm would sit in the parabolic regime for hours the factory does not have — so the field oxide is a different ambient, not a longer click on the same recipe.",
+      "whyItMatters": "A thickness miss on a gate oxide is a threshold miss. A thickness miss on a field oxide is an isolation miss. Both are this rate law plus this ambient choice, not a generic 'oxidation step'.",
+      "quiz": [
+        {
+          "id": "ox20-1",
+          "stem": "A thick thermal oxide grows more slowly than a thin one mainly because:",
+          "correctAnswer": "Oxidant must diffuse through oxide that is already there",
+          "distractors": [
+            { "text": "Silicon runs out after the first monolayer", "kind": "reversed", "rationale": "The wafer is still there. The path got longer." },
+            { "text": "Wet ambients stop working on thick films", "kind": "nearby", "rationale": "Wet is how you grow thick films in a reasonable time." },
+            { "text": "The furnace cannot exceed room temperature for thick films", "kind": "subtle", "rationale": "Thick oxides are still grown hot." }
+          ],
+          "correctExplanation": "Linear when the reaction limits, parabolic when the walk through oxide limits.",
+          "objectiveIds": ["Predict how dry versus wet oxidation changes rate and film quality"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ox20-2",
+          "stem": "A process needs 10 nm of clean gate oxide and 400 nm of field oxide. The usual split is:",
+          "correctAnswer": "Dry for the thin gate, wet for the thick field",
+          "distractors": [
+            { "text": "Wet for both, because wet is always cleaner", "kind": "reversed", "rationale": "Wet is faster and wetter, not the gate-quality ambient." },
+            { "text": "Sputter both oxides from a copper target", "kind": "misapplied", "rationale": "Thermal oxide is grown from the wafer, not sputtered metal." },
+            { "text": "Skip the field oxide and grow only a dry monolayer", "kind": "nearby", "rationale": "A monolayer does not isolate neighbouring devices." }
+          ],
+          "correctExplanation": "Ambient is a quality-versus-rate knob, not a synonym for 'oxide'.",
+          "objectiveIds": ["Predict how dry versus wet oxidation changes rate and film quality"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ox20-3",
+          "stem": "A 200 nm thermal oxide next to a 200 nm deposited oxide of the same name differ because:",
+          "correctAnswer": "Only the thermal film consumed roughly 90 nm of the original silicon",
+          "distractors": [
+            { "text": "Both films consume the same silicon, so the surfaces match", "kind": "reversed", "rationale": "A deposited film brings its own atoms." },
+            { "text": "The deposited film must be grown in wet O2", "kind": "nearby", "rationale": "Deposition is not thermal oxidation." },
+            { "text": "Neither film can sit on single-crystal silicon", "kind": "subtle", "rationale": "Both can. They arrive by different physics." }
+          ],
+          "correctExplanation": "Grown versus deposited is a surface-motion fact, not a naming convention.",
+          "objectiveIds": ["Contrast growing SiO2 from the wafer with depositing a film onto it"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-diffusion-10",
+      "conceptId": "semi-diffusion",
+      "title": "A profile is time and temperature",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["semi-wafer"],
+      "goDeeper": "semi-implant",
+      "diagram": "dopant-profiles",
+      "explanation": [
+        "Dopant atoms do not stay where you drop them if the wafer is hot. They hop through the lattice. The hop rate is exponential in temperature. The resulting concentration versus depth is a profile: high where the source was, falling as you go in. Junction depth scales like the square root of diffusivity times time. Doubling time does not double depth. Raising temperature a little can do more than adding hours.",
+        "A deposited surface source — a doped glass, a gas ambient, a spun film — feeds atoms at the surface while it lasts. The profile is highest at the surface and tails inward. A drive-in step then turns the source off (or consumes it) and lets the already-present dopant walk deeper and flatten. The same atoms, two different shapes, because the boundary condition changed.",
+        "This is why a later hot step is never free. Any anneal, oxidation, or film growth that sees 900–1100 °C keeps moving a profile you thought you had finished. The next unit will place atoms with an accelerator so the starting shape is a buried peak. Diffusion is still how that peak will smear."
+      ],
+      "example": "A boron predeposition from a surface source for 30 minutes at 950 °C puts a shallow, surface-high profile. A following 60-minute drive-in at 1050 °C with no new source walks that boron deeper and lowers the peak. The dose is almost the same. The junction is not.",
+      "whyItMatters": "Every later implant, anneal, and integration argument is about this profile. If you only remember 'we doped it', you cannot predict what the next furnace does.",
+      "quiz": [
+        {
+          "id": "df10-1",
+          "stem": "A dopant profile is mainly a function of:",
+          "correctAnswer": "How long and how hot the atoms were allowed to hop",
+          "distractors": [
+            { "text": "The colour of the furnace lamps only", "kind": "subtle", "rationale": "Temperature matters as energy, not as interior design." },
+            { "text": "The mask chrome thickness alone", "kind": "nearby", "rationale": "A mask may define where, not the depth law." },
+            { "text": "Whether the wafer was single-crystal, which freezes all motion", "kind": "reversed", "rationale": "Atoms still hop in a crystal. That is diffusion." }
+          ],
+          "correctExplanation": "Depth ~ sqrt(Dt), and D is exponential in T. Time and temperature are the knobs.",
+          "objectiveIds": ["Describe a dopant profile as a function of time and temperature"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "df10-2",
+          "stem": "A drive-in after a surface-source predeposition typically:",
+          "correctAnswer": "Walks the same dose deeper and flattens the peak",
+          "distractors": [
+            { "text": "Adds a new surface source so the peak stays at the surface", "kind": "reversed", "rationale": "Drive-in turns the source off." },
+            { "text": "Removes every dopant atom from the wafer", "kind": "nearby", "rationale": "The atoms stay. They move." },
+            { "text": "Converts the profile into a deposited metal line", "kind": "subtle", "rationale": "This is still doping, not metallization." }
+          ],
+          "correctExplanation": "Same atoms, new boundary condition, new shape.",
+          "objectiveIds": ["Contrast a driven-in profile with a deposited surface source"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "df10-3",
+          "stem": "A profile that is highest at the surface and tails inward is the signature of:",
+          "correctAnswer": "A deposited or gaseous surface source that was still feeding atoms",
+          "distractors": [
+            { "text": "A buried implant peak with no later heat", "kind": "nearby", "rationale": "An implant peak sits below the surface. That is the next concept." },
+            { "text": "A drive-in that had no atoms left to move", "kind": "reversed", "rationale": "Drive-in redistributes atoms already present." },
+            { "text": "A polish scratch that dopes by abrasion", "kind": "subtle", "rationale": "A scratch is damage, not a dopant source." }
+          ],
+          "correctExplanation": "Surface source in, tail in. A buried peak is a different placement story.",
+          "objectiveIds": ["Contrast a driven-in profile with a deposited surface source"],
+          "prerequisiteConceptIds": ["semi-wafer"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "semi-implant-10",
+      "conceptId": "semi-implant",
+      "title": "Place first, then repair",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-diffusion"],
+      "goDeeper": "semi-anneal",
+      "diagram": "dopant-profiles",
+      "explanation": [
+        "Ion implantation puts dopant atoms where an accelerator aims them. A beam of ionized boron, phosphorus, or arsenic is sped up, scanned across the wafer, and stopped by collisions in the silicon. Dose is beam current times time over area — a count, not a furnace ambient. Energy sets how deep the peak sits. The peak is usually buried, not at the surface. That is the opposite shape from a surface-source predeposition.",
+        "Each ion knocks silicon atoms off lattice sites. At enough dose the near-surface can go amorphous. Those displaced atoms and the dopant sitting in interstitial sites do not dope. A junction drawn on a mask is not electrically there until a later anneal puts dopant on substitutional sites and heals the damage. Skip that heat and you have a damaged insulator with extra atoms in it.",
+        "Factories prefer implant over most furnace predeps because the dose and the depth are dials, and because a mask or oxide can stop the beam where you do not want dopant. The cost is that damage bill, and the later thermal budget that will start to smear the peak you just paid to place."
+      ],
+      "example": "A 20 keV boron implant into masked Si puts a peak tens of nanometres below the surface in the open windows and almost nothing under a thick oxide mask. The wafer at that moment is not yet a transistor: sheet resistance is high, and a diode would leak through damage. The anneal is the second half of the step.",
+      "whyItMatters": "Implant is why modern doping looks like a placement problem. If you treat it as 'a furnace with extra voltage', you will not see why the next unit exists.",
+      "quiz": [
+        {
+          "id": "im10-1",
+          "stem": "Ion implantation places dopant with an accelerator rather than a furnace so that:",
+          "correctAnswer": "Dose and a buried peak depth can be set independently of a surface source",
+          "distractors": [
+            { "text": "The atoms automatically sit on lattice sites on arrival", "kind": "reversed", "rationale": "Arrival damages the lattice. Activation is later." },
+            { "text": "The wafer never needs to be single crystal", "kind": "nearby", "rationale": "You still implant into the crystal you started with." },
+            { "text": "The beam grows a thermal oxide as it lands", "kind": "subtle", "rationale": "Implant is placement, not oxidation." }
+          ],
+          "correctExplanation": "Current × time is dose. Energy is depth. The furnace is no longer the source.",
+          "objectiveIds": ["Explain placing dopants with an accelerator rather than a furnace"],
+          "prerequisiteConceptIds": ["semi-diffusion"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "im10-2",
+          "stem": "If an implanted wafer is never annealed, the dopant typically:",
+          "correctAnswer": "Sits off-lattice in damaged silicon and does not dope as drawn",
+          "distractors": [
+            { "text": "Becomes fully active on impact", "kind": "reversed", "rationale": "Impact is the damage. Activity needs a lattice site." },
+            { "text": "Evaporates because beams are always hot enough", "kind": "nearby", "rationale": "The wafer is not a melt. The atoms stay, damaged." },
+            { "text": "Turns into a conformal CVD film", "kind": "subtle", "rationale": "No film is being grown from a gas here." }
+          ],
+          "correctExplanation": "Damage and interstitial dopant are not a junction. Heat has to finish the job.",
+          "objectiveIds": ["Predict what lattice damage does if it is not later annealed"],
+          "prerequisiteConceptIds": ["semi-diffusion"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "im10-3",
+          "stem": "Compared with a surface-source predeposition, an as-implanted profile is usually:",
+          "correctAnswer": "Peaked below the surface, then tailed by straggle",
+          "distractors": [
+            { "text": "Highest at the surface and empty underneath", "kind": "reversed", "rationale": "That is the surface-source shape." },
+            { "text": "A uniform concentration from face to back", "kind": "nearby", "rationale": "Energy sets a peak, not a slab through the wafer." },
+            { "text": "A metal line sitting on the oxide", "kind": "subtle", "rationale": "Implanted dopant is in the silicon, not a deposited wire." }
+          ],
+          "correctExplanation": "The beam stops inside. That is why the next unit can talk about a peak smearing.",
+          "objectiveIds": ["Explain placing dopants with an accelerator rather than a furnace"],
+          "prerequisiteConceptIds": ["semi-diffusion"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-implant-20",
+      "conceptId": "semi-implant",
+      "title": "Range, straggle, and the crystal as a corridor",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["semi-diffusion"],
+      "goDeeper": "semi-anneal",
+      "diagram": "dopant-profiles",
+      "explanation": [
+        "The ten-minute unit said an accelerator places a buried peak. This one is why that peak has a width, and why the crystal can betray you. Projected range Rp is the mean depth for a given ion and energy. Straggle is the spread around that mean — some ions stop short, some go long. Dose sets how many atoms; energy sets Rp. You cannot turn a 5 keV beam into a deep well by implanting longer. You only raise the peak.",
+        "If the beam lines up with a crystal channel, ions sail between rows and stop much deeper than the amorphous-target tables promised. Factories tilt and twist the wafer a few degrees so the beam sees a random-looking forest of atoms. A process that forgets the tilt on a (100) wafer gets a channeling tail into a region that was supposed to stay undoped.",
+        "A screen oxide on the surface is a second placement trick. It knocks the beam out of channel, captures sputtered contaminant, and can move the peak relative to the Si surface when you later strip it. It also means some dose dies in the oxide. Dose numbers on a recipe are what the implanter counted, not always what remains in the silicon after a strip.",
+        "Damage still owns the electrical story. A high-dose source/drain implant can amorphize a layer; the anneal must regrow that layer as crystal (solid-phase epitaxy) or you keep a defective sheet. The placement was precise. The lattice has not agreed yet."
+      ],
+      "example": "A 40 keV phosphorus implant with the wafer at 7° tilt puts Rp around a tenth of a micron and a manageable tail. The same recipe at 0° tilt on (100) Si grows a long channeling tail that punches through a shallow well. The dose meter on the tool read the same number both times.",
+      "whyItMatters": "An implant 'recipe' is energy, dose, tilt, and what sits on the surface. If you only remember the species, you cannot predict the profile the anneal will inherit.",
+      "quiz": [
+        {
+          "id": "im20-1",
+          "stem": "Projected range is set mainly by:",
+          "correctAnswer": "Ion species and beam energy, not by how long the beam stays on",
+          "distractors": [
+            { "text": "Only the implant time, the way a furnace predep is", "kind": "reversed", "rationale": "Time sets dose. Energy sets depth." },
+            { "text": "The colour of the photoresist alone", "kind": "nearby", "rationale": "A mask stops or passes the beam. It does not set Rp in silicon." },
+            { "text": "Whether the later metal is copper or aluminum", "kind": "subtle", "rationale": "Metals are a later module. Range is a stopping fact." }
+          ],
+          "correctExplanation": "Longer implant raises the peak. It does not walk the peak deeper.",
+          "objectiveIds": ["Explain placing dopants with an accelerator rather than a furnace"],
+          "prerequisiteConceptIds": ["semi-diffusion"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "im20-2",
+          "stem": "Implanting down a crystal channel without tilt typically:",
+          "correctAnswer": "Sends a tail of ions much deeper than the intended peak",
+          "distractors": [
+            { "text": "Stops every ion in the first monolayer", "kind": "reversed", "rationale": "Channeling is the opposite of a hard stop." },
+            { "text": "Grows a wet field oxide in the channel", "kind": "misapplied", "rationale": "No oxidant is being supplied." },
+            { "text": "Removes the need for any later anneal", "kind": "nearby", "rationale": "Channeling changes depth, not lattice damage." }
+          ],
+          "correctExplanation": "Rows of atoms are a corridor. Tilt is how you close it.",
+          "objectiveIds": ["Explain placing dopants with an accelerator rather than a furnace"],
+          "prerequisiteConceptIds": ["semi-diffusion"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "im20-3",
+          "stem": "After a high-dose implant that amorphized the surface, skipping the anneal leaves:",
+          "correctAnswer": "A defective, poorly conducting sheet instead of the drawn junction",
+          "distractors": [
+            { "text": "A perfect substitutional doping profile", "kind": "reversed", "rationale": "Substitutional sites require the lattice to heal." },
+            { "text": "A conformal metal barrier on the oxide", "kind": "subtle", "rationale": "No metal was deposited." },
+            { "text": "A cleaner particle count than a wet clean", "kind": "nearby", "rationale": "Implant is not a clean." }
+          ],
+          "correctExplanation": "Placement happened. Electrical activity did not. That is the next unit.",
+          "objectiveIds": ["Predict what lattice damage does if it is not later annealed"],
+          "prerequisiteConceptIds": ["semi-diffusion"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "semi-anneal-10",
+      "conceptId": "semi-anneal",
+      "title": "Heat until it dopes, not until it walks away",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-implant"],
+      "goDeeper": "semi-well",
+      "explanation": [
+        "An implanted atom dopes only when it occupies a lattice site and the surrounding damage no longer traps every carrier. That takes heat. The anneal is not a courtesy bake. It is the step that turns a damaged placement into a junction. Until then, sheet resistance is a lie and a diode is a leak.",
+        "The same heat that activates also diffuses. Thermal budget is the integral of how much hopping you allowed — roughly how large Dt became across every hot step after the implant. A long furnace anneal heals thoroughly and smears the peak. A short rapid thermal spike can activate with less motion. Neither is free. Under-anneal leaves damage. Over-anneal walks the junction into a place the mask did not draw.",
+        "Every later oxidation or film growth spends more of that budget. Integration will treat this as a law: a high-temperature step after a shallow implant is how you wreck a profile you already paid for. The anneal is the first time you spend the budget on purpose."
+      ],
+      "example": "A shallow boron extension implanted at low energy needs to be active but stay short. A 1000 °C spike for a few seconds activates most of the dose. A 30-minute 1000 °C furnace tube activates it too — and the junction is now a much deeper diffusion that punches through the intended channel.",
+      "whyItMatters": "Activation and diffusion share a knob. If you only remember 'we annealed it', you will not see why later integration is afraid of furnaces.",
+      "quiz": [
+        {
+          "id": "an10-1",
+          "stem": "Implanted dopant is not electrically active until an anneal because:",
+          "correctAnswer": "The atoms are off-lattice and the crystal is still damaged",
+          "distractors": [
+            { "text": "The accelerator removes the atoms after it counts them", "kind": "reversed", "rationale": "The atoms are in the wafer. They are just not doping yet." },
+            { "text": "Heat is only used to grow a field oxide", "kind": "nearby", "rationale": "Oxidation is a different use of a furnace." },
+            { "text": "Dopants only work if they stay interstitial forever", "kind": "subtle", "rationale": "Interstitials are the problem. Substitutional sites are the goal." }
+          ],
+          "correctExplanation": "A lattice site plus a healed neighbourhood is what 'dopes' means.",
+          "objectiveIds": ["Explain why implanted dopant is not electrically active until the lattice heals"],
+          "prerequisiteConceptIds": ["semi-implant"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "an10-2",
+          "stem": "Thermal budget is the trade-off an anneal spends because:",
+          "correctAnswer": "The same heat that activates also lets the profile diffuse",
+          "distractors": [
+            { "text": "Heat has no effect on already-implanted atoms", "kind": "reversed", "rationale": "That would make the anneal pointless and the smear impossible." },
+            { "text": "Budget only counts the cost of the photoresist", "kind": "subtle", "rationale": "This budget is Dt, not money for resist." },
+            { "text": "A longer anneal always shrinks the junction", "kind": "nearby", "rationale": "Longer heat walks junctions deeper, not shallower." }
+          ],
+          "correctExplanation": "Activate enough, smear little. That is the knob, not two separate knobs.",
+          "objectiveIds": ["Name the thermal-budget trade-off an anneal spends"],
+          "prerequisiteConceptIds": ["semi-implant"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "an10-3",
+          "stem": "Replacing a short spike anneal with a long furnace soak at the same peak temperature typically:",
+          "correctAnswer": "Heals more thoroughly and walks the junction deeper",
+          "distractors": [
+            { "text": "Leaves the profile untouched because temperature matches", "kind": "reversed", "rationale": "Time is part of Dt." },
+            { "text": "Removes the implant dose from the wafer", "kind": "nearby", "rationale": "The dose stays. It moves." },
+            { "text": "Converts the dopant into a sputtered barrier", "kind": "subtle", "rationale": "No metal is being thrown at the wafer." }
+          ],
+          "correctExplanation": "Same T, more t, more hop. Activation and smear both rise.",
+          "objectiveIds": ["Name the thermal-budget trade-off an anneal spends"],
+          "prerequisiteConceptIds": ["semi-implant"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

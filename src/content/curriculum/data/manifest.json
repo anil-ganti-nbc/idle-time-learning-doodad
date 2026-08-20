@@ -1,0 +1,32 @@
+{
+  "courses": [
+    "cpu-foundations",
+    "cpu-microarch",
+    "arch-gpu",
+    "semi-process",
+    "semi-litho",
+    "semi-leading",
+    "os-foundations",
+    "os-concurrency",
+    "os-storage",
+    "net-foundations",
+    "net-transport",
+    "net-internet",
+    "cmp-frontend",
+    "cmp-ir",
+    "cmp-backend",
+    "ml-foundations",
+    "ml-neural",
+    "ml-transformers",
+    "horo-foundations",
+    "horo-regulation",
+    "horo-complications",
+    "mus-foundations",
+    "mus-harmony",
+    "mus-heavy",
+    "dm-history",
+    "dm-construction",
+    "dm-advanced"
+  ],
+  "generatedAt": "2026-08-19T14:47:16.940Z"
+}

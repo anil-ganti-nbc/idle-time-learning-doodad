@@ -23,6 +23,7 @@ export const provenanceSchema = z.object({
   links: z.array(z.string()).optional(),
   sourceExcerpt: z.string().optional(),
   notes: z.string().optional(),
+  cacheKey: z.string().optional(),
 });
 
 const legacySourceSchema = z.object({
@@ -75,6 +76,90 @@ export const conceptFileSchema = z.object({
   summary: z.string().min(1),
 });
 
+export const generatedQuizItemSchema = z.union([
+  quizQuestionSchema,
+  z.object({
+    id: z.string().min(1),
+    prompt: z.string().min(8),
+    correct: z.string().min(1),
+    distractors: z.tuple([
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+    ]),
+    explanation: z.string().min(8),
+    cognitiveType: z
+      .enum([
+        "recognize",
+        "distinguish",
+        "identify",
+        "apply",
+        "predict",
+        "trace",
+        "compare",
+        "diagnose",
+        "integrate",
+        "tradeoff",
+      ])
+      .optional(),
+    objectiveIds: z.array(z.string()).optional(),
+    prerequisiteConceptIds: z.array(z.string()).optional(),
+    difficultyTier: z
+      .union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)])
+      .optional(),
+  }),
+  z.object({
+    id: z.string().min(1),
+    stem: z.string().min(8),
+    correctAnswer: z.string().min(1),
+    distractors: z.tuple([
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+      z.object({
+        text: z.string().min(1),
+        kind: z.enum(["misconception", "nearby", "reversed", "misapplied", "subtle"]),
+        rationale: z.string().min(4),
+      }),
+    ]),
+    correctExplanation: z.string().min(8),
+    objectiveIds: z.array(z.string()).default([]),
+    prerequisiteConceptIds: z.array(z.string()).default([]),
+    difficultyTier: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]),
+    cognitiveType: z.enum([
+      "recognize",
+      "distinguish",
+      "identify",
+      "apply",
+      "predict",
+      "trace",
+      "compare",
+      "diagnose",
+      "integrate",
+      "tradeoff",
+    ]),
+  }),
+]);
+
 export const generatedLessonSchema = z.object({
   schema_version: z.literal(1).optional(),
   concept_id: z.string().min(1),
@@ -88,7 +173,7 @@ export const generatedLessonSchema = z.object({
   example: z.string().min(20),
   why_it_matters: z.string().min(20),
   diagram: z.string().nullable().optional(),
-  quiz: z.tuple([quizQuestionSchema, quizQuestionSchema, quizQuestionSchema]),
+  quiz: z.tuple([generatedQuizItemSchema, generatedQuizItemSchema, generatedQuizItemSchema]),
   go_deeper: z.array(z.string()).optional(),
 });
 
@@ -98,7 +183,7 @@ export const generatedExplainSchema = z.object({
 });
 
 export const generatedQuizSchema = z.object({
-  quiz: z.tuple([quizQuestionSchema, quizQuestionSchema, quizQuestionSchema]),
+  quiz: z.tuple([generatedQuizItemSchema, generatedQuizItemSchema, generatedQuizItemSchema]),
 });
 
 export const generatedPathSchema = z.object({
@@ -120,6 +205,31 @@ export const generatedPathSchema = z.object({
   sequence: z.array(z.string()).min(2),
 });
 
+export const draftLessonFileSchema = z.object({
+  id: z.string().min(1),
+  conceptId: z.string().min(1),
+  title: z.string().min(4),
+  durationMin: z.union([z.literal(5), z.literal(10), z.literal(20), z.literal(30)]),
+  effort: z.enum(["light", "normal", "deep"]),
+  level: z.enum(["intro", "core", "journalist"]),
+  prerequisites: z.array(z.string()),
+  goDeeper: z.string().optional(),
+  diagram: z.string().nullable().optional(),
+  explanation: z.array(z.string().min(20)).min(1),
+  example: z.string().min(20),
+  whyItMatters: z.string().min(20),
+  quiz: z.tuple([generatedQuizItemSchema, generatedQuizItemSchema, generatedQuizItemSchema]),
+  source: z.union([provenanceSchema, legacySourceSchema]).optional(),
+});
+
+export const lessonModuleFileSchema = z.object({
+  courseId: z.string().min(1),
+  moduleId: z.string().min(1),
+  lessons: z.array(draftLessonFileSchema).min(1),
+});
+
+export type DraftLessonFile = z.infer<typeof draftLessonFileSchema>;
+export type LessonModuleFile = z.infer<typeof lessonModuleFileSchema>;
 export type GeneratedLesson = z.infer<typeof generatedLessonSchema>;
 export type GeneratedExplain = z.infer<typeof generatedExplainSchema>;
 export type GeneratedQuiz = z.infer<typeof generatedQuizSchema>;

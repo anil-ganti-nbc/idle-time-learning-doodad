@@ -1,0 +1,513 @@
+{
+  "id": "net-foundations",
+  "title": "Networking Foundations",
+  "categoryId": "networking",
+  "description": "Packets, layers as contracts, Ethernet, IP, and the socket a program actually sees. Routing politics wait.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs144",
+      "title": "Stanford CS144",
+      "url": "https://web.stanford.edu/class/cs144/",
+      "kind": "syllabus",
+      "notes": "Packets and a reliable byte stream before BGP. Layers as implementation contracts."
+    },
+    {
+      "id": "saltzer-e2e",
+      "title": "End-to-end arguments in system design",
+      "url": "https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf",
+      "kind": "notes",
+      "notes": "Functions that only the endpoints can implement correctly."
+    },
+    {
+      "id": "rfc791",
+      "title": "Internet Protocol",
+      "url": "https://www.rfc-editor.org/rfc/rfc791",
+      "kind": "notes",
+      "notes": "IPv4 addressing, TTL, fragmentation. Mechanism, not RFC trivia."
+    },
+    {
+      "id": "rfc1034",
+      "title": "Domain Names — Concepts and Facilities",
+      "url": "https://www.rfc-editor.org/rfc/rfc1034",
+      "kind": "notes",
+      "notes": "Names that resolve to addresses. The system depth waits."
+    }
+  ],
+  "modules": [
+    {
+      "id": "net-f-pack",
+      "title": "Packets and layers",
+      "blurb": "Why we slice the problem.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "net-stack",
+        "net-packet"
+      ],
+      "learningObjectives": [
+        "Treat layers as contracts, not a morality play",
+        "Treat a packet as a header plus a payload that can be lost alone"
+      ]
+    },
+    {
+      "id": "net-f-link",
+      "title": "Link and local delivery",
+      "blurb": "MAC, switching, ARP.",
+      "order": 1,
+      "prerequisites": [
+        "net-f-pack"
+      ],
+      "spineIds": [
+        "net-ethernet"
+      ],
+      "learningObjectives": [
+        "Deliver a frame on a local medium using MAC addresses",
+        "Resolve an IP to a MAC before sending on Ethernet"
+      ]
+    },
+    {
+      "id": "net-f-ip",
+      "title": "Internet Protocol",
+      "blurb": "Addresses, CIDR, ICMP.",
+      "order": 2,
+      "prerequisites": [
+        "net-f-link"
+      ],
+      "spineIds": [
+        "net-ip"
+      ],
+      "learningObjectives": [
+        "Treat an IPv4 address as a hierarchical name routers forward on",
+        "Use a prefix length, not a class, to decide the network"
+      ]
+    },
+    {
+      "id": "net-f-host",
+      "title": "The host interface",
+      "blurb": "Sockets, UDP, names.",
+      "order": 3,
+      "prerequisites": [
+        "net-f-ip"
+      ],
+      "spineIds": [
+        "net-socket-api"
+      ],
+      "learningObjectives": [
+        "Bind a port and exchange bytes through the socket API",
+        "Resolve a name and borrow an address before a program can talk"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "net-stack",
+      "name": "The network stack",
+      "moduleId": "net-f-pack",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Layers as contracts, not a morality play.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain a layer as a contract about what the layer above does not have to know",
+        "Name which job belongs to the link, the internet, and the transport, without treating the stack as a morality play"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-packet",
+      "name": "Packets",
+      "moduleId": "net-f-pack",
+      "tier": 0,
+      "prerequisites": [
+        "net-stack"
+      ],
+      "summary": "A header plus a payload, lost independently of its neighbors.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a packet as a header plus a payload that can be lost independently of its neighbors",
+        "Predict what a receiver can and cannot assume about the next packet"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-layering",
+      "name": "Why layering",
+      "moduleId": "net-f-pack",
+      "tier": 1,
+      "prerequisites": [
+        "net-stack"
+      ],
+      "summary": "Each layer offers a service and hides a mechanism.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain that each layer offers a service and hides a mechanism",
+        "Distinguish a service a layer promises from the mechanism it uses to keep that promise"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-end-to-end",
+      "name": "The end-to-end argument",
+      "moduleId": "net-f-pack",
+      "tier": 2,
+      "prerequisites": [
+        "net-layering"
+      ],
+      "summary": "Functions that only the endpoints can implement correctly.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State the end-to-end argument: some functions can only be implemented correctly at the endpoints",
+        "Predict why putting reliability only in the network still leaves the endpoints checking"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "saltzer-e2e"
+      ]
+    },
+    {
+      "id": "net-bandwidth-delay",
+      "name": "Bandwidth-delay product",
+      "moduleId": "net-f-pack",
+      "tier": 2,
+      "prerequisites": [
+        "net-packet",
+        "arch-latency-throughput"
+      ],
+      "summary": "How much data fits in the pipe.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define the bandwidth-delay product as how much data fits in the pipe",
+        "Predict why a sender must keep that much data in flight to fill a long fat path"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-ethernet",
+      "name": "Ethernet frames",
+      "moduleId": "net-f-link",
+      "tier": 1,
+      "prerequisites": [
+        "net-packet"
+      ],
+      "summary": "A local delivery envelope with a MAC address.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an Ethernet frame as a local delivery envelope with MAC addresses",
+        "Distinguish a frame that stays on a local link from a packet that can leave the network"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-mac",
+      "name": "MAC addresses",
+      "moduleId": "net-f-link",
+      "tier": 1,
+      "prerequisites": [
+        "net-ethernet"
+      ],
+      "summary": "A link-scoped interface name, not an Internet name.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain a MAC address as a local hardware name that is not an Internet name",
+        "Predict why two hosts on different networks can reuse the same MAC without colliding on the Internet"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-switching",
+      "name": "Switching",
+      "moduleId": "net-f-link",
+      "tier": 2,
+      "prerequisites": [
+        "net-ethernet"
+      ],
+      "summary": "Learning which port a MAC last spoke from.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a switch as learning which port a MAC last spoke from",
+        "Predict which port a frame takes once the switch has seen the destination speak"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-arp",
+      "name": "ARP",
+      "moduleId": "net-f-link",
+      "tier": 2,
+      "prerequisites": [
+        "net-mac"
+      ],
+      "summary": "Who has this IP? Tell this MAC.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain ARP as asking who has this IP and learning the MAC that answers",
+        "Predict why a host must resolve the next hop's MAC before it can send an IP packet on Ethernet"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-wifi-vs-wired",
+      "name": "Shared versus switched media",
+      "moduleId": "net-f-link",
+      "tier": 2,
+      "prerequisites": [
+        "net-ethernet"
+      ],
+      "summary": "Collision domains did not vanish; they moved.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast a shared medium where stations contend with a switched link that isolates collisions",
+        "Predict why a collision domain can still exist on Wi-Fi after Ethernet became switched"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-ip",
+      "name": "IPv4 addressing",
+      "moduleId": "net-f-ip",
+      "tier": 1,
+      "prerequisites": [
+        "net-packet"
+      ],
+      "summary": "A hierarchical name the routers understand.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe an IPv4 address as a hierarchical name routers use to forward",
+        "Trace how a packet's destination address, not a MAC, decides the next network hop"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc791"
+      ]
+    },
+    {
+      "id": "net-cidr",
+      "name": "CIDR and prefixes",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "A length, not a class.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain a prefix as an address plus a length, not a class",
+        "Apply a prefix length to decide whether two addresses share a network"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc791"
+      ]
+    },
+    {
+      "id": "net-icmp",
+      "name": "ICMP",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Control messages: unreachable, too big, echo.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe ICMP as control messages about reachability, size, and echo",
+        "Predict which ICMP message a hop sends when it cannot forward or the packet is too big"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc791"
+      ]
+    },
+    {
+      "id": "net-mtu",
+      "name": "MTU",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "The largest packet this hop will accept.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define the MTU as the largest packet this hop will accept",
+        "Predict what happens when a packet is larger than the next hop's MTU"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc791"
+      ]
+    },
+    {
+      "id": "net-fragment",
+      "name": "Fragmentation",
+      "moduleId": "net-f-ip",
+      "tier": 3,
+      "prerequisites": [
+        "net-mtu"
+      ],
+      "summary": "Splitting a packet the next link will not take — and why we try not to.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain fragmentation as splitting a packet the next link will not take",
+        "Predict why we try to avoid fragmenting and what fails if a fragment is lost"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc791"
+      ]
+    },
+    {
+      "id": "net-nat-intro",
+      "name": "NAT, first look",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Many private addresses sharing one public one.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe NAT as many private addresses sharing one public address via a mapping",
+        "Predict why an unsolicited inbound packet has no table entry to land on"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-endian-wire",
+      "name": "Network byte order",
+      "moduleId": "net-f-ip",
+      "tier": 1,
+      "prerequisites": [
+        "net-packet",
+        "cpu-endian"
+      ],
+      "summary": "Big-endian on the wire, whatever you are at home.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain network byte order as big-endian on the wire regardless of the host",
+        "Predict what a little-endian host must do before a multi-byte header field is sent"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-checksum",
+      "name": "Checksums",
+      "moduleId": "net-f-ip",
+      "tier": 2,
+      "prerequisites": [
+        "net-packet"
+      ],
+      "summary": "A cheap detector, not a cryptographic proof.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a checksum as a cheap detector of accidental change, not a cryptographic proof",
+        "Predict what a receiver does when the checksum does not match"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-udp",
+      "name": "UDP",
+      "moduleId": "net-f-host",
+      "tier": 1,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "A port number and a hope.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe UDP as a port number on top of IP with no delivery promise",
+        "Predict what an application must do itself if a UDP datagram is lost"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-socket-api",
+      "name": "The socket API",
+      "moduleId": "net-f-host",
+      "tier": 1,
+      "prerequisites": [
+        "net-udp"
+      ],
+      "summary": "How a process binds a port and exchanges bytes.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe the socket API as how a process binds a port and exchanges bytes",
+        "Trace bind, send, and receive as the process-visible interface to the stack"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    },
+    {
+      "id": "net-dns-intro",
+      "name": "DNS, first look",
+      "moduleId": "net-f-host",
+      "tier": 2,
+      "prerequisites": [
+        "net-udp"
+      ],
+      "summary": "Names that resolve to addresses.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Explain DNS as a name that resolves to an address",
+        "Predict why a program that only has a name must ask before it can send an IP packet"
+      ],
+      "sourceIds": [
+        "stanford-cs144",
+        "rfc1034"
+      ]
+    },
+    {
+      "id": "net-dhcp",
+      "name": "DHCP",
+      "moduleId": "net-f-host",
+      "tier": 2,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "summary": "Borrowing an address for a while.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe DHCP as borrowing an address and related config for a lease",
+        "Predict what a host lacks if it never hears a DHCP offer"
+      ],
+      "sourceIds": [
+        "stanford-cs144"
+      ]
+    }
+  ]
+}

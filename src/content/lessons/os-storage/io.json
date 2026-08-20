@@ -1,0 +1,388 @@
+{
+  "courseId": "os-storage",
+  "moduleId": "os-s-io",
+  "lessons": [
+    {
+      "id": "os-buffer-cache-10",
+      "conceptId": "os-buffer-cache",
+      "title": "The block is in RAM; that is not durable",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-block-dev"],
+      "goDeeper": "os-page-cache",
+      "diagram": "buffer-path",
+      "explanation": [
+        "A block device is a linear array of fixed-size sectors. Asking the device for the same sector on every read is slow. The buffer cache keeps recently used blocks in RAM. A later read of a cached block is a memory copy. The cache is not another disk and not a filesystem. It is a RAM pool of blocks the kernel already fetched.",
+        "A write that hits the cache updates that RAM block. The caller may return while the device still holds the old sector. The RAM copy is then newer than the durable copy. A power cut before the kernel writes the device leaves the old sector. A cache hit is a speed fact. Durability is a device fact.",
+        "xv6's bread and bwrite path is this picture: find a buffer for a disk block, use it, and only later push dirty buffers to the device. The mechanism is the RAM copy. The hazard is treating a hit as a completed device write."
+      ],
+      "example": "A program overwrites a sector the kernel already has in the buffer cache. The kernel updates the RAM block and returns. The disk has not been told. Power fails. The next boot reads the old sector from the device.",
+      "whyItMatters": "A write that returned can still vanish on a power cut. Durability is a later trip to the device, not a hit in the buffer cache.",
+      "quiz": [
+        {
+          "id": "bc10-1",
+          "stem": "The buffer cache is:",
+          "correctAnswer": "Recently used disk blocks kept in RAM",
+          "distractors": [
+            { "text": "Sectors that exist only on the device, never in RAM", "kind": "reversed", "rationale": "The cache is the RAM copy, not the on-device original." },
+            { "text": "Sectors the disk firmware keeps as a second on-device roster", "kind": "misapplied", "rationale": "The buffer cache is recently used disk blocks in RAM, not a compiler or firmware roster." },
+            { "text": "The kernel's table of runnable process ids", "kind": "nearby", "rationale": "That table is process state, not cached sectors." }
+          ],
+          "correctExplanation": "Recently used blocks, in RAM. That is the whole object.",
+          "objectiveIds": ["Describe the buffer cache as recently used blocks kept in RAM"],
+          "prerequisiteConceptIds": ["os-block-dev"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "bc10-2",
+          "stem": "A write that hits the buffer cache typically:",
+          "correctAnswer": "Updates the RAM copy and may return before the device is written",
+          "distractors": [
+            { "text": "Guarantees the new bytes are already stored on the device", "kind": "reversed", "rationale": "A hit is RAM. The device write is a later step." },
+            { "text": "Deletes the RAM block so the device is the only copy", "kind": "misapplied", "rationale": "The cache keeps the block; it does not throw it away on write." },
+            { "text": "Rewrites the caller's handle table instead of the block", "kind": "nearby", "rationale": "The write lands in a cached block, not in a handle." }
+          ],
+          "correctExplanation": "RAM is updated. The device may still hold the old sector.",
+          "objectiveIds": ["Predict why a write that hits the cache is not yet durable"],
+          "prerequisiteConceptIds": ["os-block-dev"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "bc10-3",
+          "stem": "A write hits the cache. The device write has not run. A power cut leaves:",
+          "correctAnswer": "The old sector on the device; the RAM copy is gone",
+          "distractors": [
+            { "text": "The new bytes, because a cache hit is already durable", "kind": "reversed", "rationale": "Durability is the device copy, not the RAM hit." },
+            { "text": "An empty disk, because lost RAM wipes the device too", "kind": "misapplied", "rationale": "The device keeps its old sector. RAM loss does not erase it." },
+            { "text": "A rebuilt process table recovered from the cache", "kind": "nearby", "rationale": "The cache holds blocks, not a durable process census." }
+          ],
+          "correctExplanation": "Power kills RAM. The device still has whatever it last stored.",
+          "objectiveIds": ["Predict why a write that hits the cache is not yet durable"],
+          "prerequisiteConceptIds": ["os-block-dev"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-page-cache-10",
+      "conceptId": "os-page-cache",
+      "title": "File bytes kept as pages",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-mmap", "os-buffer-cache"],
+      "explanation": [
+        "The buffer cache holds device blocks. The page cache holds file contents as pages — the unit the virtual memory system already uses. Once a file's bytes sit in RAM they are a sequence of pages, not a list of sectors. Those pages can back an mmap range or a read copy.",
+        "mmap already made a file appear as addresses. A load from that range that finds the page in the page cache is a memory access. The device is not read. A load that misses still fills the page from the device: that fill is a block read into the page. Hit versus miss is the contrast, not a second magic path.",
+        "The two caches describe the same bytes at different grains: pages of a file, blocks of a device. This unit stays on that RAM picture. It names the file as pages, and it predicts that a mapped hit never waits on the device."
+      ],
+      "example": "A process mmap's a file it just read. The next load from that mapping finds the same pages; the disk is idle. A different process maps a file never touched since boot. The first load is not in RAM yet; the kernel reads the underlying blocks from the device, and only then does the load complete.",
+      "whyItMatters": "mmap and read share RAM pages of the same file. Treating them as two independent copies doubles the I/O and still leaves you arguing about which bytes are current.",
+      "quiz": [
+        {
+          "id": "pg10-1",
+          "stem": "The page cache holds:",
+          "correctAnswer": "File contents kept as pages, not merely device blocks",
+          "distractors": [
+            { "text": "Only the device's raw sector map, never a file's bytes", "kind": "reversed", "rationale": "That is closer to the buffer cache's grain, not the page cache's." },
+            { "text": "The scheduler's run queues sitting on each core", "kind": "nearby", "rationale": "Run queues are CPU state, not file pages." },
+            { "text": "Only inode numbers, never the file's data bytes", "kind": "misapplied", "rationale": "The page cache holds file contents as pages. It is not an inode-only index." }
+          ],
+          "correctExplanation": "The file, as pages. Blocks are the device's grain.",
+          "objectiveIds": ["Describe the page cache as file contents kept as pages, not just device blocks"],
+          "prerequisiteConceptIds": ["os-mmap", "os-buffer-cache"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pg10-2",
+          "stem": "A page-cache hit on a mapped file differs from a device block read because:",
+          "correctAnswer": "The load is satisfied from RAM pages; the device is not touched",
+          "distractors": [
+            { "text": "The hit must still wait for the device to copy each sector", "kind": "reversed", "rationale": "Waiting on the device is the miss path, not the hit." },
+            { "text": "The mapped file is compiled again before every load", "kind": "misapplied", "rationale": "A load is a memory access, not a build." },
+            { "text": "The hit allocates a new process to perform the load", "kind": "nearby", "rationale": "The current process loads. No extra process is minted." }
+          ],
+          "correctExplanation": "Hit means the page is already there. The device stays idle.",
+          "objectiveIds": ["Contrast a page-cache hit on a mapped file with a block read from the device"],
+          "prerequisiteConceptIds": ["os-mmap", "os-buffer-cache"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "pg10-3",
+          "stem": "A process loads from a mapped file whose pages are already in the page cache. The device:",
+          "correctAnswer": "Is not read for that load; the pages already hold the bytes",
+          "distractors": [
+            { "text": "Must re-read the underlying blocks on every mapped load", "kind": "reversed", "rationale": "That would make the cache pointless. A hit skips the device." },
+            { "text": "Erases the pages so the load faults forever", "kind": "misapplied", "rationale": "A hit uses the pages. It does not destroy them." },
+            { "text": "Switches the CPU into firmware to fetch the file", "kind": "nearby", "rationale": "Firmware is not on the hit path. RAM is." }
+          ],
+          "correctExplanation": "The mapping names pages that are already filled. No device trip.",
+          "objectiveIds": ["Contrast a page-cache hit on a mapped file with a block read from the device"],
+          "prerequisiteConceptIds": ["os-mmap", "os-buffer-cache"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-dma-10",
+      "conceptId": "os-dma",
+      "title": "A transfer the CPU does not copy",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-device-intro"],
+      "goDeeper": "os-driver",
+      "explanation": [
+        "A device is registers on a bus. Copying every payload byte through those registers keeps the CPU busy for the whole transfer. DMA is the other arrangement. The kernel gives the device a memory address and a length. The device writes that memory itself while the CPU runs other work.",
+        "The CPU must not use the buffer until the device says the transfer is done. Mid-transfer the bytes are a mix of old and new. That is a torn read, not a slightly stale one. The device signals completion. That signal is the permission to look.",
+        "This unit does not open the kernel code that programs a particular chip. The mechanism is the device as a second writer of memory. The rule is wait for done."
+      ],
+      "example": "The kernel points a disk at a 4 KiB buffer and runs a compiler. The disk writes those 4 KiB into RAM on its own. A process that parses the buffer before the disk reports done may see a half-written sector and treat it as a file.",
+      "whyItMatters": "A buffer the device is still filling is not a finished transfer. Using it early is a torn read, not a timing footnote.",
+      "quiz": [
+        {
+          "id": "dma10-1",
+          "stem": "DMA is best described as:",
+          "correctAnswer": "The device writing memory while the CPU does other work",
+          "distractors": [
+            { "text": "The CPU copying every payload byte into device registers", "kind": "reversed", "rationale": "That programmed I/O keeps the CPU busy. DMA is the opposite." },
+            { "text": "A cache of device registers so the CPU never has to talk to the bus", "kind": "misapplied", "rationale": "DMA is the device writing memory while the CPU does other work. It is not a register cache." },
+            { "text": "The kernel deleting a buffer so the device cannot touch it", "kind": "nearby", "rationale": "The buffer must remain so the device can write it." }
+          ],
+          "correctExplanation": "The device is the copier. The CPU is free until completion.",
+          "objectiveIds": ["Describe DMA as the device writing memory while the CPU does other work"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dma10-2",
+          "stem": "The CPU uses a DMA buffer before the device says the transfer is done. The bytes it sees are:",
+          "correctAnswer": "Not trustworthy; the transfer may still be filling the buffer",
+          "distractors": [
+            { "text": "Guaranteed complete, because DMA has already started", "kind": "reversed", "rationale": "Start is not done. Completion is the signal that matters." },
+            { "text": "Already coherent in the CPU caches, because DMA snoops every store", "kind": "misapplied", "rationale": "Bytes in a DMA buffer are not trustworthy until the device signals completion." },
+            { "text": "A second kernel image the device is required to install", "kind": "nearby", "rationale": "DMA fills the agreed buffer. It does not install a kernel." }
+          ],
+          "correctExplanation": "Until the device says done, the buffer is still in flight.",
+          "objectiveIds": ["Predict why the CPU must not use a buffer until the device says the transfer is done"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dma10-3",
+          "stem": "While a DMA write to memory is in flight, the CPU should:",
+          "correctAnswer": "Do other work and wait for the device to signal completion",
+          "distractors": [
+            { "text": "Parse the buffer immediately, since the device started", "kind": "reversed", "rationale": "Start is not permission to read. Completion is." },
+            { "text": "Recompile the kernel before each transferred byte", "kind": "misapplied", "rationale": "A transfer is runtime. It is not a rebuild." },
+            { "text": "Map the device's registers into every user process", "kind": "nearby", "rationale": "User programs still see handles. DMA does not export registers." }
+          ],
+          "correctExplanation": "The point of DMA is that the CPU is free until the device says done.",
+          "objectiveIds": ["Predict why the CPU must not use a buffer until the device says the transfer is done"],
+          "prerequisiteConceptIds": ["os-device-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-driver-10",
+      "conceptId": "os-driver",
+      "title": "The dialect stays in the driver",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-interrupt", "os-dma"],
+      "goDeeper": "os-virtio",
+      "explanation": [
+        "A driver is kernel code that speaks one device's dialect: this chip's registers, this DMA setup, this completion interrupt. A different chip is a different dialect and a different driver. The rest of the kernel should not have to know either one.",
+        "After the driver hides the registers, the rest of the kernel sees a generic face: start a block transfer, wait until this buffer is valid, send a packet. The driver's interrupt handler turns 'the device rang' into 'this buffer is done'. DMA is how the bytes arrived. Upper layers ask for blocks or packets, not for a store to control register 0x20.",
+        "xv6's teaching disk is already this split: one driver, one dialect, a block interface above it. The next unit names a dialect invented so a fake device stays small."
+      ],
+      "example": "Two machines, two disks. One driver writes a command to a memory-mapped register and waits for that chip's interrupt. The other sets up a different DMA descriptor format. Upper kernel code on both calls the same 'read this block' function. It never names either chip.",
+      "whyItMatters": "Upper layers wait on a disk or a packet only because a driver translated that wish into this chip's registers, DMA, and completion interrupt.",
+      "quiz": [
+        {
+          "id": "drv10-1",
+          "stem": "A device driver is:",
+          "correctAnswer": "Kernel code that speaks one device's dialect",
+          "distractors": [
+            { "text": "The generic block layer with no chip-specific code", "kind": "reversed", "rationale": "The generic layer is what the driver presents, not what it is." },
+            { "text": "A user program that rewrites the ISA at runtime", "kind": "misapplied", "rationale": "A driver is kernel code for a device, not an ISA editor." },
+            { "text": "Firmware that runs only at reset and then vanishes", "kind": "nearby", "rationale": "Firmware handed off. The driver is resident kernel code." }
+          ],
+          "correctExplanation": "One chip, one dialect, in the kernel. That is the driver.",
+          "objectiveIds": ["Describe a driver as kernel code that speaks one device's dialect"],
+          "prerequisiteConceptIds": ["os-interrupt", "os-dma"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "drv10-2",
+          "stem": "Two disks with different register layouts need:",
+          "correctAnswer": "Two drivers; each dialect is its own kernel code",
+          "distractors": [
+            { "text": "No drivers, because DMA removes the need to speak to a device", "kind": "reversed", "rationale": "DMA is how bytes move. Someone still programs this chip." },
+            { "text": "One driver, because DMA makes register layouts interchangeable", "kind": "misapplied", "rationale": "Different register layouts need different drivers. DMA does not erase the dialect." },
+            { "text": "The same interrupt handler copied into every user process", "kind": "nearby", "rationale": "The handler lives in the kernel driver, not in user programs." }
+          ],
+          "correctExplanation": "Different registers, different dialect, different driver.",
+          "objectiveIds": ["Describe a driver as kernel code that speaks one device's dialect"],
+          "prerequisiteConceptIds": ["os-interrupt", "os-dma"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "drv10-3",
+          "stem": "After the driver hides the device registers, the rest of the kernel sees:",
+          "correctAnswer": "A generic request, such as read this block or send this packet",
+          "distractors": [
+            { "text": "The raw control registers of that exact chip", "kind": "reversed", "rationale": "Hiding the registers is the point. Upper layers must not see them." },
+            { "text": "A new syscall number for every register poke", "kind": "nearby", "rationale": "Syscalls stay generic. The dialect stays in the driver." },
+            { "text": "The raw PCI config space, copied into every user process", "kind": "misapplied", "rationale": "After the driver hides registers, the rest of the kernel sees a generic request." }
+          ],
+          "correctExplanation": "Blocks and packets in, dialect out of sight. That is the hide.",
+          "objectiveIds": ["Predict what the rest of the kernel sees after the driver hides the device registers"],
+          "prerequisiteConceptIds": ["os-interrupt", "os-dma"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-virtio-10",
+      "conceptId": "os-virtio",
+      "title": "A device invented to be virtual",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["os-driver"],
+      "explanation": [
+        "Virtio is a device model designed to be emulated or paravirtualized. The device is a specification: queues of descriptors, a kick that work is posted, a used ring that work is done. A guest kernel runs an ordinary driver for that spec. The host — emulator or hypervisor — implements the other side. No particular real chip has to exist.",
+        "Emulating a real NIC means reproducing its register file and taking a trap on many of those accesses. A guest driver talking virtio posts a batch of packets on a shared queue and kicks once. The host drains the queue in one go. That is cheaper because guest and host agreed on a fake device that is easy to fake, not because the host became a faster clone of a particular NIC.",
+        "This unit does not require a named hypervisor. xv6's disk is virtio for the same reason a VM's network card often is: the teaching device is the one meant to be virtual."
+      ],
+      "example": "A guest wants to send ten packets. An emulated real NIC may trap on each command-register write. A virtio NIC is a descriptor ring the guest filled in its own memory; one kick asks the host to drain the ring. The host forwards the packets without pretending to be a particular PHY.",
+      "whyItMatters": "Emulating every register of a real NIC is a trap storm. Virtio exists so the guest and the host share a queue instead of pretending to be silicon.",
+      "quiz": [
+        {
+          "id": "vio10-1",
+          "stem": "Virtio is:",
+          "correctAnswer": "A device model designed to be emulated or paravirtualized",
+          "distractors": [
+            { "text": "A real NIC's full register set, required in every guest", "kind": "reversed", "rationale": "Virtio is a spec for a fake device, not a clone of a particular NIC." },
+            { "text": "A scheduler policy for sharing one core fairly", "kind": "nearby", "rationale": "Virtio is a device interface, not a CPU policy." },
+            { "text": "A filesystem type the guest must mount to see the host disk", "kind": "misapplied", "rationale": "Virtio is a device model designed to be emulated. It is not a guest filesystem type." }
+          ],
+          "correctExplanation": "A spec a host can implement. That is the model.",
+          "objectiveIds": ["Describe virtio as a device model designed to be emulated or paravirtualized"],
+          "prerequisiteConceptIds": ["os-driver"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "vio10-2",
+          "stem": "A guest driver talking virtio is cheaper than emulating a real NIC because:",
+          "correctAnswer": "Guest and host share a queue instead of trapping a real NIC's registers",
+          "distractors": [
+            { "text": "The guest must trap on every byte of every packet payload", "kind": "reversed", "rationale": "That is the cost virtio is designed to avoid." },
+            { "text": "Virtio recompiles the host kernel for each packet", "kind": "misapplied", "rationale": "A kick is a runtime signal, not a rebuild." },
+            { "text": "A real NIC has no registers, so emulation has nothing to do", "kind": "nearby", "rationale": "Real NICs have many registers. That is why cloning them is expensive." }
+          ],
+          "correctExplanation": "One agreed queue, few traps. That is the saving.",
+          "objectiveIds": ["Predict why a guest driver talking virtio is cheaper than emulating a real NIC"],
+          "prerequisiteConceptIds": ["os-driver"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "vio10-3",
+          "stem": "Compared with emulating a real NIC, virtio:",
+          "correctAnswer": "Specifies a fake device that is cheap for a host to implement",
+          "distractors": [
+            { "text": "Requires the host to reproduce every register of a particular chip", "kind": "reversed", "rationale": "That is full emulation of a real NIC, which virtio is designed to skip." },
+            { "text": "Removes the need for any guest driver at all", "kind": "misapplied", "rationale": "The guest still runs a driver. The driver speaks virtio." },
+            { "text": "Forces the guest to program physical PHY hardware directly", "kind": "nearby", "rationale": "The guest programs the virtio queues, not a physical PHY." }
+          ],
+          "correctExplanation": "A fake device agreed in advance is cheaper than a cloned real one.",
+          "objectiveIds": ["Predict why a guest driver talking virtio is cheaper than emulating a real NIC"],
+          "prerequisiteConceptIds": ["os-driver"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-init-10",
+      "conceptId": "os-init",
+      "title": "Process 1, or userspace is over",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-exec"],
+      "explanation": [
+        "Init is the first user process. The kernel constructs it during boot and lets it run. Everything else in userspace is a descendant. Init starts those programs with the process API already known: fork to copy, exec to replace the copy's memory, wait to reap. It is not a disk format in this story. It is process 1 with a job.",
+        "Because it is first, it remains the ancestor when other parents die. The kernel can hand orphaned children to init. Init starts a replacement the same way a shell starts a command: copy this process, replace the copy, wait.",
+        "Init exiting leaves no user process whose job is to start the rest, and no designated parent for orphans. Teaching Unix — xv6 — panics. The kernel is still there. Userspace is over: nothing will exec a replacement, and nothing will reap what would have been init's children."
+      ],
+      "example": "xv6's kernel creates process 1 and execs init. Init forks, execs a shell, and waits. The shell is an ordinary user program. Init exiting is a panic: there is no remaining process whose contract is to start another.",
+      "whyItMatters": "A machine with no process 1 has no one left to start replacements or reap orphans. The kernel treats that as the end of userspace.",
+      "quiz": [
+        {
+          "id": "ini10-1",
+          "stem": "Init is:",
+          "correctAnswer": "The first user process, which starts everything else",
+          "distractors": [
+            { "text": "The kernel's boot loader, still running in firmware", "kind": "reversed", "rationale": "Firmware handed off. Init is a user process the kernel started." },
+            { "text": "A second kernel that compiles user programs", "kind": "misapplied", "rationale": "Init is a user program. It does not compile the kernel." },
+            { "text": "The last device driver loaded before reset", "kind": "nearby", "rationale": "Init is process 1, not a driver." }
+          ],
+          "correctExplanation": "First user process. It starts the rest. That is init.",
+          "objectiveIds": ["Describe init as the first user process that starts everything else"],
+          "prerequisiteConceptIds": ["os-exec"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ini10-2",
+          "stem": "Init starts other programs by:",
+          "correctAnswer": "Using fork, exec, and wait — the process API already known",
+          "distractors": [
+            { "text": "Poking device registers from user mode to mint processes", "kind": "reversed", "rationale": "Process creation is the process API, not a user-mode register poke." },
+            { "text": "Asking firmware to mint a new process id in the interrupt handler", "kind": "misapplied", "rationale": "Init starts programs with fork, exec, and wait — the process API already known." },
+            { "text": "Opening a handle for each descendant without fork or exec", "kind": "nearby", "rationale": "A handle is not a new process. Init copies, then replaces the copy." }
+          ],
+          "correctExplanation": "Copy, replace the copy, reap. Init is a user of that API.",
+          "objectiveIds": ["Describe init as the first user process that starts everything else"],
+          "prerequisiteConceptIds": ["os-exec"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ini10-3",
+          "stem": "Init exits on a teaching Unix. The machine:",
+          "correctAnswer": "Panics; userspace has no process 1 left to start or reap the rest",
+          "distractors": [
+            { "text": "Continues as usual; some other process becomes a new kernel", "kind": "reversed", "rationale": "A remaining process is not a kernel, and nothing is left to be process 1." },
+            { "text": "Recompiles init from unused disk sectors automatically", "kind": "misapplied", "rationale": "Exit is not a rebuild. Nothing remains to start a replacement." },
+            { "text": "Treats the exit as a successful exec of the scheduler", "kind": "nearby", "rationale": "The scheduler is kernel code. Init exiting does not become it." }
+          ],
+          "correctExplanation": "xv6 panics. No process 1, no userspace job left to do.",
+          "objectiveIds": ["Predict what happens to the machine if init exits"],
+          "prerequisiteConceptIds": ["os-exec"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

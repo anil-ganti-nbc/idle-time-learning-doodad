@@ -1,0 +1,654 @@
+{
+  "courseId": "os-concurrency",
+  "moduleId": "os-c-vm",
+  "lessons": [
+    {
+      "id": "os-vm-5",
+      "conceptId": "os-vm",
+      "title": "The number in the load is not a frame",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-page-table",
+      "diagram": "virt-translate",
+      "explanation": [
+        "A process names virtual addresses in its loads, stores, and program counter. Those names are not physical DRAM frames. The kernel keeps a per-process map. Hardware translates each name to a frame, or it refuses. That translation is virtual memory.",
+        "Two processes may both use address 0x4000. Each map can send that number to a different frame. Each program sees its own bytes. The shared number is a coincidence of namespaces, not a shared cell — unless the kernel mapped them that way on purpose."
+      ],
+      "example": "Two editors both load from virtual 0x4000. A's map names frame 12. B's map names frame 80. Each prints its own buffer. Neither instruction mentioned a frame number.",
+      "whyItMatters": "Page tables and the TLB exist so this translation can sit on every load.",
+      "quiz": [
+        {
+          "id": "vm5-1",
+          "stem": "Virtual memory's job is:",
+          "correctAnswer": "Translating a process address into a physical frame",
+          "distractors": [
+            { "text": "Renaming the process each time it calls the kernel", "kind": "nearby", "rationale": "Identity is not the translation." },
+            { "text": "Letting every program write physical frames directly", "kind": "reversed", "rationale": "Direct frame stores would smash isolation." },
+            { "text": "Compiling the program into a smaller binary image", "kind": "misapplied", "rationale": "Translation is runtime, not a compile step." }
+          ],
+          "correctExplanation": "Process name in, physical frame out. That is the map.",
+          "objectiveIds": ["Describe virtual memory as translating process addresses to physical frames"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "vm5-2",
+          "stem": "Two processes both use virtual address 0x4000. Each typically:",
+          "correctAnswer": "Sees its own bytes; the maps name different frames",
+          "distractors": [
+            { "text": "Sees one shared cell, because the numbers match", "kind": "reversed", "rationale": "Matching names are not a shared frame." },
+            { "text": "Sees the kernel's stack sitting at that number", "kind": "nearby", "rationale": "User maps do not export the kernel stack." },
+            { "text": "Sees one shared mapping the loader reserved for that number", "kind": "misapplied", "rationale": "Matching virtual numbers do not mean a shared frame unless the maps say so." }
+          ],
+          "correctExplanation": "Same name, private maps. Each load hits a different frame.",
+          "objectiveIds": ["Predict what a program sees when two processes use the same virtual address"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "vm5-3",
+          "stem": "A user load instruction names:",
+          "correctAnswer": "A virtual address that still needs a frame",
+          "distractors": [
+            { "text": "A physical DRAM row the program computed", "kind": "nearby", "rationale": "The program never computed a row." },
+            { "text": "A physical frame the program stored in its own page table", "kind": "reversed", "rationale": "A user load names a virtual address. The program does not store its own frame numbers." },
+            { "text": "A syscall number for the next kernel trap", "kind": "misapplied", "rationale": "A load is an address, not a call number." }
+          ],
+          "correctExplanation": "The instruction holds a process name. Hardware still has to map it.",
+          "objectiveIds": ["Describe virtual memory as translating process addresses to physical frames"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-vm-10",
+      "conceptId": "os-vm",
+      "title": "Each process brings its own map",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-process"],
+      "goDeeper": "os-page-table",
+      "diagram": "virt-translate",
+      "explanation": [
+        "The five-minute unit named the split: a process address versus a physical frame. The state that makes the split real is a per-process map. The kernel writes that map. Hardware consults it on every user load, store, and fetch. The program never writes a frame number.",
+        "The map is stored as page tables. A TLB is a cache of recent translations so the hardware does not consult the tables on every access. This unit only names those two objects. How a walk works, and how other cores forget a stale cache entry, are later units.",
+        "What must be preserved is isolation: process A's translation of 0x4000 is not process B's, unless the kernel installed a shared mapping. What can fail is a missing or forbidden translation. Hardware then refuses the access and transfers into the kernel. Treating every virtual address as a physical frame would let one program smash another."
+      ],
+      "example": "A compiler and an editor both have a stack near the same high virtual address. The kernel installed two maps. The compiler's smash stays in the compiler's frames. The editor's document is not on that map.",
+      "whyItMatters": "Isolation already depends on each process bringing a map the others cannot write.",
+      "quiz": [
+        {
+          "id": "vm10-1",
+          "stem": "The kernel's per-process map exists so that:",
+          "correctAnswer": "Each process address can be translated to a physical frame",
+          "distractors": [
+            { "text": "Each process can rewrite every other process's frames", "kind": "reversed", "rationale": "The map is what stops that rewrite." },
+            { "text": "User programs can store physical frame numbers themselves", "kind": "nearby", "rationale": "User code names virtual addresses, not frames." },
+            { "text": "Each process can reuse the same physical frame numbers as names", "kind": "misapplied", "rationale": "The per-process map translates. Processes do not name physical frames as their addresses." }
+          ],
+          "correctExplanation": "Private names become frames only through that map.",
+          "objectiveIds": ["Describe virtual memory as translating process addresses to physical frames"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "vm10-2",
+          "stem": "Process A and process B both load from 0x4000. A typically sees:",
+          "correctAnswer": "Its own mapped bytes, not B's, unless the kernel shared a frame",
+          "distractors": [
+            { "text": "B's bytes, because matching addresses are always shared", "kind": "reversed", "rationale": "Matching names share a frame only if the kernel said so." },
+            { "text": "The kernel's own page tables, as ordinary user-readable data", "kind": "nearby", "rationale": "User mode does not read the kernel's tables." },
+            { "text": "The source file A was compiled from, at that address", "kind": "misapplied", "rationale": "A load is runtime memory, not a source file." }
+          ],
+          "correctExplanation": "A's map, A's frame. B is next door.",
+          "objectiveIds": ["Predict what a program sees when two processes use the same virtual address"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "vm10-3",
+          "stem": "The kernel mapped A and B's 0x4000 to different frames. A store in A:",
+          "correctAnswer": "Changes A's frame and leaves B's bytes alone",
+          "distractors": [
+            { "text": "Changes B's frame, because the virtual numbers match", "kind": "reversed", "rationale": "The numbers match. The frames do not." },
+            { "text": "Rewrites the kernel's trap handler at that address", "kind": "nearby", "rationale": "A user store hits A's map, not the handler." },
+            { "text": "Edits A's source file on disk at that offset", "kind": "misapplied", "rationale": "A store is not a write to the build tree." }
+          ],
+          "correctExplanation": "Different frames. A's store cannot name B's bytes.",
+          "objectiveIds": ["Predict what a program sees when two processes use the same virtual address"],
+          "prerequisiteConceptIds": ["os-process"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-page-table-10",
+      "conceptId": "os-page-table",
+      "title": "Unused ranges need no tables",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-vm"],
+      "goDeeper": "os-page-fault",
+      "diagram": "virt-translate",
+      "explanation": [
+        "A page table is a tree of translations. The hardware starts at a root the kernel installed for this process and walks down using bits of the virtual page number. A leaf names a physical frame and the permissions for that page. Each page is translated on its own. xv6's RISC-V tables are a three-level tree of this kind.",
+        "A single flat array of every possible page would be huge. Most of a 64-bit space is unused. A multi-level tree stays sparse: if a high-level entry is empty, the kernel never allocates the tables beneath it. A process that uses a few megabytes near zero and a stack near the top pays for those two branches, not for the hole in the middle.",
+        "The walk costs memory accesses. That is the tradeoff against the giant array. A missing or invalid entry means the hardware cannot finish the translation. A later unit treats that miss as a trap. This unit only needs the tree, and why it can have holes."
+      ],
+      "example": "A process has 8 MB of text and heap near address zero and a stack near the top of its space. The kernel allocates table pages for those two branches. The vast unused middle has no lower-level tables at all.",
+      "whyItMatters": "A hole in that tree is a later fault, not a silent fall-through into another frame.",
+      "quiz": [
+        {
+          "id": "pt10-1",
+          "stem": "To translate one virtual page, the hardware:",
+          "correctAnswer": "Walks the process's page-table tree down to a leaf that names a frame",
+          "distractors": [
+            { "text": "Adds the virtual address to the process id and then stops there", "kind": "nearby", "rationale": "The id is not an index into the tree." },
+            { "text": "Asks the running program to supply the physical frame number itself", "kind": "reversed", "rationale": "The program names a virtual page, not a frame." },
+            { "text": "Compiles the page number into a new opcode for that one access", "kind": "misapplied", "rationale": "A walk is not a compile step." }
+          ],
+          "correctExplanation": "Root to leaf, using the page number. The leaf names the frame.",
+          "objectiveIds": ["Describe a page table as the tree the hardware walks to translate a page"],
+          "prerequisiteConceptIds": ["os-vm"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pt10-2",
+          "stem": "A page table is best described as:",
+          "correctAnswer": "The tree the hardware walks to translate one page",
+          "distractors": [
+            { "text": "A cache of data bytes from the process's last load", "kind": "nearby", "rationale": "That would be a data cache, not the map." },
+            { "text": "A list of physical frames the program wrote itself", "kind": "reversed", "rationale": "The kernel writes the tree. The program does not." },
+            { "text": "The TLB: a cache of translations the kernel walks by hand on every load", "kind": "misapplied", "rationale": "The page table is the tree hardware walks. The TLB caches recent translations; the kernel does not walk it by hand on every load." }
+          ],
+          "correctExplanation": "A tree of translations. Hardware walks it per page.",
+          "objectiveIds": ["Describe a page table as the tree the hardware walks to translate a page"],
+          "prerequisiteConceptIds": ["os-vm"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "pt10-3",
+          "stem": "A multi-level page table can stay small because:",
+          "correctAnswer": "Empty high-level entries skip allocating the tables beneath",
+          "distractors": [
+            { "text": "Every possible virtual page still has a reserved leaf table", "kind": "reversed", "rationale": "That would be the giant array the tree avoids." },
+            { "text": "The TLB already stores the entire unused address space", "kind": "nearby", "rationale": "The TLB is small. Sparsity is in the tree." },
+            { "text": "Unmapped regions are stored as a single large identity map", "kind": "misapplied", "rationale": "Empty high-level entries skip the tables beneath. They are not an identity map." }
+          ],
+          "correctExplanation": "No child tables under an empty parent. The hole is free.",
+          "objectiveIds": ["Predict why a multi-level table can stay sparse"],
+          "prerequisiteConceptIds": ["os-vm"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-tlb-os-10",
+      "conceptId": "os-tlb-os",
+      "title": "Other cores still have the old translation",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-vm", "cpu-tlb"],
+      "goDeeper": "os-page-table",
+      "diagram": "tlb-shootdown",
+      "explanation": [
+        "Each core keeps a TLB: a private cache of recent page-table results. The hardware unit already treated that cache as a cache of translations, not of bytes. This unit is the OS problem. When the kernel changes a mapping — unmap, remap, or revoke write — every core that might still hold the old entry is now wrong.",
+        "A TLB shootdown is the kernel forcing those other cores to drop the stale translation. It interrupts them; they invalidate that virtual page, or the whole TLB. Until that completes, the old virtual page can still become the old physical frame on a core that never heard the change.",
+        "Skip the shootdown and isolation fails in a specific way: the kernel reused the frame, or made it read-only, and another core still writes it. The page table is already new. The cache of translations is not. Hardware does not snoop page-table stores into every remote TLB for you."
+      ],
+      "example": "The kernel unmaps a page on core 0 and hands the frame to another process. Core 1 still has the old TLB entry. A store on core 1 writes the reused frame. The table was updated. The other core never dropped the translation.",
+      "whyItMatters": "A mapping change is unfinished until every core has dropped the cached translation.",
+      "quiz": [
+        {
+          "id": "tlos10-1",
+          "stem": "A TLB shootdown is the kernel:",
+          "correctAnswer": "Forcing other cores to drop a translation that is now stale",
+          "distractors": [
+            { "text": "Prefetching the page's data bytes into every core's L1", "kind": "nearby", "rationale": "Shootdown drops a map entry, not a data line." },
+            { "text": "Asking the other cores to keep using the old mapping", "kind": "reversed", "rationale": "The point is to forget the old mapping." },
+            { "text": "Renaming the process so all of its addresses change", "kind": "misapplied", "rationale": "The process id is not the TLB." }
+          ],
+          "correctExplanation": "Remote TLBs still hold the old result. Shootdown makes them drop it.",
+          "objectiveIds": ["Explain a TLB shootdown as forcing other cores to drop a stale translation"],
+          "prerequisiteConceptIds": ["os-vm", "cpu-tlb"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "tlos10-2",
+          "stem": "Core A unmapped a page and reused the frame. Core B then stored to that virtual address. The likely miss is:",
+          "correctAnswer": "Core B still had the old TLB entry; no shootdown ran",
+          "distractors": [
+            { "text": "Core B had an empty TLB, so it could not translate", "kind": "reversed", "rationale": "An empty TLB would walk the new table, which has no mapping." },
+            { "text": "Core A forgot to switch privilege mode for the unmap", "kind": "nearby", "rationale": "The unmap already happened. The remote cache did not hear." },
+            { "text": "Core B executed a store that the ISA forbids after an unmap", "kind": "misapplied", "rationale": "The likely miss is a stale TLB entry and no shootdown, not an illegal ISA store." }
+          ],
+          "correctExplanation": "B translated with yesterday's entry. The table is not what B used.",
+          "objectiveIds": ["Predict what happens if one core changes a mapping and the others keep the old TLB entry"],
+          "prerequisiteConceptIds": ["os-vm", "cpu-tlb"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "tlos10-3",
+          "stem": "One core installs a new mapping. The others keep the old TLB entry. A load on those cores:",
+          "correctAnswer": "Still translates with the old frame and permissions",
+          "distractors": [
+            { "text": "Automatically sees the new mapping on every core", "kind": "reversed", "rationale": "Remote TLBs do not snoop the table write." },
+            { "text": "Walks the page table twice and then ignores both", "kind": "nearby", "rationale": "A TLB hit does not walk. That is the problem." },
+            { "text": "Becomes a compile error in the running program", "kind": "misapplied", "rationale": "A stale translation is runtime, not a build failure." }
+          ],
+          "correctExplanation": "The cached result wins until someone drops it.",
+          "objectiveIds": ["Predict what happens if one core changes a mapping and the others keep the old TLB entry"],
+          "prerequisiteConceptIds": ["os-vm", "cpu-tlb"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-page-fault-10",
+      "conceptId": "os-page-fault",
+      "title": "The load never became a physical address",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-vm", "os-trap"],
+      "goDeeper": "os-swap",
+      "diagram": "page-fault-path",
+      "explanation": [
+        "A page fault is a translation the hardware could not finish. The MMU refuses the access and the CPU traps into the kernel — the same family of entry as a syscall trap or a divide-by-zero. The program did not CALL the kernel. The load or store could not become a physical address.",
+        "The kernel then looks at the virtual address and at what this process is allowed to have. Some faults should fill a page: the address sits in a legal range the kernel has already promised, but no frame is installed yet. Some faults should kill the process: the address was never promised, or the access breaks the permissions that were.",
+        "Fill versus kill is a decision about the process's intended map, not a property of the trap itself. The hardware only reports that translation failed. Treating every fault as death would make ordinary first use of a heap page fatal. Treating every fault as a fill would let a wild pointer invent memory."
+      ],
+      "example": "A program indexes one past a heap buffer into an unmapped address. Hardware cannot translate. The kernel sees an address it never promised this process and kills it. A first store into a heap page the kernel did promise would have been a fill instead.",
+      "whyItMatters": "Later fills are reasons the kernel arrived; the fault itself is the refused translation.",
+      "quiz": [
+        {
+          "id": "pf10-1",
+          "stem": "A page fault is:",
+          "correctAnswer": "A missing translation that transfers control into the kernel",
+          "distractors": [
+            { "text": "A TLB hit that returns the physical frame with no trap", "kind": "nearby", "rationale": "A hit finished the translation. A fault did not." },
+            { "text": "A successful walk that installs no mapping at all", "kind": "reversed", "rationale": "A successful walk is not a fault." },
+            { "text": "A cache miss: the bytes are absent from L1 but the translation is present", "kind": "misapplied", "rationale": "A page fault is a missing translation that traps. A cache miss does not." }
+          ],
+          "correctExplanation": "The walk failed. Control goes to the kernel through a trap.",
+          "objectiveIds": ["Describe a page fault as a missing translation that transfers into the kernel"],
+          "prerequisiteConceptIds": ["os-vm", "os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pf10-2",
+          "stem": "A fault on a legal heap page with no frame yet should:",
+          "correctAnswer": "Fill a page and let the program retry the access",
+          "distractors": [
+            { "text": "Kill the process, because every fault is fatal", "kind": "reversed", "rationale": "A promised range with no frame is a fill." },
+            { "text": "Ignore the access and leave the map unchanged", "kind": "nearby", "rationale": "The access still has to complete after a fill." },
+            { "text": "Rewrite the program's source to avoid that address", "kind": "misapplied", "rationale": "The kernel does not edit source." }
+          ],
+          "correctExplanation": "The address was promised. Install a frame and retry.",
+          "objectiveIds": ["Distinguish a fault that should fill a page from one that should kill the process"],
+          "prerequisiteConceptIds": ["os-vm", "os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "pf10-3",
+          "stem": "A store to an address the process was never given should:",
+          "correctAnswer": "Kill the process rather than invent a new mapping",
+          "distractors": [
+            { "text": "Always fill a fresh frame and continue quietly", "kind": "reversed", "rationale": "A wild pointer is not a request for more heap." },
+            { "text": "Flush every core's TLB and then retry as a syscall", "kind": "nearby", "rationale": "A bad address is not a shootdown or a syscall." },
+            { "text": "Install an identity map so the store can complete", "kind": "misapplied", "rationale": "A store to an address the process was never given should kill, not invent a mapping." }
+          ],
+          "correctExplanation": "No promise, no fill. The process ends.",
+          "objectiveIds": ["Distinguish a fault that should fill a page from one that should kill the process"],
+          "prerequisiteConceptIds": ["os-vm", "os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "os-page-fault-20",
+      "conceptId": "os-page-fault",
+      "title": "Several reasons the walk stopped",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["os-vm", "os-trap"],
+      "goDeeper": "os-swap",
+      "diagram": "page-fault-path",
+      "explanation": [
+        "A missing translation is not one story. The hardware only reports that the walk failed or was forbidden; the kernel has to classify the miss. This unit inventories why the translation was missing, without turning any one reason into its own course.",
+        "First touch: the process has a legal range — a grown heap, a new stack page — and no frame yet. The kernel should allocate a frame, usually zeroed, and install the mapping. The program then retries the same load or store.",
+        "A guard page is the opposite promise: a deliberately unmapped page, often at the edge of a stack. That fault should kill, not grow the stack through the guard. A not-present bit on a page that used to be valid is a third case. The kernel may later fetch the bytes from disk and fill; that fill is not this lesson's mechanism.",
+        "Permission failures are present-but-wrong: a store into read-only text, a user load from a kernel-only page. Those are kills, not fills. The inventory is first touch, guard, not-present, and bad permission. Mixing them — filling a guard, killing a first touch — is how the mechanism fails."
+      ],
+      "example": "A first store to a heap page the kernel just grew should fill. A store that walks off the stack into the guard page should kill. Same trap entry. Opposite decisions, because the intended maps differ.",
+      "whyItMatters": "Disk fetch is one possible fill; the fault is still only the missing translation.",
+      "quiz": [
+        {
+          "id": "pf20-1",
+          "stem": "A first store to a newly grown heap page with no frame yet should:",
+          "correctAnswer": "Allocate a frame, install the mapping, and retry",
+          "distractors": [
+            { "text": "Kill the process for touching that legal heap range", "kind": "reversed", "rationale": "First touch of a promised range is a fill." },
+            { "text": "Leave the translation missing and skip the store", "kind": "nearby", "rationale": "The store still has to happen after the fill." },
+            { "text": "Treat the store as a newly invented system-call number", "kind": "misapplied", "rationale": "A heap store is not a syscall." }
+          ],
+          "correctExplanation": "Legal range, no frame. Fill, then the store completes.",
+          "objectiveIds": ["Distinguish a fault that should fill a page from one that should kill the process"],
+          "prerequisiteConceptIds": ["os-vm", "os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pf20-2",
+          "stem": "A fault on a guard page at the edge of the stack should:",
+          "correctAnswer": "Stop the process; the page was unmapped on purpose",
+          "distractors": [
+            { "text": "Grow the stack through the guard and continue", "kind": "reversed", "rationale": "A guard is a wall. Growing through it deletes the wall." },
+            { "text": "Fill the guard from disk and mark it executable", "kind": "nearby", "rationale": "A guard is not a not-present file page." },
+            { "text": "Delete the process id and keep the threads running", "kind": "misapplied", "rationale": "The id is not what a guard protects." }
+          ],
+          "correctExplanation": "Deliberately missing. That is a kill, not a fill.",
+          "objectiveIds": ["Distinguish a fault that should fill a page from one that should kill the process"],
+          "prerequisiteConceptIds": ["os-vm", "os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "pf20-3",
+          "stem": "A page marked not-present after it used to be valid typically means:",
+          "correctAnswer": "The kernel may fill it later; the translation is just missing",
+          "distractors": [
+            { "text": "The address was never legal, so the kernel must always kill", "kind": "reversed", "rationale": "It used to be valid. That is not a wild pointer." },
+            { "text": "The TLB now holds a permanent translation for that page", "kind": "nearby", "rationale": "Not-present means the walk cannot finish." },
+            { "text": "The address was swapped into the inode and can never return", "kind": "misapplied", "rationale": "Not-present after valid usually means the kernel may fill it later." }
+          ],
+          "correctExplanation": "The name is still promised. The frame is gone for now.",
+          "objectiveIds": ["Describe a page fault as a missing translation that transfers into the kernel"],
+          "prerequisiteConceptIds": ["os-vm", "os-trap"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "os-swap-10",
+      "conceptId": "os-swap",
+      "title": "Evict the frame; fault it back later",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-page-fault"],
+      "goDeeper": "os-cow",
+      "explanation": [
+        "Paging to disk treats a frame as evictable. The kernel picks a victim, writes its bytes to disk if they are dirty, marks the process's translation not-present, and reuses the frame. The virtual page still exists as a promise. The physical frame is gone.",
+        "The next access to that page faults. The kernel finds the bytes on disk, gets a frame, reads them back, and installs the translation again. That is the whole loop: evict, then fill on the next fault. It is not a new address space. It is the same page, late.",
+        "Disk is orders of magnitude slower than RAM. One miss is a stall. Many processes missing at once turn the disk into a queue and the CPUs into waiters. The illusion of extra RAM holds only while faults stay rare. When they are not, the machine spends its time moving pages, not running programs."
+      ],
+      "example": "An idle process's heap frame is written to disk and the frame is given to a busy compiler. Later the idle process loads that page. The fault waits on the disk, the bytes come back into some frame, and the load completes.",
+      "whyItMatters": "The next unit shares frames after fork by permission; this unit only evicts them to disk.",
+      "quiz": [
+        {
+          "id": "sw10-1",
+          "stem": "Paging a page to disk means the kernel:",
+          "correctAnswer": "Evicts the frame and brings the bytes back on the next fault",
+          "distractors": [
+            { "text": "Deletes the virtual page so those bytes can never return", "kind": "reversed", "rationale": "The virtual page remains. Only the frame left." },
+            { "text": "Moves the process to another core to free the frame", "kind": "nearby", "rationale": "Eviction is a memory move, not a core move." },
+            { "text": "Rewrites the program so it no longer uses that page", "kind": "misapplied", "rationale": "The program is unchanged. The frame was borrowed." }
+          ],
+          "correctExplanation": "Frame out, not-present, frame back on the next fault.",
+          "objectiveIds": ["Explain paging to disk as evicting a frame and bringing it back on the next fault"],
+          "prerequisiteConceptIds": ["os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "sw10-2",
+          "stem": "Many processes faulting on disk-backed pages at once typically:",
+          "correctAnswer": "Spend the machine on disk waits instead of useful running",
+          "distractors": [
+            { "text": "Make the disk as fast as RAM just by issuing more faults", "kind": "reversed", "rationale": "More misses make the queue longer, not the disk faster." },
+            { "text": "Cause the TLB to store whole files instead of pages", "kind": "nearby", "rationale": "The TLB still caches translations, not files." },
+            { "text": "Force the kernel to pin every process in RAM", "kind": "misapplied", "rationale": "Thrashing spends the machine on disk waits. The kernel does not respond by pinning everyone." }
+          ],
+          "correctExplanation": "The extra RAM was disk. Disk does not keep up with a crowd of misses.",
+          "objectiveIds": ["Predict the cost of treating the disk as extra RAM when many processes miss"],
+          "prerequisiteConceptIds": ["os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "sw10-3",
+          "stem": "Treating disk as extra RAM differs from having the bytes in a frame because:",
+          "correctAnswer": "A miss now waits on disk, which is far slower than RAM",
+          "distractors": [
+            { "text": "A disk fill is always cheaper than hitting a RAM frame", "kind": "reversed", "rationale": "Disk is the expensive path. RAM was the cheap one." },
+            { "text": "The virtual addresses themselves become physical", "kind": "nearby", "rationale": "The names stay virtual. The frame is what left." },
+            { "text": "The process no longer has a page table at all", "kind": "misapplied", "rationale": "The table stays. The present bit cleared." }
+          ],
+          "correctExplanation": "Same page, much longer wait. That is the cost of the illusion.",
+          "objectiveIds": ["Predict the cost of treating the disk as extra RAM when many processes miss"],
+          "prerequisiteConceptIds": ["os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "os-cow-10",
+      "conceptId": "os-cow",
+      "title": "Share the frames until a store",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-fork", "os-page-fault"],
+      "goDeeper": "os-mmap",
+      "diagram": "cow-fork",
+      "explanation": [
+        "fork, in the last course, copied the process. Copying every frame at fork time is expensive. Copy-on-write shares them instead. After fork, parent and child point at the same physical frames. The kernel marks those mappings read-only so the next store will fault.",
+        "A write fault on a shared page is the copy. The kernel allocates a new frame, copies the bytes, and remaps only the writer to that new frame with write permission. The other process keeps the old frame. Reads never needed a copy.",
+        "The state to preserve is the other side's view. Remap both, and a store in the child appears in the parent. Forget to mark the pages read-only at fork, and the store never faults, so they share writes forever. The cheap fork is a delayed copy plus a permission trap."
+      ],
+      "example": "A shell forks a helper. Both still share the heap frame. The helper stores into a buffer. That store faults, the kernel copies the page, and only the helper's table names the new frame. The shell's buffer is unchanged.",
+      "whyItMatters": "The cheap fork from the last course is this delayed copy, not a full photocopy of every frame.",
+      "quiz": [
+        {
+          "id": "cow10-1",
+          "stem": "Right after a copy-on-write fork, parent and child:",
+          "correctAnswer": "Share frames and will copy a page only when someone writes",
+          "distractors": [
+            { "text": "Each already own a private writable copy of every page", "kind": "reversed", "rationale": "That would be the expensive eager copy COW avoids." },
+            { "text": "Share their register files but never share any memory frames", "kind": "nearby", "rationale": "Registers were copied. Frames are what COW shares." },
+            { "text": "Share only the kernel stack, and copy user pages immediately", "kind": "misapplied", "rationale": "Right after COW fork they share user frames and copy on the first write." }
+          ],
+          "correctExplanation": "Same frames, read-only, until a store forces a copy.",
+          "objectiveIds": ["Describe copy-on-write as sharing frames after fork until a write"],
+          "prerequisiteConceptIds": ["os-fork", "os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cow10-2",
+          "stem": "The child writes a shared heap page. The mapping that changes is:",
+          "correctAnswer": "The child's: it gets a new frame; the parent keeps the old",
+          "distractors": [
+            { "text": "Both: parent and child must switch to the new frame", "kind": "reversed", "rationale": "Remapping both would make the store visible next door." },
+            { "text": "Neither: the store is dropped so the frames stay shared", "kind": "nearby", "rationale": "The store must complete, on a private copy." },
+            { "text": "The parent's only; the child keeps the original frame", "kind": "misapplied", "rationale": "The writer is the one that needs a private frame." }
+          ],
+          "correctExplanation": "Only the writer's table moves. The other name still works.",
+          "objectiveIds": ["Predict which mapping changes when one side writes a shared page"],
+          "prerequisiteConceptIds": ["os-fork", "os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cow10-3",
+          "stem": "After that write, a load from the same virtual page in the parent:",
+          "correctAnswer": "Still reads the old frame, which the child's store did not edit",
+          "distractors": [
+            { "text": "Reads the child's new bytes, because the pages are still one", "kind": "reversed", "rationale": "The copy split them. The parent kept the original." },
+            { "text": "Faults forever, because the parent lost its translation", "kind": "nearby", "rationale": "The parent's entry still names the old frame." },
+            { "text": "Reads the child's source file from disk at that offset", "kind": "misapplied", "rationale": "This is a frame split, not a file read." }
+          ],
+          "correctExplanation": "Parent's mapping did not move. The old bytes are still there.",
+          "objectiveIds": ["Predict which mapping changes when one side writes a shared page"],
+          "prerequisiteConceptIds": ["os-fork", "os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "os-cow-20",
+      "conceptId": "os-cow",
+      "title": "Only the writer's map gets the copy",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["os-fork", "os-page-fault"],
+      "goDeeper": "os-mmap",
+      "diagram": "cow-fork",
+      "explanation": [
+        "After fork, parent and child can share frames until someone stores. The sequence that follows is the whole mechanism: share, write fault, copy, remap one side, leave the other on the old frame.",
+        "After fork the two page tables name the same frames, read-only, with a reference count. A read hits the shared frame and nothing changes. The first store on either side faults because the mapping is not writable. That fault is the copy request, not a kill — the address is legal, the permission is the hook.",
+        "The kernel copies the frame, points the writer's page-table entry at the new frame, and makes that entry writable. The other process's entry still names the old frame. If the count has now dropped to one, the remaining side can be made writable without another copy.",
+        "The sequence fails in named ways. Skip the read-only mark and both sides write the same frame. Remap both entries to the copy and the other side sees the store. Copy but leave the writer read-only and it faults forever. Diagnose from who can see the new bytes."
+      ],
+      "example": "Parent writes a shared page after fork. The kernel copies, remaps only the parent, and drops the old frame's count to one. A later write in the child can just mark that remaining frame writable. No second copy is required.",
+      "whyItMatters": "Mix any step of share, copy, and one-sided remap and both processes observe the same store.",
+      "quiz": [
+        {
+          "id": "cow20-1",
+          "stem": "The copy-on-write sequence after fork is:",
+          "correctAnswer": "Share frames, fault on write, copy, remap only the writer",
+          "distractors": [
+            { "text": "Copy every frame at fork, then share the copies on write", "kind": "reversed", "rationale": "Eager copy is what COW delays." },
+            { "text": "Unmap both processes, then refill from disk on the next read", "kind": "nearby", "rationale": "COW is a permission split, not a disk eviction." },
+            { "text": "Merge the two page tables into one shared kernel table", "kind": "misapplied", "rationale": "Each process keeps its own table." }
+          ],
+          "correctExplanation": "Share, trap on store, copy, move only the writer's entry.",
+          "objectiveIds": ["Describe copy-on-write as sharing frames after fork until a write"],
+          "prerequisiteConceptIds": ["os-fork", "os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "cow20-2",
+          "stem": "Only the parent writes a shared page. The child's page-table entry should:",
+          "correctAnswer": "Keep naming the old frame, still without the parent's new bytes",
+          "distractors": [
+            { "text": "Switch to the parent's new frame so both stay in sync", "kind": "reversed", "rationale": "Syncing them would publish the store to the child." },
+            { "text": "Be deleted, because one write invalidates the child's map", "kind": "nearby", "rationale": "The child's name is still valid. It just stayed put." },
+            { "text": "Point at the kernel's trap handler for the rest of the run", "kind": "misapplied", "rationale": "The child's entry still names a user frame." }
+          ],
+          "correctExplanation": "The child was not the writer. Its entry does not move.",
+          "objectiveIds": ["Predict which mapping changes when one side writes a shared page"],
+          "prerequisiteConceptIds": ["os-fork", "os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "cow20-3",
+          "stem": "After fork, a store in the child appears in the parent. The likely bug is:",
+          "correctAnswer": "The pages stayed writable, or both entries were remapped to the copy",
+          "distractors": [
+            { "text": "The kernel copied the page and remapped only the writing child", "kind": "reversed", "rationale": "That is the correct sequence. The parent would not see the store." },
+            { "text": "The parent lost its process id when the child executed the store", "kind": "nearby", "rationale": "Ids do not leak stores across maps." },
+            { "text": "Fork aliased the two page tables to one writable directory", "kind": "misapplied", "rationale": "A store visible in the parent means the pages stayed writable or both entries were remapped to the copy." }
+          ],
+          "correctExplanation": "Either the store never faulted, or both tables were pointed at the new frame.",
+          "objectiveIds": ["Predict which mapping changes when one side writes a shared page"],
+          "prerequisiteConceptIds": ["os-fork", "os-page-fault"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "os-mmap-10",
+      "conceptId": "os-mmap",
+      "title": "A file, or empty memory, as addresses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["os-vm"],
+      "explanation": [
+        "mmap makes a file, or a stretch of anonymous memory, appear as a contiguous range of virtual addresses in this process. The program later loads and stores those addresses as if they were ordinary bytes. The kernel recorded the range. It does not have to put every byte in RAM at the call.",
+        "Anonymous memory is a range that starts as zeroes. A file-backed range is a range whose bytes are the file's contents. In both cases the process sees addresses, not a separate read-into-a-buffer step. This unit does not need the file system's internal objects. It needs the range.",
+        "A load from that range before the bytes sit in RAM is not a ready physical access. The first touch makes the kernel supply the bytes — zeroes, or the file's contents — and install a translation. Later loads of the same page hit memory like any other page. The range was a promise; the first touch collects it."
+      ],
+      "example": "A program maps a small config file at address 0x6000_0000. The first load from that address is not yet in RAM. The kernel supplies the file's bytes, installs a translation, and the load completes. A later load of the same page is an ordinary memory access.",
+      "whyItMatters": "The range is still a virtual map; the kernel fills the bytes when the process first uses them.",
+      "quiz": [
+        {
+          "id": "mm10-1",
+          "stem": "mmap's job is:",
+          "correctAnswer": "Making a file or anonymous memory appear as an address range",
+          "distractors": [
+            { "text": "Turning every virtual address into a physical frame at once", "kind": "nearby", "rationale": "The call records a range. It need not fill RAM yet." },
+            { "text": "Removing a range of addresses from the process entirely", "kind": "reversed", "rationale": "mmap adds a range. It does not delete the map." },
+            { "text": "Compiling a file into the kernel so it can be executed", "kind": "misapplied", "rationale": "mmap is a process map, not a kernel build step." }
+          ],
+          "correctExplanation": "A range appears in this process. File or anonymous, it is still addresses.",
+          "objectiveIds": ["Describe mmap as making a file or anonymous memory appear as a range of addresses"],
+          "prerequisiteConceptIds": ["os-vm"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "mm10-2",
+          "stem": "After mmap of a file, the process:",
+          "correctAnswer": "Can load that range as ordinary addresses naming the file's bytes",
+          "distractors": [
+            { "text": "Must still copy the whole file into a buffer before any load", "kind": "reversed", "rationale": "The point of the range is that loads name the file." },
+            { "text": "Owns a private copy of the kernel and can rewrite its maps", "kind": "nearby", "rationale": "The process still has one user map. The kernel is not copied." },
+            { "text": "Replaces its process id with a string naming the file path", "kind": "misapplied", "rationale": "The id is unchanged. A range was added." }
+          ],
+          "correctExplanation": "The file is now a span of this process's addresses.",
+          "objectiveIds": ["Describe mmap as making a file or anonymous memory appear as a range of addresses"],
+          "prerequisiteConceptIds": ["os-vm"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mm10-3",
+          "stem": "A load from that range before the bytes are in RAM:",
+          "correctAnswer": "Makes the kernel supply the bytes and then complete the load",
+          "distractors": [
+            { "text": "Silently reads whatever was last in some unused frame", "kind": "reversed", "rationale": "An unchecked leftover frame would leak someone else's bytes." },
+            { "text": "Returns the physical frame number instead of the bytes", "kind": "nearby", "rationale": "The load still wants the file's (or zero) bytes." },
+            { "text": "Fails the compile because the file was not linked in", "kind": "misapplied", "rationale": "This is a runtime first touch, not a link error." }
+          ],
+          "correctExplanation": "The range was a promise. First touch is when the kernel keeps it.",
+          "objectiveIds": ["Predict what a load from that range does before the bytes are in RAM"],
+          "prerequisiteConceptIds": ["os-vm"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

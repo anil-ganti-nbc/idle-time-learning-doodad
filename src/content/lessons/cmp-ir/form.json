@@ -1,0 +1,524 @@
+{
+  "courseId": "cmp-ir",
+  "moduleId": "cmp-ir-form",
+  "lessons": [
+    {
+      "id": "cmp-three-addr-5",
+      "conceptId": "cmp-three-addr",
+      "title": "One operator, a few names",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "core",
+      "prerequisites": ["cmp-ir-lower-intro"],
+      "goDeeper": "cmp-cfg-ir",
+      "explanation": [
+        "Nested expressions hide too much work in one tree node. `(a + b) * c` is a single plus-times tree. Three-address code names each result: `t1 = a + b` then `t2 = t1 * c`. Each instruction has one operator and a handful of operands. A later pass that wants to move or fold work rewrites those small instructions, not a tree it has to unpack.",
+        "The temporaries are the point. Once every subexpression has a name, you can copy `t1`, replace `t1`, or delete `t1` without walking children. Motion is cheap because the unit of motion is already small."
+      ],
+      "example": "`x = (a + b) * (a + b)` becomes `t1 = a + b; t2 = a + b; t3 = t1 * t2; x = t3`. Two identical adds sit in the open. A later pass can see they are the same work.",
+      "whyItMatters": "Optimizers move instructions, not parentheses. If the IR is still a nested tree, every rewrite re-implements lowering.",
+      "quiz": [
+        {
+          "id": "ir-threeaddr5-1",
+          "stem": "Rewrite `(a + b) * c` into three-address instructions:",
+          "correctAnswer": "`t1 = a + b` then `t2 = t1 * c`",
+          "distractors": [
+            { "text": "Keep `(a + b) * c` as one nested instruction", "kind": "nearby", "rationale": "That is still a tree node, not three-address." },
+            { "text": "`t1 = a + b * c` with both operators in one step", "kind": "misconception", "rationale": "One operator per instruction; the multiply is a second step." },
+            { "text": "Emit a single fused machine opcode and stop", "kind": "misapplied", "rationale": "Three-address is still IR. Target opcodes come later." }
+          ],
+          "correctExplanation": "Name the add, then multiply that name. Each step has one operator.",
+          "objectiveIds": ["Rewrite a nested expression into three-address instructions with temporary names"],
+          "prerequisiteConceptIds": ["cmp-ir-lower-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-threeaddr5-2",
+          "stem": "One operator and a few operands make later motion easy because:",
+          "correctAnswer": "Each instruction is already a small unit a pass can move or replace",
+          "distractors": [
+            { "text": "Nested trees are illegal after type checking", "kind": "nearby", "rationale": "Trees are fine as a front-end form; they are just awkward to move." },
+            { "text": "The CPU only executes three-operand instructions", "kind": "misapplied", "rationale": "This is an IR shape, not a hardware rule." },
+            { "text": "Temporaries forbid any later rewrite of the program", "kind": "reversed", "rationale": "Names exist so rewrites have something to grab." }
+          ],
+          "correctExplanation": "Small named units move. A nested tree makes every rewrite unpack children.",
+          "objectiveIds": ["Explain why one operator and a few operands make later motion easy"],
+          "prerequisiteConceptIds": ["cmp-ir-lower-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ir-threeaddr5-3",
+          "stem": "In `t1 = a + b; t2 = t1 * c`, the name `t1` exists so that:",
+          "correctAnswer": "The multiply can mention the add's result without nesting",
+          "distractors": [
+            { "text": "The lexer can recover the original parentheses", "kind": "misapplied", "rationale": "Lexing is over. This is already three-address IR." },
+            { "text": "The add and multiply share one instruction slot", "kind": "reversed", "rationale": "They are two instructions; the name is the wire between them." },
+            { "text": "A later pass must re-parse `a + b` from source", "kind": "nearby", "rationale": "The point of the temporary is to stop re-parsing." }
+          ],
+          "correctExplanation": "The temporary is the result. Later instructions mention it, not a nested tree.",
+          "objectiveIds": ["Rewrite a nested expression into three-address instructions with temporary names"],
+          "prerequisiteConceptIds": ["cmp-ir-lower-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-three-addr-10",
+      "conceptId": "cmp-three-addr",
+      "title": "Temporaries later passes can move",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ir-lower-intro"],
+      "goDeeper": "cmp-cfg-ir",
+      "diagram": "cmp-cfg-blocks",
+      "explanation": [
+        "Stanford CS143 treats three-address as the form later motion can actually rewrite. A nested source expression is a tree. Lowering names every interior result: `t1 = a + b`, `t2 = t1 * c`, `x = t2`. Each instruction carries one operator and a few operands. That is the unit a later pass copies, folds, or deletes.",
+        "CMU 15-411 puts the same cut at the start of IR: once names exist, control can be drawn as blocks and edges. `t1 = a + b` can live in an entry block and feed both sides of a branch. You do not have to keep the plus glued inside a source statement. The instruction is already a thing that can sit on an edge.",
+        "The alternative is to keep the tree and re-walk it in every pass. That works until a pass wants to hoist `a + b` above a branch or share it with another statement. Then the tree is in the way. Three-address pays the naming cost once so motion stays local."
+      ],
+      "example": "`if (c) x = a + b; else x = 0;` lowers to `t1 = a + b` in the then-path, `t2 = 0` in the else-path, and `x` assigned from whichever name arrives. The add is one instruction, not a nested AST node stuck inside the `if`.",
+      "whyItMatters": "Every later CFG, SSA, and fold pass assumes this grain. If you still have a tree, you are arguing with lowering, not optimizing.",
+      "quiz": [
+        {
+          "id": "ir-threeaddr10-1",
+          "stem": "Trace `x = (a + b) * c` into three-address with temporaries:",
+          "correctAnswer": "`t1 = a + b`; `t2 = t1 * c`; `x = t2`",
+          "distractors": [
+            { "text": "`x = a + b * c` as a single three-operand instruction", "kind": "nearby", "rationale": "That still hides two operators; the add needs its own name." },
+            { "text": "Leave `(a + b) * c` as one AST plus-times node", "kind": "reversed", "rationale": "That is the tree you just lowered out of." },
+            { "text": "Emit the source characters `a`, `+`, `b` as three tokens", "kind": "misapplied", "rationale": "Tokens are a front-end object. This is already IR." }
+          ],
+          "correctExplanation": "Name the add, name the multiply, assign `x`. Each line is one operator.",
+          "objectiveIds": ["Rewrite a nested expression into three-address instructions with temporary names"],
+          "prerequisiteConceptIds": ["cmp-ir-lower-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ir-threeaddr10-2",
+          "stem": "A pass that wants to hoist `a + b` out of a statement prefers three-address because:",
+          "correctAnswer": "The add is already one named instruction it can pick up and move",
+          "distractors": [
+            { "text": "Three-address forbids moving any instruction at all", "kind": "reversed", "rationale": "The form exists so motion is local." },
+            { "text": "The source tree already has a unique name for every plus", "kind": "nearby", "rationale": "Trees share structure; they do not name interior results as instructions." },
+            { "text": "Hoisting is a parser rewrite of the original parentheses", "kind": "misapplied", "rationale": "The parser is finished. Motion happens on IR." }
+          ],
+          "correctExplanation": "Small named units move. A nested plus inside a statement does not.",
+          "objectiveIds": ["Explain why one operator and a few operands make later motion easy"],
+          "prerequisiteConceptIds": ["cmp-ir-lower-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-threeaddr10-3",
+          "stem": "`t1 = a + b` in an entry block that feeds two successors is useful because:",
+          "correctAnswer": "Both successors can mention `t1` without recomputing the add",
+          "distractors": [
+            { "text": "Each successor must re-parse `a + b` from the source file", "kind": "misapplied", "rationale": "The temporary already holds the result." },
+            { "text": "The add must be duplicated into every successor, always", "kind": "nearby", "rationale": "Sharing the name is the point; duplication is a later choice." },
+            { "text": "Entry blocks are forbidden from holding arithmetic", "kind": "misconception", "rationale": "Arithmetic is ordinary three-address; blocks just group it." }
+          ],
+          "correctExplanation": "The name travels on the edges. That is why one operator and a name beat a nested tree.",
+          "objectiveIds": ["Explain why one operator and a few operands make later motion easy"],
+          "prerequisiteConceptIds": ["cmp-ir-lower-intro"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "cmp-cfg-ir-10",
+      "conceptId": "cmp-cfg-ir",
+      "title": "Straight line, not a soup",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-three-addr"],
+      "goDeeper": "cmp-ssa",
+      "diagram": "cmp-cfg-blocks",
+      "explanation": [
+        "Control splits a three-address stream into basic blocks. A block is a straight-line sequence: one entry, one exit, no branch in the middle. Instructions inside run in order or not at all. The edges between blocks are the taken and not-taken paths, the loop back-edge, the merge after an `if`.",
+        "Stanford CS143 draws the CFG after three-address exists for a reason. `t1 = a + b` is an instruction you can put in a block. A branch that tests `c` is the block's exit. The then-block holds `t2 = t1`; the else-block holds `t3 = 0`; both edges land in a join. Without the split, 'move this add' has no place to move to.",
+        "Leaders start a block: the first instruction, a branch target, an instruction after a branch. Everything from a leader up to the next leader is one block. The graph is those blocks plus the successor edges. Later dataflow walks the graph, not the original source statements."
+      ],
+      "example": "`t1 = a + b; if c goto L1; t3 = 0; goto L2; L1: t2 = t1; L2: ...` splits into an entry block ending at the branch, a then-block, an else-block, and a join. Four blocks, not one soup of labels.",
+      "whyItMatters": "Every global rewrite names blocks and edges. If you still see a linear dump of gotos, you will miss the join.",
+      "quiz": [
+        {
+          "id": "ir-cfgir10-1",
+          "stem": "A basic block is:",
+          "correctAnswer": "A straight-line sequence with one entry and one exit",
+          "distractors": [
+            { "text": "Any run of three-address code including a mid-block branch", "kind": "nearby", "rationale": "A branch in the middle splits the block at that exit." },
+            { "text": "The entire function treated as a single instruction list", "kind": "misconception", "rationale": "Joins and branches cut the list into blocks." },
+            { "text": "A source-level statement, including a nested `if`", "kind": "misapplied", "rationale": "The CFG is built on three-address, not on source statements." }
+          ],
+          "correctExplanation": "One entry, one exit, straight line. That is the definition later passes use.",
+          "objectiveIds": ["Identify a basic block as a straight-line sequence with one entry and one exit"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-cfgir10-2",
+          "stem": "Split `t1 = a + b; if c goto T; t3 = 0; goto J; T: t2 = t1; J: x = ...` into blocks:",
+          "correctAnswer": "Entry ending at the branch, then-block, else-block, and a join",
+          "distractors": [
+            { "text": "One block containing every instruction and both labels", "kind": "nearby", "rationale": "Labels and branches are the cuts; they start and end blocks." },
+            { "text": "A separate block for each three-address operator, no edges", "kind": "reversed", "rationale": "Straight-line runs stay together; edges connect the runs." },
+            { "text": "Keep the original AST `if` as a single tree node", "kind": "misapplied", "rationale": "The CFG is three-address blocks, not the source tree." }
+          ],
+          "correctExplanation": "Leaders at the start, the branch target, and the fall-through. Edges carry the join.",
+          "objectiveIds": ["Split three-address code into basic blocks and the edges between them"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-cfgir10-3",
+          "stem": "An instruction after a conditional branch belongs in:",
+          "correctAnswer": "A new block, because the branch was the previous block's exit",
+          "distractors": [
+            { "text": "The same block, appended after the branch", "kind": "reversed", "rationale": "Nothing in a block runs after its exit." },
+            { "text": "No block, because fall-through is not an edge", "kind": "nearby", "rationale": "Fall-through is an edge to the next leader." },
+            { "text": "The lexer token stream, which still owns control", "kind": "misapplied", "rationale": "Lexing is over. This is already three-address IR." }
+          ],
+          "correctExplanation": "The branch exits. The next instruction is a leader. That is how edges appear.",
+          "objectiveIds": ["Identify a basic block as a straight-line sequence with one entry and one exit"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-ssa-10",
+      "conceptId": "cmp-ssa",
+      "title": "Each name is written once",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-three-addr"],
+      "goDeeper": "cmp-phi",
+      "diagram": "cmp-ssa-phi",
+      "explanation": [
+        "Assignments that reuse a name hide which write a later use actually reads. Three-address still allows `x = 1; x = 2; return x`. Static single assignment gives each write a fresh name: `x1 = 1; x2 = 2`. Each name is defined exactly once. A use of `x2` has one definition, not a search through earlier stores to `x`.",
+        "LLVM's Language Reference treats that single definition as the IR's data contract. Use-def is then a graph: each use points at one instruction. Constant propagation, copy replacement, and dead-name deletion become walks of that graph instead of a hunt through every assignment of `x`.",
+        "Joins still need a story. When `x` is assigned on two incoming paths, SSA inserts a merge: `x3 = φ(x1, x2)`. The φ is a new definition, so `x3` is still written once. φ-nodes are how SSA names that join. Here the rule is the names: one write per name, even at a merge."
+      ],
+      "example": "`x = 1; if (c) x = 2; return x;` in three-address reassigns `x`. In SSA it is `x1 = 1; x2 = 2; x3 = φ(x1, x2); return x3`. The return uses one name, defined once.",
+      "whyItMatters": "If a name has two writers, every pass re-solves reaching definitions. SSA pays that cost once, as renaming.",
+      "quiz": [
+        {
+          "id": "ir-ssa10-1",
+          "stem": "Rewrite `x = 1; x = x + y; z = x` so each name is defined once:",
+          "correctAnswer": "`x1 = 1; x2 = x1 + y; z1 = x2`",
+          "distractors": [
+            { "text": "Keep `x = 1; x = x + y; z = x` and mark `x` as SSA anyway", "kind": "nearby", "rationale": "Reassignment of `x` is exactly what SSA forbids." },
+            { "text": "`x1 = 1; x1 = x1 + y; z = x1` with one name written twice", "kind": "reversed", "rationale": "The second write must be a new name." },
+            { "text": "Collapse everything to the source identifiers `x` and `z`", "kind": "misapplied", "rationale": "Source names are not SSA names; each write needs a version." }
+          ],
+          "correctExplanation": "Fresh name per write. Uses mention the version they read.",
+          "objectiveIds": ["Rewrite assignments so each name is defined exactly once"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-ssa10-2",
+          "stem": "A single definition per name turns use-def into a graph walk because:",
+          "correctAnswer": "Each use has exactly one defining instruction to follow",
+          "distractors": [
+            { "text": "Uses must scan every earlier assignment of the source variable", "kind": "reversed", "rationale": "That scan is what multiple definitions forced." },
+            { "text": "The lexer records a unique token for each assignment", "kind": "misapplied", "rationale": "This is IR naming, not tokens." },
+            { "text": "Three-address already forbade reusing any temporary", "kind": "nearby", "rationale": "Three-address still allows `x = 1; x = 2`. SSA is the extra rule." }
+          ],
+          "correctExplanation": "One def, so the use-def edge is unique. Walks replace reaching-definition searches.",
+          "objectiveIds": ["Explain why a single definition per name turns use-def into a graph walk"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ir-ssa10-3",
+          "stem": "In `x1 = 1; x2 = 2; x3 = φ(x1, x2)`, how many times is `x3` defined?",
+          "correctAnswer": "Once: the φ is the single write of `x3`",
+          "distractors": [
+            { "text": "Twice, because `x1` and `x2` both write `x3`", "kind": "nearby", "rationale": "Those are operands, not writes of `x3`." },
+            { "text": "Zero: φ is a comment the backend will ignore", "kind": "misconception", "rationale": "φ is a real SSA definition at the join." },
+            { "text": "Once per source token named `x`", "kind": "misapplied", "rationale": "Source spelling is gone; SSA versions are the names." }
+          ],
+          "correctExplanation": "φ is one instruction that defines `x3`. Operands are other names, already defined.",
+          "objectiveIds": ["Rewrite assignments so each name is defined exactly once"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-ssa-20",
+      "conceptId": "cmp-ssa",
+      "title": "Use-def as a graph walk",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["cmp-three-addr"],
+      "goDeeper": "cmp-phi",
+      "diagram": "cmp-ssa-phi",
+      "explanation": [
+        "Walking a use to its unique definition is the reason SSA exists. Start from three-address that still reassigns: `x = 1; x = x + y; z = x`. After renaming, `x1 = 1; x2 = x1 + y; z1 = x2`. The use of `x2` in `z1` has one incoming edge. There is no second writer of `x2` to consider.",
+        "CMU 15-411 treats that uniqueness as the thing that turns dataflow into a graph problem. Copy propagation is 'replace this use with the name it copies'. Dead-name deletion is 'if this definition has no uses, drop it'. Constant folding follows the same edges: if both operands of `x2 = x1 + y` are already constants, the definition of `x2` becomes a constant and every use updates.",
+        "Joins are where the graph would otherwise fork. Two predecessors that assign `x` cannot both write `x3`. The φ `x3 = φ(x1, x2)` is the extra definition that keeps the single-assignment rule at the merge. LLVM LangRef makes that φ a first-class instruction, not a comment.",
+        "The graph is not free. You must pick names so every use is dominated by its definition, or the form is garbage. A use of `x2` in a block that can run without executing `x2 = ...` is ill-formed. Verification is a later lesson. Here the operational claim is smaller: one def per name, so the walk has one step.",
+        "Three-address without SSA still has temporaries, so motion is possible. What it lacks is a unique writer. Any pass that asks 'where did this `x` come from?' falls back to reaching definitions. SSA is the renaming that answers that question by construction."
+      ],
+      "example": "`x = 1; if (c) x = 2; return x + 0;` becomes `x1 = 1; x2 = 2; x3 = φ(x1, x2); t = x3 + 0; return t`. A fold that sees `+ 0` rewrites `t` to `x3` by walking one use-def edge. It does not search for every store to `x`.",
+      "whyItMatters": "Missed optimizations that 'should have seen the constant' are often a name with two writers. SSA is how you stop searching.",
+      "quiz": [
+        {
+          "id": "ir-ssa20-1",
+          "stem": "After `x1 = 1; x2 = x1 + 0`, a copy/fold walk that follows use-def will:",
+          "correctAnswer": "Replace uses of `x2` with `x1`, because `x2` has one defining add-of-zero",
+          "distractors": [
+            { "text": "Scan every assignment of the source variable `x` in the function", "kind": "reversed", "rationale": "The single definition of `x2` is the only writer to follow." },
+            { "text": "Refuse to fold because three-address forbids replacing names", "kind": "nearby", "rationale": "Three-address plus SSA is exactly the form that makes replacement local." },
+            { "text": "Re-lex the characters `x + 0` from the original file", "kind": "misapplied", "rationale": "The walk is on IR names, not source characters." }
+          ],
+          "correctExplanation": "One def of `x2`. The walk replaces uses. No reaching-definition search.",
+          "objectiveIds": ["Explain why a single definition per name turns use-def into a graph walk"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-ssa20-2",
+          "stem": "Which fragment still has two writers of one SSA name and is therefore not SSA?",
+          "correctAnswer": "`x1 = 1; x1 = x1 + y` reusing `x1` for the sum",
+          "distractors": [
+            { "text": "`x1 = 1; x2 = x1 + y` with a fresh name for the sum", "kind": "reversed", "rationale": "That is already SSA: one write per name." },
+            { "text": "`x1 = 1; x2 = 2; x3 = φ(x1, x2)` at a join", "kind": "nearby", "rationale": "The φ is a single write of `x3`; operands are other names." },
+            { "text": "`t1 = a + b; t2 = t1 * c` as ordinary three-address", "kind": "subtle", "rationale": "Each temporary is written once; this is already compatible with SSA." }
+          ],
+          "correctExplanation": "Reassignment of `x1` is two definitions. SSA would have named the sum `x2`.",
+          "objectiveIds": ["Rewrite assignments so each name is defined exactly once"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ir-ssa20-3",
+          "stem": "Reaching-definition search versus SSA use-def differs because:",
+          "correctAnswer": "SSA makes the unique writer an edge; reaching defs must consider several writers",
+          "distractors": [
+            { "text": "Both require scanning every assignment of the source variable", "kind": "nearby", "rationale": "SSA is the renaming that removes that scan." },
+            { "text": "SSA forbids naming the result of an add at all", "kind": "reversed", "rationale": "SSA names every result; it just names it once." },
+            { "text": "Reaching definitions run in the lexer before any IR exists", "kind": "misapplied", "rationale": "Both analyses run on IR, after three-address exists." }
+          ],
+          "correctExplanation": "Several writers force a search. One writer is an edge you can walk.",
+          "objectiveIds": ["Explain why a single definition per name turns use-def into a graph walk"],
+          "prerequisiteConceptIds": ["cmp-three-addr"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "cmp-phi-10",
+      "conceptId": "cmp-phi",
+      "title": "The merge at the join",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ssa", "cmp-cfg-ir"],
+      "goDeeper": "cmp-mem2reg",
+      "diagram": "cmp-ssa-phi",
+      "explanation": [
+        "Join points in a CFG are where two names of one variable meet. SSA cannot let both predecessors write the same name. A φ sits at the start of the join block and records, per incoming edge, which predecessor's value arrives: `x3 = φ(x1, x2)`. `x3` is a new definition. Each operand is tied to an edge, not to a runtime call.",
+        "LLVM LangRef makes the correspondence explicit: the first operand comes from the first predecessor, the second from the second. If the then-block wrote `x2 = 2` and the else-block left `x1 = 1` alone, the join is `x3 = φ(x1, x2)` with those blocks as the two predecessors.",
+        "Placement is at the join, not in the middle of a block. A φ that floated down next to an add would read like a function named phi and would break the 'one entry' story: the merge has to happen before the block's body uses the name. The CFG tells you where the join is; the φ is how SSA names it."
+      ],
+      "example": "Then-block: `x2 = 2`. Else-block: no extra write, so `x1` still holds 1. Join: `x3 = φ(x1, x2)`. A use after the join mentions `x3`, never a bare `x`.",
+      "whyItMatters": "Without the φ, SSA would have to pick one predecessor's name and lie about the other path.",
+      "quiz": [
+        {
+          "id": "ir-phi10-1",
+          "stem": "Then writes `x2 = 2`, else leaves `x1 = 1`. The join should contain:",
+          "correctAnswer": "`x3 = φ(x1, x2)`, one operand per incoming edge",
+          "distractors": [
+            { "text": "`x1 = x2` in the join, overwriting the else path's name", "kind": "nearby", "rationale": "That reassigns `x1` and drops the else value." },
+            { "text": "No φ, because SSA already forbids merges", "kind": "reversed", "rationale": "φ exists so the merge is a single new definition." },
+            { "text": "A runtime call `x3 = phi(x1, x2)` inserted after the join's first add", "kind": "misapplied", "rationale": "φ is an IR merge at block start, not a call in the body." }
+          ],
+          "correctExplanation": "One new name, two operands, each tied to a predecessor edge.",
+          "objectiveIds": ["Place a φ at a join so one name records which predecessor's value arrives"],
+          "prerequisiteConceptIds": ["cmp-ssa", "cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-phi10-2",
+          "stem": "Predict the φ operands when the left predecessor defines `a1` and the right defines `a2`:",
+          "correctAnswer": "`a3 = φ(a1, a2)` with `a1` from the left edge and `a2` from the right",
+          "distractors": [
+            { "text": "`a3 = φ(a3, a3)` because the join defines `a3` twice", "kind": "misconception", "rationale": "Operands are the incoming names, not the φ's own result." },
+            { "text": "`a1 = φ(a2)` with a single operand for both edges", "kind": "nearby", "rationale": "Each predecessor supplies its own operand." },
+            { "text": "No operands; the CFG edge magically forwards the latest `a`", "kind": "subtle", "rationale": "SSA names the choice. Edges do not pick a version by themselves." }
+          ],
+          "correctExplanation": "Two edges, two operands, one new name. That is the φ.",
+          "objectiveIds": ["Predict the φ operands for a variable assigned on two incoming edges"],
+          "prerequisiteConceptIds": ["cmp-ssa", "cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ir-phi10-3",
+          "stem": "Trace `x1 = 1; if (c) x2 = 2; use x` through SSA at the join:",
+          "correctAnswer": "The join defines `x3 = φ(x1, x2)` and the use reads `x3`",
+          "distractors": [
+            { "text": "The use still reads `x`, which both blocks wrote", "kind": "nearby", "rationale": "Source `x` is gone; each write has a version." },
+            { "text": "The then-block's `x2` is rewritten to `x1` before the branch", "kind": "reversed", "rationale": "That would destroy the then value on that path." },
+            { "text": "A φ is placed in the entry block, before `x` is assigned", "kind": "misapplied", "rationale": "The merge belongs at the join, after both predecessors." }
+          ],
+          "correctExplanation": "Entry writes `x1`, then writes `x2`, join writes `x3`. The use follows `x3`.",
+          "objectiveIds": ["Place a φ at a join so one name records which predecessor's value arrives"],
+          "prerequisiteConceptIds": ["cmp-ssa", "cmp-cfg-ir"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-mem2reg-10",
+      "conceptId": "cmp-mem2reg",
+      "title": "Promote the slot that stays home",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ssa"],
+      "goDeeper": "cmp-ir-verify",
+      "explanation": [
+        "Alloca slots look like memory even when they behave like locals. A front-end often emits `%x = alloca i32`, then `store` and `load` for every mention of `x`. Those loads hide the value from SSA: each load looks like a new def from memory. mem2reg promotes an alloca that never escapes into an SSA name, replacing loads and stores with versions and φs.",
+        "Never escapes means the address is not stored, not passed to another function, not returned. The slot is a private local. Then `store 1, %x` becomes `x1 = 1`, a later `store 2` on the other path becomes `x2 = 2`, and the join load becomes `x3 = φ(x1, x2)`. LLVM's mem2reg pass is this promotion.",
+        "Some slots must stay in memory. The address is taken and given to a callee. The slot is volatile. Two pointers might alias it. Promotion would invent a register the rest of the program can still reach through a pointer. Those stay as loads and stores."
+      ],
+      "example": "`%a = alloca i32; store 1, %a; if (c) store 2, %a; %r = load %a` with no other use of `%a` becomes `x1 = 1; x2 = 2; x3 = φ(x1, x2)`. If the body also does `call f(%a)`, the address escaped and the alloca stays.",
+      "whyItMatters": "SSA cannot see through memory. Promoting the local is how `-O1` suddenly looks like a different language.",
+      "quiz": [
+        {
+          "id": "ir-mem2reg10-1",
+          "stem": "Promote `%x = alloca i32; store 1, %x; %r = load %x` when `%x` does not escape:",
+          "correctAnswer": "`x1 = 1` and `%r` rewritten to use `x1`, alloca removed",
+          "distractors": [
+            { "text": "Keep the load and store; SSA already sees through memory", "kind": "reversed", "rationale": "Loads hide the value; promotion is what exposes it." },
+            { "text": "Replace the alloca with a heap object the callee can share", "kind": "misapplied", "rationale": "Promotion goes to an SSA value, not to the heap." },
+            { "text": "Delete the store and leave `%r` as an uninitialized name", "kind": "nearby", "rationale": "The store's value is the new SSA definition, not dead." }
+          ],
+          "correctExplanation": "The store becomes a def, the load becomes a use of that def, the slot goes away.",
+          "objectiveIds": ["Promote an alloca that never escapes into an SSA value"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ir-mem2reg10-2",
+          "stem": "A stack slot must stay in memory when:",
+          "correctAnswer": "Its address is passed to a callee, so the slot escapes",
+          "distractors": [
+            { "text": "It is assigned more than once in the source function", "kind": "nearby", "rationale": "Multiple assignments become φs after promotion; they do not force memory." },
+            { "text": "SSA form is in use anywhere in the module", "kind": "misconception", "rationale": "SSA is the destination of promotion, not a reason to refuse it." },
+            { "text": "The slot holds an integer rather than a pointer", "kind": "subtle", "rationale": "Type is not the escape test; taking the address is." }
+          ],
+          "correctExplanation": "Escape means someone else can load through a pointer. That slot is really memory.",
+          "objectiveIds": ["Name a reason a stack slot must stay in memory instead of becoming a register"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-mem2reg10-3",
+          "stem": "After promoting a non-escaping alloca assigned on two incoming edges, the join holds:",
+          "correctAnswer": "A φ of the two stored values, in place of the join load",
+          "distractors": [
+            { "text": "The original load, because φ cannot replace memory", "kind": "reversed", "rationale": "Replacing that load is the point of mem2reg." },
+            { "text": "Two remaining stores and no SSA names", "kind": "nearby", "rationale": "The stores become the φ's operands." },
+            { "text": "A call to a runtime helper named mem2reg", "kind": "misapplied", "rationale": "mem2reg is a compile-time rewrite, not a call." }
+          ],
+          "correctExplanation": "Each path's store becomes a version; the load at the join becomes the φ.",
+          "objectiveIds": ["Promote an alloca that never escapes into an SSA value"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-ir-verify-10",
+      "conceptId": "cmp-ir-verify",
+      "title": "Well-formed or rejected",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-ssa"],
+      "goDeeper": "cmp-dataflow",
+      "explanation": [
+        "Types and dominance are a contract the IR verifier checks, not a hope. Every use of a name must be dominated by that name's definition: every path to the use has already executed the write. The types on operands must match the operator. LLVM LangRef writes this as well-formedness. A pass that breaks it has a bug, even if the generated code happened to work once.",
+        "A classic ill-formed fragment: `x2` is defined in the then-block, then used in a join that also has an else-path that never defined `x2`. The use is not dominated. The repair is a φ at the join, or not using `x2` there. Another: `x3 = φ(x1, x2)` where `x1` is i32 and `x2` is i64. Types do not agree.",
+        "Verification is cheap compared with debugging a later pass that assumed the contract. Run it after every transform that mints names or moves uses. A φ that is not at the start of its block, a use that floats above its def, a binary add of a pointer and a token-like opaque type: those are verifier rejections, not optimizer opinions."
+      ],
+      "example": "Then-block defines `x2 = 2`. Join uses `x2` directly on the else path as well. The verifier rejects: the else path reaches the use without the def. Legal form is `x3 = φ(x1, x2)` with `x1` defined on the else path.",
+      "whyItMatters": "An optimizer that trusts broken SSA will propagate a value that was never written on that path. The verifier is the cheap alarm.",
+      "quiz": [
+        {
+          "id": "ir-verify10-1",
+          "stem": "Every SSA use must be dominated by its definition, meaning:",
+          "correctAnswer": "Every path to the use has already executed that unique write",
+          "distractors": [
+            { "text": "Some path to the use executed the write, even if another did not", "kind": "nearby", "rationale": "Dominance requires all paths, not one." },
+            { "text": "The use appears earlier in the instruction dump than the write", "kind": "reversed", "rationale": "Textual order is not dominance; CFG paths are." },
+            { "text": "The lexer listed the name before any assignment in the file", "kind": "misapplied", "rationale": "Dominance is an IR CFG fact, not a source-token fact." }
+          ],
+          "correctExplanation": "All paths, that one write. That is the dominance half of well-formed SSA.",
+          "objectiveIds": ["Check that every use is dominated by its definition and that types agree"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ir-verify10-2",
+          "stem": "Which fragment should the verifier reject?",
+          "correctAnswer": "A join that uses `x2` defined only in the then-block, with no φ",
+          "distractors": [
+            { "text": "`x3 = φ(x1, x2)` at the join with matching types and dominated operands", "kind": "reversed", "rationale": "That is the well-formed repair." },
+            { "text": "`t1 = a + b` in a block that dominates its only use", "kind": "nearby", "rationale": "Dominated use, matching types: well-formed." },
+            { "text": "A three-address add whose result is named once and used later in the same block", "kind": "subtle", "rationale": "Same-block later uses are dominated by construction." }
+          ],
+          "correctExplanation": "The else path reaches the use with no def of `x2`. That is ill-formed SSA.",
+          "objectiveIds": ["Diagnose an ill-formed SSA fragment the verifier should reject"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ir-verify10-3",
+          "stem": "`x3 = φ(x1, x2)` with `x1` i32 and `x2` i64 is rejected because:",
+          "correctAnswer": "The φ operands' types do not agree with each other",
+          "distractors": [
+            { "text": "φ nodes are illegal once three-address exists", "kind": "misapplied", "rationale": "φ is how SSA merges three-address names." },
+            { "text": "Dominance failed: `x3` is used in its own operand list", "kind": "nearby", "rationale": "The bug here is types, not a self-use." },
+            { "text": "i32 and i64 are the same type after lowering", "kind": "reversed", "rationale": "They are different widths; the verifier cares." }
+          ],
+          "correctExplanation": "Types must agree. A mixed-width φ is ill-formed even if dominance holds.",
+          "objectiveIds": ["Check that every use is dominated by its definition and that types agree"],
+          "prerequisiteConceptIds": ["cmp-ssa"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

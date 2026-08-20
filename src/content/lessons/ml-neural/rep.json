@@ -1,0 +1,521 @@
+{
+  "courseId": "ml-neural",
+  "moduleId": "ml-n-rep",
+  "lessons": [
+    {
+      "id": "ml-inductive-10",
+      "conceptId": "ml-inductive",
+      "title": "What the architecture refuses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-hypothesis"],
+      "goDeeper": "ml-cnn",
+      "explanation": [
+        "Inductive bias is what the architecture refuses to represent, or represents only at a ridiculous cost. A hypothesis class was already a menu of functions. An architecture is a sharper menu: weight sharing, locality, recurrence, a residual path. Those refusals are the claim about the world, not a decoration on the slide.",
+        "A fully connected net can, in principle, relearn that a cat's ear is the same pattern in two corners of an image. It spends capacity on that translation every time. A convolution refuses to treat those two corners as unrelated. That refusal is the bias. It can be wrong — if the job has no spatial repeat — and then the refusal is a tax.",
+        "Name the refusal before you name the win. Translation, locality, permutation of tokens, a Markov state: each later architecture in this module is a different 'I will not spend weights on that.' A fully connected MLP's refusal is weaker: it treats every input coordinate as a private friend of every hidden unit."
+      ],
+      "example": "A 32×32 image. A dense layer to 100 units pays a separate weight for a vertical edge at every pixel. The same edge, shifted two pixels, is a new set of weights. The architecture did not refuse translation. It will try to relearn it, or fail to, with those extra knobs.",
+      "whyItMatters": "If architecture is only 'accuracy went up', you will not know which structure you stopped wasting capacity on, and you will not notice when that structure is the wrong one.",
+      "quiz": [
+        {
+          "id": "ml-ib10-1",
+          "stem": "Inductive bias, in the sense this lesson uses, is:",
+          "correctAnswer": "What the architecture refuses to represent, or represents only at ridiculous cost",
+          "distractors": [
+            { "text": "The held-out accuracy after the last epoch, reported as a personality", "kind": "misapplied", "rationale": "A number on a split is not a refusal in the function class." },
+            { "text": "A guarantee that every function is equally cheap to represent", "kind": "reversed", "rationale": "That would be no bias. The point is an unequal cost." },
+            { "text": "The learning-rate schedule, which forbids some numerical steps", "kind": "nearby", "rationale": "A schedule is how you walk. Bias is which maps are even on the menu." }
+          ],
+          "correctExplanation": "The menu got sharper. Some maps are off it, or expensive. That is the bias.",
+          "objectiveIds": ["Define inductive bias as what the architecture refuses to represent"],
+          "prerequisiteConceptIds": ["ml-hypothesis"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-ib10-2",
+          "stem": "A structure a fully connected net wastes capacity relearning is:",
+          "correctAnswer": "The same local pattern appearing at many spatial positions",
+          "distractors": [
+            { "text": "The existence of a weighted sum, which dense layers cannot compute", "kind": "reversed", "rationale": "A dense layer is a weighted sum. The waste is translation, not the inner product." },
+            { "text": "The training loss itself, which a dense net is forbidden to see", "kind": "misapplied", "rationale": "The loss is not a spatial structure." },
+            { "text": "The majority-class baseline, which architecture cannot represent", "kind": "nearby", "rationale": "A constant predictor is cheap for a dense net. The waste is elsewhere." }
+          ],
+          "correctExplanation": "A cat ear in two corners is two sets of weights unless the architecture shares them.",
+          "objectiveIds": ["Name a structure a fully connected net wastes capacity relearning"],
+          "prerequisiteConceptIds": ["ml-hypothesis"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-ib10-3",
+          "stem": "If the job has no spatial repeat, a translation-sharing architecture typically:",
+          "correctAnswer": "Pays a tax: it refused a structure the job did not have",
+          "distractors": [
+            { "text": "Becomes unbiased, because a wrong refusal is automatically no refusal", "kind": "reversed", "rationale": "A wrong refusal is still a refusal. It is just a bad claim about the world." },
+            { "text": "Deletes the hypothesis class, so no function remains to search", "kind": "misconception", "rationale": "The class is still there. It is the wrong sharper menu." },
+            { "text": "Forces every dense net to share weights it never asked for", "kind": "nearby", "rationale": "The tax lands on the sharing architecture, not on an unrelated dense net." }
+          ],
+          "correctExplanation": "Bias is a claim. When the claim is false, sharing is a cost, not a gift.",
+          "objectiveIds": ["Define inductive bias as what the architecture refuses to represent"],
+          "prerequisiteConceptIds": ["ml-hypothesis"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-cnn-10",
+      "conceptId": "ml-cnn",
+      "title": "The same pattern, anywhere",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-mlp", "ml-inductive"],
+      "goDeeper": "ml-emb-intro",
+      "diagram": "ml-cnn-share",
+      "explanation": [
+        "Convolution shares weights across space because the same pattern can appear anywhere. A small kernel — an edge, a blob, a stroke — is applied at every position. Detecting a vertical edge in the top-left uses the same weights as detecting it in the bottom-right. That sharing is the inductive bias, not a speed hack that happens to look pretty.",
+        "A dense layer must relearn that edge at every position, with a private weight for each pixel-unit pair. Convolution sees the local neighborhood and reuses the kernel. Translation of the pattern is then cheap. A global, position-specific conspiracy is then expensive, which is the refusal.",
+        "Locality is the other half. A 3×3 kernel cannot, in one layer, see the whole image. Stacking grows the receptive field. That is still not a dense map: distant pixels talk only through the composition, and the weights stay tied. CS224N will reuse the same idea on sequences with 1-d convs; the picture here is spatial."
+      ],
+      "example": "A 3×3 kernel that fires on a diagonal stroke. Slide it over a digit. The same nine weights detect the stroke in every window. A dense hidden unit would need a separate nine-weight story for each window, and nothing would force those stories to agree.",
+      "whyItMatters": "If convolution is 'the vision layer', you will not see the refusal — and you will slap a conv on a problem with no spatial repeat.",
+      "quiz": [
+        {
+          "id": "ml-cnn10-1",
+          "stem": "Convolution shares weights across space because:",
+          "correctAnswer": "The same pattern can appear anywhere, so one kernel should detect it everywhere",
+          "distractors": [
+            { "text": "Dense layers already share those weights, so convolution is only a rename", "kind": "reversed", "rationale": "Dense layers use a private weight per position. Sharing is the conv's refusal." },
+            { "text": "Images forbid a weighted sum, so a kernel is the only legal map", "kind": "misconception", "rationale": "A kernel is a weighted sum on a window. Dense maps are legal; they just waste capacity." },
+            { "text": "The loss cannot be defined unless every pixel has a unique hidden unit", "kind": "misapplied", "rationale": "The loss does not demand unique weights per pixel." }
+          ],
+          "correctExplanation": "One kernel, many positions. That is the sharing, and that is the claim about the world.",
+          "objectiveIds": ["Share weights across space because the same pattern can appear anywhere"],
+          "prerequisiteConceptIds": ["ml-mlp", "ml-inductive"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-cnn10-2",
+          "stem": "A convolution sees, that a dense layer must relearn at every position:",
+          "correctAnswer": "The same local pattern, tied by one kernel rather than a private copy per site",
+          "distractors": [
+            { "text": "The entire held-out set, which convolution is allowed to train on", "kind": "misapplied", "rationale": "Architecture is not a license to leak the split." },
+            { "text": "A different kernel at every pixel, which is how sharing is defined", "kind": "reversed", "rationale": "Different kernels per pixel is the dense story. Sharing is one kernel." },
+            { "text": "Only the batch mean, because convolution is a synonym for batch norm", "kind": "nearby", "rationale": "Normalization is a different layer. Convolution is a tied local weighted sum." }
+          ],
+          "correctExplanation": "Local neighborhood, tied weights. Dense must buy that pattern again at the next pixel.",
+          "objectiveIds": ["Predict what a convolution sees that a dense layer must relearn at every position"],
+          "prerequisiteConceptIds": ["ml-mlp", "ml-inductive"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-cnn10-3",
+          "stem": "A diagonal-stroke kernel sliding over a digit, versus a dense hidden unit, differs in that:",
+          "correctAnswer": "The nine weights are reused in every window, so a shifted stroke is the same detector",
+          "distractors": [
+            { "text": "The dense unit reuses those nine weights automatically, so the shift is free", "kind": "reversed", "rationale": "Dense weights are private per position. The shift is a new set of knobs." },
+            { "text": "The kernel is forbidden to look at a 3×3 window, unlike the dense unit", "kind": "nearby", "rationale": "The kernel is exactly a windowed weighted sum." },
+            { "text": "Both maps refuse translation, so neither can detect a shifted stroke", "kind": "subtle", "rationale": "Convolution is the map that does not refuse a spatial repeat." }
+          ],
+          "correctExplanation": "Same nine weights, every window. A shift is a new position, not a new detector.",
+          "objectiveIds": ["Predict what a convolution sees that a dense layer must relearn at every position"],
+          "prerequisiteConceptIds": ["ml-mlp", "ml-inductive"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-emb-intro-10",
+      "conceptId": "ml-emb-intro",
+      "title": "A learned lookup, not an integer",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-mlp"],
+      "goDeeper": "ml-word2vec",
+      "explanation": [
+        "Discrete symbols — a word id, a user id, a token — are not numbers with a geometry. Integer 17 is not 'near' 18. An embedding is a learned lookup: each symbol maps to a vector that the rest of the net can treat as a point. The table is just a matrix whose rows are those vectors, indexed by the id.",
+        "Nearby integers should not start as nearby vectors. If you fed raw ids into an MLP, the net would be told that word 17 and word 18 share a direction they did not earn. Random (or later, pretrained) rows break that fake metric. Training then moves rows whose symbols play similar roles toward each other, if the job asks for that.",
+        "The lookup is a first layer with a one-hot input, written as indexing for speed. Gradients still flow into the row that was selected. A symbol the batch never touched does not move. That is the whole mechanism. Later lessons will pick the job that trains the table. This one names the object."
+      ],
+      "example": "Vocabulary of 10,000 words, 32-dimensional rows. 'cat' is row 412, a 32-vector, not the integer 412. 'carpet' may be row 413 and start nowhere near 'cat'. After a later context job, 'dog' may sit closer to 'cat' than 'carpet' does — because of company, not because of adjacent ids.",
+      "whyItMatters": "If ids are already 'features', every later claim about similar words is a story you glued onto a fake number line.",
+      "quiz": [
+        {
+          "id": "ml-emb10-1",
+          "stem": "An embedding, as this lesson uses the word, is:",
+          "correctAnswer": "A learned lookup from a discrete symbol to a vector",
+          "distractors": [
+            { "text": "The integer id itself, treated as a coordinate with a real geometry", "kind": "reversed", "rationale": "The integer is the index, not the geometry. The row is the vector." },
+            { "text": "A held-out split of rare symbols you must never train", "kind": "misapplied", "rationale": "The table is a parameter. The split is not an embedding." },
+            { "text": "A softmax over classes, already normalized to a distribution", "kind": "nearby", "rationale": "Softmax is an output map. An embedding is a lookup into a table." }
+          ],
+          "correctExplanation": "Symbol in, vector out, from a table you train. That is the lookup.",
+          "objectiveIds": ["Describe an embedding as a learned lookup from a discrete symbol to a vector"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-emb10-2",
+          "stem": "Nearby symbol ids should not start as nearby vectors because:",
+          "correctAnswer": "Adjacent integers are an accident of encoding, not a claim about the symbols",
+          "distractors": [
+            { "text": "Adjacent ids are a guarantee of synonymy, so the vectors must start equal", "kind": "reversed", "rationale": "Id 17 next to 18 is not a linguistic fact. It is a table index." },
+            { "text": "Vectors are illegal on discrete symbols, so no table can be trained", "kind": "misconception", "rationale": "The table is how you give discrete symbols a geometry. It is the point." },
+            { "text": "An MLP cannot read a vector, only a raw integer id", "kind": "nearby", "rationale": "The MLP wants a vector. The lookup is how the id becomes one." }
+          ],
+          "correctExplanation": "The number line of ids is fake geometry. Start the rows without that lie.",
+          "objectiveIds": ["Predict why nearby symbols should not start as nearby integers"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-emb10-3",
+          "stem": "Feeding raw word ids into an MLP, instead of a lookup table, typically:",
+          "correctAnswer": "Tells the net that consecutive ids share a direction they did not earn",
+          "distractors": [
+            { "text": "Is required, because a lookup table cannot receive a gradient", "kind": "reversed", "rationale": "The selected row does receive a gradient. That is how the table trains." },
+            { "text": "Deletes the vocabulary, so no symbol can be represented at all", "kind": "subtle", "rationale": "The ids still index something. The crime is the fake metric, not a missing vocab." },
+            { "text": "Turns each id into a one-hot that the MLP is forbidden to multiply", "kind": "misapplied", "rationale": "A one-hot times a matrix is the lookup. Raw ids as scalars are the bug." }
+          ],
+          "correctExplanation": "Id 412 versus 413 is not 'cat' versus 'dog'. Do not hand the MLP that number line.",
+          "objectiveIds": ["Predict why nearby symbols should not start as nearby integers"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-repr-10",
+      "conceptId": "ml-repr",
+      "title": "Features the model invented",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-emb-intro"],
+      "goDeeper": "ml-transfer",
+      "explanation": [
+        "Hidden layers of a trained net are features the model invented, not columns you wrote. The embedding table, then the next map, then the next: each is a new coordinate system aimed at the loss. You did not have to name 'fur texture' or 'subject of the sentence'. The later layer is still a vector. It is just no longer your spreadsheet.",
+        "A downstream job can reuse that vector. A linear probe on a frozen hidden state, a smaller net on top of a frozen embedding, a nearest-neighbor lookup in the learned space: those are reuse, not a claim that the layer 'understands'. What transfers is geometry that was useful for the original loss, if the new job shares that geometry.",
+        "This is the point of representation learning in this course. Earlier, features were a design choice you defended at prediction time. Here, some of those features are the byproduct of a net you trained for a different, or larger, job. The next lessons pick particular jobs — context, sequences — that invent particular geometries."
+      ],
+      "example": "A digit net's last hidden layer clusters 7s near 7s even though you never wrote a 'has a crossbar' column. A downstream probe that only asks 'odd versus even' can sit on that frozen vector. It reuses the invented features. It does not reuse the original ten-way head unless you keep it.",
+      "whyItMatters": "If a hidden layer is still 'the computer's thoughts', you will not know what a later job is allowed to steal, and you will steal the wrong head.",
+      "quiz": [
+        {
+          "id": "ml-rep10-1",
+          "stem": "A later layer of a trained net should be treated as:",
+          "correctAnswer": "Features the model invented, not columns you wrote by hand",
+          "distractors": [
+            { "text": "A copy of the raw spreadsheet, stored so the net can recite it", "kind": "reversed", "rationale": "The layer is a computed map of the input, not a stored sheet." },
+            { "text": "The held-out labels, leaked so the next job cannot fail", "kind": "misapplied", "rationale": "A representation is not a leaked target." },
+            { "text": "A softmax already, because every hidden unit is a class probability", "kind": "nearby", "rationale": "Hidden units are coordinates. A later head may softmax them. They are not a distribution by default." }
+          ],
+          "correctExplanation": "Invented coordinates, aimed at a loss. Still a vector. Not your original columns.",
+          "objectiveIds": ["Treat a later layer as features the model invented, not features you wrote"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-rep10-2",
+          "stem": "A downstream job can reuse from a learned representation:",
+          "correctAnswer": "The geometry that was useful for the original loss, if the new job shares it",
+          "distractors": [
+            { "text": "The original training rows, which the representation is required to emit", "kind": "nearby", "rationale": "Reuse is a vector, not a dump of the sheet." },
+            { "text": "A guarantee of the original head's labels, even on a different task", "kind": "reversed", "rationale": "The head was for the old job. The vector is what may transfer." },
+            { "text": "The optimizer's velocity buffers, which are the true features", "kind": "misapplied", "rationale": "Optimizer state is not a representation of the input." }
+          ],
+          "correctExplanation": "Steal the vector if the new job lives in that geometry. Do not assume the old head.",
+          "objectiveIds": ["Name what a downstream job can reuse from that representation"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-rep10-3",
+          "stem": "A linear probe on a frozen digit-net hidden layer, asked odd-versus-even, is reusing:",
+          "correctAnswer": "Invented features from the original job, not a new handwritten column list",
+          "distractors": [
+            { "text": "The original ten-way head, which odd-versus-even is required to keep", "kind": "reversed", "rationale": "The probe is a new head on a frozen vector. The old head can be dropped." },
+            { "text": "The raw pixel integers as if they were already a linguistic embedding", "kind": "nearby", "rationale": "The hidden layer is the invented map of those pixels." },
+            { "text": "The held-out digits as training rows, which is the point of a probe", "kind": "misapplied", "rationale": "A probe still needs an honest split. Reuse is not a license to leak." }
+          ],
+          "correctExplanation": "Frozen invented coordinates, new cheap head. That is reuse of a representation.",
+          "objectiveIds": ["Name what a downstream job can reuse from that representation"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-word2vec-10",
+      "conceptId": "ml-word2vec",
+      "title": "Know a word by its company",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-emb-intro"],
+      "goDeeper": "ml-seq-rnn",
+      "explanation": [
+        "Distributional embeddings learn a word vector from the company it keeps. You shall know a word by its context: skip-gram predicts neighbors from the word; CBOW predicts the word from neighbors. The job is not a dictionary gloss. It is a context prediction that moves rows in the lookup table until words with similar neighbors sit near each other.",
+        "A geometric analogy — king − man + woman ≈ queen — can fall out of that geometry when the training contexts really did encode those offsets. It is not a theorem the objective promised. The objective promised: words that keep the same company should be close, and a classifier on context should work. Analogies are a sometimes-symptom, not the loss.",
+        "What the objective cannot justify is a story that the vector 'knows' a fact it never needed for context. Co-occurrence of 'Paris' and 'France' will pull those rows; it will not, by itself, license a civic-history lecture. CS224N starts here because the table is a representation trained on a job you can name."
+      ],
+      "example": "Skip-gram on 'the cat sat on the mat'. From 'cat', predict 'the', 'sat', 'on'. From 'mat', predict 'the', 'on'. After enough windows, 'cat' and 'dog' sit closer than 'cat' and 'the', because their neighbors overlap, not because someone labeled them animals.",
+      "whyItMatters": "If word2vec is 'king minus man', you will treat a demo as the mechanism and miss the context job that actually moved the rows.",
+      "quiz": [
+        {
+          "id": "ml-w2v10-1",
+          "stem": "A distributional embedding, in the word2vec sense, is learned by:",
+          "correctAnswer": "A context job: predict a word from its company, or the company from the word",
+          "distractors": [
+            { "text": "Assigning each word its integer id as the vector, so neighbors are adjacent ids", "kind": "reversed", "rationale": "Ids are not company. The last lesson forbade that fake metric." },
+            { "text": "Copying a human dictionary gloss into the row, with no prediction job", "kind": "nearby", "rationale": "The table is trained by a prediction, not by pasting definitions." },
+            { "text": "Softmaxing the vocabulary once, then freezing every row forever", "kind": "misapplied", "rationale": "Softmax may appear inside the context classifier. It is not a substitute for the job." }
+          ],
+          "correctExplanation": "Company in, vector moved. Skip-gram or CBOW is that prediction.",
+          "objectiveIds": ["Learn a word vector from the company it keeps"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-w2v10-2",
+          "stem": "The analogy king − man + woman ≈ queen is something the objective:",
+          "correctAnswer": "Can produce when contexts encode that offset, but never promised as a theorem",
+          "distractors": [
+            { "text": "Always guarantees, because every skip-gram run must satisfy all analogies", "kind": "reversed", "rationale": "Analogies are a symptom, not the loss. Many runs will miss many analogies." },
+            { "text": "Forbids, because vector arithmetic on embeddings is illegal", "kind": "misconception", "rationale": "Arithmetic is legal. It is just not the training contract." },
+            { "text": "Replaces, so you train by solving analogies instead of predicting neighbors", "kind": "nearby", "rationale": "The job is still context. Analogies are a later demo on the geometry." }
+          ],
+          "correctExplanation": "Sometimes the geometry has that offset. The loss was still 'predict the company'.",
+          "objectiveIds": ["Predict a geometric analogy the distributional objective can and cannot justify"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-w2v10-3",
+          "stem": "A civic-history lecture stored in a 'Paris' vector is something word2vec:",
+          "correctAnswer": "Cannot justify from co-occurrence alone, even if 'Paris' sits near 'France'",
+          "distractors": [
+            { "text": "Must contain, because any nearby country vector is a full historical essay", "kind": "reversed", "rationale": "Nearness is shared company, not a lecture the objective required." },
+            { "text": "Stores as a hidden column you wrote, labeled 'history', in the table", "kind": "misapplied", "rationale": "The table has no such column unless you added a different job." },
+            { "text": "Guarantees by the king − man analogy, which is the actual training loss", "kind": "subtle", "rationale": "The analogy is not the loss. Neither is a history seminar." }
+          ],
+          "correctExplanation": "Shared neighbors can pull Paris toward France. That is not a license to quote a textbook.",
+          "objectiveIds": ["Predict a geometric analogy the distributional objective can and cannot justify"],
+          "prerequisiteConceptIds": ["ml-emb-intro"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "ml-seq-rnn-10",
+      "conceptId": "ml-seq-rnn",
+      "title": "A hidden state that walks",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["ml-mlp"],
+      "goDeeper": "ml-vanish-seq",
+      "diagram": "ml-rnn-unroll",
+      "explanation": [
+        "Recurrent nets walk a sequence with a hidden state that is a function of the previous state and the current token. h_t = φ(W h_{t-1} + U x_t + b). The same weights at every step: that is the inductive bias for 'the rule does not change as we read'. The state is the memory the map is allowed to carry forward.",
+        "Unrolling makes the graph explicit. Each step is one MLP-like block, tied across time, taking the last h and the next x. To map a long input onto an output, the state must remember whatever the later step will need — a subject, a running sum, a flag that a question word appeared. What it does not write into h is gone.",
+        "The output at a step can be a score from that h, or you can wait until the last h and then classify. Either way, the computation is a chain of the same map. CS224N puts this before attention on purpose: a walking state is the first sequence architecture, and its failures are the reason the next course exists."
+      ],
+      "example": "Read 'not bad'. After 'not', h must carry a negation flag. After 'bad', the classifier on h should flip relative to a lone 'bad'. If the state overwrote that flag to store the word 'bad' only, the output cannot see the negation. The walk had one register, and you spent it.",
+      "whyItMatters": "If an RNN is 'for text', you will not ask what the state had to remember, and you will not notice when the register was too small or too far back.",
+      "quiz": [
+        {
+          "id": "ml-rnn10-1",
+          "stem": "A recurrent sequence model walks an input by:",
+          "correctAnswer": "Updating a hidden state that is a function of the previous state and the current token",
+          "distractors": [
+            { "text": "Assigning each token a private unshared MLP that cannot see the last state", "kind": "reversed", "rationale": "Tying the map and feeding h_{t-1} is the recurrence. Private unshared MLPs are not." },
+            { "text": "Looking up a single embedding and ignoring order for the rest of the job", "kind": "nearby", "rationale": "An embedding is a symbol-to-vector lookup. Recurrence is how you walk those vectors in order." },
+            { "text": "Replacing the sequence with its mean, so no state is required", "kind": "misapplied", "rationale": "A mean bag is a different, order-blind map." }
+          ],
+          "correctExplanation": "h_t from h_{t-1} and x_t, same weights. That is the walk.",
+          "objectiveIds": ["Walk a sequence with a hidden state that is a function of the previous state"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-rnn10-2",
+          "stem": "To classify 'not bad' as positive, the state after 'not' typically must:",
+          "correctAnswer": "Remember a negation flag until 'bad' arrives, or the later score cannot flip",
+          "distractors": [
+            { "text": "Forget 'not' immediately, because only the last token may affect the output", "kind": "reversed", "rationale": "If you drop the flag, 'not bad' collapses to 'bad'." },
+            { "text": "Store the entire training corpus in h, or the walk is illegal", "kind": "misconception", "rationale": "The state is a fixed-size register, not a corpus." },
+            { "text": "Skip the embedding of 'bad', because negation deletes the next token", "kind": "nearby", "rationale": "You still read 'bad'. You just combine it with the flag you kept." }
+          ],
+          "correctExplanation": "The register has to carry negation across the next step. That is the memory the job needs.",
+          "objectiveIds": ["Trace what the state must remember to map a long input onto an output"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "ml-rnn10-3",
+          "stem": "Unrolling a four-token RNN is best read as:",
+          "correctAnswer": "Four tied MLP-like blocks in a chain, each taking the last h and the next x",
+          "distractors": [
+            { "text": "Four independent nets with untied weights and no path from h_1 to h_4", "kind": "reversed", "rationale": "Tying and the h-path are the recurrence. Untied independent blocks lose both." },
+            { "text": "A single dense layer on the concatenated four ids, with no hidden state", "kind": "nearby", "rationale": "That is a bag or a concat MLP, not a walk." },
+            { "text": "A convolution with a new kernel at every time step and no shared W", "kind": "subtle", "rationale": "A conv shares in space with a local window. This share is the same map along time, via h." }
+          ],
+          "correctExplanation": "Same W, U, b at every step, chained through h. That is the unrolled graph.",
+          "objectiveIds": ["Walk a sequence with a hidden state that is a function of the previous state"],
+          "prerequisiteConceptIds": ["ml-mlp"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-vanish-seq-10",
+      "conceptId": "ml-vanish-seq",
+      "title": "Forgetting across time",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-seq-rnn", "ml-vanishing"],
+      "goDeeper": "ml-attention",
+      "diagram": "ml-rnn-unroll",
+      "explanation": [
+        "Unrolling a vanilla RNN turns depth into time. The same vanishing product now runs across steps: ∂h_t/∂h_{t-k} is a product of k local Jacobians of the recurrence. If those factors sit below one, a distant token's adjoint dies before the first weights. The net forgets because the gradient never arrived.",
+        "A distant token's gradient dies in a vanilla recurrence for the same arithmetic as a deep sigmoid stack. The weight matrix of the recurrence is applied at every step. Saturating φ shrinks it further. Ten steps of slope 0.8 is already a small number; a hundred steps is a numerical zero. The early token wrote into h, and then the product erased the path back.",
+        "Gated recurrences and, later, attention exist because of this product. This lesson only needs the diagnosis: long-range credit assignment in an unrolled vanilla RNN is a deep chain-rule product. If you cannot name that, 'RNNs forget' will sound like a personality, and the next course's lookup will sound like fashion."
+      ],
+      "example": "Sentiment on a 80-token review whose only negation is token 2. Forward, h may still carry a washed-out trace. Backward, the adjoint at the loss, multiplied by 78 recurrences, is ~0 at token 2. The embedding of 'not' does not step. The classifier learns the nearby words and misses the flag.",
+      "whyItMatters": "Sequence models fail at long range for an arithmetic reason you already have. The next course is a different path around that product, not a new kind of intelligence.",
+      "quiz": [
+        {
+          "id": "ml-vsq10-1",
+          "stem": "RNN forgetting, in this lesson's sense, is:",
+          "correctAnswer": "The same vanishing product as in a deep net, now multiplied across time steps",
+          "distractors": [
+            { "text": "A psychological limit of hidden units, which refuse to store flags on purpose", "kind": "misconception", "rationale": "There is no psychologist in h. There is a product of Jacobians." },
+            { "text": "A guarantee that embeddings cannot be looked up on long inputs", "kind": "nearby", "rationale": "The lookup still runs. The backward path to an early row is what dies." },
+            { "text": "An exploding product only, so distant tokens always take huge steps", "kind": "reversed", "rationale": "Forgetting is the vanishing side. Explosion is the other failure of the same product." }
+          ],
+          "correctExplanation": "Unroll, then multiply local Jacobians. Distant credit dies with the product.",
+          "objectiveIds": ["Explain RNN forgetting as the same vanishing product, now across time"],
+          "prerequisiteConceptIds": ["ml-seq-rnn", "ml-vanishing"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-vsq10-2",
+          "stem": "A distant token's gradient dies in a vanilla recurrence because:",
+          "correctAnswer": "The adjoint is a product of many recurrence Jacobians, which shrinks with the gap",
+          "distractors": [
+            { "text": "The forward pass skips distant tokens, so they never enter h at all", "kind": "reversed", "rationale": "They entered. The backward path is what vanished." },
+            { "text": "Reverse-mode autodiff is illegal on tied weights, so no adjoint exists", "kind": "misapplied", "rationale": "Tied weights still have a tape. The product along that tape can still die." },
+            { "text": "Softmax on the last step deletes every earlier embedding from the graph", "kind": "subtle", "rationale": "The graph still chains through h. The factors in that chain are the problem." }
+          ],
+          "correctExplanation": "k steps back means k factors. Below one, they go to zero. The early token stops learning.",
+          "objectiveIds": ["Predict why a distant token's gradient dies in a vanilla recurrence"],
+          "prerequisiteConceptIds": ["ml-seq-rnn", "ml-vanishing"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-vsq10-3",
+          "stem": "Negation at token 2 in an 80-token review, trained with a vanilla RNN, typically:",
+          "correctAnswer": "Sends a near-zero adjoint back to token 2, so the embedding of 'not' barely steps",
+          "distractors": [
+            { "text": "Sends a huge adjoint to token 2, because long products always explode", "kind": "reversed", "rationale": "The forgetting story is vanishing over long time, not explosion." },
+            { "text": "Removes the need for a hidden state, so token 2 is read as a bag of words", "kind": "nearby", "rationale": "The state is still there. Its backward path is what died." },
+            { "text": "Stores the whole review losslessly in h, so credit assignment is free", "kind": "misconception", "rationale": "A fixed-size h plus a hostile product is the opposite of lossless credit." }
+          ],
+          "correctExplanation": "78 factors later, token 2's partial is gone. Nearby words get the step. The flag does not.",
+          "objectiveIds": ["Predict why a distant token's gradient dies in a vanilla recurrence"],
+          "prerequisiteConceptIds": ["ml-seq-rnn", "ml-vanishing"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-transfer-10",
+      "conceptId": "ml-transfer",
+      "title": "Reuse a representation, not a whole job",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-repr"],
+      "goDeeper": "ml-attention",
+      "explanation": [
+        "Transfer learning reuses a representation trained on a different job. Freeze or lightly adapt the early maps; attach a new head for the new labels. You are stealing geometry, not stealing the old decision. A net trained to classify objects can donate edges and textures to a detector. A language table trained on context can donate rows to a tagger.",
+        "The old features help when the new job lives in the same geometry: similar sensors, similar invariances, similar nearby. They are the wrong inductive bias when the new job needs structure the old net refused — medical counts from a photo conv, or legal entailment from review polarity. Then the donated vector is a tax.",
+        "This is a first look, not the whole adaptation catalogue. Later courses will name fine-tuning, probes, and pretraining at scale. The mechanism here is already enough: a representation is a reusable map, a head is a job, and transfer is the decision to keep the map. Measure the new held-out set. The old leaderboard does not travel with the weights."
+      ],
+      "example": "A conv net trained on everyday objects. Reuse the early layers for a small medical-image set: edges may help; the late 'this is a bicycle' geometry may not. If the new job is laterality of an X-ray, the old refusal (texture over left/right canvas position) can hurt until you unfreeze or replace those maps.",
+      "whyItMatters": "If transfer is 'download a brain', you will keep a head that answers the old question, or a bias that fights the new one, and call both success.",
+      "quiz": [
+        {
+          "id": "ml-tr10-1",
+          "stem": "Transfer learning, on a first look in this course, is:",
+          "correctAnswer": "Reusing a representation trained on a different job, usually with a new head",
+          "distractors": [
+            { "text": "Retraining from scratch on the new labels, deleting every old map", "kind": "reversed", "rationale": "That is not reuse. Transfer keeps some of the old map." },
+            { "text": "Copying the old leaderboard onto the new task without a new split", "kind": "misapplied", "rationale": "The old number does not travel. The vector might." },
+            { "text": "Replacing the architecture with a majority-class baseline from the old job", "kind": "nearby", "rationale": "A baseline is not a donated representation." }
+          ],
+          "correctExplanation": "Keep the map, change the job. That is the reuse.",
+          "objectiveIds": ["Reuse a representation trained on a different job"],
+          "prerequisiteConceptIds": ["ml-repr"],
+          "difficultyTier": 3,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-tr10-2",
+          "stem": "Old features typically help a new job when:",
+          "correctAnswer": "The new job lives in the same geometry the old loss actually trained",
+          "distractors": [
+            { "text": "The new job needs structure the old net refused, so the donated bias is a gift", "kind": "reversed", "rationale": "A wrong refusal is a tax. Help requires shared geometry." },
+            { "text": "You keep the old head's labels, even if the new question is different", "kind": "nearby", "rationale": "The head is the old job. Help lives in the vector, not in the old decision." },
+            { "text": "Parameter count exceeds n, which by itself transfers any geometry", "kind": "subtle", "rationale": "Overparameterization is not a transfer theorem. Shared geometry is." }
+          ],
+          "correctExplanation": "Same sensors, same invariances, same notion of nearby. Then the vector is a gift.",
+          "objectiveIds": ["Predict when the old features help and when they are the wrong inductive bias"],
+          "prerequisiteConceptIds": ["ml-repr"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-tr10-3",
+          "stem": "A natural-image conv donated to a job that needs canvas left/right, not texture, is typically:",
+          "correctAnswer": "The wrong inductive bias: the old net refused position that the new job needs",
+          "distractors": [
+            { "text": "A guaranteed win, because any conv is the correct bias for every image job", "kind": "reversed", "rationale": "Convolution refuses some position-specific maps. That can be the wrong refusal." },
+            { "text": "A held-out leak, because donated weights always contain the new labels", "kind": "misapplied", "rationale": "The old net never saw the new labels. The failure is bias, not leakage." },
+            { "text": "Identical to training a dense net from scratch, so the donation cannot hurt", "kind": "nearby", "rationale": "A wrong tied kernel can hurt relative to a dense start that never refused position." }
+          ],
+          "correctExplanation": "The old refusal was translation-heavy texture. Laterality needed position. Unfreeze or replace.",
+          "objectiveIds": ["Predict when the old features help and when they are the wrong inductive bias"],
+          "prerequisiteConceptIds": ["ml-repr"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

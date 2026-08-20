@@ -1,0 +1,265 @@
+{
+  "courseId": "horo-regulation",
+  "moduleId": "horo-r-organ",
+  "lessons": [
+    {
+      "id": "horo-balance-10",
+      "conceptId": "horo-balance",
+      "title": "Mass that the spring returns",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-escape"],
+      "goDeeper": "horo-hairspring",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Inertia lives in the rim. The balance wheel is the mass that oscillates. The hairspring returns it. Period grows with the square root of that inertia, so a heavier rim or a larger diameter makes a longer swing and a losing day.",
+        "Add mass at the rim, or move mass outward with timing screws, and the period stretches. Remove mass, or shift it inward, and the period shrinks. The train has not changed. You changed the timebase on purpose.",
+        "A rim that is out of poise is still this mass, just uneven. Gravity will find the heavy spot in vertical positions. That is a later lesson. Today the rule is simpler: the balance is the inertia term, and inertia sets how long a swing takes."
+      ],
+      "example": "Two timing screws backed out move brass toward the rim. Inertia rises, the period lengthens, and a timing machine that read plus-eight can print closer to zero without touching the hairspring.",
+      "whyItMatters": "Regulate the mass and you have changed the clock. The going train only counted what that mass allowed.",
+      "quiz": [
+        {
+          "id": "horo-bal10-1",
+          "stem": "In this course the balance wheel is treated as:",
+          "correctAnswer": "The oscillating mass whose inertia helps set the period",
+          "distractors": [
+            { "text": "The last wheel of the train, delivering the impulse", "kind": "nearby", "rationale": "That job belongs to the escape wheel." },
+            { "text": "The restoring spring that returns the rim each beat", "kind": "reversed", "rationale": "The hairspring is the restoring term." },
+            { "text": "A display pinion that reports counted unlocks on the dial", "kind": "misapplied", "rationale": "Hands display. The balance is the mass." }
+          ],
+          "correctExplanation": "The rim is the mass. The spring returns it. Together they are the timebase.",
+          "objectiveIds": ["Treat the balance wheel as the mass that oscillates"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-bal10-2",
+          "stem": "Adding inertia at the rim, with the hairspring left alone, will typically:",
+          "correctAnswer": "Lengthen the period, so the watch loses seconds",
+          "distractors": [
+            { "text": "Shorten the period, so the watch gains seconds", "kind": "reversed", "rationale": "More inertia means a slower swing, not a faster one." },
+            { "text": "Leave the period alone, because only the train sets rate", "kind": "misconception", "rationale": "Period lives in inertia and stiffness, not in the gears." },
+            { "text": "Raise amplitude forever, which is the same as a faster rate", "kind": "subtle", "rationale": "Inertia and amplitude are different knobs. Period is the rate story." }
+          ],
+          "correctExplanation": "Period grows with the square root of inertia. More rim mass, longer swing, losing day.",
+          "objectiveIds": ["Predict how adding or removing inertia changes the period"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-bal10-3",
+          "stem": "A watch runs fast and the spring looks clean. Removing a little rim mass would:",
+          "correctAnswer": "Cut inertia, shorten the period, and make the gaining worse",
+          "distractors": [
+            { "text": "Cut inertia, lengthen the period, and cancel the gaining", "kind": "reversed", "rationale": "Less inertia shortens the period. A fast watch gets faster." },
+            { "text": "Leave rate alone, because mass never enters the period", "kind": "misconception", "rationale": "Mass is the inertia term. It is half of the period." },
+            { "text": "Convert the lever into a recoil escapement by lightening the rim", "kind": "misapplied", "rationale": "Rim mass is not the escapement family." }
+          ],
+          "correctExplanation": "A fast watch needs more inertia or a longer spring, not a lighter rim.",
+          "objectiveIds": ["Predict how adding or removing inertia changes the period"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-hairspring-10",
+      "conceptId": "horo-hairspring",
+      "title": "Restoring force in a coil",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-balance"],
+      "goDeeper": "horo-regulator",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Stiffness of the hairspring is the restoring term. Together with balance inertia it sets the period. Lengthen the active coil or weaken the alloy and the watch loses. Shorten the active coil and it gains. The spring is the clock, not the train.",
+        "A magnetic error sticks coils together. Effective length and stiffness both move, usually toward a fast, unstable rate. A concentricity error — out of flat, off centre, or a coil that breathes against a stud — writes position and amplitude into that same period.",
+        "Look at the spring in the flat and in beat before you touch a regulator pin. A coil that is not round, or that leans on the stud, will beat the timing machine in ways no index can cancel. Restore the spring, then regulate."
+      ],
+      "example": "A hairspring that has jumped the stud and sits off-centre prints a rate that flips sign from dial-up to crown-down. Recentering the coil does more than sliding the index a full line.",
+      "whyItMatters": "A bent or magnetized spring is a rate error you cannot index away. Fix the coil first.",
+      "quiz": [
+        {
+          "id": "horo-hs10-1",
+          "stem": "The hairspring earns its keep in the timebase by:",
+          "correctAnswer": "Acting as the restoring spring that sets the period with the rim",
+          "distractors": [
+            { "text": "Acting as the last wheel of the train, delivering impulse", "kind": "nearby", "rationale": "Impulse is the escape wheel and pallets." },
+            { "text": "Acting as the oscillating mass whose inertia is the period", "kind": "reversed", "rationale": "The balance is the mass. The spring is the restoring term." },
+            { "text": "Acting as a display pinion that reports counted unlocks", "kind": "misapplied", "rationale": "Hands display. The spring returns the rim." }
+          ],
+          "correctExplanation": "Restoring spring plus rim inertia. That pair is the period.",
+          "objectiveIds": ["Treat the hairspring as the restoring spring that sets the period"],
+          "prerequisiteConceptIds": ["horo-balance"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-hs10-2",
+          "stem": "Coils that stick after a magnetic insult typically move the rate by:",
+          "correctAnswer": "Changing effective length and stiffness, often toward a fast, unstable day",
+          "distractors": [
+            { "text": "Adding inertia at the rim, which always makes a slow, stable day", "kind": "reversed", "rationale": "Magnetism grabs the spring, not the brass of the rim." },
+            { "text": "Converting the lever into a quartz crystal until you oil the stud", "kind": "misapplied", "rationale": "A stuck coil is still a hairspring. It is not a crystal." },
+            { "text": "Leaving period alone, because magnetism only colours the plates", "kind": "misconception", "rationale": "Stuck coils change the restoring term. Period moves." }
+          ],
+          "correctExplanation": "Stuck coils change the spring you actually have. Period jumps, usually fast.",
+          "objectiveIds": ["Predict what a magnetic or concentricity error does to the rate"],
+          "prerequisiteConceptIds": ["horo-balance"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-hs10-3",
+          "stem": "A spring that is off-centre and out of flat will typically show as:",
+          "correctAnswer": "A rate that moves with position and amplitude until the coil is restored",
+          "distractors": [
+            { "text": "A rate that is perfect in every position because the error cancels", "kind": "reversed", "rationale": "Concentricity errors write position into the period." },
+            { "text": "A quartz stepper fault, best fixed by changing the cell", "kind": "misapplied", "rationale": "This is a mechanical spring. A cell will not recenter it." },
+            { "text": "A missing escape tooth, visible only on the fourth wheel", "kind": "nearby", "rationale": "Look at the coil first. The train is the wrong suspect." }
+          ],
+          "correctExplanation": "Off-centre or out of flat, the period cares about position. Restore the coil.",
+          "objectiveIds": ["Predict what a magnetic or concentricity error does to the rate"],
+          "prerequisiteConceptIds": ["horo-balance"],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-regulator-10",
+      "conceptId": "horo-regulator",
+      "title": "Index pins versus rim screws",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-hairspring"],
+      "goDeeper": "horo-rate",
+      "diagram": "horo-balance-spring",
+      "explanation": [
+        "Effective length is what a regulator changes. Two pins, or a boot, grab the outer coil. Slide the index toward the stud and the active spring shortens, so the watch gains. Slide it away and the watch loses. Inertia of the rim has not moved.",
+        "A free-sprung balance leaves the spring pinned at the stud and the collet only. Rate is changed by moving mass on the rim, usually with timing screws. The active length stays put, so the terminal curve the spring designer cut is not pinched by a boot.",
+        "Pinning the spring in a regulator boot has a cost. The pins can pinch, the coil can breathe against them at high amplitude, and isochronism suffers. A boot that is too tight is a rate error that moves with swing. Free-sprung avoids that pinch."
+      ],
+      "example": "An index slid toward the stud takes a plus-ten watch toward zero. The same correction on a free-sprung rim is a pair of screws edged inward, leaving the outer coil untouched.",
+      "whyItMatters": "Know which knob you are turning — length or inertia — or a pinched boot will look like a mystery rate.",
+      "quiz": [
+        {
+          "id": "horo-reg10-1",
+          "stem": "How does a regulator index change rate, compared with a free-sprung rim?",
+          "correctAnswer": "The index changes effective length; the free-sprung rim changes inertia",
+          "distractors": [
+            { "text": "The index changes inertia; the free-sprung rim changes effective length", "kind": "reversed", "rationale": "Pins shorten the coil. Screws move mass." },
+            { "text": "Both change the escape-wheel tooth count and leave the spring alone", "kind": "misapplied", "rationale": "Neither knob is a train-ratio tool." },
+            { "text": "Both only oil the pallet stones, which is how modern rate is set", "kind": "nearby", "rationale": "Oil is a later timing problem, not the regulator." }
+          ],
+          "correctExplanation": "Length versus inertia. Same period formula, two different terms.",
+          "objectiveIds": ["Contrast changing effective length with changing inertia"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-reg10-2",
+          "stem": "Sliding a regulator index toward the stud, pins still parallel, typically:",
+          "correctAnswer": "Shortens the active coil so the period drops and the watch gains",
+          "distractors": [
+            { "text": "Lengthens the active coil so the period grows and the watch loses", "kind": "reversed", "rationale": "Toward the stud is shorter, faster." },
+            { "text": "Adds rim inertia, which is the only way an index can work", "kind": "misconception", "rationale": "The index does not move mass on the rim." },
+            { "text": "Converts the watch to a quartz stepper until the boot is oiled", "kind": "misapplied", "rationale": "An index is still a mechanical length knob." }
+          ],
+          "correctExplanation": "Toward the stud, shorter spring, faster watch. Inertia sat still.",
+          "objectiveIds": ["Contrast changing effective length with changing inertia"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 2,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "horo-reg10-3",
+          "stem": "A regulator boot that pinches the outer coil will typically:",
+          "correctAnswer": "Make rate walk with amplitude, because the coil breathes in the pinch",
+          "distractors": [
+            { "text": "Improve isochronism, because a tight boot is a better terminal curve", "kind": "reversed", "rationale": "A pinch fights the curve. Isochronism gets worse." },
+            { "text": "Demagnetize the spring, which is the hidden job of the pins", "kind": "misapplied", "rationale": "Pins are a length clamp, not a degausser." },
+            { "text": "Lock the escape wheel, which is how a boot replaces the pallets", "kind": "nearby", "rationale": "The boot grabs the spring. It does not lock the train." }
+          ],
+          "correctExplanation": "A pinched coil is an amplitude-dependent length. That is the drawback.",
+          "objectiveIds": ["Predict a drawback of pinning the spring in a regulator boot"],
+          "prerequisiteConceptIds": ["horo-hairspring"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "horo-quartz-contrast-10",
+      "conceptId": "horo-quartz-contrast",
+      "title": "Crystal and a divider",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["horo-escape"],
+      "goDeeper": "horo-rate",
+      "explanation": [
+        "Quartz counts a crystal, not a sprung balance. A 32,768 Hz bar is divided down to one pulse a second. That pulse steps a motor. There is no lock, no drop, no impulse pin. The resonator is the crystal. The counter is a chip.",
+        "A quartz stepper is not a lever with cleaner oil. It is a different machine: an electronic oscillator and a gear train that only displays. Do not grade it against a Swiss lever as if both were competing at lock and draw. They do not share those jobs.",
+        "The contrast is the resonator. Mechanical timekeeping lives in a balance and hairspring whose period you can disturb with position, magnetism, and oil. Quartz timekeeping lives in a crystal whose period you disturb with temperature and a dying cell."
+      ],
+      "example": "A quartz seconds hand jumps once a second because a divider reached 1 Hz and a stepper took one increment. A lever watch steps six or eight times a second because the escape wheel unlocked that often.",
+      "whyItMatters": "Name the resonator before you compare the two machines, or you will diagnose a crystal with pallet oil.",
+      "quiz": [
+        {
+          "id": "horo-qz10-1",
+          "stem": "What does a quartz movement actually count as its timebase?",
+          "correctAnswer": "Cycles of a crystal, divided down, not a sprung balance",
+          "distractors": [
+            { "text": "Unlocks of a Swiss lever, just hidden under the circuit", "kind": "misconception", "rationale": "There is no lever in the timebase. The crystal is the resonator." },
+            { "text": "Turns of the mainspring barrel, scaled by a train of wheels", "kind": "nearby", "rationale": "A cell powers the circuit. The crystal is still the count." },
+            { "text": "Swings of a free-sprung rim whose screws replace the crystal", "kind": "reversed", "rationale": "That is the mechanical resonator, which quartz is not using." }
+          ],
+          "correctExplanation": "Crystal in, divider, one-hertz step. No sprung balance in the count.",
+          "objectiveIds": ["State that quartz counts a crystal, not a sprung balance"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-qz10-2",
+          "stem": "A quartz stepper differs from a mechanical escapement in that it:",
+          "correctAnswer": "Advances a display train from a divided crystal, with no lock or impulse",
+          "distractors": [
+            { "text": "Uses the same pallet stones, only with a cleaner grade of oil", "kind": "misconception", "rationale": "There are no pallets to oil. The machines do not share that job." },
+            { "text": "Locks and impulses a balance, then hides the fork under a circuit", "kind": "reversed", "rationale": "No lock, no impulse, no fork. Different resonator." },
+            { "text": "Proves the lever is luxury decoration the crystal has now replaced", "kind": "subtle", "rationale": "The lesson is a mechanism contrast, not a luxury ranking." }
+          ],
+          "correctExplanation": "Stepper plus crystal, versus lock-and-impulse. Different jobs, not a ranking.",
+          "objectiveIds": ["Distinguish a quartz stepper from a mechanical escapement without a luxury claim"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-qz10-3",
+          "stem": "You are asked why a quartz hand jumps once a second while a lever chatters. The honest contrast is:",
+          "correctAnswer": "The crystal is divided to 1 Hz; the lever unlocks many times a second",
+          "distractors": [
+            { "text": "Quartz is the luxury version of the same Swiss lever and pallets", "kind": "subtle", "rationale": "That is a ranking, and it is also the wrong machine." },
+            { "text": "The lever has no oscillator, so it must chatter to invent a second", "kind": "reversed", "rationale": "The lever has a sprung balance. It unlocks on that period." },
+            { "text": "Both count the same escape wheel; only the case metal is different", "kind": "nearby", "rationale": "The resonators differ. Case metal is housing." }
+          ],
+          "correctExplanation": "Different resonators, different step. Not a grade of the same escapement.",
+          "objectiveIds": ["Distinguish a quartz stepper from a mechanical escapement without a luxury claim"],
+          "prerequisiteConceptIds": ["horo-escape"],
+          "difficultyTier": 1,
+          "cognitiveType": "compare"
+        }
+      ]
+    }
+  ]
+}

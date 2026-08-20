@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as GraphRouteImport } from './routes/graph'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LibraryRouteImport } from './routes/library'
@@ -18,6 +19,7 @@ import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as SessionRouteImport } from './routes/session'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TopicsRouteImport } from './routes/topics'
+import { Route as CourseCourseIdRouteImport } from './routes/course.$courseId'
 import { Route as LearnLessonIdRouteImport } from './routes/learn.$lessonId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as LearnLessonIdQuizRouteImport } from './routes/learn_.$lessonId.quiz'
@@ -26,6 +28,11 @@ import { Route as LearnLessonIdRateRouteImport } from './routes/learn_.$lessonId
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GraphRoute = GraphRouteImport.update({
@@ -68,6 +75,11 @@ const TopicsRoute = TopicsRouteImport.update({
   path: '/topics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CourseCourseIdRoute = CourseCourseIdRouteImport.update({
+  id: '/course/$courseId',
+  path: '/course/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnLessonIdRoute = LearnLessonIdRouteImport.update({
   id: '/learn/$lessonId',
   path: '/learn/$lessonId',
@@ -91,6 +103,7 @@ const LearnLessonIdRateRoute = LearnLessonIdRateRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/graph': typeof GraphRoute
   '/history': typeof HistoryRoute
   '/library': typeof LibraryRoute
@@ -99,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/session': typeof SessionRoute
   '/settings': typeof SettingsRoute
   '/topics': typeof TopicsRoute
+  '/course/$courseId': typeof CourseCourseIdRoute
   '/learn/$lessonId': typeof LearnLessonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/learn/$lessonId/quiz': typeof LearnLessonIdQuizRoute
@@ -106,6 +120,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/graph': typeof GraphRoute
   '/history': typeof HistoryRoute
   '/library': typeof LibraryRoute
@@ -114,6 +129,7 @@ export interface FileRoutesByTo {
   '/session': typeof SessionRoute
   '/settings': typeof SettingsRoute
   '/topics': typeof TopicsRoute
+  '/course/$courseId': typeof CourseCourseIdRoute
   '/learn/$lessonId': typeof LearnLessonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/learn/$lessonId/quiz': typeof LearnLessonIdQuizRoute
@@ -122,6 +138,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/graph': typeof GraphRoute
   '/history': typeof HistoryRoute
   '/library': typeof LibraryRoute
@@ -130,6 +147,7 @@ export interface FileRoutesById {
   '/session': typeof SessionRoute
   '/settings': typeof SettingsRoute
   '/topics': typeof TopicsRoute
+  '/course/$courseId': typeof CourseCourseIdRoute
   '/learn/$lessonId': typeof LearnLessonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/learn_/$lessonId/quiz': typeof LearnLessonIdQuizRoute
@@ -139,6 +157,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/graph'
     | '/history'
     | '/library'
@@ -147,6 +166,7 @@ export interface FileRouteTypes {
     | '/session'
     | '/settings'
     | '/topics'
+    | '/course/$courseId'
     | '/learn/$lessonId'
     | '/api/auth/$'
     | '/learn/$lessonId/quiz'
@@ -154,6 +174,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/graph'
     | '/history'
     | '/library'
@@ -162,6 +183,7 @@ export interface FileRouteTypes {
     | '/session'
     | '/settings'
     | '/topics'
+    | '/course/$courseId'
     | '/learn/$lessonId'
     | '/api/auth/$'
     | '/learn/$lessonId/quiz'
@@ -169,6 +191,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/graph'
     | '/history'
     | '/library'
@@ -177,6 +200,7 @@ export interface FileRouteTypes {
     | '/session'
     | '/settings'
     | '/topics'
+    | '/course/$courseId'
     | '/learn/$lessonId'
     | '/api/auth/$'
     | '/learn_/$lessonId/quiz'
@@ -185,6 +209,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   GraphRoute: typeof GraphRoute
   HistoryRoute: typeof HistoryRoute
   LibraryRoute: typeof LibraryRoute
@@ -193,6 +218,7 @@ export interface RootRouteChildren {
   SessionRoute: typeof SessionRoute
   SettingsRoute: typeof SettingsRoute
   TopicsRoute: typeof TopicsRoute
+  CourseCourseIdRoute: typeof CourseCourseIdRoute
   LearnLessonIdRoute: typeof LearnLessonIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   LearnLessonIdQuizRoute: typeof LearnLessonIdQuizRoute
@@ -206,6 +232,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/graph': {
@@ -264,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/course/$courseId': {
+      id: '/course/$courseId'
+      path: '/course/$courseId'
+      fullPath: '/course/$courseId'
+      preLoaderRoute: typeof CourseCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/$lessonId': {
       id: '/learn/$lessonId'
       path: '/learn/$lessonId'
@@ -297,6 +337,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   GraphRoute: GraphRoute,
   HistoryRoute: HistoryRoute,
   LibraryRoute: LibraryRoute,
@@ -305,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   SessionRoute: SessionRoute,
   SettingsRoute: SettingsRoute,
   TopicsRoute: TopicsRoute,
+  CourseCourseIdRoute: CourseCourseIdRoute,
   LearnLessonIdRoute: LearnLessonIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   LearnLessonIdQuizRoute: LearnLessonIdQuizRoute,

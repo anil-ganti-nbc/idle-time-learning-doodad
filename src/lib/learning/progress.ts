@@ -1,14 +1,22 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { emptyCourseProgress } from "./curriculum";
 import { defaultAi, defaultProfile, defaultSettings, defaultState } from "./defaults";
-import { importExport, type ImportMode } from "./export";
-import { emptyProgress, scheduleReview } from "./srs";
+import { importExport, saveRollback, type ImportMode } from "./export";
+import { PROGRESS_PERSIST_VERSION, PROGRESS_STORAGE_KEY } from "./persistence";
+import { persistStorage } from "./storage";
+import { emptyProgress, normalizeProgressRow, quizRatio, reviewQuality, scheduleReviewFull } from "./srs";
 import type {
   AiSettings,
+  AssessmentItemRecord,
   Category,
   CategoryId,
   Concept,
   ConceptProgress,
+  Course,
+  CoursePlacement,
+  CourseProgress,
+  DifficultyNote,
   GenerationLogEntry,
   Lesson,
   LessonFeedbackVerdict,
@@ -22,6 +30,7 @@ import type {
   TimeBudget,
   Understanding,
 } from "./types";
+import { appendAssessmentItems, emptyAssessmentHistory, markLaterPoorRating } from "@/lib/quiz/history";
 
 interface ProgressStore extends ProgressState {
   setJournalist: (on: boolean) => void;
@@ -45,7 +54,11 @@ interface ProgressStore extends ProgressState {
     timeBudget: TimeBudget;
     sourceType: SessionRecord["sourceType"];
     sourceProvider?: string;
+    courseId?: string;
+    assessmentItems?: AssessmentItemRecord[];
+    positions?: number[];
   }) => SessionRecord;
+  noteDifficulty: (sessionId: string, note: DifficultyNote) => void;
   upsertCategory: (category: Category) => void;
   removeCategory: (id: string) => void;
   upsertConcept: (concept: Concept) => void;
@@ -60,9 +73,12 @@ interface ProgressStore extends ProgressState {
   replaceState: (state: ProgressState) => void;
   importBundle: (raw: unknown, mode?: ImportMode) => { warnings: string[]; backupAt: string };
   resetAll: () => void;
+  applyPlacement: (courseId: string, placement: CoursePlacement) => void;
+  declareConceptsKnown: (courseId: string, conceptIds: string[], placement: CoursePlacement) => void;
+  touchCourse: (courseId: string, at?: string) => void;
 }
 
-function migrateV1(persisted: unknown): ProgressState {
+function migratePersisted(persisted: unknown): ProgressState {
   const p = (persisted ?? {}) as Partial<ProgressState> & {
     settings?: Partial<Preferences>;
     concepts?: Record<string, ConceptProgress>;
@@ -71,12 +87,7 @@ function migrateV1(persisted: unknown): ProgressState {
   };
   const concepts: Record<string, ConceptProgress> = {};
   for (const [id, row] of Object.entries(p.concepts ?? {})) {
-    concepts[id] = {
-      ...emptyProgress(id),
-      ...row,
-      reviewHistory: row.reviewHistory ?? [],
-      updatedAt: row.updatedAt ?? row.lastStudiedAt ?? null,
-    };
+    concepts[id] = normalizeProgressRow({ ...row, conceptId: id });
   }
   return {
     ...defaultState(),
@@ -96,6 +107,9 @@ function migrateV1(persisted: unknown): ProgressState {
     customLessons: p.customLessons ?? [],
     generationLog: p.generationLog ?? [],
     pendingPath: p.pendingPath ?? null,
+    courses: p.courses ?? {},
+    customCourses: p.customCourses ?? [],
+    assessmentHistory: (p as ProgressState).assessmentHistory ?? emptyAssessmentHistory(),
   };
 }
 
@@ -109,8 +123,16 @@ export const useProgress = create<ProgressStore>()(
       updateSettings: (partial) => set((s) => ({ settings: { ...s.settings, ...partial } })),
       updateAi: (partial) => set((s) => ({ ai: { ...s.ai, ...partial } })),
       recordSession: (input) => {
-        const prev = get().concepts[input.conceptId] ?? emptyProgress(input.conceptId);
-        const schedule = scheduleReview(prev, input.understanding, input.quizCorrect, input.quizTotal);
+        const prev = normalizeProgressRow(get().concepts[input.conceptId] ?? emptyProgress(input.conceptId));
+        const quality = reviewQuality(input.understanding, input.quizCorrect, input.quizTotal);
+        const lapseCount = prev.lapseCount + (quality <= 1 ? 1 : 0);
+        const schedule = scheduleReviewFull({
+          prev,
+          understanding: input.understanding,
+          quizCorrect: input.quizCorrect,
+          quizTotal: input.quizTotal,
+          lapseCount,
+        });
         const completedAt = new Date().toISOString();
         const next: ConceptProgress = {
           ...prev,
@@ -118,11 +140,14 @@ export const useProgress = create<ProgressStore>()(
           understanding: input.understanding,
           quizCorrect: prev.quizCorrect + input.quizCorrect,
           quizTotal: prev.quizTotal + input.quizTotal,
-          lastQuizScore: input.quizCorrect,
+          lastQuizCorrect: input.quizCorrect,
+          lastQuizTotal: input.quizTotal,
+          lastQuizScore: quizRatio(input.quizCorrect, input.quizTotal),
           estimatedMinutes: prev.estimatedMinutes + input.estimatedMinutes,
           actualMinutes: prev.actualMinutes + input.actualMinutes,
           lastStudiedAt: completedAt,
           timesStudied: prev.timesStudied + 1,
+          lapseCount,
           ...schedule,
           reviewHistory: [
             ...prev.reviewHistory,
@@ -154,19 +179,40 @@ export const useProgress = create<ProgressStore>()(
           sourceType: input.sourceType,
           sourceProvider: input.sourceProvider,
         };
-        set((s) => ({
-          concepts: { ...s.concepts, [input.conceptId]: next },
-          sessions: [session, ...s.sessions].slice(0, 800),
-          recentCategoryIds: [
-            input.categoryId,
-            ...s.recentCategoryIds.filter((c) => c !== input.categoryId),
-          ].slice(0, 8),
-        }));
+        set((s) => {
+          const courses = { ...s.courses };
+          if (input.courseId) {
+            const prev = courses[input.courseId] ?? emptyCourseProgress(input.courseId);
+            courses[input.courseId] = {
+              ...prev,
+              startedAt: prev.startedAt ?? completedAt,
+              lastStudiedAt: completedAt,
+            };
+          }
+          return {
+            concepts: { ...s.concepts, [input.conceptId]: next },
+            sessions: [session, ...s.sessions].slice(0, 800),
+            recentCategoryIds: [
+              input.categoryId,
+              ...s.recentCategoryIds.filter((c) => c !== input.categoryId),
+            ].slice(0, 8),
+            courses,
+            assessmentHistory: markLaterPoorRating(
+              appendAssessmentItems(s.assessmentHistory, input.assessmentItems ?? [], input.positions ?? []),
+              input.conceptId,
+              input.understanding,
+            ),
+          };
+        });
         return session;
       },
+      noteDifficulty: (sessionId, note) =>
+        set((s) => ({
+          sessions: s.sessions.map((row) => (row.id === sessionId ? { ...row, difficultyNote: note } : row)),
+        })),
       upsertCategory: (category) =>
         set((s) => ({
-          customCategories: upsert(s.customCategories, category),
+          customCategories: upsert(s.customCategories, stamp(category)),
         })),
       removeCategory: (id) =>
         set((s) => ({
@@ -178,7 +224,7 @@ export const useProgress = create<ProgressStore>()(
           }),
         })),
       upsertConcept: (concept) =>
-        set((s) => ({ customConcepts: upsert(s.customConcepts, concept) })),
+        set((s) => ({ customConcepts: upsert(s.customConcepts, stamp(concept)) })),
       removeConcept: (id) =>
         set((s) => ({
           customConcepts: s.customConcepts.filter((c) => c.id !== id),
@@ -255,15 +301,59 @@ export const useProgress = create<ProgressStore>()(
       replaceState: (state) => set(state),
       importBundle: (raw, mode = "merge") => {
         const result = importExport(snapshot(get()), raw, mode);
+        if (mode === "replace") saveRollback(result.backup);
         set(result.state);
         return { warnings: result.warnings, backupAt: result.backup.exported_at };
       },
       resetAll: () => set(defaultState()),
+      applyPlacement: (courseId, placement) =>
+        set((s) => {
+          const prev = s.courses[courseId] ?? emptyCourseProgress(courseId);
+          return {
+            courses: {
+              ...s.courses,
+              [courseId]: {
+                ...prev,
+                startedAt: prev.startedAt ?? placement.at,
+                lastStudiedAt: placement.at,
+                waivedConceptIds: [...new Set([...prev.waivedConceptIds, ...placement.waivedConceptIds])],
+                placement,
+              },
+            },
+          };
+        }),
+      declareConceptsKnown: (courseId, conceptIds, placement) =>
+        set((s) => {
+          const prev = s.courses[courseId] ?? emptyCourseProgress(courseId);
+          return {
+            courses: {
+              ...s.courses,
+              [courseId]: {
+                ...prev,
+                startedAt: prev.startedAt ?? placement.at,
+                waivedConceptIds: [...new Set([...prev.waivedConceptIds, ...conceptIds, ...placement.waivedConceptIds])],
+                placement,
+              },
+            },
+          };
+        }),
+      touchCourse: (courseId, at) =>
+        set((s) => {
+          const stampAt = at ?? new Date().toISOString();
+          const prev = s.courses[courseId] ?? emptyCourseProgress(courseId);
+          return {
+            courses: {
+              ...s.courses,
+              [courseId]: { ...prev, startedAt: prev.startedAt ?? stampAt, lastStudiedAt: stampAt },
+            },
+          };
+        }),
     }),
     {
-      name: "dau-progress-v1",
-      version: 2,
-      migrate: (persisted) => migrateV1(persisted),
+      name: PROGRESS_STORAGE_KEY,
+      version: PROGRESS_PERSIST_VERSION,
+      storage: createJSONStorage(() => persistStorage()),
+      migrate: (persisted) => migratePersisted(persisted),
       partialize: (s) => ({
         profile: s.profile,
         settings: s.settings,
@@ -276,10 +366,22 @@ export const useProgress = create<ProgressStore>()(
         customLessons: s.customLessons,
         generationLog: s.generationLog,
         pendingPath: s.pendingPath,
+        courses: s.courses,
+        customCourses: s.customCourses,
+        assessmentHistory: s.assessmentHistory,
       }),
     },
   ),
 );
+
+function stamp<T extends { createdAt?: string; updatedAt?: string }>(item: T): T {
+  const now = new Date().toISOString();
+  return {
+    ...item,
+    createdAt: item.createdAt ?? now,
+    updatedAt: now,
+  };
+}
 
 function upsert<T extends { id: string }>(list: T[], item: T): T[] {
   const idx = list.findIndex((x) => x.id === item.id);
@@ -302,11 +404,10 @@ function snapshot(s: ProgressState): ProgressState {
     customLessons: s.customLessons,
     generationLog: s.generationLog,
     pendingPath: s.pendingPath,
+    courses: s.courses,
+    customCourses: s.customCourses,
+    assessmentHistory: s.assessmentHistory,
   };
 }
 
-export function generationsToday(log: { at: string; ok: boolean }[], now = new Date()): number {
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  return log.filter((e) => e.ok && new Date(e.at).getTime() >= start.getTime()).length;
-}
+export { generationsToday, isBillableAttempt } from "./accounting";

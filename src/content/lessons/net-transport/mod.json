@@ -1,0 +1,452 @@
+{
+  "courseId": "net-transport",
+  "moduleId": "net-t-mod",
+  "lessons": [
+    {
+      "id": "net-bufferbloat-10",
+      "conceptId": "net-bufferbloat",
+      "title": "The queue hid the drop and left the delay",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-congestion"],
+      "goDeeper": "net-ecn",
+      "diagram": "net-bloat",
+      "explanation": [
+        "A loss-based sender grows its in-flight window until something drops. That drop is supposed to mean the hop is full. A huge buffer at the hop delays that drop. Packets sit for hundreds of milliseconds instead of being refused. The sender sees a healthy path for longer than the path is healthy, fills the buffer, and only then loses a packet.",
+        "The standing queue is the bloated part. Latency-sensitive work — a keystroke, a call — now waits behind a bulk transfer's backlog even though the link is not dropping. Throughput can look fine. Delay does not. The congestion signal was supposed to be honest and early. The buffer turned it into late loss plus a permanent wait.",
+        "Smaller buffers, or a mark before overflow, restore an earlier signal. Bigger buffers in the name of 'not dropping' are how a home hop makes every interactive flow share a bulk flow's queue. The failure is not missing capacity. It is a signal that arrived after the delay had already wrecked the tail."
+      ],
+      "example": "A bulk sender fills a 200 ms buffer on a 10 Mbit/s hop. A call sharing the hop adds 200 ms of one-way delay before any drop. The bulk sender's window is still growing. When a drop finally happens, the call has been unusable for seconds. A 5 ms buffer would have dropped earlier and kept the call's wait short.",
+      "whyItMatters": "A path that 'never drops' can still be a bad path, because the missing drop was the only congestion signal the sender had.",
+      "quiz": [
+        {
+          "id": "nt-bb10-1",
+          "stem": "Bufferbloat is:",
+          "correctAnswer": "Huge buffers turning congestion into delay instead of an honest early drop",
+          "distractors": [
+            { "text": "Tiny buffers that drop on the first extra packet, starving every sender", "kind": "reversed", "rationale": "That is undersized buffering. Bloat is the oversized case." },
+            { "text": "A receiver advertising a zero window so the sender must stop", "kind": "nearby", "rationale": "Flow control is at the destination. Bloat is a hop queue." },
+            { "text": "A rule that forbids any in-flight window larger than one packet", "kind": "misapplied", "rationale": "Senders still pipeline. The queue is what grew, not the rule." }
+          ],
+          "correctExplanation": "The drop comes late. Until then the extra data is delay. That is the bloat.",
+          "objectiveIds": ["Describe bufferbloat as huge buffers turning congestion into delay instead of honest loss"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-bb10-2",
+          "stem": "A latency-sensitive flow sharing a hop with a bulk sender in a standing 200 ms queue typically:",
+          "correctAnswer": "Pays the standing delay even when the link is not dropping",
+          "distractors": [
+            { "text": "Sees zero extra delay, because no drop means the hop is empty", "kind": "reversed", "rationale": "No drop is the trap. The queue is full of undropped packets." },
+            { "text": "Receives the hop's leftover capacity as a reserved circuit", "kind": "misapplied", "rationale": "Sharing a bloated queue is the opposite of a reservation." },
+            { "text": "Forces the bulk sender to a zero window until the call ends", "kind": "nearby", "rationale": "The bulk sender still sees no loss, so it does not stop." }
+          ],
+          "correctExplanation": "The link can be busy without dropping. The wait is the queue, not a missing packet.",
+          "objectiveIds": ["Predict why a latency-sensitive flow suffers in a standing queue even when the link is not dropping"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-bb10-3",
+          "stem": "A loss-based sender on a hop with a 200 ms buffer, compared with a 5 ms buffer, will typically:",
+          "correctAnswer": "Keep growing longer, fill the standing queue, and only then see a drop",
+          "distractors": [
+            { "text": "See the drop sooner, because larger buffers generate loss faster", "kind": "reversed", "rationale": "Larger buffers postpone loss. That is the bloat." },
+            { "text": "Ignore delay entirely and freeze the window at one packet", "kind": "misapplied", "rationale": "Loss-based senders grow until loss. The late loss is the problem." },
+            { "text": "Measure the buffer size from a header and set the window to match it", "kind": "nearby", "rationale": "The sender still does not see the buffer. It sees late loss." }
+          ],
+          "correctExplanation": "The signal is the drop. Hide the drop behind a queue and the sender overfills.",
+          "objectiveIds": ["Predict why a latency-sensitive flow suffers in a standing queue even when the link is not dropping"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-ecn-10",
+      "conceptId": "net-ecn",
+      "title": "A mark instead of a drop",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-congestion"],
+      "explanation": [
+        "A congested hop's usual signal is a drop. The sender then repairs and shrinks. Explicit congestion notification marks a packet instead: the hop sets a bit, the packet still arrives, and the receiver echoes the mark so the sender can treat it like a congestion signal without losing the payload.",
+        "The sender should respond as it would to a drop from overflow — shrink the in-flight window — not as it would to a missing byte that needs repair. The data got through. Retransmitting it is waste. Ignoring the mark is how you go back to filling until a real drop. Both endpoints and the hop have to play: a mark that the sender never hears is graffiti.",
+        "Marks are an earlier, cleaner signal than overflow, and they fail when a box in the middle clears the bits, or when a sender treats a mark as corruption. They do not require a new map of the hop. They require the existing feedback loop to carry one extra fact: the pipe is full, and this packet still made it."
+      ],
+      "example": "A hop's queue is rising. Instead of dropping packet 50, it marks it. Packet 50 arrives. The receiver reports the mark. The sender halves its window and does not retransmit 50. A sender that retransmits 50 anyway has treated a congestion signal as loss of payload. A sender that ignores the mark keeps filling until the hop really drops.",
+      "whyItMatters": "Repairing a packet that arrived is the wrong reaction. The mark was capacity news, not a hole.",
+      "quiz": [
+        {
+          "id": "nt-ecn10-1",
+          "stem": "Explicit congestion notification is:",
+          "correctAnswer": "Marking a packet at a congested hop instead of dropping it",
+          "distractors": [
+            { "text": "Dropping every marked packet so the sender must retransmit", "kind": "reversed", "rationale": "The point of the mark is that the packet still arrives." },
+            { "text": "A receiver advertisement that the application buffer is full", "kind": "nearby", "rationale": "That is flow control. ECN is a path signal." },
+            { "text": "A reserved circuit the hop grants when the queue is rising", "kind": "misapplied", "rationale": "No circuit is granted. A bit is set on a packet that still goes through." }
+          ],
+          "correctExplanation": "The hop says full without discarding the bytes. That is the mark.",
+          "objectiveIds": ["Explain ECN as marking a packet instead of dropping it"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-ecn10-2",
+          "stem": "A sender that sees a congestion mark on data that arrived should:",
+          "correctAnswer": "Shrink the in-flight window and not retransmit the marked payload",
+          "distractors": [
+            { "text": "Retransmit the payload, because a mark always means the bytes were lost", "kind": "misconception", "rationale": "The bytes arrived. Repair is the wrong move." },
+            { "text": "Double the window, because arrival means leftover capacity", "kind": "reversed", "rationale": "The mark is a full-pipe signal. Growth is the failure." },
+            { "text": "Ignore the mark and wait for a drop, which is the only legal signal", "kind": "subtle", "rationale": "The mark is the signal. Waiting for a drop undoes ECN." }
+          ],
+          "correctExplanation": "Treat the mark as overflow news. The payload is already at the receiver.",
+          "objectiveIds": ["Predict what a sender should do when it sees a congestion mark"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-ecn10-3",
+          "stem": "A mark that the receiver never echoes, compared with a drop of the same packet:",
+          "correctAnswer": "Gives the sender no congestion signal and no hole to repair — the news is lost",
+          "distractors": [
+            { "text": "Is stronger than a drop, because unmarked arrivals always cut the window", "kind": "reversed", "rationale": "An un-echoed mark is invisible. A drop is visible as a hole." },
+            { "text": "Forces a zero receive window until the application reads", "kind": "nearby", "rationale": "Credit is not the mark path." },
+            { "text": "Rewrites the sender's round-trip estimator to zero", "kind": "misapplied", "rationale": "RTT samples are separate. The missing echo is missing capacity news." }
+          ],
+          "correctExplanation": "Drops are visible as holes. Marks are visible only if they are reported. Silence is a broken ECN path.",
+          "objectiveIds": ["Predict what a sender should do when it sees a congestion mark"],
+          "prerequisiteConceptIds": ["net-congestion"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "net-bbr-10",
+      "conceptId": "net-bbr",
+      "title": "Model the pipe; do not wait for a drop",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-congestion", "net-bandwidth-delay"],
+      "diagram": "net-cwnd",
+      "explanation": [
+        "Loss-based control finds capacity by filling until drop. On a bloated hop that means a standing queue. Delay-based control, BBR as the named design, models two numbers instead: the delivery rate the path has actually been achieving, and the minimum round-trip time seen when the queue was probably empty. The target is to keep about one bandwidth-delay product in flight — the pipe full, the queue not.",
+        "Pacing to the estimated rate, with a window around that product, is the mechanism. Probes briefly raise the rate to see if more bandwidth appeared, then drain to re-sample min RTT. The sender is not waiting for a drop to learn it went too far. It is comparing current delay and current delivery to the model.",
+        "The tradeoff is robustness versus honesty of delay. Loss-based control is crude and works when drops mean overflow. Delay-based control keeps latency down when the model is right, and can be wrong when min RTT is stale, when competing loss-based senders fill the buffer anyway, or when delay is not queueing. Modeling the pipe is a bet that delay and delivery rate are better signals than overflow."
+      ],
+      "example": "A 40 ms min RTT and a 100 Mbit/s delivery rate say the pipe holds about 500 KB. A loss-based sender might put 2 MB in flight and sit in a 150 ms queue until a drop. BBR paces near 100 Mbit/s with a window near 500 KB, sees delay climb during a probe, and drains rather than waiting for a loss. Throughput stays high. The interactive flow sharing the hop does not pay 150 ms.",
+      "whyItMatters": "Waiting for a drop on a deep buffer is how you buy throughput with latency. The model tries to stop at the product.",
+      "quiz": [
+        {
+          "id": "nt-bbr10-1",
+          "stem": "Delay-based control of the BBR kind is:",
+          "correctAnswer": "Modeling bottleneck rate and min RTT so the sender can fill the pipe without waiting for a drop",
+          "distractors": [
+            { "text": "Growing the window until a drop, then halving, as the only legal probe", "kind": "nearby", "rationale": "That is loss-based AIMD. BBR is the model that tries not to need the drop." },
+            { "text": "Ignoring delivery rate and treating every delay increase as a lost packet", "kind": "reversed", "rationale": "Delivery rate is half the model. Delay is not rebranded as loss." },
+            { "text": "Asking the hop to publish its queue length in every header", "kind": "misapplied", "rationale": "The sender still infers. The signals are delay and delivery, not a census." }
+          ],
+          "correctExplanation": "Two numbers: how fast the pipe has been delivering, and how short the delay can be. Pace to that product.",
+          "objectiveIds": ["Describe delay-based control as modeling the pipe instead of waiting for a drop"],
+          "prerequisiteConceptIds": ["net-congestion", "net-bandwidth-delay"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-bbr10-2",
+          "stem": "A loss-based reaction, compared with one that uses delay and delivery rate, typically:",
+          "correctAnswer": "Fills until overflow, so a deep buffer becomes standing delay before any cut",
+          "distractors": [
+            { "text": "Stops at min RTT automatically, because loss and delay are the same signal", "kind": "misconception", "rationale": "Loss comes after the queue. Delay can be seen before overflow." },
+            { "text": "Needs a reserved circuit, because loss-based senders cannot share a hop", "kind": "misapplied", "rationale": "They share. They share by overflowing together." },
+            { "text": "Ignores the bandwidth-delay product, which delay-based control also ignores", "kind": "reversed", "rationale": "The product is exactly what the delay-based model tries to hold." }
+          ],
+          "correctExplanation": "Loss is a late signal on a deep queue. Delay and delivery can stop at the product.",
+          "objectiveIds": ["Contrast a loss-based reaction with one that uses delay and delivery rate"],
+          "prerequisiteConceptIds": ["net-congestion", "net-bandwidth-delay"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "nt-bbr10-3",
+          "stem": "Pacing near the estimated rate with a window near one product, versus filling until drop:",
+          "correctAnswer": "Keeps the pipe busy with less standing queue, at the cost of trusting delay and delivery samples",
+          "distractors": [
+            { "text": "Always underfills, because any model smaller than overflow is illegal", "kind": "reversed", "rationale": "The product is a full pipe. Overflow is the extra queue on top." },
+            { "text": "Removes the need to share, because a model is a reservation", "kind": "misapplied", "rationale": "Other senders still exist. The model is still an inference." },
+            { "text": "Makes min RTT irrelevant, because pacing ignores delay by construction", "kind": "nearby", "rationale": "Min RTT is half the product. Pacing without it is just a rate guess." }
+          ],
+          "correctExplanation": "Full pipe, empty-ish queue. The bet is that delay and delivery are honest enough to steer.",
+          "objectiveIds": ["Contrast a loss-based reaction with one that uses delay and delivery rate"],
+          "prerequisiteConceptIds": ["net-congestion", "net-bandwidth-delay"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-quic-10",
+      "conceptId": "net-quic",
+      "title": "Transport over UDP so the kernel is not the protocol",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-udp", "net-head-of-line"],
+      "goDeeper": "net-tls-place",
+      "explanation": [
+        "Kernel TCP changes on the deployment schedule of operating systems. A transport that runs over UDP can change in user space: new recovery, new handshake, new encryption, without waiting for every path and every kernel to agree. QUIC is that bet. UDP is the datagram. The reliability, the congestion loop, and the crypto live in the library.",
+        "Independent streams are the answer to head-of-line blocking. A lost packet on stream A does not freeze stream B. Each stream is still reliable and ordered for its own bytes. The connection is no longer one ordered byte stream that stalls every multiplexed message behind one hole. That is the delivery-rule change, not a routing change.",
+        "The tradeoff is ossification versus machinery. User-space evolution is faster. Every middlebox that expected TCP now sees UDP, so NAT timeouts, filters, and 'UDP is suspicious' policies become the path. You also reimplement congestion and recovery that the kernel already had. QUIC is not a smaller protocol. It is a protocol you are allowed to change."
+      ],
+      "example": "A page fetches an image and a script on one QUIC connection as two streams. The image's packet is lost. The script stream is still delivered. On one ordered byte stream, the script bytes would have sat behind the image hole until the retransmit landed. The kernel did not need a new TCP option for that; the library shipped the streams.",
+      "whyItMatters": "Head-of-line was a property of one ordered stream. Putting transport on UDP is how you change that property without a kernel flag day.",
+      "quiz": [
+        {
+          "id": "nt-quic10-1",
+          "stem": "QUIC runs as a transport over UDP so that:",
+          "correctAnswer": "The protocol can change in user space without waiting on kernel TCP",
+          "distractors": [
+            { "text": "UDP suddenly promises in-order delivery and the library can stay empty", "kind": "reversed", "rationale": "UDP is still a datagram. QUIC supplies reliability in the library." },
+            { "text": "The internet layer can be skipped and packets have no addresses", "kind": "misapplied", "rationale": "QUIC still sits on IP. UDP is the port and the hope." },
+            { "text": "Middleboxes that rewrite TCP are required to rewrite QUIC the same way", "kind": "nearby", "rationale": "Many middleboxes will not. That is part of the cost." }
+          ],
+          "correctExplanation": "User-space transport. UDP is the datagram the kernel already forwards.",
+          "objectiveIds": ["Explain QUIC as a transport over UDP so it can change without the kernel"],
+          "prerequisiteConceptIds": ["net-udp", "net-head-of-line"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-quic10-2",
+          "stem": "A loss on stream A of a QUIC connection, with stream B fully received, typically:",
+          "correctAnswer": "Leaves stream B deliverable; A's hole does not stall B's bytes",
+          "distractors": [
+            { "text": "Stalls every stream, because QUIC is still one ordered byte stream", "kind": "reversed", "rationale": "Independent streams are how QUIC avoids that stall." },
+            { "text": "Deletes stream B as a precaution, because one hole invalidates the connection", "kind": "misconception", "rationale": "B's bytes are fine. Only A's missing packet is repaired." },
+            { "text": "Forces a kernel TCP fallback that reintroduces a single ordered stream", "kind": "nearby", "rationale": "Fallback is a deployment tactic, not the stream rule." }
+          ],
+          "correctExplanation": "One connection, several ordered streams. A hole is local to its stream.",
+          "objectiveIds": ["Predict how QUIC avoids head-of-line blocking across independent streams"],
+          "prerequisiteConceptIds": ["net-udp", "net-head-of-line"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-quic10-3",
+          "stem": "Evolving recovery in a user-space UDP transport, versus changing kernel TCP, trades:",
+          "correctAnswer": "Faster protocol change against middleboxes and policies that only expected TCP",
+          "distractors": [
+            { "text": "No congestion control at all, because UDP paths cannot be shared", "kind": "reversed", "rationale": "QUIC still runs a congestion loop. UDP does not excuse a flood." },
+            { "text": "A guarantee that every NAT will hold UDP mappings longer than TCP ones", "kind": "misapplied", "rationale": "UDP mappings often die sooner. That is a cost, not a gift." },
+            { "text": "Identical head-of-line behavior, because streams cannot change delivery order", "kind": "nearby", "rationale": "Streams are the delivery-order change. That is a benefit, not a wash." }
+          ],
+          "correctExplanation": "You get to ship a new transport. The path may still punish UDP. That is the deal.",
+          "objectiveIds": ["Explain QUIC as a transport over UDP so it can change without the kernel"],
+          "prerequisiteConceptIds": ["net-udp", "net-head-of-line"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-tls-place-10",
+      "conceptId": "net-tls-place",
+      "title": "Encryption sat on the stream; a later design ate it",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-tcp-state"],
+      "diagram": "net-encap",
+      "explanation": [
+        "TLS, in the usual stack, is a layer on an already-established TCP connection. The handshake bytes are TCP payload. Sequence numbers, TIME_WAIT, and retransmits belong to TCP and do not know the bytes are ciphertext. A middlebox that understands TCP can still see the 4-tuple, the handshake timing, and often the fact that TLS is happening, even when it cannot read the application.",
+        "That split has a cost. TCP's handshake is a round trip before TLS's handshake can start, so the first protected byte is late. TCP also cannot protect its own control: resets and sequence games are in the clear. A later design, QUIC, fused encryption into the transport so the first packets are already protected and the kernel is not in the TLS path. The summary's 'why QUIC ate it' is this fusion, not a new stream lesson.",
+        "Putting TLS above TCP was the layering that let encryption ship without changing every kernel. Fusing it into the transport is how you stop paying a double handshake and how you stop exposing transport control to the path. The socket still says 'encrypted bytes'. The record of who agreed sequences is no longer a separate, cleartext protocol."
+      ],
+      "example": "A browser opens TCP, waits through SYN / SYN-ACK / ACK, then starts a TLS handshake as payload. A filter on the path sees the TCP handshake and the TLS ClientHello shape. QUIC carries the crypto in its own first packets over UDP; that filter sees a datagram and, unless it speaks QUIC, not a TCP state machine it can sit on.",
+      "whyItMatters": "Encryption as a passenger of TCP leaves the transport itself exposed. Fusing it is how a later transport stopped handing the path a clear control channel.",
+      "quiz": [
+        {
+          "id": "nt-tls10-1",
+          "stem": "In the usual stack, TLS sits:",
+          "correctAnswer": "On a TCP byte stream, as payload the transport does not interpret",
+          "distractors": [
+            { "text": "Inside each IP header, replacing addresses with ciphertext", "kind": "misapplied", "rationale": "Addresses still have to route. TLS is not an IP option." },
+            { "text": "Below TCP, so TIME_WAIT and retransmits are encrypted from TCP itself", "kind": "reversed", "rationale": "TCP runs first and in the clear. TLS is the passenger." },
+            { "text": "Only on UDP, because TCP connections cannot carry ciphertext", "kind": "nearby", "rationale": "TCP carrying TLS is the common case. QUIC is the later fusion." }
+          ],
+          "correctExplanation": "TCP agrees sequences. TLS encrypts bytes on that stream. Two layers, two handshakes.",
+          "objectiveIds": ["Locate TLS as encryption sitting on a byte stream, and say why QUIC absorbed it"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "nt-tls10-2",
+          "stem": "A middlebox that only understands TCP plus TLS, faced with QUIC over UDP, typically:",
+          "correctAnswer": "Cannot sit on TCP state or TLS-as-payload; it sees datagrams it was not written to parse",
+          "distractors": [
+            { "text": "Reads QUIC as TCP payload automatically, because encryption is always a passenger", "kind": "misconception", "rationale": "QUIC fused the crypto. There is no TCP session to sit on." },
+            { "text": "Reconstructs TIME_WAIT for the UDP 4-tuple using the TLS record layer", "kind": "nearby", "rationale": "TIME_WAIT is a TCP close rule. QUIC is not that state machine." },
+            { "text": "Strips the encryption because UDP forbids ciphertext", "kind": "misapplied", "rationale": "UDP carries whatever the payload is. The box just does not understand it." }
+          ],
+          "correctExplanation": "The box's TCP and TLS parsers have nothing to hook. That is what 'ate it' costs the path.",
+          "objectiveIds": ["Predict what a middlebox that only understands TCP plus TLS cannot see inside QUIC"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-tls10-3",
+          "stem": "QUIC absorbing TLS, rather than riding as TCP payload, is meant to:",
+          "correctAnswer": "Protect transport control and skip a cleartext TCP handshake before crypto can start",
+          "distractors": [
+            { "text": "Keep TCP's handshake in the clear so middleboxes can still rewrite sequences", "kind": "reversed", "rationale": "Leaving TCP clear is what the fusion gives up." },
+            { "text": "Move encryption into the IP header so routers can decrypt at each hop", "kind": "misapplied", "rationale": "Routers still forward datagrams. They do not decrypt QUIC." },
+            { "text": "Eliminate acknowledgements, because encrypted transports cannot signal loss", "kind": "nearby", "rationale": "Loss signals remain. They are just no longer a clear TCP header." }
+          ],
+          "correctExplanation": "One protected transport handshake instead of TCP then TLS. Control is no longer a public protocol.",
+          "objectiveIds": ["Locate TLS as encryption sitting on a byte stream, and say why QUIC absorbed it"],
+          "prerequisiteConceptIds": ["net-tcp-state"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "net-udp-use-10",
+      "conceptId": "net-udp-use",
+      "title": "Drop the late packet rather than stall the live one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-udp", "net-congestion"],
+      "explanation": [
+        "UDP is a port and a hope. That is a defect if you needed a byte stream. It is the point if a late packet is worse than a missing one. Media, games, and live telemetry would rather skip a frame than freeze while a reliable stream retransmits and delivers in order. The application writes its own timing: play what has arrived, ignore what missed the deadline.",
+        "Putting that work on a reliable ordered stream turns a loss into a stall: the hole at the front blocks the next frame even if it already arrived. Congestion still exists. A UDP sender that ignores it will flood the hop and wreck the flows that are trying to share. The right tool is datagram plus an application that can stand a gap, plus some congestion loop so the gaps are not self-inflicted.",
+        "The tradeoff is simplicity versus repair. UDP does not stall. UDP also does not fill holes, does not order, and does not by itself share the pipe. A call that needs every byte, in order, still wants a reliable stream. A call that needs the latest sample, now, wants the datagram and a willingness to drop."
+      ],
+      "example": "A 50 fps game sends a position every 20 ms. Packet 200 is lost. Packet 201 arrives with a newer position. The client renders 201 and never waits for 200. On a reliable stream, 201 would sit behind the hole until 200 was retransmitted — a stall of several RTTs for a position that is already stale.",
+      "whyItMatters": "Reliability is a repair that costs time. When the next sample replaces the last, that time is the wrong cost.",
+      "quiz": [
+        {
+          "id": "nt-udp10-1",
+          "stem": "UDP is the right tool when the application would rather:",
+          "correctAnswer": "Drop a late packet than stall waiting for a retransmission of an old one",
+          "distractors": [
+            { "text": "Block until every missing byte is repaired and delivered in order", "kind": "reversed", "rationale": "That is the reliable-stream contract. UDP is the opposite bet." },
+            { "text": "Ignore congestion entirely, because datagrams cannot fill a hop", "kind": "misconception", "rationale": "Datagrams fill hops easily. Sharing is still required." },
+            { "text": "Replace IP addresses with port numbers so routers can be skipped", "kind": "misapplied", "rationale": "UDP still rides on IP. The hope is delivery, not a new internet." }
+          ],
+          "correctExplanation": "Late is useless. A gap is acceptable. That is the datagram's job.",
+          "objectiveIds": ["Explain when UDP is the right tool: anything that would rather drop than stall"],
+          "prerequisiteConceptIds": ["net-udp", "net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-udp10-2",
+          "stem": "A media sender whose packet 200 is lost while 201 (a newer frame) has arrived should typically:",
+          "correctAnswer": "Play 201 and skip 200, rather than stall the stream for a retransmit of 200",
+          "distractors": [
+            { "text": "Freeze until 200 is retransmitted, because frames must play in original order", "kind": "reversed", "rationale": "A newer frame replaces the old. Waiting makes the stall the user sees." },
+            { "text": "Double its sending rate, because a loss means leftover capacity", "kind": "nearby", "rationale": "Loss is still a congestion signal. Flooding is not the media fix." },
+            { "text": "Close the port, because one gap makes UDP illegal for the rest of the call", "kind": "misapplied", "rationale": "Gaps are expected. The call continues with the latest sample." }
+          ],
+          "correctExplanation": "The live frame is 201. Repairing 200 would stall for a picture no longer wanted.",
+          "objectiveIds": ["Predict why a media sender often prefers a late packet dropped to a reliable stall"],
+          "prerequisiteConceptIds": ["net-udp", "net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-udp10-3",
+          "stem": "Choosing datagrams for live media, versus a reliable ordered stream, trades:",
+          "correctAnswer": "No stall on a hole against having to accept gaps and still run a congestion loop",
+          "distractors": [
+            { "text": "Perfect in-order delivery against a kernel that cannot send datagrams", "kind": "reversed", "rationale": "Datagrams give up in-order repair. The kernel can send them." },
+            { "text": "A reserved hop for the call against forbidding any other sender", "kind": "misapplied", "rationale": "UDP does not reserve the hop. Sharing is still the unseen pipe." },
+            { "text": "Automatic retransmission of every frame against zero application logic", "kind": "nearby", "rationale": "Retransmit-everything is the stream. Media that wants gaps must handle them." }
+          ],
+          "correctExplanation": "You skip the hole. You live with the gap. You still must not flood the hop.",
+          "objectiveIds": ["Explain when UDP is the right tool: anything that would rather drop than stall"],
+          "prerequisiteConceptIds": ["net-udp", "net-congestion"],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-middlebox-10",
+      "conceptId": "net-middlebox",
+      "title": "The path rewrites you",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-nat-intro", "net-tcp-state"],
+      "explanation": [
+        "A hop is supposed to forward. Many devices on the path also rewrite. NAT maps many private addresses onto one public one and must see enough of the transport to keep that table. Filters drop packets whose headers they do not like. Some boxes rewrite sequence numbers, splice connections, or refuse anything that is not the TCP they were written for. The path is not just routers.",
+        "A quiet TCP connection's mapping expires; the next packet has nowhere to land. An unexpected header — a new option, a new transport on UDP — is dropped because the box's parser has no case for it. A filter that expects a TCP handshake will not pass a design that hid that handshake. TIME_WAIT at the host does not refresh a NAT that already forgot.",
+        "The tradeoff is a working last-mile versus an ossified internet. NAT let many homes share a handful of addresses. Filters stop some attacks. Both freeze what a transport may look like. Evolving the protocol then means looking like TCP, tunneling through UDP and hoping the mapping lasts, or failing closed. The rewrite is part of the path's contract, even when no RFC wanted it."
+      ],
+      "example": "A host behind NAT has ESTABLISHED to a server. Ten minutes idle, no keepalive. The NAT drops the mapping. The host's next data segment arrives at the NAT with no table entry and is discarded, or a reset comes from a box that no longer knows the 4-tuple. The socket still said ESTABLISHED. The path had already rewritten the host out of existence.",
+      "whyItMatters": "Designing a transport as if the path only forwarded is how new headers die at the first filter.",
+      "quiz": [
+        {
+          "id": "nt-mb10-1",
+          "stem": "A middlebox, in this unit's sense, is:",
+          "correctAnswer": "A device on the path that rewrites or filters, not just a router that forwards",
+          "distractors": [
+            { "text": "Only the destination host, which is the last place a packet can change", "kind": "reversed", "rationale": "The rewrite happens in the middle. That is the point." },
+            { "text": "A sender-side window algorithm that infers capacity from delay", "kind": "nearby", "rationale": "That is congestion control at an endpoint, not a box on the path." },
+            { "text": "A reserved circuit the internet layer grants to every 4-tuple", "kind": "misapplied", "rationale": "There is no such circuit. There is a table that can expire or drop you." }
+          ],
+          "correctExplanation": "Forwarding was the hop's job. Rewriting and filtering are the extra jobs that ossify the path.",
+          "objectiveIds": ["Describe a middlebox as a device on the path that rewrites or filters, not just a router"],
+          "prerequisiteConceptIds": ["net-nat-intro", "net-tcp-state"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "nt-mb10-2",
+          "stem": "A quiet TCP flow behind NAT, with no keepalive, can vanish because:",
+          "correctAnswer": "The mapping expires, so a later packet has no table entry to land on",
+          "distractors": [
+            { "text": "TIME_WAIT at the host refreshes the NAT automatically on every idle minute", "kind": "reversed", "rationale": "TIME_WAIT is a close rule at the host. Idle ESTABLISHED does not feed the NAT." },
+            { "text": "The receiver window goes to zero whenever a NAT exists on the path", "kind": "nearby", "rationale": "Credit is not the mapping. The table aging is." },
+            { "text": "Sequence numbers wrap, which NATs treat as a new handshake they always accept", "kind": "misapplied", "rationale": "Wrap is not what expires a quiet mapping. Silence is." }
+          ],
+          "correctExplanation": "No traffic, no mapping. The socket's ESTABLISHED does not keep the table alive.",
+          "objectiveIds": ["Predict why an unexpected header or a quiet flow can be dropped or rewritten"],
+          "prerequisiteConceptIds": ["net-nat-intro", "net-tcp-state"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "nt-mb10-3",
+          "stem": "A new transport header on a path of TCP-expecting filters, versus looking like TCP, trades:",
+          "correctAnswer": "The ability to evolve against the risk that the unexpected header is dropped",
+          "distractors": [
+            { "text": "Guaranteed faster NAT mappings, because unknown headers always refresh tables longer", "kind": "reversed", "rationale": "Unknown headers are what get dropped or unmapped. They do not win longer timers." },
+            { "text": "A requirement that TIME_WAIT be implemented in every router", "kind": "misapplied", "rationale": "TIME_WAIT is endpoint close state. Filters do not take it on." },
+            { "text": "Identical visibility, because rewriting boxes ignore all headers equally", "kind": "nearby", "rationale": "They do not. TCP is what they were written to parse." }
+          ],
+          "correctExplanation": "Evolve and maybe die at the filter, or look like TCP and stay stuck. That is the ossification tax.",
+          "objectiveIds": ["Predict why an unexpected header or a quiet flow can be dropped or rewritten"],
+          "prerequisiteConceptIds": ["net-nat-intro", "net-tcp-state"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,770 @@
+{
+  "courseId": "cpu-microarch",
+  "moduleId": "cpu-m-mp",
+  "lessons": [
+    {
+      "id": "cpu-coherency-10",
+      "conceptId": "cpu-coherency",
+      "title": "One address, not two truths",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-pipeline"],
+      "goDeeper": "cpu-consistency",
+      "diagram": "two-caches",
+      "explanation": [
+        "A pipeline with a private cache is a fast sequential core. Two such cores, each with a private copy of the same address, can disagree. Coherence is the rule that stops that: for any one address, at most one core may write, and any number may read a common value. Single-writer / multiple-reader. A write must make other copies go away or update them before the writer continues to claim that address.",
+        "That rule is about copies of one location. It does not say in what order another core will see stores to two different locations. That second question is consistency, the next sibling in this module. People flatten the two words because both involve 'memory looking wrong'. They are different bugs. Coherence is two caches inventing two values for `x`. Consistency is `x=1` becoming visible after, or before, `y=1` in a way the program did not expect.",
+        "Hardware keeps the rule with a protocol you will name in the next unit. For now you only need the invariant and the split. A core that never shares an address does not exercise coherence. A program that shares without a protocol is not a program you can debug."
+      ],
+      "example": "Core 0 writes `x = 1`. Core 1's cache still holds `x = 0`. Without coherence, core 1 can keep reading 0 forever. With the single-writer rule, core 0's write invalidates or updates core 1's copy before the write is done. Core 1's next read of `x` cannot invent a second truth. Whether core 1 has already seen some other store `y = 1` is a different question.",
+      "whyItMatters": "A private copy of an address is a latency bet for one core. This course is what that bet costs the moment two cores share. If you cannot separate 'one address' from 'the order of two addresses', MESI and TSO will sound like two names for the same slide.",
+      "quiz": [
+        {
+          "id": "coh10-1",
+          "stem": "The single-writer / multiple-reader rule says that for one address:",
+          "correctAnswer": "At most one core may hold a writable copy; many may hold a read-only copy",
+          "distractors": [
+            { "text": "Every core must write the address on every cycle", "kind": "reversed", "rationale": "Most cores do not even touch it." },
+            { "text": "Only one core in the package is allowed to have a cache", "kind": "nearby", "rationale": "Private caches are the point. The rule is about one line." },
+            { "text": "Reads are illegal once any core has written", "kind": "subtle", "rationale": "Readers are allowed. They just cannot keep a stale writable copy." }
+          ],
+          "correctExplanation": "One writer, or many readers, never two writers with two values.",
+          "objectiveIds": ["State the single-writer / multiple-reader rule for one address"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "coh10-2",
+          "stem": "Coherence is not the same as consistency because coherence:",
+          "correctAnswer": "Constrains copies of one address, not the order of stores to different addresses",
+          "distractors": [
+            { "text": "Is a brand name for the same memory-model rule", "kind": "nearby", "rationale": "They are routinely taught as a pair because they are not the same." },
+            { "text": "Only applies to instruction caches", "kind": "misapplied", "rationale": "Data copies are the usual fight." },
+            { "text": "Deletes the need for any cache", "kind": "subtle", "rationale": "Coherence is how caches stay honest. It assumes they exist." }
+          ],
+          "correctExplanation": "One location versus the order among locations. Different questions.",
+          "objectiveIds": ["Separate coherence from consistency"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "coh10-3",
+          "stem": "After core 0 writes x, coherence requires that core 1:",
+          "correctAnswer": "Cannot keep a private copy that still claims the old x",
+          "distractors": [
+            { "text": "Must also have written y in the same cycle", "kind": "nearby", "rationale": "That would be an ordering story about two addresses." },
+            { "text": "Must flush its entire pipeline", "kind": "misapplied", "rationale": "The rule is about the copy of x, not every in-flight op." },
+            { "text": "Is forbidden to read any address ever again", "kind": "subtle", "rationale": "It may read. It may not invent a second x." }
+          ],
+          "correctExplanation": "The old copy has to go or be updated. That is one address, one truth.",
+          "objectiveIds": ["State the single-writer / multiple-reader rule for one address"],
+          "prerequisiteConceptIds": ["cpu-pipeline"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cpu-mesi-10",
+      "conceptId": "cpu-mesi",
+      "title": "Invalidation is how two writers stop",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-coherency"],
+      "goDeeper": "cpu-snoop-vs-dir",
+      "diagram": "mesi",
+      "explanation": [
+        "MESI names four states a cached line can be in. Invalid: I do not have a copy. Shared: I have a read-only copy, and someone else might too. Exclusive: I have the only copy, still clean. Modified: I have the only copy, and I have written it — memory is stale. The single-writer rule is encoded in those states: Modified and Exclusive are the writable ones, and they are unique.",
+        "A write to a Shared line cannot just store. Other readers exist. The writer must invalidate those copies (or take Exclusive) before the line becomes Modified. That invalidation is the protocol's whole job. A write to Exclusive can silently become Modified — no one else had a copy. A read of Invalid must fetch, and the line arrives Shared or Exclusive depending on whether a neighbour still holds it.",
+        "False sharing is the performance tax that is not a real data dependence. Two variables that the program thinks are independent live on one line. Core 0 writes `a`, core 1 writes `b`, the line ping-pongs as if they fought over one word. The protocol is working. The layout is the bug. Padding, or not placing hot independent fields on one 64-byte line, is the fix — not a larger ROB."
+      ],
+      "example": "`struct { int a; int b; }` on one line. Thread 0 does `s.a++` in a loop. Thread 1 does `s.b++`. Every store takes Shared → invalidate others → Modified, then the other core does the same. Two uncontended counters, one line, a coherence storm. Split them onto two lines and the storm stops.",
+      "whyItMatters": "When a scaler 'doesn't scale' on two cores and the algorithm has no shared counter, look at the line, not the mutex. MESI is doing what you asked. You asked the wrong thing of one line.",
+      "quiz": [
+        {
+          "id": "mesi10-1",
+          "stem": "A write to a Shared line must first:",
+          "correctAnswer": "Invalidate (or otherwise take away) the other copies",
+          "distractors": [
+            { "text": "Stay Shared and let every core keep writing", "kind": "reversed", "rationale": "Two writers would invent two truths." },
+            { "text": "Flush the instruction cache only", "kind": "nearby", "rationale": "This is a data-line state change." },
+            { "text": "Delete the line from DRAM forever", "kind": "subtle", "rationale": "Memory still holds a last-known value. Other caches must not." }
+          ],
+          "correctExplanation": "Shared means neighbours may hold it. A writer has to make them Invalid first.",
+          "objectiveIds": ["Name what a write to a Shared line must do"],
+          "prerequisiteConceptIds": ["cpu-coherency"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mesi10-2",
+          "stem": "False sharing is:",
+          "correctAnswer": "Two independent variables fighting because they share one line",
+          "distractors": [
+            { "text": "Two cores correctly fighting over one program variable", "kind": "nearby", "rationale": "That is true sharing. Painful, but the program named it." },
+            { "text": "A miss caused only by a cold first touch", "kind": "misapplied", "rationale": "Compulsory is a miss class, not a coherence ping-pong." },
+            { "text": "A branch mispredict on a shared function", "kind": "subtle", "rationale": "The fight is a line, not a next PC." }
+          ],
+          "correctExplanation": "The protocol sees one address (the line). The program thought it had two.",
+          "objectiveIds": ["Diagnose false sharing as two variables on one line"],
+          "prerequisiteConceptIds": ["cpu-coherency"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mesi10-3",
+          "stem": "A write to an Exclusive line can become Modified without talking to neighbours because:",
+          "correctAnswer": "Exclusive already means this core holds the only copy",
+          "distractors": [
+            { "text": "Exclusive forbids writes", "kind": "reversed", "rationale": "Exclusive is the clean unique copy, ready to be dirtied." },
+            { "text": "Shared already promised uniqueness", "kind": "nearby", "rationale": "Shared is the many-readers state." },
+            { "text": "Invalid lines can be written silently", "kind": "subtle", "rationale": "Invalid means you do not have it. You must fetch first." }
+          ],
+          "correctExplanation": "No other copy, no invalidation to send. That is why Exclusive exists.",
+          "objectiveIds": ["Name what a write to a Shared line must do"],
+          "prerequisiteConceptIds": ["cpu-coherency"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-snoop-vs-dir-10",
+      "conceptId": "cpu-snoop-vs-dir",
+      "title": "Ask everyone, or ask the owner",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-mesi"],
+      "goDeeper": "cpu-consistency",
+      "explanation": [
+        "MESI says what must happen. It does not say how a core finds the other copies. Snooping broadcasts the question: 'I want to write this line — does anyone have it?' Every cache watches the bus or ring and answers. Simple, and the traffic grows with the number of cores times the number of writes. A quiet core still has to look at everyone else's traffic.",
+        "A directory keeps a record of who holds each line — often at the last-level cache or a home slice of the address space. A writer asks the directory. The directory messages only the current holders. Quiet cores stay quiet. The cost is the directory itself: storage, a hop to the home, and a more complicated failure story when the record is stale.",
+        "Snooping wins at small core counts and on a short shared bus. Directories win as the package grows, which is why a 4-core laptop and a 64-core socket are not the same machine wearing a bigger sticker. Hybrid designs snoop inside a cluster and use a directory between clusters. The scaling sentence is the one to keep: broadcast is O(everyone); a directory is O(holders)."
+      ],
+      "example": "Core 7 writes a line only core 3 holds. Snoop: 63 other caches see the probe. Directory: the home looks up the sharer list, messages core 3, and the other 62 cores do not hear about it. At 8 cores the broadcast is cheap. At 64 it is the workload.",
+      "whyItMatters": "A review that says 'better interconnect' without saying snoop versus directory is refusing to say who still has to listen. Core count is when that refusal gets expensive.",
+      "quiz": [
+        {
+          "id": "sd10-1",
+          "stem": "Snooping finds other copies by:",
+          "correctAnswer": "Broadcasting the request so every cache can answer",
+          "distractors": [
+            { "text": "Asking a stored owner list and messaging only those cores", "kind": "nearby", "rationale": "That is a directory." },
+            { "text": "Renaming the line into a private physical register", "kind": "misapplied", "rationale": "Rename is a register-name story." },
+            { "text": "Deleting MESI so no one needs a copy", "kind": "subtle", "rationale": "The protocol still runs. Broadcast is how it is delivered." }
+          ],
+          "correctExplanation": "Everyone listens. That is the mechanism and the scaling cost.",
+          "objectiveIds": ["Contrast broadcast snooping with asking a directory"],
+          "prerequisiteConceptIds": ["cpu-mesi"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sd10-2",
+          "stem": "As core count grows, broadcast snooping typically:",
+          "correctAnswer": "Scales worse, because every write still bothers every cache",
+          "distractors": [
+            { "text": "Scales better than a directory, because no extra state is stored", "kind": "reversed", "rationale": "The missing state is paid for in traffic." },
+            { "text": "Stops working at two cores by law", "kind": "nearby", "rationale": "Small snooping systems work. Large ones drown." },
+            { "text": "Converts every miss into a hit", "kind": "subtle", "rationale": "Delivery method is not a hit-rate miracle." }
+          ],
+          "correctExplanation": "Traffic is everyone × writes. Directories message holders, not the room.",
+          "objectiveIds": ["Predict which scales worse as core count grows"],
+          "prerequisiteConceptIds": ["cpu-mesi"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sd10-3",
+          "stem": "A directory's extra cost, compared with snooping, is mainly:",
+          "correctAnswer": "Storing who holds each line, and a hop to ask that record",
+          "distractors": [
+            { "text": "Forbidding private caches", "kind": "nearby", "rationale": "Private caches remain. The directory tracks them." },
+            { "text": "A larger ISA register file", "kind": "misapplied", "rationale": "This is coherence bookkeeping, not the architectural file." },
+            { "text": "A guarantee that false sharing disappears", "kind": "subtle", "rationale": "False sharing is a line-layout problem. Either delivery still ping-pongs." }
+          ],
+          "correctExplanation": "You bought a map of holders so you could stop shouting. The map is not free.",
+          "objectiveIds": ["Predict which scales worse as core count grows"],
+          "prerequisiteConceptIds": ["cpu-mesi"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-consistency-10",
+      "conceptId": "cpu-consistency",
+      "title": "What another core is allowed to see",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-coherency"],
+      "goDeeper": "cpu-tso-vs-relaxed",
+      "explanation": [
+        "Coherence already promised that one address has one truth. Consistency is the contract about several addresses: when core 0 does `x = 1; y = 1`, what is core 1 allowed to see, and in what order? May it see the new y while still seeing the old x? May a load of x pass an earlier store of y in this thread? The memory model is the list of allowed answers. It is not a cache protocol.",
+        "Sequential consistency is the strict story: there is one global order of all ops, and each core's ops appear in program order inside it. Most real machines are weaker, because a store buffer, an independent load, or a write combining buffer is exactly a reorder the sequential story would forbid. Coherence still holds — each address still has one writer at a time. The model is about crossing addresses.",
+        "This is why 'the caches are coherent' does not tell you whether a lock-free algorithm is correct. The algorithm assumed an order. The machine promised a possibly weaker one. The next unit names two common promises: a TSO-like model that mostly only lets a store hide under a later load, and a relaxed model that lets more pairs move and then sells you a fence to stop them."
+      ],
+      "example": "Core 0: `x = 1; y = 1`. Core 1: `r1 = y; r2 = x`. Coherence says each of x and y has one value at a time. Consistency decides whether r1 == 1 and r2 == 0 is allowed — seeing the later store and missing the earlier one. Sequential consistency forbids that pair. Some real models allow it.",
+      "whyItMatters": "Journalists and programmers both over-quote 'coherent memory'. The interesting sentence is the model: which reorder is legal, and which instruction is the one that forbids it.",
+      "quiz": [
+        {
+          "id": "mc10-1",
+          "stem": "A memory consistency model defines:",
+          "correctAnswer": "Which stores another core may see, and in what order",
+          "distractors": [
+            { "text": "Only whether two caches may hold the same line", "kind": "nearby", "rationale": "That is coherence, already settled." },
+            { "text": "The number of sets in L1", "kind": "misapplied", "rationale": "Geometry is not a memory model." },
+            { "text": "Which opcode the ALU is allowed to run", "kind": "subtle", "rationale": "The model is about visibility of stores, not the ALU menu." }
+          ],
+          "correctExplanation": "Order and visibility across cores. One address was the previous unit.",
+          "objectiveIds": ["Define what stores another core is allowed to see and when"],
+          "prerequisiteConceptIds": ["cpu-coherency"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "mc10-2",
+          "stem": "Coherence alone does not pick a memory model because:",
+          "correctAnswer": "One-address uniqueness does not constrain the order of different addresses",
+          "distractors": [
+            { "text": "Coherence already lists every legal interleaving", "kind": "reversed", "rationale": "If it did, we would not need a second word." },
+            { "text": "Caches cannot exist on a coherent machine", "kind": "nearby", "rationale": "Coherence is a property of caches." },
+            { "text": "The ISA has no stores", "kind": "subtle", "rationale": "Stores are why the model exists." }
+          ],
+          "correctExplanation": "Two honest copies of two lines can still appear in a surprising order.",
+          "objectiveIds": ["Explain why coherence alone does not pick a memory model"],
+          "prerequisiteConceptIds": ["cpu-coherency"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mc10-3",
+          "stem": "A store buffer that lets a later load to a different address go first is:",
+          "correctAnswer": "A microarchitectural reason a machine might be weaker than sequential consistency",
+          "distractors": [
+            { "text": "Proof that coherence has failed", "kind": "nearby", "rationale": "Each address can still have one writer. The order among addresses moved." },
+            { "text": "Required by every ISA equally", "kind": "misapplied", "rationale": "Different ISAs promise different models." },
+            { "text": "Impossible on a pipelined core", "kind": "subtle", "rationale": "Pipelines and buffers are exactly how the hole appears." }
+          ],
+          "correctExplanation": "The implementation created a legal-or-not reorder. The model says which.",
+          "objectiveIds": ["Explain why coherence alone does not pick a memory model"],
+          "prerequisiteConceptIds": ["cpu-coherency"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-tso-vs-relaxed-10",
+      "conceptId": "cpu-tso-vs-relaxed",
+      "title": "The store that hides under a load",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-consistency"],
+      "explanation": [
+        "Total Store Order (TSO), the model x86 approximately keeps, is sequential consistency plus one common hole: a store may sit in a store buffer while a later load to a different address goes to cache. Store-load reordering. Same-address loads still forward from the buffer, so this thread does not see its own stores late. Store-store and load-load stay in order. That is why x86 code often 'just works' and then fails on one famous handshake.",
+        "A weaker, more relaxed model — the default on many Arm and RISC-V cores — may also reorder store-store or load-load unless the program says not to. Independent addresses really are independent until a fence, an acquire/release pair, or a strongly ordered opcode draws a line. The hardware is allowed to keep more work in flight. The programmer is required to name the edges that matter.",
+        "A fence exists to recover an order the model does not give you for free. On TSO you need it for that store-then-load handshake. On a relaxed core you need it in more places. Serializing instructions on x86 are a blunt fence-plus-pipeline-drain. They are not 'the memory model'. They are how you opt back into a stronger story for a few ops."
+      ],
+      "example": "Core 0: `x = 1; r1 = y`. Core 1: `y = 1; r2 = x`. Under TSO both r1 and r2 can be 0, because each load passed the local store still sitting in a buffer. A fence between each store and its later load closes the hole. On a more relaxed core you may also need fences to keep two stores from swapping.",
+      "whyItMatters": "This is why a lock-free snippet that is fine on a laptop fails on a phone, or why an `mfence` showed up after a port. The algorithm assumed an order. The two ISAs did not promise the same one.",
+      "quiz": [
+        {
+          "id": "tso10-1",
+          "stem": "TSO's characteristic extra reorder, versus sequential consistency, is:",
+          "correctAnswer": "A store may hide in a buffer while a later load to a different address proceeds",
+          "distractors": [
+            { "text": "Loads and stores to the same address may take any order", "kind": "reversed", "rationale": "Same-address order is preserved; the load forwards." },
+            { "text": "Two stores to different addresses may freely swap", "kind": "nearby", "rationale": "That is a weaker, more relaxed permission, not TSO's headline hole." },
+            { "text": "Coherence is suspended for one line", "kind": "subtle", "rationale": "Each address is still coherent. The hole is across addresses." }
+          ],
+          "correctExplanation": "Store-load, different addresses. That is the TSO gap.",
+          "objectiveIds": ["Contrast TSO store-load reordering with a weaker model"],
+          "prerequisiteConceptIds": ["cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "tso10-2",
+          "stem": "A fence exists so that:",
+          "correctAnswer": "The program can forbid a reorder the model would otherwise allow",
+          "distractors": [
+            { "text": "Caches can be turned off for one cycle", "kind": "nearby", "rationale": "The cache stays. Visibility order is what changed." },
+            { "text": "The ISA can delete stores", "kind": "misapplied", "rationale": "Stores still happen. Their observers are delayed or released." },
+            { "text": "Frequency is legally required to drop", "kind": "subtle", "rationale": "A fence is an ordering edge, not a clock." }
+          ],
+          "correctExplanation": "The model is the default. The fence is the opt-in to a stronger edge.",
+          "objectiveIds": ["Say why a fence exists"],
+          "prerequisiteConceptIds": ["cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "tso10-3",
+          "stem": "A more relaxed model than TSO typically:",
+          "correctAnswer": "Allows additional pairs (store-store or load-load) to move unless a fence says not to",
+          "distractors": [
+            { "text": "Forbids the store-load hole that TSO allows", "kind": "reversed", "rationale": "Relaxed is weaker, not stronger." },
+            { "text": "Makes every core share one physical register file", "kind": "nearby", "rationale": "The model is about visibility, not about rename." },
+            { "text": "Removes the need for caches", "kind": "subtle", "rationale": "Caches stay. The contract about order changes." }
+          ],
+          "correctExplanation": "More legal interleavings, more fences when you care. That is the trade.",
+          "objectiveIds": ["Contrast TSO store-load reordering with a weaker model"],
+          "prerequisiteConceptIds": ["cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-tso-vs-relaxed-20",
+      "conceptId": "cpu-tso-vs-relaxed",
+      "title": "A handshake that both can lose",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-consistency"],
+      "explanation": [
+        "The ten-minute unit named the TSO hole. This one walks it until the fence is obvious. Two cores, two flags, each writes its own and then reads the other — the classic store-load handshake. Sequential consistency says they cannot both read 0: one of the two stores became globally visible first, so the other core's later load must see it. TSO does not give you that, because each store can still be private in a buffer when the local load goes out.",
+        "Trace one legal TSO execution. Core 0 writes x, the write sits. Core 0 loads y from cache and sees 0. Core 1 writes y, the write sits. Core 1 loads x and sees 0. Then both buffers drain. Coherence was never broken: x has one writer, y has one writer. The observers just looked before the drain. A fence after each store — or an x86 locked read-modify-write, which drains the buffer — makes that execution illegal, because the load is not allowed to pass the store.",
+        "Now weaken the machine. A relaxed core may also let core 0's two stores swap, or let two loads pass each other. The same handshake then needs more than one flavour of fence: you may have to keep the two stores in order and keep each load from passing its store. Acquire and release are named fences that only constrain one direction, so the common publish/subscribe pattern does not have to be a full drain.",
+        "That is why 'it worked on my x86 box' is not a proof. The box promised TSO. The phone promised less. Porting the algorithm without naming the edges is how you ship a heisenbug that only reproduces on one ISA. The Intel SDM and the Arm ARM are where those promises are written down; this unit is the picture you need before those pages are readable."
+      ],
+      "example": "Dekker-style mutual exclusion: each core sets `flag[me] = 1` then reads `flag[other]`. Both reading 0 means both entered the critical section. TSO allows it without fences. Insert a store-load fence between each write and the later read and the double-entry disappears. On a relaxed core, also keep the flag store from passing any earlier stores that published the data you are protecting — a store-store edge the x86 version got for free.",
+      "whyItMatters": "You cannot audit a lock-free snippet, or a 'we removed the fence and it got faster' commit, unless you can name which pair moved. TSO versus relaxed is that vocabulary.",
+      "quiz": [
+        {
+          "id": "tso20-1",
+          "stem": "In the two-flag handshake, both cores reading 0 is possible on TSO because:",
+          "correctAnswer": "Each load can pass its own earlier store while that store is still buffered",
+          "distractors": [
+            { "text": "Coherence allowed two values of the same flag", "kind": "nearby", "rationale": "Each flag still has one writer. The loads were early." },
+            { "text": "The ISA deleted one of the two stores", "kind": "misapplied", "rationale": "Both stores happen. Visibility is late." },
+            { "text": "L1 is required to ignore flags", "kind": "subtle", "rationale": "The cache is fine. The buffer is the hole." }
+          ],
+          "correctExplanation": "Two store-load passes, two zeros, no coherence failure.",
+          "objectiveIds": ["Contrast TSO store-load reordering with a weaker model"],
+          "prerequisiteConceptIds": ["cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "tso20-2",
+          "stem": "A fence between each store and its later load in that handshake:",
+          "correctAnswer": "Forbids the load from leaving until the store is visible enough to satisfy the model",
+          "distractors": [
+            { "text": "Deletes the flags from memory", "kind": "nearby", "rationale": "The flags stay. Their observers wait." },
+            { "text": "Makes the two cores share one cache line so coherence is unnecessary", "kind": "misapplied", "rationale": "A fence orders the store and the later load. It does not collapse coherence." },
+            { "text": "Turns TSO into a cache-less machine", "kind": "subtle", "rationale": "Caches remain. One edge got stronger." }
+          ],
+          "correctExplanation": "The fence is the missing edge sequential consistency had implied.",
+          "objectiveIds": ["Say why a fence exists"],
+          "prerequisiteConceptIds": ["cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "tso20-3",
+          "stem": "Porting the x86 handshake to a more relaxed core often needs extra fences because:",
+          "correctAnswer": "Store-store or load-load pairs the x86 model kept in order may now move",
+          "distractors": [
+            { "text": "Relaxed models forbid all fences", "kind": "reversed", "rationale": "They need more of them, not fewer." },
+            { "text": "The phone has no stores", "kind": "nearby", "rationale": "It has stores. It promises less about their order." },
+            { "text": "TSO already allowed every pair to move", "kind": "subtle", "rationale": "TSO's extra hole is mainly store-load." }
+          ],
+          "correctExplanation": "Weaker default, more named edges. That is the port, not a faster ALU.",
+          "objectiveIds": ["Contrast TSO store-load reordering with a weaker model"],
+          "prerequisiteConceptIds": ["cpu-consistency"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-vector-simd-10",
+      "conceptId": "cpu-vector-simd",
+      "title": "One opcode, the elements you named",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["arch-data-parallel"],
+      "explanation": [
+        "Foundations already named data-parallel work: the same operation over many independent elements. SIMD is how a CPU instruction set sells that. One opcode names a packed register — four, eight, sixteen adjacent elements — and the datapath does the op on all of them. You said which elements. There is no implicit 'some lanes took a branch and sat out' in the programming model. A scalar data-parallel loop is the same math, one element per instruction.",
+        "Width is visible. A 128-bit register holding four 32-bit floats is a contract the compiler can count. Alignment, remainder elements, and mixed types are your problem. Predication or mask bits, when they exist, are explicit: you named a mask. That is different from a machine that groups adjacent threads and lets some of them disable themselves behind a data-dependent branch without you packing the group.",
+        "SIMD does not invent independence. A reduction that feeds each element into the next is still a chain. Packing it into a vector register does not shorten the chain; it just leaves some lanes useless. The win is a short independent map — `c[i] = a[i] + b[i]` — where the packed add is four useful adds. The loss is a leftover tail, or a gather from scattered addresses that turns one instruction back into many cache lines."
+      ],
+      "example": "`for (i) c[i] = a[i] * b[i]` on 8-wide SIMD is one packed multiply per eight elements, plus a scalar cleanup for `n % 8`. The same loop written as eight scalar multiplies is the same data-parallel idea with eight times the fetch and issue. A loop `x = a[i] + x` is not: each add needs the last x. Packing it does not create eight independent x's.",
+      "whyItMatters": "This is the CPU's honest data-parallel unit. If you treat it as 'a small GPU', you will expect implicit divergence and be surprised by a packed register you have to fill yourself.",
+      "quiz": [
+        {
+          "id": "simd10-1",
+          "stem": "SIMD means:",
+          "correctAnswer": "One instruction operates on packed elements the instruction named",
+          "distractors": [
+            { "text": "The compiler must emit one scalar op per element, always", "kind": "reversed", "rationale": "That is the scalar loop SIMD is an alternative to." },
+            { "text": "Adjacent threads implicitly take or skip a branch as a group", "kind": "nearby", "rationale": "That is a different, later data-parallel machine." },
+            { "text": "The ISA no longer has scalar adds", "kind": "subtle", "rationale": "Scalar stays. Packed is an extra encoding." }
+          ],
+          "correctExplanation": "You packed the elements. One opcode, those lanes.",
+          "objectiveIds": ["Define SIMD as one instruction on packed elements you named"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "simd10-2",
+          "stem": "A scalar data-parallel loop differs from packed SIMD in that:",
+          "correctAnswer": "Each element is its own instruction, even though the math is the same",
+          "distractors": [
+            { "text": "The math is no longer data-parallel", "kind": "reversed", "rationale": "The work is the same. The encoding is not." },
+            { "text": "Only stores are allowed in the scalar version", "kind": "nearby", "rationale": "Loads, adds, and stores all have scalar forms." },
+            { "text": "Packed SIMD forbids independent elements", "kind": "subtle", "rationale": "Independence is exactly what packing spends." }
+          ],
+          "correctExplanation": "Same independent map. Different number of opcodes in flight.",
+          "objectiveIds": ["Contrast packed SIMD with a scalar data-parallel loop"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "simd10-3",
+          "stem": "Packing a long dependent chain into a vector register typically:",
+          "correctAnswer": "Does not shorten the chain; idle lanes do not create independence",
+          "distractors": [
+            { "text": "Deletes the dependence because the register is wide", "kind": "reversed", "rationale": "Width is not ILP. The next element still needs the last." },
+            { "text": "Turns the chain into a cache miss by law", "kind": "nearby", "rationale": "Misses are an address story, not a packing law." },
+            { "text": "Requires the program to stop using numbers", "kind": "subtle", "rationale": "The values stay. The dependence stays." }
+          ],
+          "correctExplanation": "Data-parallel is a property of the work. Packing does not invent it.",
+          "objectiveIds": ["Contrast packed SIMD with a scalar data-parallel loop"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-vliw-10",
+      "conceptId": "cpu-vliw",
+      "title": "The compiler packed the group",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-ilp-idea"],
+      "explanation": [
+        "A superscalar core spends silicon finding independent ops at issue. VLIW (very long instruction word) spends compile time instead. The compiler packs a group of ops that it believes can start together — a wide instruction that is really several ops with a promised independence. The hardware issues the group as written. It does not have to do the expensive search.",
+        "The trade appears when the compiler was wrong, or when the world changed. A cache miss, an unpredictable load latency, an alias the static program could not see: the packed group still occupies the issue slots. Independent-looking ops that are not ready become empty slots you already fetched. There is no scheduler to slide a ready op from the next group into the hole. You bought a simpler core and a harder compiler, and you pay when reality is not the static schedule.",
+        "This is the other side of the ILP idea from Foundations. Independent nearby instructions are the raw material. Someone has to find them. Hardware-find (superscalar, rename, a scheduler) adapts to the miss that the compiler could not see. Compiler-find (VLIW) is cheaper at the same advertised width and brittle on variable latency. DSPs and some GPUs historically liked the cheap decode. General-purpose CPUs mostly did not."
+      ],
+      "example": "The compiler packs `add; mul; load` as one group because the three do not mention each other's destinations. The load misses. On a superscalar OOO core the add and mul can still complete and later independent work can issue. On a strict VLIW, those issue slots were owned by that group; the miss stalls the group. The independence was real. The latency was not the one in the compiler's table.",
+      "whyItMatters": "When a slide says 'the compiler exposes ILP', ask whether the hardware is allowed to change its mind at issue. That yes/no is VLIW versus superscalar, not a brand of opcode.",
+      "quiz": [
+        {
+          "id": "vliw10-1",
+          "stem": "In a VLIW machine, the issue group is packed by:",
+          "correctAnswer": "The compiler, which promises those ops can start together",
+          "distractors": [
+            { "text": "A hardware scheduler that searches at issue", "kind": "reversed", "rationale": "That search is what VLIW is trying not to build." },
+            { "text": "The BTB, using last week's group", "kind": "nearby", "rationale": "The BTB predicts a next PC, not an issue packet." },
+            { "text": "DRAM, when a line comes back", "kind": "subtle", "rationale": "A fill does not assemble the packet." }
+          ],
+          "correctExplanation": "Static packing. Hardware issues what it was handed.",
+          "objectiveIds": ["State that the compiler packs the issue group"],
+          "prerequisiteConceptIds": ["cpu-ilp-idea"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "vliw10-2",
+          "stem": "If the compiler guessed wrong about independence or latency, VLIW typically:",
+          "correctAnswer": "Still occupies those issue slots; it cannot freely slide later ready work into the hole",
+          "distractors": [
+            { "text": "Secretly becomes out-of-order and finds other ops", "kind": "reversed", "rationale": "Then you built the expensive search you were avoiding." },
+            { "text": "Deletes the program's stores to stay on schedule", "kind": "nearby", "rationale": "Correctness is not optional. The slots just go empty." },
+            { "text": "Rewrites the ISA at runtime to scalar", "kind": "subtle", "rationale": "The encoding stays wide. The work is not ready." }
+          ],
+          "correctExplanation": "You paid for a static group. Reality did not match the table.",
+          "objectiveIds": ["Name the trade-off when the compiler guessed wrong about independence"],
+          "prerequisiteConceptIds": ["cpu-ilp-idea"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "vliw10-3",
+          "stem": "Compared with hardware-scheduled superscalar, VLIW is betting that:",
+          "correctAnswer": "A simpler issue path is worth a more brittle static schedule",
+          "distractors": [
+            { "text": "Variable miss latency will always match the compiler's table", "kind": "nearby", "rationale": "That is the hope, and the usual failure." },
+            { "text": "ILP does not exist, so width is pointless", "kind": "reversed", "rationale": "VLIW exists because ILP exists. It just finds it earlier." },
+            { "text": "Caches are no longer needed", "kind": "subtle", "rationale": "Misses are exactly when the static pack hurts." }
+          ],
+          "correctExplanation": "Cheap decode versus adaptability. Same ILP, different finder.",
+          "objectiveIds": ["Name the trade-off when the compiler guessed wrong about independence"],
+          "prerequisiteConceptIds": ["cpu-ilp-idea"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-power-wall-10",
+      "conceptId": "cpu-power-wall",
+      "title": "Frequency stopped being the story",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cpu-perf-metrics"],
+      "explanation": [
+        "Foundations factored time into instruction count, work per cycle, and clock period. For a long time the industry shrank the period: more GHz, same program. That run ended. Voltage stopped falling with feature size the way the old scaling story promised. Dynamic power goes with capacitance × voltage² × frequency. You could not raise frequency without raising voltage, and you could not raise voltage without melting the package or emptying the battery. That ceiling is the power wall.",
+        "So the extra transistors went sideways. More independent work in one thread — wider issue, more things in flight, more speculation — tries to raise work per cycle instead of frequency. That work is not free. A larger window, a hotter predictor, another speculative load, all switch more capacitance each cycle, often at a voltage you still cannot drop. You can spend power chasing ILP that is not there and lose to a cooler, narrower core that stays busy.",
+        "This is why a launch slide now quotes efficiency and a boost-clock that lasts for a burst. The burst is a thermal capacitor, not a new law. Multi-core is the other sideways move: more threads, each at a frequency the package can afford. The wall did not make pipelines obsolete. It made 'just clock it harder' a sentence you should no longer believe."
+      ],
+      "example": "A 2004-era 3.8 GHz single-thread part and a modern 3.8 GHz boost on one core are not the same bet. The modern core spends those ticks on a much wider, more speculative window — and only holds 3.8 GHz until the package hits a watt or a temperature limit. The extra ILP hardware is why a 2.5 GHz all-core number can still beat the old 3.8 GHz part on throughput, and why the fan still howls when you ask for the boost.",
+      "whyItMatters": "Every later 'we added speculation / width / another core' sentence is an answer to this wall. If you still think performance is GHz, the rest of the department will look like decoration.",
+      "quiz": [
+        {
+          "id": "pw10-1",
+          "stem": "Frequency stopped being the scaling story mainly because:",
+          "correctAnswer": "Voltage stopped falling with it, so power grew too fast to keep raising the clock",
+          "distractors": [
+            { "text": "ISAs forbade clocks above 1 GHz", "kind": "nearby", "rationale": "The contract did not cap frequency. Physics and the package did." },
+            { "text": "Pipelines were deleted from every core", "kind": "misapplied", "rationale": "Pipelines stayed. The clock race ended." },
+            { "text": "Instruction counts became zero", "kind": "subtle", "rationale": "Programs still have work. The tick stopped being the cheap knob." }
+          ],
+          "correctExplanation": "CV²f with a voltage that would not drop. That is the wall.",
+          "objectiveIds": ["Explain why frequency stopped being the scaling story"],
+          "prerequisiteConceptIds": ["cpu-perf-metrics"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pw10-2",
+          "stem": "Spending extra transistors on more in-flight work raises power because:",
+          "correctAnswer": "Those structures switch capacitance each cycle, often at a voltage you still cannot drop",
+          "distractors": [
+            { "text": "ILP deletes the clock, which the formula forbids", "kind": "reversed", "rationale": "The clock stays. You are trying to do more per tick." },
+            { "text": "Caches become illegal when the window grows", "kind": "nearby", "rationale": "Caches stay. They also cost power, for a different reason." },
+            { "text": "Voltage automatically halves when you add a scheduler", "kind": "subtle", "rationale": "If it did, there would be no wall." }
+          ],
+          "correctExplanation": "More useful work per cycle is also more switching. The wall did not go away.",
+          "objectiveIds": ["Relate extra ILP to power and voltage cost"],
+          "prerequisiteConceptIds": ["cpu-perf-metrics"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pw10-3",
+          "stem": "Chasing more one-thread ILP after the power wall can lose when:",
+          "correctAnswer": "The extra window burns watts on independence the program does not have",
+          "distractors": [
+            { "text": "The program is full of independent work and stays within the envelope", "kind": "reversed", "rationale": "That is when the sideways transistors pay rent." },
+            { "text": "Frequency is undefined", "kind": "nearby", "rationale": "Cores still have a clock. The question is what you spend it on." },
+            { "text": "The ISA uses ordinary adds", "kind": "subtle", "rationale": "Ordinary adds are not the failure. Empty speculation is." }
+          ],
+          "correctExplanation": "Power spent on empty slots is power a narrower busy core did not spend.",
+          "objectiveIds": ["Relate extra ILP to power and voltage cost"],
+          "prerequisiteConceptIds": ["cpu-perf-metrics"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "cpu-security-spec-10",
+      "conceptId": "cpu-security-spec",
+      "title": "Architecture rolled it back. The cache did not.",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-speculative-load", "cpu-predictors"],
+      "explanation": [
+        "A squash restores architectural state. Registers look as if the wrong path never ran. Stores from that path never become globally visible. That is the ROB promise you already have. Transient state is everything the wrong path still touched in structures the ISA does not name: a cache line a speculative load filled, a predictor entry a wrong-path branch trained, a store-buffer slot that existed for a few cycles. Architecture cannot see those. A later timing observation can.",
+        "Put a speculative load together with a predictor and you have a channel without writing a new opcode. The predictor can be trained — or already be willing — to send fetch down a path the architectural branch will later reject. That path includes a load whose address depends on a value the program was not supposed to use. The load fills a line. The squash undoes the register. The line remains. A later access that is architecturally allowed is faster or slower depending on that leftover, which is enough to infer something about the forbidden value.",
+        "This is not a separate villain unit glued onto the course. It is the same mechanisms — prediction, speculative loads, a hierarchy that does not roll back — observed from the other side. Mitigations flush or partition predictor state, delay speculative loads, or constrain who may touch a line. Each one takes back some of the performance this course has been selling. That is the tax, not a new ISA."
+      ],
+      "example": "A predicted-true bounds check lets a load of `secret[i]` issue. The load misses and fills a line whose set depends on the secret byte. The check was false; the destination register dies. A later walk of an architecturally legal array is faster on that one set. The secret never became an ISA value. The leftover line still classified it.",
+      "whyItMatters": "If you cannot say which structure survived the squash, every 'we mitigated speculation' sentence is a slogan. The channel is leftover microarchitectural state. The mitigation is which leftover you agreed to throw away.",
+      "quiz": [
+        {
+          "id": "ss10-1",
+          "stem": "Transient state is observable after a squash because:",
+          "correctAnswer": "Some microarchitectural structures keep the wrong-path touch even though registers roll back",
+          "distractors": [
+            { "text": "The ROB commits the wrong path on purpose", "kind": "reversed", "rationale": "The ROB's job is to make that path architecturally never happen." },
+            { "text": "The ISA added a 'leak' opcode that stores the secret", "kind": "nearby", "rationale": "No new opcode is required. Leftover state is enough." },
+            { "text": "Caches are required to evict every line on a mispredict", "kind": "subtle", "rationale": "If they did, this leftover would not exist." }
+          ],
+          "correctExplanation": "Architecture undoes names it knows. The hierarchy and the predictor are not those names.",
+          "objectiveIds": ["Explain that transient state can be observed even when architecture rolls it back"],
+          "prerequisiteConceptIds": ["cpu-speculative-load", "cpu-predictors"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ss10-2",
+          "stem": "A speculative load plus a predictor can form a side channel because:",
+          "correctAnswer": "The predictor can send a load down a path that fills a line, then the squash leaves that line",
+          "distractors": [
+            { "text": "Predictors are only allowed to store architectural registers", "kind": "reversed", "rationale": "Predictors store guesses, not the ISA file." },
+            { "text": "Loads cannot issue until every branch in the program has retired", "kind": "nearby", "rationale": "If that were true, the load would not be speculative." },
+            { "text": "The fence instruction deletes the L1 for all cores", "kind": "subtle", "rationale": "A fence is an ordering edge, not an automatic L1 wipe." }
+          ],
+          "correctExplanation": "Wrong-path permission from the predictor, leftover line from the load. Together they classify a value.",
+          "objectiveIds": ["Reason about why a speculative load plus a predictor creates a side channel"],
+          "prerequisiteConceptIds": ["cpu-speculative-load", "cpu-predictors"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ss10-3",
+          "stem": "Flushing or partitioning predictor state after a domain switch is a mitigation that:",
+          "correctAnswer": "Throws away learned history so a wrong-path guess is harder to plant or reuse",
+          "distractors": [
+            { "text": "Raises frequency so leaks happen too fast to observe", "kind": "nearby", "rationale": "This is a predictor-state story, not a clock story." },
+            { "text": "Makes every load non-speculative and deletes the ROB", "kind": "misapplied", "rationale": "Some mitigations delay loads. Flushing a predictor is a different knob." },
+            { "text": "Guarantees the cache never fills again", "kind": "subtle", "rationale": "The cache still fills. You attacked the steering, not the hierarchy." }
+          ],
+          "correctExplanation": "You paid the cold-TAGE tax from earlier in the course, on purpose.",
+          "objectiveIds": ["Reason about why a speculative load plus a predictor creates a side channel"],
+          "prerequisiteConceptIds": ["cpu-predictors", "cpu-speculative-load"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-security-spec-20",
+      "conceptId": "cpu-security-spec",
+      "title": "Three leftovers, one channel",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-speculative-load", "cpu-predictors"],
+      "explanation": [
+        "The ten-minute unit said leftover state can be observed. This one separates three leftovers so a mitigation sentence has a noun. Leftover one: the cache line a speculative load filled. Leftover two: the predictor (direction, target, or return stack) trained or poisoned on the wrong path. Leftover three: other resource occupancy — an MSHR, a fill buffer, a port — that changes how long a later honest op waits. Architecture rolled back none of these by default.",
+        "A channel needs a transmitter and a receiver that share one leftover. The speculative load is a transmitter into the cache: its address, which may depend on a value that will be discarded, chooses a line. The receiver is a later, architecturally allowed access whose latency depends on that line. The predictor is a transmitter into the front end: it chooses whether that load happens at all, and on which path. You do not need a new instruction. You need a guess the machine was already willing to make, and a structure it was already unwilling to undo.",
+        "Mitigations pick a leftover. Flush or partition the predictor and leftover two dies — at the cost of the cold-history cliff you already named. Delay a speculative load until the permission is architectural and leftover one is harder to write — at the cost of the miss-hiding this course exists to sell. Constrain cache sharing across privilege domains and the receiver loses its line. None of these is free, and stacking them is how a 'security tax' becomes a double-digit IPC story.",
+        "Read a disclosure, or a microcode update note, as a map onto these three. 'We disabled a predictor mode' is leftover two. 'We serialize certain loads' is leftover one. 'We flushed this buffer on a privilege change' is leftover three. If the note does not name a structure, it is not yet a mechanism."
+      ],
+      "example": "A context switch that stuffs the return stack (a leftover-two cleanup you met with the RAS) plus a delayed L1 fill for loads that are still speculative (leftover one) plus an L1 that is flushed on the same switch (also leftover one, blunter). Three knobs, three taxes: return mispredicts, more demand misses, and a cold L1. The disclosure that only says 'speculative execution mitigated' has not told you which bill you are paying.",
+      "whyItMatters": "This course's mechanisms are the attack surface. Naming the leftover is how you read a mitigation without treating 'Spectre' as a brand and 'fence' as a spell.",
+      "quiz": [
+        {
+          "id": "ss20-1",
+          "stem": "The three leftovers this unit separates are:",
+          "correctAnswer": "A filled cache line, trained predictor state, and occupied hidden resources",
+          "distractors": [
+            { "text": "The architectural register file, the PC, and committed stores", "kind": "reversed", "rationale": "Those are what the squash does restore." },
+            { "text": "Only DRAM, and nothing on the core", "kind": "nearby", "rationale": "The interesting leftovers are usually on-core." },
+            { "text": "The ISA's opcode list, the ABI, and the linker", "kind": "subtle", "rationale": "Those are software contracts, not transient microarchitecture." }
+          ],
+          "correctExplanation": "Hierarchy, front end, occupancy. Architecture names none of them.",
+          "objectiveIds": ["Explain that transient state can be observed even when architecture rolls it back"],
+          "prerequisiteConceptIds": ["cpu-speculative-load", "cpu-predictors"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ss20-2",
+          "stem": "In this picture the predictor's role in the channel is to:",
+          "correctAnswer": "Steer a load onto a path that should not have run, so the load can write a leftover",
+          "distractors": [
+            { "text": "Commit the secret into an ISA register", "kind": "reversed", "rationale": "If it became architectural, you would not need a leftover." },
+            { "text": "Replace the cache with a second DRAM", "kind": "nearby", "rationale": "The cache is still the usual leftover-one transmitter." },
+            { "text": "Turn off MSHRs so misses cannot happen", "kind": "subtle", "rationale": "Occupancy can be leftover three. The predictor is steering." }
+          ],
+          "correctExplanation": "Permission to speculate is the front-end half. The load writes the hierarchy half.",
+          "objectiveIds": ["Reason about why a speculative load plus a predictor creates a side channel"],
+          "prerequisiteConceptIds": ["cpu-speculative-load", "cpu-predictors"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ss20-3",
+          "stem": "Delaying speculative loads until permission is architectural, versus flushing predictors, trades:",
+          "correctAnswer": "Miss-hiding (leftover one) against front-end history (leftover two)",
+          "distractors": [
+            { "text": "Nothing; the two knobs are the same structure", "kind": "nearby", "rationale": "One is the hierarchy path, one is the predictor." },
+            { "text": "The ISA for a new memory model", "kind": "misapplied", "rationale": "These are implementation mitigations, not a new contract." },
+            { "text": "Frequency for voltage, only", "kind": "subtle", "rationale": "The tax is IPC from less speculation or a colder predictor." }
+          ],
+          "correctExplanation": "Each leftover has a different bill. Stacking them is how the tax becomes large.",
+          "objectiveIds": ["Reason about why a speculative load plus a predictor creates a side channel"],
+          "prerequisiteConceptIds": ["cpu-speculative-load", "cpu-predictors"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cpu-microcode-10",
+      "conceptId": "cpu-microcode",
+      "title": "A small program the ISA did not grow",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cpu-isa"],
+      "explanation": [
+        "An ISA operation is a contract: this opcode means this transformation. Some opcodes are a poor match for a simple pipeline — a long string move, a complicated privilege change, a rare decimal helper. A microcode assist turns that one architectural instruction into a short internal sequence the core already knows how to run: several simpler internal ops, a little control, maybe a trip through a sequencer. The programmer still wrote one instruction. The implementation ran a small program.",
+        "That sequence is not a new architectural instruction. You cannot jump into the middle of it from another program. A future core may implement the same opcode with a different sequence, or with dedicated hardware and no assist at all. Microcode updates can change the sequence — including to insert a mitigation or fix a rare bug — without changing the opcode the compiler emitted. That is why a 'microcode update' can change performance or close a speculation hole without a recompile.",
+        "Foundations separated ISA from microarchitecture. This is that split under load. A dense CISC-style encoding is more likely to need assists; a regular encoding tries to make every opcode a simple pipeline citizen. Neither choice is a moral ranking. An assist is the implementation admitting that this one contract step is actually several."
+      ],
+      "example": "A string-copy opcode the ISA still documents can become dozens of internal moves and a loop in the sequencer. A later core implements the same opcode with a dedicated unit and the assist disappears. Your binary did not change. A microcode patch on the first core can insert a serializing step into that sequence after a disclosure; the opcode name on the page is the same.",
+      "whyItMatters": "When a vendor says 'this instruction is now an assist' they are telling you about throughput and about where a firmware patch can still reach. They are not announcing a new mnemonic.",
+      "quiz": [
+        {
+          "id": "uc10-1",
+          "stem": "A microcode assist means:",
+          "correctAnswer": "One ISA op is implemented as a small internal sequence",
+          "distractors": [
+            { "text": "The compiler emitted a new architectural opcode", "kind": "reversed", "rationale": "The opcode was already in the contract. The implementation changed." },
+            { "text": "The program may jump into the middle of that sequence", "kind": "nearby", "rationale": "The sequence is not part of the programmer-visible ISA." },
+            { "text": "Caches have been replaced by microcode", "kind": "subtle", "rationale": "This is how a complex op runs, not a memory hierarchy." }
+          ],
+          "correctExplanation": "A contract step, several internal steps. The binary still names one op.",
+          "objectiveIds": ["State that some ISA ops become a small internal program"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "uc10-2",
+          "stem": "A microcode assist is not a new architectural instruction because:",
+          "correctAnswer": "Other programs cannot name or jump into the internal sequence; only the original opcode is in the contract",
+          "distractors": [
+            { "text": "The sequence is listed as a new mnemonic every compiler must emit", "kind": "reversed", "rationale": "If it were architectural, it would be a new opcode." },
+            { "text": "Assists are illegal on every ISA", "kind": "nearby", "rationale": "They are a common implementation of complex ops." },
+            { "text": "The ROB is required to reject them", "kind": "subtle", "rationale": "The internal ops still flow through the core like other work." }
+          ],
+          "correctExplanation": "Visibility is the test. If software cannot name it, it is not a new ISA op.",
+          "objectiveIds": ["Explain why a microcode assist is not a new architectural instruction"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "uc10-3",
+          "stem": "A microcode update can change performance or close a hole without a recompile because:",
+          "correctAnswer": "It can replace the internal sequence behind an opcode the binary already uses",
+          "distractors": [
+            { "text": "It rewrites every source file on disk", "kind": "nearby", "rationale": "The binary stays. The implementation of an opcode moves." },
+            { "text": "It changes the architectural register count", "kind": "misapplied", "rationale": "The contract is what you are trying not to change." },
+            { "text": "It deletes the need for an ISA", "kind": "subtle", "rationale": "The ISA is what stayed still enough for the binary to keep running." }
+          ],
+          "correctExplanation": "Same mnemonic, new internal program. That is the point of the split.",
+          "objectiveIds": ["Explain why a microcode assist is not a new architectural instruction"],
+          "prerequisiteConceptIds": ["cpu-isa"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

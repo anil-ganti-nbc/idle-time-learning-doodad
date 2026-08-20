@@ -6,10 +6,14 @@ import { HydrateGate } from "@/components/hydrate";
 import { ProvenanceLine, SourceBadge } from "@/components/provenance";
 import { Button } from "@/components/ui/button";
 import { generateExplain, generateQuiz } from "@/lib/ai/client";
+import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
+import { courseForConcept } from "@/lib/learning/curriculum";
 import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
-import type { LessonFeedbackVerdict } from "@/lib/learning/types";
+import { quizContextFor } from "@/lib/learning/quiz-context";
+import { makeReadinessContext } from "@/lib/learning/readiness";
+import { PROMPT_VERSION, type LessonFeedbackVerdict } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 
 export const Route = createFileRoute("/learn/$lessonId")({
@@ -36,6 +40,9 @@ function LessonReady() {
   const logGeneration = useProgress((s) => s.logGeneration);
   const archiveLesson = useProgress((s) => s.archiveLesson);
   const ai = useProgress((s) => s.ai);
+  const progress = useProgress((s) => s.concepts);
+  const profile = useProgress((s) => s.profile);
+  const courseProgress = useProgress((s) => s.courses);
   const aiCtx = useAiContext(getLive()?.generations ?? 0);
   const [busy, setBusy] = useState<string | null>(null);
   const [styleOpen, setStyleOpen] = useState(false);
@@ -52,6 +59,7 @@ function LessonReady() {
   }
 
   const unit = lesson;
+  const course = courseForConcept(catalog, unit.conceptId);
   const concept = catalog.conceptMap[unit.conceptId];
   const categoryName = concept ? catalog.categoryMap[concept.category]?.name : "";
   const prereqNames = unit.prerequisites
@@ -76,6 +84,8 @@ function LessonReady() {
     const result = await generateExplain(aiCtx, unit, style);
     setBusy(null);
     setStyleOpen(false);
+    if (result.billable) bumpLiveGeneration();
+    logGeneration(toGenerationLog("explain", result, { lessonId: unit.id, conceptId: unit.conceptId }));
     if (!result.ok) {
       toast.error(result.error);
       return;
@@ -93,7 +103,7 @@ function LessonReady() {
           provider: result.provider,
           model: result.model,
           generatedAt: new Date().toISOString(),
-          promptVersion: "dau-lesson-v1",
+          promptVersion: PROMPT_VERSION,
           schemaVersion: 1,
           notes: `explain:${style}`,
         },
@@ -105,25 +115,22 @@ function LessonReady() {
         custom: true,
       },
     );
-    bumpLiveGeneration();
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "explain",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-      lessonId: unit.id,
-      conceptId: unit.conceptId,
-    });
     toast("Explanation rewritten.");
   }
 
   async function regenQuiz() {
     setBusy("quiz");
-    const result = await generateQuiz(aiCtx, unit);
+    const result = await generateQuiz(
+      aiCtx,
+      unit,
+      quizContextFor(unit, makeReadinessContext(catalog, progress, profile, courseProgress), catalog, {
+        journalist: useProgress.getState().settings.journalistDepth,
+        history: useProgress.getState().assessmentHistory,
+      }),
+    );
     setBusy(null);
+    if (result.billable) bumpLiveGeneration();
+    logGeneration(toGenerationLog("quiz", result, { lessonId: unit.id, conceptId: unit.conceptId }));
     if (!result.ok) {
       toast.error(result.error);
       return;
@@ -140,24 +147,12 @@ function LessonReady() {
           provider: result.provider,
           model: result.model,
           generatedAt: new Date().toISOString(),
-          promptVersion: "dau-lesson-v1",
+          promptVersion: PROMPT_VERSION,
           schemaVersion: 1,
         },
       },
       { ...unit, quiz: result.value, custom: true },
     );
-    bumpLiveGeneration();
-    logGeneration({
-      id: `gen-${Date.now()}`,
-      at: new Date().toISOString(),
-      kind: "quiz",
-      provider: result.provider,
-      model: result.model,
-      promptVersion: "dau-lesson-v1",
-      ok: true,
-      lessonId: unit.id,
-      conceptId: unit.conceptId,
-    });
     toast("Quiz replaced.");
   }
 
@@ -169,11 +164,11 @@ function LessonReady() {
   return (
     <article className="mx-auto max-w-xl">
       <p className="text-xs tracking-[0.18em] text-muted uppercase">
-        {categoryName} · {unit.durationMin} min · {unit.effort}
+        {course ? course.title : categoryName} · {unit.durationMin} min · {unit.effort}
         {unit.level === "journalist" ? " · journalist" : ""}
       </p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <h1 className="font-display text-3xl leading-tight tracking-tight sm:text-4xl">{unit.title}</h1>
+        <h1 className="font-display text-3xl leading-tight tracking-tight break-words sm:text-4xl">{unit.title}</h1>
         <SourceBadge lesson={unit} />
       </div>
       {prereqNames.length > 0 && (
@@ -182,8 +177,13 @@ function LessonReady() {
       <div className="mt-3">
         <ProvenanceLine lesson={unit} />
       </div>
+      {unit.versions && unit.versions.length > 0 ? (
+        <p className="mt-2 text-xs text-subtle">
+          {unit.versions.length} earlier version{unit.versions.length === 1 ? "" : "s"} kept
+        </p>
+      ) : null}
 
-      <div className="mt-8 space-y-5 text-[17px] leading-[1.6] text-fg">
+      <div className="mt-8 space-y-6 text-[17px] leading-[1.65] break-words text-fg">
         {unit.explanation.map((p) => (
           <p key={p.slice(0, 24)}>{p}</p>
         ))}
@@ -193,12 +193,12 @@ function LessonReady() {
 
       <section className="mt-8 rounded-lg bg-surface px-5 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
         <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Example</h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-fg">{unit.example}</p>
+        <p className="mt-2 text-[15px] leading-relaxed break-words text-fg">{unit.example}</p>
       </section>
 
       <section className="mt-6">
         <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Why it matters</h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-muted">{unit.whyItMatters}</p>
+        <p className="mt-2 text-[15px] leading-relaxed break-words text-muted">{unit.whyItMatters}</p>
       </section>
 
       {unit.source.sourceExcerpt && (

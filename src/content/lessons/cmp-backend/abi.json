@@ -1,0 +1,520 @@
+{
+  "courseId": "cmp-backend",
+  "moduleId": "cmp-be-abi",
+  "lessons": [
+    {
+      "id": "cmp-abi-call-10",
+      "conceptId": "cmp-abi-call",
+      "title": "Where the platform wants the arguments",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-isel", "cpu-isa"],
+      "goDeeper": "cmp-frame",
+      "diagram": "cmp-frame-abi",
+      "explanation": [
+        "Arguments do not travel by wish. A calling convention is the platform's map from a language-level call to specific registers and stack slots. On System V AMD64, the first integer or pointer arguments go in `%rdi` then `%rsi` (then `%rdx`, `%rcx`, `%r8`, `%r9`); the integer return comes back in `%rax`. The ISA named those registers. The ABI assigned them jobs.",
+        "Stanford CS143 treats the convention as a contract both sides compile against. The caller places arguments where the callee will look. The callee leaves the return where the caller will look. A compiler that puts the first argument in `%rax` on this platform has not invented a faster call. It has miscompiled every call into code the other object file will misread.",
+        "Some registers survive a call and some do not. On this same System V map, `%rax`, `%rdi`, `%rsi`, and the other argument registers are caller-saved: if the caller still needs the value, it must save it before the `call`. `%rbx`, `%rbp`, and `%r12`–`%r15` are callee-saved: the callee must restore them before it returns. Predicting the save set is reading that split, not guessing."
+      ],
+      "example": "`int add(int a, int b)` compiled for System V AMD64 takes `a` in `%rdi`, `b` in `%rsi`, and returns the sum in `%rax`. A caller that still needs its own `%rdi` across the call pushes it, or copies it to a callee-saved register, before `call add`.",
+      "whyItMatters": "Two object files agree only if they share this map. A 'wrong return' that looks like an optimizer bug is often an argument left in the wrong register.",
+      "quiz": [
+        {
+          "id": "be-abicall10-1",
+          "stem": "Place the arguments and return of `int add(int a, int b)` under System V AMD64:",
+          "correctAnswer": "`a` in `%rdi`, `b` in `%rsi`, the sum returned in `%rax`",
+          "distractors": [
+            { "text": "`a` in `%rax`, `b` in `%rbx`, the sum returned in `%rdi`", "kind": "reversed", "rationale": "That swaps the platform's argument and return registers." },
+            { "text": "Both arguments and the return in a single stack slot named `add`", "kind": "nearby", "rationale": "The first two integer args and the return are registers on this ABI." },
+            { "text": "Whatever virtual names instruction selection still has on the IR", "kind": "misapplied", "rationale": "The ABI names architectural registers, not SSA temporaries." }
+          ],
+          "correctExplanation": "System V AMD64: first two integer args in `%rdi` and `%rsi`, integer return in `%rax`.",
+          "objectiveIds": ["Place arguments and the return value where the platform's convention requires"],
+          "prerequisiteConceptIds": ["cmp-isel", "cpu-isa"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-abicall10-2",
+          "stem": "A System V caller still needs its `%rdi` after `call add`. It must:",
+          "correctAnswer": "Save `%rdi` before the call, because the callee may overwrite that caller-saved register",
+          "distractors": [
+            { "text": "Assume `%rdi` comes back unchanged, because argument registers are callee-saved", "kind": "reversed", "rationale": "On this ABI the argument registers are caller-saved." },
+            { "text": "Ask the linker to pin `%rdi` so no callee can write it", "kind": "misapplied", "rationale": "The linker does not police register volatility." },
+            { "text": "Reload `%rdi` from `%rax`, which always echoes the first argument", "kind": "nearby", "rationale": "`%rax` holds the return value, not a saved copy of `%rdi`." }
+          ],
+          "correctExplanation": "Caller-saved means the caller owns the save. `%rdi` is in that set on System V.",
+          "objectiveIds": ["Predict which registers a caller must save across a call"],
+          "prerequisiteConceptIds": ["cmp-isel", "cpu-isa"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-abicall10-3",
+          "stem": "Trace `return add(x, y)` on System V from the caller's side:",
+          "correctAnswer": "Move `x` into `%rdi`, `y` into `%rsi`, `call add`, then read the result from `%rax`",
+          "distractors": [
+            { "text": "Push `x` and `y` only, then read the result from `%rdi`", "kind": "nearby", "rationale": "The first two integer args are registers here; the return is `%rax`." },
+            { "text": "Leave `x` and `y` in their SSA names; the callee will find them", "kind": "reversed", "rationale": "The callee looks in the ABI registers, not in the caller's virtual names." },
+            { "text": "Emit a relocation for `add` and skip placing any arguments", "kind": "misapplied", "rationale": "The symbol `add` may still be a hole. The arguments are not." }
+          ],
+          "correctExplanation": "Place, call, read. `%rdi`, `%rsi`, `%rax` are the three named slots on this ABI.",
+          "objectiveIds": ["Place arguments and the return value where the platform's convention requires"],
+          "prerequisiteConceptIds": ["cmp-isel", "cpu-isa"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-frame-10",
+      "conceptId": "cmp-frame",
+      "title": "Prologue builds it, epilogue tears it down",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-abi-call"],
+      "goDeeper": "cmp-object",
+      "diagram": "cmp-frame-abi",
+      "explanation": [
+        "Every call leaves a record the callee and the unwinder can both read. The prologue builds that stack frame: it saves the incoming frame pointer if the ABI uses one, copies the stack pointer into it, then subtracts space for locals and spill slots. The epilogue reverses the same steps and returns. Between those two points, offsets from the frame pointer name the record.",
+        "A System V call already pushed the return address. After a standard `push %rbp; mov %rsp, %rbp`, that address sits at `8(%rbp)` and the saved `%rbp` sits at `0(%rbp)`. A spilled value the allocator parked in the frame sits at a negative offset, `−8(%rbp)` or whatever slot the compiler reserved. The body addresses those slots. It does not invent a second stack.",
+        "The epilogue is the matching teardown. It restores `%rsp` from `%rbp` (or adds back the same constant it subtracted), pops the saved frame pointer, and `ret`s to the address the `call` pushed. A frame the unwinder cannot walk is usually a prologue that never stored a recognizable chain, or an epilogue that left `%rsp` pointing at the wrong slot."
+      ],
+      "example": "`push %rbp; mov %rsp, %rbp; sub $16, %rsp` then `movq %rax, −8(%rbp)` parks a spill in the frame. The return address the caller pushed is at `8(%rbp)`. The epilogue is `mov %rbp, %rsp; pop %rbp; ret`.",
+      "whyItMatters": "A spilled value and a return address that share a frame are why a smashed stack looks like a wrong return. The record is one object with two jobs.",
+      "quiz": [
+        {
+          "id": "be-frame10-1",
+          "stem": "A System V prologue that uses a frame pointer typically:",
+          "correctAnswer": "Saves `%rbp`, sets `%rbp` from `%rsp`, then subtracts space for locals and spills",
+          "distractors": [
+            { "text": "Pops the return address so the body can reuse that stack slot", "kind": "reversed", "rationale": "The return address stays. `ret` will consume it." },
+            { "text": "Writes the frame into the object file's symbol table", "kind": "misapplied", "rationale": "The frame is a runtime record on the stack, not a symbol." },
+            { "text": "Moves arguments from `%rdi` into `%rax` so the body has only one register", "kind": "nearby", "rationale": "Argument placement is the calling convention, not the prologue's frame build." }
+          ],
+          "correctExplanation": "Save the old frame pointer, install the new one, allocate the slot area. That is the build.",
+          "objectiveIds": ["Describe the stack frame a prologue builds and an epilogue tears down"],
+          "prerequisiteConceptIds": ["cmp-abi-call"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-frame10-2",
+          "stem": "After `push %rbp; mov %rsp, %rbp` on System V AMD64, the return address and a spill at the first slot sit at:",
+          "correctAnswer": "Return address at `8(%rbp)`, spilled value at a negative offset such as `−8(%rbp)`",
+          "distractors": [
+            { "text": "Return address at `−8(%rbp)`, spill at `8(%rbp)`, swapped so locals sit above", "kind": "reversed", "rationale": "The call pushed the return address before the prologue. It sits above the saved `%rbp`." },
+            { "text": "Both in `%rax`, because the ABI returns every stack slot", "kind": "misapplied", "rationale": "`%rax` is the return-value register, not a frame map." },
+            { "text": "Both omitted; System V stores the frame only in the object file", "kind": "nearby", "rationale": "The frame is on the stack at run time. The .o does not hold it." }
+          ],
+          "correctExplanation": "Saved `%rbp` at `0(%rbp)`, return address just above it, spills below. That is the record.",
+          "objectiveIds": ["Trace where a spilled value and a return address sit in the frame"],
+          "prerequisiteConceptIds": ["cmp-abi-call"],
+          "difficultyTier": 3,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "be-frame10-3",
+          "stem": "An epilogue differs from the prologue because:",
+          "correctAnswer": "It restores `%rsp` and `%rbp` and returns, tearing down what the prologue built",
+          "distractors": [
+            { "text": "It builds a second frame on top of the first so the caller can unwind twice", "kind": "nearby", "rationale": "One frame per call. The epilogue removes it." },
+            { "text": "It places the next call's arguments in `%rdi` and `%rsi`", "kind": "misapplied", "rationale": "Argument placement is for the next call, not this return." },
+            { "text": "It deletes the return address so `ret` has nothing to pop", "kind": "reversed", "rationale": "`ret` consumes the return address. The epilogue must leave it." }
+          ],
+          "correctExplanation": "Build, then tear down. The matching reverse is how `%rsp` finds the return address again.",
+          "objectiveIds": ["Describe the stack frame a prologue builds and an epilogue tears down"],
+          "prerequisiteConceptIds": ["cmp-abi-call"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-object-10",
+      "conceptId": "cmp-object",
+      "title": "What a .o still refuses to know",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-isel"],
+      "goDeeper": "cmp-reloc",
+      "explanation": [
+        "The assembler does not emit a finished program. An object file is sections plus a symbol table the linker will read. `.text` holds the opcodes this translation unit selected. `.data` and `.rodata` hold initialized bytes. `.bss` names zeros that do not need to occupy the file. Symbols label the functions and globals this file defines, and the names it only mentions.",
+        "Stanford CS143 treats the .o as a promise with holes. A defined symbol such as `add` has a section and an offset inside this file. An undefined symbol such as `printf` has a name and no body. The file also does not yet know the final virtual address of its own `.text`. Those addresses are what the linker still has to finish.",
+        "What the linker will see is exactly that inventory: section bytes, defined symbols, undefined symbols, and the relocation records that mark the holes. What it will not see is the IR, the SSA names, or the source tokens. A missing function is already an undefined symbol. It is not a type error waiting to happen at link time."
+      ],
+      "example": "A file that compiles `int add(int,int)` and calls `printf` defines `add` in `.text` and lists `printf` as undefined. The call's displacement is not a finished address. The .o records a hole for the linker.",
+      "whyItMatters": "Debugging 'undefined reference' in the front end is a stage error. The .o already told you which name it could not define.",
+      "quiz": [
+        {
+          "id": "be-object10-1",
+          "stem": "Name what an object file shows the linker:",
+          "correctAnswer": "Sections of bytes, plus symbols this file defines and symbols it only mentions",
+          "distractors": [
+            { "text": "The SSA form of every function, so the linker can re-allocate registers", "kind": "nearby", "rationale": "SSA is gone. The linker sees bytes and names." },
+            { "text": "The source token stream, so the linker can re-parse the call", "kind": "misapplied", "rationale": "Tokens do not survive into the .o." },
+            { "text": "A finished virtual-address map for every symbol in the process", "kind": "reversed", "rationale": "Final addresses are what the linker still has to assign." }
+          ],
+          "correctExplanation": "Bytes in sections, names in the symbol table. That is the linker's input.",
+          "objectiveIds": ["Name the sections and symbols an object file shows the linker"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-object10-2",
+          "stem": "Inside a .o that calls `printf` and defines `add`, what is still unknown?",
+          "correctAnswer": "The final address of `printf`, and usually the final load address of `add` itself",
+          "distractors": [
+            { "text": "The opcode selected for each IR add inside `add`", "kind": "nearby", "rationale": "Selection already happened. Those bytes are in `.text`." },
+            { "text": "Whether `printf` was a legal identifier in the source language", "kind": "misapplied", "rationale": "The front end already accepted the name. The .o just lacks a body." },
+            { "text": "Nothing; a .o is a complete runnable image", "kind": "reversed", "rationale": "If it were complete, the linker would have nothing to finish." }
+          ],
+          "correctExplanation": "Defined bytes, unfinished addresses. The linker supplies the missing ones.",
+          "objectiveIds": ["Predict what is still unknown inside a .o that the linker must finish"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-object10-3",
+          "stem": "`.text`, `.data`, and an undefined `printf` in the symbol table together mean:",
+          "correctAnswer": "This file holds some code and data, and it expects another file to define `printf`",
+          "distractors": [
+            { "text": "The lexer left `printf` unclassified, so the linker must retokenize it", "kind": "misapplied", "rationale": "An undefined symbol is a missing definition, not a missing token class." },
+            { "text": "`.text` is a stack frame and `.data` is the return address", "kind": "nearby", "rationale": "Those are runtime frame slots, not object-file sections." },
+            { "text": "The file is already linked; undefined names are comments", "kind": "reversed", "rationale": "Undefined symbols are the linker's remaining work." }
+          ],
+          "correctExplanation": "Sections are the contents. An undefined symbol is a name this .o cannot finish.",
+          "objectiveIds": ["Name the sections and symbols an object file shows the linker"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-reloc-10",
+      "conceptId": "cmp-reloc",
+      "title": "An address that is still a hole",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-object"],
+      "goDeeper": "cmp-linker",
+      "explanation": [
+        "Some addresses are still holes when the .o is written. A relocation is a record that names the hole: at this offset in this section, write the final address of this symbol, at this width, with this addend. The compiled `call printf` does not contain `printf`'s address. It contains a placeholder and a relocation that says how to fill it.",
+        "The linker applies the record after it knows the address. A 32-bit PC-relative hole gets a 32-bit displacement. A 64-bit absolute hole gets eight bytes. The opcode around the hole is not the relocation; the displacement or immediate is. Applying the record is arithmetic into a known width at a known offset.",
+        "Wrong width or wrong place breaks the instruction, not just the address. A 64-bit value stuffed into a 32-bit hole overwrites the next bytes — often the next opcode. A relocation applied at the opcode instead of the displacement corrupts the instruction and leaves the hole unfilled. The program then jumps wherever those smashed bytes decode."
+      ],
+      "example": "`call printf` in `.text` carries a 4-byte displacement hole and a relocation naming `printf`. Applied at the displacement, it becomes a relative call. Applied four bytes earlier, it overwrites the `call` opcode. Applied as eight bytes, it smears into the next instruction.",
+      "whyItMatters": "A crash at a `call` that 'looks fine' in the .o is often a relocation applied at the wrong offset. The hole was real; the patch missed it.",
+      "quiz": [
+        {
+          "id": "be-reloc10-1",
+          "stem": "A relocation is best described as:",
+          "correctAnswer": "A hole the linker fills with a final address, at a recorded offset and width",
+          "distractors": [
+            { "text": "A stack slot the prologue reserves for a spilled SSA name", "kind": "nearby", "rationale": "Spills are frame memory. Relocations are object-file address holes." },
+            { "text": "A new opcode the selector emits when a symbol is undefined", "kind": "misapplied", "rationale": "The opcode is already there. The address field is the hole." },
+            { "text": "A finished virtual address already baked into the .o", "kind": "reversed", "rationale": "If the address were finished, there would be nothing to relocate." }
+          ],
+          "correctExplanation": "Offset, symbol, width, addend. The linker writes the address into that hole.",
+          "objectiveIds": ["Describe a relocation as a hole the linker fills with a final address"],
+          "prerequisiteConceptIds": ["cmp-object"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-reloc10-2",
+          "stem": "A 64-bit address applied into a 32-bit call displacement will:",
+          "correctAnswer": "Overwrite the next bytes after the hole, often the following opcode",
+          "distractors": [
+            { "text": "Be silently truncated to a correct relative call, always", "kind": "nearby", "rationale": "Truncation is not the same as applying at the recorded width. Extra bytes spill." },
+            { "text": "Turn the call into a stack spill of the symbol's address", "kind": "misapplied", "rationale": "Width mistakes smash encodings. They do not insert spills." },
+            { "text": "Be ignored, because relocations cannot change `.text`", "kind": "reversed", "rationale": "Filling `.text` holes is the usual case." }
+          ],
+          "correctExplanation": "The record's width is part of the contract. Eight bytes in a four-byte hole walk on the next instruction.",
+          "objectiveIds": ["Predict what breaks if a relocation is applied at the wrong width or place"],
+          "prerequisiteConceptIds": ["cmp-object"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-reloc10-3",
+          "stem": "A relocation applied at the `call` opcode instead of its displacement field:",
+          "correctAnswer": "Corrupts the opcode and leaves the address hole unfilled",
+          "distractors": [
+            { "text": "Is harmless, because any four bytes in the instruction are the hole", "kind": "nearby", "rationale": "Only the recorded offset is the hole. The opcode is not a spare field." },
+            { "text": "Converts the call into a return, which the epilogue expected", "kind": "misapplied", "rationale": "Wrong-place patches do not become well-formed control." },
+            { "text": "Is how PIC hides the address from the dynamic linker", "kind": "subtle", "rationale": "PIC uses a different kind of hole, still at the address field." }
+          ],
+          "correctExplanation": "Place matters as much as width. Patch the field, not the opcode beside it.",
+          "objectiveIds": ["Predict what breaks if a relocation is applied at the wrong width or place"],
+          "prerequisiteConceptIds": ["cmp-object"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-linker-10",
+      "conceptId": "cmp-linker",
+      "title": "Resolve the name, patch the hole",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-reloc"],
+      "goDeeper": "cmp-pic",
+      "explanation": [
+        "Many object files become one address space when the linker resolves symbols and applies relocations. It concatenates sections, assigns each defined symbol a final address, then walks every relocation and writes that address into the hole. The output is an executable or a shared library whose remaining holes, if any, belong to the dynamic linker.",
+        "An undefined reference is a symbol a relocation named that no object, archive, or shared library provided. `printf` is fine if `libc` defined it. `add` is not fine if no .o in the link defined `add`. The diagnostic is a missing definition, not a type error and not a missing opcode. The front end already accepted the name.",
+        "Resolution is first-match by the linker's search rules. Two strong definitions of the same global are a multiple-definition error. A weak definition can lose to a strong one. The applied relocation then uses whichever definition won. The program that jumps to the wrong `add` is often two .o files that both thought they owned the name."
+      ],
+      "example": "`main.o` calls `add`; `add.o` defines `add`. The linker assigns `add` an address, patches the `call` hole in `main.o`, and emits one image. Drop `add.o` from the link and the same hole becomes `undefined reference to add`.",
+      "whyItMatters": "A missing .o and a misspelled symbol look identical at this stage. The linker only knows the name it was asked to finish.",
+      "quiz": [
+        {
+          "id": "be-linker10-1",
+          "stem": "Combine `main.o` (calls `add`) with `add.o` (defines `add`) by:",
+          "correctAnswer": "Assigning `add` an address and applying the call's relocation to that address",
+          "distractors": [
+            { "text": "Re-running instruction selection on both files so the call becomes an add opcode", "kind": "nearby", "rationale": "The call is already an opcode. The hole is the address." },
+            { "text": "Deleting the relocation, because two .o files make holes illegal", "kind": "reversed", "rationale": "Two files are why the hole exists. Applying it is the job." },
+            { "text": "Re-parsing `add` from source so the linker can type-check it", "kind": "misapplied", "rationale": "The linker resolves names in symbol tables, not source." }
+          ],
+          "correctExplanation": "Resolve the symbol, patch the hole. That is the combination.",
+          "objectiveIds": ["Combine object files by resolving symbols and applying relocations"],
+          "prerequisiteConceptIds": ["cmp-reloc"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-linker10-2",
+          "stem": "`undefined reference to add` means:",
+          "correctAnswer": "A relocation named `add`, and no object in the link provided a definition",
+          "distractors": [
+            { "text": "The parser rejected the identifier `add` in the source file", "kind": "misapplied", "rationale": "A parse failure never produced this .o." },
+            { "text": "The register allocator spilled `add` and the slot was never reloaded", "kind": "nearby", "rationale": "Spills are frame traffic. This diagnostic is a missing symbol." },
+            { "text": "Two files defined `add`, so the linker refused both", "kind": "reversed", "rationale": "Two definitions are a multiple-definition error, not an undefined reference." }
+          ],
+          "correctExplanation": "A name was used. Nobody defined it. That is the whole report.",
+          "objectiveIds": ["Diagnose an undefined reference as a symbol no object provided"],
+          "prerequisiteConceptIds": ["cmp-reloc"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "be-linker10-3",
+          "stem": "Applying relocations differs from merely concatenating `.text` sections because:",
+          "correctAnswer": "Concatenation places the bytes; applying relocations fills the address holes those bytes still have",
+          "distractors": [
+            { "text": "Concatenation is illegal; only relocations produce an image", "kind": "nearby", "rationale": "Both happen. Order is: place, then patch." },
+            { "text": "Relocations rewrite the source tokens that produced each opcode", "kind": "misapplied", "rationale": "No tokens remain. The patch is into section bytes." },
+            { "text": "Concatenation already knows every final address, so holes are comments", "kind": "reversed", "rationale": "Placement chooses addresses. The holes still need those values written in." }
+          ],
+          "correctExplanation": "Place the sections, then write the addresses. Either step alone is an unfinished image.",
+          "objectiveIds": ["Combine object files by resolving symbols and applying relocations"],
+          "prerequisiteConceptIds": ["cmp-reloc"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-pic-10",
+      "conceptId": "cmp-pic",
+      "title": "A relative load so the text can move",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-reloc"],
+      "goDeeper": "cmp-tls",
+      "explanation": [
+        "Shared libraries cannot assume a fixed load address. Position-independent code builds an address with a relative load — on System V x86-64, typically `leaq foo(%rip), %rax` — so the same bytes work wherever the dynamic linker mapped the text. The displacement is the distance from this instruction to `foo`, not a virtual address baked in at compile time.",
+        "An absolute immediate is illegal in that shared text because it would name a fixed address the library does not own. Either the dynamic linker would have to rewrite the text for every process (destroying sharing) or the immediate would point at the wrong place after a slide. The relative form slides for free: the distance between the `lea` and `foo` does not change when the whole object moves.",
+        "The remaining holes are then relative, or they live in a data table the dynamic linker is allowed to relocate (GOT/PLT). The executable that is not shared can still use absolute addresses if the platform lets it. The library that will be mapped at a load-time address cannot. The constraint is the mapping, not a fashion in encodings."
+      ],
+      "example": "`leaq msg(%rip), %rdi` then `call puts@PLT` is PIC: the string's address is computed from the current `%rip`, and `puts` goes through a table the dynamic linker fills. `movabs $msg, %rdi` in a `.so` is the absolute immediate that will not survive a slide.",
+      "whyItMatters": "A shared library that 'works in tests' with a fixed address is a library nobody else can map. The relative load is why one text serves every process.",
+      "quiz": [
+        {
+          "id": "be-pic10-1",
+          "stem": "Generate the address of `msg` so the code can sit anywhere:",
+          "correctAnswer": "A PC-relative load such as `leaq msg(%rip), %rax`",
+          "distractors": [
+            { "text": "An absolute `movabs $msg, %rax` baked at compile time", "kind": "reversed", "rationale": "That immediate names a fixed address the library will not keep." },
+            { "text": "A stack spill of `msg`'s compile-time address into the frame", "kind": "nearby", "rationale": "Parking an absolute address on the stack does not make it slide." },
+            { "text": "A front-end rewrite of the identifier `msg` into a token class", "kind": "misapplied", "rationale": "This is an addressing choice in the backend, not a lexer question." }
+          ],
+          "correctExplanation": "The displacement is a distance. Distances survive a slide; absolute immediates do not.",
+          "objectiveIds": ["Generate an address using a relative load so the code can sit anywhere"],
+          "prerequisiteConceptIds": ["cmp-reloc"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-pic10-2",
+          "stem": "An absolute immediate is illegal in a shared library because:",
+          "correctAnswer": "The library's load address is chosen later, so a baked virtual address would be wrong or unshareable",
+          "distractors": [
+            { "text": "Shared libraries are forbidden from mentioning any symbol by name", "kind": "nearby", "rationale": "They mention symbols. They just must not bake the address into text." },
+            { "text": "Absolute immediates are not valid x86 encodings at all", "kind": "reversed", "rationale": "The encoding exists. The mapping policy rejects it in shared text." },
+            { "text": "The assembler cannot emit immediates until after `main` returns", "kind": "misapplied", "rationale": "This is a load-time mapping constraint, not a runtime-after-main rule." }
+          ],
+          "correctExplanation": "Slide or rewrite. Shared text refuses the rewrite, so it refuses the absolute immediate.",
+          "objectiveIds": ["Predict why an absolute immediate is illegal in a shared library"],
+          "prerequisiteConceptIds": ["cmp-reloc"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-pic10-3",
+          "stem": "A PC-relative `lea` differs from an absolute `movabs` of the same symbol because:",
+          "correctAnswer": "The `lea` stores a distance that still works after a slide; the `movabs` stores a fixed address that does not",
+          "distractors": [
+            { "text": "The `lea` is only legal in executables; the `movabs` is required in libraries", "kind": "reversed", "rationale": "The library is the one that needs the relative form." },
+            { "text": "Both bake the same virtual address; only the mnemonic changes", "kind": "nearby", "rationale": "The fields differ. One is a displacement, one is an absolute immediate." },
+            { "text": "The `lea` is a stack-frame operation the prologue will undo", "kind": "misapplied", "rationale": "This is address formation, not frame teardown." }
+          ],
+          "correctExplanation": "Distance versus baked address. That is the PIC cut.",
+          "objectiveIds": ["Generate an address using a relative load so the code can sit anywhere"],
+          "prerequisiteConceptIds": ["cmp-reloc"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "cmp-tls-10",
+      "conceptId": "cmp-tls",
+      "title": "One cell per thread, same name",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-abi-call", "os-thread-vs-proc"],
+      "goDeeper": "cmp-debug-info",
+      "explanation": [
+        "A process can run several threads that share one address space; each thread still has its own register state and its own stack. Thread-local storage is a global name with one cell per thread: every thread writes `errno` or a `thread_local` counter and hits a private location. The name is shared. The cell is not.",
+        "The backend emits an access the ABI defines for that cell — on System V x86-64, typically a load through the thread pointer in `%fs` — not an ordinary global load. The dynamic linker (or the thread-start path) allocates a fresh block of those cells when a thread is created. Two threads executing the same `mov %fs:errno@tpoff, %eax` read two different addresses.",
+        "An ordinary global used instead is one cell for the whole process. Two threads incrementing it without other synchronization lose updates or see stale values. TLS does not make a data structure thread-safe. It makes this particular name stop being shared. The bug that 'only happens under load' is often that global that should have been a cell per thread."
+      ],
+      "example": "`thread_local int nest;` compiled to a `%fs`-relative load gives each thread its own `nest`. The same `int nest;` as an ordinary global is one counter. Two threads entering a function that does `nest++` then share — and race — that one cell.",
+      "whyItMatters": "A race on `errno` or a per-thread cursor is not a mysterious ABI bug. It is one cell where the language promised many.",
+      "quiz": [
+        {
+          "id": "be-tls10-1",
+          "stem": "Thread-local storage is:",
+          "correctAnswer": "A global name with one cell per thread, not one cell for the process",
+          "distractors": [
+            { "text": "A stack slot the prologue creates for every local variable", "kind": "nearby", "rationale": "Locals are already per-activation. TLS is a named global that is per-thread." },
+            { "text": "A kernel system call that creates a new process for each access", "kind": "misapplied", "rationale": "Threads of one process share an address space. TLS is a cell inside it." },
+            { "text": "An ordinary global that the linker replicates into `.text`", "kind": "reversed", "rationale": "Replication into text would still be one cell, plus a sharing violation." }
+          ],
+          "correctExplanation": "Same name, one private cell per thread. That is the whole mechanism.",
+          "objectiveIds": ["Describe thread-local storage as a global name with one cell per thread"],
+          "prerequisiteConceptIds": ["cmp-abi-call", "os-thread-vs-proc"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-tls10-2",
+          "stem": "Two threads increment an ordinary global `nest` instead of a thread-local one. What goes wrong?",
+          "correctAnswer": "They share one cell, so increments race and the per-thread count is lost",
+          "distractors": [
+            { "text": "The kernel creates a process per increment, so the count is always one", "kind": "misapplied", "rationale": "Threads stay in one process. The bug is the shared cell." },
+            { "text": "Nothing: ordinary globals are already one cell per thread", "kind": "reversed", "rationale": "Ordinary globals are one cell per process. That is the mistake." },
+            { "text": "The callee-saved registers are overwritten, so the ABI return is wrong", "kind": "nearby", "rationale": "Register saves are a calling-convention issue, not a TLS sharing bug." }
+          ],
+          "correctExplanation": "One name, one shared cell, two writers. The per-thread story is gone.",
+          "objectiveIds": ["Predict what goes wrong if two threads share an ordinary global instead"],
+          "prerequisiteConceptIds": ["cmp-abi-call", "os-thread-vs-proc"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-tls10-3",
+          "stem": "A `%fs`-relative load of `errno` in two threads differs from a PC-relative load of an ordinary global because:",
+          "correctAnswer": "The thread pointer selects a different cell in each thread; the ordinary global is one address",
+          "distractors": [
+            { "text": "Both loads hit the same process-wide cell; only the mnemonic differs", "kind": "nearby", "rationale": "The thread pointer is how the cell becomes per-thread." },
+            { "text": "`%fs` is the return-value register on System V, so the load is a call", "kind": "misapplied", "rationale": "System V returns integers in `%rax`. `%fs` is the thread pointer here." },
+            { "text": "PC-relative loads are illegal inside a thread, so the global cannot exist", "kind": "reversed", "rationale": "Ordinary PIC globals are PC-relative. They are just shared." }
+          ],
+          "correctExplanation": "The name is global either way. The thread pointer is what splits the cell.",
+          "objectiveIds": ["Describe thread-local storage as a global name with one cell per thread"],
+          "prerequisiteConceptIds": ["cmp-abi-call", "os-thread-vs-proc"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-debug-info-10",
+      "conceptId": "cmp-debug-info",
+      "title": "The caret after the optimizer moved",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-source-loc"],
+      "goDeeper": "cmp-runtime",
+      "explanation": [
+        "Optimized code still owes the debugger a map. Debug info — DWARF location lists on this platform — says that at this program counter, the source variable `x` lives in this register or this stack slot, and that those bytes correspond to this source span. The human still recognizes the span. The location is whatever the optimizer left.",
+        "A dead store's variable may have no current location. The store was deleted because nothing read it. At that PC there is no register and no slot holding `x`, because `x` does not exist there any more. The debugger that prints `<optimized out>` is reading an empty location list, not refusing to work.",
+        "The map has to track motion. A value that starts in `%rdi`, is copied to `%rbx` across a call, then spilled to `−8(%rbp)` needs three location entries, each with a PC range. Pointing at the original source span for all three is the job. Pointing at the spill slot's offset as if it were a line number is how the caret becomes a shrug."
+      ],
+      "example": "`int x = 0; /* never read */` compiled at `-O2` has a DWARF entry for `x` whose location list is empty after the store is deleted. `int x = a + b; use(x);` after allocation might say `x` is in `%eax` from the add through the call setup.",
+      "whyItMatters": "A debugger that cannot find `x` after a legal rewrite is often missing location entries, not missing the variable. The optimizer scrambled the home; the map has to follow.",
+      "quiz": [
+        {
+          "id": "be-debug10-1",
+          "stem": "Map an optimized home of `x` back to a source span the human still recognizes:",
+          "correctAnswer": "A location list: at this PC, `x` is in this register or slot, still tagged with the original span",
+          "distractors": [
+            { "text": "The stack offset of the spill, printed as if it were a source line", "kind": "nearby", "rationale": "The offset is a location. The span is the source the human wrote." },
+            { "text": "The IR temporary name `t9`, because SSA is the debugger's language", "kind": "misapplied", "rationale": "The human recognizes the source span, not an SSA version." },
+            { "text": "A relocation the linker applies to the identifier `x`", "kind": "subtle", "rationale": "Relocations fill addresses in section bytes, not debugger locations." }
+          ],
+          "correctExplanation": "PC plus home, tagged with the span. That is the map after the optimizer moved the value.",
+          "objectiveIds": ["Map an optimized location back to a source span the human still recognizes"],
+          "prerequisiteConceptIds": ["cmp-source-loc"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-debug10-2",
+          "stem": "A dead store to `x` was deleted. At that PC the variable may have no current location because:",
+          "correctAnswer": "Nothing holds `x` there any more, so the location list is empty at that PC",
+          "distractors": [
+            { "text": "DWARF forbids naming any variable that was ever stored", "kind": "nearby", "rationale": "Stores that survive have locations. Deleted ones do not." },
+            { "text": "The lexer dropped the span when it classified `x`", "kind": "misapplied", "rationale": "The span still exists. The home does not." },
+            { "text": "The register file always contains every source variable", "kind": "reversed", "rationale": "If that were true, nothing would be optimized out." }
+          ],
+          "correctExplanation": "No home, no location. `<optimized out>` is the empty entry, not a debugger refusal.",
+          "objectiveIds": ["Predict why a dead store's variable may have no current location"],
+          "prerequisiteConceptIds": ["cmp-source-loc"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-debug10-3",
+          "stem": "`x` moves from `%rdi` to `%rbx` across a call. The debug map should:",
+          "correctAnswer": "Record two PC ranges, one for each home, both pointing at the same source span",
+          "distractors": [
+            { "text": "Keep only `%rdi`, because the ABI's first argument is the variable's true home", "kind": "nearby", "rationale": "The incoming register is one home, not the only one." },
+            { "text": "Drop the span and name the registers as the source", "kind": "reversed", "rationale": "The human still needs the span. The registers are locations." },
+            { "text": "Emit a spill store so the debugger has a permanent slot", "kind": "misapplied", "rationale": "Debug info should not insert extra stores just to have a home." }
+          ],
+          "correctExplanation": "Homes change. The span does not. The location list is how both facts travel.",
+          "objectiveIds": ["Map an optimized location back to a source span the human still recognizes"],
+          "prerequisiteConceptIds": ["cmp-source-loc"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    }
+  ]
+}

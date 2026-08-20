@@ -1,0 +1,458 @@
+{
+  "courseId": "dm-history",
+  "moduleId": "dm-h-scenes",
+  "lessons": [
+    {
+      "id": "dm-history-10",
+      "conceptId": "dm-history",
+      "title": "Two factories under one name",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-listening"],
+      "goDeeper": "dm-florida",
+      "diagram": "dm-two-factories",
+      "explanation": [
+        "Two rooms finished a similar move out of thrash with different desks. One packed the bar with separated pick attack and a kit that clicks as punctuation. The other stacked midrange so guitar cells fused into a wall. Hear Morrisound versus Sunlight as a DAU listening contrast — click versus smear — not as the two factories that founded the genre. Other rooms existed.",
+        "A factory here is production plus riff doctrine: how the guitar is supposed to sit, how the kit is supposed to speak, and what the desk is for. Naming a roster of famous players is not that contrast. You can hear the two jobs on records without listing a lineup.",
+        "Morrisound versus Sunlight names two engineering decisions, not two fashion seasons. One desk left pick and kick as separate events. The other let guitar midrange occupy the front as a smear. Hear that split before you reach for a magazine cover."
+      ],
+      "example": "A dry, articulate palm-muted verse next to a midrange wall at similar tempo. Same decade, same ancestor pressures, two answers about what a rhythm guitar is for.",
+      "whyItMatters": "If you treat old-school death metal as one object, later branches will look like taste. They are forks from two desks.",
+      "quiz": [
+        {
+          "id": "dm-hist10-1",
+          "stem": "Florida and Stockholm count as two production doctrines when they:",
+          "correctAnswer": "Split guitar-and-kit jobs under one name: separation versus a wall",
+          "distractors": [
+            { "text": "Share one desk so both cities must sound like a single factory", "kind": "nearby", "rationale": "One desk would be one factory. The split is the lesson." },
+            { "text": "Are fashion seasons a magazine can rank by which logo is cooler", "kind": "reversed", "rationale": "Fashion ranking is what this contrast refuses." },
+            { "text": "Need a celebrity roster before any doctrine can be heard at all", "kind": "misapplied", "rationale": "A roster is a substitute for hearing the two jobs." }
+          ],
+          "correctExplanation": "One name, two jobs: separation versus a wall. That is the factory split.",
+          "objectiveIds": ["Contrast Florida and Stockholm as two production doctrines under one genre name"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "dm-hist10-2",
+          "stem": "Morrisound versus Sunlight is best heard as which kind of fact?",
+          "correctAnswer": "Engineering decisions about separation versus a fused midrange wall",
+          "distractors": [
+            { "text": "A contest over which city's nightlife had the better late clubs", "kind": "nearby", "rationale": "Nightlife is a scene-gossip card, not a desk decision." },
+            { "text": "Fashion seasons that swapped every year regardless of the desk", "kind": "reversed", "rationale": "Fashion is the substitute. Engineering is the split." },
+            { "text": "Proof that only one of the two rooms was allowed to use a kick", "kind": "subtle", "rationale": "Both rooms used a kit. The split is how guitar and kick sit." }
+          ],
+          "correctExplanation": "Two desks, two claims about separation versus smear. That is engineering.",
+          "objectiveIds": ["Hear Morrisound versus Sunlight as engineering decisions, not fashion"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-hist10-3",
+          "stem": "Pick and kick stay separate on one record; a guitar wall on another. That split is:",
+          "correctAnswer": "Two factories under one genre name, audible as desk-and-riff doctrine",
+          "distractors": [
+            { "text": "Proof that the wall record failed because it is the less famous", "kind": "nearby", "rationale": "Fame is a roster substitute. The wall is a doctrine." },
+            { "text": "Evidence both records must be one doctrine played at two volumes", "kind": "reversed", "rationale": "Volume is not the split. Separation versus wall is." },
+            { "text": "A reason to wait for a biography card before describing the mix", "kind": "misapplied", "rationale": "You can hear the split without a biography." }
+          ],
+          "correctExplanation": "Separate events versus a wall. Same genre name, two factories.",
+          "objectiveIds": ["Contrast Florida and Stockholm as two production doctrines under one genre name"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-history-20",
+      "conceptId": "dm-history",
+      "title": "Desks that finish a riff differently",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["dm-listening"],
+      "goDeeper": "dm-florida",
+      "diagram": "dm-two-factories",
+      "explanation": [
+        "The short lesson named two factories. This pass is the inventory. A Florida bar wants the pick to stay an event, the kick to stay an event, and the palm mute to punch holes in the cell. A Stockholm bar wants the guitar as a surface, so cells smear into one midrange object.",
+        "Neither desk is a purity test. Tape copies moved both ways, and later records mixed the doctrines on purpose. The useful hearing is still the first split: separation as a claim versus wall as a claim. A genre name that covers both will hide that split if you let it.",
+        "Engineering, not fashion, means you can point at the speakers. Click versus smear, pick attack versus fused midrange, kit as punctuation versus kit as a roll under a wall. A cover story about which city was cooler cannot do that pointing.",
+        "Once both doctrines are audible, old-school stops being a single object. Later branches — thicker, odder, longer, colder — grow in soil that already had two answers about the guitar's job. Start from those answers. A birthday plaque will not tell you which desk you are hearing."
+      ],
+      "example": "Mute the names. Hear whether pick and kick stay events or the guitar is a surface. That pointing is the inventory. A cooler-city story cannot do it.",
+      "whyItMatters": "Branches later will look like taste if the two desks stay undescribed. Name the inventory first.",
+      "quiz": [
+        {
+          "id": "dm-hist20-1",
+          "stem": "Calling Morrisound versus Sunlight fashion rather than engineering typically:",
+          "correctAnswer": "Swaps a speaker-level split for a cover story about the cooler city",
+          "distractors": [
+            { "text": "Recovers the kick click from a singer's interview as if that were mix", "kind": "nearby", "rationale": "An interview is a personality card, not a desk split." },
+            { "text": "Is required, because desks cannot be heard and only magazines count", "kind": "reversed", "rationale": "Desks can be heard. Magazines are the substitute." },
+            { "text": "Is the only honest way to refuse a celebrity list when naming a scene", "kind": "subtle", "rationale": "Fashion language is how celebrity lists sneak back in." }
+          ],
+          "correctExplanation": "Engineering is click versus smear. Fashion is a cooler-city cover story.",
+          "objectiveIds": ["Hear Morrisound versus Sunlight as engineering decisions, not fashion"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-hist20-2",
+          "stem": "A bar where pick and kick stay events, versus a bar where guitar is a surface, shows:",
+          "correctAnswer": "Two riff-and-desk doctrines under one genre name, not one old-school object",
+          "distractors": [
+            { "text": "That the surface bar is automatically worse because it is less famous", "kind": "nearby", "rationale": "Fame is not the contrast. The guitar's job is." },
+            { "text": "That both bars must be the same doctrine measured at two metronome marks", "kind": "reversed", "rationale": "Tempo is not the split. Separation versus surface is." },
+            { "text": "That you should wait for a jazz exam before either bar can be described", "kind": "misapplied", "rationale": "No exam gates hearing pick, kick, and surface." }
+          ],
+          "correctExplanation": "Events versus surface. One name, two doctrines. Old-school is not one object.",
+          "objectiveIds": ["Contrast Florida and Stockholm as two production doctrines under one genre name"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-hist20-3",
+          "stem": "If you only have fashion language for the two rooms, a later listening pass will typically:",
+          "correctAnswer": "Lack a mechanism for pointing at click versus smear on the speakers",
+          "distractors": [
+            { "text": "Automatically sort every later branch by which city had the better clubs", "kind": "nearby", "rationale": "Clubs are gossip. The missing mechanism is the desk split." },
+            { "text": "Be enough, because a magazine cover already is the engineering claim", "kind": "reversed", "rationale": "A cover is fashion. Engineering is what the speakers do." },
+            { "text": "Force later mixes into a blast catalog whether the desk was dry or wet", "kind": "subtle", "rationale": "Kit taxonomy is a later argument. The gap here is desk language." }
+          ],
+          "correctExplanation": "Without click-versus-smear words, you cannot point. Fashion will not do that work.",
+          "objectiveIds": ["Hear Morrisound versus Sunlight as engineering decisions, not fashion"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-florida-10",
+      "conceptId": "dm-florida",
+      "title": "Clarity, mute, and a click",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-stockholm",
+      "explanation": [
+        "Clarity here is a DAU listen, not a compliment and not the whole of Florida. Palm-muted figures punch the cell into syllables. The kit, especially the kick, is often tracked so the attack reads as a separate event. Point at pick, mute, and drum when they stay separate. Morrisound records are not uniformly clicky, and 'Florida' also names a roster and a circuit.",
+        "Palm-mute punctuation is the right-hand job: chugs and rests that carve the riff into counted hits. The particular drum sound is a tight, often clicky kick that marks those hits. Together they make density without asking the guitar to become a wall.",
+        "Point at those facts on a record. If the pick stays an event, the mute still punches, and the kick still clicks, you are hearing the doctrine. Listing Tampa players is a substitute for that pointing, even when the names are historically real."
+      ],
+      "example": "On a verse, tap the mute hits, then tap the kick. If both stay countable and the guitar does not swallow them, you are pointing at the doctrine, not at a roster.",
+      "whyItMatters": "Later mix arguments sit on this pointing. A Tampa list will not tell you whether pick, mute, and kick stayed events.",
+      "quiz": [
+        {
+          "id": "dm-flo10-1",
+          "stem": "The Florida doctrine, in this lesson's description, is made of which three facts?",
+          "correctAnswer": "Clarity, palm-mute punctuation, and a particular, often clicky drum sound",
+          "distractors": [
+            { "text": "A ranked Tampa roster plus a magazine cover from the same recording year", "kind": "nearby", "rationale": "A roster is the substitute, not the three facts." },
+            { "text": "Buzzsaw midrange walls and a smear that fuses guitar cells into one object", "kind": "reversed", "rationale": "That is the other factory's doctrine." },
+            { "text": "A completed harmony exam required before any mute can count as punctuation", "kind": "misapplied", "rationale": "No exam gates mute, pick, or kick as events." }
+          ],
+          "correctExplanation": "Clarity, mute punctuation, clicky kit. Those three are the doctrine.",
+          "objectiveIds": ["Name clarity, palm-mute punctuation, and a particular drum sound as the Florida doctrine"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-flo10-2",
+          "stem": "You can point at the Florida doctrine on a record when you can:",
+          "correctAnswer": "Show pick as an event, mute as punctuation, and kick as a click",
+          "distractors": [
+            { "text": "Name more Tampa players than the last paragraph managed to list", "kind": "nearby", "rationale": "A longer roster is still a roster, not pointing." },
+            { "text": "Replace those three facts with a roster and call pointing done", "kind": "reversed", "rationale": "That is the substitute this lesson drops." },
+            { "text": "Wait for a blast taxonomy before the kick is allowed to click", "kind": "misapplied", "rationale": "You can hear a clicky kick without that catalog." }
+          ],
+          "correctExplanation": "Pick, mute, kick as events. Pointing is those facts, not a roster.",
+          "objectiveIds": ["Point at those facts on a record instead of naming a roster"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-flo10-3",
+          "stem": "Palm-mute punctuation and a clicky kick together are doing which Florida job?",
+          "correctAnswer": "Carving density into counted hits without turning the guitar into a wall",
+          "distractors": [
+            { "text": "Proving the players are more famous than a Stockholm recording session", "kind": "nearby", "rationale": "Fame is not the job. Counted hits are." },
+            { "text": "Stacking midrange so pick and kick fuse into one dirty guitar surface", "kind": "reversed", "rationale": "Fuse-into-wall is the other factory." },
+            { "text": "Replacing the vocal's rhythm job so the singer can stop having a register", "kind": "subtle", "rationale": "Mute and kick sit beside the vocal. They do not retire it." }
+          ],
+          "correctExplanation": "Counted hits, not a wall. Mute and clicky kick carve the density.",
+          "objectiveIds": ["Name clarity, palm-mute punctuation, and a particular drum sound as the Florida doctrine"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "dm-stockholm-10",
+      "conceptId": "dm-stockholm",
+      "title": "Buzzsaw as a midrange wall",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-history"],
+      "goDeeper": "dm-production-doctrine",
+      "explanation": [
+        "Buzzsaw guitars are a spectral claim: a midrange-forward distortion that turns stacked cells into one dirty surface. A DAU Stockholm listen wants that dirt in the middle of the speaker, not a separated pick tick. You hear a wall before you hear a syllable. The city is not identical with one pedal or one desk.",
+        "Dirtier midrange is the construction, not a failure to mix. Cells fuse because the guitar occupies the same band as its neighbor and as the vocal. An articulate desk would have refused that fuse. This factory chose it, and the riff doctrine follows the smear.",
+        "The HM-2 wall is a spectrum you can describe: midrange energy, a buzzy edge, stacked intervals that smear. Treating it as a brand sticker replaces the hearing with a pedal name. The pedal is a tool that can make that spectrum. The wall is the doctrine."
+      ],
+      "example": "A stacked chromatic cell that reads as one buzzy midrange object rather than as syllables. That is the wall. You do not need the pedal's catalog number to say so.",
+      "whyItMatters": "If the wall is only a sticker, you cannot hear why later forks kept or refused that smear.",
+      "quiz": [
+        {
+          "id": "dm-stk10-1",
+          "stem": "Buzzsaw guitars and a dirtier midrange, as the Stockholm doctrine, mean:",
+          "correctAnswer": "A midrange-forward surface that fuses stacked cells into one dirty wall",
+          "distractors": [
+            { "text": "A separated pick tick with a clicky kick as the whole of the doctrine", "kind": "nearby", "rationale": "That is the Florida doctrine, not the wall." },
+            { "text": "A failure to mix, so the wall is only a mistake the desk forgot to fix", "kind": "reversed", "rationale": "The fuse is chosen construction, not a forgotten fix." },
+            { "text": "A brand contest over which pedal logo must appear in the liner notes", "kind": "misapplied", "rationale": "A logo is a sticker. The doctrine is the spectrum." }
+          ],
+          "correctExplanation": "Buzzsaw surface, dirtier midrange, fused cells. That is the doctrine.",
+          "objectiveIds": ["Name buzzsaw guitars and a dirtier midrange as the Stockholm doctrine"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-stk10-2",
+          "stem": "Describing the HM-2 wall as spectrum rather than a brand sticker means you:",
+          "correctAnswer": "Name midrange energy, a buzzy edge, and stacked intervals that smear",
+          "distractors": [
+            { "text": "Name the pedal first and treat the hearing as optional extra credit", "kind": "nearby", "rationale": "The pedal name is the sticker this lesson drops." },
+            { "text": "Treat the sticker as the doctrine and the spectrum as a shop detail", "kind": "reversed", "rationale": "That swaps sticker and spectrum." },
+            { "text": "Wait for a Florida click before any midrange wall is allowed to count", "kind": "subtle", "rationale": "The wall is its own doctrine. It does not wait on a click." }
+          ],
+          "correctExplanation": "Midrange, buzzy edge, smear. Spectrum is the wall. A sticker is not.",
+          "objectiveIds": ["Describe the HM-2 wall as spectrum, not as a brand sticker"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-stk10-3",
+          "stem": "You hear guitar cells fuse into one dirty midrange object. That hearing is:",
+          "correctAnswer": "The Stockholm doctrine: buzzsaw surface and dirtier midrange as construction",
+          "distractors": [
+            { "text": "Proof the players failed a clarity exam and so the record does not count", "kind": "nearby", "rationale": "Clarity is the other factory. Fuse is this one's job." },
+            { "text": "The Florida doctrine, because any distorted guitar is already a clicky kick", "kind": "reversed", "rationale": "Distortion is not a click. Florida is the separated events." },
+            { "text": "A lyric-trivia fact that replaces the need to hear guitar or kit at all", "kind": "misapplied", "rationale": "A lyric line does not decode a midrange wall." }
+          ],
+          "correctExplanation": "Fused dirty midrange is the Stockholm job. Construction, not a failed exam.",
+          "objectiveIds": ["Name buzzsaw guitars and a dirtier midrange as the Stockholm doctrine"],
+          "prerequisiteConceptIds": ["dm-history"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-production-doctrine-10",
+      "conceptId": "dm-production-doctrine",
+      "title": "Mix as a compositional choice",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-florida", "dm-stockholm"],
+      "goDeeper": "dm-brutal",
+      "diagram": "dm-two-factories",
+      "explanation": [
+        "Once both factories are audible, the mix stops being a coat of paint. Dry separation and midrange smear are how the composition is presented, and they change what the riff is. A cell that stays separate is a different object from a cell that fuses into a wall.",
+        "Treat the mix as part of the composition. Kick click, pick attack, guitar width, and how much midrange the vocal shares with the strings are writing decisions made at the desk. Changing them rewrites the bar even when the tablature stays put.",
+        "A drier guitar leaves cells as counted events; a wetter or more mid-smeared guitar glues them. Predict the fuse: more shared midrange, less pick tick, more wall. Predict the separate: less smear, more attack, more punctuation. That prediction is the doctrine."
+      ],
+      "example": "Same tablature, two mixes: one with pick tick and kick click, one with fused midrange. The cell is a different object. The desk wrote that difference.",
+      "whyItMatters": "If mix is only paint, you will argue about fashion. If mix is composition, you can predict fuse versus separate.",
+      "quiz": [
+        {
+          "id": "dm-pdo10-1",
+          "stem": "Treating the mix as part of the composition is a claim that:",
+          "correctAnswer": "Desk choices rewrite the bar even when the written cell stays put",
+          "distractors": [
+            { "text": "Loudness alone is the composition and the riff cells do not matter", "kind": "nearby", "rationale": "Loudness is playback. Desk choices rewrite the object." },
+            { "text": "The mix is only paint, so cells stay the same object at any smear", "kind": "reversed", "rationale": "Paint is the model this lesson drops." },
+            { "text": "Only a later branch catalog can justify mentioning kick click at all", "kind": "subtle", "rationale": "Kick click is already a compositional fact here." }
+          ],
+          "correctExplanation": "The desk rewrites the bar. Tablature staying put does not freeze the object.",
+          "objectiveIds": ["Treat the mix as part of the composition"],
+          "prerequisiteConceptIds": ["dm-florida", "dm-stockholm"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-pdo10-2",
+          "stem": "A wetter or more mid-smeared guitar, compared with a drier one, typically:",
+          "correctAnswer": "Glues cells into a fused wall as shared midrange rises and pick tick falls",
+          "distractors": [
+            { "text": "Automatically makes the kick clickier than a dry, articulate tracking room", "kind": "nearby", "rationale": "Smear glues. Click is the drier, more separate claim." },
+            { "text": "Leaves cells more separate, because smear always increases pick attack", "kind": "reversed", "rationale": "Smear reduces pick tick. Separate is the drier job." },
+            { "text": "Changes only the lyric register, leaving guitar cells untouched as objects", "kind": "misapplied", "rationale": "The guitar object is what smear changes." }
+          ],
+          "correctExplanation": "More smear, more fuse. Drier tracking keeps cells as events.",
+          "objectiveIds": ["Predict how a drier or wetter guitar changes whether cells fuse or stay separate"],
+          "prerequisiteConceptIds": ["dm-florida", "dm-stockholm"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-pdo10-3",
+          "stem": "Choosing a drier guitar over a smeared one is a trade that usually:",
+          "correctAnswer": "Keeps cells as counted events at the cost of the midrange wall's fuse",
+          "distractors": [
+            { "text": "Guarantees a better record because dry mix is always the moral upgrade", "kind": "nearby", "rationale": "Dry is a job, not a grade. This course refuses that rank." },
+            { "text": "Fuses cells harder, as if dry tracking were the way walls get built", "kind": "reversed", "rationale": "Dry tracking is how cells stay separate, not how walls fuse." },
+            { "text": "Removes any need for palm-mute punctuation or a kick attack in the bar", "kind": "subtle", "rationale": "Drier mix presents those attacks. It does not retire them." }
+          ],
+          "correctExplanation": "Dry keeps events; smear buys the wall. That trade is the doctrine.",
+          "objectiveIds": ["Predict how a drier or wetter guitar changes whether cells fuse or stay separate"],
+          "prerequisiteConceptIds": ["dm-florida", "dm-stockholm"],
+          "difficultyTier": 2,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "dm-gore-vs-occult-10",
+      "conceptId": "dm-gore-vs-occult",
+      "title": "Lyrical domains as registers",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-listening"],
+      "goDeeper": "dm-history",
+      "explanation": [
+        "Gore, occult imagery, and social disgust are lyrical registers — bands of vocabulary a vocal can occupy, the way a growl occupies a frequency band. They are not a morality ranking and not a trivia contest about who wrote the grossest line.",
+        "A register here is a domain of images that sits on the rhythm of the vocal. Gore tends toward body and viscera as texture. Occult tends toward ritual and cosmology as texture. Social disgust tends toward rot in institutions. Each can ride the same riff cell.",
+        "Refuse lyric trivia as a substitute for construction. Knowing a famous corpse line does not tell you whether the guitar is a wall, whether the kit is a roll, or where the vocal attacks in the bar. The lyric domain is one layer. It is not the song."
+      ],
+      "example": "The same chromatic cell under a viscera line, then under a ritual line. The lyric domain moved. The riff job did not. Trivia about the grossest line would have missed that.",
+      "whyItMatters": "If lyrics are only trivia or a morality play, you will skip the bar. Registers sit on construction. They do not replace it.",
+      "quiz": [
+        {
+          "id": "dm-gvo10-1",
+          "stem": "Gore, occult, and social disgust are treated here as which kind of object?",
+          "correctAnswer": "Lyrical registers: imagery domains a vocal can occupy as a texture layer",
+          "distractors": [
+            { "text": "A ranked morality scale that proves one scene heavier and therefore better", "kind": "misconception", "rationale": "Heavier-as-better is a ranking this course refuses." },
+            { "text": "Trivia categories whose only job is to replace riff and kit construction", "kind": "reversed", "rationale": "Trivia is the substitute. Registers sit on construction." },
+            { "text": "Kit grammars that decide whether a blast or a d-beat is allowed at all", "kind": "misapplied", "rationale": "Lyric domains are not kit grammar." }
+          ],
+          "correctExplanation": "Registers are imagery bands. Morality ranks and trivia lists are other objects.",
+          "objectiveIds": ["Treat gore, occult, and social disgust as lyrical registers"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-gvo10-2",
+          "stem": "Lyric trivia fails as a substitute for musical construction because it:",
+          "correctAnswer": "Names a famous line without naming guitar job, kit grammar, or attack",
+          "distractors": [
+            { "text": "Is forbidden even as a supporting detail after the construction is named", "kind": "nearby", "rationale": "A line may support. It may not replace the bar." },
+            { "text": "Is required, because lyrics are the only layer this music is allowed", "kind": "reversed", "rationale": "Lyrics are one layer. Construction is still the song." },
+            { "text": "Automatically recovers the desk doctrine from the corpse-line word count", "kind": "misapplied", "rationale": "Word count does not decode a desk." }
+          ],
+          "correctExplanation": "A famous line is not guitar, kit, or vocal attack. Trivia is a substitute.",
+          "objectiveIds": ["Refuse trivia about lyrics as a substitute for musical construction"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-gvo10-3",
+          "stem": "A gore line and an occult line over the same riff cell are best described as:",
+          "correctAnswer": "Two lyrical registers that can ride one construction without ranking it",
+          "distractors": [
+            { "text": "Proof that the gore line is the heavier, therefore better, of the pair", "kind": "nearby", "rationale": "Heavier-as-better is a morality rank, not a register." },
+            { "text": "A morality play whose winner decides whether the riff is allowed to exist", "kind": "reversed", "rationale": "Registers do not license the riff. They sit on it." },
+            { "text": "A reason to ignore mix, kit, and cell once a lyric domain has been named", "kind": "subtle", "rationale": "Naming a domain is not permission to skip construction." }
+          ],
+          "correctExplanation": "Two registers, one cell. The lyric domain moved. The riff job did not.",
+          "objectiveIds": ["Treat gore, occult, and social disgust as lyrical registers"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-double-kick-hist-10",
+      "conceptId": "dm-double-kick-hist",
+      "title": "When one foot dropped the pulse",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-listening"],
+      "goDeeper": "dm-brutal",
+      "explanation": [
+        "When a single pedal could no longer subdivide the bar at the speed the riff wanted, a second beater became useful. Double-kick is that subdivision tool. It predates death metal in NWOBHM and thrash; do not date the genre from the moment one foot 'failed'. Hear two beaters as a grid option you can point at, not a trophy and not a founding date.",
+        "Hear it as history, not as sport. The question is not who played more notes. The question is when the grammar of the floor and kick changed from a rock two-and-four to a rolled or doubled pulse under the guitar cell. That is a date in construction, not a trophy.",
+        "Mark the moment on a record: the right foot is no longer enough to state the pulse the riff is counting. A second beater fills the grid. You do not need a drum-off ranking to hear that the subdivision changed. The marker is the extra beater doing a job one foot dropped."
+      ],
+      "example": "A bar where one foot still states a rock pulse, then a bar where two beaters fill a subdivision the riff is already counting. The second bar is the marker.",
+      "whyItMatters": "If double-kick is only sport, you will miss the date the floor grammar changed. Subdivision is the marker. Trophies are not.",
+      "quiz": [
+        {
+          "id": "dm-dkh10-1",
+          "stem": "The right foot stopped being enough, as a historical marker, at the point when:",
+          "correctAnswer": "One pedal could no longer subdivide the pulse the riff was already counting",
+          "distractors": [
+            { "text": "A drum-off ranking proved one player more famous than the previous decade", "kind": "nearby", "rationale": "A ranking is sport. The marker is a dropped job." },
+            { "text": "Hand speed on the snare replaced the need for any kick pulse in the bar", "kind": "reversed", "rationale": "The kick job moved to two beaters. It did not vanish." },
+            { "text": "A fashion magazine retired the single pedal as a moral rather than grid fact", "kind": "misapplied", "rationale": "Magazines do not mark subdivision. The grid does." }
+          ],
+          "correctExplanation": "One foot dropped the pulse the riff was counting. That is the marker.",
+          "objectiveIds": ["Mark when the right foot stopped being enough"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-dkh10-2",
+          "stem": "Hearing double-kick as historical subdivision rather than sport means you:",
+          "correctAnswer": "Ask when the floor-and-kick grammar changed, not who played more notes",
+          "distractors": [
+            { "text": "Rank players by note count and treat that ranking as the construction date", "kind": "nearby", "rationale": "Note-count rank is sport, not a grammar date." },
+            { "text": "Treat a trophy as the marker and the grid change as optional extra credit", "kind": "reversed", "rationale": "That swaps sport for history." },
+            { "text": "Wait for a Florida roster before any second beater is allowed to count", "kind": "subtle", "rationale": "A roster is not the subdivision marker." }
+          ],
+          "correctExplanation": "Grammar change, not note count. History is a date in the grid.",
+          "objectiveIds": ["Hear double-kick as a historical subdivision, not as sport"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-dkh10-3",
+          "stem": "On a record, a second beater filling a pulse one foot can no longer state is:",
+          "correctAnswer": "The historical marker that the right-foot job has been handed to two beaters",
+          "distractors": [
+            { "text": "Proof of a sport win, so the construction date is whichever player is famous", "kind": "nearby", "rationale": "Fame is not the marker. The extra beater's job is." },
+            { "text": "Evidence that the riff slowed down and no longer needs a kick pulse at all", "kind": "reversed", "rationale": "The pulse is still needed. One foot could not state it." },
+            { "text": "A mix argument about smear that does not involve the kit's grid in the bar", "kind": "misapplied", "rationale": "This is kit subdivision, not a desk smear." }
+          ],
+          "correctExplanation": "Two beaters doing a job one foot dropped. That is the historical marker.",
+          "objectiveIds": ["Mark when the right foot stopped being enough"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

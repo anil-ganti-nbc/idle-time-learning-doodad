@@ -1,0 +1,658 @@
+{
+  "courseId": "semi-litho",
+  "moduleId": "semi-l-euv",
+  "lessons": [
+    {
+      "id": "semi-euv-10",
+      "conceptId": "semi-euv",
+      "title": "13.5 nm, and the lenses die",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["semi-litho", "semi-duv"],
+      "goDeeper": "semi-euv-source",
+      "diagram": "euv",
+      "explanation": [
+        "EUV lithography is a later light source, not the first word of this course. After 193 nm immersion and a k1 floor, some pitches still do not fit one DUV exposure. The next λ that industry actually built is 13.5 nm — extreme ultraviolet. Rayleigh still holds: smaller λ, smaller CD, other terms fixed. The architecture does not hold. The lenses you just learned die.",
+        "Almost everything absorbs 13.5 nm, including air and every practical glass. There is no refractive column. The optic is a chain of multilayer mirrors. The mask is reflective too: an absorber pattern on a mirror, not chrome-on-glass you shine through. The whole path sits in vacuum. Those three facts — mirrors, reflective mask, vacuum — are the course. Source details, pellicles, and photon noise get their own units.",
+        "EUV did not retire DUV. It took the layers a single 193 nm pass could not print and made some of them a single 13.5 nm pass. Multipatterning still exists. Treat 'EUV node' as 'this layer may be one EUV exposure', not as a synonym for magic."
+      ],
+      "example": "A contact that was two 193 nm litho-etch passes can become one 13.5 nm exposure. The implant block next to it stays 193 nm. Same wafer, two lamps. The contact tool is a mirror chain in vacuum. The implant tool is still a lens.",
+      "whyItMatters": "If EUV is 'lithography, but newer', you will not understand why the column cannot be glass and why DUV bays are still full.",
+      "quiz": [
+        {
+          "id": "eu10-1",
+          "stem": "EUV lithography uses 13.5 nm light and mirrors because:",
+          "correctAnswer": "Practical refractive materials absorb that wavelength, so a lens column dies",
+          "distractors": [
+            { "text": "Mirrors are cheaper than glass at 193 nm too, so DUV already abandoned lenses", "kind": "nearby", "rationale": "DUV still uses glass. The die-off is at 13.5 nm." },
+            { "text": "13.5 nm cannot be imaged at all, even with mirrors", "kind": "reversed", "rationale": "Mirrors are how it is imaged." },
+            { "text": "13.5 nm still transmits in fused silica, so the DUV lens column can be kept", "kind": "misapplied", "rationale": "Glass eats 13.5 nm. That is why the column flipped." }
+          ],
+          "correctExplanation": "Glass works at 193. Glass eats 13.5. That is why the optic flipped.",
+          "objectiveIds": ["Identify 13.5 nm as the light and mirrors as the optic because refractive materials absorb it"],
+          "prerequisiteConceptIds": ["semi-litho", "semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "eu10-2",
+          "stem": "A DUV path versus an EUV path differs first in that:",
+          "correctAnswer": "DUV sends light through glass lenses; EUV bounces it off a chain of mirrors",
+          "distractors": [
+            { "text": "Both use the same transmissive chrome-on-glass column in air", "kind": "reversed", "rationale": "EUV cannot use that column." },
+            { "text": "EUV deletes the mask and writes with the stage alone", "kind": "nearby", "rationale": "There is still a reflective original." },
+            { "text": "DUV requires vacuum and EUV runs in open air", "kind": "subtle", "rationale": "Air is the EUV problem, not the DUV one." }
+          ],
+          "correctExplanation": "Refractive versus reflective. That is the architectural break.",
+          "objectiveIds": ["Contrast an EUV reflective path with a DUV refractive lens path"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "eu10-3",
+          "stem": "EUV is a later light source in this course because:",
+          "correctAnswer": "It is what you reach after DUV lenses, NA, and k1 have already been spent",
+          "distractors": [
+            { "text": "It is the first word of lithography, before resist exists", "kind": "reversed", "rationale": "The course printed layers with 193 nm first on purpose." },
+            { "text": "It replaces CMP so wafers no longer need to be flat", "kind": "nearby", "rationale": "Focus still needs a plane." },
+            { "text": "It grows the gate oxide from 13.5 nm photons", "kind": "misapplied", "rationale": "EUV writes a stencil. It does not oxidize." }
+          ],
+          "correctExplanation": "Rayleigh, DUV, then a new λ. Not the other way around.",
+          "objectiveIds": ["Contrast an EUV reflective path with a DUV refractive lens path"],
+          "prerequisiteConceptIds": ["semi-litho", "semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-euv-20",
+      "conceptId": "semi-euv",
+      "title": "The column that cannot be glass",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["semi-litho", "semi-duv"],
+      "goDeeper": "semi-euv-source",
+      "diagram": "duv-vs-euv",
+      "explanation": [
+        "The ten-minute unit named 13.5 nm and the death of lenses. This one is the system that sentence forces. A DUV scanner is a lamp, a transmissive reticle, a glass column in air, a wafer on a stage. An EUV scanner is a tin-plasma source, a reflective reticle, a chain of multilayer mirrors, and a vacuum chamber around all of it. Every bounce costs photons. Every millimetre of air costs photons. The architecture is a photon budget before it is a brochure.",
+        "Why glass dies is absorption, not taste. At 13.5 nm the photon energy is high enough that almost every material has a huge absorption coefficient. A lens thick enough to have optical power is a beam dump. A few tens of nanometres of a well-chosen multilayer, stacked so Bragg reflection adds in phase, can reflect a few tens of percent. That is enough to build a column if you accept the loss and put the whole thing in vacuum.",
+        "The mask follows the same physics. You cannot shine through chrome-on-glass. You shine onto a multilayer and let a patterned absorber throw a shadow in reflection. Defects on that mirror are printed. A pellicle, later, is a membrane that must protect that mirror without eating the few photons you have left.",
+        "Do not take this unit as High-NA platform lore. Same λ, same mirror idea, later NA is a later course. Here the claim is smaller: EUV is DUV's successor lamp with a reflective vacuum column, used on the layers 193 nm could not finish in one pass."
+      ],
+      "example": "Trace one photon: tin plasma → collector mirror → illuminator mirrors → reflective mask → projection mirrors → wafer. Six or so reflections, each maybe 60–70% if you are lucky, and the wafer sees a few percent of what the plasma made. A DUV photon mostly went through glass and arrived. That is why source power and dose become factory words at 13.5 nm.",
+      "whyItMatters": "Node-delay stories that stop at 'EUV is hard' are interchangeable. The hard thing is a column that absorbs, on purpose, at every bounce.",
+      "quiz": [
+        {
+          "id": "eu20-1",
+          "stem": "A lens thick enough to have power at 13.5 nm fails because:",
+          "correctAnswer": "The material absorbs the light, so the element is a beam dump, not an optic",
+          "distractors": [
+            { "text": "13.5 nm photons refuse to travel in vacuum", "kind": "reversed", "rationale": "Vacuum is how they travel. Matter is the problem." },
+            { "text": "Glass would raise NA above 4 automatically", "kind": "nearby", "rationale": "Absorption, not a runaway NA, is the failure." },
+            { "text": "The resist cannot be coated in any EUV tool", "kind": "misapplied", "rationale": "Resist still coats. The column is the break." }
+          ],
+          "correctExplanation": "Absorption kills refractive power. Mirrors are the leftover option.",
+          "objectiveIds": ["Identify 13.5 nm as the light and mirrors as the optic because refractive materials absorb it"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "eu20-2",
+          "stem": "An EUV mask is reflective rather than transmissive because:",
+          "correctAnswer": "Light must bounce off a multilayer; it cannot go through a glass plate",
+          "distractors": [
+            { "text": "Chrome-on-glass suddenly transmits 13.5 nm better than 193 nm", "kind": "reversed", "rationale": "Glass is worse here, not better." },
+            { "text": "Reflective masks delete overlay as a budget", "kind": "nearby", "rationale": "Placement is still a budget." },
+            { "text": "The wafer is now the mask", "kind": "subtle", "rationale": "There is still an original." }
+          ],
+          "correctExplanation": "Absorber on a mirror. Same job as chrome, opposite direction of light.",
+          "objectiveIds": ["Contrast an EUV reflective path with a DUV refractive lens path"],
+          "prerequisiteConceptIds": ["semi-litho", "semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "eu20-3",
+          "stem": "A photon budget appears at EUV more loudly than at DUV because:",
+          "correctAnswer": "Each mirror bounce and any leftover gas spends a fraction of an already scarce beam",
+          "distractors": [
+            { "text": "193 nm lenses absorb more than EUV mirrors by design", "kind": "reversed", "rationale": "Glass at 193 is the efficient path." },
+            { "text": "EUV tools do not use a source", "kind": "nearby", "rationale": "They do. The next unit is that source." },
+            { "text": "Dose is no longer measured at the wafer", "kind": "misapplied", "rationale": "Dose is more precious, not deleted." }
+          ],
+          "correctExplanation": "Lossy column, vacuum, few photons at the film. That is the system.",
+          "objectiveIds": ["Contrast an EUV reflective path with a DUV refractive lens path"],
+          "prerequisiteConceptIds": ["semi-duv"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        }
+      ]
+    },
+    {
+      "id": "semi-euv-source-10",
+      "conceptId": "semi-euv-source",
+      "title": "A laser on tin, tens of thousands of times a second",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-euv-mirrors",
+      "diagram": "euv",
+      "explanation": [
+        "The 13.5 nm light is not a lamp you buy at a catalogue. A high-power CO2 laser hits tin droplets, tens of thousands of times a second, and the resulting plasma emits in the EUV band. A collector mirror gathers a fraction of that emission into the illuminator. That is the industrial source. A synchrotron in every fab is not the high-volume path.",
+        "Source power is a throughput and dose budget, not a brochure wattage. The wafer needs a certain mJ/cm² to switch the resist. The column eats most of what the plasma makes. What remains, divided by the dose you demand, is how many wafers per hour you can print. Raise the requested dose to fight later stochastic noise and the same source prints fewer wafers. Lower the dose and you print faster and noisier.",
+        "Tin debris on the collector is a scheduled degradation: the mirror that stares at the plasma slowly dirties. This unit does not own collector recipes. It owns the sentence: the source is a pulsed tin plasma, and its useful output is the photons that survive to the wafer, per second."
+      ],
+      "example": "A layer that needs 60 mJ/cm² at the resist, after a column that delivers a few percent of source output, sets a wafers-per-hour number. Doubling dose to quiet stochastics roughly halves that number unless the laser-and-tin machine also doubles useful output. The 'source power' slide is that quotient.",
+      "whyItMatters": "A foundry slip that mentions 'source power' is talking about photons per second versus dose, not about whether the tool is plugged in.",
+      "quiz": [
+        {
+          "id": "es10-1",
+          "stem": "The high-volume EUV source in this course is:",
+          "correctAnswer": "A CO2 laser hitting tin droplets tens of thousands of times a second",
+          "distractors": [
+            { "text": "A mercury lamp behind a 193 nm lens", "kind": "nearby", "rationale": "That is a DUV story." },
+            { "text": "A synchrotron built under every scanner", "kind": "subtle", "rationale": "Not the HVM path this course names." },
+            { "text": "The Czochralski melt glowing as it freezes", "kind": "misapplied", "rationale": "The puller is not the illuminator." }
+          ],
+          "correctExplanation": "Laser, tin, plasma, 13.5 nm. That is the object.",
+          "objectiveIds": ["Describe the source as a CO2 laser hitting tin droplets tens of thousands of times a second"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "es10-2",
+          "stem": "Source power is a budget because:",
+          "correctAnswer": "Useful photons per second, divided by the dose the resist demands, set wafers per hour",
+          "distractors": [
+            { "text": "The number on the brochure prints the wafer by itself", "kind": "reversed", "rationale": "The column and the dose eat the brochure number." },
+            { "text": "Power only heats the chuck so resist melts on purpose", "kind": "nearby", "rationale": "The budget is photons at the film." },
+            { "text": "Power sets the reticle reduction ratio", "kind": "misapplied", "rationale": "Reduction is geometry." }
+          ],
+          "correctExplanation": "Photons/second versus mJ/cm² is throughput. That is the budget.",
+          "objectiveIds": ["Explain why source power is a throughput and dose budget, not a brochure number"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "es10-3",
+          "stem": "Raising the requested EUV dose without raising useful source output typically:",
+          "correctAnswer": "Cuts throughput because each wafer must collect more of a fixed photon stream",
+          "distractors": [
+            { "text": "Speeds the scanner because dose is free at 13.5 nm", "kind": "reversed", "rationale": "More dose is more time or more source." },
+            { "text": "Deletes the need for vacuum", "kind": "subtle", "rationale": "Air still eats EUV." },
+            { "text": "Converts the tool back into a DUV lens column", "kind": "nearby", "rationale": "Dose is not architecture." }
+          ],
+          "correctExplanation": "Same stream, hungrier wafer, fewer wafers per hour.",
+          "objectiveIds": ["Explain why source power is a throughput and dose budget, not a brochure number"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-euv-mirrors-10",
+      "conceptId": "semi-euv-mirrors",
+      "title": "Bragg stacks once glass has died",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-euv-vacuum",
+      "diagram": "duv-vs-euv",
+      "explanation": [
+        "A useful EUV projection optic in high-volume manufacturing is a multilayer Bragg reflector: dozens of alternating thin films, thicknesses chosen so reflections from the interfaces add in phase at 13.5 nm. It is a quarter-wave stack in spirit, not a silvered bathroom mirror. Peak reflectivity is a few tens of percent, not 99%. That is the practical HVM projection optic once refractive glass has died. Collectors can be grazing-incidence; research tools have used zone plates. Those do not retire the stack in the scanner column.",
+        "The column is therefore a chain. Illuminator mirrors shape the beam onto the reflective mask. Projection mirrors form the reduced image on the wafer. Each bounce keeps maybe two-thirds of the light and dumps the rest as heat and scatter. Six bounces at 65% is about 8% through. The source has to be huge because the optic is a sieve on purpose.",
+        "Angle and wavelength are picky. The stack is tuned for a band around 13.5 nm and a range of incidence angles. Light outside that band is just heat. This unit does not own High-NA anamorphic geometry — that is a later platform. It owns why the optic is a stack, and why the stack is a photon tax."
+      ],
+      "example": "A six-mirror projection path at 66% each delivers 0.66⁶ ≈ 8% of what entered it, before the illuminator and the mask take their cuts. Doubling source power does not double dose if you also add a bounce. The column's length in mirrors is a factory number.",
+      "whyItMatters": "Mirror count is not trivia. It is why source-power slides and dose slides are the same argument.",
+      "quiz": [
+        {
+          "id": "em10-1",
+          "stem": "Multilayer Bragg mirrors are the EUV optic because:",
+          "correctAnswer": "They are the practical way to reflect 13.5 nm after refractive glass has died",
+          "distractors": [
+            { "text": "They transmit 13.5 nm better than fused silica lenses", "kind": "reversed", "rationale": "They reflect. They do not become the old lenses." },
+            { "text": "They raise wafer diameter", "kind": "nearby", "rationale": "A stack is not a saw." },
+            { "text": "They set resist tone", "kind": "misapplied", "rationale": "Tone is chemistry." }
+          ],
+          "correctExplanation": "Glass does not work as a 13.5 nm lens in the HVM column. A tuned stack is the leftover reflector.",
+          "objectiveIds": ["Explain multilayer Bragg mirrors as the practical HVM projection optic once glass dies"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "em10-2",
+          "stem": "Each extra bounce in the column typically:",
+          "correctAnswer": "Keeps only a fraction of the beam, so dose at the wafer falls unless the source grows",
+          "distractors": [
+            { "text": "Creates photons, so longer columns are brighter", "kind": "reversed", "rationale": "Bounces spend photons." },
+            { "text": "Converts the tool to immersion DUV", "kind": "nearby", "rationale": "A mirror is not water." },
+            { "text": "Removes the need for a mask", "kind": "subtle", "rationale": "The mask is one of the mirrors." }
+          ],
+          "correctExplanation": "A sieve with more meshes passes less. That is the chain.",
+          "objectiveIds": ["Predict why each bounce costs photons and why the column is a chain of mirrors"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "em10-3",
+          "stem": "The EUV column is a chain of mirrors rather than one optic because:",
+          "correctAnswer": "Illumination and reduction have to happen in reflection, bounce by bounce",
+          "distractors": [
+            { "text": "A single bathroom-silver mirror already has 100% reflectivity at 13.5 nm", "kind": "reversed", "rationale": "Ordinary metals are poor here. Stacks are the point." },
+            { "text": "Mirrors exist to heat the tin until it becomes silicon", "kind": "misapplied", "rationale": "Wrong factory." },
+            { "text": "Rayleigh forbids more than one surface in any lithography", "kind": "nearby", "rationale": "DUV lenses have many elements too. The difference is reflection versus refraction." }
+          ],
+          "correctExplanation": "Shape the beam, image the mask, reduce it — all as reflections.",
+          "objectiveIds": ["Predict why each bounce costs photons and why the column is a chain of mirrors"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-euv-vacuum-10",
+      "conceptId": "semi-euv-vacuum",
+      "title": "Air eats EUV, so the column is a chamber",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-pellicle",
+      "diagram": "euv",
+      "explanation": [
+        "A few millimetres of air will swallow a 13.5 nm beam. The absorption is molecular, not a cleanliness slogan: oxygen, nitrogen, water, anything with electrons at the wrong binding energies. The entire optical path — source, mirrors, mask, wafer stage — lives in vacuum. The tool is a chamber that happens to print, not a lens stand with a pump bolted on.",
+        "A leak or a vented beam path does not 'dim the room'. It eats the dose at the wafer. The resist sees fewer photons, CD walks, stochastic defects rise, or the exposure time blows past the throughput budget. Residual gas also cracks and deposits on the mirrors, so vacuum is a lifetime issue as well as a dose issue.",
+        "DUV ran in air because glass and 193 nm allow it. EUV cannot. When a briefing says the tool is 'down for vacuum', they are not doing housekeeping. They are recovering the medium the photons can travel in."
+      ],
+      "example": "A small air inrush during a wafer exchange raises the column pressure for a handful of fields. Those fields print as if the dose dropped — because it did. The recipe number did not change. The path stopped being empty.",
+      "whyItMatters": "Vacuum is not a vibe. It is the medium. A vented column is a missing lamp.",
+      "quiz": [
+        {
+          "id": "ev10-1",
+          "stem": "The EUV column is a vacuum chamber because:",
+          "correctAnswer": "Air absorbs 13.5 nm, so the beam has to travel in emptiness",
+          "distractors": [
+            { "text": "Air is required to keep DUV lenses from drying out", "kind": "nearby", "rationale": "DUV likes air. EUV cannot have it." },
+            { "text": "Vacuum grows the thermal gate oxide", "kind": "misapplied", "rationale": "Oxidation wants oxidant, not this chamber." },
+            { "text": "Rayleigh only holds inside a pump", "kind": "subtle", "rationale": "Rayleigh holds. The photons have to arrive first." }
+          ],
+          "correctExplanation": "Matter eats this wavelength. The path is a chamber.",
+          "objectiveIds": ["Explain why air absorbs EUV so the whole column is a vacuum chamber"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ev10-2",
+          "stem": "A leak into the beam path typically:",
+          "correctAnswer": "Eats dose at the wafer even if the scanner recipe is unchanged",
+          "distractors": [
+            { "text": "Makes 13.5 nm travel farther than in vacuum", "kind": "reversed", "rationale": "Gas is the absorber." },
+            { "text": "Converts the mirrors back into fused-silica lenses", "kind": "nearby", "rationale": "A leak is not an architecture swap." },
+            { "text": "Automatically planarizes the incoming wafer", "kind": "misapplied", "rationale": "Vacuum is not CMP." }
+          ],
+          "correctExplanation": "Same recipe, fewer photons through gas, CD and noise move.",
+          "objectiveIds": ["Predict what a vented or leaking beam path does to the dose at the wafer"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ev10-3",
+          "stem": "DUV can run in air while EUV cannot because:",
+          "correctAnswer": "193 nm still transmits through air and glass; 13.5 nm does not",
+          "distractors": [
+            { "text": "EUV tools legally forbid nitrogen for unrelated reasons", "kind": "subtle", "rationale": "The reason is absorption, not a statute." },
+            { "text": "DUV photons cannot exist outside a chamber", "kind": "reversed", "rationale": "DUV is the air-compatible path." },
+            { "text": "Resists only coat in vacuum at 193 nm", "kind": "nearby", "rationale": "Coat is not the medium issue." }
+          ],
+          "correctExplanation": "Wavelength decides whether air is a window or a wall.",
+          "objectiveIds": ["Explain why air absorbs EUV so the whole column is a vacuum chamber"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-pellicle-10",
+      "conceptId": "semi-pellicle",
+      "title": "A membrane that must protect without eating the beam",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-stochastics",
+      "diagram": "euv",
+      "explanation": [
+        "A particle on an EUV mask prints, because the original is in the optical path. A pellicle is a thin membrane that stands off the mask so a particle lands out of focus and does not become a killer on the wafer. That job is old. The EUV version is hard because the membrane must do it without eating the few photons the column has left.",
+        "A pellicle that is not optically free spends transmission. Lower transmission is a lower dose at the wafer unless you slow down or turn the source up. Wrinkles and heating are real, and a later course can live in those materials. This course owns the trade: protect the mask, pay in photons.",
+        "Running without a pellicle is a defect bet: every adders particle on the reticle is a printed defect. Running with a bad pellicle is a dose bet. Neither is free. The stochastic unit next is what those missing photons do to the resist."
+      ],
+      "example": "A pellicle at 80% two-pass transmission (out and back) throws away a fifth of the already-sieved beam. The same layer without a pellicle prints faster and then dies on a single carbon flake that landed in a clear absorber opening.",
+      "whyItMatters": "Pellicle headlines are dose headlines in costume. If the membrane is 'just a dust cover', you will miss why it is a factory argument.",
+      "quiz": [
+        {
+          "id": "pe10-1",
+          "stem": "An EUV pellicle is:",
+          "correctAnswer": "A membrane that must protect the mask without eating the photons",
+          "distractors": [
+            { "text": "A second wafer bonded under the device", "kind": "nearby", "rationale": "It sits at the reticle, not in the stack." },
+            { "text": "A DUV immersion puddle", "kind": "misapplied", "rationale": "Wrong wavelength, wrong job." },
+            { "text": "The tin droplet generator", "kind": "subtle", "rationale": "That is the source." }
+          ],
+          "correctExplanation": "Stand-off dust cover on a reflective original, with a photon tax.",
+          "objectiveIds": ["Describe an EUV pellicle as a membrane that must protect the mask without eating the photons"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "pe10-2",
+          "stem": "A pellicle that is not optically free typically:",
+          "correctAnswer": "Cuts dose at the wafer, so you spend throughput or source to stay legal",
+          "distractors": [
+            { "text": "Creates extra 13.5 nm photons as it wrinkles", "kind": "reversed", "rationale": "A membrane absorbs and scatters. It does not lase." },
+            { "text": "Removes overlay as a budget", "kind": "nearby", "rationale": "Placement is still a budget." },
+            { "text": "Lets the column run in open air", "kind": "subtle", "rationale": "Vacuum is still required." }
+          ],
+          "correctExplanation": "Transmission < 1 is a dose cut. Dose is time or source.",
+          "objectiveIds": ["Predict the dose or throughput cost of a pellicle that is not optically free"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "pe10-3",
+          "stem": "Skipping the pellicle to save photons typically spends:",
+          "correctAnswer": "A defect budget: particles on the mask now print",
+          "distractors": [
+            { "text": "Nothing, because EUV masks cannot hold particles", "kind": "reversed", "rationale": "They can, and they print." },
+            { "text": "The Czochralski orientation notch", "kind": "misapplied", "rationale": "Wrong object." },
+            { "text": "The Rayleigh k1 floor, which vanishes", "kind": "nearby", "rationale": "A dust cover does not repeal imaging theory." }
+          ],
+          "correctExplanation": "Photons versus printed adders. That is the bet.",
+          "objectiveIds": ["Predict the dose or throughput cost of a pellicle that is not optically free"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-stochastics-10",
+      "conceptId": "semi-stochastics",
+      "title": "When the photon count is a small integer",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-na",
+      "diagram": "resist-tone",
+      "explanation": [
+        "At 13.5 nm each photon carries a lot of energy, so a given dose in mJ/cm² is fewer photons than the same number at 193 nm. A contact hole or a thin line now holds a small integer of photons, and of the photoacids those photons generate. Poisson noise on a small integer is not grain on a photograph. It is a hole that does not open, or a line that pinches. That is a stochastic defect.",
+        "This is the EUV version of the rough wall you already met. LER was a wiggly edge. Stochastics is the same statistics loud enough to be a killer defect, because the count in the feature is small. Cleaning the room does not fix it. The lever is dose, resist, and layout — more photons, or a film that uses them more evenly, or a pattern that does not amplify the tail.",
+        "Raise dose and the relative noise falls, and throughput falls with it. That sentence is the whole unit. The twenty-minute variant names the RLS triangle. A later course can call this a scaling wall. Here it is a defect mechanism at EUV doses."
+      ],
+      "example": "A 20 nm contact whose mean photon count in the hole is about 100 has a 1σ of 10%. The left tail does not clear develop. Multiply by a hundred billion contacts and you have a yield model, not bad luck.",
+      "whyItMatters": "When a foundry says EUV 'defectivity' without a particle story, they may mean this. The cleaner is not the lever. The photon budget is.",
+      "quiz": [
+        {
+          "id": "st10-1",
+          "stem": "EUV stochastic defects are:",
+          "correctAnswer": "Photon and photoacid shot noise at EUV doses, loud enough to be a killer",
+          "distractors": [
+            { "text": "Crooked mirrors as a mechanical alignment issue only", "kind": "nearby", "rationale": "Mirrors have other problems. This is counting statistics." },
+            { "text": "Tin being expensive on the commodity market", "kind": "subtle", "rationale": "Price is not Poisson." },
+            { "text": "A wet-etch undercut on the pellicle", "kind": "misapplied", "rationale": "Wrong mechanism." }
+          ],
+          "correctExplanation": "Small counts, fat relative noise, missing holes and pinched lines.",
+          "objectiveIds": ["Explain stochastic defects as photon and photoacid shot noise at EUV doses"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "st10-2",
+          "stem": "Raising dose to fight stochastics typically:",
+          "correctAnswer": "Lowers relative noise and spends throughput, because the wafer must collect more photons",
+          "distractors": [
+            { "text": "Raises relative noise because a larger dose has a larger variance", "kind": "reversed", "rationale": "Variance grows, but relative noise falls as 1/√N." },
+            { "text": "Lets you drop NA, treating extra photons as a substitute for resolution", "kind": "subtle", "rationale": "Dose is not a Rayleigh knob." },
+            { "text": "Kills photoacid noise as well, so LER is unchanged while holes yield", "kind": "nearby", "rationale": "Photon count and acid shot noise are different terms." }
+          ],
+          "correctExplanation": "Noise falls as the square root of count. Count is time.",
+          "objectiveIds": ["Predict why raising dose fights noise and spends throughput"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "st10-3",
+          "stem": "A 'random' missing EUV contact that clusters on a tiny-gap layout is often:",
+          "correctAnswer": "A local photon or acid budget too small for that geometry, not a cleaner miss",
+          "distractors": [
+            { "text": "Proof that CMP never happened on any wafer", "kind": "nearby", "rationale": "Layout-clustered opens are a counting story." },
+            { "text": "A Czochralski grain boundary under every such contact", "kind": "misapplied", "rationale": "The wafer is still one crystal." },
+            { "text": "Evidence that 193 nm lenses have returned", "kind": "subtle", "rationale": "The lamp did not change mid-lot." }
+          ],
+          "correctExplanation": "Geometry amplified the tail. That is still stochastics.",
+          "objectiveIds": ["Predict why raising dose fights noise and spends throughput"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-stochastics-20",
+      "conceptId": "semi-stochastics",
+      "title": "Resolution, roughness, sensitivity — pick two",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-na",
+      "diagram": "resist-tone",
+      "explanation": [
+        "The ten-minute unit said a small integer of photons is a defect. This one is the triangle the resist lives in. Resolution, line-edge roughness, and sensitivity trade. Push sensitivity — a 'faster' resist that switches at a lower dose — and you often used fewer photons to generate the acids, so roughness and missing features get worse. Push resolution with a thinner, higher-contrast film and the volume that holds those photons shrinks. Push smoothness with more dose or less acid diffusion and throughput or blur pays.",
+        "Chemical amplification is why a sparse EUV shower can still print: one photon makes an acid, the acid switches many sites. That gain is also a blur, because acids wander. A metal-oxide resist can absorb more and change the constant. It does not repeal Poisson, and it hands you underlayer and etch-selectivity problems instead. This course will not become a resist-chemistry catalogue. It will say the triangle has a name — RLS — and the factory moves around it.",
+        "Inspection and layout matter because some geometries amplify the tail: tiny gaps, aggressive tips, isolated holes. A hotspot that 'looks random' on a wafer map and clusters on one drawn motif is a stochastic-aware OPC miss, not a cosmic ray. Raising dose still works. It still spends wafers per hour.",
+        "A later course can call this a scaling wall and put High-NA next to it. Here the claim is smaller and physical: at EUV doses the count is small, the triangle is real, and more NA is not more photons."
+      ],
+      "example": "Raise PAG loading to print at 20 mJ/cm² instead of 40. The mean acid count in a tip holds; the variance does not. LER rises and a fraction of tips pinch. The 'faster' resist was the noisier one. A split lot at 40 mJ/cm² is cleaner and half the throughput.",
+      "whyItMatters": "Resist drop-ins and dose knobs are the same triangle. If you treat a new bottle as a filter preset, you will miss the yield bill.",
+      "quiz": [
+        {
+          "id": "st20-1",
+          "stem": "The RLS triangle says that pushing sensitivity typically:",
+          "correctAnswer": "Uses fewer photons or more wandering acids, so roughness or resolution pays",
+          "distractors": [
+            { "text": "Gives resolution, smoothness, and speed with no bill", "kind": "reversed", "rationale": "The triangle is the bill." },
+            { "text": "Sets NA from the resist bottle", "kind": "nearby", "rationale": "NA is the optic." },
+            { "text": "Turns overlay into a resist property", "kind": "misapplied", "rationale": "Placement is a different budget." }
+          ],
+          "correctExplanation": "Faster often means fewer events. Fewer events are noisier.",
+          "objectiveIds": ["Explain stochastic defects as photon and photoacid shot noise at EUV doses"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "st20-2",
+          "stem": "A missing-hole defect that clusters on one drawn motif after a resist 'speed-up' usually:",
+          "correctAnswer": "Is a local count problem the faster film made louder, not a random cleaner miss",
+          "distractors": [
+            { "text": "Proves Poisson has been repealed", "kind": "reversed", "rationale": "Clustering on geometry is the opposite of repeal." },
+            { "text": "Means the tin laser is unplugged", "kind": "nearby", "rationale": "The lot printed. The tail failed." },
+            { "text": "Is fixed by skipping develop", "kind": "subtle", "rationale": "Develop is how you read the solubility map." }
+          ],
+          "correctExplanation": "Same motif, fewer photons, fatter tail. That is RLS, not housekeeping.",
+          "objectiveIds": ["Predict why raising dose fights noise and spends throughput"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "st20-3",
+          "stem": "Raising dose versus switching to a more sensitive resist is a trade because:",
+          "correctAnswer": "Dose buys count and spends wafers per hour; sensitivity saves time and often spends roughness",
+          "distractors": [
+            { "text": "Both are free and always move all three RLS corners the right way", "kind": "reversed", "rationale": "If they were free, there would be no triangle." },
+            { "text": "Only the pellicle vendor can move either knob", "kind": "nearby", "rationale": "Dose and resist are process knobs." },
+            { "text": "NA cancels Poisson at any dose", "kind": "misapplied", "rationale": "NA is resolution versus focus, not photon count." }
+          ],
+          "correctExplanation": "Time versus noise versus size. You pick two.",
+          "objectiveIds": ["Predict why raising dose fights noise and spends throughput"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-na-10",
+      "conceptId": "semi-na",
+      "title": "NA buys pitch and spends the focus slice",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-high-na",
+      "diagram": "dof-trade",
+      "explanation": [
+        "Numerical aperture is n · sin(θ), the sine of the half-angle the optic can accept, times the index of the medium. You already used it at 193 nm, including the water that pushed n above 1. The same definition holds at 13.5 nm. Resolution still scales as 1/NA. Depth of focus still scales roughly as λ / NA². Raising NA at EUV is the same trade you already paid for at DUV, now on a mirror column with a much smaller λ.",
+        "Today's EUV tools sit at a modest NA compared with immersion DUV's 1.35, because a reflective column cannot just dip the wafer in water and quote 1.35. Pushing EUV NA higher — High-NA as a later platform — buys pitch and spends an even thinner focus slice, plus a new tool family. That platform is the next course. This unit is the knob and the bill, not the exe-class machine.",
+        "So when a briefing says High-NA 'enables' a node, translate: they spent 1/NA² of focus to buy 1/NA of pitch at 13.5 nm. They did not repeal Rayleigh. They did not make every layer on the wafer that NA. They moved some layers onto a scarcer, tighter-window tool."
+      ],
+      "example": "At 13.5 nm, raising NA from 0.33 toward a higher value cuts printable pitch and cuts depth of focus by about the square of that ratio. A wafer that was flat enough at the lower NA starts to spend its leftover topography as CD scatter. The incoming plane from the last course did not get thicker.",
+      "whyItMatters": "If NA is a score, High-NA looks like a bigger number on the same tool. If NA is n sinθ with a DoF bill, the later platform is physics you already own.",
+      "quiz": [
+        {
+          "id": "na10-1",
+          "stem": "Numerical aperture is:",
+          "correctAnswer": "n · sin(θ) — the sine of the half-angle the optic can accept, times the medium index",
+          "distractors": [
+            { "text": "The chrome thickness on a DUV reticle", "kind": "nearby", "rationale": "NA is an optic, not a plate." },
+            { "text": "The number of tin droplets per second", "kind": "subtle", "rationale": "That is the source rate." },
+            { "text": "The k1 factor under another name", "kind": "misapplied", "rationale": "k1 is process cleverness. NA is geometry." }
+          ],
+          "correctExplanation": "A cone and a medium. That is the whole definition.",
+          "objectiveIds": ["State numerical aperture as the sine of the half-angle the optic can accept"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "na10-2",
+          "stem": "Raising NA at EUV, other terms fixed, typically:",
+          "correctAnswer": "Buys resolution and spends depth of focus roughly as 1/NA²",
+          "distractors": [
+            { "text": "Buys resolution and thickens the focus slice", "kind": "reversed", "rationale": "DoF falls as NA²." },
+            { "text": "Deletes overlay as a yield term", "kind": "nearby", "rationale": "Tighter pitch usually makes overlay louder." },
+            { "text": "Lets the column run full of air", "kind": "subtle", "rationale": "NA is not vacuum." }
+          ],
+          "correctExplanation": "Same Rayleigh bill you paid at 193, now at 13.5.",
+          "objectiveIds": ["Predict that raising NA buys resolution and spends depth of focus roughly as 1/NA²"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "na10-3",
+          "stem": "High-NA as a later platform is this knob pushed further, not:",
+          "correctAnswer": "A repeal of Rayleigh or a free thickening of the focus slice",
+          "distractors": [
+            { "text": "A larger NA that still spends 1/NA² of height", "kind": "reversed", "rationale": "That is exactly what it is — and it still spends height." },
+            { "text": "Something this course should specify as anamorphic field-stitch hardware", "kind": "nearby", "rationale": "That hardware is the next course." },
+            { "text": "A reason to skip planarity", "kind": "misapplied", "rationale": "A thinner slice makes flatness more mandatory." }
+          ],
+          "correctExplanation": "Same physics, later machine. Do not take the brochure as a new law.",
+          "objectiveIds": ["Predict that raising NA buys resolution and spends depth of focus roughly as 1/NA²"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-overlay-10",
+      "conceptId": "semi-overlay",
+      "title": "The tail of the placement budget is the yield",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv"],
+      "goDeeper": "semi-overlay-budget",
+      "diagram": "overlay-marks",
+      "explanation": [
+        "You already own overlay as a DUV budget: layer N versus layer N−1, after alignment, including the tail. At EUV the pads are smaller, the pitches are tighter, and a multipatterned neighbor layer may still be 193 nm. Overlay is now a yield budget measured in a handful of nanometres, not a slogan on a scanner slide.",
+        "The pieces did not change: stage, lens or mirror distortion, mask writing, wafer warpage, and a random leftover. Correction is still a model — higher-order wafer alignment, per-exposure residuals, after-develop or after-etch metrology fed back to the next lot. You do not 'have 2 nm overlay'. You have a 3σ on a pair, after correction, on wafers that bowed in the last anneal.",
+        "An open or a short that is not a stochastic missing hole and not a CD miss is often this tail eating the landing. Designers fatten pads and invent self-aligned vias because they do not trust the edge of the histogram. A later course will write overlay budgets in fractions of a nanometre next to High-NA field stitches. This unit is the histogram, and the landing it eats."
+      ],
+      "example": "A via landing on a 20 nm-wide metal with 8 nm of overlay on one side is no longer a via. It is an open or a merged neighbor. A split lot with a fatter landing (a design rule) cuts the fails without raising EUV dose. The cheaper knob was the pad, not the lamp.",
+      "whyItMatters": "Yield-ramp journalism that names process window and never names overlay is missing the usual villain. The villain is a distribution, and the victim is a landing pad.",
+      "quiz": [
+        {
+          "id": "ov10-1",
+          "stem": "Overlay at this depth is:",
+          "correctAnswer": "A layer-to-layer yield budget whose tail eats landings, not a slogan",
+          "distractors": [
+            { "text": "Another name for line-edge roughness", "kind": "nearby", "rationale": "LER is a wall. Overlay is a placement." },
+            { "text": "The tin droplet rate", "kind": "subtle", "rationale": "That is the source." },
+            { "text": "The k1 floor of a single 193 nm pass", "kind": "misapplied", "rationale": "k1 is resolution." }
+          ],
+          "correctExplanation": "Did this layer land on the last one, in the tail, on this pair.",
+          "objectiveIds": ["Treat overlay as a layer-to-layer yield budget, not a slogan"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ov10-2",
+          "stem": "An open via with legal CD and no stochastic-looking cluster often points to:",
+          "correctAnswer": "The overlay tail putting the hole off the metal landing",
+          "distractors": [
+            { "text": "A lamp that never fired on that field", "kind": "reversed", "rationale": "The hole printed. It printed in the wrong place." },
+            { "text": "A missing Czochralski notch", "kind": "nearby", "rationale": "Orientation is not this miss." },
+            { "text": "Wet oxidation of the resist", "kind": "misapplied", "rationale": "No oxidant step is required for a placement miss." }
+          ],
+          "correctExplanation": "Pretty hole, wrong place. Read the tail, not the mean CD.",
+          "objectiveIds": ["Diagnose an open or short as a tail of the overlay distribution eating the landing"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ov10-3",
+          "stem": "Fatter landings and self-aligned vias exist because:",
+          "correctAnswer": "Designers refuse to trust the overlay tail on a tiny pad",
+          "distractors": [
+            { "text": "Metals cannot be etched at all", "kind": "nearby", "rationale": "They can. The pad is about placement, not etchability." },
+            { "text": "EUV has no masks", "kind": "reversed", "rationale": "It has a reflective original." },
+            { "text": "NA is infinite so focus never matters", "kind": "subtle", "rationale": "NA is a different budget." }
+          ],
+          "correctExplanation": "The process owns the edge of the histogram. The drawing buys margin.",
+          "objectiveIds": ["Diagnose an open or short as a tail of the overlay distribution eating the landing"],
+          "prerequisiteConceptIds": ["semi-euv"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

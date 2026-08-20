@@ -7,14 +7,26 @@ import {
 import { makeId } from "@/lib/learning/catalog";
 import { normalizeLesson } from "@/lib/learning/normalize";
 import { PROMPT_VERSION } from "@/lib/learning/types";
-import type { Concept, Effort, Lesson, Level, Provenance, TimeBudget } from "@/lib/learning/types";
+import type { Concept, Effort, Lesson, Level, Provenance, QuizQuestion, TimeBudget } from "@/lib/learning/types";
+import { assembleQuiz } from "@/lib/quiz/assemble";
+import { assertNoProgressFields } from "./guard";
 import { extractJson } from "./json";
 
 export { extractJson };
 export type ParseFailure = { ok: false; error: string; issues?: string[] };
 export type ParseSuccess<T> = { ok: true; value: T };
 
+function rejectProgressLeak(raw: unknown): ParseFailure | null {
+  const leak = assertNoProgressFields(raw);
+  if (!leak.ok) {
+    return { ok: false, error: leak.error };
+  }
+  return null;
+}
+
 export function parseGeneratedLesson(raw: unknown): ParseSuccess<ReturnType<typeof generatedLessonSchema.parse>> | ParseFailure {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedLessonSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -23,16 +35,12 @@ export function parseGeneratedLesson(raw: unknown): ParseSuccess<ReturnType<type
       issues: parsed.error.issues.map((i) => `${i.path.join(".") || "root"}: ${i.message}`),
     };
   }
-  if (raw && typeof raw === "object") {
-    const obj = raw as Record<string, unknown>;
-    if ("mastery" in obj || "progress" in obj || "ease" in obj) {
-      return { ok: false, error: "Generated lesson tried to write mastery state and was rejected." };
-    }
-  }
   return { ok: true, value: parsed.data };
 }
 
 export function parseGeneratedExplain(raw: unknown) {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedExplainSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -45,6 +53,8 @@ export function parseGeneratedExplain(raw: unknown) {
 }
 
 export function parseGeneratedQuiz(raw: unknown) {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedQuizSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -57,6 +67,8 @@ export function parseGeneratedQuiz(raw: unknown) {
 }
 
 export function parseGeneratedPath(raw: unknown) {
+  const leak = rejectProgressLeak(raw);
+  if (leak) return leak;
   const parsed = generatedPathSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -68,13 +80,29 @@ export function parseGeneratedPath(raw: unknown) {
   return { ok: true as const, value: parsed.data };
 }
 
+function finalizedQuiz(
+  raw: ReturnType<typeof generatedLessonSchema.parse>["quiz"],
+  opts?: Parameters<typeof assembleQuiz>[1],
+): [QuizQuestion, QuizQuestion, QuizQuestion] {
+  const assembled = assembleQuiz(raw, opts);
+  if (!assembled.ok) {
+    throw new Error(assembled.error);
+  }
+  return assembled.quiz;
+}
+
 export function lessonFromGenerated(
   data: ReturnType<typeof generatedLessonSchema.parse>,
   meta: {
     id?: string;
     conceptId: string;
     level: Level;
+    durationMin?: TimeBudget;
+    effort?: Effort;
+    prerequisites?: string[];
+    goDeeper?: string;
     provenance: Provenance;
+    assemble?: Parameters<typeof assembleQuiz>[1];
   },
 ): Lesson {
   const explanation = Array.isArray(data.explanation) ? data.explanation : [data.explanation];
@@ -84,17 +112,17 @@ export function lessonFromGenerated(
       id: meta.id ?? makeId("ai", data.title),
       conceptId: meta.conceptId,
       title: data.title,
-      durationMin: data.estimated_minutes as TimeBudget,
-      effort: data.effort as Effort,
-      level: data.level ?? meta.level,
-      prerequisites: data.prerequisites,
-      goDeeper: data.go_deeper?.[0],
+      durationMin: meta.durationMin ?? (data.estimated_minutes as TimeBudget),
+      effort: meta.effort ?? (data.effort as Effort),
+      level: meta.level,
+      prerequisites: meta.prerequisites ?? data.prerequisites,
+      goDeeper: meta.goDeeper,
       source: meta.provenance,
       explanation,
       example: data.example,
       whyItMatters: data.why_it_matters,
       diagram: data.diagram ?? undefined,
-      quiz: data.quiz,
+      quiz: finalizedQuiz(data.quiz, meta.assemble),
       custom: true,
       createdAt: meta.provenance.generatedAt,
       updatedAt: meta.provenance.generatedAt,
@@ -125,6 +153,8 @@ export function defaultAiProvenance(input: {
   model: string;
   sourceExcerpt?: string;
   links?: string[];
+  cacheKey?: string;
+  notes?: string;
 }): Provenance {
   return {
     type: "ai",
@@ -135,5 +165,7 @@ export function defaultAiProvenance(input: {
     schemaVersion: 1,
     sourceExcerpt: input.sourceExcerpt,
     links: input.links,
+    cacheKey: input.cacheKey,
+    notes: input.notes,
   };
 }

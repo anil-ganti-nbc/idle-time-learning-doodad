@@ -1,0 +1,456 @@
+{
+  "courseId": "dm-history",
+  "moduleId": "dm-h-lineage",
+  "lessons": [
+    {
+      "id": "dm-lineage-5",
+      "conceptId": "dm-lineage",
+      "title": "Soil, not a birthday",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "dm-thrash-bridge",
+      "diagram": "dm-lineage-soil",
+      "explanation": [
+        "Death metal did not arrive with a stamped birth year. This course tracks three pressures instead of a birthday roster: hardcore's short aggression, thrash's speed-as-argument, and extreme metal's taste for weight. Naming three famous bands is a shopping list. Naming those pressures is a DAU listening method, not a closed history.",
+        "Speed had been doing the heavy lifting in thrash: play it faster and the claim got louder. What changed is that weight and density took that job. A slower riff could now feel more loaded than a sprint, because the kit, the tuning, and the vocal were packing the bar."
+      ],
+      "example": "Hear a mid-tempo palm-muted figure over a packed kit after a thrash sprint. The later bar is denser. Speed is no longer the only claim the music can make.",
+      "whyItMatters": "If you start from a birthday and a roster, you will miss the construction change. Start from soil and from the job that moved.",
+      "quiz": [
+        {
+          "id": "dm-lin5-1",
+          "stem": "Death metal's lineage is best placed in which soil?",
+          "correctAnswer": "Hardcore, thrash, and extreme-metal pressures named without a roster",
+          "distractors": [
+            { "text": "A ranked list of famous bands from one year treated as the soil", "kind": "nearby", "rationale": "A roster is a shopping list, not the pressures." },
+            { "text": "A single birthday and one inventor who licensed the whole style", "kind": "reversed", "rationale": "A birthday is what this lesson refuses as the model." },
+            { "text": "A completed music-theory course required before any of this soil", "kind": "misapplied", "rationale": "Local fragments are taught here; a prior course is not the soil." }
+          ],
+          "correctExplanation": "Soil is three pressures you can name. A roster is not that placement.",
+          "objectiveIds": ["Place death metal in hardcore, thrash, and extreme-metal soil without a name-drop list"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-lin5-2",
+          "stem": "When weight took the job speed had been doing, the change was:",
+          "correctAnswer": "Density and load could argue even when the metronome dropped",
+          "distractors": [
+            { "text": "Every riff had to get faster or the claim of load failed", "kind": "reversed", "rationale": "That is the old job, the one weight replaced." },
+            { "text": "Guitar solos became longer so speed could stay the whole job", "kind": "nearby", "rationale": "Solos are not the job that moved." },
+            { "text": "The mix had to be foggy or the lineage would not count as real", "kind": "misapplied", "rationale": "Mix arguments come later; this is construction load." }
+          ],
+          "correctExplanation": "Weight and density took the proof. BPM is no longer the only lever.",
+          "objectiveIds": ["Name what changed when weight took the job speed had been doing"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-lin5-3",
+          "stem": "A mid-tempo packed riff after a thrash sprint is lineage evidence when:",
+          "correctAnswer": "Weight and kit density are doing the job the sprint used to do",
+          "distractors": [
+            { "text": "The second riff names more famous players than the first riff", "kind": "nearby", "rationale": "A roster is not evidence of the job change." },
+            { "text": "The second riff is automatically worse because it is slower", "kind": "reversed", "rationale": "Slower can be the new load. Tempo is not a grade." },
+            { "text": "The two riffs prove a birthday that one city can put on a plaque", "kind": "subtle", "rationale": "A plaque is the birthday model this lesson drops." }
+          ],
+          "correctExplanation": "The sprint used speed. The packed bar uses weight. That is the move.",
+          "objectiveIds": ["Name what changed when weight took the job speed had been doing"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-lineage-10",
+      "conceptId": "dm-lineage",
+      "title": "Weight takes the job from speed",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "dm-thrash-bridge",
+      "diagram": "dm-lineage-soil",
+      "explanation": [
+        "Hardcore lent shortness, volume, and a DIY postal habit. Thrash lent palm-muted right hands and the idea that velocity was the argument. Extreme metal around that seam started to prefer chromatic weight, lower register, and a kit that filled the bar instead of only racing it.",
+        "Weight took that job from speed in stages. A riff could sit lower and move less and still feel more loaded, because the kit packed the bar, the strings sat lower, and the vocal occupied the same second. BPM is a measurement. Density is a construction choice.",
+        "Lineage here is soil, which means conditions you can name without a roster. Anyone can list ancestors. The useful claim is what those ancestors were doing, and which of those jobs death metal kept, dropped, or reversed."
+      ],
+      "example": "A hardcore burst, a thrash gallop, and a slower tuned-down figure with a full kit. The third is already arguing with speed as the only proof of load.",
+      "whyItMatters": "Later scene and listening lessons sit on this soil. If you only have a name-drop, you have no mechanism to hear.",
+      "quiz": [
+        {
+          "id": "dm-lin10-1",
+          "stem": "A name-drop list fails as lineage because it:",
+          "correctAnswer": "Names people instead of hardcore, thrash, and weight pressures",
+          "distractors": [
+            { "text": "Names too many albums that traveled on the same tape network", "kind": "nearby", "rationale": "Tape paths are infrastructure. The failure is replacing pressures with people." },
+            { "text": "Is the only honest way to place the style in musical soil", "kind": "reversed", "rationale": "Honesty here is naming jobs, not listing famous names." },
+            { "text": "Is required before you are allowed to hear a riff cell at all", "kind": "misapplied", "rationale": "Listening does not wait on a roster." }
+          ],
+          "correctExplanation": "Pressures you can name are the soil. People-lists are a substitute.",
+          "objectiveIds": ["Place death metal in hardcore, thrash, and extreme-metal soil without a name-drop list"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-lin10-2",
+          "stem": "A slower bar that feels more loaded than a sprint usually means:",
+          "correctAnswer": "Weight, tuning, kit, and vocal are packing a job speed used to hold",
+          "distractors": [
+            { "text": "The players failed a speed contest and the load therefore dropped", "kind": "reversed", "rationale": "Load can rise while BPM falls. That is the job change." },
+            { "text": "The vocalist has a more famous biography than the earlier band", "kind": "nearby", "rationale": "Biography is a celebrity card, not the construction move." },
+            { "text": "Someone forgot a harmony course before tracking the riff at all", "kind": "misapplied", "rationale": "This course does not gate lineage on a theory prerequisite." }
+          ],
+          "correctExplanation": "Packed bar, lower strings, occupied vocal. Speed is no longer the proof.",
+          "objectiveIds": ["Name what changed when weight took the job speed had been doing"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-lin10-3",
+          "stem": "If you only have a roster, a later listening pass will typically:",
+          "correctAnswer": "Lack a mechanism for what changed in the soil besides famous names",
+          "distractors": [
+            { "text": "Automatically recover the kit grammar from the singer's surname", "kind": "nearby", "rationale": "A surname does not decode a kit grammar." },
+            { "text": "Be enough, because a roster is already the complete soil model", "kind": "reversed", "rationale": "A roster is the model this lesson rejects." },
+            { "text": "Force every later mix to be a smear whether the desk was dry or not", "kind": "subtle", "rationale": "Mix doctrine is a later argument. Soil is the job change." }
+          ],
+          "correctExplanation": "Without pressures, you cannot hear what moved. Names will not do that work.",
+          "objectiveIds": ["Place death metal in hardcore, thrash, and extreme-metal soil without a name-drop list"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-listening-10",
+      "conceptId": "dm-listening",
+      "title": "Riff, kit, and vocal as equals",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-lineage"],
+      "goDeeper": "dm-vocal-hist",
+      "diagram": "dm-listen-layers",
+      "explanation": [
+        "This course listens to a death-metal bar in three passes. The guitar states a cell you can hum as a shape even when it is chromatic. The kit states a grammar: backbeat, gallop, roll, or half-time. The vocal states a rhythm and a register. Dropping a pass leaves you describing a vibe. The three jobs are a method, not a claim that every mix treats those parts as equal.",
+        "Mix is an argument you can describe. A dry, articulate recording leaves pick attack and kick transients as separate events. A smear stacks midrange so cells fuse into a wall. Neither is a failure of hearing. Each is a claim about what should occupy the front of the sound.",
+        "Listen in passes if the first pass is overload. One pass for the cell, one for the kit's accent pattern, one for where the vocal sits in register and in the bar. Then one pass for whether the mix is separating those parts or gluing them. That is literacy; loudness is a playback setting."
+      ],
+      "example": "Mute the vocal in your head and tap the kit's accent pattern. Then hum the guitar cell as a shape. Then say whether pick attack and kick stay separate or fuse. That is three parts plus a mix claim.",
+      "whyItMatters": "Every later argument about vocal style or a desk is a description of these layers. If they stay undescribed, you will only have opinions.",
+      "quiz": [
+        {
+          "id": "dm-lis10-1",
+          "stem": "Listening for riff, kit, and vocal as equal parts means you:",
+          "correctAnswer": "Give the cell, the kit grammar, and the vocal rhythm each a pass",
+          "distractors": [
+            { "text": "Rank the guitarist above the drummer on a celebrity scorecard", "kind": "nearby", "rationale": "A scorecard is a list of people, not three parts." },
+            { "text": "Treat the vocal as the only part and the rest as leftover haze", "kind": "reversed", "rationale": "Equal parts forbids collapsing the track onto the voice." },
+            { "text": "Wait for a verse-chorus map before any of those parts can count", "kind": "misapplied", "rationale": "Pop maps are not the entry ticket to these three jobs." }
+          ],
+          "correctExplanation": "Three passes, three jobs. Rankings and verse-chorus maps are other sports.",
+          "objectiveIds": ["Listen for riff, kit, and vocal as equal parts"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-lis10-2",
+          "stem": "Calling a mix an argument you can describe is a claim that:",
+          "correctAnswer": "Dry separation or midrange smear is a choice you can put in words",
+          "distractors": [
+            { "text": "The recording failed unless every part is equally loud at once", "kind": "nearby", "rationale": "Balance is not the same as an argument you can name." },
+            { "text": "Loudness makes the mix undescribable, so haze is the honest report", "kind": "reversed", "rationale": "Loudness is playback. The argument is still there to name." },
+            { "text": "Only a later blast catalog can justify mentioning the recording desk", "kind": "misapplied", "rationale": "You can describe dry versus smear without that catalog." }
+          ],
+          "correctExplanation": "Dry or smear, separated or fused: those are words. Fog is a refusal to use them.",
+          "objectiveIds": ["Treat the mix as an argument you can describe, not as fog"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-lis10-3",
+          "stem": "Riff, kit, and vocal as parts differ from mix-as-argument because:",
+          "correctAnswer": "Parts are construction layers; mix is how those layers are presented",
+          "distractors": [
+            { "text": "Parts are only the singer; mix is only the guitar brand on the chain", "kind": "nearby", "rationale": "That collapses both jobs onto a person and a product." },
+            { "text": "Mix is the only layer; riff, kit, and vocal are just haze around it", "kind": "reversed", "rationale": "The mix presents the parts. It does not replace them." },
+            { "text": "Parts are a birthday list; mix is which city gets the plaque", "kind": "subtle", "rationale": "Those are lineage mistakes, not listening layers." }
+          ],
+          "correctExplanation": "Cell, kit, vocal are built. Mix is the presentation of that build.",
+          "objectiveIds": ["Listen for riff, kit, and vocal as equal parts"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-thrash-bridge-10",
+      "conceptId": "dm-thrash-bridge",
+      "title": "Speed stopped being the point",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-lineage"],
+      "goDeeper": "dm-listening",
+      "explanation": [
+        "Thrash often treated speed as the proof. Palm-muted eights, a d-beat or backbeat kit, and a shout sitting on the snare accents: go faster and the song claims more. One DAU way to hear a cut is the moment that proof stops being enough, and density, weight, and a different kit grammar take over the job. Early death metal was also often faster than contemporaneous thrash; speed retiring is not the only historical cut.",
+        "D-beat in a thrash section is a grammar: kick and snare still sketch a rock accent, even at sprint tempo, so you can nod on a backbeat. Blast in a death-metal stretch is a different grammar: kick, snare, and often a cymbal interlock into a roll, so the rock 2-and-4 stops being the only grid. Same drums, two phrase types.",
+        "Mark the cut by what the bar is for rather than by a BPM contest. If speeding up still makes the point, you are in the thrash job. If packing the bar, dropping the backbeat, and letting the guitar sit as a surface makes the point, speed has been demoted."
+      ],
+      "example": "A verse that still answers every snare on 2 and 4, then a stretch where kick and snare become a continuous roll under a repeated guitar cell. That stretch is the grammar change. The metronome may barely have moved.",
+      "whyItMatters": "If you only hear 'faster' you will miss the formal cut. The kit changed jobs. BPM is optional evidence.",
+      "quiz": [
+        {
+          "id": "dm-thr10-1",
+          "stem": "A thrash d-beat section and a death-metal blast differ as grammars because:",
+          "correctAnswer": "D-beat still sketches a rock accent; a blast turns the kit into a roll",
+          "distractors": [
+            { "text": "D-beat always uses more cymbals than a blast can legally touch", "kind": "nearby", "rationale": "Cymbal count is not the grammar split." },
+            { "text": "A blast keeps 2-and-4 as the only accent; d-beat removes that grid", "kind": "reversed", "rationale": "That swaps the two grammars." },
+            { "text": "They are the same grammar measured at two settings on a metronome", "kind": "misapplied", "rationale": "The split is accent pattern, not a tempo knob." }
+          ],
+          "correctExplanation": "Backbeat you can nod to versus a roll that removes 2-and-4 as the only grid.",
+          "objectiveIds": ["Contrast a thrash d-beat section with a death-metal blast as grammars"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "dm-thr10-2",
+          "stem": "Speed stopped being the point at the transition where:",
+          "correctAnswer": "Density and a new kit grammar took the job that velocity had held",
+          "distractors": [
+            { "text": "Every band agreed to a single birthday and retired the d-beat", "kind": "nearby", "rationale": "No birthday conference retired a grammar." },
+            { "text": "Faster BPM became the only remaining proof that a riff was loaded", "kind": "reversed", "rationale": "That would keep speed as the point." },
+            { "text": "Harsh vocals were banned so that speed could stay the whole argument", "kind": "subtle", "rationale": "Vocals were not banned; the kit job moved." }
+          ],
+          "correctExplanation": "Velocity lost the proof. Density and a different kit grammar took it.",
+          "objectiveIds": ["Mark the transition where speed stopped being the point"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-thr10-3",
+          "stem": "You hear kick and snare as a continuous roll under a guitar cell. That stretch is:",
+          "correctAnswer": "Blast grammar, where the rock backbeat is no longer the only grid",
+          "distractors": [
+            { "text": "D-beat grammar, because any fast kit still counts as a backbeat", "kind": "nearby", "rationale": "Speed alone does not make a d-beat. Accent pattern does." },
+            { "text": "Proof that speed, rather than grammar, is the only thing that changed", "kind": "reversed", "rationale": "The roll is a grammar change. The metronome may not have moved." },
+            { "text": "A mix argument about smear that does not involve the kit at all", "kind": "misapplied", "rationale": "This is kit grammar, not a desk choice." }
+          ],
+          "correctExplanation": "Continuous roll under a cell is blast grammar. D-beat would still nod on 2 and 4.",
+          "objectiveIds": ["Contrast a thrash d-beat section with a death-metal blast as grammars"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "dm-vocal-hist-10",
+      "conceptId": "dm-vocal-hist",
+      "title": "Harsh vocals have a history",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-listening"],
+      "goDeeper": "dm-scene-not-celeb",
+      "explanation": [
+        "Growls and screams arrived as technique. A DAU lineage heuristic, not a closed history: hardcore already used shouted rhythm; extreme metal pushed the voice into lower registers, fry and false-cord noise, and sometimes a narrower pitched range so the vocal could live as a drum-like layer. High screams, sung-harsh hybrids, and other paths exist beside that sketch.",
+        "Describe the vocal as rhythm and register. Where does it attack in the bar? How low or high is the band of noise? Does it double the kick, answer the snare, or drone through a cell? Personality copy such as angry, evil, or the guy from a famous lineup replaces that description instead of adding to it.",
+        "History here means a technique moving: shout to bark to low growl to higher shriek as available colors, sometimes in one track. None of those colors is a moral rank. Each occupies a different band and a different rhythmic job. Learn to name the job before you name the person."
+      ],
+      "example": "A low sustained growl that sits on the downbeats, then a higher bark that chatters with the snare. Same throat family, two rhythmic jobs. You do not need the singer's name to say that.",
+      "whyItMatters": "If the vocal is only a personality, you cannot hear arrangement. Rhythm and register are arrangement.",
+      "quiz": [
+        {
+          "id": "dm-voc10-1",
+          "stem": "Harsh vocals are treated in this lesson as which kind of object?",
+          "correctAnswer": "A technique with a history that moved shout toward lower registers",
+          "distractors": [
+            { "text": "A personality type you can read off a singer's interview quotes", "kind": "nearby", "rationale": "Quotes are a character card, not a technique history." },
+            { "text": "A moral rank that proves one scene heavier and therefore better", "kind": "misconception", "rationale": "Heavier-as-better is a ranking this course refuses." },
+            { "text": "A substitute for kit grammar so the drums can stop having a job", "kind": "misapplied", "rationale": "The vocal is a layer beside the kit, not a replacement for it." }
+          ],
+          "correctExplanation": "Technique plus history. Personality and moral rank are other objects.",
+          "objectiveIds": ["Treat harsh vocals as a technique with a history"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dm-voc10-2",
+          "stem": "A useful first description of a harsh vocal on a track is:",
+          "correctAnswer": "Where it attacks in the bar, and which register the noise occupies",
+          "distractors": [
+            { "text": "Whether the singer seems angry enough for the take to count as real", "kind": "nearby", "rationale": "Anger is a personality guess, not a rhythmic description." },
+            { "text": "Which famous person is making the sound, treated as the whole analysis", "kind": "reversed", "rationale": "A name is the substitute this lesson drops." },
+            { "text": "How many bands the singer joined, listed as a stand-in for rhythm", "kind": "misapplied", "rationale": "A resume is not register and not placement in the bar." }
+          ],
+          "correctExplanation": "Attack in the bar, band of noise. That is rhythm and register.",
+          "objectiveIds": ["Describe a vocal as rhythm and register, not as a personality"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-voc10-3",
+          "stem": "Treating a vocal as personality instead of rhythm and register typically:",
+          "correctAnswer": "Swaps a checkable rhythm-and-register description for a character card",
+          "distractors": [
+            { "text": "Automatically recovers the kit's blast or d-beat from the lyric sheet", "kind": "nearby", "rationale": "A lyric sheet does not decode kit grammar." },
+            { "text": "Is required, because harsh vocals have no technique and no history", "kind": "reversed", "rationale": "They do have both. That is the lesson." },
+            { "text": "Is the only way to refuse a celebrity list when describing a scene", "kind": "subtle", "rationale": "Personality cards are how celebrity lists sneak back in." }
+          ],
+          "correctExplanation": "Character cards replace the checkable job. Rhythm and register keep it.",
+          "objectiveIds": ["Describe a vocal as rhythm and register, not as a personality"],
+          "prerequisiteConceptIds": ["dm-listening"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-scene-not-celeb-10",
+      "conceptId": "dm-scene-not-celeb",
+      "title": "City, studio, and a tape network",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-lineage"],
+      "goDeeper": "dm-tape-trading",
+      "explanation": [
+        "Scene talk collapses into a celebrity list unless you force a method. This course describes a scene as three parts: a city where people could practice and play, a studio (or a room with a desk) where the sound got fixed to tape, and a network that moved those copies. Labels, venues, and later internet scenes sit outside that triad. Without some mechanism, you have famous names and no description.",
+        "City is rooms, clubs, and the cost of getting to them. Studio is a room, a desk, an engineer habit, a drum sound that can be copied. Tape network is who dubbed whom, which zine printed the address, how a copy left town. Those are facts you can check. A ranking of singers fails as a scene description.",
+        "Refuse the substitute even when the list is historically real. Famous players lived in those cities. The lesson is that the list cannot stand in for the city-studio-network description. If you cannot say how a sound left the room, you have fandom, which is fine, and you do not yet have a scene."
+      ],
+      "example": "Two records from the same years, different rooms, different desks, copies moving by mail. Listing the singers tells you less than naming the city, the room, and the postal path.",
+      "whyItMatters": "Tape-trading only makes sense once a scene is infrastructure. Celebrity lists make the next lesson look like gossip.",
+      "quiz": [
+        {
+          "id": "dm-scn10-1",
+          "stem": "A scene, in this lesson's description, is made of which three parts?",
+          "correctAnswer": "A city, a studio or tracking room, and a tape network that moves copies",
+          "distractors": [
+            { "text": "A ranked celebrity list plus a magazine cover from the same year", "kind": "nearby", "rationale": "That is the substitute, not the three-part description." },
+            { "text": "One famous singer whose biography stands in for the whole city", "kind": "reversed", "rationale": "A biography is a celebrity card, not a scene." },
+            { "text": "A completed blast catalog agreed in a single capital's office", "kind": "misapplied", "rationale": "Kit taxonomy is not city, studio, or mail." }
+          ],
+          "correctExplanation": "City, room with a desk, copies that move. That is the scene object.",
+          "objectiveIds": ["Describe a scene as a city, a studio, and a tape network"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-scn10-2",
+          "stem": "A historically real list of famous players still fails as a scene when it:",
+          "correctAnswer": "Is used as a substitute for city, studio, and how copies left town",
+          "distractors": [
+            { "text": "Includes engineers next to guitarists and still names only people", "kind": "nearby", "rationale": "Adding job titles to a list still leaves you with a list of people." },
+            { "text": "Is forbidden even as a supporting detail after infrastructure is named", "kind": "reversed", "rationale": "Names may support. They may not replace the three parts." },
+            { "text": "Cannot be printed in a zine because zines only carry chord charts", "kind": "misapplied", "rationale": "Zines carried addresses, reviews, and lists. That is not the failure." }
+          ],
+          "correctExplanation": "Real names can sit beside infrastructure. They cannot replace it.",
+          "objectiveIds": ["Refuse a celebrity list as a substitute for that description"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-scn10-3",
+          "stem": "If you can name the singers but not the room or the postal path, you should expect:",
+          "correctAnswer": "Fandom without a mechanism for how the sound was fixed and moved",
+          "distractors": [
+            { "text": "A guaranteed match between two cities' drum sounds on every tape", "kind": "nearby", "rationale": "Names do not sync drum sounds across rooms." },
+            { "text": "A complete scene description, because names already imply a studio", "kind": "reversed", "rationale": "Names do not imply a room, a desk, or a mail path." },
+            { "text": "That the mix cannot be dry, since famous names require smear", "kind": "subtle", "rationale": "Mix is a later argument. Missing infrastructure is the gap here." }
+          ],
+          "correctExplanation": "Singers without a room or a path is fandom. Scene needs the mechanism.",
+          "objectiveIds": ["Describe a scene as a city, a studio, and a tape network"],
+          "prerequisiteConceptIds": ["dm-lineage"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-tape-trading-10",
+      "conceptId": "dm-tape-trading",
+      "title": "Postal scenes finish the same move",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["dm-scene-not-celeb"],
+      "goDeeper": "dm-history",
+      "explanation": [
+        "Tapes and zines were how the style spread. A dubbed cassette plus a photocopied interview could leave one city and land in another without a label, a radio slot, or a capital that licensed the move. The unit of transmission was a copy you could mail rather than a chart position.",
+        "Postal scenes are slow and branching. One trader copies a rehearsal. A zine prints the address. Someone in a second city hears a riff grammar, a kit idea, a vocal register, and finishes a local version with a local room. Delay and distortion are part of how that network works.",
+        "Predict two cities finishing the same move without a single capital: the grammar is portable on tape, the rooms are local, and nobody has to wait for a headquarters to authorize the next record. Parallel invention is the expected outcome of a postal mesh. A capital would have been a bottleneck."
+      ],
+      "example": "A rehearsal tape mailed across an ocean, a zine review, then a second city tracking a similar density and harsh register the next year. No single office had to say yes.",
+      "whyItMatters": "Once you see the mesh, 'who invented it' becomes the wrong first question. Ask how a copy traveled and why two rooms could complete the same job.",
+      "quiz": [
+        {
+          "id": "dm-tap10-1",
+          "stem": "Trace how the style typically spread through tapes and zines:",
+          "correctAnswer": "A dubbed cassette and a printed address leave one city and land in another",
+          "distractors": [
+            { "text": "A capital's radio slot licenses each new riff before any copy is mailed", "kind": "nearby", "rationale": "Radio licensing is a capital model. The postal path skipped it." },
+            { "text": "Zines banned cassettes, so only finished retail discs could leave a city", "kind": "reversed", "rationale": "Zines and tapes traveled together. Retail was optional." },
+            { "text": "A theory exam had to be passed before a trader could dub a rehearsal", "kind": "misapplied", "rationale": "No exam gated the mail." }
+          ],
+          "correctExplanation": "Copy plus address, city to city. That is the path. Capitals and exams are other systems.",
+          "objectiveIds": ["Explain how the style spread through tapes and zines"],
+          "prerequisiteConceptIds": ["dm-scene-not-celeb"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "dm-tap10-2",
+          "stem": "Two cities can finish the same move without a single capital because:",
+          "correctAnswer": "The grammar is portable on tape and the rooms that finish it stay local",
+          "distractors": [
+            { "text": "One office secretly mailed identical masters to both desks on the same day", "kind": "nearby", "rationale": "A secret office is still a capital. The mesh does not need one." },
+            { "text": "A capital must authorize the riff or the second city cannot track it", "kind": "reversed", "rationale": "Authorization is the bottleneck this network does not have." },
+            { "text": "Both cities waited for the same celebrity to move and bring the sound", "kind": "subtle", "rationale": "A traveling celebrity is a person-list model, not a postal mesh." }
+          ],
+          "correctExplanation": "Portable grammar, local rooms. Parallel finish is what a mesh predicts.",
+          "objectiveIds": ["Predict why two cities could finish the same move without a single capital"],
+          "prerequisiteConceptIds": ["dm-scene-not-celeb"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-tap10-3",
+          "stem": "A zine printing a trader's address next to a cassette review is doing the job of:",
+          "correctAnswer": "Moving a copy path so a second city can hear and finish a local version",
+          "distractors": [
+            { "text": "Ranking singers so a celebrity list can replace the postal network", "kind": "nearby", "rationale": "An address is infrastructure. A ranking is the substitute." },
+            { "text": "Stopping tapes from leaving town so that one capital keeps the style", "kind": "reversed", "rationale": "Printing an address is how copies leave, not how they are stopped." },
+            { "text": "Replacing kit grammar with a lyric sheet the drummer must sight-read", "kind": "misapplied", "rationale": "A zine address is mail, not a drum chart." }
+          ],
+          "correctExplanation": "Address plus review is a path. The second city can now hear and finish.",
+          "objectiveIds": ["Explain how the style spread through tapes and zines"],
+          "prerequisiteConceptIds": ["dm-scene-not-celeb"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    }
+  ]
+}

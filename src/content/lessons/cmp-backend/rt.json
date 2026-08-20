@@ -1,0 +1,715 @@
+{
+  "courseId": "cmp-backend",
+  "moduleId": "cmp-be-rt",
+  "lessons": [
+    {
+      "id": "cmp-runtime-10",
+      "conceptId": "cmp-runtime",
+      "title": "Support the compiler still links",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["cmp-abi-call"],
+      "goDeeper": "cmp-gc",
+      "explanation": [
+        "Compiled code still links support the compiler did not emit as user IR. Start files, `malloc`, language personality routines, compiler-rt helpers, a garbage collector, a JIT stub — those live in a runtime the program is linked against after this compiler finishes. The backend assumes they exist and calls them at the ABI the last module taught.",
+        "Stanford CS143 and the JVM spec draw the same line in different languages. C still needs `crt` and `libc`. Java still needs a heap, a class loader, and interpreters or compiled frames the VM owns. The runtime is code in the process, linked or loaded with the program. It is not a new opcode, and it is not the kernel.",
+        "The kernel is the OS. It switches threads, maps pages, and services syscalls. It does not implement `new Object()`, C++ `throw`, or the System V unwinder's personality function. Confusing the two sends a language bug to `strace` and an `EFAULT` to the GC. The runtime calls the kernel when it needs a page. The kernel does not collect Java objects."
+      ],
+      "example": "`new int[n]` in a managed language becomes a call into the allocator the runtime linked, not a kernel `brk` the compiler planted. A C `malloc` is the same shape: a userspace library, which may then `mmap`. The syscall is a callee of the runtime, not the runtime itself.",
+      "whyItMatters": "A crash inside `malloc` or a GC pause is not 'the CPU mis-decoded the add'. Blame the support you still linked.",
+      "quiz": [
+        {
+          "id": "be-runtime10-1",
+          "stem": "Name support the compiled program still links after the compiler finishes:",
+          "correctAnswer": "Allocator, start files, personality routines, and other userspace helpers the ABI calls",
+          "distractors": [
+            { "text": "The lexer and parser, re-run by the kernel on every call", "kind": "misapplied", "rationale": "The front end is finished. The runtime is linked support, not a re-parse." },
+            { "text": "A new architectural register file the linker mints for SSA names", "kind": "nearby", "rationale": "The ISA is fixed. The runtime is code, not extra crayons." },
+            { "text": "Nothing; a finished compiler emits a kernel image with no libraries", "kind": "reversed", "rationale": "Almost every compiled program still links a runtime." }
+          ],
+          "correctExplanation": "The compiler emits calls. The linked runtime is the callee that still has to exist.",
+          "objectiveIds": ["Name support the compiled program still links after the compiler finishes"],
+          "prerequisiteConceptIds": ["cmp-abi-call"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-runtime10-2",
+          "stem": "A language runtime differs from the OS kernel because:",
+          "correctAnswer": "The runtime is userspace support linked with the program; the kernel is the OS that serves syscalls",
+          "distractors": [
+            { "text": "They are two names for the same privileged allocator", "kind": "nearby", "rationale": "The runtime may call the kernel for pages. It is not the kernel." },
+            { "text": "The kernel implements `new` and `throw`; the runtime only names registers", "kind": "reversed", "rationale": "Those language operations live in the runtime, not in the kernel." },
+            { "text": "The runtime is a relocation width; the kernel is a section name", "kind": "misapplied", "rationale": "Both are running code. The cut is userspace support versus the OS." }
+          ],
+          "correctExplanation": "Userspace, linked, language-shaped. The kernel is below that and does not know your objects.",
+          "objectiveIds": ["Distinguish a language runtime from the OS kernel"],
+          "prerequisiteConceptIds": ["cmp-abi-call"],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "be-runtime10-3",
+          "stem": "`throw` compiled as a call to a personality helper is runtime support, not a kernel trap, because:",
+          "correctAnswer": "The helper is a linked userspace routine that walks frames; the kernel is not the unwinder",
+          "distractors": [
+            { "text": "Every `throw` is a syscall, so the kernel must implement C++ exceptions", "kind": "reversed", "rationale": "Unwinding is language runtime work. The kernel is not looking at landing pads." },
+            { "text": "The helper is an IR operator the selector left unlowered", "kind": "nearby", "rationale": "The call is a real ABI call into a library, not leftover IR." },
+            { "text": "Personality functions live in the object-file symbol table only, never in bytes", "kind": "misapplied", "rationale": "They are real functions the program links and runs." }
+          ],
+          "correctExplanation": "A call into linked support. That is the runtime. The kernel is not on this path until someone syscalls.",
+          "objectiveIds": ["Name support the compiled program still links after the compiler finishes"],
+          "prerequisiteConceptIds": ["cmp-abi-call"],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cmp-gc-10",
+      "conceptId": "cmp-gc",
+      "title": "Reachable from a root, no free()",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-runtime"],
+      "goDeeper": "cmp-exception",
+      "diagram": "cmp-gc-roots",
+      "explanation": [
+        "Live objects are the ones a root can still reach. A collector starts from registers, stack slots, and globals that hold pointers — the roots — and walks every pointer it finds. Anything not reached is garbage. There is no matching `free()` in the user program. The runtime decides, from reachability, what may be reused.",
+        "Stanford CS143 and the JVM spec both put the compiler in that story. The compiled frame must leave those roots somewhere the collector can find: a register the ABI still holds, a stack slot, a static field. A pointer the compiler hid in an unrecorded temporary is a live object the collector will not see.",
+        "Conservative and precise collectors disagree on how to read a word. A conservative scan treats any bit pattern that looks like a pointer as a root. A precise scan needs a map of which slots actually are pointers. Both start from roots. Both refuse to require a user `free()`. They differ in what they are willing to believe about a word on the stack."
+      ],
+      "example": "`p = new Node(); q = p; p = null;` — `q` is still a root, so the node stays live. Drop `q` as well and the next collection can reclaim the node, with no `free()` in the source.",
+      "whyItMatters": "A use-after-reclaim in a managed language is often a root the compiler did not record, not a missing `free()` the user forgot.",
+      "quiz": [
+        {
+          "id": "be-gc10-1",
+          "stem": "Find live objects from roots without a matching `free()`:",
+          "correctAnswer": "Start from pointer-holding registers, stack slots, and globals, then walk every reachable object",
+          "distractors": [
+            { "text": "Wait for the user program to call `free()` on each object it allocated", "kind": "reversed", "rationale": "Automatic collection exists so that matching `free()` is not required." },
+            { "text": "Treat every byte of `.text` as a live object the collector must keep", "kind": "nearby", "rationale": "Code bytes are not heap objects. Roots are pointer-holding locations." },
+            { "text": "Ask the kernel which pages the process has mapped, and keep all of them", "kind": "misapplied", "rationale": "Mapped is not reachable. The walk is from roots, not from the page table." }
+          ],
+          "correctExplanation": "Roots, then the walk. Anything not reached is collectable. No user `free()`.",
+          "objectiveIds": ["Find live objects from roots without a matching free()"],
+          "prerequisiteConceptIds": ["cmp-runtime"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-gc10-2",
+          "stem": "A conservative scan and a precise scan that needs stack maps differ because:",
+          "correctAnswer": "Conservative treats any pointer-shaped word as a root; precise trusts a map of which slots are pointers",
+          "distractors": [
+            { "text": "Conservative requires a `free()`; precise deletes objects without roots", "kind": "reversed", "rationale": "Neither requires a user `free()`. The cut is how they read a stack word." },
+            { "text": "Precise walks `.text`; conservative walks only the kernel's page tables", "kind": "misapplied", "rationale": "Both walk from roots in the mutator's state, not from code or the kernel." },
+            { "text": "They are two names for the same register-coloring pass", "kind": "nearby", "rationale": "Collection is a runtime walk, not allocation of crayons." }
+          ],
+          "correctExplanation": "Same roots-and-walk idea. The argument is whether an untyped word counts.",
+          "objectiveIds": ["Compare a conservative scan with a precise one that needs stack maps"],
+          "prerequisiteConceptIds": ["cmp-runtime"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-gc10-3",
+          "stem": "`p` is stored only in a register the compiler did not record as a root. The collector will:",
+          "correctAnswer": "Miss that object if nothing else refers to it, and may reclaim it while `p` is still in use",
+          "distractors": [
+            { "text": "Find it anyway, because every architectural register is always a root", "kind": "nearby", "rationale": "Only pointer-holding locations the runtime knows about are roots." },
+            { "text": "Refuse to run until the user inserts a matching `free()`", "kind": "reversed", "rationale": "The collector does not wait for `free()`. It waits for a recorded root." },
+            { "text": "Promote the register to a stack slot in the object file's `.bss`", "kind": "misapplied", "rationale": "Collection does not rewrite the .o. It reads the roots it was given." }
+          ],
+          "correctExplanation": "An unrecorded pointer is an invisible live object. That is how a managed language use-after-reclaims.",
+          "objectiveIds": ["Find live objects from roots without a matching free()"],
+          "prerequisiteConceptIds": ["cmp-runtime"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-gc-20",
+      "conceptId": "cmp-gc",
+      "title": "Precise maps versus a conservative scan",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cmp-runtime"],
+      "goDeeper": "cmp-exception",
+      "diagram": "cmp-gc-roots",
+      "explanation": [
+        "Conservative collectors treat every word that looks like a pointer as a root. A stack slot holding an integer whose bits happen to match a heap address keeps that object alive. The collector cannot update those bits if it moves objects, so conservative heaps are usually immovable. The payoff is that the compiler need not emit a map of which slots are pointers.",
+        "Precise collectors refuse that guess. At every safepoint they consult a stack map: this register is a pointer, that slot is an integer, this other slot is a derived pointer that must be adjusted if the object moves. The walk from roots is then exact. Objects can move, because every pointer the mutator still holds is named and can be patched.",
+        "The JVM spec is the usual precise picture. Compiled frames record roots at safepoints; the interpreter has a known layout; globals in class statics are enumerated. A missing map entry is not a retained integer. It is a live object the collector will free, which is a use-after-reclaim the next load will notice.",
+        "False retain is the conservative failure. A `long` that looks like a pointer pins an object forever, or until that integer changes. Missing root is the precise failure when the compiler lies. The two bugs face opposite directions: keep too much, or keep too little. Tuning a conservative heap for 'leaks' and a precise heap for crashes is reading that split.",
+        "Derived pointers make precision sharper. An interior pointer into an object is not the object base. A precise map has to say so, or a moving collector will update the base and leave the interior pointer aiming at yesterday. Conservative collectors usually forbid moving, which dodges the update but pays in fragmentation and in every integer that looks enough like a pointer."
+      ],
+      "example": "A stack slot holds `0x7f8a41000a80`. Conservative: if that is a heap address, the object stays, even if the slot is an integer hash. Precise: the map says 'not a pointer', the object dies if nothing else refers to it. Swap the map to 'pointer' when the slot is `Node* p` or the node dies under the mutator's feet.",
+      "whyItMatters": "Choosing conservative to avoid maps is choosing false retains and a non-moving heap. Choosing precise is choosing to trust every safepoint map the compiler emits.",
+      "quiz": [
+        {
+          "id": "be-gc20-1",
+          "stem": "Walk live objects in a precise collector at a safepoint:",
+          "correctAnswer": "Read the stack map for that PC, treat only the listed slots and registers as roots, then trace",
+          "distractors": [
+            { "text": "Treat every word on the stack as a root, then require a user `free()` for the rest", "kind": "reversed", "rationale": "That is conservative guessing plus a `free()` the collector is supposed to replace." },
+            { "text": "Color the interference graph and keep any object that did not spill", "kind": "misapplied", "rationale": "Register allocation is not reachability." },
+            { "text": "Scan `.text` for immediate constants that look like heap addresses", "kind": "nearby", "rationale": "Immediates in code are not mutator roots unless a map says so." }
+          ],
+          "correctExplanation": "The map names the roots. The walk follows only those. That is precise collection.",
+          "objectiveIds": ["Find live objects from roots without a matching free()"],
+          "prerequisiteConceptIds": ["cmp-runtime"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-gc20-2",
+          "stem": "Compared with a precise map, a conservative scan of the same frame will:",
+          "correctAnswer": "Keep any object whose address collides with an integer, and usually refuse to move objects",
+          "distractors": [
+            { "text": "Free more objects, because integers prove the slot is dead", "kind": "reversed", "rationale": "Conservative keeps extra objects. It does not free extra ones." },
+            { "text": "Need a richer stack map than the precise collector does", "kind": "nearby", "rationale": "Conservative exists to avoid that map." },
+            { "text": "Run in the kernel so userspace integers cannot look like pointers", "kind": "misapplied", "rationale": "The scan is of the mutator's frame, still in the runtime." }
+          ],
+          "correctExplanation": "False retains and a non-moving heap are the conservative bargain. Precision is the other bargain.",
+          "objectiveIds": ["Compare a conservative scan with a precise one that needs stack maps"],
+          "prerequisiteConceptIds": ["cmp-runtime"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-gc20-3",
+          "stem": "A precise map omits a register that still holds the only pointer to a node. The collector:",
+          "correctAnswer": "Treats the node as unreachable and may reclaim it while the mutator still uses that register",
+          "distractors": [
+            { "text": "Falls back to a conservative scan of that register, so the node is safe", "kind": "nearby", "rationale": "Precise collectors do not guess the slots the map left out." },
+            { "text": "Inserts a `free()` in the user program so the omission becomes explicit", "kind": "reversed", "rationale": "The failure is a missing root, not a newly required `free()`." },
+            { "text": "Colors the node as spilled and reloads it from the frame automatically", "kind": "misapplied", "rationale": "Collection is not register allocation." }
+          ],
+          "correctExplanation": "Missing root, missing object. That is the precise collector's dangerous direction.",
+          "objectiveIds": ["Find live objects from roots without a matching free()"],
+          "prerequisiteConceptIds": ["cmp-runtime"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-exception-10",
+      "conceptId": "cmp-exception",
+      "title": "Unwind until a handler matches",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-frame"],
+      "goDeeper": "cmp-unwinding",
+      "explanation": [
+        "Throwing does not jump to a handler by magic. The runtime walks frames from the throw site toward the caller until a landing pad claims the exception. Each frame's handler table is consulted; a match transfers control to that pad with the exception object in the ABI's agreed register. No match in this frame means this frame is left, and the walk continues.",
+        "Cleanups run on the way out. A C++ frame that constructed two locals with destructors will run those destructors as it is unwound, even if it has no `catch`. A `finally` block is the same shape in another language: work that must run because the frame is being abandoned, not because a handler here matched. The pad that only cleans up then resumes the walk.",
+        "The Itanium C++ ABI is the usual exhibit: a personality function decides, per frame, whether to install a handler or run cleanups. A compiler that omitted a destructor from the frame's unwind info will skip that cleanup. A compiler that claimed a handler for the wrong type will catch what it should have passed on. The walk is only as honest as the tables."
+      ],
+      "example": "`f` constructs `Lock g`, then calls `h`, which throws. `f` has no `catch`. Unwinding runs `Lock::~Lock` in `f`, then continues to `f`'s caller, which has `catch (...)` and becomes the matching handler. `g` is released on the way out.",
+      "whyItMatters": "A leak on the exception path is often a cleanup the table forgot, not a `catch` the user omitted. The walk only runs what the frame recorded.",
+      "quiz": [
+        {
+          "id": "be-exc10-1",
+          "stem": "A throw with no handler in the current frame should:",
+          "correctAnswer": "Leave this frame and keep walking callers until a matching handler is found",
+          "distractors": [
+            { "text": "Return normally in `%rax` with the exception object as the result", "kind": "nearby", "rationale": "A throw is not a return. The walk is looking for a landing pad." },
+            { "text": "Stop in the kernel, which implements language exceptions", "kind": "misapplied", "rationale": "Unwinding is runtime work through recorded frames, not a syscall." },
+            { "text": "Delete the current frame's return address so `ret` cannot come back", "kind": "reversed", "rationale": "The walk uses the saved return address to find the caller, then continues." }
+          ],
+          "correctExplanation": "No match here, abandon the frame, try the caller. That is the unwind.",
+          "objectiveIds": ["Unwind frames until a matching handler is found"],
+          "prerequisiteConceptIds": ["cmp-frame"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-exc10-2",
+          "stem": "`f` constructed `Lock g` and has no `catch`; `h` throws. On the way out of `f`:",
+          "correctAnswer": "`Lock::~Lock` runs as a cleanup, then the walk continues to `f`'s caller",
+          "distractors": [
+            { "text": "No destructor runs, because a frame without `catch` is skipped whole", "kind": "reversed", "rationale": "Cleanups run because the frame is abandoned, not because it caught." },
+            { "text": "`g` is spilled into `%rax` and returned as the exception object", "kind": "nearby", "rationale": "The exception object is what was thrown, not the local being destroyed." },
+            { "text": "The prologue rebuilds `f`'s frame so the destructor can run later", "kind": "misapplied", "rationale": "Unwinding tears the frame down. It does not rebuild it." }
+          ],
+          "correctExplanation": "Cleanup, then continue. A matching handler may live further up; the lock still has to die here.",
+          "objectiveIds": ["Predict which destructors or cleanups run on the way out"],
+          "prerequisiteConceptIds": ["cmp-frame"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-exc10-3",
+          "stem": "Trace a throw from `h` through `f` (cleanup only) to `main` (`catch (...)`):",
+          "correctAnswer": "Leave `h`, run `f`'s cleanups, then transfer to `main`'s landing pad",
+          "distractors": [
+            { "text": "Jump straight to `main`, skipping `f`, because `f` has no `catch`", "kind": "nearby", "rationale": "No `catch` does not mean no visit. Cleanups still run in `f`." },
+            { "text": "Return from `h` to `f` to `main` along the normal `%rax` path", "kind": "reversed", "rationale": "Normal returns do not consult handler tables or run abandon-cleanups." },
+            { "text": "Relocate `h`'s throw site into `main`'s `.text` and rerun it", "kind": "misapplied", "rationale": "Unwinding walks existing frames. It does not move code." }
+          ],
+          "correctExplanation": "Walk out of `h`, clean `f`, land in `main`. Each frame is visited for the tables it recorded.",
+          "objectiveIds": ["Unwind frames until a matching handler is found"],
+          "prerequisiteConceptIds": ["cmp-frame"],
+          "difficultyTier": 4,
+          "cognitiveType": "trace"
+        }
+      ]
+    },
+    {
+      "id": "cmp-unwinding-10",
+      "conceptId": "cmp-unwinding",
+      "title": "Tables stay off the hot path",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-exception"],
+      "goDeeper": "cmp-jit",
+      "explanation": [
+        "Tables replace a `setjmp` planted in every frame. The Itanium unwind model records, in `.eh_frame` or an equivalent, how to restore each callee-saved register and find the caller's frame from this PC. A throw consults those tables. A normal call does not write a jump buffer and does not save the world on entry.",
+        "`setjmp` in every prologue would make the hot path pay for an exception that usually never arrives: extra stores, a fatter frame, a branch the predictor has to ignore. Tables sit in a side section. The prologue still saves what the ABI already required. Only the unwinder reads the extra description, and only after someone throws.",
+        "That is why tables stay off the hot path until an exception is thrown. The cost moves to throw time and to the size of the unwind section. A function compiled `-fno-exceptions` can omit the tables and the landing pads. A function that might be unwound through cannot omit them, or the walk stops at a frame it cannot restore."
+      ],
+      "example": "A System V leaf that only clobbers caller-saved registers has a tiny FDE: 'no saved registers, return address at the usual slot.' `setjmp` on entry would still have saved a jump buffer that no throw ever used. The table is read only if a throw reaches this PC.",
+      "whyItMatters": "An exception ABI that feels free on the call path is paying in tables, not in prologue stores. Putting `setjmp` back in every frame is how that freedom disappears.",
+      "quiz": [
+        {
+          "id": "be-unwind10-1",
+          "stem": "Use unwind tables instead of a `setjmp` in every frame by:",
+          "correctAnswer": "Recording how to restore this frame in a side table, and consulting it only when unwinding",
+          "distractors": [
+            { "text": "Calling `setjmp` in the prologue so every return can longjmp to a handler", "kind": "reversed", "rationale": "That is the hot-path tax the tables exist to avoid." },
+            { "text": "Spilling every live SSA name to `.eh_frame` at compile time", "kind": "nearby", "rationale": "The table describes how to walk the frame, not a dump of every value." },
+            { "text": "Asking the kernel to snapshot the register file on each `call`", "kind": "misapplied", "rationale": "The OS is not the unwinder, and a per-call snapshot is the same tax." }
+          ],
+          "correctExplanation": "Describe the frame once, in a table. Read the description only on throw.",
+          "objectiveIds": ["Use unwind tables instead of a setjmp in every frame"],
+          "prerequisiteConceptIds": ["cmp-exception"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-unwind10-2",
+          "stem": "Tables stay off the hot path until an exception is thrown because:",
+          "correctAnswer": "A normal call never reads `.eh_frame`; only the unwinder does, after a throw",
+          "distractors": [
+            { "text": "The prologue still executes `setjmp`, but the table makes it cheaper", "kind": "reversed", "rationale": "The point is that the prologue does not `setjmp` at all." },
+            { "text": "The linker deletes the tables from any function that contains a `call`", "kind": "nearby", "rationale": "Functions that can be unwound keep their tables. Calls do not strip them." },
+            { "text": "The kernel caches every frame, so userspace tables are never consulted", "kind": "misapplied", "rationale": "The runtime unwinder reads the tables. The kernel is not this path." }
+          ],
+          "correctExplanation": "No throw, no walk, no table read. The call path pays only the ABI's ordinary saves.",
+          "objectiveIds": ["Explain why tables stay off the hot path until an exception is thrown"],
+          "prerequisiteConceptIds": ["cmp-exception"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "be-unwind10-3",
+          "stem": "A frame compiled without unwind info is on the stack when a throw happens. The unwinder will:",
+          "correctAnswer": "Be unable to restore that frame honestly, so the walk stops or skips required cleanups",
+          "distractors": [
+            { "text": "Invent a `setjmp` buffer from the return address and continue as usual", "kind": "nearby", "rationale": "Without a description, it does not know which registers were saved where." },
+            { "text": "Fall back to a normal `ret`, which is equivalent to running cleanups", "kind": "reversed", "rationale": "`ret` is the non-exception path and does not run abandon-cleanups." },
+            { "text": "Relocate the throw into a function that did emit tables", "kind": "misapplied", "rationale": "The throw site is fixed. The missing table is this frame's." }
+          ],
+          "correctExplanation": "No table, no restore. That is why a frame that might be unwound cannot omit the description.",
+          "objectiveIds": ["Explain why tables stay off the hot path until an exception is thrown"],
+          "prerequisiteConceptIds": ["cmp-exception"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-jit-10",
+      "conceptId": "cmp-jit",
+      "title": "Compile the hot fragment in flight",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-isel"],
+      "goDeeper": "cmp-deopt",
+      "explanation": [
+        "Hot fragments can be compiled after the program has already started. A JIT watches an interpreter or a cheap baseline, notices a loop or a method that is taking time, and runs instruction selection on that fragment while the rest of the program keeps running. The next entry into that fragment jumps to the new machine code.",
+        "Stanford CS143 and the JVM spec treat this as ordinary compilation on a delay. The same backend jobs exist — select, allocate, emit — but they now steal cycles from the workload they are trying to speed up. A method compiled after one call has not yet repaid that steal. A loop compiled after ten thousand trips might.",
+        "Cold code stays uncompiled on purpose. The compile-time cost is real, and a fragment that runs twice will never earn it back. The policy is a threshold, not a moral claim about the source. The compiler that JITs every loaded method at startup has not become a better backend. It has become a slower startup."
+      ],
+      "example": "An interpreter counts trips around a bytecode loop. At 10,000 the runtime compiles the loop, patches the dispatch to the new entry, and the next iteration runs selected x86. A one-shot initialization method never hits the threshold and stays interpreted.",
+      "whyItMatters": "A JIT pause is compile time coming out of the user's clock. Knowing which fragment earned that pause is how you read a profile that suddenly grew a compiler thread.",
+      "quiz": [
+        {
+          "id": "be-jit10-1",
+          "stem": "Compile a hot fragment while the program is already running by:",
+          "correctAnswer": "Selecting and emitting machine code for that fragment on a runtime thread, then pointing later entries at it",
+          "distractors": [
+            { "text": "Stopping the process, writing a new .o, and asking the user to relink", "kind": "reversed", "rationale": "A JIT does not leave the process. The compile happens in flight." },
+            { "text": "Re-lexing the source file on each iteration of the hot loop", "kind": "misapplied", "rationale": "The input is a runtime IR or bytecode, not a fresh token stream." },
+            { "text": "Coloring the fragment's live ranges in the interpreter's source text", "kind": "nearby", "rationale": "Allocation is part of the compile, but it runs on IR, not on source." }
+          ],
+          "correctExplanation": "Same backend jobs, in-process, after the program has started. Then redirect the next entry.",
+          "objectiveIds": ["Compile a hot fragment while the program is already running"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-jit10-2",
+          "stem": "Compared with compiling everything at startup, waiting for a hotness threshold:",
+          "correctAnswer": "Spends compile time only on fragments that have already run enough to maybe repay it",
+          "distractors": [
+            { "text": "Compiles more code, because thresholds invent extra methods", "kind": "reversed", "rationale": "A threshold withholds compile time from cold code." },
+            { "text": "Avoids instruction selection entirely, because hotness is an opcode", "kind": "misapplied", "rationale": "Hotness is a policy. The selected code is still selected." },
+            { "text": "Forces every fragment to be interpreted forever after the first compile", "kind": "nearby", "rationale": "The point of the compile is that later entries stop interpreting." }
+          ],
+          "correctExplanation": "Cost is paid late and only for the hot set. That is the comparison with compile-everything.",
+          "objectiveIds": ["Compare JIT compile-time cost with the speed the new code must repay"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-jit10-3",
+          "stem": "A method that runs twice will usually stay uncompiled because:",
+          "correctAnswer": "The compile-time cost cannot be repaid by two trips through the new code",
+          "distractors": [
+            { "text": "JITs are forbidden from compiling methods that have already started", "kind": "reversed", "rationale": "Compiling after start is the definition. Coldness is the reason to skip." },
+            { "text": "Two trips produce no IR the selector could cover", "kind": "nearby", "rationale": "The IR exists. The economics do not." },
+            { "text": "The linker has not yet assigned the method an address, so emit is illegal", "kind": "misapplied", "rationale": "A JIT emits into its own buffer. It does not wait on static linking." }
+          ],
+          "correctExplanation": "Two executions do not earn a compile. The threshold exists so that cost has a chance to repay.",
+          "objectiveIds": ["Compare JIT compile-time cost with the speed the new code must repay"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "cmp-jit-20",
+      "conceptId": "cmp-jit",
+      "title": "The compile must repay its own clock",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["cmp-isel"],
+      "goDeeper": "cmp-deopt",
+      "explanation": [
+        "Compile-time spent while the user waits has to be repaid by the new code. A JIT is not a faster backend. It is a backend whose wall-clock is subtracted from the same run it is trying to shorten. Ten milliseconds to select and allocate a method that then saves one microsecond per call needs ten thousand later calls before the ledger is even.",
+        "Tiers exist because that ledger is not one number. An interpreter is cheap to start and slow per op. A baseline compiler is a fast, dumb selector that pays a little to win a little. An optimizing compile is the expensive cover — better tiles, better allocation, maybe inlining — that only a hot fragment can afford. The JVM spec's story is this ladder, not a single compile.",
+        "The policy that picks a tier is a bet on remaining lifetime. A loop that has already run 10,000 times will probably run 10,000 more; the optimizing compile is rational. A method that ran 10,000 times during startup and will now sleep is a compile that will never earn out. Profiles that die with the phase they measured are how that bet fails.",
+        "Compile-time also contends with the mutator. A compiler thread on the same cores steals the cycles the new code was supposed to free. Off-thread compile hides some of that, but it still consumes memory for IR and it still has to stop the world, or handshake, to install the new entry. The install is part of the cost, not a footnote after emit.",
+        "Repayment is therefore a comparison, not a slogan. Measure the compile, measure the per-entry win, estimate the remaining entries. A JIT that always chooses the optimizing tile set is optimizing the benchmark you already knew was hot, and stalling the program whose hot set you have not seen yet."
+      ],
+      "example": "Baseline compile of a 200-byte method takes 200 µs and saves 20 ns per call versus the interpreter. After 10,000 calls the compile is repaid. An optimizing recompile takes 8 ms and saves another 10 ns. That second compile needs 800,000 more calls. A method about to go cold should stay at baseline.",
+      "whyItMatters": "A JIT that 'made the benchmark faster' by compiling everything at startup moved the cost out of the measured window. The user's first request still paid it.",
+      "quiz": [
+        {
+          "id": "be-jit20-1",
+          "stem": "An optimizing compile takes 8 ms and saves 10 ns per later call. It repays itself after:",
+          "correctAnswer": "About 800,000 later calls, because 8 ms / 10 ns is the remaining-lifetime test",
+          "distractors": [
+            { "text": "One call, because any selected opcode is faster than the interpreter", "kind": "nearby", "rationale": "Faster per call is not the same as repaid. The 8 ms still happened." },
+            { "text": "Zero calls, because compile time is not on the user's clock", "kind": "reversed", "rationale": "In a JIT, compile time is on the user's clock. That is the point." },
+            { "text": "The next link step, when the .o files are combined", "kind": "misapplied", "rationale": "There is no static link step on this path. The compile is in-process." }
+          ],
+          "correctExplanation": "Cost over win is remaining entries needed. That is the repayment comparison.",
+          "objectiveIds": ["Compare JIT compile-time cost with the speed the new code must repay"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-jit20-2",
+          "stem": "Keeping a once-hot startup method at baseline, rather than recompiling it as optimizing, trades:",
+          "correctAnswer": "A smaller per-call win against not spending milliseconds the method will never earn back",
+          "distractors": [
+            { "text": "Correctness, because baseline code is not a legal selection of the IR", "kind": "nearby", "rationale": "Baseline is a cheaper legal cover. The trade is cost, not legality." },
+            { "text": "Nothing: an optimizing compile is always repaid by the first call", "kind": "reversed", "rationale": "First-call repayment would require the win to exceed the whole compile." },
+            { "text": "The register file, which baseline is not allowed to use", "kind": "misapplied", "rationale": "Both tiers allocate. They differ in how much time they spend doing it." }
+          ],
+          "correctExplanation": "You leave residual slowness on a method that is about to sleep, and you keep the milliseconds.",
+          "objectiveIds": ["Compare JIT compile-time cost with the speed the new code must repay"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        },
+        {
+          "id": "be-jit20-3",
+          "stem": "A JIT that compiles every loaded method at startup, then runs the benchmark, has:",
+          "correctAnswer": "Moved compile-time out of the measured window; the user's first real request still paid it",
+          "distractors": [
+            { "text": "Proved that compile-time is free, because the benchmark did not see it", "kind": "reversed", "rationale": "Hiding a cost is not deleting it. The ledger still includes startup." },
+            { "text": "Avoided instruction selection, which only runs after a hotness trip", "kind": "nearby", "rationale": "It ran selection earlier, on everything. That is more compile-time, not none." },
+            { "text": "Converted the JIT into a static linker that no longer emits code in-process", "kind": "misapplied", "rationale": "Emit still happens in-process. Only the schedule of when changed." }
+          ],
+          "correctExplanation": "The comparison has to include the compile you scheduled before the stopwatch. Otherwise the JIT looks free.",
+          "objectiveIds": ["Compile a hot fragment while the program is already running"],
+          "prerequisiteConceptIds": ["cmp-isel"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-deopt-10",
+      "conceptId": "cmp-deopt",
+      "title": "When the speculation was a lie",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-jit"],
+      "goDeeper": "cmp-stackmap",
+      "explanation": [
+        "Speculative types are a bet, not a proof. An optimizing JIT may compile a call as if the receiver is always `C`, or a branch as if a type test never fails. When the assumption is false, the compiled fragment cannot continue. Deoptimization falls back to a safer version — the interpreter, or a baseline compile that did not take the bet.",
+        "The fall-back needs a state the safer version understands. Locals, the expression stack, and the bytecode (or IR) program counter have to be reconstructed from whatever the optimizing frame actually held: registers, spill slots, maybe a subset of the locals the optimizer kept. A value the optimizer proved dead under the assumption may be live again in the interpreter. The deopt record has to say how to rebuild it, or admit it cannot.",
+        "The JVM spec's uncommon trap is this transfer. The compiled code hits a guard, the runtime unpacks the frame into interpreter state, and execution resumes at the bytecode the guard corresponded to. The next time through, a different compile may be chosen. The bug is a reconstruction that drops a local, or resumes at the wrong PC, not the fact that a speculation failed."
+      ],
+      "example": "A compile assumes `x` is `C` and inlines `C.m`. A later call passes a `D`. The guard fails. The runtime rebuilds the interpreter locals (`x` still holding the `D`), sets the PC to the original invoke, and continues in the interpreter, which dispatches `D.m`.",
+      "whyItMatters": "A crash on an uncommon type is often a deopt that could not rebuild a local, not a failed inlining of the common type. The safer version only works if the state is honest.",
+      "quiz": [
+        {
+          "id": "be-deopt10-1",
+          "stem": "A compiled guard sees a receiver that is not the speculated type. The compiled fragment should:",
+          "correctAnswer": "Fall back to a safer version that did not take the bet, instead of continuing under the lie",
+          "distractors": [
+            { "text": "Keep going, because selection already committed to the inlined body", "kind": "reversed", "rationale": "The guard exists so that commitment can be abandoned." },
+            { "text": "Relink the process with a new .o that contains every possible type", "kind": "misapplied", "rationale": "Deopt is an in-process transfer, not a static relink." },
+            { "text": "Spill the receiver and pretend the speculated type still holds", "kind": "nearby", "rationale": "A spill does not repair a failed type assumption." }
+          ],
+          "correctExplanation": "The assumption is false. Leave this code. The safer version is the rest of the story.",
+          "objectiveIds": ["Fall back to a safer version when a speculative assumption is false"],
+          "prerequisiteConceptIds": ["cmp-jit"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-deopt10-2",
+          "stem": "The interpreter (or baseline) that takes over must reconstruct:",
+          "correctAnswer": "Locals, expression stack, and the bytecode or IR PC that correspond to the guard",
+          "distractors": [
+            { "text": "Only `%rax`, because System V returns the whole frame in the return register", "kind": "nearby", "rationale": "A frame is more than the return register. Locals and the PC matter." },
+            { "text": "The original source tokens, so the lexer can rebuild the method", "kind": "misapplied", "rationale": "Deopt transfers runtime state, not a token stream." },
+            { "text": "Nothing: the safer version starts the method from the first bytecode", "kind": "reversed", "rationale": "Resuming at the start would rerun work and drop the current locals." }
+          ],
+          "correctExplanation": "Same abstract state, different code. Locals, stack, PC. That is the reconstruction.",
+          "objectiveIds": ["Predict the state the interpreter or baseline compiler must reconstruct"],
+          "prerequisiteConceptIds": ["cmp-jit"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-deopt10-3",
+          "stem": "A deopt record omits a local the optimizer proved dead under the speculation. When the guard fails:",
+          "correctAnswer": "The safer version may see a missing or stale local, because that proof no longer holds",
+          "distractors": [
+            { "text": "The local is still dead in the interpreter, so omitting it is always safe", "kind": "nearby", "rationale": "Dead under the bet is not dead in the general version." },
+            { "text": "The linker will re-create the local from a relocation at the throw site", "kind": "misapplied", "rationale": "Deopt is not linking, and this is not a throw." },
+            { "text": "SSA uniqueness restores the local from its one definition automatically", "kind": "reversed", "rationale": "The compiled frame may not even hold that definition any more." }
+          ],
+          "correctExplanation": "The proof was conditional. Failed speculation revives values the compile threw away. The record has to know that.",
+          "objectiveIds": ["Predict the state the interpreter or baseline compiler must reconstruct"],
+          "prerequisiteConceptIds": ["cmp-jit"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-stackmap-10",
+      "conceptId": "cmp-stackmap",
+      "title": "Roots at this safepoint, nowhere else",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-gc", "cmp-jit"],
+      "goDeeper": "cmp-lto",
+      "explanation": [
+        "Safepoints are the instants the collector is allowed to look. A stack map records, for this PC, which registers and stack slots currently hold GC roots. The JIT (or the static compiler) emits a map at every place a collection might stop the mutator: a call, a loop back-edge, a allocation slow path. Between safepoints the compiler may keep pointers in places the collector will not search.",
+        "The JVM spec treats that map as the contract between compiled code and the collector. A root in `%rbx` at this call site is live. The same `%rbx` at the next safepoint may hold an integer. The map is per PC, not per function. A derived interior pointer has to be named too, or a moving collector will update the base and leave the interior aiming at the old address.",
+        "A root missing from the map is a live object the collector will treat as garbage. The next load through that pointer is a use-after-reclaim. An extra root is a false retain — usually the cheaper bug, and the one conservative collectors accept on purpose. Precise collection is only as honest as this map."
+      ],
+      "example": "At a call safepoint, the map says `%rdi` holds `this` and `−16(%rbp)` holds a `Node*`. The collector traces those and patches them if the objects move. A `Node*` left only in `%r10`, not listed, can be reclaimed during the call.",
+      "whyItMatters": "A GC crash that 'only happens in compiled code' is often a safepoint map that forgot a register, not a broken mark phase.",
+      "quiz": [
+        {
+          "id": "be-stackmap10-1",
+          "stem": "Record where GC roots live at a safepoint by:",
+          "correctAnswer": "Emitting a per-PC map of which registers and stack slots currently hold pointers",
+          "distractors": [
+            { "text": "Marking every architectural register as a root for the whole function", "kind": "nearby", "rationale": "Homes change by PC. A function-wide map would both miss and over-retain." },
+            { "text": "Writing the roots into the kernel's page tables so the OS can collect", "kind": "misapplied", "rationale": "The collector is in the language runtime. The map is for that runtime." },
+            { "text": "Deleting every pointer from registers so the collector has nothing to miss", "kind": "reversed", "rationale": "The mutator still needs those pointers. The map names them; it does not erase them." }
+          ],
+          "correctExplanation": "This PC, these homes. That is the stack map the collector will read.",
+          "objectiveIds": ["Record where GC roots live at a safepoint"],
+          "prerequisiteConceptIds": ["cmp-gc", "cmp-jit"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-stackmap10-2",
+          "stem": "A `Node*` lives only in `%r10` at a call safepoint and is missing from the map. The collector will:",
+          "correctAnswer": "Treat that node as unreachable if nothing else refers to it, and may reclaim it during the call",
+          "distractors": [
+            { "text": "Scan every register conservatively, so `%r10` is safe without a map entry", "kind": "nearby", "rationale": "A precise collector trusts the map. It does not guess the omitted register." },
+            { "text": "Insert a spill of `%r10` after the fact, then resume the mark", "kind": "reversed", "rationale": "The collector does not rewrite the compiled frame to repair the map." },
+            { "text": "Relocate the node into `%rax`, the ABI return register, automatically", "kind": "misapplied", "rationale": "ABI return registers are not a backup root list." }
+          ],
+          "correctExplanation": "Missing from the map means not a root. A live pointer the compiler forgot is a use-after-reclaim waiting.",
+          "objectiveIds": ["Predict what the collector gets wrong if a root is missing from the map"],
+          "prerequisiteConceptIds": ["cmp-gc", "cmp-jit"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-stackmap10-3",
+          "stem": "The same register holds a pointer at one safepoint and an integer at the next. The maps must:",
+          "correctAnswer": "Disagree: list it as a root at the first PC and omit it as a pointer at the second",
+          "distractors": [
+            { "text": "Agree, because a register's type is a property of the whole function", "kind": "nearby", "rationale": "Allocation reuses crayons. The type is per PC." },
+            { "text": "Both omit it, because reused registers can never hold roots", "kind": "reversed", "rationale": "Reuse is why the map is per PC, not a reason to drop the first root." },
+            { "text": "Both list it, and let the collector distinguish integers from pointers by the heap tag", "kind": "subtle", "rationale": "That is a conservative guess. Precise maps do not ask the collector to guess." }
+          ],
+          "correctExplanation": "Homes and types change. Two PCs, two maps. That is the whole reason the record is per safepoint.",
+          "objectiveIds": ["Record where GC roots live at a safepoint"],
+          "prerequisiteConceptIds": ["cmp-gc", "cmp-jit"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "cmp-lto-10",
+      "conceptId": "cmp-lto",
+      "title": "The other .o is finally visible",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-ipo", "cmp-linker"],
+      "goDeeper": "cmp-pgo",
+      "explanation": [
+        "Whole-program rewrites wait until the linker can see every .o. Link-time optimization keeps IR (or a fat object) in the files the compiler wrote, and runs interprocedural passes after those files are gathered. Inlining a call whose callee lived in another translation unit is legal here. It was not legal when each .o was compiled alone.",
+        "Compile-time IPO never saw the other .o. It can inline within a file, propagate a constant that is local, and stop at the `extern` boundary. LTO crosses that boundary because the linker, or a linker plugin, now holds both functions' IR. The same pass, a larger scope. LLVM and GCC both do this as a second compile after the objects exist.",
+        "The cost is compile time and memory at link. The win is the call that used to be a PLT stub and is now a body in the caller, or a global that used to look escaped and is now local to the combined module. A program whose hot call is across two .c files is the case compile-time IPO cannot reach and LTO can."
+      ],
+      "example": "`main.c` calls `add` in `arith.c`. Compile-time IPO in `main.c` sees an external `add` and emits a call. LTO sees both IR graphs, inlines `add`, and the call disappears. The linker is no longer patching that particular hole because the hole is gone.",
+      "whyItMatters": "A missed inline that 'should have been obvious' is often a file boundary. LTO is how that boundary stops being a wall.",
+      "quiz": [
+        {
+          "id": "be-lto10-1",
+          "stem": "Optimize across object-file boundaries after the linker can see the whole program by:",
+          "correctAnswer": "Keeping IR in the .o files and running interprocedural passes once every file is present",
+          "distractors": [
+            { "text": "Re-parsing every source file in the kernel after `exec`", "kind": "misapplied", "rationale": "LTO is a link-time compile of stored IR, not a kernel re-parse." },
+            { "text": "Applying relocations a second time so calls become inlines", "kind": "nearby", "rationale": "Relocations patch addresses. They do not rewrite IR across files." },
+            { "text": "Forbidding `extern` so each file is already the whole program", "kind": "reversed", "rationale": "The files stay separate at compile time. LTO is what gathers them." }
+          ],
+          "correctExplanation": "IR survives in the objects. The later pass sees the callee the first compile could not.",
+          "objectiveIds": ["Optimize across object-file boundaries after the linker can see the whole program"],
+          "prerequisiteConceptIds": ["cmp-ipo", "cmp-linker"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-lto10-2",
+          "stem": "Compile-time IPO that never saw the other .o differs from LTO because:",
+          "correctAnswer": "It must stop at the `extern` boundary; LTO can inline or specialize once both IR graphs exist",
+          "distractors": [
+            { "text": "IPO can already see every .o; LTO exists only to assign registers again", "kind": "reversed", "rationale": "Per-file IPO cannot see the other file. That is the gap LTO fills." },
+            { "text": "LTO runs in the lexer; IPO runs in the linker", "kind": "misapplied", "rationale": "Both are IR transforms. They differ in when the other file is present." },
+            { "text": "They are two names for applying the same relocations", "kind": "nearby", "rationale": "Relocations are address holes. This comparison is about IR scope." }
+          ],
+          "correctExplanation": "Same kind of pass, different visibility. The other .o is the whole difference.",
+          "objectiveIds": ["Compare LTO with a compile-time IPO that never saw the other .o"],
+          "prerequisiteConceptIds": ["cmp-ipo", "cmp-linker"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "be-lto10-3",
+          "stem": "Keeping IR for LTO, rather than emitting only machine code per .o, trades:",
+          "correctAnswer": "Link-time compile cost and memory for interprocedural rewrites that cross file boundaries",
+          "distractors": [
+            { "text": "Correctness, because IR at link time cannot preserve observable behavior", "kind": "nearby", "rationale": "LTO is still a semantics-preserving compile. The trade is cost versus scope." },
+            { "text": "Nothing: machine-code .o files already contain the other file's IR", "kind": "reversed", "rationale": "Ordinary .o files have bytes and symbols, not the callee's IR." },
+            { "text": "The ABI, which LTO is required to abandon so calls can inline", "kind": "misapplied", "rationale": "Inlined bodies still honor the platform ABI at remaining call edges." }
+          ],
+          "correctExplanation": "You pay at link to see the whole program. That is the LTO bargain.",
+          "objectiveIds": ["Compare LTO with a compile-time IPO that never saw the other .o"],
+          "prerequisiteConceptIds": ["cmp-ipo", "cmp-linker"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "cmp-pgo-10",
+      "conceptId": "cmp-pgo",
+      "title": "Yesterday's counts, today's inliner",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["cmp-inlining"],
+      "explanation": [
+        "Yesterday's run is how today's inliner learns which calls were hot. Profile-guided optimization instruments a build, runs a workload, then recompiles with those counts: inline the call that ran a million times, lay out the branch that went the common way, put the cold handler off the fall-through. The profile is data about one execution, not a proof about the next.",
+        "A profile that does not match this run produces a mis-optimization. The inliner trusts a startup-heavy profile and fattens `main` with initialization callees that this request never hits. The layout trusts a branch that flipped in production. The binary is then worse than an unprofiled `-O2` on the path that actually runs.",
+        "GCC's `-fprofile-generate` / `-fprofile-use` is the usual two-pass shape. The second compile is still the same backend. It just has counters on edges and calls. A JIT that uses last week's profile for this week's traffic is the same idea on a delay. Stale data is the failure mode, not the existence of the counters."
+      ],
+      "example": "A training run spends 90% of its time in `parse`. The second compile inlines `parse`'s helpers and lays its hot loop tightly. Production spends 90% of its time in `render`. The inlined `parse` helpers now bloat I-cache and `render` is still a pile of calls. The profile was true yesterday.",
+      "whyItMatters": "A PGO binary that 'won the bench' and lost production is usually a workload mismatch, not a broken inliner. The counts were about a different program run.",
+      "quiz": [
+        {
+          "id": "be-pgo10-1",
+          "stem": "Use yesterday's profile to decide today's inlining and layout by:",
+          "correctAnswer": "Recompiling with those edge and call counts, so hot calls inline and hot branches fall through",
+          "distractors": [
+            { "text": "Deleting the inliner, because a profile already named the machine code", "kind": "reversed", "rationale": "The profile feeds the inliner. It does not replace it." },
+            { "text": "Applying relocations in profile order so the linker inlines across .o files", "kind": "misapplied", "rationale": "Relocations patch addresses. Inlining is an IR rewrite guided by counts." },
+            { "text": "Interpreting the profile as a proof that every future run will match", "kind": "nearby", "rationale": "The second compile uses the counts as a bet, not as a proof." }
+          ],
+          "correctExplanation": "Same compiler, extra counters. Hot becomes inline and fall-through. That is the use.",
+          "objectiveIds": ["Use yesterday's profile to decide today's inlining and layout"],
+          "prerequisiteConceptIds": ["cmp-inlining"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "be-pgo10-2",
+          "stem": "A training run was startup-heavy; production is request-heavy. Today's inliner will:",
+          "correctAnswer": "Fatten the startup path and leave the request path as calls, because those were yesterday's counts",
+          "distractors": [
+            { "text": "Ignore the profile once `main` returns, so production is unaffected", "kind": "reversed", "rationale": "The binary is already laid out. The mismatch is compiled in." },
+            { "text": "Re-profile automatically on the first production request and relink", "kind": "nearby", "rationale": "Static PGO does not relink in production. A stale binary stays stale." },
+            { "text": "Treat every call as hot, because mismatched profiles default to inline-all", "kind": "misapplied", "rationale": "The compiler trusts the counters it has, including the cold ones." }
+          ],
+          "correctExplanation": "The second compile believed the training run. Production is a different run. That is the mis-optimization.",
+          "objectiveIds": ["Predict a mis-optimization when the profile does not match this run"],
+          "prerequisiteConceptIds": ["cmp-inlining"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "be-pgo10-3",
+          "stem": "Trusting a stale profile for inlining, rather than compiling without counts, trades:",
+          "correctAnswer": "A possible win on yesterday's hot path against a worse layout on the path this run actually takes",
+          "distractors": [
+            { "text": "Correctness, because a mismatched profile changes observable results", "kind": "nearby", "rationale": "PGO is a performance bet. The danger is slowness, not a wrong answer." },
+            { "text": "Nothing: a profile cannot hurt, because unused counts are ignored", "kind": "reversed", "rationale": "Used counts on the wrong path are how I-cache and call overhead get worse." },
+            { "text": "The ABI, which PGO is allowed to abandon for profiled calls", "kind": "misapplied", "rationale": "Inlining does not retire the calling convention on the edges that remain." }
+          ],
+          "correctExplanation": "You spend code size and layout on a path that may not run. That is the stale-profile trade.",
+          "objectiveIds": ["Predict a mis-optimization when the profile does not match this run"],
+          "prerequisiteConceptIds": ["cmp-inlining"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

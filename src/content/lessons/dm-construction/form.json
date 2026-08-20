@@ -1,0 +1,595 @@
+{
+  "courseId": "dm-construction",
+  "moduleId": "dm-c-form",
+  "lessons": [
+    {
+      "id": "dm-song-form-10",
+      "conceptId": "dm-song-form",
+      "title": "Intro, cell A, cell B, return",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "goDeeper": "dm-riff-form",
+      "diagram": "dm-form",
+      "explanation": [
+        "Order an intro, a cell A, a cell B, and a return — or refuse the return on purpose. The intro can be a fragment of A. B is contrast: a new cell, or the same cell under a new kit occupation. Return is a choice, not a law. Through-composed stacking is the refusal done honestly.",
+        "Mark a section change that is only a drum texture. Blast under A, then half-time under A, is already A then A-as-B. You do not need a new guitar figure to change the piece. If you cannot hear the kit change as a section, you are still waiting for a chorus that this form does not owe you.",
+        "Write contrast, not just density. Two cells that are equally packed with no kit change and no mute change will read as one long bar. Thin something, or change the grid, or actually write B. Density piled on density is not an order."
+      ],
+      "example": "Intro fragment of A; A over a blast; A over half-time; B as a chromatic cell; return to A. Or: A, mutated A, B, C, end — return refused, stack declared.",
+      "whyItMatters": "Without an order you can name, later riff-as-form and breakdown lessons have no sections to act on. Density is not a map.",
+      "quiz": [
+        {
+          "id": "dm-sfo10-1",
+          "stem": "Ordering intro, riff A, riff B, and return — or refusing return — is a claim that:",
+          "correctAnswer": "The song is a chosen sequence of cells, and coming back is optional on purpose",
+          "distractors": [
+            {
+              "text": "Every honest track must return, because through-composed stacking is a failure",
+              "kind": "reversed",
+              "rationale": "Refusal of return is a legal, named choice."
+            },
+            {
+              "text": "A pop chorus is required before any cell is allowed to be A or B",
+              "kind": "nearby",
+              "rationale": "A chorus is a different map. Cells can already be A and B."
+            },
+            {
+              "text": "The order is only a celebrity list of who played which riff",
+              "kind": "misapplied",
+              "rationale": "A roster is not a sequence of cells."
+            }
+          ],
+          "correctExplanation": "Sequence of cells. Return is a choice. A chorus is not the ticket.",
+          "objectiveIds": [
+            "Order intro, riff A, riff B, and return — or refuse return on purpose"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-sfo10-2",
+          "stem": "A section change that is only a drum texture is one where:",
+          "correctAnswer": "The guitar cell stays and the kit occupation changes, and that change is the section",
+          "distractors": [
+            {
+              "text": "The kit is ignored, because only a new guitar figure can ever change a section",
+              "kind": "reversed",
+              "rationale": "The kit change is exactly the section this lesson marks."
+            },
+            {
+              "text": "The mix must smear, or a texture change is not allowed to count as form",
+              "kind": "nearby",
+              "rationale": "Smear is presentation. The occupation of the kit is the form."
+            },
+            {
+              "text": "A vocal hook must arrive, or the drums cannot host a section by themselves",
+              "kind": "misapplied",
+              "rationale": "A hook is not required for a kit-only section change."
+            }
+          ],
+          "correctExplanation": "Same cell, new kit job. That is already A then A-as-B.",
+          "objectiveIds": [
+            "Mark a section change that is only a drum texture"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-sfo10-3",
+          "stem": "Two equally packed cells with no kit change and no mute change will typically:",
+          "correctAnswer": "Read as one long bar of density rather than as A then B",
+          "distractors": [
+            {
+              "text": "Automatically become a clear A and B, because packing is already contrast",
+              "kind": "reversed",
+              "rationale": "Packing on packing is not an order."
+            },
+            {
+              "text": "Force a return even if you meant to refuse one",
+              "kind": "nearby",
+              "rationale": "Return is still a choice. The missing object is contrast."
+            },
+            {
+              "text": "Require drop tuning before density can be heard as two sections",
+              "kind": "subtle",
+              "rationale": "Tuning is not the missing contrast. Kit, mute, or a real B is."
+            }
+          ],
+          "correctExplanation": "Contrast has to be written. Density is not a map.",
+          "objectiveIds": [
+            "Order intro, riff A, riff B, and return — or refuse return on purpose",
+            "Mark a section change that is only a drum texture"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-riff-cell"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "dm-riff-form-10",
+      "conceptId": "dm-riff-form",
+      "title": "Mutations that become the next section",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-song-form",
+        "mus-form-riff"
+      ],
+      "goDeeper": "dm-breakdown-dm",
+      "diagram": "dm-form",
+      "explanation": [
+        "Form in this style is the order of cells and their mutations. A then A inverted, A sequenced, A opened instead of choked: those are sections. You are not waiting for a chorus to arrive. You are listing the figures in the order they occupy the track.",
+        "Show a mutation that is the next section, not a new song. Raise the last pitch a semitone, start the cell later, plane it, or release the pedal. A listener should still hear the parent figure. If they cannot, you wrote a new song and called it a mutation.",
+        "Keep a spine across the order so the mutations accumulate. Random new cells with no parent are a stack, which is legal, but they are not riff-as-form. Riff-as-form is kinship: each section is a rewrite you can point at."
+      ],
+      "example": "Cell A choked; A with the last attack open; A started on a later beat; A planed up a minor third. Four sections, one parent. A brand-new pentatonic chorus in the same minutes would have been a new song.",
+      "whyItMatters": "If form is only verse-chorus, this repertoire looks like a mess. If form is the order of mutations, the mess is already a map.",
+      "quiz": [
+        {
+          "id": "dm-rfo10-1",
+          "stem": "Treating the form as the order of cells and their mutations means you:",
+          "correctAnswer": "List the figures and rewrites as the sections, rather than waiting for a chorus",
+          "distractors": [
+            {
+              "text": "Wait for a verse-chorus map before any mutated cell is allowed to be form",
+              "kind": "reversed",
+              "rationale": "The order of mutations is already the form."
+            },
+            {
+              "text": "Rank the guitarists so a celebrity list can stand in for the order",
+              "kind": "nearby",
+              "rationale": "A roster is not a sequence of rewrites."
+            },
+            {
+              "text": "Ignore the guitar and let only the mix bus define each section",
+              "kind": "misapplied",
+              "rationale": "The cell is the form object. A desk is presentation."
+            }
+          ],
+          "correctExplanation": "Figures in order, including rewrites. A chorus is optional, not the map.",
+          "objectiveIds": [
+            "Treat the form as the order of cells and their mutations"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-song-form",
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-rfo10-2",
+          "stem": "A mutation that is the next section, not a new song, is a rewrite that:",
+          "correctAnswer": "Keeps the parent figure audible while changing mute, place, sequence, or a pitch",
+          "distractors": [
+            {
+              "text": "Erases the parent so a brand-new riff can be claimed as the same cell",
+              "kind": "reversed",
+              "rationale": "If the parent is gone, it is a new song."
+            },
+            {
+              "text": "Requires a spoken count of every bar before the rewrite may begin",
+              "kind": "nearby",
+              "rationale": "Audible kinship is the test, not a spoken count."
+            },
+            {
+              "text": "Is illegal unless a pop hook explains the rewrite to the listener",
+              "kind": "misapplied",
+              "rationale": "A hook is not the kinship test."
+            }
+          ],
+          "correctExplanation": "Parent still heard. That is a section. Parent gone is a new song.",
+          "objectiveIds": [
+            "Show a mutation that is the next section, not a new song"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-song-form",
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-rfo10-3",
+          "stem": "Random new cells with no parent figure across a track should be diagnosed as:",
+          "correctAnswer": "A stack of songs, which is legal, but not riff-as-form kinship",
+          "distractors": [
+            {
+              "text": "Perfect riff-as-form, because any new cell is already a mutation of silence",
+              "kind": "reversed",
+              "rationale": "Kinship needs a parent you can point at."
+            },
+            {
+              "text": "A required breakdown, because stacks are forbidden without half-time",
+              "kind": "nearby",
+              "rationale": "Half-time is a different lever. Kinship is the missing object."
+            },
+            {
+              "text": "Proof that V–I was hiding in each new cell all along",
+              "kind": "subtle",
+              "rationale": "Cadence hunting is not the diagnosis. Missing parent is."
+            }
+          ],
+          "correctExplanation": "No parent, no mutation. You stacked. That is a different, honest map.",
+          "objectiveIds": [
+            "Treat the form as the order of cells and their mutations",
+            "Show a mutation that is the next section, not a new song"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-song-form",
+            "mus-form-riff"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-breakdown-dm-10",
+      "conceptId": "dm-breakdown-dm",
+      "title": "Contrast, not a genre swap",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-song-form"
+      ],
+      "goDeeper": "dm-vocal-rhythm",
+      "explanation": [
+        "Half-time weight can be contrast inside the piece, or a visitor from another groove. Contrast keeps the cell: slower kick, open mute, same chromatic spine. A visitor replaces the spine with a generic chug, a crowd-cue, and a groove this song had not been writing. Slam and deathcore use one-note half-time on purpose; that is not automatically another genre. Ask whether the spine survived. That is a DAU contrast check, not a border law.",
+        "Predict when a breakdown erases the cell. If the chromatic spine, the pedal grind, or the additive grouping is swapped for a one-note chug anyone could have dropped into another track, the cell is gone. The half-time succeeded as a genre cue and failed as contrast.",
+        "Use the drop when the cell can survive it. Open the last attack, thin the blast to a half-time snare, keep the pitches. That is weight as a formal axis. A breakdown that needs a new riff, a new tuning slogan, and a new audience is a swap. Name which one you wrote."
+      ],
+      "example": "Blast-cell A; half-time A with the last attack open. Contrast. Versus: blast-cell A; a one-note chug in a new groove with no leftover pitches from A. That second drop erased the cell.",
+      "whyItMatters": "Breakdowns are a fork. Contrast keeps the song you were writing. A genre swap starts a different one in the same minutes.",
+      "quiz": [
+        {
+          "id": "dm-brk10-1",
+          "stem": "Half-time weight used as contrast, rather than as a different genre arriving, is a drop that:",
+          "correctAnswer": "Keeps the cell's spine and slows the kit, instead of replacing the figure with a generic chug",
+          "distractors": [
+            {
+              "text": "Must replace the spine, because contrast is defined as a new genre in the same minutes",
+              "kind": "reversed",
+              "rationale": "Replacing the spine is the visitor, not the contrast."
+            },
+            {
+              "text": "Requires a crowd-cue sample or the half-time is not allowed to count",
+              "kind": "nearby",
+              "rationale": "A cue is a visitor's habit, not the test of contrast."
+            },
+            {
+              "text": "Is illegal unless the guitar retunes for a weight contest in the drop",
+              "kind": "misapplied",
+              "rationale": "Heavier-as-better is not the fork this lesson names."
+            }
+          ],
+          "correctExplanation": "Same spine, new kit occupation. A generic chug is the other fork.",
+          "objectiveIds": [
+            "Use half-time weight as contrast, or refuse it as a different genre arriving"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-song-form"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-brk10-2",
+          "stem": "A breakdown erases the cell you were writing when it:",
+          "correctAnswer": "Swaps the spine, pedal, or grouping for a one-note chug that could live in another track",
+          "distractors": [
+            {
+              "text": "Slows the kit while keeping the chromatic spine and the pedal grind",
+              "kind": "reversed",
+              "rationale": "That drop kept the cell. Erasure is the swap."
+            },
+            {
+              "text": "Names the band, which is already enough to delete any guitar figure",
+              "kind": "nearby",
+              "rationale": "A surname does not erase a spine. A chug does."
+            },
+            {
+              "text": "Uses half-time at all, because slowing the kit always deletes the riff",
+              "kind": "subtle",
+              "rationale": "Half-time can be contrast. The erasure is the lost spine."
+            }
+          ],
+          "correctExplanation": "Lost spine, generic chug. That is erasure. Slow kit plus same pitches is not.",
+          "objectiveIds": [
+            "Predict when a breakdown erases the cell you were writing"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-song-form"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-brk10-3",
+          "stem": "Blast-cell A then half-time A with an open last attack should be read as:",
+          "correctAnswer": "Contrast inside the piece, because the parent cell is still the figure",
+          "distractors": [
+            {
+              "text": "A genre swap, because any half-time is already a different song by law",
+              "kind": "reversed",
+              "rationale": "Half-time plus parent cell is contrast, not a visitor."
+            },
+            {
+              "text": "Proof that return is forbidden, so A may never come back after the drop",
+              "kind": "nearby",
+              "rationale": "Return is still a choice. The drop did not ban it."
+            },
+            {
+              "text": "A two-guitar exam that cannot count until a third is stacked above A",
+              "kind": "misapplied",
+              "rationale": "Mute and kit are the contrast. A harmony guitar is another lesson."
+            }
+          ],
+          "correctExplanation": "Parent still there, kit slowed, last attack open. That is contrast.",
+          "objectiveIds": [
+            "Use half-time weight as contrast, or refuse it as a different genre arriving",
+            "Predict when a breakdown erases the cell you were writing"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-song-form"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "dm-vocal-rhythm-10",
+      "conceptId": "dm-vocal-rhythm",
+      "title": "Rhythm, not a pop hook",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-blast",
+        "dm-song-form"
+      ],
+      "goDeeper": "dm-harmony-two-gtr",
+      "explanation": [
+        "A DAU arrangement test: phrase the vocal against the kick, not only as a melody sitting on top. Harsh register can be a drum-like layer: attacks that double the kick, answer the snare, or drone through a cell. A sung hook that ignores the kick is a different job, even if the throat is still harsh. Melodic death, death-doom, and plenty of classic records float phrases that are not tap-grids.",
+        "Write a vocal rhythm that is a third grid. Guitar cell is one grid. Kit grammar is the second. The voice's attacks are the third: a pattern you could tap with the sound off. If you cannot tap it, you have lyrics as a caption, not a rhythmic instrument.",
+        "Place silences. A continuous growl with no rest is a surface, which can be a choice, but it is not yet a third grid. Attacks and gaps against the kick are how the voice phrases. Personality copy — angry, evil, the guy from a lineup — replaces that grid instead of writing it."
+      ],
+      "example": "Low growl on the downbeat kicks, then a bark on the snare off-beats, then two beats of rest. Three-grid writing. A harsh vowel held as a mood while the kick runs ignored would have been a caption.",
+      "whyItMatters": "If the vocal is only a personality, you cannot arrange it. Rhythm against the kick is arrangement. A hook sitting on top is a different style's job.",
+      "quiz": [
+        {
+          "id": "dm-vry10-1",
+          "stem": "Phrasing the vocal against the kick, not as a melody sitting on top, means you:",
+          "correctAnswer": "Place harsh attacks to double, answer, or rest against the feet, rather than floating a hook",
+          "distractors": [
+            {
+              "text": "Write a sung hook that ignores the kick so the voice can sit above the song",
+              "kind": "reversed",
+              "rationale": "Sitting on top is the job this lesson refuses."
+            },
+            {
+              "text": "Ban the kit whenever the voice is harsh, so only the throat has a pulse",
+              "kind": "nearby",
+              "rationale": "The kick is the partner. It is not fired."
+            },
+            {
+              "text": "Wait for a celebrity name before any growl is allowed to be rhythm",
+              "kind": "misapplied",
+              "rationale": "A surname is not a placement against the kick."
+            }
+          ],
+          "correctExplanation": "Attacks against the feet. A hook above the song is a different job.",
+          "objectiveIds": [
+            "Phrase the vocal against the kick, not as a melody sitting on top"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast",
+            "dm-song-form"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dm-vry10-2",
+          "stem": "A vocal rhythm that is a third grid is a pattern you:",
+          "correctAnswer": "Could tap with the sound off, beside the guitar cell and the kit grammar",
+          "distractors": [
+            {
+              "text": "Could only describe as angry or evil, with no attacks you can tap",
+              "kind": "reversed",
+              "rationale": "Personality copy is the caption this lesson drops."
+            },
+            {
+              "text": "Must hide, because a third grid is illegal once a blast is in the bar",
+              "kind": "nearby",
+              "rationale": "The blast is the second grid. The voice can still be the third."
+            },
+            {
+              "text": "Replace with a pop chorus so the voice can be a melody after all",
+              "kind": "misapplied",
+              "rationale": "A chorus is not the third grid."
+            }
+          ],
+          "correctExplanation": "Tappable attacks plus gaps. That is a grid. Mood words are not.",
+          "objectiveIds": [
+            "Write a vocal rhythm that is a third grid"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast",
+            "dm-song-form"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "dm-vry10-3",
+          "stem": "A continuous growl with no rest against a running kick is best diagnosed as:",
+          "correctAnswer": "A surface that is not yet a third grid, because there are no attacks and gaps to tap",
+          "distractors": [
+            {
+              "text": "A complete third grid, because any harsh sound is already rhythm by default",
+              "kind": "reversed",
+              "rationale": "Harshness is register. Rhythm needs a tappable pattern."
+            },
+            {
+              "text": "Proof the kick must stop, or a growl is not allowed to occupy the bar",
+              "kind": "nearby",
+              "rationale": "The kick can run. The voice still needs a pattern."
+            },
+            {
+              "text": "A two-guitar problem that distortion will automatically phrase for the singer",
+              "kind": "subtle",
+              "rationale": "Distortion is a guitar spectrum. It does not tap the vocal grid."
+            }
+          ],
+          "correctExplanation": "Surface without gaps is not a grid. Write attacks and rest against the kick.",
+          "objectiveIds": [
+            "Phrase the vocal against the kick, not as a melody sitting on top",
+            "Write a vocal rhythm that is a third grid"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-blast",
+            "dm-song-form"
+          ],
+          "difficultyTier": 2,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "dm-harmony-two-gtr-10",
+      "conceptId": "dm-harmony-two-gtr",
+      "title": "Unison, a third, or a second riff",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": [
+        "dm-harmony",
+        "mus-voice-lead"
+      ],
+      "goDeeper": "dm-tech-vs-func",
+      "explanation": [
+        "Choose unison, a third above, or a second riff. Unison thickens the cell. A third above is a parallel or modal harmony that still reports to the same rhythm. A second riff is a counter-cell, often in another register, that must still lock or coincide. Those are three arrangements, not one default.",
+        "Predict what distortion does to a close harmony. Gain stacks midrange; close thirds beat and smear until the two parts fuse into one thick pitch-band. Wider intervals, octave doubling, or unison stay readable. If you need two lines heard as two, do not seat them a third apart under high gain without a plan.",
+        "Lock the two parts to the same cell rhythm unless the second riff is the point. A harmony guitar that phrases against the cell without a coincidence is polymeter by accident. Name the choice: thicken, color, or counter. Accidental smear is not a fourth option."
+      ],
+      "example": "Both guitars on the chromatic cell (unison); then a diatonic third that smears under high gain; then a higher counter-cell that meets the original every four bars. Three jobs. The smear was predicted, not a surprise.",
+      "whyItMatters": "Two guitars are an arrangement fork. Distortion is a spectral fact that can erase the fork you thought you wrote.",
+      "quiz": [
+        {
+          "id": "dm-2gt10-1",
+          "stem": "Unison, a third above, and a second riff differ as two-guitar jobs because:",
+          "correctAnswer": "Unison thickens, a third colors the same rhythm, a second riff is a counter-cell",
+          "distractors": [
+            {
+              "text": "They are the same job, because any second guitar is already a required third",
+              "kind": "reversed",
+              "rationale": "Three jobs. Defaulting to a third erases the choice."
+            },
+            {
+              "text": "Unison is illegal, so only a third or a celebrity solo may occupy guitar two",
+              "kind": "nearby",
+              "rationale": "Unison is a legal thickening. A solo is a different object."
+            },
+            {
+              "text": "A pop hook must sit on guitar two, or none of those jobs may begin",
+              "kind": "misapplied",
+              "rationale": "A hook is not the three-way fork."
+            }
+          ],
+          "correctExplanation": "Thicken, color, or counter. Name which one you hired.",
+          "objectiveIds": [
+            "Choose unison, a third above, or a second riff"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "dm-2gt10-2",
+          "stem": "High gain on a close third between two guitars typically:",
+          "correctAnswer": "Smears the parts into one pitch-band, so the two lines stop reading as two",
+          "distractors": [
+            {
+              "text": "Separates the parts more clearly, because gain always articulates close intervals",
+              "kind": "reversed",
+              "rationale": "Gain stacks midrange. Close thirds fuse."
+            },
+            {
+              "text": "Bans unison, because smear can only happen when both guitars play the same pitch",
+              "kind": "nearby",
+              "rationale": "Unison thickens. Close thirds are the smear risk."
+            },
+            {
+              "text": "Requires a blast catalog before any interval may be stacked under gain",
+              "kind": "misapplied",
+              "rationale": "Kit taxonomy does not predict a spectral fuse."
+            }
+          ],
+          "correctExplanation": "Close plus gain equals fuse. Wider, octave, or unison stay readable.",
+          "objectiveIds": [
+            "Predict what distortion does to a close harmony between two guitars"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "dm-2gt10-3",
+          "stem": "If you need two guitar lines heard as two under distortion, a working tradeoff is:",
+          "correctAnswer": "Use unison, an octave, or a wider interval, and treat a close third as a smear you planned",
+          "distractors": [
+            {
+              "text": "Seat them a third apart at max gain and expect both lines to stay separate",
+              "kind": "reversed",
+              "rationale": "That seating is how they fuse."
+            },
+            {
+              "text": "Delete guitar two, because distortion forbids any second part on principle",
+              "kind": "nearby",
+              "rationale": "A second part is legal. The interval and the gain are the tradeoff."
+            },
+            {
+              "text": "Replace both lines with a breakdown chug so smear cannot occur",
+              "kind": "subtle",
+              "rationale": "A genre swap is not the spectral tradeoff."
+            }
+          ],
+          "correctExplanation": "Readable two, or planned smear. Close thirds under high gain are the second unless you meant them.",
+          "objectiveIds": [
+            "Choose unison, a third above, or a second riff",
+            "Predict what distortion does to a close harmony between two guitars"
+          ],
+          "prerequisiteConceptIds": [
+            "dm-harmony",
+            "mus-voice-lead"
+          ],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

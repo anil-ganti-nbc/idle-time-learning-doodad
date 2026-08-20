@@ -1,0 +1,263 @@
+{
+  "courseId": "cpu-foundations",
+  "moduleId": "cpu-f-perf",
+  "lessons": [
+    {
+      "id": "arch-latency-throughput-10",
+      "conceptId": "arch-latency-throughput",
+      "title": "Two numbers that refuse to be one",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": [],
+      "goDeeper": "arch-data-parallel",
+      "diagram": "latency-throughput",
+      "explanation": [
+        "Latency is the time from starting one piece of work to finishing it. Throughput is how many pieces finish per unit time. They share a unit of time and they are not interchangeable. A bakery can take forty minutes to bake one loaf and still sell two hundred loaves an hour if two hundred loaves share the oven.",
+        "Hardware announcements collapse the two into a single 'speed'. Clock frequency is how fast one stage ticks — a latency story about a slice of one instruction. Instructions per cycle is how often useful work retires — a throughput story about the whole machine. You can raise the clock and lose throughput if every other cycle is a stall. You can lower the clock and gain throughput if you keep more independent work in flight.",
+        "The rest of this course is techniques for buying one quantity without pretending you bought the other. A pipeline overlaps stages so more instructions finish per second; each instruction still takes several stages. A cache attacks a long memory latency that would otherwise serialize the line. When someone says a chip got faster, ask which number moved."
+      ],
+      "example": "A load from DRAM might take three hundred cycles. That is latency. A core that only issues that load retires almost nothing while it waits. If the machine has other independent work ready, those cycles can still retire useful results. The load is still slow. The machine is not idle. Throughput was protected; latency was not deleted.",
+      "whyItMatters": "Every confused claim about clocks, cores, or 'more performance' is a latency/throughput mix-up. If you cannot say which quantity moved, you cannot read the claim, and you cannot choose the next technique.",
+      "quiz": [
+        {
+          "id": "lt10-1",
+          "stem": "A change that only shrinks how long one instruction takes, leaving completions per cycle alone, primarily moved:",
+          "correctAnswer": "Latency",
+          "distractors": [
+            { "text": "Throughput", "kind": "nearby", "rationale": "Throughput is completion rate, not per-item time." },
+            { "text": "Instruction count", "kind": "misapplied", "rationale": "How many instructions exist is not how long one takes." },
+            { "text": "Endianness", "kind": "subtle", "rationale": "Byte order is a naming convention, not a speed." }
+          ],
+          "correctExplanation": "Latency is per-item time. Throughput is how many items finish per unit time.",
+          "objectiveIds": ["Distinguish latency from throughput with a concrete pipeline or factory example"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "lt10-2",
+          "stem": "An oven that needs 40 minutes per loaf and holds 200 loaves at once is mainly showing:",
+          "correctAnswer": "High throughput despite high latency",
+          "distractors": [
+            { "text": "That latency has been eliminated", "kind": "reversed", "rationale": "Each loaf still takes 40 minutes." },
+            { "text": "That clock frequency is the only knob", "kind": "misconception", "rationale": "Overlap, not frequency, is doing the work here." },
+            { "text": "That the bakery has no capacity limit", "kind": "subtle", "rationale": "The oven size is exactly the capacity that creates throughput." }
+          ],
+          "correctExplanation": "Each loaf still takes forty minutes. Many finish each hour because they overlap.",
+          "objectiveIds": ["Distinguish latency from throughput with a concrete pipeline or factory example"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "lt10-3",
+          "stem": "Raising clock frequency can fail to raise completions per second when:",
+          "correctAnswer": "The extra ticks are spent stalled, so useful work per cycle falls",
+          "distractors": [
+            { "text": "Frequency and throughput are the same number", "kind": "misconception", "rationale": "They are related and they are not the same number." },
+            { "text": "The instruction set has too few opcodes", "kind": "nearby", "rationale": "ISA width is not what turns extra ticks into stalls." },
+            { "text": "The oven was already empty", "kind": "subtle", "rationale": "An empty oven is a capacity story, not a stall-per-tick story." }
+          ],
+          "correctExplanation": "A faster tick on idle stages is a faster wait. Throughput needs useful retirements, not just a hotter clock.",
+          "objectiveIds": ["Explain why raising clock or width can move one without the other"],
+          "prerequisiteConceptIds": [],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "arch-data-parallel-10",
+      "conceptId": "arch-data-parallel",
+      "title": "A map is not a chain",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-amdahl",
+      "explanation": [
+        "Some programs are a chain: each step needs the previous result. Some programs are a map: the same operation on many independent elements. Colour every pixel, add two arrays, apply one force law to many particles. Independence is the property hardware can spend. If element 7 does not wait on element 3, you can run them together, or stagger them so a miss on 3 does not stall 7.",
+        "A loop-carried dependence (`x = f(x)`) is the opposite. No amount of extra arithmetic units deletes that edge. People say 'embarrassingly parallel' when the independence is obvious. Most real programs are mixed: a data-parallel map around a sequential reduction, or a grid of work that must meet at a barrier.",
+        "The skill is seeing which parts are maps. Hardware that bets on many simple pipelines only wins on the independent parts. A rewrite that turns a chain into a tree of partials is an algorithm change. The machine only runs the independence you actually created."
+      ],
+      "example": "`out[i] = 2 * in[i]` is data-parallel: each index owns its element. `out[i] = out[i-1] + in[i]` is a chain. You can recover parallelism with a tree of partial sums, but that is a different algorithm. The original loop has a carried dependence the hardware cannot wish away.",
+      "whyItMatters": "Wide machines are not faster sequential cores. They are machines for independent elements. If you cannot point at the independent work, you are about to be disappointed by a parallel launch.",
+      "quiz": [
+        {
+          "id": "dp10-1",
+          "stem": "A computation is data-parallel when:",
+          "correctAnswer": "The same operation applies to independent elements",
+          "distractors": [
+            { "text": "It is written as a for-loop", "kind": "nearby", "rationale": "Loops can be sequential chains." },
+            { "text": "It uses a lot of memory", "kind": "subtle", "rationale": "Traffic is not independence." },
+            { "text": "It has a high clock", "kind": "misapplied", "rationale": "Frequency is a latency story, not a map." }
+          ],
+          "correctExplanation": "The hardware property is independence of elements, not the syntax of a loop.",
+          "objectiveIds": ["Recognize when a computation is data-parallel"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "dp10-2",
+          "stem": "`x = f(x)` on every iteration is hard to widen because:",
+          "correctAnswer": "Each step depends on the previous result",
+          "distractors": [
+            { "text": "Function calls are always slow", "kind": "misconception", "rationale": "The cost is the dependence, not call overhead." },
+            { "text": "The ISA forbids functions", "kind": "subtle", "rationale": "ISAs happily express sequential updates." },
+            { "text": "There is no clock", "kind": "misapplied", "rationale": "A chain is a dependence, not a missing oscillator." }
+          ],
+          "correctExplanation": "A loop-carried dependence is a chain. Extra units have nothing independent to do.",
+          "objectiveIds": ["Contrast that with a sequential dependence a GPU cannot wish away"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 0,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "dp10-3",
+          "stem": "Rewriting a reduction as a tree of partials is an example of:",
+          "correctAnswer": "Creating independence the original loop did not have",
+          "distractors": [
+            { "text": "Raising DRAM latency on purpose", "kind": "reversed", "rationale": "The rewrite is about dependence, not making memory slower." },
+            { "text": "Changing the byte order", "kind": "nearby", "rationale": "Endianness does not manufacture parallelism." },
+            { "text": "Deleting the need for a clock", "kind": "subtle", "rationale": "The algorithm still runs on a timed machine." }
+          ],
+          "correctExplanation": "The algorithm manufactures parallelism. Hardware cannot invent a missing independent edge.",
+          "objectiveIds": ["Contrast that with a sequential dependence a GPU cannot wish away"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-amdahl-10",
+      "conceptId": "cpu-amdahl",
+      "title": "The part you cannot widen owns the speedup",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["arch-data-parallel"],
+      "goDeeper": "cpu-perf-metrics",
+      "explanation": [
+        "Amdahl's argument is a conservation law, not a slogan. If a fraction s of the original time is serial — it cannot be widened — then even infinite parallel resources leave you with at least s of the original time. Speedup is at most 1/s. The parallel fraction can be made cheap. The leftover cannot.",
+        "People apply this backwards. They measure the part they accelerated, quote that number, and ignore the serial glue: setup, reduction, I/O, a lock, a single-threaded parser. The more you speed the wide part, the more the leftover dominates wall time. That is why a 100× kernel can produce a 2× program.",
+        "The useful move is to name s. Sometimes s is real physics (a loop-carried dependence). Sometimes s is an accident of the current algorithm (a sequential reduction you could rewrite as a tree). Amdahl does not tell you s is sacred. It tells you that whatever you leave serial will own the endgame."
+      ],
+      "example": "A program spends 90% of its time in a map you can widen and 10% in a serial pass. Infinite workers make the map free. The program still takes 10% of the original time: speedup 10×, not infinity. If you only report the map, you will promise 100× and ship 10×.",
+      "whyItMatters": "Every 'we parallelized it' claim needs the serial leftover in the same sentence. Otherwise you are quoting the part that got cheaper and hiding the part that now dominates.",
+      "quiz": [
+        {
+          "id": "am10-1",
+          "stem": "If a fraction s of the original time cannot be parallelized, Amdahl's bound on speedup is:",
+          "correctAnswer": "1/s, even with infinite parallel resources",
+          "distractors": [
+            { "text": "s itself", "kind": "reversed", "rationale": "s is the leftover time, not the speedup." },
+            { "text": "The number of workers", "kind": "nearby", "rationale": "Worker count does not lift the serial floor." },
+            { "text": "The clock frequency", "kind": "misapplied", "rationale": "Amdahl is about the serial fraction, not the tick." }
+          ],
+          "correctExplanation": "Infinite workers make the parallel part free. You still pay s. Speedup ≤ 1/s.",
+          "objectiveIds": ["State Amdahl's bound as the serial fraction that remains"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "am10-2",
+          "stem": "A map that was 90% of runtime is made instant. The program's speedup is about:",
+          "correctAnswer": "10×, because the leftover 10% is now the whole run",
+          "distractors": [
+            { "text": "90×, because that is how much you accelerated", "kind": "misconception", "rationale": "You deleted 90% of the original time, leaving 10%." },
+            { "text": "Infinite, because the map is gone", "kind": "reversed", "rationale": "The serial pass is still there." },
+            { "text": "0.9×, because 90% vanished", "kind": "subtle", "rationale": "Vanishing work makes the program faster, not slower." }
+          ],
+          "correctExplanation": "Original 1.0 becomes 0.10. 1 / 0.10 = 10. The leftover owns the new runtime.",
+          "objectiveIds": ["Predict why speeding only the parallel part stops helping"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "am10-3",
+          "stem": "Further widening an already-tiny parallel remainder usually:",
+          "correctAnswer": "Moves wall time very little, because the serial leftover dominates",
+          "distractors": [
+            { "text": "Always doubles speedup again", "kind": "reversed", "rationale": "Diminishing returns are the point of the bound." },
+            { "text": "Deletes the need for an algorithm", "kind": "nearby", "rationale": "If s is an accident, rewrite s; more workers will not." },
+            { "text": "Raises the clock automatically", "kind": "misapplied", "rationale": "Amdahl is not a frequency knob." }
+          ],
+          "correctExplanation": "Once the map is cheap, extra workers polish a rounding error. Attack s, or stop.",
+          "objectiveIds": ["Predict why speeding only the parallel part stops helping"],
+          "prerequisiteConceptIds": ["arch-data-parallel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "cpu-perf-metrics-10",
+      "conceptId": "cpu-perf-metrics",
+      "title": "Time is instructions, CPI, and a tick",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["arch-latency-throughput"],
+      "goDeeper": "cpu-pipeline",
+      "explanation": [
+        "CPU time for a program factors as instruction count × cycles per instruction × clock period. That is bookkeeping, not a slogan. Instruction count is the compiler and the ISA. CPI is how many ticks the machine actually spends per retired instruction — stalls included. Clock period is how long a tick lasts.",
+        "IPC is 1/CPI when you mean useful retirements per cycle. Marketing quotes peak IPC. Reality is average CPI on this binary, with these misses and these branches. A machine can have a faster clock and a worse CPI and lose. Another can have a slower clock and retire more useful work per tick and win.",
+        "The three factors move separately. A compiler that emits fewer instructions can still lose if those instructions miss in cache and inflate CPI. A wider issue path can drop CPI only if there is independent work to issue. A frequency bump can raise power and leave CPI stuck on memory. When a review says 'faster', ask which factor moved."
+      ],
+      "example": "Program A: 1.0e9 instructions, CPI 1.0, 2 GHz → 0.50 s. Program B: the same instructions, CPI 1.6 because of misses, 2.5 GHz → 0.64 s. The higher clock lost. The CPI story was the real one.",
+      "whyItMatters": "Clock-only comparisons are how people misread every chip launch. Time has three factors. If you cannot name which one moved, you are reading a brochure.",
+      "quiz": [
+        {
+          "id": "pm10-1",
+          "stem": "CPU time factors as:",
+          "correctAnswer": "Instruction count × CPI × clock period",
+          "distractors": [
+            { "text": "Clock frequency alone", "kind": "misconception", "rationale": "Frequency is one factor, not the product." },
+            { "text": "Cache size × core count", "kind": "nearby", "rationale": "Those may move CPI, they are not the identity." },
+            { "text": "Opcode count in the ISA", "kind": "subtle", "rationale": "How many operations exist is not how many this program retired." }
+          ],
+          "correctExplanation": "Count, cycles per instruction, and the length of a cycle. That is the identity.",
+          "objectiveIds": ["Factor time into instruction count, CPI, and clock period"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "pm10-2",
+          "stem": "A chip with a higher clock can still take longer when:",
+          "correctAnswer": "CPI rises enough that extra ticks do not buy extra useful work",
+          "distractors": [
+            { "text": "Instruction count is exactly zero", "kind": "subtle", "rationale": "A zero-instruction program is not the usual case." },
+            { "text": "The ISA has more registers", "kind": "nearby", "rationale": "Register count is not the failing factor here." },
+            { "text": "Throughput and latency are the same number", "kind": "misapplied", "rationale": "They are not, and that is a different lesson." }
+          ],
+          "correctExplanation": "Time is the product. A hotter clock times a fatter CPI can be a slower run.",
+          "objectiveIds": ["Explain why a higher clock can still lose performance"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "pm10-3",
+          "stem": "Peak IPC in a slide deck is a poor predictor of this program because:",
+          "correctAnswer": "Average CPI includes the stalls this binary actually hits",
+          "distractors": [
+            { "text": "IPC is not related to CPI", "kind": "reversed", "rationale": "IPC is the reciprocal of CPI when both mean useful work." },
+            { "text": "Compilers cannot change instruction count", "kind": "nearby", "rationale": "They can, and that is a different factor." },
+            { "text": "Clock period is always one nanosecond", "kind": "subtle", "rationale": "Period varies; that is not why peak IPC lies." }
+          ],
+          "correctExplanation": "Peak assumes a fed machine. This binary's misses and branches are in the average.",
+          "objectiveIds": ["Explain why a higher clock can still lose performance"],
+          "prerequisiteConceptIds": ["arch-latency-throughput"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        }
+      ]
+    }
+  ]
+}

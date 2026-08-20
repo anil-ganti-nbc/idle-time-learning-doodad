@@ -1,0 +1,650 @@
+{
+  "courseId": "ml-transformers",
+  "moduleId": "ml-t-sys",
+  "lessons": [
+    {
+      "id": "ml-inference-10",
+      "conceptId": "ml-inference",
+      "title": "The forward pass you actually serve",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-transformer"],
+      "goDeeper": "ml-context",
+      "explanation": [
+        "Training walks a batch, computes a loss, and pushes adjoints backward so every knob can move. Inference is the other job: a forward pass that emits tokens for a user. The tape, the optimizer, and the gradient buffers can stay on the floor. You are serving a function, not fitting one.",
+        "Generate time has costs training can hide. Each new token scores the growing prefix. Memory for past keys and values grows with length. Latency is a token clock, not a throughput of minibatches. A training graph that looked cheap can be expensive the moment you decode one sequence at a time.",
+        "Decoding choices — greedy, sample, beam — are inference policy, not a new architecture. They pick among the same next-token distribution. Changing the sampler does not retrain the stack. It changes which continuation you ship."
+      ],
+      "example": "A decoder trained with teacher forcing never had to emit a hundred tokens in a row under a latency budget. At serve time that hundred-step loop is the product, and the backward pass is gone.",
+      "whyItMatters": "Confusing train graphs with serve graphs is how people price a model from a training FLOP slide and then miss the KV memory bill.",
+      "quiz": [
+        {
+          "id": "ml-inf10-1",
+          "stem": "Inference, as this course uses it, is the job of:",
+          "correctAnswer": "Serving the forward pass without the backward pass you trained",
+          "distractors": [
+            { "text": "Keeping the tape live so every user token updates the weights", "kind": "reversed", "rationale": "Serve does not fit. The knobs stay put." },
+            { "text": "Replacing the transformer with a database of facts", "kind": "misapplied", "rationale": "The stack is still a forward pass." },
+            { "text": "Reporting training loss as if it were a product metric", "kind": "nearby", "rationale": "Train loss is not the serve job." }
+          ],
+          "correctExplanation": "Forward only. No adjoints. That is serve.",
+          "objectiveIds": ["Serve the forward pass without the backward pass you trained"],
+          "prerequisiteConceptIds": ["ml-transformer"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-inf10-2",
+          "stem": "Which cost often dominates generate time even when it did not dominate training?",
+          "correctAnswer": "Memory and latency of scoring a growing prefix token by token",
+          "distractors": [
+            { "text": "The backward pass through every layer on every user token", "kind": "reversed", "rationale": "Serve dropped the backward pass." },
+            { "text": "Shuffling the training set between epochs", "kind": "misapplied", "rationale": "Epochs are a train loop." },
+            { "text": "Computing a full Hessian of the pretrain loss", "kind": "nearby", "rationale": "Second-order train work is not the serve bill." }
+          ],
+          "correctExplanation": "Length, cache, and per-token latency show up when you decode.",
+          "objectiveIds": ["Name a cost that exists at generate time that did not dominate training"],
+          "prerequisiteConceptIds": ["ml-transformer"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-inf10-3",
+          "stem": "A training run that looks cheap on minibatch throughput can still be expensive to serve because:",
+          "correctAnswer": "Decode is a sequential token clock with a growing prefix, not a batched train step",
+          "distractors": [
+            { "text": "Serve must recompute the Hessian of the original loss", "kind": "misapplied", "rationale": "No Hessian at serve." },
+            { "text": "Every user request refits the entire stack from random", "kind": "reversed", "rationale": "Weights stay; only the forward pass runs." },
+            { "text": "Teacher forcing is required on every generated token", "kind": "nearby", "rationale": "Teacher forcing was a train trick." }
+          ],
+          "correctExplanation": "One sequence, many steps, growing history. That is the serve loop.",
+          "objectiveIds": ["Name a cost that exists at generate time that did not dominate training"],
+          "prerequisiteConceptIds": ["ml-transformer"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-context-10",
+      "conceptId": "ml-context",
+      "title": "How much past the model can see",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-inference", "ml-positional"],
+      "goDeeper": "ml-kv-cache",
+      "explanation": [
+        "A context window is the span of tokens the model is allowed to attend to. Positional encodings and the attention implementation set that span. Past the window, earlier tokens are simply not there. They are not compressed into a secret summary unless you built one.",
+        "Cost grows with the span. Naive all-pairs attention is quadratic in length. Memory for keys and values is linear in length times layers times heads. Stretching the window is a systems bet, not a free adjective on a slide.",
+        "A document longer than the window falls off the left edge. The model continues from what still fits. If the needed fact was in the dropped prefix, fluency will not restore it. Retrieval and summarization exist because the window is finite."
+      ],
+      "example": "A 4k-token window cannot hold a 40k-token contract. The last clauses sit in view; the definitions at the top do not, unless you retrieve them or chunk the file.",
+      "whyItMatters": "Context-window marketing is a length and a cost. Treat it as either and you will stop asking the model to remember a book it cannot attend to.",
+      "quiz": [
+        {
+          "id": "ml-ctx10-1",
+          "stem": "A context window, here, is which of the following limits?",
+          "correctAnswer": "How much past the model can attend to, and what that costs",
+          "distractors": [
+            { "text": "How many parameters the stack is allowed to own", "kind": "nearby", "rationale": "Parameter count is not the window." },
+            { "text": "How many epochs you ran in pretraining", "kind": "misapplied", "rationale": "Epochs are a train loop." },
+            { "text": "How many tools the host is willing to call", "kind": "subtle", "rationale": "Tools are a later loop around the window." }
+          ],
+          "correctExplanation": "Span of tokens plus the bill for scoring them.",
+          "objectiveIds": ["State how much past the model can attend to, and what that costs"],
+          "prerequisiteConceptIds": ["ml-inference", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-ctx10-2",
+          "stem": "A needed definition sits 50k tokens back in a 4k window. What falls out?",
+          "correctAnswer": "That definition is not in the attended prefix, so fluency cannot restore it",
+          "distractors": [
+            { "text": "The window secretly stores the whole file as one vector", "kind": "misconception", "rationale": "Unless you built a summary, the left edge is gone." },
+            { "text": "Positional encodings fetch any offset for free", "kind": "nearby", "rationale": "Positions name tokens that are present, not dropped ones." },
+            { "text": "The backward pass will recover the missing clause at serve", "kind": "misapplied", "rationale": "Serve has no backward pass." }
+          ],
+          "correctExplanation": "Out of window is out of the computation. Retrieve or drop.",
+          "objectiveIds": ["Predict what falls out of a window that is shorter than the document"],
+          "prerequisiteConceptIds": ["ml-inference", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-ctx10-3",
+          "stem": "Why is stretching a window a systems bet rather than a free upgrade?",
+          "correctAnswer": "Attention and KV memory grow with length, so the extra span has a bill",
+          "distractors": [
+            { "text": "Longer windows delete the need for a positional encoding", "kind": "reversed", "rationale": "Longer spans need positions more, not less." },
+            { "text": "The tokenizer shrinks automatically when the window grows", "kind": "misapplied", "rationale": "Tokenization is a different map." },
+            { "text": "Training loss becomes the only remaining cost", "kind": "nearby", "rationale": "Serve cost is the point of the bet." }
+          ],
+          "correctExplanation": "Quadratic scores or linear cache — someone pays for the extra tokens.",
+          "objectiveIds": ["State how much past the model can attend to, and what that costs"],
+          "prerequisiteConceptIds": ["ml-inference", "ml-positional"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-kv-cache-10",
+      "conceptId": "ml-kv-cache",
+      "title": "Remember the prefix, do not rebuild it",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-context", "ml-inference"],
+      "goDeeper": "ml-rag",
+      "diagram": "ml-kv-cache",
+      "explanation": [
+        "Under a causal mask, keys and values of past tokens do not depend on future tokens. Once a token has been scored, its K and V can be stored. The next query only needs to score against that stored prefix plus the new token. Recomputing the whole prefix every step is waste.",
+        "The cache is a table: layer, head, position, key/value vectors. It grows with generated length. That is why long conversations get expensive in memory even when each new token is one small matmul.",
+        "Validity is the causal contract. If a future token could change a past key, the cache would be a lie. Autoregressive decode is exactly the case where it is not a lie. Bidirectional encode of a whole document is a different job."
+      ],
+      "example": "Token 1 writes K1,V1. Token 2 writes K2,V2 and scores Q2 against both. Token 3 does not rebuild K1. It appends.",
+      "whyItMatters": "Inference price wars and context-window ads both reduce to how you store and score this table.",
+      "quiz": [
+        {
+          "id": "ml-kv10-1",
+          "stem": "A KV cache exists so that generate time can:",
+          "correctAnswer": "Remember past keys and values instead of recomputing the prefix",
+          "distractors": [
+            { "text": "Store gradients so the user can keep training the stack", "kind": "misapplied", "rationale": "Serve dropped the backward pass." },
+            { "text": "Replace attention with a hash table of whole documents", "kind": "nearby", "rationale": "The cache is K and V of this prefix, not a corpus index." },
+            { "text": "Delete the causal mask because history is already known", "kind": "reversed", "rationale": "The mask is why the cache is valid." }
+          ],
+          "correctExplanation": "Append K and V. Score the new query. Do not rebuild the past.",
+          "objectiveIds": ["Remember past keys and values so you do not recompute the prefix"],
+          "prerequisiteConceptIds": ["ml-context", "ml-inference"],
+          "difficultyTier": 5,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-kv10-2",
+          "stem": "Why does a causal mask make that cache valid while generating?",
+          "correctAnswer": "Past keys and values do not depend on future tokens under the mask",
+          "distractors": [
+            { "text": "Queries never change, so you can freeze the whole stack", "kind": "nearby", "rationale": "The new query changes. The past K/V do not." },
+            { "text": "Softmax is not differentiable at generate time", "kind": "misapplied", "rationale": "Differentiability is a train concern." },
+            { "text": "The tokenizer forbids future characters from existing", "kind": "misconception", "rationale": "The mask is an attention contract, not a spelling rule." }
+          ],
+          "correctExplanation": "No path from the future into past K/V. Append is legal.",
+          "objectiveIds": ["Explain why a causal mask makes that cache valid while generating"],
+          "prerequisiteConceptIds": ["ml-context", "ml-inference"],
+          "difficultyTier": 5,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ml-kv10-3",
+          "stem": "The cache grows with generated length because:",
+          "correctAnswer": "Each new token appends another position of keys and values per layer",
+          "distractors": [
+            { "text": "Each new token stores a full copy of the training set", "kind": "misapplied", "rationale": "The cache is this prefix, not the corpus." },
+            { "text": "The optimizer keeps a momentum slot per generated token", "kind": "nearby", "rationale": "No optimizer at serve." },
+            { "text": "The vocabulary grows by one word every step", "kind": "reversed", "rationale": "The vocab is fixed. Positions grow." }
+          ],
+          "correctExplanation": "Length times layers times heads. That table is the bill.",
+          "objectiveIds": ["Remember past keys and values so you do not recompute the prefix"],
+          "prerequisiteConceptIds": ["ml-context", "ml-inference"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "ml-kv-cache-20",
+      "conceptId": "ml-kv-cache",
+      "title": "Append, tile, and the memory bill",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["ml-context", "ml-inference"],
+      "goDeeper": "ml-sparsity-attn",
+      "diagram": "ml-kv-cache",
+      "explanation": [
+        "Prefill scores the prompt as a batch: every prompt token can write its K and V in one pass. Decode then walks one token at a time, appending. The prefill is bandwidth-heavy and parallel. The decode is latency-heavy and sequential. Mixing those two phases in one mental model is how people misread a benchmark.",
+        "Because past K/V are reused, the expensive part of decode is often moving that table, not multiplying a new tiny query. Paged and tiled caches exist to keep the table in a layout the matmul can stream. The algorithm did not change. The layout did.",
+        "Multi-request serving shares weights and fights over cache memory. A long conversation can evict another user's prefix. That is a scheduler problem sitting on the same causal contract, not a new attention paper.",
+        "Invalidate the cache when the prefix actually changes — an edited prompt, a swapped system message, a bidirectional re-encode. Blind reuse after those edits is a silent correctness bug. The mask made the old table legal for the old prefix only."
+      ],
+      "example": "A 2k-token prompt prefills once. The next 200 generated tokens each append one column. Editing the system prompt at token 50 requires dropping the table from that point, not pretending K1 is still about the new text.",
+      "whyItMatters": "If you cannot see the cache as a legal reuse of causal history, you will treat every long-context demo as magic and every OOM as a surprise.",
+      "quiz": [
+        {
+          "id": "ml-kv20-1",
+          "stem": "How does prefill differ from decode in the life of a KV cache?",
+          "correctAnswer": "Prefill writes the prompt's K/V in one parallel pass; decode appends one token at a time",
+          "distractors": [
+            { "text": "Prefill runs the backward pass; decode runs the forward pass", "kind": "reversed", "rationale": "Neither phase trains." },
+            { "text": "Prefill deletes the cache so decode can start from random keys", "kind": "nearby", "rationale": "Prefill fills the cache. Decode uses it." },
+            { "text": "Decode rebuilds the whole prompt on every token by design", "kind": "misapplied", "rationale": "That is the waste the cache exists to avoid." }
+          ],
+          "correctExplanation": "One batched write of the prompt, then append-only generate.",
+          "objectiveIds": ["Remember past keys and values so you do not recompute the prefix"],
+          "prerequisiteConceptIds": ["ml-context", "ml-inference"],
+          "difficultyTier": 5,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-kv20-2",
+          "stem": "Editing the system prompt in the middle of a cached conversation should:",
+          "correctAnswer": "Invalidate stored prefix from the edit; those K/V described different text",
+          "distractors": [
+            { "text": "Keep the old table, since the causal mask still applies to any text", "kind": "reversed", "rationale": "The mask legalizes reuse of the same prefix, not a rewritten one." },
+            { "text": "Retrain the stack so the new prompt has its own weights", "kind": "misapplied", "rationale": "This is a cache correctness issue, not a training issue." },
+            { "text": "Grow the vocabulary so the edit becomes a new token type", "kind": "nearby", "rationale": "The vocab is not the cache." }
+          ],
+          "correctExplanation": "Different prefix, different K/V. Reuse would be a lie.",
+          "objectiveIds": ["Explain why a causal mask makes that cache valid while generating"],
+          "prerequisiteConceptIds": ["ml-context", "ml-inference"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-kv20-3",
+          "stem": "Paged or tiled KV layouts exist mainly because:",
+          "correctAnswer": "Decode is often limited by moving the table, so layout becomes the serve problem",
+          "distractors": [
+            { "text": "The causal mask is illegal unless keys live in 4KB pages", "kind": "misconception", "rationale": "The mask is an attention rule, not a page size." },
+            { "text": "Training requires a page table for every minibatch example", "kind": "misapplied", "rationale": "This is a serve layout, not a train rule." },
+            { "text": "Softmax can only run on paged memory", "kind": "nearby", "rationale": "Softmax does not care about your allocator." }
+          ],
+          "correctExplanation": "Stream the table you already legally reused. That is the layout bet.",
+          "objectiveIds": ["Remember past keys and values so you do not recompute the prefix"],
+          "prerequisiteConceptIds": ["ml-context", "ml-inference"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "ml-rag-10",
+      "conceptId": "ml-rag",
+      "title": "Look it up, then continue",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-prompt", "ml-emb-intro"],
+      "goDeeper": "ml-tools",
+      "diagram": "ml-rag-path",
+      "explanation": [
+        "Retrieval-augmented generation is a host loop: embed a query, fetch passages, stuff them into the prompt, then let the model continue. The weights are not a database. The index is. If the retrieved text is wrong, a fluent continuation of that text is still wrong.",
+        "Embeddings make the lookup cheap. They do not make it true. A near neighbor in embedding space is a similar string, not a certified fact. The model will happily treat a bad neighbor as context because that is what the prompt asked it to condition on.",
+        "RAG does not replace the context window. It chooses what to put in the window. A long document still has to be chunked. Citations are a product choice about showing the retrieved span, not a proof the span was used faithfully."
+      ],
+      "example": "Ask for a refund policy. The host retrieves paragraph 4 of the handbook and prepends it. The model continues from that paragraph. If paragraph 4 was the 2019 policy, the fluent answer is last year's rule.",
+      "whyItMatters": "Most 'the model made it up' reports on internal tools are a missed retrieval, not a mysterious new failure mode.",
+      "quiz": [
+        {
+          "id": "ml-rag10-1",
+          "stem": "RAG, in this course, is the move where you:",
+          "correctAnswer": "Look something up instead of hoping the weights remember",
+          "distractors": [
+            { "text": "Fine-tune the stack on every document the night before", "kind": "nearby", "rationale": "That is adaptation of weights, not a retrieve-then-condition loop." },
+            { "text": "Delete the prompt so the model must invent the passage", "kind": "reversed", "rationale": "RAG adds retrieved text to the prompt." },
+            { "text": "Replace attention with a SQL query and skip the transformer", "kind": "misapplied", "rationale": "The model still continues tokens. The host fetched first." }
+          ],
+          "correctExplanation": "Host fetches. Model conditions. Weights are not the index.",
+          "objectiveIds": ["Look something up instead of hoping the weights remember"],
+          "prerequisiteConceptIds": ["ml-prompt", "ml-emb-intro"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-rag10-2",
+          "stem": "Retrieval returns the wrong paragraph and the model writes a fluent policy from it. What failed?",
+          "correctAnswer": "The continuation is fluent over a bad retrieve; fluency is not a fact check",
+          "distractors": [
+            { "text": "The causal mask must have been turned off", "kind": "misapplied", "rationale": "The mask is unrelated to a bad neighbor." },
+            { "text": "The embedding space proved the paragraph was the legal policy", "kind": "reversed", "rationale": "Near neighbors are similar strings, not certified rules." },
+            { "text": "Next-token loss cannot run unless retrieval is exact", "kind": "nearby", "rationale": "Loss will happily continue a wrong context." }
+          ],
+          "correctExplanation": "Wrong context in, fluent wrong out. That is the RAG failure.",
+          "objectiveIds": ["Predict a failure when retrieval is wrong but the continuation is fluent"],
+          "prerequisiteConceptIds": ["ml-prompt", "ml-emb-intro"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-rag10-3",
+          "stem": "Why does RAG not remove the need for a context window?",
+          "correctAnswer": "Retrieved spans still have to fit in the tokens the model can attend to",
+          "distractors": [
+            { "text": "The index attends for the model, so the window can be zero", "kind": "reversed", "rationale": "The model still attends over the stuffed prompt." },
+            { "text": "Embeddings store the whole corpus inside one parameter", "kind": "misconception", "rationale": "The corpus lives in the index, not in one vector." },
+            { "text": "Prefill is illegal once a retriever exists", "kind": "misapplied", "rationale": "Prefill still writes the stuffed prompt into the cache." }
+          ],
+          "correctExplanation": "RAG chooses the window's contents. It does not abolish the window.",
+          "objectiveIds": ["Look something up instead of hoping the weights remember"],
+          "prerequisiteConceptIds": ["ml-prompt", "ml-emb-intro"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-tools-10",
+      "conceptId": "ml-tools",
+      "title": "The host runs the action",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-prompt"],
+      "goDeeper": "ml-eval-llm",
+      "explanation": [
+        "Tool use is a loop around the model. The model emits a structured action — a function name, a query, a click. The host runs that action in the real world, writes the result back into the context, and asks for another continuation. The weights did not fetch the weather. The host did.",
+        "A single forward pass that only emits prose is not that loop. It can describe a tool. It cannot have called one unless someone outside the softmax ran the call. Agents are this loop with a stopping rule, not a new layer type.",
+        "Failures split. The model can emit a malformed action. The host can run a dangerous action faithfully. The result can be stale. Blame the step that actually broke. 'The agent is smart' hides all three."
+      ],
+      "example": "The model writes `get_price('XYZ')`. The host hits a market API and pastes `184.2` back. The next continuation uses that number. If the API was down, the model did not 'know' a price. The host had nothing to paste.",
+      "whyItMatters": "Safety and reliability live in the host loop. Treating tool use as a personality of the weights will miss the permission you just granted.",
+      "quiz": [
+        {
+          "id": "ml-tool10-1",
+          "stem": "Tool use, here, means you let the model:",
+          "correctAnswer": "Call a tool, read the result the host wrote back, and continue",
+          "distractors": [
+            { "text": "Replace the transformer with the tool so no tokens are emitted", "kind": "reversed", "rationale": "The model still continues after the host returns." },
+            { "text": "Train a new head that is the weather API", "kind": "misapplied", "rationale": "The API is outside the weights." },
+            { "text": "Store every possible tool result in the KV cache at init", "kind": "nearby", "rationale": "Results arrive after the host runs the call." }
+          ],
+          "correctExplanation": "Emit action, host runs it, result re-enters the prompt.",
+          "objectiveIds": ["Let the model call a tool, read the result, and continue"],
+          "prerequisiteConceptIds": ["ml-prompt"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-tool10-2",
+          "stem": "How does a tool loop differ from a single forward pass that only emits text?",
+          "correctAnswer": "The host runs the action and writes the result back",
+          "distractors": [
+            { "text": "A lone pass already runs shell commands inside softmax", "kind": "reversed", "rationale": "Softmax emits tokens. It does not exec." },
+            { "text": "The tool loop deletes the causal mask", "kind": "nearby", "rationale": "The mask stays. The host is extra." },
+            { "text": "Fine-tuning is required before any function name can be emitted", "kind": "misapplied", "rationale": "A prompted schema can be enough to emit a call." }
+          ],
+          "correctExplanation": "Outside the model, something ran. That is the difference.",
+          "objectiveIds": ["Distinguish a tool loop from a single forward pass that only emits text"],
+          "prerequisiteConceptIds": ["ml-prompt"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-tool10-3",
+          "stem": "The model emits a well-formed delete call and the host runs it. Who did the deletion?",
+          "correctAnswer": "The host; the model only emitted an action the host chose to execute",
+          "distractors": [
+            { "text": "The softmax, because probabilities can unlink files", "kind": "misconception", "rationale": "Probabilities are numbers. The host has permissions." },
+            { "text": "The KV cache, which stores destructive side effects", "kind": "nearby", "rationale": "The cache stores K/V, not filesystem actions." },
+            { "text": "Pretraining, which already deleted the file last year", "kind": "misapplied", "rationale": "Pretrain did not run your host." }
+          ],
+          "correctExplanation": "Permissions sit on the host. The continuation only asked.",
+          "objectiveIds": ["Let the model call a tool, read the result, and continue"],
+          "prerequisiteConceptIds": ["ml-prompt"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "ml-eval-llm-10",
+      "conceptId": "ml-eval-llm",
+      "title": "A leaderboard is not the job",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-inference"],
+      "goDeeper": "ml-failure",
+      "explanation": [
+        "Generative models do not have one number that means 'good'. A leaderboard score is one distribution, one prompt style, one metric. Contamination — the test items leaking into the train crawl — can inflate that number without making the product safer or more useful.",
+        "What a benchmark cannot see is the job you actually serve: your documents, your users, your cost of a fluent error. Held-out tasks from that job beat a public ranking. Human review, rubric scores, and unit tests on tool calls are evaluations. A screenshot of a chart is not.",
+        "Automatic metrics (exact match, overlap, learned judges) each fail in a known way. Exact match punishes a correct paraphrase. Overlap rewards a copied sentence. A judge model has the same contamination and bias risks as the system under test. Use more than one, and keep a slice a human still reads."
+      ],
+      "example": "A model tops a public QA board whose questions were on the web in 2023. On your internal refund mail it invents policies. The board did not see your mail. Your mail is the evaluation.",
+      "whyItMatters": "Shipping from a leaderboard is how you buy contamination and miss the failure your users will actually hit.",
+      "quiz": [
+        {
+          "id": "ml-ev10-1",
+          "stem": "Evaluating a generative model, here, requires more than:",
+          "correctAnswer": "A single leaderboard number on a public suite",
+          "distractors": [
+            { "text": "A held-out slice from the job you actually serve", "kind": "reversed", "rationale": "That slice is the evaluation you want." },
+            { "text": "A human read of a sample of fluent errors", "kind": "nearby", "rationale": "Humans seeing errors is part of eval, not the thing we reject." },
+            { "text": "A unit test on a tool call the host actually ran", "kind": "subtle", "rationale": "That is also a real evaluation." }
+          ],
+          "correctExplanation": "One public number is not the job. Your distribution is.",
+          "objectiveIds": ["Evaluate a generative model with more than a leaderboard number"],
+          "prerequisiteConceptIds": ["ml-inference"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-ev10-2",
+          "stem": "Contamination, in this lesson, means which of these leaks?",
+          "correctAnswer": "Test items that sat in the train crawl, so the number is partly memorization",
+          "distractors": [
+            { "text": "A validation split you used only to pick a checkpoint", "kind": "nearby", "rationale": "That is ordinary model selection, not a leaked public test." },
+            { "text": "A KV cache that still holds last week's conversation", "kind": "misapplied", "rationale": "Cache is serve memory, not a benchmark leak." },
+            { "text": "A learning rate that was too large in pretrain", "kind": "subtle", "rationale": "Step size is not contamination." }
+          ],
+          "correctExplanation": "If the test was in the crawl, the board is not unseen.",
+          "objectiveIds": ["Name contamination and the thing a benchmark cannot see"],
+          "prerequisiteConceptIds": ["ml-inference"],
+          "difficultyTier": 4,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "ml-ev10-3",
+          "stem": "A public board cannot see your product job because:",
+          "correctAnswer": "Your documents, users, and cost of a fluent error are a different distribution",
+          "distractors": [
+            { "text": "Leaderboards are illegal once a KV cache exists", "kind": "misapplied", "rationale": "Caches do not outlaw boards. They just are not the job." },
+            { "text": "Public questions are always harder than internal mail", "kind": "nearby", "rationale": "Harder is not the point. Different is the point." },
+            { "text": "The tokenizer refuses to encode internal jargon", "kind": "reversed", "rationale": "Jargon encodes. The board still never scored it." }
+          ],
+          "correctExplanation": "Different distribution, different errors. Measure that.",
+          "objectiveIds": ["Name contamination and the thing a benchmark cannot see"],
+          "prerequisiteConceptIds": ["ml-inference"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-failure-10",
+      "conceptId": "ml-failure",
+      "title": "Fluent is not a diagnosis",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-eval-llm"],
+      "goDeeper": "ml-hallucination",
+      "explanation": [
+        "A wrong answer can break for different reasons. Reasoning fails when the steps do not follow. Attribution fails when the span the model cites is not the span it used. Calibration fails when a confident token is not a frequent truth. Incentives fail when the objective rewarded looking helpful more than being checkable.",
+        "Those are different repairs. More retrieve for attribution. A verifier or a tool for a calculation. A refusal or an uncertainty mark for calibration. A prompt or a fine-tune that stops rewarding a smile. Calling every miss 'the model is dumb' hides the repair.",
+        "Fluency is cheap. Next-token training makes local English easy. A diagnosis has to look past the sentence at which contract broke: the retrieve, the arithmetic, the citation, or the incentive."
+      ],
+      "example": "A refund bot cites section 4 and applies section 7. The prose is clean. The break is attribution, not vocabulary. Fetching section 4 again will not help if the continuation never used it.",
+      "whyItMatters": "You cannot patch a system you have only insulted. Name the break or you will buy the wrong knob.",
+      "quiz": [
+        {
+          "id": "ml-fail10-1",
+          "stem": "Which of these are different breaks, not one vague 'dumb model' event?",
+          "correctAnswer": "Reasoning, attribution, calibration, and incentive failures",
+          "distractors": [
+            { "text": "Learning rate, batch size, and warmup as the only four breaks", "kind": "nearby", "rationale": "Those are train knobs, not serve failure kinds." },
+            { "text": "Prefill, decode, and page size as moral categories", "kind": "misapplied", "rationale": "Those are serve phases, not diagnoses of a wrong answer." },
+            { "text": "Greedy, sample, and beam as the four ethical failures", "kind": "subtle", "rationale": "Samplers are decode policy, not this taxonomy." }
+          ],
+          "correctExplanation": "Four contracts. Four repairs. Not one insult.",
+          "objectiveIds": ["Name reasoning, attribution, calibration, and incentive failures as different breaks"],
+          "prerequisiteConceptIds": ["ml-eval-llm"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ml-fail10-2",
+          "stem": "A fluent answer cites the right document and still applies the wrong rule. What broke?",
+          "correctAnswer": "Attribution: the span it showed is not the span it used",
+          "distractors": [
+            { "text": "The tokenizer, because fluent words cannot encode rules", "kind": "misapplied", "rationale": "The words encoded fine. The use was wrong." },
+            { "text": "The KV cache, which always swaps section numbers", "kind": "nearby", "rationale": "Cache reuse is not this diagnosis." },
+            { "text": "Contamination of a public leaderboard", "kind": "subtle", "rationale": "This is a local use error, not a leaked test." }
+          ],
+          "correctExplanation": "Shown span ≠ used span. That is attribution.",
+          "objectiveIds": ["Diagnose a fluent answer that fails for a reason other than 'the model is dumb'"],
+          "prerequisiteConceptIds": ["ml-eval-llm"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ml-fail10-3",
+          "stem": "Why is 'the model is dumb' a bad diagnosis for a fluent miss?",
+          "correctAnswer": "It hides whether retrieve, steps, citation, or incentive is the contract that broke",
+          "distractors": [
+            { "text": "Fluent misses are impossible under a causal mask", "kind": "reversed", "rationale": "The mask does not prevent a wrong continuation." },
+            { "text": "Dumbness is a recognized cognitiveType in this course", "kind": "misapplied", "rationale": "We do not grade models as people." },
+            { "text": "Only a larger parameter count can be named as a cause", "kind": "nearby", "rationale": "Size is not a diagnosis of this answer." }
+          ],
+          "correctExplanation": "Name the contract. Then pick the repair.",
+          "objectiveIds": ["Diagnose a fluent answer that fails for a reason other than 'the model is dumb'"],
+          "prerequisiteConceptIds": ["ml-eval-llm"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-hallucination-10",
+      "conceptId": "ml-hallucination",
+      "title": "A confident continuation is not a retrieve",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-failure"],
+      "goDeeper": "ml-sparsity-attn",
+      "explanation": [
+        "Hallucination, here, is a fluent continuation that is not a retrieved fact and is not licensed by the context you gave. It is a calibration failure of next-token training: the locally likely sentence is emitted with the same machinery as a copied span. The model is not 'lying' in a human sense. It is continuing.",
+        "Next-token loss punishes an unlikely token, not a false proposition. If a confident falsehood is locally likely, the objective is satisfied. Nothing in the loss asks 'did a source say this?' unless you built that ask into retrieve, tools, or a later objective.",
+        "Mitigations are systems: retrieve first, cite the span, refuse when the window is empty, or train a preference against ungrounded claims. None of those is a personality transplant. They change the contract the continuation has to meet."
+      ],
+      "example": "Ask for a case citation that is not in the prompt or the index. The model emits a plausible reporter volume and a holding. The holding reads like law. No such case exists. The loss never saw a reason to stop.",
+      "whyItMatters": "If you treat hallucination as a moral failing, you will buy a lecture. If you treat it as ungrounded continuation, you will buy a retrieve or a refusal.",
+      "quiz": [
+        {
+          "id": "ml-hal10-1",
+          "stem": "Hallucination, as this lesson uses it, is:",
+          "correctAnswer": "A fluent continuation that is not a retrieved fact",
+          "distractors": [
+            { "text": "Any token the softmax assigned less than 0.5", "kind": "nearby", "rationale": "Low probability is not the definition." },
+            { "text": "A KV cache that ran out of pages", "kind": "misapplied", "rationale": "Memory pressure is a serve fault, not this word." },
+            { "text": "A dropout mask that was left on at serve", "kind": "subtle", "rationale": "Dropout is a train regularizer." }
+          ],
+          "correctExplanation": "Fluent, ungrounded. That is the object.",
+          "objectiveIds": ["Treat hallucination as a fluent continuation that is not a retrieved fact"],
+          "prerequisiteConceptIds": ["ml-failure"],
+          "difficultyTier": 4,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-hal10-2",
+          "stem": "Why does next-token training not, by itself, punish a confident falsehood?",
+          "correctAnswer": "The loss scores local token likelihood, not whether a proposition is sourced",
+          "distractors": [
+            { "text": "Falsehoods are removed from the vocabulary at init", "kind": "reversed", "rationale": "The vocab has no truth bit." },
+            { "text": "The causal mask blocks any untrue future token", "kind": "misapplied", "rationale": "The mask blocks future context, not falsehood." },
+            { "text": "Cross-entropy is only defined on retrieved spans", "kind": "nearby", "rationale": "CE runs on whatever target text you trained." }
+          ],
+          "correctExplanation": "Likely token, small loss. Truth was never the number.",
+          "objectiveIds": ["Predict why next-token training does not punish a confident falsehood by itself"],
+          "prerequisiteConceptIds": ["ml-failure"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ml-hal10-3",
+          "stem": "A useful repair for ungrounded continuation is to:",
+          "correctAnswer": "Change the contract: retrieve, cite, refuse, or train against unsourced claims",
+          "distractors": [
+            { "text": "Delete the softmax so no token can be confident", "kind": "reversed", "rationale": "You still need a distribution to decode." },
+            { "text": "Train only on punctuation until facts appear", "kind": "misapplied", "rationale": "Punctuation is not a grounding contract." },
+            { "text": "Lengthen the window so falsehoods fall out of cache", "kind": "nearby", "rationale": "A longer window can still invent." }
+          ],
+          "correctExplanation": "Give the continuation a source test. That is the repair.",
+          "objectiveIds": ["Treat hallucination as a fluent continuation that is not a retrieved fact"],
+          "prerequisiteConceptIds": ["ml-failure"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "ml-sparsity-attn-10",
+      "conceptId": "ml-sparsity-attn",
+      "title": "Not every pair of tokens has to meet",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["ml-self-attn", "ml-context"],
+      "goDeeper": "ml-failure",
+      "explanation": [
+        "Full self-attention scores every query against every key. That is the honest all-pairs bill. Sparse and linear attention bets skip some pairs: a window, a pattern of strides, a learned router, or a kernel that approximates the softmax mix. The hope is that the skipped pairs were not doing the work.",
+        "The bet has a failure mode. If the needed token sits outside the pattern, the head cannot read it. Long-context papers are mostly this trade: pay less than n², risk a miss, measure the miss on the job you care about.",
+        "Linear attention changes the algebra so the mix is not a full score matrix. It is still a mix of values. It is not a database. Compare it with full scoring on the span you actually serve, not on a slogan about infinity."
+      ],
+      "example": "A sliding-window head of 256 tokens cannot see a definition 2k tokens back unless another path — a global token, a retrieve, a second layer with a wider pattern — carries it.",
+      "whyItMatters": "Context-window ads that skip the all-pairs bill have made a sparsity bet. Name the pairs you dropped or you are reading a press release.",
+      "quiz": [
+        {
+          "id": "ml-sp10-1",
+          "stem": "A sparse or linear attention bet is the move where you:",
+          "correctAnswer": "Skip pairs of tokens that you hope do not need to meet",
+          "distractors": [
+            { "text": "Score every query against every key, then throw the matrix away", "kind": "reversed", "rationale": "That still paid n². Sparse never built those scores." },
+            { "text": "Replace tokens with a SQL join on the training crawl", "kind": "misapplied", "rationale": "This is still attention, just fewer pairs." },
+            { "text": "Freeze the KV cache so no new key can ever be written", "kind": "nearby", "rationale": "Cache policy is not a sparsity pattern." }
+          ],
+          "correctExplanation": "Fewer meetings, smaller bill, a risk that a needed pair was skipped.",
+          "objectiveIds": ["Skip pairs of tokens that do not need to meet"],
+          "prerequisiteConceptIds": ["ml-self-attn", "ml-context"],
+          "difficultyTier": 5,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "ml-sp10-2",
+          "stem": "Compared with full all-pairs scoring, a windowed sparse head:",
+          "correctAnswer": "Pays less than n² and cannot read a token that sits outside the window",
+          "distractors": [
+            { "text": "Pays the same n² but with a friendlier name", "kind": "reversed", "rationale": "If it paid n² it was not sparse." },
+            { "text": "Always finds any definition in the document for free", "kind": "misconception", "rationale": "Outside the pattern is invisible." },
+            { "text": "Deletes the need for a causal mask", "kind": "misapplied", "rationale": "Sparsity and causality are different restrictions." }
+          ],
+          "correctExplanation": "Cheaper mix, smaller receptive field. That is the comparison.",
+          "objectiveIds": ["Compare a sparse or linear attention bet with full all-pairs scoring"],
+          "prerequisiteConceptIds": ["ml-self-attn", "ml-context"],
+          "difficultyTier": 5,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ml-sp10-3",
+          "stem": "A definition the windowed head cannot see will be available only if:",
+          "correctAnswer": "Another path — retrieve, a global token, or a wider pattern — carries it",
+          "distractors": [
+            { "text": "The softmax invents a key for tokens it did not score", "kind": "reversed", "rationale": "Unscored keys do not enter the mix." },
+            { "text": "You set the learning rate to zero at serve", "kind": "misapplied", "rationale": "Serve is not fitting." },
+            { "text": "The tokenizer spells the definition as one character", "kind": "nearby", "rationale": "Spelling does not create a skipped pair." }
+          ],
+          "correctExplanation": "If the pair never met, some other path has to carry the fact.",
+          "objectiveIds": ["Skip pairs of tokens that do not need to meet"],
+          "prerequisiteConceptIds": ["ml-self-attn", "ml-context"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        }
+      ]
+    }
+  ]
+}

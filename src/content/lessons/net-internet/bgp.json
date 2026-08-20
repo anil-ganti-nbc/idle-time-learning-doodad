@@ -1,0 +1,589 @@
+{
+  "courseId": "net-internet",
+  "moduleId": "net-i-bgp",
+  "lessons": [
+    {
+      "id": "net-bgp-10",
+      "conceptId": "net-bgp",
+      "title": "Policy chooses among advertised paths",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["net-as"],
+      "goDeeper": "net-policy-route",
+      "diagram": "net-bgp-path",
+      "explanation": [
+        "Between networks that do not share a policy, a path is an advertisement, not a shortest-path result. BGP is how autonomous systems tell each other which prefixes they can reach. A route is a prefix plus the sequence of ASes that would be crossed, plus attributes the receiving AS is free to interpret as politics.",
+        "The receiving AS applies local policy to the set of advertised paths and picks one. That pick can prefer a longer AS path over a shorter one, because length is a tie-break after opinion, not a law of physics. Neighbors never see the paths this AS refused; they see the one path it chose to re-advertise, with itself prepended.",
+        "Nothing in that loop promised a globally short path, a stable path, or a path the destination would have chosen. It promised that each AS, given what it was told, applied its own rules. Scale works because the unit of advertisement is a prefix, not a host."
+      ],
+      "example": "AS 64500 hears 203.0.113.0/24 as path 701 15169 and as path 3356 1299 15169. Policy prefers neighbor 3356, so the longer path is installed and advertised onward as 64500 3356 1299 15169. The shorter path is still in the box; it is not the one the rest of the Internet hears from 64500.",
+      "whyItMatters": "A 'bad path' is often a working policy. Until you can say which advertisement was chosen and why, you will keep asking the protocol for a shortest-path answer it does not compute.",
+      "quiz": [
+        {
+          "id": "ni-bgp10-1",
+          "stem": "BGP, between autonomous systems, is best described as:",
+          "correctAnswer": "Policy routing over advertised paths, not a shortest-path computation",
+          "distractors": [
+            { "text": "A flood of the entire interior topology to every neighboring AS", "kind": "nearby", "rationale": "Interior maps stay inside an AS. BGP advertises prefixes and AS paths." },
+            { "text": "A guarantee that the globally fewest hops will always be installed", "kind": "reversed", "rationale": "Policy can install a longer AS path. Shortest is not the contract." },
+            { "text": "A per-packet conversation that recomputes a path on every arrival", "kind": "misapplied", "rationale": "BGP fills a table. The datapath still just looks up." }
+          ],
+          "correctExplanation": "Advertisements in, policy out. The protocol does not run shortest path across ASes.",
+          "objectiveIds": ["Explain BGP as policy routing between autonomous systems, not shortest path"],
+          "prerequisiteConceptIds": ["net-as"],
+          "difficultyTier": 3,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-bgp10-2",
+          "stem": "AS 64500 prefers neighbor 3356 even though 701 offers a shorter AS path. The installed path is:",
+          "correctAnswer": "The longer one, because local policy outranks AS-path length",
+          "distractors": [
+            { "text": "The shorter one, because BGP must install the fewest ASes", "kind": "reversed", "rationale": "Length is not a law. Policy can prefer a longer advertised path." },
+            { "text": "Neither; overlapping AS paths make the prefix unroutable", "kind": "nearby", "rationale": "Two advertisements are the normal input to a policy choice." },
+            { "text": "A merge of both paths, sent as a single combined AS sequence", "kind": "misapplied", "rationale": "One path is chosen. Paths are not concatenated from every neighbor." }
+          ],
+          "correctExplanation": "Policy picks among what was advertised. A longer AS path can still win.",
+          "objectiveIds": ["Predict why a longer AS path can still be chosen when policy prefers it"],
+          "prerequisiteConceptIds": ["net-as", "net-bgp"],
+          "difficultyTier": 3,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-bgp10-3",
+          "stem": "After 64500 chooses the 3356 path, neighbors of 64500 typically hear:",
+          "correctAnswer": "The chosen path with 64500 prepended, not the rejected 701 path",
+          "distractors": [
+            { "text": "Both candidate paths, so they can rerun 64500's policy", "kind": "reversed", "rationale": "BGP re-advertises the selected route, not the rejected alternatives." },
+            { "text": "64500's interior link-state map, including every campus cost", "kind": "nearby", "rationale": "Neighbors get a prefix and an AS path, not the interior graph." },
+            { "text": "Nothing, because a longer path is illegal to announce", "kind": "misapplied", "rationale": "A policy-chosen longer path is a legal advertisement." }
+          ],
+          "correctExplanation": "What you selected is what you speak. The other path stays local.",
+          "objectiveIds": ["Explain BGP as policy routing between autonomous systems, not shortest path"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-bgp-20",
+      "conceptId": "net-bgp",
+      "title": "A path is a rumor you chose to repeat",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["net-as"],
+      "goDeeper": "net-policy-route",
+      "diagram": "net-bgp-path",
+      "explanation": [
+        "The ten-minute unit named the job: choose among advertised paths. The rest of the protocol is how that choice is represented and repeated. A route is a prefix, an AS path, and a bundle of attributes. The receiving AS ranks candidates by configured preference first and by path properties after. AS-path length is one of those later properties, which is why a longer path can still be the one that gets installed.",
+        "What you advertise is the rumor of the path you selected, with your AS number on the front. Neighbors cannot see the candidate you discarded, the interior hops you used, or the metric you assigned. Scale depends on that compression: hundreds of thousands of prefixes, not a host route for every machine, and not a copy of anyone's interior map. The datapath still just looks those prefixes up.",
+        "A session that dies is a withdrawal of every route learned over it. Convergence then is every AS re-choosing among whatever advertisements remain. That process can settle on a new path, can take a long time, and can fail to be 'shortest' in any global sense. Policy that fights — prefer me, prefer him, prefer me — can even prevent a stable choice. The protocol's safety properties are weak on purpose: no one agreed to a single objective.",
+        "Failure diagnosis starts with the rumor, not the cable. A prefix missing from a table is often a policy filter or a session that dropped, not a dark fiber. A surprising path is often the path this AS actually preferred. Until you can name the advertisement, the attribute that ranked it, and whether it was re-announced, 'BGP broke' is a weather report."
+      ],
+      "example": "AS 64500 learns 203.0.113.0/24 from two neighbors, ranks the 3356 path above the 701 path, installs it, and announces 64500 3356 1299 15169. The session to 3356 drops. 64500 withdraws that advertisement and, if policy still allows, installs the 701 path and announces 64500 701 15169 instead. Hosts in 203.0.113.0/24 did not move. The rumor did.",
+      "whyItMatters": "Outages that look like 'the Internet is down' are often a withdrawn rumor or a policy that will not accept the remaining one. You cannot ping a preference.",
+      "quiz": [
+        {
+          "id": "ni-bgp20-1",
+          "stem": "A BGP route that an AS re-advertises is typically:",
+          "correctAnswer": "The path it selected, with its own AS prepended",
+          "distractors": [
+            { "text": "The union of every candidate path it heard, concatenated", "kind": "reversed", "rationale": "One path is chosen and spoken. Rejected candidates stay local." },
+            { "text": "A copy of its interior topology, including every link cost", "kind": "nearby", "rationale": "Neighbors get a prefix and an AS path, not the interior graph." },
+            { "text": "A per-host route for every address in the prefix", "kind": "misapplied", "rationale": "The unit of advertisement is the prefix. That is how it scales." }
+          ],
+          "correctExplanation": "Selected path, your number on the front. That is the rumor the rest of the Internet hears from you.",
+          "objectiveIds": ["Explain BGP as policy routing between autonomous systems, not shortest path"],
+          "prerequisiteConceptIds": ["net-as", "net-bgp"],
+          "difficultyTier": 3,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ni-bgp20-2",
+          "stem": "The BGP session that was feeding the installed path dies. This AS typically:",
+          "correctAnswer": "Withdraws that path and re-chooses among advertisements that remain",
+          "distractors": [
+            { "text": "Keeps advertising the dead neighbor's path until a timer of years", "kind": "reversed", "rationale": "A dead session withdraws what was learned over it." },
+            { "text": "Floods its interior map so every AS can recompute shortest path", "kind": "nearby", "rationale": "BGP does not export the interior map as a replacement for a session." },
+            { "text": "Deletes the prefix from IP, so hosts in it lose their addresses", "kind": "misapplied", "rationale": "The prefix still exists. Only this AS's rumor of a path changed." }
+          ],
+          "correctExplanation": "Session down, those routes gone, policy runs again on what is left.",
+          "objectiveIds": ["Predict why a longer AS path can still be chosen when policy prefers it"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 3,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ni-bgp20-3",
+          "stem": "Policy that ranks a longer AS path above a shorter one is:",
+          "correctAnswer": "Legal and common; length is a later tie-break, not the first rule",
+          "distractors": [
+            { "text": "Illegal; BGP must discard any path that is not shortest", "kind": "reversed", "rationale": "The protocol is policy first. Shortest is not a requirement." },
+            { "text": "Possible only if the prefix is a single host route", "kind": "nearby", "rationale": "Prefix length and AS-path length are different knobs." },
+            { "text": "A sign the datapath has started to recompute paths per packet", "kind": "misapplied", "rationale": "Policy still only fills a table. Lookup does not change." }
+          ],
+          "correctExplanation": "Configured preference outranks AS-path length. A longer rumor can still be the one you repeat.",
+          "objectiveIds": ["Predict why a longer AS path can still be chosen when policy prefers it"],
+          "prerequisiteConceptIds": ["net-as", "net-bgp"],
+          "difficultyTier": 3,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-peering-10",
+      "conceptId": "net-peering",
+      "title": "A peer will not carry you to the rest of the Internet",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-bgp"],
+      "goDeeper": "net-ixp",
+      "diagram": "net-peer-transit",
+      "explanation": [
+        "Settlement-free is a business fact that shows up as a filter, not as a warmer handshake. Peering means two ASes exchange routes to their own customers, and usually only those, at no charge. A packet from one side's customer to the other side's customer can take the peer link. A packet to 'someone else on the Internet' cannot, because that would be carrying traffic the peer was never paid to carry.",
+        "The filter is the mechanism. You advertise customer prefixes to a peer. You accept customer prefixes from a peer. You do not advertise a default. You do not advertise routes you learned from a paid provider. You do not expect the peer to advertise the rest of the table. When someone says a peer 'should just transit for a bit', they are asking for a different contract.",
+        "Peering lasts until the traffic ratio, the coverage, or the politics stop looking free. Then the same BGP session becomes a negotiation, a depeering, or a bill. The protocol did not change. The incentive did."
+      ],
+      "example": "AS 15169 and AS 16509 peer. A customer of 15169 talking to a customer of 16509 can use the peer link. A packet from 15169 to a university that is a customer of neither is not the peer's problem; 15169 sends that packet to whoever it pays for the rest of the Internet.",
+      "whyItMatters": "A 'dead peer' that still has a session is often a filter doing its job. The missing routes were never supposed to be there.",
+      "quiz": [
+        {
+          "id": "ni-peer10-1",
+          "stem": "Peering, as opposed to paying for reachability, is:",
+          "correctAnswer": "Settlement-free exchange of each other's customer routes",
+          "distractors": [
+            { "text": "Paying a neighbor for a default route to the rest of the Internet", "kind": "reversed", "rationale": "That is transit. Peering is the unpaid customer-for-customer swap." },
+            { "text": "Flooding interior link-state to a neighboring AS", "kind": "nearby", "rationale": "Peering still uses BGP advertisements, not an interior map." },
+            { "text": "A promise to carry every prefix either AS has ever heard", "kind": "misapplied", "rationale": "Carrying 'everything heard' is transit, and a peer will refuse it." }
+          ],
+          "correctExplanation": "Customer routes, no bill. That is the exchange. The rest of the table is not included.",
+          "objectiveIds": ["Describe peering as settlement-free exchange of customer routes"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ni-peer10-2",
+          "stem": "A packet from a 15169 customer to a destination that is not a 16509 customer, sent toward their peer link, typically:",
+          "correctAnswer": "Is not taken; a peer does not offer transit to the rest of the Internet",
+          "distractors": [
+            { "text": "Is always taken, because a BGP session means full transit", "kind": "reversed", "rationale": "A session can exist and still filter to customer routes only." },
+            { "text": "Is converted into a host route so the peer cannot refuse it", "kind": "misapplied", "rationale": "Prefix length does not create a transit contract." },
+            { "text": "Forces 16509 to advertise a default back to 15169", "kind": "nearby", "rationale": "Defaults are how transit is sold. Peers do not owe a default." }
+          ],
+          "correctExplanation": "No customer on the other side, no settlement-free path. The peer will not carry it.",
+          "objectiveIds": ["Predict why a peer will not typically offer transit to the rest of the Internet"],
+          "prerequisiteConceptIds": ["net-bgp", "net-peering"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-peer10-3",
+          "stem": "Compared with paying a provider for the rest of the table, peering trades:",
+          "correctAnswer": "No bill for customer-to-customer paths, and no path to everyone else",
+          "distractors": [
+            { "text": "A full default in both directions at no charge", "kind": "reversed", "rationale": "A free default is unpaid transit. Peers do not sell that." },
+            { "text": "Interior metrics shared so both ASes become one policy", "kind": "nearby", "rationale": "Peering keeps two policies. It does not merge ASes." },
+            { "text": "A requirement that every packet take the longer AS path", "kind": "misapplied", "rationale": "Path length is a later BGP tie-break, not the peering contract." }
+          ],
+          "correctExplanation": "You save money where customers meet. You still need someone else for the rest of the Internet.",
+          "objectiveIds": ["Predict why a peer will not typically offer transit to the rest of the Internet"],
+          "prerequisiteConceptIds": ["net-peering"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-transit-10",
+      "conceptId": "net-transit",
+      "title": "Default routing is usually a bill",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-bgp"],
+      "goDeeper": "net-peering",
+      "diagram": "net-peer-transit",
+      "explanation": [
+        "Someone has to take the packet that is not for a customer of anyone you peer with. Transit is paying another AS to reach the rest of the Internet. The provider advertises a default, or a full table; the customer advertises its own prefixes; money and traffic flow in opposite directions.",
+        "The filter is the opposite of peering. A transit provider will carry prefixes it did not originate, because that is the product. A transit customer will send 'unknown destination' to that provider on purpose. The same BGP session type, different export policy, different invoice.",
+        "Without at least one transit relationship, a stub AS can reach only the customers of its peers. That is a fine network and a bad Internet. The bill is how the default-free zone stays connected to campuses, shops, and phones that will never peer with everyone."
+      ],
+      "example": "Campus AS 64500 pays AS 701. 701 advertises a default, or the full table, to 64500. 64500 advertises 203.0.113.0/24 up to 701. A student fetching a prefix that no campus peer owns goes to 701, because that is what the money bought.",
+      "whyItMatters": "A campus that 'lost the Internet' while local peers still work has usually lost transit, not electricity. The remaining sessions were never a default.",
+      "quiz": [
+        {
+          "id": "ni-trans10-1",
+          "stem": "Transit is:",
+          "correctAnswer": "Paying another AS to reach prefixes beyond your own customers",
+          "distractors": [
+            { "text": "Exchanging only customer routes at no charge", "kind": "reversed", "rationale": "That is peering. Transit is the paid rest-of-the-Internet product." },
+            { "text": "Flooding your interior map so the provider can run shortest path", "kind": "nearby", "rationale": "Transit is still BGP policy plus a bill, not an interior flood." },
+            { "text": "A link that forbids any packet from leaving your AS", "kind": "misapplied", "rationale": "Transit exists so packets can leave toward the rest of the Internet." }
+          ],
+          "correctExplanation": "Money for a default, or for a full table. That is how a stub reaches everyone else.",
+          "objectiveIds": ["Describe transit as paying another AS to reach the rest of the Internet"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ni-trans10-2",
+          "stem": "Campus 64500 still has peer sessions but its session to paid AS 701 is down. Destinations that no peer owns typically:",
+          "correctAnswer": "Become unreachable; peers were never a default to the rest of the Internet",
+          "distractors": [
+            { "text": "Stay reachable, because any BGP session implies a default route", "kind": "reversed", "rationale": "Peer sessions filter to customer routes. They do not replace transit." },
+            { "text": "Are rewritten as campus host routes and flooded interiorly", "kind": "misapplied", "rationale": "An interior map does not invent a path through the rest of the Internet." },
+            { "text": "Move to the longest AS path among the remaining peers automatically", "kind": "nearby", "rationale": "There is no remaining path if no peer originated or learned that prefix as a customer." }
+          ],
+          "correctExplanation": "Peers cover their customers. Transit covers everyone else. That session was the everyone-else path.",
+          "objectiveIds": ["Contrast a transit link with a settlement-free peer"],
+          "prerequisiteConceptIds": ["net-bgp", "net-transit"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-trans10-3",
+          "stem": "A transit link and a settlement-free peer differ first in:",
+          "correctAnswer": "Whether the neighbor will carry traffic to the rest of the Internet, for a bill",
+          "distractors": [
+            { "text": "Whether BGP is used; peers use an interior protocol instead", "kind": "nearby", "rationale": "Both relationships are BGP. The export policy and the invoice differ." },
+            { "text": "Whether the datapath still looks up prefixes", "kind": "misapplied", "rationale": "Forwarding is the same. The control-plane contract is what changed." },
+            { "text": "Whether a longer AS path is illegal on one of them", "kind": "subtle", "rationale": "Path length is a ranking knob, not the definition of transit versus peer." }
+          ],
+          "correctExplanation": "Same protocol, different product: paid default versus unpaid customer routes.",
+          "objectiveIds": ["Contrast a transit link with a settlement-free peer"],
+          "prerequisiteConceptIds": ["net-transit"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "net-ixp-10",
+      "conceptId": "net-ixp",
+      "title": "A room is not a protocol",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-peering"],
+      "explanation": [
+        "Many ASes can meet on one Ethernet without becoming one network. An Internet exchange point is a fabric — a switch, a building, a LAN — where those ASes plug in so they can peer without a private cable for every pair. The room is shared. The routing policies are not.",
+        "Peering at an IXP is still a BGP session and still a filter. You choose whom to session with, which customer prefixes to export, and whether a multilateral route server speaks for you. Sitting on the same VLAN does not install a default and does not make the exchange operator your transit provider.",
+        "The economic win is density. One port, many potential peers, some of the traffic that used to ride a paid provider now leaves locally. The remaining prefixes still need transit. An IXP that 'replaces the Internet' is a slogan; an IXP that short-circuits a few fat customer-to-customer paths is the actual design."
+      ],
+      "example": "AS 64500, a CDN, and an access ISP all attach to the same exchange fabric. 64500 sessions with the CDN and no longer sends that CDN's prefixes to AS 701. Student video to that CDN leaves at the exchange. A random /24 in another country still goes to 701.",
+      "whyItMatters": "A campus that 'peered at the IXP' and still buys a huge transit bill has usually sessioned with almost no one, or is sending non-customer traffic into a fabric that will not take it.",
+      "quiz": [
+        {
+          "id": "ni-ixp10-1",
+          "stem": "An IXP is primarily:",
+          "correctAnswer": "A shared fabric where many ASes meet so they can peer",
+          "distractors": [
+            { "text": "A single AS that owns every attached network's policy", "kind": "reversed", "rationale": "The fabric is shared. Each AS keeps its own policy." },
+            { "text": "A replacement for BGP, using only an interior protocol", "kind": "nearby", "rationale": "Peering at an exchange is still BGP. The room is not a protocol." },
+            { "text": "A paid default route sold by the switch operator to everyone", "kind": "misapplied", "rationale": "An exchange is not automatically transit. Sessions and filters still decide." }
+          ],
+          "correctExplanation": "A room and a LAN. Policies and BGP sessions remain per AS.",
+          "objectiveIds": ["Describe an IXP as a fabric where many ASes meet to peer"],
+          "prerequisiteConceptIds": ["net-peering"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-ixp10-2",
+          "stem": "After 64500 peers with a CDN at an exchange, traffic to that CDN's customer prefixes typically:",
+          "correctAnswer": "Leaves locally, so those paths no longer need to ride paid transit",
+          "distractors": [
+            { "text": "Still must ride AS 701, because an exchange cannot carry packets", "kind": "reversed", "rationale": "The whole point of the fabric is to carry those peered packets locally." },
+            { "text": "Becomes a host route for every viewer at the campus", "kind": "misapplied", "rationale": "The CDN still advertises prefixes. Viewers are not each a /32 in BGP." },
+            { "text": "Forces the exchange operator to originate the CDN's prefixes", "kind": "nearby", "rationale": "The CDN originates. The exchange is a meeting place, not an origin AS." }
+          ],
+          "correctExplanation": "Customer-to-customer over the fabric. That is the transit you no longer buy for those paths.",
+          "objectiveIds": ["Predict why an exchange reduces the need to buy transit for some paths"],
+          "prerequisiteConceptIds": ["net-peering", "net-ixp"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-ixp10-3",
+          "stem": "Sitting on an IXP VLAN, without BGP sessions, typically:",
+          "correctAnswer": "Does not install peers or a default; the fabric is not itself a routing policy",
+          "distractors": [
+            { "text": "Automatically peers you with every other attached AS", "kind": "nearby", "rationale": "Some route servers exist, but attachment is not a session. You still choose." },
+            { "text": "Makes the exchange operator your unpaid transit provider", "kind": "reversed", "rationale": "An IXP does not owe you the rest of the Internet." },
+            { "text": "Merges every attached AS into one interior map", "kind": "misapplied", "rationale": "Shared Ethernet is not a shared IGP or a shared policy." }
+          ],
+          "correctExplanation": "A port is not a route. Sessions and filters still have to exist.",
+          "objectiveIds": ["Describe an IXP as a fabric where many ASes meet to peer"],
+          "prerequisiteConceptIds": ["net-ixp"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        }
+      ]
+    },
+    {
+      "id": "net-policy-route-10",
+      "conceptId": "net-policy-route",
+      "title": "Local preference is politics with a number",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-bgp"],
+      "goDeeper": "net-anycast-bgp",
+      "diagram": "net-bgp-path",
+      "explanation": [
+        "AS-path length is the metric people remember. Local preference is the one operators actually set first. Incoming policy stamps a number on each candidate: prefer this neighbor, prefer customers over everyone else, make that backup stay backup. The decision process looks at local preference before it looks at AS-path length, so a longer path with a higher preference wins.",
+        "The rest of the attributes are later knobs — MED, origin, the IGP cost to the exit, which router learned it first. They matter when preference is tied. They do not rescue you from a preference you set on purpose. Export policy is the other half: which of those chosen paths you will even tell a given neighbor about.",
+        "Reading a looking glass without the preference is how journalists get the story backwards. A 'longer path' is often the path this AS wanted. A 'better path' that is not installed is often a path that lost on local preference, not a protocol bug."
+      ],
+      "example": "AS 64500 hears 203.0.113.0/24 from neighbor A as path 3356 15169 (length 2, local pref 200) and from neighbor B as path 701 15169 (length 2, local pref 100), and also a length-1 path from a backup at local pref 80. Neighbor A wins. Length never got a vote.",
+      "whyItMatters": "Traffic engineering on the Internet is mostly 'set local pref, then maybe pad the path so others set theirs'. Until you name the attribute, you are arguing with a number you cannot see.",
+      "quiz": [
+        {
+          "id": "ni-pol10-1",
+          "stem": "In the usual BGP decision order, a route is ranked by:",
+          "correctAnswer": "Local preference first, then AS-path length as a later tie-break",
+          "distractors": [
+            { "text": "AS-path length first, with local preference used only for logging", "kind": "reversed", "rationale": "Preference is the political knob and it is consulted first." },
+            { "text": "Prefix length in the datapath, which BGP recomputes per packet", "kind": "nearby", "rationale": "Longest-prefix is a forwarding rule on installed rows, not the BGP ranking of two equal prefixes." },
+            { "text": "Which neighbor's name sorts first alphabetically", "kind": "misapplied", "rationale": "Operators set a number. They do not sort AS names as the first rule." }
+          ],
+          "correctExplanation": "Politics, then path length. That is why a longer AS path can still be the winner.",
+          "objectiveIds": ["Explain local preference and AS-path as policy encoded in attributes"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 4,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "ni-pol10-2",
+          "stem": "Two advertisements for the same prefix: pref 200 with AS path length 3, pref 100 with length 1. Installed is:",
+          "correctAnswer": "The length-3 path, because local preference is compared first",
+          "distractors": [
+            { "text": "The length-1 path, because BGP must prefer fewer ASes", "kind": "reversed", "rationale": "Length is later. Preference 200 already won." },
+            { "text": "Neither; mixed preference and length make the prefix unroutable", "kind": "nearby", "rationale": "This is the normal ranking, not an error." },
+            { "text": "Both, load-shared per packet in the datapath", "kind": "misapplied", "rationale": "One best path is chosen for ordinary BGP. The datapath does not average them." }
+          ],
+          "correctExplanation": "200 beats 100 before anyone counts ASes. The longer rumor is the one that is installed.",
+          "objectiveIds": ["Predict which attribute typically decides a route before AS-path length does"],
+          "prerequisiteConceptIds": ["net-bgp", "net-policy-route"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-pol10-3",
+          "stem": "A looking glass shows a longer AS path installed than a shorter alternative. The first diagnosis is:",
+          "correctAnswer": "Local preference (or other earlier policy) preferred the longer path",
+          "distractors": [
+            { "text": "BGP is broken, because a longer path can never be legal", "kind": "reversed", "rationale": "Longer paths are legal the moment preference outranks length." },
+            { "text": "The datapath ignored the table and picked by cable color", "kind": "misapplied", "rationale": "The datapath looks up whatever policy installed." },
+            { "text": "The shorter path must have been a more-specific prefix", "kind": "nearby", "rationale": "The question is two paths for the same prefix. Specificity is a different override." }
+          ],
+          "correctExplanation": "Ask which attribute ranked it. Length losing is usually preference winning, not a bug.",
+          "objectiveIds": ["Predict which attribute typically decides a route before AS-path length does"],
+          "prerequisiteConceptIds": ["net-policy-route"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-hijack-10",
+      "conceptId": "net-hijack",
+      "title": "The table does not check who owns the prefix",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-bgp"],
+      "goDeeper": "net-rpki",
+      "diagram": "net-leak",
+      "explanation": [
+        "Ownership of a prefix is a registry story. The forwarding table does not check it. A hijack is announcing a prefix you do not own: originating 203.0.113.0/24, or a more-specific slice of it, from an AS that has no right to that space. Neighbors who accept the advertisement install a next hop toward you. Traffic follows.",
+        "More-specific is the sharp tool. The victim still advertises the aggregate. You advertise a longer mask. Longest-prefix match on every datapath that heard you now sends that slice to you. You did not have to beat the victim's AS path. You changed which row exists.",
+        "Acceptance is the other half. BGP will propagate what policy does not filter. Trust plus a missing origin check is the whole crime scene. The protocol did what it always does: install an advertised path to a prefix."
+      ],
+      "example": "YouTube originates 208.65.152.0/22. Another AS announces 208.65.153.0/24, a more-specific it does not own. Tables that heard the /24 send 208.65.153.1 to the hijacker. Tables that heard only the /22 still send that address to YouTube.",
+      "whyItMatters": "A global outage that is 'just one /24' is often this override. The aggregate is still in the table. The slice has a new, unauthorized next hop.",
+      "quiz": [
+        {
+          "id": "ni-hij10-1",
+          "stem": "A route hijack is:",
+          "correctAnswer": "Announcing a prefix you do not own so traffic is sent to you",
+          "distractors": [
+            { "text": "Paying a provider for a default to the rest of the Internet", "kind": "misapplied", "rationale": "Transit is a contract. A hijack is an unauthorized origin." },
+            { "text": "Flooding an interior map after a link failure", "kind": "nearby", "rationale": "Interior reconvergence is not an unauthorized prefix announcement." },
+            { "text": "Refusing to carry a peer's non-customer traffic", "kind": "reversed", "rationale": "That filter is peering working as designed, not a hijack." }
+          ],
+          "correctExplanation": "Originating space that is not yours. The table installs it if policy lets it through.",
+          "objectiveIds": ["Describe a route hijack as announcing a prefix you do not own"],
+          "prerequisiteConceptIds": ["net-bgp"],
+          "difficultyTier": 4,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-hij10-2",
+          "stem": "The victim still announces 208.65.152.0/22. A hijacker announces 208.65.153.0/24. A packet to 208.65.153.1:",
+          "correctAnswer": "Follows the /24 toward the hijacker wherever that row was accepted",
+          "distractors": [
+            { "text": "Follows the /22, because aggregates always beat more-specifics", "kind": "reversed", "rationale": "The longer mask wins. That is why the slice is the weapon." },
+            { "text": "Is dropped, because two origins make the address unroutable", "kind": "nearby", "rationale": "Two rows are a choice, not a crash. Longest match picks the /24." },
+            { "text": "Is load-shared to both origins in every datapath", "kind": "misapplied", "rationale": "Each datapath picks the longest match it has, not both next hops." }
+          ],
+          "correctExplanation": "More specific wins. Unauthorized length is enough; you do not have to win the AS-path comparison on the aggregate.",
+          "objectiveIds": ["Predict why a more-specific unauthorized prefix can steal traffic"],
+          "prerequisiteConceptIds": ["net-bgp", "net-hijack"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-hij10-3",
+          "stem": "A looking glass in a far AS shows the hijacker's /24 installed. The mechanism that got it there is:",
+          "correctAnswer": "Ordinary BGP acceptance and propagation of an advertised prefix",
+          "distractors": [
+            { "text": "A datapath bug that ignores installed aggregates", "kind": "nearby", "rationale": "The datapath is obeying longest match on a row that should not exist." },
+            { "text": "A registry check that reassigned ownership automatically", "kind": "reversed", "rationale": "The table does not consult the registry. That is the hole." },
+            { "text": "An interior flood that replaced every AS's policy", "kind": "misapplied", "rationale": "Hijacks travel as inter-AS advertisements, not as an IGP map." }
+          ],
+          "correctExplanation": "No extra exploit is required. Accept the advertisement, install the row, propagate it.",
+          "objectiveIds": ["Describe a route hijack as announcing a prefix you do not own"],
+          "prerequisiteConceptIds": ["net-hijack"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "net-hijack-20",
+      "conceptId": "net-hijack",
+      "title": "A leak and a hijack are different crimes",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["net-bgp"],
+      "goDeeper": "net-rpki",
+      "diagram": "net-leak",
+      "explanation": [
+        "Two failures look similar from a looking glass and are not the same crime. A hijack originates a prefix you do not own: the AS path starts with the wrong AS, or a more-specific appears from an AS that has no right to that space. A leak announces a route you were allowed to use but not allowed to re-advertise: a customer prefix sent to a peer, a peer prefix sent to another peer, a learned path exported past its intended boundary.",
+        "Incentives and victims differ. A hijack attracts traffic by lying about origin or about a more-specific. A leak attracts traffic by accidentally offering a path — often a short, cheap-looking path — through a network that cannot hold the volume. The leaker may have a real route. The hijacker may not. Both can blackhole. Only one is an ownership lie.",
+        "More-specific still dominates both stories when it shows up. A leaked /24 of a /16 you were supposed to keep local will steal that slice from every table that hears it, for the same longest-match reason a hijacked /24 would. Diagnosis therefore cannot stop at 'a prefix moved'. Ask: did this AS originate space that is not theirs, or did they export a path they were meant to keep?",
+        "Accidental and malicious share a propagation machine. Pakistan Telecom in 2008 announced a more-specific of YouTube and the route escaped. Plenty of leaks are a missing export filter after a maintenance window. The looking glass will show an unexpected origin or an unexpected transit AS. The fix for a leak is policy. The fix for a hijack starts with not accepting the origin — a later cryptographic permission story, not a shorter AS path."
+      ],
+      "example": "AS 64500 accidentally exports a learned 203.0.113.0/24, path 701 15169, to a peer. The peer and its neighbors now see 64500 701 15169 and may prefer it. That is a leak: 64500 had a real path and the wrong audience. Separately, AS 64496 originates 203.0.113.0/24 as path 64496 with no relationship to the owner. That is a hijack. A more-specific 203.0.113.0/24 from either will beat a honest 203.0.113.0/16.",
+      "whyItMatters": "Calling every bad prefix a hijack hides the operator who forgot a filter. Calling every leak a hacker hides the AS that is lying about origin. The looking glass will not label the crime for you.",
+      "quiz": [
+        {
+          "id": "ni-hij20-1",
+          "stem": "A leak, as opposed to a hijack, is typically:",
+          "correctAnswer": "Re-advertising a real route past the policy boundary where it belonged",
+          "distractors": [
+            { "text": "Originating a prefix the AS does not own, as a new first hop", "kind": "reversed", "rationale": "That is a hijack. A leak mis-exports a path it was allowed to use." },
+            { "text": "A cable cut that withdraws every prefix in an AS", "kind": "nearby", "rationale": "A cut is a withdrawal. A leak is an extra advertisement." },
+            { "text": "A datapath that ignores longest-prefix match on purpose", "kind": "misapplied", "rationale": "Both leak and hijack still rely on ordinary lookup of whatever was installed." }
+          ],
+          "correctExplanation": "Wrong audience, real path. Ownership was not the lie; export policy was.",
+          "objectiveIds": ["Describe a route hijack as announcing a prefix you do not own"],
+          "prerequisiteConceptIds": ["net-bgp", "net-hijack"],
+          "difficultyTier": 4,
+          "cognitiveType": "compare"
+        },
+        {
+          "id": "ni-hij20-2",
+          "stem": "A looking glass shows AS 64496 as origin of 203.0.113.0/24, a prefix 64496 does not own. This is:",
+          "correctAnswer": "A hijack: the origin is unauthorized, not merely an over-exported path",
+          "distractors": [
+            { "text": "A leak, because any unexpected path is a leak by definition", "kind": "nearby", "rationale": "A leak keeps a legitimate origin and exports it too far. This origin is wrong." },
+            { "text": "Normal transit, because any AS may originate any prefix it hears", "kind": "reversed", "rationale": "Hearing a prefix does not grant the right to originate it." },
+            { "text": "An interior failure, because only IGPs can move a prefix", "kind": "misapplied", "rationale": "The unexpected origin is an inter-AS advertisement." }
+          ],
+          "correctExplanation": "Wrong first AS on the path. That is origin theft, not a filter left open.",
+          "objectiveIds": ["Describe a route hijack as announcing a prefix you do not own"],
+          "prerequisiteConceptIds": ["net-hijack"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ni-hij20-3",
+          "stem": "Either a leaked /24 or a hijacked /24 can steal traffic from a honest /16 because:",
+          "correctAnswer": "The more-specific row wins in forwarding wherever it was accepted",
+          "distractors": [
+            { "text": "BGP prefers longer AS paths when a leak is present", "kind": "nearby", "rationale": "The steal is prefix length in the datapath, not AS-path length." },
+            { "text": "Aggregates always beat more-specifics after a leak", "kind": "reversed", "rationale": "The opposite: the /24 beats the /16." },
+            { "text": "The datapath drops overlapping prefixes as a safety feature", "kind": "misapplied", "rationale": "Overlap is how the steal works. There is no such safety drop." }
+          ],
+          "correctExplanation": "Same lookup rule for both crimes. Diagnose origin separately from the length override.",
+          "objectiveIds": ["Predict why a more-specific unauthorized prefix can steal traffic"],
+          "prerequisiteConceptIds": ["net-bgp", "net-hijack"],
+          "difficultyTier": 4,
+          "cognitiveType": "predict"
+        }
+      ]
+    },
+    {
+      "id": "net-rpki-10",
+      "conceptId": "net-rpki",
+      "title": "Permission to originate is not a path proof",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["net-hijack"],
+      "explanation": [
+        "A signature can say who may originate a prefix. It does not walk the path. RPKI lets the holder of 8.8.8.0/24 publish that AS 15169 is allowed to originate it, at a maximum length. A relying AS that does origin validation can mark a conflicting origin invalid and refuse to install it. The hijack that is 'wrong first AS' loses on that check.",
+        "The hole that remains is the rest of the path. An attacker who originates nothing, but who inserts themselves on a path that still starts with the authorized AS, is not caught by origin validation. A leak of a correctly originated prefix is not caught either: the origin is still good. RPKI is a permission slip for the first hop of the rumor, not a proof of the walk.",
+        "Operators still have to fetch the permission set and still have to filter on it. A ROA that is missing, stale, or too tight will invalidate the real origin and take you off the air as surely as a hijack would have. The cryptography does not replace policy. It gives policy one fact it did not have: who is allowed to start this prefix."
+      ],
+      "example": "A ROA says AS 15169 may originate 8.8.8.0/24. AS 64496 originating 8.8.8.0/24 is invalid and dropped by a validating neighbor. AS 64496 announcing 8.8.8.0/24 with path 64496 15169 still shows 15169 as origin; origin validation can accept it. The path is a lie origin checking does not see.",
+      "whyItMatters": "A press line that 'RPKI means BGP is signed now' oversells a one-hop permission. Hijacks of origin shrink. Path manipulation and leaks remain.",
+      "quiz": [
+        {
+          "id": "ni-rpki10-1",
+          "stem": "RPKI origin validation gives a relying AS:",
+          "correctAnswer": "Cryptographic permission for which AS may originate a prefix",
+          "distractors": [
+            { "text": "A proof that every AS on the path honestly forwarded the route", "kind": "reversed", "rationale": "Origin is the first hop. The rest of the path is not signed by this check." },
+            { "text": "A replacement for longest-prefix match in the datapath", "kind": "misapplied", "rationale": "RPKI filters which rows may be installed. Lookup still uses length." },
+            { "text": "A bill that turns every peer into a transit provider", "kind": "nearby", "rationale": "Permission to originate is not a business relationship." }
+          ],
+          "correctExplanation": "A ROA is who may start the prefix. It is not a walk of the AS path.",
+          "objectiveIds": ["Explain RPKI as cryptographic permission for an AS to originate a prefix"],
+          "prerequisiteConceptIds": ["net-hijack"],
+          "difficultyTier": 5,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "ni-rpki10-2",
+          "stem": "A hijacker originates 8.8.8.0/24 from AS 64496. A neighbor checking a ROA for 15169 typically:",
+          "correctAnswer": "Marks the route invalid and can refuse to install it",
+          "distractors": [
+            { "text": "Must install it, because any originated prefix is always valid", "kind": "reversed", "rationale": "The check exists to reject that origin." },
+            { "text": "Converts the /24 into 15169's aggregate automatically", "kind": "nearby", "rationale": "Validation does not rewrite prefixes. It accepts or rejects the advertisement." },
+            { "text": "Ignores origin and instead compares only AS-path length", "kind": "misapplied", "rationale": "Origin validation is a filter before ordinary ranking, not a length comparison." }
+          ],
+          "correctExplanation": "Wrong origin versus a ROA. Invalid, eligible to drop. That is the hijack origin validation can stop.",
+          "objectiveIds": ["Predict what origin validation does and does not stop"],
+          "prerequisiteConceptIds": ["net-hijack", "net-rpki"],
+          "difficultyTier": 5,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "ni-rpki10-3",
+          "stem": "A path 64496 15169 for 8.8.8.0/24, with a ROA allowing 15169 to originate, is:",
+          "correctAnswer": "Origin-valid, even if 64496 is an unauthorized insertion on the path",
+          "distractors": [
+            { "text": "Origin-invalid, because any extra AS makes the ROA fail", "kind": "reversed", "rationale": "Origin is the last AS in the path as origin, 15169. Extra hops are not this check." },
+            { "text": "Rejected as a leak, because RPKI also signs export policy", "kind": "nearby", "rationale": "RPKI origin validation does not encode who may re-advertise to whom." },
+            { "text": "Rewritten by the datapath to remove 64496 before lookup", "kind": "misapplied", "rationale": "The datapath does not edit AS paths. Invalid-or-not is a control-plane filter." }
+          ],
+          "correctExplanation": "The origin matches the ROA. Path manipulation and leaks are outside what this permission proves.",
+          "objectiveIds": ["Predict what origin validation does and does not stop"],
+          "prerequisiteConceptIds": ["net-rpki"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

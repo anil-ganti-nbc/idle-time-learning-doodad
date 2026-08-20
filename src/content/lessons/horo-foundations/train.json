@@ -1,0 +1,721 @@
+{
+  "courseId": "horo-foundations",
+  "moduleId": "horo-f-train",
+  "lessons": [
+    {
+      "id": "horo-mainspring-5",
+      "conceptId": "horo-mainspring",
+      "title": "A spiral that stores work",
+      "durationMin": 5,
+      "effort": "light",
+      "level": "intro",
+      "prerequisites": ["horo-movement"],
+      "goDeeper": "horo-barrel",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Work sits in a spiral of steel, coiled inside the barrel. Wind the arbor and the coils tighten. That elastic bend is stored work, not a slogan about power. Let the barrel turn and the spiral pays the train in torque.",
+        "Set steel has taken a permanent bend: coils rest in a bunch and deliver less push as the day runs. A tired spring does the same as its alloy loses snap. Either way the train sees a fading torque, not a steady one."
+      ],
+      "example": "A spring that sits in a tight cluster after let-down has taken a set. Morning amplitude looks poor, and the watch dies hours before the last service said it would.",
+      "whyItMatters": "If the store is tired, later talk of trains and beat rates is a story about a spring that cannot push.",
+      "quiz": [
+        {
+          "id": "horo-ms5-1",
+          "stem": "In this lesson, the mainspring is best described as:",
+          "correctAnswer": "A spiral of steel that stores work as elastic strain",
+          "distractors": [
+            { "text": "A wheel that meters the unwind into counted seconds", "kind": "nearby", "rationale": "Metering is the timebase. The spring only stores." },
+            { "text": "A jewel count printed on the spec as a grade of the calibre", "kind": "misconception", "rationale": "Jewel count names holes. It is not a spring." },
+            { "text": "A display train that turns the hour hand from the dial", "kind": "misapplied", "rationale": "Hands display. The spiral stores work." }
+          ],
+          "correctExplanation": "A coiled spiral stores work. That is the whole job of the spring.",
+          "objectiveIds": ["Describe the mainspring as a spiral that stores work"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-ms5-2",
+          "stem": "A mainspring that has taken a set typically delivers:",
+          "correctAnswer": "Less torque through the day, because useful coils no longer open",
+          "distractors": [
+            { "text": "More torque at dusk, because set steel stores a second day", "kind": "reversed", "rationale": "Set steel has already lost range. Dusk is worse, not better." },
+            { "text": "A higher beat rate, because a bent spring is a faster clock", "kind": "misapplied", "rationale": "Beat rate is a train and oscillator product, not a bent coil." },
+            { "text": "The same torque, because set only names the colour of the alloy", "kind": "subtle", "rationale": "Set is a permanent take-up of the spiral, not a colour." }
+          ],
+          "correctExplanation": "Set coils sit bunched. Useful turns and torque both sag.",
+          "objectiveIds": ["Predict what a set or tired spring does to torque through the day"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ms5-3",
+          "stem": "A tired mainspring and a set mainspring are alike in that both:",
+          "correctAnswer": "Fade in torque as the day runs, so the train is under-pushed",
+          "distractors": [
+            { "text": "Raise jewel count, which is how tired steel is graded", "kind": "misconception", "rationale": "Neither fault adds a jewel. Both steal torque." },
+            { "text": "Turn the hands into the timebase until the spring is oiled", "kind": "misapplied", "rationale": "Hands still display. The store is what faded." },
+            { "text": "Lock the click so the crown can no longer wind the arbor", "kind": "nearby", "rationale": "The click is a later one-way. Tired steel still winds." }
+          ],
+          "correctExplanation": "Set or tired, the spiral has less snap. Torque fades. The train feels it.",
+          "objectiveIds": ["Predict what a set or tired spring does to torque through the day"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "horo-mainspring-10",
+      "conceptId": "horo-mainspring",
+      "title": "Set steel, fading torque",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "intro",
+      "prerequisites": ["horo-movement"],
+      "goDeeper": "horo-barrel",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Steel coiled into a spiral stores work as elastic strain. The inner end hooks the arbor; the outer end hooks the barrel wall. Winding tightens that spiral. Running lets it open against the wall, so torque leaves through the drum, not back through the crown.",
+        "Set is a permanent take-up: the spring no longer wants to fill the barrel. Coils stack, useful turns vanish, and torque sags early in the day. Tired steel has the same symptom with a different cause — the alloy has lost elastic range after years of winding.",
+        "HSNY 101 and WOSTEP both treat the mainspring as a store, not a clock. Predict the day: a set or tired spring will start the morning with less torque and die sooner. Oil will not restore a spiral that has already taken a set."
+      ],
+      "example": "Let down a barrel and the spring sits in a tight cluster instead of filling the drum. Fit it anyway and amplitude is low at breakfast; the watch is dead by late afternoon.",
+      "whyItMatters": "A fading store looks like a timing fault until you open the barrel and look at the spiral.",
+      "quiz": [
+        {
+          "id": "horo-ms10-1",
+          "stem": "How does stored work in the mainspring differ from the going train?",
+          "correctAnswer": "The spring stores elastic work; the train only counts the unwind",
+          "distractors": [
+            { "text": "The spring meters seconds; the train stores the day's torque", "kind": "reversed", "rationale": "The spring stores. The train counts. Neither meters a second." },
+            { "text": "They are two names for the barrel teeth under the dial", "kind": "nearby", "rationale": "Barrel teeth are how the drum drives. They are not the spiral." },
+            { "text": "The spring is a jewel; the train is the polished hole it sits in", "kind": "misapplied", "rationale": "Jewels are bearings. The spiral is steel that stores work." }
+          ],
+          "correctExplanation": "Store versus count. The spiral holds the work. The train spends it.",
+          "objectiveIds": ["Describe the mainspring as a spiral that stores work"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-ms10-2",
+          "stem": "Through a running day, a set mainspring will typically:",
+          "correctAnswer": "Deliver fading torque as bunched coils refuse to open fully",
+          "distractors": [
+            { "text": "Gain torque at dusk because set steel restocks overnight in the case", "kind": "reversed", "rationale": "Set is lost range. Night in a case does not unbend it." },
+            { "text": "Hold a true rate because a bent spring is a better timebase", "kind": "misapplied", "rationale": "The spring is not the timebase. Fading torque is the symptom." },
+            { "text": "Add barrel turns, which is how a set spiral is supposed to grade", "kind": "subtle", "rationale": "Set removes useful turns. It does not add them." }
+          ],
+          "correctExplanation": "Bunched coils, fewer useful turns, fading torque. That is a set spring.",
+          "objectiveIds": ["Predict what a set or tired spring does to torque through the day"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ms10-3",
+          "stem": "Amplitude is poor by noon and the watch dies early. The barrel is open and coils sit stacked. You should treat that as:",
+          "correctAnswer": "A set or tired spring whose store can no longer push the train",
+          "distractors": [
+            { "text": "Proof that jewel count was too low for this particular barrel", "kind": "nearby", "rationale": "Stacked coils are a spring fault. Count did not stack them." },
+            { "text": "A display fault, best fixed by fitting a longer pair of hands", "kind": "misapplied", "rationale": "Hands will not restore a spiral that has taken a set." },
+            { "text": "Normal running-in that polishes the spring into a tighter coil", "kind": "subtle", "rationale": "A tighter resting coil is damage, not a finish step." }
+          ],
+          "correctExplanation": "Stacked coils after let-down are a set or tired spring. Replace it.",
+          "objectiveIds": ["Predict what a set or tired spring does to torque through the day"],
+          "prerequisiteConceptIds": ["horo-movement"],
+          "difficultyTier": 0,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-barrel-10",
+      "conceptId": "horo-barrel",
+      "title": "Drum, arbor, and first wheel",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-mainspring"],
+      "goDeeper": "horo-gear-train",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Inside the barrel drum sits the mainspring. The arbor is the axle you wind. The drum is the cup whose teeth drive the first wheel of the going train, usually the centre pinion. Arbor and drum are not two names for one part.",
+        "Torque travels arbor to spring to barrel wall to centre pinion. The click holds the arbor still while the watch runs, so the drum is what turns. Reverse that in your head and you will oil the arbor as if it were the driver.",
+        "A going barrel is this arrangement: wind the arbor, run the drum. Trace it on a simple calibre until arbor, hook, wall, and barrel teeth are four places. The first wheel of the train starts at those teeth."
+      ],
+      "example": "On a student going-barrel calibre the ratchet sits on the arbor. Hold the arbor, and the drum still turns as the spring opens against the wall and the barrel teeth drive the centre pinion.",
+      "whyItMatters": "Mix arbor and drum and you will wind a part that is supposed to stand still while the watch runs.",
+      "quiz": [
+        {
+          "id": "horo-ba10-1",
+          "stem": "The barrel, in this course, is the drum that:",
+          "correctAnswer": "Holds the spring and drives the first wheel with its teeth",
+          "distractors": [
+            { "text": "Meters the unwind as the timebase of the whole watch", "kind": "nearby", "rationale": "The oscillator meters. The drum only holds and drives." },
+            { "text": "Displays the count on the dial as a pair of hands", "kind": "misapplied", "rationale": "Hands display. The barrel is the store's housing." },
+            { "text": "Counts jewels so the calibre can be graded from the spec", "kind": "misconception", "rationale": "A drum is not a jewel count." }
+          ],
+          "correctExplanation": "Drum holds the spring. Teeth on that drum drive the first wheel.",
+          "objectiveIds": ["Name the barrel as the drum that holds the spring and drives the first wheel"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-ba10-2",
+          "stem": "Trace torque from a wound going barrel to the centre pinion. The order is:",
+          "correctAnswer": "Arbor, spring, barrel wall, then the teeth that drive the centre pinion",
+          "distractors": [
+            { "text": "Centre pinion, then the spring, with the arbor left until last", "kind": "reversed", "rationale": "The arbor is held. Torque leaves through the wall, then the teeth." },
+            { "text": "Crown, then the hands, with no drum on the path at all", "kind": "nearby", "rationale": "That path is winding or setting, not the going path." },
+            { "text": "Balance first, so the spring has a beat before the drum can turn", "kind": "misapplied", "rationale": "The drum drives the train. The balance meters later." }
+          ],
+          "correctExplanation": "Arbor held, spring, wall, teeth, centre pinion. That is the going barrel.",
+          "objectiveIds": ["Trace torque from arbor to barrel wall to the centre pinion"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-ba10-3",
+          "stem": "How does the barrel arbor differ from the barrel drum while the watch runs?",
+          "correctAnswer": "The click holds the arbor; the drum turns and drives the centre pinion",
+          "distractors": [
+            { "text": "The drum is held still; the arbor is what drives the centre pinion", "kind": "reversed", "rationale": "In a going barrel the drum runs. The arbor is the one held." },
+            { "text": "They are two words for the cannon that carries the minute hand", "kind": "nearby", "rationale": "A cannon pinion is display. The barrel is the store's drum." },
+            { "text": "The arbor meters seconds; the drum is only a decorative cup", "kind": "misapplied", "rationale": "Neither part is the timebase. The drum is the driver." }
+          ],
+          "correctExplanation": "Going barrel: arbor held by the click, drum turning, teeth driving.",
+          "objectiveIds": ["Name the barrel as the drum that holds the spring and drives the first wheel"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        }
+      ]
+    },
+    {
+      "id": "horo-gear-train-10",
+      "conceptId": "horo-gear-train",
+      "title": "A count, not a clock",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-barrel"],
+      "goDeeper": "horo-wheel-pinion",
+      "diagram": "horo-train",
+      "explanation": [
+        "Barrel teeth drive the centre pinion. Centre wheel drives the third pinion, third wheel the fourth, fourth wheel the escape pinion. Each step raises speed and cuts torque. That chain is a reduction from a slow drum to a fast escape wheel.",
+        "The train counts the unwind into turns. It does not know a second. Without the escapement and oscillator, those wheels would dump the barrel in a rush. Keeping time is the timebase; counting is the train.",
+        "Follow barrel to escape on a three-hand calibre before you name a beat rate. The fourth wheel often carries the seconds hand because it turns once a minute — that is a counted turn, still waiting to be metered."
+      ],
+      "example": "Wound barrel, complete train, balance locked: the escape wheel sits still. Unlock the pallet and the same train advances in ticks. The wheels did not learn time; they were allowed to count.",
+      "whyItMatters": "Treat the train as a clock and you will chase brass when the oscillator was what failed.",
+      "quiz": [
+        {
+          "id": "horo-gt10-1",
+          "stem": "Follow a reduction from the barrel to the escape wheel. After the fourth wheel comes:",
+          "correctAnswer": "The escape pinion and escape wheel, the last of the count",
+          "distractors": [
+            { "text": "The cannon pinion immediately, with no escape wheel on the path", "kind": "reversed", "rationale": "The cannon is display. The escape is the last of the going train." },
+            { "text": "The winding stem, which is how energy is supposed to leave", "kind": "misapplied", "rationale": "The stem is how energy enters, on the wind." },
+            { "text": "The hour wheel, treated here as the last wheel of the going train", "kind": "nearby", "rationale": "The hour wheel is motion works, after the count." }
+          ],
+          "correctExplanation": "Barrel, centre, third, fourth, escape. That is the reduction.",
+          "objectiveIds": ["Follow a reduction from the barrel to the escape wheel"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-gt10-2",
+          "stem": "Why does the going train count the unwind rather than keep time?",
+          "correctAnswer": "It only multiplies turns; the oscillator is what meters a second",
+          "distractors": [
+            { "text": "It stores the work; the barrel is only a decorative drum", "kind": "reversed", "rationale": "Stored work is the spring. The train spends it as a count." },
+            { "text": "It is the timebase, so the balance can be left off a simple calibre", "kind": "misconception", "rationale": "Leave off the balance and the train dumps. That is not timekeeping." },
+            { "text": "It grades the watch by how many jewels sit under the train bridge", "kind": "subtle", "rationale": "Jewel count is not why a train fails to know a second." }
+          ],
+          "correctExplanation": "A gearbox counts. A second is a metered unlock, not a tooth.",
+          "objectiveIds": ["State why the train counts and does not keep time"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-gt10-3",
+          "stem": "The going train on a simple calibre is best named as:",
+          "correctAnswer": "A reduction from the barrel to the escape wheel that counts turns",
+          "distractors": [
+            { "text": "A clock that knows seconds even with the balance locked", "kind": "misconception", "rationale": "Locked balance, no unlocks, no time. The train still only counts." },
+            { "text": "A display of hour and minute sitting entirely under the dial", "kind": "nearby", "rationale": "That is motion works. The going train ends at the escape." },
+            { "text": "A winding path from the crown to the ratchet on the arbor", "kind": "misapplied", "rationale": "That path puts work in. The going train spends it." }
+          ],
+          "correctExplanation": "Reduction, barrel to escape. Count, not clock.",
+          "objectiveIds": ["State why the train counts and does not keep time"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "horo-gear-train-20",
+      "conceptId": "horo-gear-train",
+      "title": "Barrel to escape, step by step",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "core",
+      "prerequisites": ["horo-barrel"],
+      "goDeeper": "horo-wheel-pinion",
+      "diagram": "horo-train",
+      "explanation": [
+        "Reduction is the going train's whole geometry. A slow, high-torque barrel must feed a fast, low-torque escape wheel. Centre, third, and fourth wheels are the steps. Miss a step in the story and the escape wheel seems to sit on the barrel.",
+        "Count, do not clock. Each mesh multiplies turns: one barrel revolution becomes many at the escape. The oscillator will later unlock those turns in ticks. Until then the train is only a gearbox. A stopped balance proves it — the count has nothing to report.",
+        "On a simple calibre the centre wheel turns once an hour and the fourth once a minute. Those periods are designed tooth counts, not a sense of time inside the brass. Change a pinion leaf count and both periods move. The timebase did not move; the ratio did.",
+        "WOSTEP traces this path before any timing machine. Diagnose a train that is complete but silent by asking whether the escape wheel is being unlocked. A missing fourth pinion leaf will starve the escape even if the barrel is fully wound."
+      ],
+      "example": "Follow a wound going barrel through centre, third, and fourth to the escape. Lock the pallet and the fourth sits still. The seconds hand, if it lives on that fourth, is a counted turn waiting for an unlock.",
+      "whyItMatters": "Name each step of the reduction or a silent train will send you to the hairspring first.",
+      "quiz": [
+        {
+          "id": "horo-gt20-1",
+          "stem": "A going train from barrel to escape is a reduction because:",
+          "correctAnswer": "Each step raises speed and cuts torque until the escape wheel is fast",
+          "distractors": [
+            { "text": "Each step stores more work than the barrel already held", "kind": "reversed", "rationale": "The train spends stored work. It does not restock the spring." },
+            { "text": "Each step is a jewel added so the spec sheet can show a higher grade", "kind": "misconception", "rationale": "Reduction is tooth counts, not a jewel tally." },
+            { "text": "Each step is a hand on the dial, ending with the hour wheel as escape", "kind": "nearby", "rationale": "Hands are display. The escape wheel is the last of the count." }
+          ],
+          "correctExplanation": "Slow drum, fast escape. That is what the steps are for.",
+          "objectiveIds": ["Follow a reduction from the barrel to the escape wheel"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "trace"
+        },
+        {
+          "id": "horo-gt20-2",
+          "stem": "The centre turns once an hour because of tooth counts. If you change the third pinion leaves, that hour typically:",
+          "correctAnswer": "Moves, because the period was a ratio, not a clock inside the brass",
+          "distractors": [
+            { "text": "Stays put, because brass wheels know an hour by feel", "kind": "misconception", "rationale": "Wheels do not know an hour. Ratios do." },
+            { "text": "Becomes the beat rate, which is how pinions are supposed to grade", "kind": "misapplied", "rationale": "Beat rate is a later product. You just moved a ratio." },
+            { "text": "Sets the hands from the stem without any going train at all", "kind": "nearby", "rationale": "Setting is a different path. The third pinion is on the going path." }
+          ],
+          "correctExplanation": "Designed counts, not a sense of time. Change a pinion, move the hour.",
+          "objectiveIds": ["State why the train counts and does not keep time"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-gt20-3",
+          "stem": "A fully wound barrel and a complete train sit silent. The first question to ask is:",
+          "correctAnswer": "Whether the escape wheel is being unlocked by the timebase",
+          "distractors": [
+            { "text": "Whether the hour hand has become the timebase under the dial", "kind": "nearby", "rationale": "The hour hand is display. Silence is about unlocks." },
+            { "text": "Whether jewel count is high enough for a barrel this size", "kind": "misconception", "rationale": "Count did not silence the train. Missing unlocks did." },
+            { "text": "Whether the crystal is storing the remaining mainspring torque", "kind": "misapplied", "rationale": "The crystal is housing. The escape is what must be unlocked." }
+          ],
+          "correctExplanation": "Complete count, no unlocks, nothing reports. Ask about the timebase first.",
+          "objectiveIds": ["State why the train counts and does not keep time"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-wheel-pinion-10",
+      "conceptId": "horo-wheel-pinion",
+      "title": "Large wheel, small pinion",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-gear-train"],
+      "goDeeper": "horo-ratio",
+      "diagram": "horo-train",
+      "explanation": [
+        "Mesh is a large toothed wheel driving a small pinion, over and over down the train. The wheel turns slowly; the pinion turns faster by the tooth-to-leaf ratio. That pair is one step. The next wheel is mounted on that same pinion's arbor.",
+        "Too deep a mesh binds: teeth bottom, pivots load, wear shows at the root. Too shallow a mesh skips: backlash grows, a tooth can climb out, and the escape wheel sees a jerk instead of a steady count. Depth is a measured overlap, not a vibe.",
+        "Predict the noise. A train that howls after a bridge was seated hard is often a deep mesh from lost endshake. A train that jumps under light torque is often a shallow one. Inspect the meeting of wheel and pinion before you oil the problem away."
+      ],
+      "example": "A third wheel driven too deep into the fourth pinion leaves brass powder at the tooth roots. The watch runs heavy, then stops. Shallow the other way, and a tooth climbs out under a shock.",
+      "whyItMatters": "Mesh depth is where a bent bridge, a thick pivot, or a wrong depthing first shows up as a 'timing' complaint.",
+      "quiz": [
+        {
+          "id": "horo-wp10-1",
+          "stem": "A wheel-and-pinion step in the going train is:",
+          "correctAnswer": "A large toothed wheel driving a small pinion, over and over",
+          "distractors": [
+            { "text": "A small wheel driving a large pinion, which is how torque is stored", "kind": "reversed", "rationale": "Large wheel drives small pinion. That is the reduction step." },
+            { "text": "A jewel driving a screw, which is how a bridge is supposed to mesh", "kind": "misapplied", "rationale": "Jewels are holes. Mesh is wheel teeth on pinion leaves." },
+            { "text": "Two names for the cannon that carries the minute hand alone", "kind": "nearby", "rationale": "A cannon is display. Train mesh is the going count." }
+          ],
+          "correctExplanation": "Large wheel, small pinion, next wheel on that arbor. That pair is one step.",
+          "objectiveIds": ["Describe a large wheel driving a small pinion, over and over"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-wp10-2",
+          "stem": "If the mesh between a train wheel and the next pinion is too deep, you should expect:",
+          "correctAnswer": "Binding, root wear, and a train that runs heavy or stops",
+          "distractors": [
+            { "text": "A cleaner skip, which is how a deep mesh is supposed to grade", "kind": "reversed", "rationale": "Skipping is the shallow fault. Deep mesh binds." },
+            { "text": "A higher beat rate, because bottomed teeth tick faster", "kind": "misapplied", "rationale": "Depth does not rewrite tooth counts. It steals freedom." },
+            { "text": "Extra power reserve, because a bind stores work in the teeth", "kind": "subtle", "rationale": "A bind wastes work. It does not store a reserve." }
+          ],
+          "correctExplanation": "Deep mesh bottoms teeth. Wear at the root, then a bind.",
+          "objectiveIds": ["Predict backlash and wear if the mesh is too deep or too shallow"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-wp10-3",
+          "stem": "A train jumps under light torque and a tooth can climb out of mesh. The depthing is typically:",
+          "correctAnswer": "Too shallow, so backlash is large and the tooth is free to skip",
+          "distractors": [
+            { "text": "Too deep, which is the only way a tooth is able to climb", "kind": "reversed", "rationale": "Deep mesh traps the tooth. Climbing is a shallow fault." },
+            { "text": "Correct, because jumping is how a lever escapement is oiled", "kind": "misapplied", "rationale": "Jumping under light torque is a mesh fault, not a lubrication rite." },
+            { "text": "Irrelevant, because jewel count sets whether teeth can skip", "kind": "misconception", "rationale": "Skip is geometry of the mesh, not a count of holes." }
+          ],
+          "correctExplanation": "Shallow mesh, large backlash, a tooth climbs. Inspect the meeting.",
+          "objectiveIds": ["Predict backlash and wear if the mesh is too deep or too shallow"],
+          "prerequisiteConceptIds": ["horo-gear-train"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    },
+    {
+      "id": "horo-ratio-10",
+      "conceptId": "horo-ratio",
+      "title": "Tooth counts set the tick",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-wheel-pinion"],
+      "goDeeper": "horo-train-math",
+      "diagram": "horo-train",
+      "explanation": [
+        "Divide wheel teeth by the pinion leaves they drive. That quotient is one step of the train ratio. Multiply the steps from centre to escape, then multiply by escape teeth and by two beats per tooth on a lever, and you have beats per hour.",
+        "Tooth counts are why the escapement ticks at a chosen rate. Nobody stamped 18,000 on the balance as a brand. The oscillator is made to swing at a period that matches that product. Mismatch the two and the train will trip or starve.",
+        "Compute a simple pair: an 80-tooth wheel driving a 10-leaf pinion turns that pinion eight times per wheel turn. Stack three such pairs and the escape wheel is turning fast enough for a five-beat second. The arithmetic is the rate."
+      ],
+      "example": "Centre 80 driving a 10-leaf third pinion is an 8:1 step. Write every step that way, multiply, and the tick rate is a number you computed, not a word on a spec sheet.",
+      "whyItMatters": "If you cannot read a tooth count as a ratio, 18,000 and 28,800 stay slogans.",
+      "quiz": [
+        {
+          "id": "horo-ra10-1",
+          "stem": "An 80-tooth wheel driving a 10-leaf pinion turns that pinion how many times per wheel turn?",
+          "correctAnswer": "Eight times, because the ratio is wheel teeth divided by pinion leaves",
+          "distractors": [
+            { "text": "Ten times, because you always divide leaves by teeth", "kind": "reversed", "rationale": "Leaves into teeth, not teeth into leaves. 80/10 is eight." },
+            { "text": "Once, because a pinion is only allowed one turn per hour", "kind": "nearby", "rationale": "The centre wheel is the once-an-hour part, not every pinion." },
+            { "text": "Eighty times, because each tooth is one beat of the balance", "kind": "misapplied", "rationale": "A tooth is not a beat. The quotient is eight, not eighty." }
+          ],
+          "correctExplanation": "80/10 = 8. Wheel teeth over pinion leaves. That is one step.",
+          "objectiveIds": ["Compute a simple train ratio from wheel and pinion teeth"],
+          "prerequisiteConceptIds": ["horo-wheel-pinion"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-ra10-2",
+          "stem": "The escapement ticks at a chosen rate primarily because:",
+          "correctAnswer": "Tooth counts in the train were cut to a product that matches the oscillator",
+          "distractors": [
+            { "text": "The case diameter was chosen, which is what sets beats per hour", "kind": "misapplied", "rationale": "Case size is housing. Tooth counts set the product." },
+            { "text": "Jewel count was printed high enough to force a faster unlock", "kind": "misconception", "rationale": "Holes do not write a beat rate. Ratios do." },
+            { "text": "The hands were longer, so each tick had to cover more dial", "kind": "nearby", "rationale": "Hand length is display. It does not cut the train." }
+          ],
+          "correctExplanation": "Counts, then a matching oscillator period. That is the chosen tick.",
+          "objectiveIds": ["Read tooth counts as the reason the escapement ticks at a chosen rate"],
+          "prerequisiteConceptIds": ["horo-wheel-pinion"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-ra10-3",
+          "stem": "Beats per hour, in this lesson, fall out of:",
+          "correctAnswer": "The product of train steps, escape teeth, and two beats per tooth",
+          "distractors": [
+            { "text": "The mass of the case, treated here as a substitute for tooth counts", "kind": "misapplied", "rationale": "Mass of the case is not a ratio." },
+            { "text": "The colour of the hairspring, which is how a rate is supposed to grade", "kind": "subtle", "rationale": "Colour is not a tooth count. The product is." },
+            { "text": "The number of hands, with three-hand watches locked at 18,000", "kind": "nearby", "rationale": "Hand count is display. Beat rate is train arithmetic." }
+          ],
+          "correctExplanation": "Steps, escape teeth, two beats each. Multiply. That is the rate.",
+          "objectiveIds": ["Read tooth counts as the reason the escapement ticks at a chosen rate"],
+          "prerequisiteConceptIds": ["horo-wheel-pinion"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        }
+      ]
+    },
+    {
+      "id": "horo-train-math-10",
+      "conceptId": "horo-train-math",
+      "title": "Why 18,000 is arithmetic",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-ratio"],
+      "goDeeper": "horo-beat-rate",
+      "diagram": "horo-train",
+      "explanation": [
+        "Eighteen thousand beats per hour is a product, not a slogan. Centre 80 driving a 10-leaf third pinion, third 75 driving a 10-leaf fourth, fourth 80 driving an 8-leaf escape pinion, 15 escape teeth, two beats each: 8 × 7.5 × 10 × 30 = 18,000.",
+        "Twenty-eight thousand eight hundred is the same product with one count changed. Keep that 80-10-75-10-80-8 train and give the escape 24 teeth instead of 15: 8 × 7.5 × 10 × 48 = 28,800. The slogan moved because a tooth count moved.",
+        "Predict a change: add ten teeth to the fourth wheel and beats per hour rise in proportion. An 80-tooth fourth at 18,000 becomes 20,250 with 90 teeth on that same 8-leaf pinion. The oscillator still has to accept that period."
+      ],
+      "example": "A student swaps a 15-tooth escape for a 24-tooth escape and leaves every other count. The machine that was 18,000 is now 28,800 on paper. The balance must be a 4 Hz organ or the train will trip.",
+      "whyItMatters": "If 18,000 and 28,800 stay slogans, a changed wheel will look like a haunted rate.",
+      "quiz": [
+        {
+          "id": "horo-tm10-1",
+          "stem": "Why do 18,000 beats per hour fall out of a 80-10-75-10-80-8-15 train?",
+          "correctAnswer": "Because 8 × 7.5 × 10 × (15 × 2) multiplies to 18,000",
+          "distractors": [
+            { "text": "Because 18,000 is stamped on every balance as a brand, not a product", "kind": "misconception", "rationale": "The number is a product of counts. It is not a stamp that replaces arithmetic." },
+            { "text": "Because the case is 18 mm, which is how beat rate is supposed to be read", "kind": "misapplied", "rationale": "Case size is not a tooth count." },
+            { "text": "Because three hands always force 18,000, whatever the wheels say", "kind": "nearby", "rationale": "Hand count is display. The product is the wheels." }
+          ],
+          "correctExplanation": "8 × 7.5 × 10 × 30 = 18,000. That is why the slogan exists.",
+          "objectiveIds": ["Show why 18,000 and 28,800 beats per hour fall out of tooth counts"],
+          "prerequisiteConceptIds": ["horo-ratio"],
+          "difficultyTier": 2,
+          "cognitiveType": "apply"
+        },
+        {
+          "id": "horo-tm10-2",
+          "stem": "Keep the 80-10-75-10-80-8 train and change only the escape from 15 teeth to 24. The beat rate becomes:",
+          "correctAnswer": "28,800, because the last factor went from 30 to 48",
+          "distractors": [
+            { "text": "18,000 still, because beat rate cannot move if the barrel is unchanged", "kind": "reversed", "rationale": "Escape teeth are in the product. Change them and the product moves." },
+            { "text": "15,000, because you subtract the extra nine teeth from 18,000", "kind": "misapplied", "rationale": "You multiply the last factor, you do not subtract teeth from the slogan." },
+            { "text": "Jewel count plus 24, which is how a new escape is supposed to grade", "kind": "subtle", "rationale": "The new product is 8 × 7.5 × 10 × 48, not a jewel tally." }
+          ],
+          "correctExplanation": "15 × 2 = 30; 24 × 2 = 48. Same train, new last factor, 28,800.",
+          "objectiveIds": ["Predict the beat rate if one wheel in the train changes teeth"],
+          "prerequisiteConceptIds": ["horo-ratio"],
+          "difficultyTier": 2,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-tm10-3",
+          "stem": "Add ten teeth to the fourth wheel of the 18,000 example (80 to 90 on the 8-leaf escape pinion). The new product is:",
+          "correctAnswer": "20,250 beats per hour, in proportion to 90/80",
+          "distractors": [
+            { "text": "18,010, because each extra tooth adds one beat and nothing else", "kind": "nearby", "rationale": "The fourth wheel is a ratio, not a one-beat tally." },
+            { "text": "8,000, because a larger fourth wheel must slow the whole train by half", "kind": "reversed", "rationale": "More teeth on the driver speeds the pinion, so the product rises." },
+            { "text": "Unchanged, because only the escape wheel is allowed to set the slogan", "kind": "misconception", "rationale": "Every wheel in the product can move the rate." }
+          ],
+          "correctExplanation": "90/8 instead of 80/8. 18,000 × 90/80 = 20,250.",
+          "objectiveIds": ["Predict the beat rate if one wheel in the train changes teeth"],
+          "prerequisiteConceptIds": ["horo-ratio"],
+          "difficultyTier": 2,
+          "cognitiveType": "identify"
+        }
+      ]
+    },
+    {
+      "id": "horo-beat-rate-10",
+      "conceptId": "horo-beat-rate",
+      "title": "Beats per hour as the clock",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-ratio"],
+      "goDeeper": "horo-escape",
+      "diagram": "horo-train",
+      "explanation": [
+        "Call beat rate the beats per hour the movement is built to count. Five beats a second is 18,000. Eight beats a second is 28,800. That number is the movement's clock: how often the escapement should unlock if the oscillator period is honest.",
+        "Relate it to the oscillator, not to the case. A large case does not make a slower beat. A small case does not make a faster one. Period lives in the balance and hairspring. The train ratio is cut to match that period, or the other way around.",
+        "Read 28,800 as eight unlocks a second, not as a grade. Two calibres can share a beat rate and differ in every other job. Timing a watch against the wrong beat setting on a machine is how you invent a fault that is only a switch."
+      ],
+      "example": "A 36 mm watch and a 44 mm watch can both be 28,800. Put the 18,000 setting on the timing machine and both look wildly fast. The case did not decide. The switch did.",
+      "whyItMatters": "If beat rate is a slogan about size, you will regulate the wrong machine.",
+      "quiz": [
+        {
+          "id": "horo-bt10-1",
+          "stem": "Beat rate, as this lesson uses the words, is:",
+          "correctAnswer": "Beats per hour, the movement's clock of how often it should unlock",
+          "distractors": [
+            { "text": "Case diameter in millimetres, treated here as a substitute clock", "kind": "misapplied", "rationale": "The case is housing. Beat rate is unlocks per hour." },
+            { "text": "Jewel count on the spec sheet, which is how a clock is supposed to grade", "kind": "misconception", "rationale": "Holes are not a clock. Beats per hour are." },
+            { "text": "How long the mainspring can run the train after a full wind", "kind": "nearby", "rationale": "That number is power reserve, a later store of turns." }
+          ],
+          "correctExplanation": "Beats per hour. That is the movement's clock, not the case.",
+          "objectiveIds": ["Define beat rate as beats per hour, the movement's clock"],
+          "prerequisiteConceptIds": ["horo-ratio"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-bt10-2",
+          "stem": "A larger case does not, by itself, change beat rate because:",
+          "correctAnswer": "Beat rate is the oscillator period matched to a train product, not a case size",
+          "distractors": [
+            { "text": "Larger cases always beat faster, which is how size is supposed to grade", "kind": "reversed", "rationale": "Size is not the clock. Period and ratio are." },
+            { "text": "The crystal stores the period, so steel cases cannot have a beat", "kind": "misapplied", "rationale": "The crystal is housing. The oscillator owns the period." },
+            { "text": "Jewel count rises with case size, and that count is the true clock", "kind": "misconception", "rationale": "Neither size nor jewel count writes beats per hour." }
+          ],
+          "correctExplanation": "Period in the organ, product in the train. The case is not in that sentence.",
+          "objectiveIds": ["Relate beat rate to the oscillator period, not to the case size"],
+          "prerequisiteConceptIds": ["horo-ratio"],
+          "difficultyTier": 1,
+          "cognitiveType": "distinguish"
+        },
+        {
+          "id": "horo-bt10-3",
+          "stem": "You time a 28,800 calibre on a machine left at 18,000. The trace will typically:",
+          "correctAnswer": "Look wildly wrong, because the machine is counting against the wrong clock",
+          "distractors": [
+            { "text": "Look true, because case size on the machine overrides beat setting", "kind": "reversed", "rationale": "The machine must be told the beat. Case size is not a setting." },
+            { "text": "Force the balance to 18,000, which is how regulation is supposed to start", "kind": "misapplied", "rationale": "A switch does not recut the train or the hairspring." },
+            { "text": "Add jewels until the two slogans agree on the paper ticket", "kind": "subtle", "rationale": "You set the machine to the calibre's beat. You do not add holes." }
+          ],
+          "correctExplanation": "Wrong beat setting, invented fault. Match the machine to the movement's clock.",
+          "objectiveIds": ["Relate beat rate to the oscillator period, not to the case size"],
+          "prerequisiteConceptIds": ["horo-ratio"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-power-reserve-10",
+      "conceptId": "horo-power-reserve",
+      "title": "Stored turns, then stop",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-mainspring"],
+      "goDeeper": "horo-click",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Hours of running are stored turns of the barrel, paid out through the train. If the barrel turns once in seven hours and the spring has six useful turns, you have about forty hours. Power reserve is that quotient, not a number printed for show.",
+        "Extra friction eats those turns. A dry jewel, a thick oil that should have been a thin one, a deep mesh — each steals torque the spring would have spent on the escape. The watch dies early. The spring did not shrink; the load grew.",
+        "Predict a thicker oil in the train: amplitude falls, the last hours vanish, and the reserve you measured last service is gone. Clean the extra film before you fit a longer spring. Stored work is finite; wasted work shortens the day."
+      ],
+      "example": "A calibre that ran forty hours after service dies at twenty-four with a train jewel left dry. The spring still has turns. Friction spent them on heat and scoring instead of unlocks.",
+      "whyItMatters": "A short reserve is often a load, not a weak spring, and a longer spring will not fix a dry hole.",
+      "quiz": [
+        {
+          "id": "horo-pr10-1",
+          "stem": "Power reserve, in this lesson, is best stated as:",
+          "correctAnswer": "How long the spring can run the train, as stored barrel turns",
+          "distractors": [
+            { "text": "How many jewels were fitted, treated here as hours of running", "kind": "misconception", "rationale": "Holes are not hours. Turns of the barrel are." },
+            { "text": "How large the case is, which is how a reserve is supposed to grade", "kind": "misapplied", "rationale": "Case size is housing. Reserve is stored turns." },
+            { "text": "How often the escapement unlocks in one hour of honest running", "kind": "nearby", "rationale": "That number is beat rate, the movement's clock." }
+          ],
+          "correctExplanation": "Stored turns, paid out as hours. That is the reserve.",
+          "objectiveIds": ["State power reserve as how long the spring can run the train"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 1,
+          "cognitiveType": "recognize"
+        },
+        {
+          "id": "horo-pr10-2",
+          "stem": "A thicker oil in the going train will typically do what to power reserve?",
+          "correctAnswer": "Shorten it, because extra friction spends stored turns on load instead of unlocks",
+          "distractors": [
+            { "text": "Lengthen it, because a thick film is extra stored work in the jewels", "kind": "reversed", "rationale": "Oil is a load when it is too thick. It is not a second spring." },
+            { "text": "Leave it, because reserve is printed and cannot move with lubrication", "kind": "subtle", "rationale": "Printed hours assume a clean, correctly oiled train." },
+            { "text": "Convert it into beat rate, which is how thick oil is supposed to grade", "kind": "misapplied", "rationale": "Beat rate is a product of counts. Oil does not recut teeth." }
+          ],
+          "correctExplanation": "Extra load, wasted turns, early stop. Thick oil shortens the day.",
+          "objectiveIds": ["Predict what extra friction or a thicker oil does to that number"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-pr10-3",
+          "stem": "A dry train jewel appears after a watch that used to run forty hours now dies at twenty-four. You should:",
+          "correctAnswer": "Treat the short reserve as extra friction, and restore the bearing before a longer spring",
+          "distractors": [
+            { "text": "Fit a longer spring first, because hours are only a length of steel", "kind": "nearby", "rationale": "A dry hole will eat the new spring's turns the same way." },
+            { "text": "Raise jewel count, which is how a short reserve is supposed to be cured", "kind": "misconception", "rationale": "You already have the hole. It is dry. Count will not oil it." },
+            { "text": "Time it on 28,800, because beat setting restores stored turns", "kind": "misapplied", "rationale": "A machine switch does not refill a barrel." }
+          ],
+          "correctExplanation": "Load first. The spring still had turns; the dry jewel spent them.",
+          "objectiveIds": ["Predict what extra friction or a thicker oil does to that number"],
+          "prerequisiteConceptIds": ["horo-mainspring"],
+          "difficultyTier": 1,
+          "cognitiveType": "apply"
+        }
+      ]
+    },
+    {
+      "id": "horo-click-10",
+      "conceptId": "horo-click",
+      "title": "The pawl that keeps the wind",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "core",
+      "prerequisites": ["horo-barrel"],
+      "goDeeper": "horo-winding",
+      "diagram": "horo-power-flow",
+      "explanation": [
+        "Ratchet wheel and click are the one-way that keeps the spring wound. The ratchet sits on the barrel arbor. The click is a pawl sprung into those teeth. Wind, and the click slips. Let go, and the click locks so the arbor cannot run backwards through the crown.",
+        "A failed click is not a slow leak. The moment you let go of the crown, the arbor reverses, the winding wheels spin, and the crown can whip. That dump can strip a winding pinion or throw a click spring across the plate.",
+        "Name both parts before you blame the spring. A watch that unwinds in your hand while the train is still at rest is a click problem. The barrel is doing what an unlocked arbor allows: paying stored work back out the winding path."
+      ],
+      "example": "You wind, let go, and the crown snaps backward. The click foot has jumped the ratchet. The train never moved. Stored work left through the winding wheels.",
+      "whyItMatters": "Without the click, winding is a loan the arbor pays back the instant you let go.",
+      "quiz": [
+        {
+          "id": "horo-ck10-1",
+          "stem": "The click and ratchet earn their keep in a movement by:",
+          "correctAnswer": "Acting as the one-way that keeps the spring wound on the arbor",
+          "distractors": [
+            { "text": "Metering the unwind as the timebase of the whole watch", "kind": "nearby", "rationale": "The oscillator meters. The click only holds the arbor." },
+            { "text": "Displaying the count on the dial as a pair of hands", "kind": "misapplied", "rationale": "Hands display. The click is a pawl on the ratchet." },
+            { "text": "Counting jewels so the calibre can be graded from the spec", "kind": "subtle", "rationale": "A pawl is not a jewel count." }
+          ],
+          "correctExplanation": "One-way on the arbor. Wind in, not back out the crown.",
+          "objectiveIds": ["Name the click and ratchet as the one-way that keeps the spring wound"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "identify"
+        },
+        {
+          "id": "horo-ck10-2",
+          "stem": "The click fails and you let go of the crown. The moment that follows is typically:",
+          "correctAnswer": "The arbor reverses and the crown can whip as stored work dumps out the winding path",
+          "distractors": [
+            { "text": "The train keeps the wind, because barrel teeth are a second click", "kind": "reversed", "rationale": "The going train is not a one-way on the arbor. The click was." },
+            { "text": "The hands become the timebase until a new click can be oiled on", "kind": "misapplied", "rationale": "Hands still display. The dump is through the winding wheels." },
+            { "text": "Jewel count drops by one, which is how a failed click is supposed to grade", "kind": "misconception", "rationale": "A jumped pawl does not remove a jewel. It dumps the spring." }
+          ],
+          "correctExplanation": "Let go, arbor reverses, crown whips. That is a failed click, not a slow leak.",
+          "objectiveIds": ["Predict what a failed click does the moment you let go of the crown"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "predict"
+        },
+        {
+          "id": "horo-ck10-3",
+          "stem": "You wind, let go, and the crown snaps back while the going train never moves. The first suspect is:",
+          "correctAnswer": "A click that is not holding the ratchet, so the arbor is free to reverse",
+          "distractors": [
+            { "text": "A fourth wheel that has become the one-way on the arbor", "kind": "nearby", "rationale": "The fourth wheel is on the going path. The snap was on the winding path." },
+            { "text": "A hairspring that is too long, which is how a crown is supposed to snap", "kind": "misapplied", "rationale": "The organ was not in the dump. The click was." },
+            { "text": "A set mainspring, taken as the only reason a crown can reverse", "kind": "subtle", "rationale": "A set spring fades through the day. It does not whip the crown on let-go." }
+          ],
+          "correctExplanation": "Train at rest, crown snapping: the one-way on the arbor failed.",
+          "objectiveIds": ["Predict what a failed click does the moment you let go of the crown"],
+          "prerequisiteConceptIds": ["horo-barrel"],
+          "difficultyTier": 1,
+          "cognitiveType": "diagnose"
+        }
+      ]
+    }
+  ]
+}

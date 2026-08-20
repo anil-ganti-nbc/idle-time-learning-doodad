@@ -1,0 +1,558 @@
+{
+  "id": "dm-construction",
+  "title": "Riff, Rhythm, and Harmony Construction",
+  "categoryId": "death-metal",
+  "description": "How the music is built: riff cells, tremolo, chromatic motion, pedal tones, blast and double-kick vocabulary, song structure. Assumes music-theory foundations rather than reteaching intervals.",
+  "curriculumVersion": 1,
+  "orderHint": 1,
+  "difficultyRange": [
+    2,
+    4
+  ],
+  "entryRequirements": [
+    "mus-interval",
+    "mus-modes",
+    "mus-meter",
+    "dm-listening"
+  ],
+  "sourceReferences": [
+    {
+      "id": "berklee-metal",
+      "title": "Berklee Metal Guitar",
+      "url": "https://online.berklee.edu/courses/metal-guitar",
+      "kind": "syllabus",
+      "notes": "Riff vocabulary, rhythm, modes, and right-hand technique as construction skills. Depends on fundamentals rather than reteaching intervals."
+    },
+    {
+      "id": "mit-metal101",
+      "title": "MIT Heavy Metal 101",
+      "url": "https://ocw.mit.edu/courses/res-21m-001-heavy-metal-101-january-iap-2025/",
+      "kind": "ocw",
+      "notes": "Songwriting tropes and technique as construction, not celebrity."
+    },
+    {
+      "id": "berklee-guitar",
+      "title": "Berklee Guitar Fundamentals",
+      "url": "https://online.berklee.edu/courses/guitar-fundamentals",
+      "kind": "syllabus",
+      "notes": "This course must not duplicate interval and meter literacy."
+    }
+  ],
+  "modules": [
+    {
+      "id": "dm-c-riff",
+      "title": "Riff vocabulary",
+      "blurb": "Cells, tremolo, chromatic motion, pedals.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "dm-riff-cell",
+        "dm-harmony"
+      ],
+      "learningObjectives": [
+        "Write a short cell that can be repeated, displaced, or mutated",
+        "Use mute, tremolo, pedal, and tuning as orchestration, not decoration"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-c-rhythm",
+      "title": "Rhythm-section grammar",
+      "blurb": "Blast, double-kick, displacement.",
+      "order": 1,
+      "prerequisites": [
+        "dm-c-riff"
+      ],
+      "spineIds": [
+        "dm-blast",
+        "dm-double-kick"
+      ],
+      "learningObjectives": [
+        "Use blast, double-kick, and odd grouping as grammar",
+        "Put guitar and kit in different meters that coincide later"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-c-form",
+      "title": "Putting a song together",
+      "blurb": "Structure, two guitars, vocals as rhythm.",
+      "order": 2,
+      "prerequisites": [
+        "dm-c-rhythm"
+      ],
+      "spineIds": [
+        "dm-song-form",
+        "dm-riff-form"
+      ],
+      "learningObjectives": [
+        "Order cells so the song has contrast, not just density",
+        "Write two guitars or a vocal as rhythm, not as a pop hook"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "dm-riff-cell",
+      "name": "The riff cell",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "mus-interval",
+        "dm-listening"
+      ],
+      "summary": "A short figure that can be repeated, displaced, or mutated.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write a short figure that can be repeated, displaced, or mutated",
+        "Identify the cell in a recorded riff before naming the band"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-tremolo",
+      "name": "Tremolo writing",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Picking that turns a pitch into a surface.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use tremolo picking to turn a pitch into a surface",
+        "Write a tremolo line that still has a harmonic job"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-chromatic-move",
+      "name": "Chromatic movement",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-semitone"
+      ],
+      "summary": "Semitone steps as the riff's spine.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use semitone steps as the riff's spine",
+        "Sequence a chromatic cell without turning it into a scale exercise"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-pedal-tone",
+      "name": "Pedal tones",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-pedal"
+      ],
+      "summary": "An open string that the cell grinds against.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Grind the cell against an open string",
+        "Release the pedal so the clash has a form"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-harmony",
+      "name": "Death-metal harmony",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "mus-interval",
+        "mus-modes",
+        "dm-riff-cell"
+      ],
+      "summary": "Diminished cells, chromatic planing, and riff as form.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Build harmony from diminished cells, chromatic planing, and riff-as-form",
+        "Analyze a section by the cell and the drum texture, not by V\u2013I"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-diminished",
+      "name": "Diminished cells",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-tritone"
+      ],
+      "summary": "Minor thirds stacked until the octave repeats.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Stack minor thirds until the octave repeats",
+        "Write a diminished cell that sequences instead of running"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-tritone-riff",
+      "name": "Tritone and flat-2 riffs",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-phrygian"
+      ],
+      "summary": "The two intervals this style treats as home.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat tritone and flat-2 as home intervals for this style",
+        "Write a riff that sits on those intervals without borrowing a Phrygian lecture"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-palm-mute",
+      "name": "Palm mute as orchestration",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Choked versus open as two instruments.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use choked versus open as two instruments",
+        "Orchestrate a cell by mute, not by adding notes"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-guitar-tune",
+      "name": "Tunings that change the riff",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-pedal-tone",
+        "mus-drop-tune"
+      ],
+      "summary": "A dropped string is a compositional choice.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Choose a tuning because it changes the riff, not because it is 'heavier'",
+        "Predict the new open-string pedal a drop creates"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-pick-hand",
+      "name": "Right-hand endurance versus accent",
+      "moduleId": "dm-c-riff",
+      "tier": 2,
+      "prerequisites": [
+        "dm-tremolo"
+      ],
+      "summary": "Speed that still has a downbeat.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Keep a downbeat inside speed",
+        "Write an accent pattern a right hand can survive"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-blast",
+      "name": "Blast beats",
+      "moduleId": "dm-c-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "dm-listening",
+        "mus-meter"
+      ],
+      "summary": "A DAU drum-grammar heuristic used in many death-metal sections, not the beat that created the genre.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use a blast as a grid that removes the rock backbeat as the only accent",
+        "Contrast a blast section with a thrash d-beat as grammars"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-blast-types",
+      "name": "Blast vocabulary",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-blast"
+      ],
+      "summary": "Traditional, bomb, hammer \u2014 different occupations of the kit.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish traditional, bomb, and hammer blasts by what the kit is doing",
+        "Choose a blast type for a texture, not for a speed contest"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-double-kick",
+      "name": "Double-kick vocabulary",
+      "moduleId": "dm-c-rhythm",
+      "tier": 2,
+      "prerequisites": [
+        "dm-blast"
+      ],
+      "summary": "Two feet as a subdivision engine.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use two feet as a subdivision engine",
+        "Write a kick figure that locks a guitar cell instead of filling space"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-dm-displacement",
+      "name": "Rhythmic displacement",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-displacement"
+      ],
+      "summary": "The same cell, started on a different beat of the bar.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Start the same cell on a different beat of the bar",
+        "Predict how the blast grid reaccents that move"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-odd-meter",
+      "name": "Odd meter in death metal",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell",
+        "mus-odd-meter"
+      ],
+      "summary": "Groupings that are felt, not counted out loud.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Group an odd bar so it is felt, not counted out loud",
+        "Write 5 or 7 as additive cells a kit can phrase"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-polymeter-dm",
+      "name": "Polymeter in the band",
+      "moduleId": "dm-c-rhythm",
+      "tier": 4,
+      "prerequisites": [
+        "dm-odd-meter",
+        "mus-polymeter"
+      ],
+      "summary": "Guitar in 3, kit in 4, a coincidence later.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Put guitar in one meter and kit in another, with a coincidence later",
+        "Mark the bar where the two grids meet"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-string-skip",
+      "name": "String skipping and wide intervals",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Leaps that refuse stepwise comfort.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Leap so the line refuses stepwise comfort",
+        "Give a wide interval a harmonic job, not a gym job"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-sweep-function",
+      "name": "Sweeps as function, not sport",
+      "moduleId": "dm-c-rhythm",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony"
+      ],
+      "summary": "An arpeggio that has a harmonic job.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use a sweep as an arpeggio that has a harmonic job",
+        "Refuse a sweep that only proves the right hand"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-song-form",
+      "name": "Song structure",
+      "moduleId": "dm-c-form",
+      "tier": 2,
+      "prerequisites": [
+        "dm-riff-cell"
+      ],
+      "summary": "Intro, riff A, riff B, return \u2014 or a through-composed stack.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Order intro, riff A, riff B, and return \u2014 or refuse return on purpose",
+        "Mark a section change that is only a drum texture"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-riff-form",
+      "name": "Riff as form",
+      "moduleId": "dm-c-form",
+      "tier": 3,
+      "prerequisites": [
+        "dm-song-form",
+        "mus-form-riff"
+      ],
+      "summary": "The form is the order of cells and their mutations.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat the form as the order of cells and their mutations",
+        "Show a mutation that is the next section, not a new song"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-breakdown-dm",
+      "name": "Breakdowns and whether they belong",
+      "moduleId": "dm-c-form",
+      "tier": 2,
+      "prerequisites": [
+        "dm-song-form"
+      ],
+      "summary": "Half-time weight as contrast, or as a different genre arriving.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Use half-time weight as contrast, or refuse it as a different genre arriving",
+        "Predict when a breakdown erases the cell you were writing"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-vocal-rhythm",
+      "name": "Vocals as a rhythmic instrument",
+      "moduleId": "dm-c-form",
+      "tier": 2,
+      "prerequisites": [
+        "dm-blast",
+        "dm-song-form"
+      ],
+      "summary": "Phrasing against the kick, not a melody sitting on top.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Phrase the vocal against the kick, not as a melody sitting on top",
+        "Write a vocal rhythm that is a third grid"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    },
+    {
+      "id": "dm-harmony-two-gtr",
+      "name": "Two-guitar writing",
+      "moduleId": "dm-c-form",
+      "tier": 3,
+      "prerequisites": [
+        "dm-harmony",
+        "mus-voice-lead"
+      ],
+      "summary": "Unison, harmony a third above, or a second riff.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Choose unison, a third above, or a second riff",
+        "Predict what distortion does to a close harmony between two guitars"
+      ],
+      "sourceIds": [
+        "mit-metal101",
+        "berklee-metal"
+      ]
+    }
+  ]
+}

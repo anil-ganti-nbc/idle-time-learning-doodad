@@ -1,0 +1,525 @@
+{
+  "courseId": "arch-gpu",
+  "moduleId": "arch-gpu-resources",
+  "lessons": [
+    {
+      "id": "gpu-exec-resources-10",
+      "conceptId": "gpu-exec-resources",
+      "title": "An SM is a bundle of pipes",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-warps"],
+      "goDeeper": "gpu-occupancy",
+      "explanation": [
+        "A streaming multiprocessor (NVIDIA) or compute unit (AMD) is the processor that actually runs warps. It is not one giant ALU. It is a bundle of pipes: general arithmetic units, special-function units for things like reciprocal square root, and load/store units that speak to the memory system. Tensor or matrix units, when present, are another pipe — a later concept.",
+        "Not every instruction can issue on every unit. An add wants a general ALU. A sine or a fast reciprocal wants the special-function pipe. A load wants a load/store unit. If a warp's next instruction needs a pipe that is busy, that warp waits even if other pipes are idle. Dual-issue designs can start more than one instruction per cycle only when the ops land on different pipes and are ready.",
+        "This is why 'more CUDA cores' is an incomplete sentence. The marketing number usually counts the general ALUs. A kernel that is all special functions or all loads does not see that number. The SM is a collection of constrained issue ports, and warps compete for them."
+      ],
+      "example": "A warp of fast-math rsqrt calls can queue behind the special-function units while the general ALUs sit idle. A warp of independent adds can fill those ALUs and still stall if every thread also needs a load and the load pipe is the bottleneck.",
+      "whyItMatters": "The next concept — how many warps can live here — only makes sense once you know what 'here' contains. Occupancy is a count against these files and pipes, not a percentage in a slide.",
+      "quiz": [
+        {
+          "id": "er10-1",
+          "stem": "A streaming multiprocessor or compute unit is best described as:",
+          "correctAnswer": "A processor with several pipes — ALUs, special functions, and load/store — that run warps",
+          "distractors": [
+            { "text": "A single ALU shared by the whole device", "kind": "reversed", "rationale": "The device has many such processors, each with many pipes." },
+            { "text": "The host CPU's reorder buffer", "kind": "misapplied", "rationale": "ROBs are a latency-core structure." },
+            { "text": "The programming-model grid", "kind": "nearby", "rationale": "A grid is a launch. An SM is hardware." }
+          ],
+          "correctExplanation": "Warps run on an SM/CU. That processor is a bundle of different pipes.",
+          "objectiveIds": ["Name the pipes a streaming multiprocessor actually has"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "er10-2",
+          "stem": "A warp whose next instruction is a special-function op stalls when:",
+          "correctAnswer": "The special-function pipe is busy, even if the general ALUs are idle",
+          "distractors": [
+            { "text": "Any ALU on the chip is idle", "kind": "reversed", "rationale": "Idle general ALUs do not execute a special-function op." },
+            { "text": "The host has not yet compiled the kernel", "kind": "nearby", "rationale": "This is a runtime pipe conflict, not a compile step." },
+            { "text": "The block size is a multiple of the warp width", "kind": "subtle", "rationale": "A full warp is the usual case, not the stall reason." }
+          ],
+          "correctExplanation": "Issue ports are typed. The wrong idle pipe does not help.",
+          "objectiveIds": ["Explain why not every instruction can issue on every unit"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "er10-3",
+          "stem": "A slide that only quotes an ALU count is incomplete because:",
+          "correctAnswer": "Load/store and special-function pipes can be the real limit for that kernel",
+          "distractors": [
+            { "text": "ALUs are never used on a GPU", "kind": "reversed", "rationale": "General ALUs are used constantly. They are just not the only pipe." },
+            { "text": "Warps do not run on those ALUs", "kind": "nearby", "rationale": "They do. Other instructions still need other pipes." },
+            { "text": "The programming model forbids loads", "kind": "subtle", "rationale": "Kernels load constantly. Those ops have their own units." }
+          ],
+          "correctExplanation": "The SM is several constrained ports. One number is one of them.",
+          "objectiveIds": ["Explain why not every instruction can issue on every unit"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-memory-hierarchy-10",
+      "conceptId": "gpu-memory-hierarchy",
+      "title": "Different spaces, different bills",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-warps"],
+      "goDeeper": "gpu-shared-mem",
+      "diagram": "gpu-mem",
+      "explanation": [
+        "A GPU thread sees several memories that do not cost the same. Registers are the closest: per-thread, compiler-allocated, a cycle or two. Shared memory (NVIDIA) or LDS (AMD) is a software-managed scratchpad visible to a block — fast, small, and a later unit of its own. Then come hardware caches (L1 near the SM, L2 over the device) and finally device DRAM, often HBM: hundreds of cycles, high bandwidth if you use it well.",
+        "Some of those names are programmer-facing spaces: registers, shared/LDS, local (spilled per-thread), global (device), constant, texture. Others are hardware caches you do not allocate. Confusing a named space with a cache is how people say 'I put it in L1' when they meant shared memory — or the reverse.",
+        "Cost order is the point of this unit, not yet the access-pattern rules that make DRAM cheap or expensive. Registers beat shared, shared beats uncached DRAM, and a cache hit sits in between. Where you place a value is a decision with a bill."
+      ],
+      "example": "A reduction that rereads the same tile from device memory on every step pays HBM each time. Staging that tile in the block's shared scratchpad pays HBM once, then on-chip reuse. The arithmetic did not change. The space did.",
+      "whyItMatters": "Later words — scratchpad banks, DRAM transactions, how many warps fit — are refinements of this hierarchy. If the spaces are one blurry 'GPU memory', those refinements have nothing to attach to.",
+      "quiz": [
+        {
+          "id": "mh10-1",
+          "stem": "From cheapest to most expensive for a typical GPU thread, the spaces are:",
+          "correctAnswer": "Registers, then shared/LDS, then device DRAM",
+          "distractors": [
+            { "text": "Device DRAM, then shared/LDS, then registers", "kind": "reversed", "rationale": "Off-chip last, not first." },
+            { "text": "Shared/LDS, then registers, then the host's DRAM", "kind": "nearby", "rationale": "Registers are closer than shared. Host DRAM is another machine." },
+            { "text": "All three cost one cycle by definition", "kind": "subtle", "rationale": "That is the confusion this unit exists to kill." }
+          ],
+          "correctExplanation": "On-chip named state first. Off-chip device memory last.",
+          "objectiveIds": ["Place registers, shared/LDS, caches, and device memory in cost order"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "mh10-2",
+          "stem": "Shared memory / LDS differs from L1 because:",
+          "correctAnswer": "The programmer names and manages the scratchpad; L1 is a hardware cache",
+          "distractors": [
+            { "text": "L1 is larger than device DRAM", "kind": "reversed", "rationale": "Caches are smaller than DRAM. That is why they exist." },
+            { "text": "Shared memory is only visible to the host", "kind": "nearby", "rationale": "It is visible to threads in a block, not to the host as a scratchpad." },
+            { "text": "Registers live in L1 by ISA law", "kind": "subtle", "rationale": "Registers are their own file, not a cache line." }
+          ],
+          "correctExplanation": "Named space versus automatic cache. You allocate one. You hit or miss the other.",
+          "objectiveIds": ["Say which spaces are programmer-named and which are hardware caches"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "mh10-3",
+          "stem": "Putting a reused tile in shared memory instead of rereading device memory is a bet that:",
+          "correctAnswer": "The on-chip scratchpad is cheaper than another round trip to DRAM",
+          "distractors": [
+            { "text": "Device memory has become faster than registers", "kind": "reversed", "rationale": "The hierarchy did not flip." },
+            { "text": "The host will perform the loads", "kind": "nearby", "rationale": "The tile is still a device-side placement." },
+            { "text": "L2 has been deleted from the chip", "kind": "subtle", "rationale": "Caches still exist. You chose a named space instead of hoping for a hit." }
+          ],
+          "correctExplanation": "Same math, cheaper space. That is the hierarchy doing work.",
+          "objectiveIds": ["Place registers, shared/LDS, caches, and device memory in cost order"],
+          "prerequisiteConceptIds": ["gpu-warps"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-shared-mem-10",
+      "conceptId": "gpu-shared-mem",
+      "title": "A scratchpad the block can see",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-memory-hierarchy"],
+      "goDeeper": "gpu-bank-conflict",
+      "diagram": "gpu-mem",
+      "explanation": [
+        "Shared memory (NVIDIA) or local data share (AMD) is a software-managed scratchpad. Threads in one block can read and write it. Threads in another block cannot. It is not a cache: you choose what lives there and when. Capacity is small — tens to low hundreds of kilobytes per SM — and it is a resource the block occupies for its lifetime.",
+        "Because the scratchpad is shared, a write by one thread is not automatically visible to another at the next statement. You need a block-scoped barrier: every thread in the block arrives, the writes become visible, then they proceed. Without the barrier, you have a race. With a barrier around nothing useful, you have paid a sync for no communication.",
+        "The usual pattern is tiling. Load a tile from device memory into the scratchpad, barrier, reuse the tile many times, barrier, move on. The scratchpad is how a block stages working data that would otherwise bounce off DRAM on every step."
+      ],
+      "example": "A tiled matrix multiply: each block loads a chunk of A and B into shared memory, waits at a barrier, then every thread of the block reuses that chunk for its inner product. Skip the barrier and some threads read a neighbour's tile before it landed.",
+      "whyItMatters": "The scratchpad is why the programming-model block exists as more than a launch convenience. Banks, occupancy, and later launch limits all charge this file. If you treat it as 'just a faster DRAM', those bills will look arbitrary.",
+      "quiz": [
+        {
+          "id": "sm10-1",
+          "stem": "Shared memory / LDS is:",
+          "correctAnswer": "A software-managed scratchpad visible to threads in one block",
+          "distractors": [
+            { "text": "A hardware cache the compiler cannot name", "kind": "reversed", "rationale": "You name it. That is the point." },
+            { "text": "Device DRAM under another name", "kind": "nearby", "rationale": "It is on-chip and much smaller than DRAM." },
+            { "text": "A file only the host CPU can read", "kind": "subtle", "rationale": "It is a device-side block resource." }
+          ],
+          "correctExplanation": "Programmer-managed, block-scoped, on-chip. Not a cache and not DRAM.",
+          "objectiveIds": ["Describe shared memory as a software-managed scratchpad visible to a block"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "sm10-2",
+          "stem": "A block-scoped barrier around a shared-memory tile exists so that:",
+          "correctAnswer": "Writes from every thread become visible before any thread reuses the tile",
+          "distractors": [
+            { "text": "The host can rewrite the kernel mid-launch", "kind": "misapplied", "rationale": "The barrier is device-side, among threads of one block." },
+            { "text": "Device DRAM can be turned off", "kind": "nearby", "rationale": "The barrier is about visibility, not powering down memory." },
+            { "text": "Registers spill automatically into the scratchpad", "kind": "subtle", "rationale": "Spills are a compiler choice. The barrier is a communication fence." }
+          ],
+          "correctExplanation": "Shared data needs a meeting point. The barrier is that meeting.",
+          "objectiveIds": ["Explain why a block barrier exists around that scratchpad"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "sm10-3",
+          "stem": "Skipping the barrier after a cooperative shared-memory load typically:",
+          "correctAnswer": "Lets some threads read a neighbour's value before it has been written",
+          "distractors": [
+            { "text": "Makes the scratchpad larger", "kind": "reversed", "rationale": "A race does not add capacity." },
+            { "text": "Converts shared memory into L2", "kind": "nearby", "rationale": "The space does not change type because you forgot a sync." },
+            { "text": "Forces the launch to become synchronous on the host", "kind": "subtle", "rationale": "This is intra-block visibility, not host launch policy." }
+          ],
+          "correctExplanation": "No meeting, no guarantee. The scratchpad is shared, not magically ordered.",
+          "objectiveIds": ["Explain why a block barrier exists around that scratchpad"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-bank-conflict-10",
+      "conceptId": "gpu-bank-conflict",
+      "title": "Same bank, later please",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-shared-mem"],
+      "goDeeper": "gpu-occupancy",
+      "explanation": [
+        "Shared memory is banked, typically into 32 banks, each able to service one 32-bit word per cycle. Threads in a warp that touch different banks proceed in parallel. Threads that touch different addresses in the same bank serialize: the hardware replays the access, one bank-cycle at a time. That replay is a bank conflict.",
+        "Two special cases are not conflicts. If every thread reads the same address, the bank can broadcast. If they write the same address, you have a correctness problem, not a banking one. The painful pattern is a stride that is a multiple of the bank count: thread i touches word 32*i, every thread lands in bank 0, and a 32-wide access becomes 32 serial ones.",
+        "Padding a tile by one column, or swapping which index is consecutive, is how people dodge that stride. The scratchpad did not get faster. You stopped asking one bank to do everyone's work."
+      ],
+      "example": "A 32×32 tile stored without padding, then read as tile[k][threadIdx.x], is fine — consecutive threads hit consecutive banks. Read as tile[threadIdx.x][k] with k fixed and a 32-wide row, and you may march down one bank. Insert a pad so the row is 33 words and the same column walk spreads across banks.",
+      "whyItMatters": "A kernel that 'uses shared memory' and still crawls is often this: the tile is on-chip and the bank is in a queue. The next occupancy unit will charge you for the scratchpad whether or not you used the banks well.",
+      "quiz": [
+        {
+          "id": "bc10-1",
+          "stem": "A shared-memory bank conflict happens when:",
+          "correctAnswer": "Several threads in the group hit different addresses in the same bank",
+          "distractors": [
+            { "text": "Every thread reads the same address and the bank broadcasts", "kind": "reversed", "rationale": "A broadcast is the case that is not a conflict." },
+            { "text": "The tile was loaded from device memory at all", "kind": "nearby", "rationale": "Coming from DRAM does not bank-conflict the scratchpad." },
+            { "text": "The host maps the scratchpad into its own DRAM", "kind": "subtle", "rationale": "Banking is an on-chip SRAM organisation." }
+          ],
+          "correctExplanation": "Same bank, different words, serial replay. That is the conflict.",
+          "objectiveIds": ["Diagnose when several threads hit the same shared-memory bank"],
+          "prerequisiteConceptIds": ["gpu-shared-mem"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "bc10-2",
+          "stem": "A stride-32 walk over 32-bit words in a 32-bank scratchpad typically:",
+          "correctAnswer": "Serializes the access because every thread lands in the same bank",
+          "distractors": [
+            { "text": "Broadcasts, because 32 is the bank count", "kind": "reversed", "rationale": "Broadcast needs the same address, not the same bank." },
+            { "text": "Deletes the barrier the tile needed", "kind": "nearby", "rationale": "Banking is a throughput tax, not a visibility fence." },
+            { "text": "Moves the tile back into registers automatically", "kind": "subtle", "rationale": "The space does not change because the stride was ugly." }
+          ],
+          "correctExplanation": "One bank, many addresses, many replays. Padding exists to break that stride.",
+          "objectiveIds": ["Predict the serialization cost of a strided shared-memory access"],
+          "prerequisiteConceptIds": ["gpu-shared-mem"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "bc10-3",
+          "stem": "Padding a shared-memory tile by one column is trying to:",
+          "correctAnswer": "Spread a column walk across banks instead of stacking it in one",
+          "distractors": [
+            { "text": "Make device DRAM appear on-chip", "kind": "misapplied", "rationale": "Padding does not change which memory you are in." },
+            { "text": "Increase the warp width to 33", "kind": "nearby", "rationale": "Warp width is a machine constant." },
+            { "text": "Remove the need for a block barrier", "kind": "subtle", "rationale": "Visibility still needs a barrier. Padding is a bank layout trick." }
+          ],
+          "correctExplanation": "You kept the scratchpad and changed the mapping. Banks stop queuing.",
+          "objectiveIds": ["Predict the serialization cost of a strided shared-memory access"],
+          "prerequisiteConceptIds": ["gpu-shared-mem"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-coalescing-10",
+      "conceptId": "gpu-coalescing",
+      "title": "Adjacent threads, adjacent addresses",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-memory-hierarchy"],
+      "goDeeper": "gpu-occupancy",
+      "diagram": "gpu-coalesce",
+      "explanation": [
+        "Device memory is served in transactions — aligned chunks, often on the order of 32 to 128 bytes — not in single-thread word loads. If the threads of a warp touch consecutive addresses, the hardware can satisfy them with one or a few transactions. That merging is coalescing.",
+        "If those threads touch scattered addresses, each address can become its own transaction. The arithmetic in the kernel did not get harder. The memory pipe just did thirty-two trips instead of one. A strided walk (thread i touches A[i * stride]) is the usual way to buy that bill without noticing.",
+        "This is a warp-shaped rule about global or device memory, not about the shared scratchpad. The scratchpad has banks. Device memory has transactions. Both punish a bad layout. They are not the same mechanism."
+      ],
+      "example": "Thread i loads A[i] of 32-bit values: one warp touches 128 consecutive bytes and one transaction can cover it. Thread i loads A[i * 32]: the same warp touches 32 widely spaced words and the pipe issues many transactions for the same 32 useful values.",
+      "whyItMatters": "A kernel that 'has enough parallelism' and still runs at a few percent of peak bandwidth is often uncoalesced. Occupancy cannot hide a thirty-two-fold increase in memory traffic.",
+      "quiz": [
+        {
+          "id": "co10-1",
+          "stem": "Memory coalescing means:",
+          "correctAnswer": "Adjacent threads touching adjacent addresses become one device-memory transaction",
+          "distractors": [
+            { "text": "The shared-memory banks merge into one bank", "kind": "nearby", "rationale": "Banking is the scratchpad story. Coalescing is device memory." },
+            { "text": "The host copies the array into registers", "kind": "misapplied", "rationale": "The host is not the transaction unit." },
+            { "text": "Warps shrink until each has one thread", "kind": "subtle", "rationale": "Warp width does not change because addresses lined up." }
+          ],
+          "correctExplanation": "One warp, one tight address range, few transactions.",
+          "objectiveIds": ["State that adjacent threads touching adjacent addresses become one transaction"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "co10-2",
+          "stem": "A warp in which each thread loads a far-apart address typically:",
+          "correctAnswer": "Pays many transactions for the same number of useful words",
+          "distractors": [
+            { "text": "Pays one transaction because a warp is always one request", "kind": "reversed", "rationale": "One warp can generate many transactions when addresses scatter." },
+            { "text": "Turns device memory into shared memory", "kind": "nearby", "rationale": "The space does not change because the pattern was ugly." },
+            { "text": "The memory controller still merges them into one transaction", "kind": "subtle", "rationale": "Scattered addresses typically become many transactions. The compiler does not reject the kernel." }
+          ],
+          "correctExplanation": "Scatter is many trips. The useful-word count did not grow.",
+          "objectiveIds": ["Diagnose a scattered access pattern as many transactions"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "co10-3",
+          "stem": "Preferring A[i] over A[i * large_stride] for thread i is a bet that:",
+          "correctAnswer": "A tight address range will merge into few transactions",
+          "distractors": [
+            { "text": "Device memory only accepts strided addresses", "kind": "reversed", "rationale": "Stride is legal and expensive." },
+            { "text": "Shared-memory banks will disappear", "kind": "nearby", "rationale": "This is a DRAM-transaction layout, not a bank layout." },
+            { "text": "The warp width will grow to match the stride", "kind": "subtle", "rationale": "Hardware width is constant." }
+          ],
+          "correctExplanation": "Layout is the knob. Adjacent threads, adjacent words, fewer trips.",
+          "objectiveIds": ["State that adjacent threads touching adjacent addresses become one transaction"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-coalescing-20",
+      "conceptId": "gpu-coalescing",
+      "title": "Transactions, structures, and why SoA exists",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["gpu-memory-hierarchy"],
+      "goDeeper": "gpu-occupancy",
+      "diagram": "gpu-coalesce",
+      "explanation": [
+        "The ten-minute unit said adjacent threads plus adjacent addresses become one transaction. This one is about the patterns that break that rule even when the source looks tidy. Hardware still serves aligned segments. A warp whose addresses span many segments pays many segments. Alignment, not just consecutiveness, decides how many.",
+        "A two-dimensional array walked in the wrong index is a classic miss. If thread i owns column i of row r, the addresses are consecutive and coalesce. If thread i owns row i of column c, the addresses are a whole row apart and scatter. The C expression looks symmetric. The layout is not. Transposing the walk, or transposing the data, is the fix; wishing the cache will paper over a 4 KB stride usually will not.",
+        "Array-of-structures versus structure-of-arrays is the same fact wearing a type name. Thread i touching particles[i].x, .y, .z with a 12-byte struct steps 12 bytes at a time and often splits transactions. Three arrays x[i], y[i], z[i] let each field coalesce on its own. You paid an extra base address to buy segment density.",
+        "Misaligned starts matter too. A warp that touches 128 consecutive bytes starting at an address that is not on a segment boundary can split into two transactions. So can a 33-thread-wide useful span that crosses a line. The arithmetic did not change. The segment map did."
+      ],
+      "example": "A particle struct {float x,y,z,pad;} stored as an array: thread i reads particles[i].x and the warp's x's sit 16 bytes apart — often several segments. Store x[], y[], z[] separately and the same warp reads 128 tight bytes of x. Same physics. Different transaction count.",
+      "whyItMatters": "Bandwidth numbers in a profiler are this lesson. 'Uncoalesced' is not a moral failing. It is a segment map you can redraw — by index order, by structure layout, or by alignment — before you reach for more resident warps.",
+      "quiz": [
+        {
+          "id": "co20-1",
+          "stem": "A 2D array where thread i walks column i of one row typically coalesces because:",
+          "correctAnswer": "Those addresses are adjacent, so they fit in few aligned transactions",
+          "distractors": [
+            { "text": "Two-dimensional arrays are always one transaction", "kind": "misconception", "rationale": "The other index order is the usual scatter." },
+            { "text": "The scratchpad banks merge DRAM transactions", "kind": "nearby", "rationale": "Coalescing is a device-memory rule, not a bank rule." },
+            { "text": "The host packs the row on every access", "kind": "subtle", "rationale": "The device issues the transactions. Layout is yours." }
+          ],
+          "correctExplanation": "Row-major, thread-owns-column is the tight walk. The other order is a stride.",
+          "objectiveIds": ["State that adjacent threads touching adjacent addresses become one transaction"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "co20-2",
+          "stem": "An array-of-structures in which each thread reads one field of its struct often:",
+          "correctAnswer": "Scatters the warp across many transactions because consecutive fields sit far apart",
+          "distractors": [
+            { "text": "Always collapses to one transaction because a struct is one object", "kind": "reversed", "rationale": "The hardware sees addresses, not object names." },
+            { "text": "Turns the load into a shared-memory bank conflict only", "kind": "nearby", "rationale": "This is a DRAM-transaction pattern." },
+            { "text": "Forces the warp width down to the struct size", "kind": "subtle", "rationale": "Warp width is not a function of your type." }
+          ],
+          "correctExplanation": "AoS is a stride equal to the struct size. SoA makes each field a tight array.",
+          "objectiveIds": ["Diagnose a scattered access pattern as many transactions"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "co20-3",
+          "stem": "A 128-byte consecutive touch that starts off a segment boundary can still:",
+          "correctAnswer": "Split into two transactions because alignment, not just span, decides the cut",
+          "distractors": [
+            { "text": "Become free, because consecutive bytes never cost", "kind": "reversed", "rationale": "Consecutive and aligned are both required for one segment." },
+            { "text": "Be served from the host's L1 instead", "kind": "nearby", "rationale": "This is a device DRAM segment map." },
+            { "text": "Resize the warp to the next power of two", "kind": "subtle", "rationale": "Alignment does not change the scheduling quantum." }
+          ],
+          "correctExplanation": "Segments are aligned. A tidy span with a messy start is two trips.",
+          "objectiveIds": ["Diagnose a scattered access pattern as many transactions"],
+          "prerequisiteConceptIds": ["gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-occupancy-10",
+      "conceptId": "gpu-occupancy",
+      "title": "How many warps can live here",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-exec-resources", "gpu-memory-hierarchy"],
+      "goDeeper": "gpu-occupancy-math",
+      "diagram": "gpu-occupancy",
+      "explanation": [
+        "Occupancy is how many warps can reside on an SM at once. It is not a speed. It is a headcount, limited by finite files: the register file, the shared-memory / LDS budget, and hard caps on warps, blocks, and threads per SM. The first resource that runs out sets the count.",
+        "That headcount exists so the SM has someone to switch to when a warp waits on memory or on a pipe. More residents can mean more candidates. They can also mean more cache pressure and no extra throughput if the kernel was already math-bound or already paying a huge memory tax.",
+        "A kernel that uses almost the whole register file per thread, or almost the whole scratchpad per block, starves residency. You did not make the SM faster. You made it lonely. Occupancy is a budget you spend on per-thread state."
+      ],
+      "example": "An SM that can hold 64 warps, a kernel that needs so many registers that only 16 warps fit, and a kernel that needs so much shared memory that only 2 blocks of 4 warps fit — three different occupancy numbers, same chip. The limiter moved.",
+      "whyItMatters": "The next units — the arithmetic of the budget, then hiding latency — need this definition first. Occupancy is inventory. It is not a score you maximise for its own sake.",
+      "quiz": [
+        {
+          "id": "oc10-1",
+          "stem": "Occupancy is primarily:",
+          "correctAnswer": "How many warps can reside on an SM given registers, shared memory, and slot caps",
+          "distractors": [
+            { "text": "The host CPU clock that launched the kernel", "kind": "misapplied", "rationale": "Host frequency does not size the SM's files." },
+            { "text": "Whether the kernel was written in C++", "kind": "nearby", "rationale": "Language is not the resource budget." },
+            { "text": "The number of PCIe lanes to the device", "kind": "subtle", "rationale": "Link width is off-chip, not residency." }
+          ],
+          "correctExplanation": "A resident-warp budget, limited by files and caps. Not a marketing percentage.",
+          "objectiveIds": ["Define occupancy as how many warps can reside given registers and shared memory"],
+          "prerequisiteConceptIds": ["gpu-exec-resources", "gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "oc10-2",
+          "stem": "Raising occupancy can fail to raise throughput when:",
+          "correctAnswer": "The kernel is already limited by something other than waiting for another ready warp",
+          "distractors": [
+            { "text": "The warps happen to have registers allocated", "kind": "misconception", "rationale": "Having registers is normal, not a limiter by itself." },
+            { "text": "The grid was launched with more than one block", "kind": "nearby", "rationale": "Multiple blocks are the usual case." },
+            { "text": "The device happens to implement SIMT", "kind": "subtle", "rationale": "SIMT is the execution model, not the bottleneck story." }
+          ],
+          "correctExplanation": "Occupancy buys candidates. If you are math-bound or drowning in memory traffic, more residents may not help.",
+          "objectiveIds": ["Predict when more resident warps stop raising throughput"],
+          "prerequisiteConceptIds": ["gpu-exec-resources", "gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "oc10-3",
+          "stem": "A kernel that uses almost the whole register file per thread typically:",
+          "correctAnswer": "Limits how many warps can reside, so the SM has fewer candidates",
+          "distractors": [
+            { "text": "Automatically becomes faster because registers beat DRAM", "kind": "reversed", "rationale": "Per-thread richness can starve residency." },
+            { "text": "Forces the hardware warp width down to 16", "kind": "misapplied", "rationale": "Warp width is a machine constant." },
+            { "text": "Deletes the SM's load/store pipe", "kind": "subtle", "rationale": "Pipes are not removed because the register file is full." }
+          ],
+          "correctExplanation": "More state per thread, fewer residents. That is the occupancy trade.",
+          "objectiveIds": ["Define occupancy as how many warps can reside given registers and shared memory"],
+          "prerequisiteConceptIds": ["gpu-exec-resources", "gpu-memory-hierarchy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "gpu-occupancy-math-10",
+      "conceptId": "gpu-occupancy-math",
+      "title": "Registers times warps against a finite file",
+      "durationMin": 10,
+      "effort": "normal",
+      "level": "journalist",
+      "prerequisites": ["gpu-occupancy"],
+      "goDeeper": "gpu-latency-hiding",
+      "diagram": "gpu-occupancy",
+      "explanation": [
+        "The occupancy definition was a headcount. This unit is the arithmetic. An SM has a register file of a known size. Each thread of a kernel needs some number of registers. A warp is 32 (or 64) threads, so one warp costs that product. Divide the file by the per-warp cost and you have a register-limited warp cap. Shared memory is the same shape: bytes per block against the SM's scratchpad, then convert blocks to warps.",
+        "The actual occupancy is the minimum of those caps and the architectural maxima (warps per SM, blocks per SM, threads per SM). You do not get to add the limits. The first ceiling wins. A kernel that looks 'fine on registers' can still be scratchpad-limited, and the other way around.",
+        "The trade is explicit. Cutting registers per thread — by rewriting, by spilling, or by compiling at a lower register target — can raise the warp cap. Spilling moves state into slower memory, so you may win residents and lose per-thread speed. Growing the shared tile can cut DRAM traffic and also cut how many blocks fit. The budget is coupled even before a later unit names the coupled launch."
+      ],
+      "example": "A 65,536-register file, 32-wide warps, 64 registers per thread: each warp costs 2,048 registers, so the file holds 32 warps. Drop to 32 registers per thread and the same file holds 64 warps — if no other cap is tighter. A 48 KB scratchpad with 24 KB per block holds two blocks, whatever the register story says.",
+      "whyItMatters": "Occupancy calculators are this division. If you cannot do it on paper, a percentage in a tool is just a colour. The next unit spends the residents you just counted.",
+      "quiz": [
+        {
+          "id": "om10-1",
+          "stem": "On a 65,536-register SM with 32-wide warps and 64 registers per thread, the register file alone holds:",
+          "correctAnswer": "32 warps, because each warp costs 2,048 registers",
+          "distractors": [
+            { "text": "64 warps, because the warp width is 32", "kind": "nearby", "rationale": "Width is the group size, not the file size." },
+            { "text": "65,536 warps, one per register", "kind": "reversed", "rationale": "A warp is many threads, each with many registers." },
+            { "text": "One warp, because a file serves one group", "kind": "subtle", "rationale": "The file is shared among many resident warps." }
+          ],
+          "correctExplanation": "32 threads × 64 registers = 2,048 per warp. 65,536 / 2,048 = 32.",
+          "objectiveIds": ["Compute a register or shared-memory budget against a finite file"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "om10-2",
+          "stem": "A kernel that is fine on registers but uses half the scratchpad per block is often:",
+          "correctAnswer": "Limited by how many such blocks fit, not by the register file",
+          "distractors": [
+            { "text": "Unlimited, because registers were the only budget", "kind": "reversed", "rationale": "The first ceiling wins. Shared memory is a ceiling." },
+            { "text": "Limited by the host's DRAM size", "kind": "nearby", "rationale": "This is an on-chip residency cap." },
+            { "text": "Forced to a warp width of 16", "kind": "subtle", "rationale": "Width does not shrink to paper over a scratchpad cap." }
+          ],
+          "correctExplanation": "Minimum of the caps. A generous register file does not enlarge the scratchpad.",
+          "objectiveIds": ["Compute a register or shared-memory budget against a finite file"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "om10-3",
+          "stem": "Cutting registers per thread to raise occupancy is a trade because:",
+          "correctAnswer": "You may gain residents and pay spills or a tighter per-thread schedule",
+          "distractors": [
+            { "text": "Registers are free, so cutting them only helps", "kind": "reversed", "rationale": "Fewer registers can mean spills or less slack inside the thread." },
+            { "text": "The scratchpad grows by the same number of bytes", "kind": "nearby", "rationale": "The two files are separate budgets." },
+            { "text": "Warp width doubles when registers shrink", "kind": "subtle", "rationale": "Width is constant. Residency is what moved." }
+          ],
+          "correctExplanation": "State versus headcount. Both sit on the same chip.",
+          "objectiveIds": ["Trade per-thread state against how many warps can live"],
+          "prerequisiteConceptIds": ["gpu-occupancy"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

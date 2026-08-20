@@ -1,0 +1,528 @@
+{
+  "courseId": "semi-leading",
+  "moduleId": "semi-a-highna",
+  "lessons": [
+    {
+      "id": "semi-high-na-10",
+      "conceptId": "semi-high-na",
+      "title": "High-NA is a new scanner family",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-na"],
+      "goDeeper": "semi-high-na-optics",
+      "diagram": "high-na-field",
+      "explanation": [
+        "The last course left you with NA as a knob: n · sin(θ), resolution as 1/NA, depth of focus as ~λ / NA². High-NA is that knob pushed from 0.33 to 0.55 on a reflective EUV column. You cannot bolt a bigger cone onto the existing tool. The mirrors get larger, the angles get steeper, the field shrinks, and the stages have to move differently. That is a new scanner family, not a firmware number.",
+        "What it buys is pitch — some layers that were two 0.33-NA exposures can become one 0.55-NA exposure. What it spends is the focus slice (DoF falls as NA²), a smaller exposure field that must be stitched, and overlay between those stitches. It does not make every layer on the wafer High-NA. High-NA time is scarce. Layers that still fit 0.33 stay there.",
+        "A briefing that says High-NA 'reduces multipatterning' is naming one purchased thing. Translate it: they spent field size and focus to buy a single-exposure pitch on a specific layer family. They did not repeal Rayleigh, and they did not delete 193 nm from the flow."
+      ],
+      "example": "A contact layer that was two 0.33-NA EUV passes may move to one 0.55-NA pass — cheaper in mask count, hungrier in focus and stitch overlay. A metal layer that still prints at 0.33 stays on the older family because the new tool's hours are the scarce resource.",
+      "whyItMatters": "If High-NA is a bigger number on the same tool, every node slide is a lie you will reprint. If it is a new family with a smaller field, you know which questions to ask: which layers moved, what the stitch budget is, and what still sits on 0.33.",
+      "quiz": [
+        {
+          "id": "hn10-1",
+          "stem": "High-NA at 0.55 is a new scanner family rather than a bigger number on the same tool because:",
+          "correctAnswer": "The mirrors, angles, field, and stages all change; you cannot bolt a bigger cone onto the last machine",
+          "distractors": [
+            { "text": "The same column just accepts a software flag that says 0.55", "kind": "reversed", "rationale": "NA is hardware geometry, not a menu item." },
+            { "text": "0.55 is only a resist bottle label", "kind": "nearby", "rationale": "Resist is a later process implication." },
+            { "text": "Every layer on the wafer must move the day the tool arrives", "kind": "misapplied", "rationale": "High-NA time is scarce. Many layers stay at 0.33." }
+          ],
+          "correctExplanation": "A new cone on a reflective column is a new machine. The number is the consequence, not the product.",
+          "objectiveIds": ["Treat 0.55 NA as a new scanner family, not a bigger number on the same tool"],
+          "prerequisiteConceptIds": ["semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "hn10-2",
+          "stem": "A layer that 'moves to High-NA to cut multipatterning' is usually:",
+          "correctAnswer": "Buying a single-exposure pitch and spending focus slice plus a smaller, stitchable field",
+          "distractors": [
+            { "text": "Repealing Rayleigh so DoF gets thicker for free", "kind": "reversed", "rationale": "DoF still falls as NA²." },
+            { "text": "Proof that 193 nm has left the factory", "kind": "nearby", "rationale": "Most layers still print at DUV." },
+            { "text": "A reason to skip incoming wafer flatness", "kind": "misapplied", "rationale": "A thinner slice makes flatness more mandatory." }
+          ],
+          "correctExplanation": "One purchased pitch. Two spent budgets. Read both sides of the sentence.",
+          "objectiveIds": ["Predict what High-NA buys in pitch and what it spends in focus, field, and overlay"],
+          "prerequisiteConceptIds": ["semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "hn10-3",
+          "stem": "Layers that still fit 0.33 NA typically stay there because:",
+          "correctAnswer": "High-NA hours are scarce, and the new family spends field and focus you may not need",
+          "distractors": [
+            { "text": "0.33 tools cannot print anything once a 0.55 tool exists", "kind": "reversed", "rationale": "The older family keeps most of the wafer." },
+            { "text": "0.55 automatically thickens every process window", "kind": "nearby", "rationale": "It thins the window." },
+            { "text": "Pellicles only work on the new family", "kind": "subtle", "rationale": "Pellicles are a photon tax on EUV generally." }
+          ],
+          "correctExplanation": "You do not spend the scarce machine on a layer the last family already prints.",
+          "objectiveIds": ["Predict what High-NA buys in pitch and what it spends in focus, field, and overlay"],
+          "prerequisiteConceptIds": ["semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-high-na-20",
+      "conceptId": "semi-high-na",
+      "title": "The field shrinks when the cone opens",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-na"],
+      "goDeeper": "semi-high-na-optics",
+      "diagram": "high-na-field",
+      "explanation": [
+        "The ten-minute unit said High-NA is a family. This one is why the field has to shrink. A larger NA on a reflective column means larger, steeper mirrors. The mask cannot grow without bound — it has to stay a writable, inspectable plate. Anamorphic demagnification (the next concept) is how they keep that plate a workable size. The wafer-side price is a smaller exposure field. You tile a die with more shots.",
+        "More shots are not just a throughput story. Every stitch is an overlay pair. The last course treated overlay as a tail that eats landings. High-NA multiplies the pairs: field-to-field on the same layer, plus layer-to-layer against whatever still printed at 0.33 or 193. 'High-NA reduces multipatterning' and 'overlay got harder' are often the same sentence.",
+        "Depth of focus falls roughly as 1/NA². From 0.33 to 0.55 that is a factor of about (0.55/0.33)² ≈ 2.8 thinner. The incoming plane from CMP does not get a matching gift. Resist has to go thinner to live in the slice, and a thinner film is a worse etch mask. Inspection has to see stochastic leftovers in a smaller volume. The process implications are a later unit. Here: the family change is a field change plus a focus change.",
+        "Do not memorise a model name or a first-ship quarter. Ask which layers moved, how many fields a die now takes, and whether the overlay residual at the stitch is in the yield model. Those are durable. The brochure number is not."
+      ],
+      "example": "A die that was one 0.33 field may take two High-NA fields. The extra pass can still beat two full multipatterning masks on that layer — and still lose the lot if the stitch residual eats the via landing. The cheaper fix is sometimes a fatter pad, not another hour of scanner time.",
+      "whyItMatters": "Reporting that stops at 'they bought High-NA' is last year's sentence. The sentence that holds up names the field, the stitch, and the layer that actually moved.",
+      "quiz": [
+        {
+          "id": "hn20-1",
+          "stem": "The High-NA exposure field shrinks mainly because:",
+          "correctAnswer": "Larger, steeper mirrors plus a mask that must stay writable force a smaller wafer-side shot",
+          "distractors": [
+            { "text": "The source can no longer make tin plasma", "kind": "nearby", "rationale": "The source is the same class of tin laser. The optic changed." },
+            { "text": "Wafers got smaller so the field had to follow", "kind": "reversed", "rationale": "300 mm wafers did not shrink." },
+            { "text": "k1 became a field-size number", "kind": "misapplied", "rationale": "k1 is process cleverness, not a shot size." }
+          ],
+          "correctExplanation": "Mask manufacturability and the new cone set the shot. The wafer inherits the leftover.",
+          "objectiveIds": ["Treat 0.55 NA as a new scanner family, not a bigger number on the same tool"],
+          "prerequisiteConceptIds": ["semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "hn20-2",
+          "stem": "A High-NA stitch that prints legal CD and still kills vias is usually:",
+          "correctAnswer": "An overlay residual at the field boundary eating the landing",
+          "distractors": [
+            { "text": "Proof that 13.5 nm light cannot form an image", "kind": "reversed", "rationale": "The features printed. They printed in the wrong place." },
+            { "text": "A missing Czochralski seed", "kind": "subtle", "rationale": "Crystal growth is not this miss." },
+            { "text": "A wet-etch undercut of the scanner stage", "kind": "misapplied", "rationale": "No wet etch ran on the stage." }
+          ],
+          "correctExplanation": "Pretty holes, wrong place, at the seam. That is the new pair the field created.",
+          "objectiveIds": ["Predict what High-NA buys in pitch and what it spends in focus, field, and overlay"],
+          "prerequisiteConceptIds": ["semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "hn20-3",
+          "stem": "Depth of focus dropping by about the square of the NA ratio means:",
+          "correctAnswer": "The incoming plane and the resist thickness have less height to miss by",
+          "distractors": [
+            { "text": "The slice gets thicker, so topography is free again", "kind": "reversed", "rationale": "The square makes the slice thinner." },
+            { "text": "Overlay residuals automatically go to zero", "kind": "nearby", "rationale": "Focus and overlay are different budgets." },
+            { "text": "The wavelength jumps back to 193 nm", "kind": "subtle", "rationale": "High-NA is still 13.5 nm." }
+          ],
+          "correctExplanation": "Same Rayleigh bill, now paid on a tighter height. Flatness was not optional before. It is less optional now.",
+          "objectiveIds": ["Predict what High-NA buys in pitch and what it spends in focus, field, and overlay"],
+          "prerequisiteConceptIds": ["semi-na"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-high-na-optics-10",
+      "conceptId": "semi-high-na-optics",
+      "title": "Anamorphic mirrors keep the mask printable",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-high-na", "semi-euv-mirrors"],
+      "goDeeper": "semi-anamorphic",
+      "diagram": "anamorphic-field",
+      "explanation": [
+        "You already know the EUV column is a chain of multilayer Bragg mirrors. High-NA needs a wider cone, so those mirrors get larger and sit at steeper angles. If demagnification stayed a simple 4× in both axes, the mask would have to grow with the cone. A bigger reflective mask is harder to write, harder to inspect, and no longer fits the mask shops that already exist. That is not a slogan. That is why the optic is anamorphic.",
+        "Anamorphic here means different demagnification in X and Y — classically 4× in one axis and 8× in the other — so the reticle stays a manufacturable size. The wafer-side field is no longer a scaled rectangle of the mask in both directions. You already paid a field shrink in the last unit. This unit is the optical reason that shrink is not symmetric.",
+        "The next concept (anamorphic imaging) is the field-and-stitch consequence. This one is the mirror design: you distort the reduction so the mask shop does not have to invent a new plate."
+      ],
+      "example": "A 4×/4× High-NA mask at these angles would be an awkward, barely writable plate. 4×/8× keeps the plate in the existing ecosystem and hands a squeezed field to the scanner. The mask shop did not shrink. The reduction did.",
+      "whyItMatters": "If you think High-NA is just 'bigger mirrors', you will miss why the field is half and why stitch overlay became a node-delay noun.",
+      "quiz": [
+        {
+          "id": "ho10-1",
+          "stem": "High-NA optics are anamorphic so that:",
+          "correctAnswer": "X and Y demagnify differently and the mask stays a writable, inspectable size",
+          "distractors": [
+            { "text": "The tin plasma can run in air", "kind": "nearby", "rationale": "Air still eats EUV. Anamorphic is about the mask." },
+            { "text": "The wafer can skip CMP", "kind": "misapplied", "rationale": "A thinner focus slice makes CMP more necessary." },
+            { "text": "Refractive glass starts working at 13.5 nm", "kind": "reversed", "rationale": "The column is still mirrors." }
+          ],
+          "correctExplanation": "Keep the plate in the ecosystem. Pay with an unequal reduction.",
+          "objectiveIds": ["Explain anamorphic High-NA optics as different demagnification in X and Y so the mask stays printable"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-euv-mirrors"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "ho10-2",
+          "stem": "A simple 4× in both axes at High-NA would fail first because:",
+          "correctAnswer": "The reflective mask would have to grow past what mask shops can write and inspect",
+          "distractors": [
+            { "text": "Tin droplets would freeze in the source", "kind": "subtle", "rationale": "The source is not why the plate grows." },
+            { "text": "Photoresist cannot be coated any more", "kind": "nearby", "rationale": "Resist is a wafer-side film." },
+            { "text": "k1 would become larger than one", "kind": "misapplied", "rationale": "k1 is not a mask-size law." }
+          ],
+          "correctExplanation": "The plate is the constraint. Anamorphic is how the cone does not drag the plate with it.",
+          "objectiveIds": ["Predict why a reflective mask cannot simply grow to feed a larger NA at 4× in both axes"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-euv-mirrors"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "ho10-3",
+          "stem": "Keeping the reticle a traditional size while raising NA trades against:",
+          "correctAnswer": "A wafer field that is no longer a symmetric 4× shrink, so you stitch more shots",
+          "distractors": [
+            { "text": "A thicker depth of focus than 0.33 NA", "kind": "reversed", "rationale": "DoF still thins as NA²." },
+            { "text": "The right to skip multilayer mirrors", "kind": "nearby", "rationale": "The column is still Bragg mirrors." },
+            { "text": "Free overlay on every layer pair", "kind": "subtle", "rationale": "More shots usually make overlay louder." }
+          ],
+          "correctExplanation": "Printable mask, squeezed field. That is the optic's bill.",
+          "objectiveIds": ["Predict why a reflective mask cannot simply grow to feed a larger NA at 4× in both axes"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-euv-mirrors"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-high-na-mask-10",
+      "conceptId": "semi-high-na-mask",
+      "title": "The absorber has thickness, and the angle sees it",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-high-na", "semi-mask"],
+      "goDeeper": "semi-high-na-process",
+      "diagram": "mask-3d-stack",
+      "explanation": [
+        "A DUV mask is chrome on glass that light goes through. An EUV mask is an absorber sitting on a multilayer mirror that light bounces off. The absorber is not infinitely thin. At 0.33 NA the angles already see some of that thickness as shadowing and a phase error. At High-NA the cone is steeper. The same few nanometres of absorber become a first-order imaging term.",
+        "So a '2D' drawn rectangle is a 3D object to the light: a cliff of absorber on a Bragg stack. Edges that face the incoming beam do not print like edges that face away. Dense lines shift. Tips pull back. A CD miss that tracks orientation or local 3D neighbourhood is often the mask stack, not a wafer dose error.",
+        "Mask-3D as a general EUV fact is the sibling concept in this module. This unit is the High-NA amplification: the angles you bought for pitch make the absorber's height matter more. OPC and mask-write compensation try to pre-distort for it. They do not make the absorber two-dimensional."
+      ],
+      "example": "Two identical drawn spaces, one facing the illumination, one opposite. At High-NA they print different CDs. Raising wafer dose moves both. It does not cancel the orientation split. The fix lives in the mask model, not in the scanner recipe.",
+      "whyItMatters": "A yield meeting that treats every CD miss as 'dose' will chase the lamp while the absorber cliff is the thing that printed.",
+      "quiz": [
+        {
+          "id": "hm10-1",
+          "stem": "Absorber thickness matters more at High-NA mainly because:",
+          "correctAnswer": "The steeper cone sees the absorber as a 3D cliff, so shadowing and phase become first-order",
+          "distractors": [
+            { "text": "High-NA light is transmitted through glass again", "kind": "reversed", "rationale": "The mask is still reflective." },
+            { "text": "Tin droplets sit on the absorber on purpose", "kind": "subtle", "rationale": "Debris is a source problem, not this 3D term." },
+            { "text": "k1 is defined as absorber height", "kind": "misapplied", "rationale": "k1 is process cleverness." }
+          ],
+          "correctExplanation": "A thicker-looking wall at a steeper angle. That is the High-NA mask bill.",
+          "objectiveIds": ["Explain why absorber thickness matters more at High-NA angles"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-mask"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "hm10-2",
+          "stem": "A CD split that tracks feature orientation, not the scanner dose recipe, often points to:",
+          "correctAnswer": "A mask-stack shadowing or phase error, not a wafer that saw the wrong mJ/cm²",
+          "distractors": [
+            { "text": "A pellicle that added photons", "kind": "reversed", "rationale": "Pellicles eat photons. They do not invent orientation." },
+            { "text": "A Czochralski notch on the wrong side", "kind": "nearby", "rationale": "Wafer orientation is not this split." },
+            { "text": "A wet field oxide grown on the reticle", "kind": "misapplied", "rationale": "No thermal oxide grew on the mask." }
+          ],
+          "correctExplanation": "Same dose, different face of the cliff. Read the mask, not the lamp.",
+          "objectiveIds": ["Predict a CD or placement error that comes from the mask stack, not the wafer"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-mask"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "hm10-3",
+          "stem": "OPC and mask-write compensation for High-NA 3D effects are a trade because:",
+          "correctAnswer": "They pre-distort the drawing so the wafer looks right, and they spend mask complexity and model risk",
+          "distractors": [
+            { "text": "They make the absorber infinitely thin", "kind": "reversed", "rationale": "The cliff is still there." },
+            { "text": "They delete the need for a multilayer", "kind": "nearby", "rationale": "The Bragg stack is still the mirror." },
+            { "text": "They thicken depth of focus back to 0.33", "kind": "subtle", "rationale": "Mask 3D is not the DoF knob." }
+          ],
+          "correctExplanation": "You buy a printable image and spend a harder original. That is the usual lithography bargain, now in 3D.",
+          "objectiveIds": ["Predict a CD or placement error that comes from the mask stack, not the wafer"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-mask"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-high-na-process-10",
+      "conceptId": "semi-high-na-process",
+      "title": "The window thins, so the film and the inspect must follow",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-high-na", "semi-process-window"],
+      "goDeeper": "semi-stochastic-limit",
+      "diagram": "high-na-field",
+      "explanation": [
+        "The last course defined a process window as the focus and dose ranges that still print a legal CD. High-NA spends that window: DoF falls as NA², so the focus axis of the Bossung plot shrinks. A wafer that was inside the 0.33-NA window can sit outside the 0.55-NA window without anyone changing dose. Incoming flatness, already a lithography input, is now a tighter input.",
+        "Resist has to go thinner to live in the slice. A thinner film is a worse etch mask and a smaller chemical volume — which feeds the stochastic count problem the next module will treat as a wall. Inspection has to find missing holes and line pinches in that smaller volume, after develop and after etch. 'New resists, new inspection' is not a shopping list. It is the window talking.",
+        "So a High-NA process implication is not a new Rayleigh law. It is the same window you already know, squeezed in focus, handing a thinner film to etch and a noisier feature to inspect. Layers that cannot live in that window stay on 0.33 or go back to a multipatterned 193."
+      ],
+      "example": "A 40 nm resist that was comfortable at 0.33 NA leaves CD scatter at 0.55 because half the die sits near the edge of the thinner slice. Cutting the film to live in focus then fails the etch: the stencil does not last. The lot needs a different underlayer or a layer that never should have moved.",
+      "whyItMatters": "If you read 'High-NA process challenges' as vendor mood, you will miss that they are naming the window you already own, now too thin for the last film.",
+      "quiz": [
+        {
+          "id": "hp10-1",
+          "stem": "A High-NA process window is thinner than the 0.33-NA window mainly because:",
+          "correctAnswer": "Depth of focus falls as NA², so the focus axis of the legal-CD region shrinks",
+          "distractors": [
+            { "text": "Dose stops existing at 0.55", "kind": "reversed", "rationale": "Dose is still a knob. The height is what shrank." },
+            { "text": "The source no longer makes 13.5 nm light", "kind": "nearby", "rationale": "The wavelength did not jump." },
+            { "text": "k1 becomes the only remaining term", "kind": "misapplied", "rationale": "k1 is still process cleverness, not a focus law." }
+          ],
+          "correctExplanation": "Same window, less height. That is the process implication in one sentence.",
+          "objectiveIds": ["Contrast a High-NA process window with the 0.33-NA window already taught"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-process-window"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "hp10-2",
+          "stem": "Thinning resist to live in a High-NA focus slice typically:",
+          "correctAnswer": "Spends etch budget and chemical volume, so inspect has a smaller, noisier target",
+          "distractors": [
+            { "text": "Makes every etch infinitely selective", "kind": "reversed", "rationale": "A thinner stencil is a worse mask." },
+            { "text": "Lets you skip incoming CMP", "kind": "nearby", "rationale": "Thinner focus makes flatness louder." },
+            { "text": "Turns overlay into a resist property", "kind": "subtle", "rationale": "Placement is a different budget." }
+          ],
+          "correctExplanation": "The film shrank to fit the slice. Etch and count pay.",
+          "objectiveIds": ["Predict how a thinner High-NA focus slice changes resist thickness and inspection"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-process-window"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "hp10-3",
+          "stem": "Keeping a layer on 0.33 NA after High-NA exists is often the right call when:",
+          "correctAnswer": "The squeezed window and thinner film would cost more than the pitch you would buy",
+          "distractors": [
+            { "text": "The 0.33 family has been legally banned", "kind": "reversed", "rationale": "Most layers stay on the older family." },
+            { "text": "High-NA always thickens the window", "kind": "nearby", "rationale": "It thins the window." },
+            { "text": "Inspection tools refuse 0.33 wafers", "kind": "subtle", "rationale": "Inspect follows the process, not a fashion." }
+          ],
+          "correctExplanation": "Scarce tool, thinner window. Move only the layers that need the pitch.",
+          "objectiveIds": ["Contrast a High-NA process window with the 0.33-NA window already taught"],
+          "prerequisiteConceptIds": ["semi-high-na", "semi-process-window"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-mask-3d-10",
+      "conceptId": "semi-mask-3d",
+      "title": "A multilayer pattern is not a 2D drawing",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv-mirrors", "semi-mask"],
+      "goDeeper": "semi-high-na-mask",
+      "diagram": "mask-3d-stack",
+      "explanation": [
+        "A DUV reticle is a chrome drawing on glass. Light goes through the openings. An EUV mask is an absorber sitting on a Bragg stack. Light comes in at an angle, bounces off the multilayer, and has to miss or hit the absorber on the way. The pattern you drew as 2D is a relief object with height, sidewalls, and a mirror underneath.",
+        "That geometry shadows. It phase-shifts. Neighbours on the mask change the local mirror they sit on. A CD or placement error that tracks the 3D neighbourhood of the absorber — not the wafer dose, not a particle — is a mask-3D effect. It already exists at 0.33 NA. High-NA makes the angles worse; it did not invent the phenomenon.",
+        "So when a briefing says 'mask 3D effects', do not hear 'the mask is thick so it is hard.' Hear: the image is of a cliff on a mirror, and the drawing is a lie the OPC model has to unsay."
+      ],
+      "example": "A contact array prints small on one side of a large absorber pad and legal on the other, same wafer dose. The pad is a 3D neighbour that shadows the stack. Raising dose moves both populations. It does not remove the split.",
+      "whyItMatters": "If every EUV CD miss is 'stochastics' or 'dose', you will miss the class of errors that live on the mask, not in the photon count.",
+      "quiz": [
+        {
+          "id": "m310-1",
+          "stem": "An EUV mask pattern is not a 2D chrome drawing to the light because:",
+          "correctAnswer": "The absorber has height on a multilayer mirror, so the beam sees a cliff and a bounce",
+          "distractors": [
+            { "text": "EUV masks are transmissive glass with no absorber", "kind": "reversed", "rationale": "They are reflective stacks with an absorber." },
+            { "text": "The wafer CMP step writes the mask", "kind": "nearby", "rationale": "CMP is a wafer plane, not a reticle." },
+            { "text": "k1 is the absorber thickness in nanometres", "kind": "misapplied", "rationale": "k1 is process cleverness." }
+          ],
+          "correctExplanation": "Height plus a mirror. That is why '2D' is a drawing convention, not the physics.",
+          "objectiveIds": ["Explain why a pattern on a multilayer mirror is not a 2D chrome drawing to the light"],
+          "prerequisiteConceptIds": ["semi-euv-mirrors", "semi-mask"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "m310-2",
+          "stem": "A CD split that tracks the 3D neighbourhood of the absorber, not wafer dose, is usually:",
+          "correctAnswer": "A mask-3D or shadowing effect, not a lamp that missed the field",
+          "distractors": [
+            { "text": "Proof that Poisson noise has been repealed", "kind": "reversed", "rationale": "A systematic neighbourhood split is not shot noise." },
+            { "text": "A missing backside power via", "kind": "subtle", "rationale": "Power delivery is a later device concept." },
+            { "text": "A wet oxide grown through the pellicle", "kind": "misapplied", "rationale": "No oxidant step ran on the mask." }
+          ],
+          "correctExplanation": "Same photons, different cliff. Read the original, not the source power.",
+          "objectiveIds": ["Diagnose a print error as a mask-3D or shadowing effect rather than a dose miss"],
+          "prerequisiteConceptIds": ["semi-euv-mirrors", "semi-mask"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "m310-3",
+          "stem": "Treating mask 3D as only a High-NA problem is a mistake because:",
+          "correctAnswer": "The cliff-on-a-mirror already exists at 0.33 NA; High-NA only makes the angles worse",
+          "distractors": [
+            { "text": "0.33-NA masks are infinitely thin by law", "kind": "reversed", "rationale": "They have absorbers too." },
+            { "text": "193 nm chrome has the same Bragg stack", "kind": "nearby", "rationale": "DUV is transmissive chrome on glass." },
+            { "text": "Stochastics delete 3D geometry", "kind": "subtle", "rationale": "Count noise is a different budget." }
+          ],
+          "correctExplanation": "The phenomenon is EUV. The amplification is High-NA.",
+          "objectiveIds": ["Explain why a pattern on a multilayer mirror is not a 2D chrome drawing to the light"],
+          "prerequisiteConceptIds": ["semi-euv-mirrors", "semi-mask"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-mask-3d-20",
+      "conceptId": "semi-mask-3d",
+      "title": "Shadowing on a Bragg stack is the image",
+      "durationMin": 20,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-euv-mirrors", "semi-mask"],
+      "goDeeper": "semi-high-na-mask",
+      "diagram": "mask-3d-stack",
+      "explanation": [
+        "The ten-minute unit said the drawing is a lie. This one is the optical object. EUV arrives off-axis. It travels down toward the stack, reflects from many bilayer interfaces, and travels back out. An absorber line is a wall in that path. The wall casts a shadow whose width depends on height, sidewall angle, and the incoming direction. The multilayer under a dense pattern is not the same mirror as the multilayer under an isolated space — the neighbours load the Bragg condition.",
+        "So three different 'dose' stories can be false: the scanner recipe was right and the feature still moved; two orientations of the same CD printed differently; a pad next door shifted a contact that never changed drawing. Those are 3D mask effects. Photon shot noise can sit on top of them. It is not a substitute diagnosis.",
+        "Compensation is a model of that 3D object, written back into the mask shop. The model is wrong in the usual ways: a sidewall that is not the assumed angle, a stack whose period drifted, a flare term that ate the margin the model thought it had. A 'random' hotspot that clusters on one drawn motif after a mask revision is often the model missing a 3D neighbour, not a cleaner that failed.",
+        "High-NA, next door in this module, steepens the incoming angle and makes every one of these terms louder. Do not wait for 0.55 to start seeing cliffs on mirrors. 0.33 already prints them."
+      ],
+      "example": "A via chain fails on the side of a wide absorber plate and yields on the open side. Split lot: extra wafer dose cuts both tails a little and burns throughput. A mask revision that pulls the plate back and adds a sub-resolution assist kills the cluster without dose. The cheaper knob was the 3D neighbour.",
+      "whyItMatters": "Node-delay pieces that say 'EUV defectivity' and never say 'mask 3D' are mixing a particle story, a photon-count story, and a geometry story. Only one of those three lives on the reticle.",
+      "quiz": [
+        {
+          "id": "m320-1",
+          "stem": "Off-axis EUV plus an absorber wall produces a print error because:",
+          "correctAnswer": "The beam sees a shadowed, phase-shifted cliff on a loaded Bragg stack, not a flat chrome opening",
+          "distractors": [
+            { "text": "The light goes through the silicon wafer first", "kind": "reversed", "rationale": "The mask is above the wafer, reflective." },
+            { "text": "CMP planarizes the reticle during exposure", "kind": "nearby", "rationale": "The reticle is not polished mid-shot." },
+            { "text": "k1 is measured in absorber degrees", "kind": "misapplied", "rationale": "k1 is not an angle of a wall." }
+          ],
+          "correctExplanation": "A wall in an angled bounce. That is the image, whether you drew a rectangle or not.",
+          "objectiveIds": ["Explain why a pattern on a multilayer mirror is not a 2D chrome drawing to the light"],
+          "prerequisiteConceptIds": ["semi-euv-mirrors", "semi-mask"],
+          "difficultyTier": 4,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "m320-2",
+          "stem": "A hotspot that clusters on one motif after a mask revision and ignores a dose split is usually:",
+          "correctAnswer": "A 3D-neighbour or model miss on the reticle, not a wafer photon-count accident",
+          "distractors": [
+            { "text": "Proof that the source is unplugged", "kind": "reversed", "rationale": "The field printed. One motif failed." },
+            { "text": "A backside power via that opened in the mask shop", "kind": "subtle", "rationale": "Power vias are a later device story." },
+            { "text": "A wet etch of the scanner's vacuum", "kind": "misapplied", "rationale": "No wet etch ran on the column." }
+          ],
+          "correctExplanation": "Geometry that survived the dose knob. Look at the original.",
+          "objectiveIds": ["Diagnose a print error as a mask-3D or shadowing effect rather than a dose miss"],
+          "prerequisiteConceptIds": ["semi-euv-mirrors", "semi-mask"],
+          "difficultyTier": 4,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "m320-3",
+          "stem": "Raising wafer dose to 'fix' a mask-3D split typically:",
+          "correctAnswer": "Moves both populations a little, spends throughput, and leaves the orientation or neighbour split",
+          "distractors": [
+            { "text": "Deletes the absorber height", "kind": "reversed", "rationale": "Dose does not plane the mask." },
+            { "text": "Converts the stack into transmissive glass", "kind": "nearby", "rationale": "The Bragg mirror is still there." },
+            { "text": "Automatically thickens depth of focus", "kind": "subtle", "rationale": "Dose is not the DoF knob." }
+          ],
+          "correctExplanation": "Photons are the expensive, weak lever on a geometry error. The mask model is the lever.",
+          "objectiveIds": ["Diagnose a print error as a mask-3D or shadowing effect rather than a dose miss"],
+          "prerequisiteConceptIds": ["semi-euv-mirrors", "semi-mask"],
+          "difficultyTier": 4,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    },
+    {
+      "id": "semi-anamorphic-10",
+      "conceptId": "semi-anamorphic",
+      "title": "The field is no longer a simple 4× shrink",
+      "durationMin": 10,
+      "effort": "deep",
+      "level": "journalist",
+      "prerequisites": ["semi-high-na-optics"],
+      "goDeeper": "semi-overlay-budget",
+      "diagram": "anamorphic-field",
+      "explanation": [
+        "The optics unit said X and Y demagnify differently so the mask stays printable. This unit is what that does to the field. A DUV or 0.33-NA EUV field is a scaled rectangle of the reticle — classically 4× in both axes, 26 × 33 mm on the wafer. Anamorphic High-NA breaks the square: one axis shrinks more. The wafer field is smaller and no longer a similar rectangle.",
+        "A smaller field means more exposure shots per layer. More shots mean more stage moves and more stitch boundaries. Each stitch is an overlay pair against the previous field and against every other layer. Designers who assumed one field per die now have a seam. The seam is a yield term, not an illustration.",
+        "So 'anamorphic imaging' is not a photography adjective. It is why a High-NA layer can need two shots where a 0.33 layer needed one, and why overlay budgets in the next module are measured in fractions of a nanometre at those seams."
+      ],
+      "example": "A large die that filled one 0.33 field now takes two High-NA fields. The extra shot can still beat a second multipatterning mask — and still lose the edge row of vias if the stitch residual is a couple of nanometres. The die did not get smaller. The field did.",
+      "whyItMatters": "If you hear 'anamorphic' and think only 'fancy mirrors', you will miss the stitch. The stitch is what a reporter can actually ask about.",
+      "quiz": [
+        {
+          "id": "an10-1",
+          "stem": "Anamorphic High-NA imaging means the reticle field is no longer a simple 4× shrink because:",
+          "correctAnswer": "X and Y reduce by different factors, so the wafer shot is a smaller, stretched leftover of the plate",
+          "distractors": [
+            { "text": "The mask is now printed in contact, 1×", "kind": "reversed", "rationale": "It is still a reduced projection." },
+            { "text": "Wafers are no longer round", "kind": "subtle", "rationale": "The wafer did not change shape." },
+            { "text": "k1 is applied only on one axis", "kind": "misapplied", "rationale": "k1 is not an axis of reduction." }
+          ],
+          "correctExplanation": "Unequal reduction. Unequal field. That is the whole sentence.",
+          "objectiveIds": ["State that the reticle field is no longer a simple 4× shrink in both axes"],
+          "prerequisiteConceptIds": ["semi-high-na-optics"],
+          "difficultyTier": 5,
+          "cognitiveType": "integrate"
+        },
+        {
+          "id": "an10-2",
+          "stem": "A die that now takes two High-NA fields instead of one 0.33 field typically adds:",
+          "correctAnswer": "A stitch boundary whose overlay residual is a new yield pair",
+          "distractors": [
+            { "text": "A thicker depth of focus across the seam", "kind": "reversed", "rationale": "DoF thinned. The seam is placement." },
+            { "text": "A free deletion of all other overlay pairs", "kind": "nearby", "rationale": "You added a pair. You did not delete the others." },
+            { "text": "A reason to skip the mask entirely", "kind": "subtle", "rationale": "There is still a reticle." }
+          ],
+          "correctExplanation": "More shots, more seams, more pairs. That is the field talking.",
+          "objectiveIds": ["Predict why a smaller or stretched scanner field multiplies exposure shots and stitch overlay"],
+          "prerequisiteConceptIds": ["semi-high-na-optics"],
+          "difficultyTier": 5,
+          "cognitiveType": "diagnose"
+        },
+        {
+          "id": "an10-3",
+          "stem": "Keeping traditional reticle sizes via anamorphic optics trades against:",
+          "correctAnswer": "More wafer shots and a tighter stitch-overlay problem per layer",
+          "distractors": [
+            { "text": "A return to transmissive EUV glass", "kind": "reversed", "rationale": "The column is still mirrors." },
+            { "text": "Automatically legal overlay on every pair", "kind": "nearby", "rationale": "The opposite: more pairs." },
+            { "text": "A thicker resist that never needs inspect", "kind": "subtle", "rationale": "Field size is not the film." }
+          ],
+          "correctExplanation": "Printable mask, squeezed field, extra seams. You pick the ecosystem over the simple 4×.",
+          "objectiveIds": ["Predict why a smaller or stretched scanner field multiplies exposure shots and stitch overlay"],
+          "prerequisiteConceptIds": ["semi-high-na-optics"],
+          "difficultyTier": 5,
+          "cognitiveType": "tradeoff"
+        }
+      ]
+    }
+  ]
+}

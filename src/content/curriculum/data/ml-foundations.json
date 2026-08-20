@@ -1,0 +1,538 @@
+{
+  "id": "ml-foundations",
+  "title": "Machine Learning Foundations",
+  "categoryId": "ml",
+  "description": "The learning problem, linear models, generalization, and gradient descent. Neural nets wait. Transformers wait longer.",
+  "curriculumVersion": 1,
+  "orderHint": 0,
+  "difficultyRange": [
+    0,
+    2
+  ],
+  "entryRequirements": [],
+  "sourceReferences": [
+    {
+      "id": "stanford-cs229",
+      "title": "Stanford CS229 Machine Learning",
+      "url": "https://cs229.stanford.edu/syllabus-new.html",
+      "kind": "syllabus",
+      "notes": "Supervised setup and linear/logistic models before neural nets. No transformers in the core sequence. Linear algebra and probability are assumed tools, not LLM trivia."
+    }
+  ],
+  "modules": [
+    {
+      "id": "ml-f-problem",
+      "title": "The learning problem",
+      "blurb": "Examples, features, and a loss you can actually compute.",
+      "order": 0,
+      "prerequisites": [],
+      "spineIds": [
+        "ml-learning-problem",
+        "ml-loss"
+      ],
+      "learningObjectives": [
+        "State a supervised learning problem",
+        "Name what a loss is for"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-f-linear",
+      "title": "Linear models",
+      "blurb": "Regression, classification, and a slope.",
+      "order": 1,
+      "prerequisites": [
+        "ml-f-problem"
+      ],
+      "spineIds": [
+        "ml-linear-reg",
+        "ml-gd"
+      ],
+      "learningObjectives": [
+        "Fit a linear score by reducing a loss you can compute",
+        "Turn that score into a probability or a class without treating it as a promise"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-f-gen",
+      "title": "Generalization",
+      "blurb": "Train, validation, test, and the ways you fool yourself.",
+      "order": 2,
+      "prerequisites": [
+        "ml-f-linear"
+      ],
+      "spineIds": [
+        "ml-overfit",
+        "ml-train-val-test"
+      ],
+      "learningObjectives": [
+        "Split data so train, validation, and test keep three jobs",
+        "Diagnose a fit that memorized the sample instead of the population"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-f-opt",
+      "title": "Optimization in practice",
+      "blurb": "Stochastic gradients and the assumptions underneath.",
+      "order": 3,
+      "prerequisites": [
+        "ml-f-gen"
+      ],
+      "spineIds": [
+        "ml-gd-variants",
+        "ml-iid"
+      ],
+      "learningObjectives": [
+        "Estimate a slope from a minibatch instead of the whole set",
+        "Name the i.i.d. assumption and a way real data violates it"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "ml-learning-problem",
+      "name": "The learning problem",
+      "moduleId": "ml-f-problem",
+      "tier": 0,
+      "prerequisites": [],
+      "summary": "Inferring a rule from examples that should work on examples you have not seen.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State a learning problem as inferring a rule from examples that should work on unseen examples",
+        "Name what 'work' means here: a prediction job, not a memorized spreadsheet"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-features-targets",
+      "name": "Features and targets",
+      "moduleId": "ml-f-problem",
+      "tier": 0,
+      "prerequisites": [
+        "ml-learning-problem"
+      ],
+      "summary": "The inputs you chose and the thing you are trying to predict.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Separate the inputs you chose from the target you are trying to predict",
+        "Predict what breaks if the target leaks into the features"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-hypothesis",
+      "name": "Hypothesis class",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-features-targets"
+      ],
+      "summary": "The family of functions you are willing to consider.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe a hypothesis class as the family of functions you are willing to consider",
+        "Predict what a class that is too small or too large will do to the fit"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-loss",
+      "name": "Loss functions",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-hypothesis"
+      ],
+      "summary": "A number that says how wrong a prediction is.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define a loss as a number that says how wrong a prediction is",
+        "Choose a loss that matches the prediction job rather than a leftover default"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-lin-alg-lite",
+      "name": "Vectors as the language of models",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-features-targets"
+      ],
+      "summary": "Features live in a space. Geometry is not decoration.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat a feature vector as a point in a space, not a pile of columns",
+        "Read a weighted sum as a geometric operation in that space"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-prob-lite",
+      "name": "Probability as bookkeeping",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-learning-problem"
+      ],
+      "summary": "Uncertainty written as numbers you can multiply.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write uncertainty as numbers you can multiply and condition",
+        "Distinguish a probability from a decision you still have to make"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-baselines",
+      "name": "Baselines before cleverness",
+      "moduleId": "ml-f-problem",
+      "tier": 1,
+      "prerequisites": [
+        "ml-loss"
+      ],
+      "summary": "The dumb answer you must beat.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Name a dumb answer you must beat before claiming a model works",
+        "Predict when a clever model is losing to the mean or the majority class"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-linear-reg",
+      "name": "Linear regression",
+      "moduleId": "ml-f-linear",
+      "tier": 1,
+      "prerequisites": [
+        "ml-loss",
+        "ml-lin-alg-lite"
+      ],
+      "summary": "A weighted sum plus a bias, fit by reducing squared error.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Write a linear regression as a weighted sum plus a bias fit by reducing squared error",
+        "Predict the fit when one feature is a scaled copy of another"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-logistic",
+      "name": "Logistic regression",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-linear-reg"
+      ],
+      "summary": "A linear score turned into a probability.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Turn a linear score into a probability with a logistic curve",
+        "Predict why a linear score alone is not a valid class probability"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-prob-model",
+      "name": "Predictions as probabilities",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-logistic",
+        "ml-prob-lite"
+      ],
+      "summary": "A number between 0 and 1 is not a promise.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Treat a number between 0 and 1 as a calibrated claim, not a promise",
+        "Diagnose a confident probability that does not match observed frequency"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-gd",
+      "name": "Gradient descent",
+      "moduleId": "ml-f-linear",
+      "tier": 1,
+      "prerequisites": [
+        "ml-loss"
+      ],
+      "summary": "Following the slope of a loss you can actually compute.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Step parameters opposite the gradient of a loss you can compute",
+        "Predict what a step that is too large or too small does to the loss"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-feature-scale",
+      "name": "Feature scaling",
+      "moduleId": "ml-f-linear",
+      "tier": 1,
+      "prerequisites": [
+        "ml-gd"
+      ],
+      "summary": "Why unscaled inputs make the slope lie.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Rescale features so one column does not dominate the slope",
+        "Predict the crooked path gradient descent takes on unscaled inputs"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-convex",
+      "name": "Convex versus non-convex loss",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-gd"
+      ],
+      "summary": "One bowl, or a landscape with many basins.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Distinguish a bowl with one minimum from a landscape with many basins",
+        "Predict why a local step is enough on a convex loss and not otherwise"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-metrics-class",
+      "name": "Classification metrics",
+      "moduleId": "ml-f-linear",
+      "tier": 2,
+      "prerequisites": [
+        "ml-logistic"
+      ],
+      "summary": "Precision, recall, and why accuracy lies.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Compute precision and recall instead of trusting accuracy on a skewed set",
+        "Diagnose a high accuracy that still misses the class you care about"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-train-val-test",
+      "name": "Train, validation, test",
+      "moduleId": "ml-f-gen",
+      "tier": 1,
+      "prerequisites": [
+        "ml-learning-problem"
+      ],
+      "summary": "Three splits, three jobs. Mixing them is the original sin.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Give train, validation, and test three different jobs and keep them unmixed",
+        "Name the original sin of tuning on the set you later report"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-overfit",
+      "name": "Overfitting",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-train-val-test",
+        "ml-hypothesis"
+      ],
+      "summary": "Fitting the sample, missing the population.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe overfitting as fitting the sample and missing the population",
+        "Read a training loss that falls while validation loss rises"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-generalization",
+      "name": "Generalization",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-overfit"
+      ],
+      "summary": "Performance on the distribution, not the spreadsheet.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Define generalization as performance on the distribution, not the spreadsheet",
+        "Predict what a distribution shift does to a number you trusted on the test split"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-bias-variance",
+      "name": "Bias and variance",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-generalization"
+      ],
+      "summary": "A model that cannot see versus a model that sees noise.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Contrast a model that cannot see the signal with one that sees the noise",
+        "Predict how more data or less capacity moves bias and variance"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-regularization",
+      "name": "Regularization",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-overfit"
+      ],
+      "summary": "Paying a tax on complexity so the fit cannot wander.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Tax complexity so the fit cannot wander as far as the sample would like",
+        "Choose an L2 or L1 penalty for a reason, not as a checkbox"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-crossval",
+      "name": "Cross-validation",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-train-val-test"
+      ],
+      "summary": "Rotating the held-out slice when data is scarce.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Rotate the held-out slice when a single split is too noisy",
+        "Predict what leaks if you peek at the test fold while choosing a model"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-capacity",
+      "name": "Model capacity",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-bias-variance"
+      ],
+      "summary": "How much structure the hypothesis class can represent.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Describe capacity as how much structure the hypothesis class can represent",
+        "Predict underfit and overfit from a capacity that is too small or too large"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-early-stop",
+      "name": "Early stopping",
+      "moduleId": "ml-f-gen",
+      "tier": 2,
+      "prerequisites": [
+        "ml-overfit",
+        "ml-gd"
+      ],
+      "summary": "Quitting while the validation loss is still honest.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Stop training when validation loss is still honest, before the sample is memorized",
+        "Predict why early stopping is a regularizer that needs a real validation split"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-gd-variants",
+      "name": "Stochastic and mini-batch gradients",
+      "moduleId": "ml-f-opt",
+      "tier": 2,
+      "prerequisites": [
+        "ml-gd"
+      ],
+      "summary": "Estimating the slope from a handful of examples.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "Estimate the slope from a minibatch instead of the whole dataset",
+        "Compare full-batch, stochastic, and mini-batch updates on cost and noise"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    },
+    {
+      "id": "ml-iid",
+      "name": "The i.i.d. assumption",
+      "moduleId": "ml-f-opt",
+      "tier": 2,
+      "prerequisites": [
+        "ml-generalization"
+      ],
+      "summary": "Independent, identically distributed \u2014 and how often that is a lie.",
+      "estimatedMinutes": 10,
+      "objectives": [
+        "State the i.i.d. assumption: independent, identically distributed examples",
+        "Name a common way real data violates it and what that does to the split"
+      ],
+      "sourceIds": [
+        "stanford-cs229"
+      ]
+    }
+  ]
+}

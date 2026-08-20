@@ -12,6 +12,8 @@ export function emptyProgress(conceptId: string): ConceptProgress {
     quizCorrect: 0,
     quizTotal: 0,
     lastQuizScore: null,
+    lastQuizCorrect: null,
+    lastQuizTotal: 0,
     estimatedMinutes: 0,
     actualMinutes: 0,
     lastStudiedAt: null,
@@ -19,8 +21,70 @@ export function emptyProgress(conceptId: string): ConceptProgress {
     timesStudied: 0,
     ease: 2.3,
     intervalDays: 0,
+    lapseCount: 0,
     reviewHistory: [],
     updatedAt: null,
+  };
+}
+
+export function quizRatio(correct: number, total: number): number {
+  if (total <= 0) return 0;
+  return clamp(correct / total, 0, 1);
+}
+
+/**
+ * Normalise a persisted/imported progress row.
+ * v1/v2 wrote lastQuizScore as the raw correct-count (0–3).
+ * Current code stores a 0–1 ratio plus lastQuizCorrect / lastQuizTotal.
+ */
+export function normalizeProgressRow(
+  row: Partial<ConceptProgress> & { conceptId: string },
+): ConceptProgress {
+  const base = { ...emptyProgress(row.conceptId), ...row };
+  const quiz = migrateQuizFields(row);
+  return {
+    ...base,
+    ...quiz,
+    lapseCount: typeof row.lapseCount === "number" && Number.isFinite(row.lapseCount) ? row.lapseCount : 0,
+    reviewHistory: row.reviewHistory ?? [],
+    updatedAt: row.updatedAt ?? row.lastStudiedAt ?? null,
+  };
+}
+
+function migrateQuizFields(row: Partial<ConceptProgress>): Pick<
+  ConceptProgress,
+  "lastQuizScore" | "lastQuizCorrect" | "lastQuizTotal"
+> {
+  if (row.lastQuizCorrect != null) {
+    const total = row.lastQuizTotal && row.lastQuizTotal > 0 ? row.lastQuizTotal : 3;
+    return {
+      lastQuizCorrect: row.lastQuizCorrect,
+      lastQuizTotal: total,
+      lastQuizScore: quizRatio(row.lastQuizCorrect, total),
+    };
+  }
+  if (row.lastQuizScore == null) {
+    return { lastQuizScore: null, lastQuizCorrect: null, lastQuizTotal: row.lastQuizTotal ?? 0 };
+  }
+  const looksLikeLegacyCount =
+    Number.isInteger(row.lastQuizScore) &&
+    row.lastQuizScore >= 0 &&
+    row.lastQuizScore <= 3 &&
+    (row.lastQuizCorrect == null) &&
+    (row.lastQuizTotal == null || row.lastQuizTotal === 0);
+  if (looksLikeLegacyCount) {
+    return {
+      lastQuizCorrect: row.lastQuizScore,
+      lastQuizTotal: 3,
+      lastQuizScore: quizRatio(row.lastQuizScore, 3),
+    };
+  }
+  const total = row.lastQuizTotal && row.lastQuizTotal > 0 ? row.lastQuizTotal : 3;
+  const ratio = clamp(row.lastQuizScore, 0, 1);
+  return {
+    lastQuizScore: ratio,
+    lastQuizCorrect: Math.round(ratio * total),
+    lastQuizTotal: total,
   };
 }
 
@@ -56,6 +120,8 @@ export interface ScheduleInput {
   quizCorrect: number;
   quizTotal: number;
   now?: Date;
+  /** Lifetime lapses after this review (already incremented on fail). */
+  lapseCount?: number;
 }
 
 export function scheduleReview(
@@ -77,6 +143,7 @@ export function scheduleReview(
  * - number of prior encounters
  * - days since last exposure (early restudy grows interval more slowly)
  * - mean quality of the last three reviews
+ * - lapse count (repeated forgetting stays on a short interval)
  */
 export function scheduleReviewFull(
   input: ScheduleInput,
@@ -86,6 +153,7 @@ export function scheduleReviewFull(
   const encounters = input.prev.timesStudied;
   const elapsed = daysSince(input.prev.lastStudiedAt, now);
   const recent = meanRecentQuality(input.prev.reviewHistory);
+  const lapses = input.lapseCount ?? input.prev.lapseCount;
 
   let ease = input.prev.ease;
   if (quality <= 1) ease -= 0.28;
@@ -94,11 +162,12 @@ export function scheduleReviewFull(
   else if (quality === 4) ease += 0.1;
   else ease += 0.16;
   if (encounters >= 4 && quality >= 4) ease += 0.04;
+  if (quality <= 1 && lapses >= 2) ease -= 0.06;
   ease = clamp(ease, MIN_EASE, MAX_EASE);
 
   let intervalDays: number;
   if (quality <= 1) {
-    intervalDays = input.quizCorrect === 0 ? 1 : MIN_INTERVAL;
+    intervalDays = input.quizCorrect === 0 || lapses >= 2 ? 1 : MIN_INTERVAL;
   } else if (input.prev.intervalDays < 1) {
     intervalDays = quality <= 3 ? 3 : 6;
   } else {

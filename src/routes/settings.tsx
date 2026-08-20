@@ -6,14 +6,21 @@ import { JournalistToggle } from "@/components/journalist-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAiStatus } from "@/lib/ai/client";
+import { sanitizeLocalBaseUrl } from "@/lib/ai/local-url";
 import { PROVIDER_META } from "@/lib/ai/providers";
-import { buildExport } from "@/lib/learning/export";
+import { buildClientDiagnostics } from "@/lib/learning/diagnostics";
+import { assertImportSize, buildExport, loadRollback, secretExportGuard } from "@/lib/learning/export";
+import { survives } from "@/lib/learning/persistence";
 import { generationsToday, useProgress } from "@/lib/learning/progress";
-import { loadSecrets, saveSecrets } from "@/lib/learning/secrets";
+import { loadSecrets, saveSecrets, secretFor, secretPatch } from "@/lib/learning/secrets";
 import type { AiProviderId, AiSecrets, Effort, TimeBudget } from "@/lib/learning/types";
 import { useCatalog } from "@/lib/learning/use-catalog";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
+
+const SECRET_EXPORT_WARNING =
+  "The file will contain API keys in plaintext. Anyone with the file can spend those keys. Export anyway?";
+
 
 function SettingsPage() {
   return (
@@ -32,11 +39,15 @@ function SettingsReady() {
   const [mode, setMode] = useState<"merge" | "replace">("merge");
   const [secrets, setSecrets] = useState<AiSecrets>({});
   const [xaiEnv, setXaiEnv] = useState(false);
+  const [keySources, setKeySources] = useState<Record<string, string>>({});
   const [interest, setInterest] = useState("");
 
   useEffect(() => {
     setSecrets(loadSecrets());
-    void getAiStatus().then((s) => setXaiEnv(s.xaiEnv));
+    void getAiStatus().then((s) => {
+      setXaiEnv(s.xaiEnv);
+      setKeySources(s.sources ?? {});
+    });
   }, []);
 
   function persistSecrets(next: AiSecrets) {
@@ -44,16 +55,32 @@ function SettingsReady() {
     saveSecrets(next);
   }
 
-  function exportJson() {
-    const bundle = buildExport(snapshot(), includeKeys ? secrets : undefined, includeKeys);
+  function downloadBundle(bundle: ReturnType<typeof buildExport>, filename: string) {
     const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `dead-air-university-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    setNote("Exported a versioned JSON archive.");
+  }
+
+  function exportJson() {
+    if (includeKeys) {
+      const gate = secretExportGuard(true, confirm(SECRET_EXPORT_WARNING));
+      if (!gate.ok) {
+        setNote(gate.error);
+        return;
+      }
+    }
+    const bundle = buildExport(snapshot(), includeKeys ? secrets : undefined, includeKeys);
+    downloadBundle(
+      bundle,
+      includeKeys
+        ? `dead-air-university-WITH-SECRETS-${new Date().toISOString().slice(0, 10)}.json`
+        : `dead-air-university-${new Date().toISOString().slice(0, 10)}.json`,
+    );
+    setNote(includeKeys ? "Exported an archive that includes plaintext API keys." : "Exported a versioned JSON archive.");
   }
 
   function snapshot() {
@@ -70,26 +97,58 @@ function SettingsReady() {
       customLessons: s.customLessons,
       generationLog: s.generationLog,
       pendingPath: s.pendingPath,
+      courses: s.courses,
+      customCourses: s.customCourses,
+      assessmentHistory: s.assessmentHistory,
     };
   }
 
   function onFile(file: File) {
+    const size = assertImportSize(file.size);
+    if (!size.ok) {
+      setNote(size.error);
+      return;
+    }
     void file.text().then((text) => {
       try {
         const parsed = JSON.parse(text) as unknown;
+        if (mode === "replace") {
+          const current = buildExport(snapshot());
+          downloadBundle(
+            current,
+            `dead-air-university-rollback-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`,
+          );
+        }
         const result = state.importBundle(parsed, mode);
         if (includeKeys && parsed && typeof parsed === "object" && "secrets" in (parsed as object)) {
           persistSecrets({ ...secrets, ...((parsed as { secrets?: AiSecrets }).secrets ?? {}) });
         }
         setNote(
-          `Imported (${mode}). Backup taken at ${new Date(result.backupAt).toLocaleString()}. ${result.warnings[0] ?? ""}`.trim(),
+          mode === "replace"
+            ? `Replaced local state. A rollback file was downloaded and a restore snapshot was saved. ${result.warnings[0] ?? ""}`.trim()
+            : `Imported (merge). ${result.warnings[0] ?? ""}`.trim(),
         );
         if (result.warnings.length) toast(result.warnings[0]);
-        else toast("Import complete.");
+        else toast(mode === "replace" ? "Replace complete. Rollback saved." : "Import complete.");
       } catch (err) {
         setNote(err instanceof Error ? err.message : "That file was not a progress export.");
       }
     });
+  }
+
+  function restoreRollback() {
+    const snap = loadRollback();
+    if (!snap) {
+      setNote("No replace-import snapshot on this device.");
+      return;
+    }
+    try {
+      const result = state.importBundle(snap, "replace");
+      setNote(`Restored the pre-replace snapshot from ${new Date(result.backupAt).toLocaleString()}.`);
+      toast("Restored previous state.");
+    } catch (err) {
+      setNote(err instanceof Error ? err.message : "Could not restore the snapshot.");
+    }
   }
 
   const used = generationsToday(state.generationLog);
@@ -99,11 +158,72 @@ function SettingsReady() {
       <p className="text-xs tracking-[0.18em] text-muted uppercase">Local</p>
       <h1 className="mt-2 font-display text-3xl tracking-tight">Settings</h1>
       <p className="mt-2 text-sm text-muted">
-        Optional profile and AI. Nothing here is required before a session. Progress stays on this
-        device unless you export it.
+        Optional profile and AI. Nothing here is required before a session. Progress stays in
+        this browser. A hosted URL is not an account and does not sync across devices — export
+        an archive to move. The server never holds your graph.
       </p>
 
-      <section className="mt-8 space-y-4">
+      <section className="mt-8 space-y-3 rounded-xl bg-surface p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+        <h2 className="font-display text-xl tracking-tight">Back up your university</h2>
+        <p className="text-sm leading-relaxed text-muted">
+          Versioned JSON. This is the official way to move progress between browsers and devices.
+          A replace import downloads your current archive first and keeps a restore snapshot on
+          this device. Merge will not silently overwrite newer local progress. Archives larger
+          than 8 MB are rejected.
+        </p>
+        <label className="flex items-start gap-2 text-sm text-muted">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={includeKeys}
+            onChange={(e) => {
+              if (!e.target.checked) {
+                setIncludeKeys(false);
+                return;
+              }
+              const allowed = confirm(SECRET_EXPORT_WARNING);
+              setIncludeKeys(allowed);
+            }}
+          />
+          <span>
+            Include API keys in the file
+            <span className="mt-1 block text-xs text-bad">
+              Off by default. The JSON will contain plaintext credentials if you confirm twice.
+            </span>
+          </span>
+        </label>
+        <label className="flex items-center gap-2 text-sm text-muted">
+          Replace everything on import
+          <input
+            type="checkbox"
+            checked={mode === "replace"}
+            onChange={(e) => setMode(e.target.checked ? "replace" : "merge")}
+          />
+        </label>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" onClick={exportJson}>
+            Export learning data
+          </Button>
+          <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()}>
+            Import
+          </Button>
+          <Button type="button" variant="ghost" onClick={restoreRollback}>
+            Restore last replace
+          </Button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) onFile(f);
+            }}
+          />
+        </div>
+      </section>
+
+      <section className="mt-10 space-y-4">
         <h2 className="font-display text-xl tracking-tight">Local profile</h2>
         <label className="block text-xs text-muted">
           Display name
@@ -326,17 +446,26 @@ function SettingsReady() {
         </div>
         <p className="text-xs text-subtle">
           Used today: {used}/{state.ai.maxPerDay}
-          {xaiEnv ? " · environment xAI key present" : " · no environment xAI key"}
+          {" · "}
+          {describeKeySource(state.ai.provider, keySources[state.ai.provider], xaiEnv)}
         </p>
         <label className="block text-xs text-muted">
-          {state.ai.provider === "local" ? "Local base URL" : `${PROVIDER_META[state.ai.provider].label} API key`}
+          {state.ai.provider === "local"
+            ? "Browser fallback — local base URL"
+            : `Browser fallback key for ${PROVIDER_META[state.ai.provider].label}`}
           {state.ai.provider === "local" ? (
-            <Input
-              className="mt-1 font-mono"
-              value={secrets.localBaseUrl ?? ""}
-              onChange={(e) => persistSecrets({ ...secrets, localBaseUrl: e.target.value })}
-              placeholder="http://127.0.0.1:11434/v1"
-            />
+            <>
+              <Input
+                className="mt-1 font-mono"
+                value={secrets.localBaseUrl ?? ""}
+                onChange={(e) => persistSecrets({ ...secrets, localBaseUrl: e.target.value })}
+                placeholder="http://127.0.0.1:11434/v1"
+              />
+              {(() => {
+                const check = sanitizeLocalBaseUrl(secrets.localBaseUrl, "user");
+                return !check.ok ? <p className="mt-1 text-xs text-bad">{check.error}</p> : null;
+              })()}
+            </>
           ) : (
             <Input
               className="mt-1 font-mono"
@@ -344,53 +473,47 @@ function SettingsReady() {
               autoComplete="off"
               value={secretFor(state.ai.provider, secrets)}
               onChange={(e) => persistSecrets({ ...secrets, ...secretPatch(state.ai.provider, e.target.value) })}
-              placeholder={state.ai.provider === "xai" && xaiEnv ? "Optional override of env key" : "Stored only on this device"}
+              placeholder={
+                keySources[state.ai.provider] === "env" || keySources[state.ai.provider] === "file"
+                  ? "Ignored while an environment or server-file key is present"
+                  : "Plaintext on this device only — last resort"
+              }
             />
           )}
         </label>
+        <p className="text-xs leading-relaxed text-subtle">
+          Key lookup order: environment variable, then a local <span className="font-mono">.dau-secrets.json</span>{" "}
+          next to the app (local server only — not durable on typical serverless hosts), then this
+          browser field. Environment and file keys never leave the server. This field is a labelled
+          convenience fallback, not a vault.
+        </p>
       </section>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-display text-xl tracking-tight">Export / import</h2>
-        <p className="text-sm text-muted">
-          Versioned JSON. Import makes a backup first and will not silently overwrite newer local
-          progress.
+        <h2 className="font-display text-xl tracking-tight">Where this lives</h2>
+        <p className="text-sm leading-relaxed text-muted">
+          Progress, the knowledge graph, reviews, and custom lessons are stored in this browser.
+          Refresh and restart keep them. Opening the same hosted URL in another browser, profile,
+          or device starts a separate local graph unless you import an archive. An unfinished
+          lesson lives only in this tab.
         </p>
-        <label className="flex items-center gap-2 text-sm text-muted">
-          <input type="checkbox" checked={includeKeys} onChange={(e) => setIncludeKeys(e.target.checked)} />
-          Include API keys in the file
-        </label>
-        <label className="flex items-center gap-2 text-sm text-muted">
-          Replace everything on import
-          <input
-            type="checkbox"
-            checked={mode === "replace"}
-            onChange={(e) => setMode(e.target.checked ? "replace" : "merge")}
-          />
-        </label>
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="secondary" onClick={exportJson}>
-            Export archive
-          </Button>
-          <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()}>
-            Import
-          </Button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/json"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) onFile(f);
-            }}
-          />
-        </div>
+        <ul className="space-y-1.5 text-sm text-muted">
+          <PersistLine event="refresh" />
+          <PersistLine event="browserRestart" />
+          <PersistLine event="serverRestart" />
+          <PersistLine event="deviceChange" />
+        </ul>
       </section>
 
-      <div className="mt-8">
-        <Link to="/topics" className="text-sm text-muted no-underline hover:text-fg">
+      <div className="mt-8 flex flex-wrap gap-4 text-sm">
+        <Link to="/about" className="text-muted no-underline hover:text-fg">
+          How it works
+        </Link>
+        <Link to="/topics" className="text-muted no-underline hover:text-fg">
           Custom topics and learning paths
+        </Link>
+        <Link to="/login" className="text-subtle no-underline hover:text-muted">
+          Optional identity
         </Link>
       </div>
 
@@ -409,22 +532,87 @@ function SettingsReady() {
       </Button>
 
       {note && <p className="mt-4 text-sm text-muted">{note}</p>}
+
+      <DiagnosticsPanel
+        subjects={catalog.categories.length}
+        courses={catalog.courses.length}
+        concepts={catalog.concepts.length}
+        lessons={catalog.lessons.length}
+        aiEnabled={state.ai.enabled}
+        aiProvider={state.ai.provider}
+        serverSources={keySources}
+      />
     </div>
   );
 }
 
-function secretFor(provider: AiProviderId, secrets: AiSecrets): string {
-  if (provider === "xai") return secrets.xai ?? "";
-  if (provider === "openai") return secrets.openai ?? "";
-  if (provider === "anthropic") return secrets.anthropic ?? "";
-  if (provider === "gemini") return secrets.gemini ?? "";
-  return secrets.localApiKey ?? "";
+function DiagnosticsPanel(props: {
+  subjects: number;
+  courses: number;
+  concepts: number;
+  lessons: number;
+  aiEnabled: boolean;
+  aiProvider: string;
+  serverSources: Record<string, string>;
+}) {
+  const report = buildClientDiagnostics(props);
+  return (
+    <details className="mt-10 rounded-xl bg-surface p-4 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+      <summary className="cursor-pointer text-muted">Diagnostics</summary>
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-muted">
+        <dt>Release</dt>
+        <dd className="text-fg">{report.appRelease}</dd>
+        <dt>Curriculum</dt>
+        <dd className="text-fg">v{report.curriculumVersion}</dd>
+        <dt>Retained courses</dt>
+        <dd className="text-fg">{report.curriculum.courses}</dd>
+        <dt>Catalog</dt>
+        <dd className="text-fg">
+          {report.curriculum.concepts} concepts · {report.curriculum.lessons} lessons
+        </dd>
+        <dt>Learning store</dt>
+        <dd className="text-fg">v{report.persistVersion}</dd>
+        <dt>Export schema</dt>
+        <dd className="text-fg">v{report.exportSchemaVersion}</dd>
+        <dt>Storage</dt>
+        <dd className="break-words text-fg">{report.storageMode}</dd>
+        <dt>Runtime</dt>
+        <dd className="text-fg">{report.runtime}</dd>
+        <dt>AI</dt>
+        <dd className="text-fg">
+          {report.aiEnabled ? "on" : "off"} / {report.aiProvider} / server {report.serverProvider}
+        </dd>
+      </dl>
+      <ul className="mt-3 space-y-1 text-xs text-subtle">
+        {report.notes.map((note) => (
+          <li key={note}>{note}</li>
+        ))}
+      </ul>
+    </details>
+  );
 }
 
-function secretPatch(provider: AiProviderId, value: string): Partial<AiSecrets> {
-  if (provider === "xai") return { xai: value };
-  if (provider === "openai") return { openai: value };
-  if (provider === "anthropic") return { anthropic: value };
-  if (provider === "gemini") return { gemini: value };
-  return { localApiKey: value };
+function PersistLine({ event }: { event: "refresh" | "browserRestart" | "serverRestart" | "deviceChange" }) {
+  const row = survives(event);
+  const label =
+    event === "refresh"
+      ? "Browser refresh"
+      : event === "browserRestart"
+        ? "Browser restart"
+        : event === "serverRestart"
+          ? "App / server restart"
+          : "Another device";
+  return (
+    <li>
+      <span className="text-fg">{label}.</span> {row.note}
+    </li>
+  );
 }
+
+function describeKeySource(provider: AiProviderId, source: string | undefined, xaiEnv: boolean): string {
+  if (source === "env" || (provider === "xai" && xaiEnv)) return "using environment key";
+  if (source === "file") return "using local server secrets file";
+  if (source === "none") return "no server key — browser fallback only";
+  return "key source unknown";
+}
+
