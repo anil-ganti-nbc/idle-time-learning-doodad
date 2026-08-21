@@ -1,5 +1,6 @@
 import type { Plugin } from "vite";
 import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -135,6 +136,18 @@ export default defineConfig(({ command }) => ({
     strictPort: true,
   },
   resolve: { tsconfigPaths: true },
+  server: {
+    fs: {
+      // The practice-labs contract is imported directly from the sibling repo
+      // (single source of truth — no vendored copy). Allow-list must include
+      // this project's root AND the sibling; setting `allow` replaces Vite's
+      // workspace defaults rather than extending them.
+      allow: [
+        fileURLToPath(new URL(".", import.meta.url)),
+        fileURLToPath(new URL("../dau-practice-labs", import.meta.url)),
+      ],
+    },
+  },
   plugins: [
     pgliteBootstrapPlugin(),
     // Before tanstackStart so /auth/popup never falls through to the SPA.

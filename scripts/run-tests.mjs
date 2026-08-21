@@ -41,6 +41,7 @@ const files = [
   ...under("src/lib/learning", ".test.ts"),
   ...under("src/lib/ai", ".test.ts"),
   ...under("src/lib/quiz", ".test.ts"),
+  ...under("src/lib/practice", ".test.ts"),
   ...under("src/content", ".test.ts"),
   ...under("scripts", ".test.mjs"),
 ].sort();

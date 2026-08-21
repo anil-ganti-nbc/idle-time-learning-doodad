@@ -1,4 +1,4 @@
-import { Et as ZodString, Ht as _coercedString, Tt as ZodBoolean, Vt as _coercedBoolean } from "./@better-auth/core+[...].mjs";
+import { Et as ZodString, Gt as _coercedString, Tt as ZodBoolean, Wt as _coercedBoolean } from "./@better-auth/core+[...].mjs";
 //#region node_modules/zod/v4/classic/coerce.js
 function string(params) {
 	return _coercedString(ZodString, params);

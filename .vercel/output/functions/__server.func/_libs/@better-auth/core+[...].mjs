@@ -8395,6 +8395,7 @@ var string$1 = (params) => {
 var integer = /^-?\d+$/;
 var number$1 = /^-?\d+(?:\.\d+)?$/;
 var boolean$1 = /^(?:true|false)$/i;
+var _null$2 = /^null$/i;
 var lowercase = /^[^A-Z]*$/;
 var uppercase = /^[^a-z]*$/;
 //#endregion
@@ -9204,6 +9205,22 @@ var $ZodBoolean = /*@__PURE__*/ $constructor("$ZodBoolean", (inst, def) => {
 		if (typeof input === "boolean") return payload;
 		payload.issues.push({
 			expected: "boolean",
+			code: "invalid_type",
+			input,
+			inst
+		});
+		return payload;
+	};
+});
+var $ZodNull = /*@__PURE__*/ $constructor("$ZodNull", (inst, def) => {
+	$ZodType.init(inst, def);
+	inst._zod.pattern = _null$2;
+	inst._zod.values = /* @__PURE__ */ new Set([null]);
+	inst._zod.parse = (payload, _ctx) => {
+		const input = payload.value;
+		if (input === null) return payload;
+		payload.issues.push({
+			expected: "null",
 			code: "invalid_type",
 			input,
 			inst
@@ -10489,6 +10506,13 @@ function _coercedBoolean(Class, params) {
 	});
 }
 // @__NO_SIDE_EFFECTS__
+function _null$1(Class, params) {
+	return new Class({
+		type: "null",
+		...normalizeParams(params)
+	});
+}
+// @__NO_SIDE_EFFECTS__
 function _any(Class) {
 	return new Class({ type: "any" });
 }
@@ -11044,6 +11068,13 @@ var numberProcessor = (schema, ctx, _json, _params) => {
 };
 var booleanProcessor = (_schema, _ctx, json, _params) => {
 	json.type = "boolean";
+};
+var nullProcessor = (_schema, ctx, json, _params) => {
+	if (ctx.target === "openapi-3.0") {
+		json.type = "string";
+		json.nullable = true;
+		json.enum = [null];
+	} else json.type = "null";
 };
 var neverProcessor = (_schema, _ctx, json, _params) => {
 	json.not = {};
@@ -11783,6 +11814,14 @@ var ZodBoolean = /*@__PURE__*/ $constructor("ZodBoolean", (inst, def) => {
 function boolean(params) {
 	return /* @__PURE__ */ _boolean(ZodBoolean, params);
 }
+var ZodNull = /*@__PURE__*/ $constructor("ZodNull", (inst, def) => {
+	$ZodNull.init(inst, def);
+	ZodType.init(inst, def);
+	inst._zod.processJSONSchema = (ctx, json, params) => nullProcessor(inst, ctx, json, params);
+});
+function _null(params) {
+	return /* @__PURE__ */ _null$1(ZodNull, params);
+}
 var ZodAny = /*@__PURE__*/ $constructor("ZodAny", (inst, def) => {
 	$ZodAny.init(inst, def);
 	ZodType.init(inst, def);
@@ -11901,6 +11940,14 @@ function object(shape, params) {
 	return new ZodObject({
 		type: "object",
 		shape: shape ?? {},
+		...normalizeParams(params)
+	});
+}
+function strictObject(shape, params) {
+	return new ZodObject({
+		type: "object",
+		shape,
+		catchall: never(),
 		...normalizeParams(params)
 	});
 }
@@ -19135,4 +19182,4 @@ var socialProviders = {
 };
 var SocialProviderListEnum = _enum(Object.keys(socialProviders)).or(string());
 //#endregion
-export { assertCryptoKey as $, getCurrentAdapter as $t, JWTClaimsBuilder as A, boolean as At, jweEncryption as B, union as Bt, serializeSignedCookie as C, isSafeUrlScheme as Ct, decodeJwt as D, _enum as Dt, base64Url as E, ZodString as Et, JWS_RECOGNIZED as F, object as Ft, digest as G, createAdapterFactory as Gt, jwkToKey as H, _coercedString as Ht, validateAlgorithms as I, optional as It, unprotected as J, ATTR_HOOK_TYPE as Jt, encodeBase64url as K, withSpan as Kt, validateCrit as L, record as Lt, jwsAlgorithm as M, literal as Mt, sign as N, looseObject as Nt, decodeProtectedHeader as O, any as Ot, JWE_RECOGNIZED as P, number as Pt, encode as Q, getAuthTables as Qt, validateCritDuplicates as R, string as Rt, serializeCookie as S, defineErrorCodes as Sn, createFetch as St, base64 as T, ZodBoolean as Tt, assertNotSet as U, capitalizeFirstLetter as Ut, prepareKey as V, _coercedBoolean as Vt, decodeBase64url as W, toKebabCase as Wt, isJWK as X, import_src as Xt, isDisjoint as Y, ATTR_OPERATION_ID as Yt, isObject as Z, safeJSONParse as Zt, runWithRequestState as _, isTest as _n, decoder as _t, createAuthorizationURL as a, initGetFieldName as an, JWEDecryptionFailed as at, createRouter$1 as b, kAPIErrorHeaderSymbol as bn, uint64be as bt, createRateLimitKey as c, createLogger as cn, JWSInvalid as ct, deprecate as d, ENV as dn, JWTInvalid as dt, queueAfterTransactionHook as en, isCryptoKey as et, createAuthEndpoint as f, env as fn, invalidKeyInput as ft, hasRequestState as g, isProduction as gn, concat as gt, defineRequestState as h, isDevelopment as hn, checkUsage as ht, refreshAccessToken as i, initGetModelName as in, JOSENotSupported as it, validateClaimsSet as j, email as jt, jwtVerify as k, array as kt, findInvalidTrustedProxies as l, logger as ln, JWTClaimValidationFailed as lt, isAPIError as m, getEnvVar as mn, checkModulusLength as mt, socialProviders as n, runWithTransaction as nn, isKeyObject as nt, applyDefaultAccessTokenExpiry as o, generateId as on, JWEInvalid as ot, createAuthMiddleware as p, getBooleanEnvVar as pn, checkCryptoKey as pt, parseJoseHeader as q, ATTR_CONTEXT as qt, validateAuthorizationCode as r, getBetterAuthVersion as rn, JOSEAlgNotAllowed as rt, isLoopbackHost as s, createRandomStringGenerator as sn, JWKInvalid as st, SocialProviderListEnum as t, runWithAdapter as tn, isKeyLike as tt, getIp as u, shouldPublishLog as un, JWTExpired as ut, getCurrentAuthContext as v, APIError as vn, encode$1 as vt, filterOutputFields as w, normalizePathname as wt, toResponse as x, BASE_ERROR_CODES as xn, betterFetch as xt, runWithEndpointContext as y, BetterAuthError as yn, uint32be as yt, jweAlgorithm as z, tuple as zt };
+export { assertCryptoKey as $, import_src as $t, JWTClaimsBuilder as A, array as At, jweEncryption as B, string as Bt, serializeSignedCookie as C, kAPIErrorHeaderSymbol as Cn, isSafeUrlScheme as Ct, decodeJwt as D, _enum as Dt, base64Url as E, ZodString as Et, JWS_RECOGNIZED as F, number as Ft, digest as G, _coercedString as Gt, jwkToKey as H, union as Ht, validateAlgorithms as I, object as It, unprotected as J, createAdapterFactory as Jt, encodeBase64url as K, capitalizeFirstLetter as Kt, validateCrit as L, optional as Lt, jwsAlgorithm as M, email as Mt, sign as N, literal as Nt, decodeProtectedHeader as O, _null as Ot, JWE_RECOGNIZED as P, looseObject as Pt, encode as Q, ATTR_OPERATION_ID as Qt, validateCritDuplicates as R, record as Rt, serializeCookie as S, BetterAuthError as Sn, createFetch as St, base64 as T, defineErrorCodes as Tn, ZodBoolean as Tt, assertNotSet as U, unknown as Ut, prepareKey as V, tuple as Vt, decodeBase64url as W, _coercedBoolean as Wt, isJWK as X, ATTR_CONTEXT as Xt, isDisjoint as Y, withSpan as Yt, isObject as Z, ATTR_HOOK_TYPE as Zt, runWithRequestState as _, getEnvVar as _n, decoder as _t, createAuthorizationURL as a, runWithTransaction as an, JWEDecryptionFailed as at, createRouter$1 as b, isTest as bn, uint64be as bt, createRateLimitKey as c, initGetFieldName as cn, JWSInvalid as ct, deprecate as d, createLogger as dn, JWTInvalid as dt, safeJSONParse as en, isCryptoKey as et, createAuthEndpoint as f, logger as fn, invalidKeyInput as ft, hasRequestState as g, getBooleanEnvVar as gn, concat as gt, defineRequestState as h, env as hn, checkUsage as ht, refreshAccessToken as i, runWithAdapter as in, JOSENotSupported as it, validateClaimsSet as j, boolean as jt, jwtVerify as k, any as kt, findInvalidTrustedProxies as l, generateId as ln, JWTClaimValidationFailed as lt, isAPIError as m, ENV as mn, checkModulusLength as mt, socialProviders as n, getCurrentAdapter as nn, isKeyObject as nt, applyDefaultAccessTokenExpiry as o, getBetterAuthVersion as on, JWEInvalid as ot, createAuthMiddleware as p, shouldPublishLog as pn, checkCryptoKey as pt, parseJoseHeader as q, toKebabCase as qt, validateAuthorizationCode as r, queueAfterTransactionHook as rn, JOSEAlgNotAllowed as rt, isLoopbackHost as s, initGetModelName as sn, JWKInvalid as st, SocialProviderListEnum as t, getAuthTables as tn, isKeyLike as tt, getIp as u, createRandomStringGenerator as un, JWTExpired as ut, getCurrentAuthContext as v, isDevelopment as vn, encode$1 as vt, filterOutputFields as w, BASE_ERROR_CODES as wn, normalizePathname as wt, toResponse as x, APIError as xn, betterFetch as xt, runWithEndpointContext as y, isProduction as yn, uint32be as yt, jweAlgorithm as z, strictObject as zt };

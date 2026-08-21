@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { LessonDiagram } from "@/components/diagrams";
 import { HydrateGate } from "@/components/hydrate";
@@ -9,6 +9,11 @@ import { generateExplain, generateQuiz } from "@/lib/ai/client";
 import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { courseForConcept } from "@/lib/learning/curriculum";
+import {
+  initPracticeResultListener,
+  openPracticeLab,
+  practiceLabsForLesson,
+} from "@/lib/practice/labs";
 import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
 import { useProgress } from "@/lib/learning/progress";
 import { quizContextFor } from "@/lib/learning/quiz-context";
@@ -62,9 +67,20 @@ function LessonReady() {
   const course = courseForConcept(catalog, unit.conceptId);
   const concept = catalog.conceptMap[unit.conceptId];
   const categoryName = concept ? catalog.categoryMap[concept.category]?.name : "";
+  const practiceLabs = practiceLabsForLesson(course?.id, unit.conceptId);
   const prereqNames = unit.prerequisites
     .map((id) => catalog.conceptMap[id]?.name ?? id)
     .filter(Boolean);
+
+  useEffect(() => {
+    return initPracticeResultListener((entry) => {
+      if (entry.completed) {
+        toast.success(`Practice logged: ${entry.lessonId}`, {
+          description: `Chudbox take · ${Math.round(entry.timeSpentMs / 1000)}s${entry.selfRating ? ` · rated ${entry.selfRating}/3` : ""}`,
+        });
+      }
+    });
+  }, []);
 
   function beginQuiz() {
     const live = getLive();
@@ -205,6 +221,34 @@ function LessonReady() {
         <section className="mt-6">
           <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Grounded in source</h2>
           <p className="mt-2 text-sm leading-relaxed text-subtle">{unit.source.sourceExcerpt}</p>
+        </section>
+      )}
+
+      {practiceLabs.length > 0 && (
+        <section className="mt-8 rounded-lg bg-surface px-5 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+          <h2 className="text-xs tracking-[0.16em] text-muted uppercase">Practice lab</h2>
+          {practiceLabs.map((lab) => (
+            <div key={lab.labId} className="mt-2 flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[15px] text-fg">{lab.name}</p>
+                <p className="text-sm leading-relaxed text-muted">{lab.description}</p>
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={() => {
+                  const launch = openPracticeLab({ id: unit.id, conceptId: unit.conceptId, title: unit.title });
+                  if (!launch.ok) toast.error(launch.message ?? "Could not launch the practice lab.");
+                }}
+              >
+                Practice in {lab.name} ↗
+              </Button>
+            </div>
+          ))}
+          <p className="mt-3 text-2xs leading-relaxed text-subtle">
+            Opens in a new tab. When you complete a take there, the result is posted back and logged here.
+          </p>
         </section>
       )}
 
