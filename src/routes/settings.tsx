@@ -90,6 +90,7 @@ function SettingsReady() {
       settings: s.settings,
       ai: s.ai,
       concepts: s.concepts,
+      practiceTakes: s.practiceTakes,
       sessions: s.sessions,
       recentCategoryIds: s.recentCategoryIds,
       customCategories: s.customCategories,

@@ -12,8 +12,17 @@ const xBanner = host
   ? `https://og.grok.me/v1/banner.png?host=${encodeURIComponent(host)}&title=${encodeURIComponent(APP_NAME)}&color=0A0A0B`
   : undefined;
 
+const DEPLOY_CONFIG_SCRIPT = `try {
+  var x = new XMLHttpRequest();
+  x.open("GET", "/practice-urls.json", false);
+  x.send(null);
+  if (x.status === 200) window.__DAU_LAB_URLS__ = JSON.parse(x.responseText);
+} catch (e) { /* dev: registry defaults apply */ }`;
+
 export const Route = createRootRoute({
   head: () => ({
+    scripts: [{ children: DEPLOY_CONFIG_SCRIPT }],
+
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

@@ -9,13 +9,13 @@ import { generateExplain, generateQuiz } from "@/lib/ai/client";
 import { toGenerationLog } from "@/lib/ai/attempt";
 import { useAiContext } from "@/lib/ai/use-ai";
 import { courseForConcept } from "@/lib/learning/curriculum";
+import { useProgress } from "@/lib/learning/progress";
 import {
   initPracticeResultListener,
   openPracticeLab,
   practiceLabsForLesson,
 } from "@/lib/practice/labs";
 import { getLive, startLive, bumpLiveGeneration } from "@/lib/learning/live";
-import { useProgress } from "@/lib/learning/progress";
 import { quizContextFor } from "@/lib/learning/quiz-context";
 import { makeReadinessContext } from "@/lib/learning/readiness";
 import { PROMPT_VERSION, type LessonFeedbackVerdict } from "@/lib/learning/types";
@@ -74,9 +74,17 @@ function LessonReady() {
 
   useEffect(() => {
     return initPracticeResultListener((entry) => {
+      useProgress.getState().recordPracticeTake({
+        at: entry.at,
+        labId: entry.labId,
+        conceptId: entry.conceptId,
+        lessonId: entry.lessonId,
+        completed: entry.completed,
+        ...(entry.selfRating != null ? { selfRating: entry.selfRating } : {}),
+      });
       if (entry.completed) {
         toast.success(`Practice logged: ${entry.lessonId}`, {
-          description: `Chudbox take · ${Math.round(entry.timeSpentMs / 1000)}s${entry.selfRating ? ` · rated ${entry.selfRating}/3` : ""}`,
+          description: `${entry.labId} · ${Math.round(entry.timeSpentMs / 1000)}s${entry.selfRating ? ` · rated ${entry.selfRating}/3` : ""}`,
         });
       }
     });

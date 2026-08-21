@@ -191,8 +191,25 @@ export function buildPracticeRequestForLesson(lesson: PracticeLessonRef) {
   };
 }
 
+/**
+ * Deploy-time overrides: a hosted deployment injects
+ * `window.__DAU_LAB_URLS__ = { [labId]: "https://lab.example.com/" }`
+ * before this module loads (see deploy/README). Localhost registry
+ * defaults remain the single-source-of-truth fallback.
+ */
+interface LabUrlOverrides {
+  [labId: string]: string | undefined;
+}
+
+function deployedBaseForLab(labId: string): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  const overrides = (window as { __DAU_LAB_URLS__?: LabUrlOverrides }).__DAU_LAB_URLS__;
+  const url = overrides?.[labId];
+  return typeof url === "string" && url.length > 0 ? url : undefined;
+}
+
 function launchBaseForLab(labId: string): string {
-  return getLab(labId)?.launchUrl ?? "http://localhost:8080/";
+  return deployedBaseForLab(labId) ?? getLab(labId)?.launchUrl ?? "http://localhost:8080/";
 }
 
 /**
@@ -241,13 +258,16 @@ export function openPracticeLab(lesson: PracticeLessonRef): PracticeLaunch {
 export function initPracticeResultListener(onResult: (entry: PracticeLogEntry) => void): () => void {
   if (typeof window === "undefined") return () => {};
   const allowedOrigins = new Set<string>();
-  for (const labId of [CHUDBOX_LAB_ID, MOVEMENT_BENCH_LAB_ID, FAB_LAB_ID, PIPELINE_LAB_ID, COMPILER_WORKBENCH_ID, PACKET_LAB_ID, OS_LAB_ID, ML_LAB_ID]) {
-    const base = getLab(labId)?.launchUrl;
-    if (!base) continue;
-    try {
-      allowedOrigins.add(new URL(base).origin);
-    } catch {
-      // Malformed registry entry — skip rather than trust everything.
+  const labIds = [CHUDBOX_LAB_ID, MOVEMENT_BENCH_LAB_ID, FAB_LAB_ID, PIPELINE_LAB_ID, COMPILER_WORKBENCH_ID, PACKET_LAB_ID, OS_LAB_ID, ML_LAB_ID];
+  const overrides = typeof window !== "undefined" ? (window as { __DAU_LAB_URLS__?: LabUrlOverrides }).__DAU_LAB_URLS__ : undefined;
+  for (const labId of labIds) {
+    for (const candidate of [getLab(labId)?.launchUrl, overrides?.[labId]]) {
+      if (!candidate) continue;
+      try {
+        allowedOrigins.add(new URL(candidate).origin);
+      } catch {
+        // Malformed entry — skip rather than trust everything.
+      }
     }
   }
 

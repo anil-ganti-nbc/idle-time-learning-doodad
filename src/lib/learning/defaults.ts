@@ -46,4 +46,5 @@ export const defaultState = (): Omit<
   courses: {},
   customCourses: [],
   assessmentHistory: emptyAssessmentHistory(),
+  practiceTakes: [],
 });

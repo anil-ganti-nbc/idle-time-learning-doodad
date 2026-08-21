@@ -1,0 +1,68 @@
+# DAU Practice Platform — Caddyfile (path-based, zero extra DNS)
+#
+# Replace `dau.tailnet-name.ts.net` with your NAS's Tailscale hostname.
+# Tailscale + Caddy: run `tailscale cert dau.tailnet-name.ts.net` on the NAS
+# and point tls at the files, or use `tls internal` for LAN-only trust.
+
+{
+	auto_https disable_redirects
+}
+
+dau.tailnet-name.ts.net {
+	tls /var/lib/tailscale/certs/dau.tailnet-name.ts.net.crt /var/lib/tailscale/certs/dau.tailnet-name.ts.net.key
+
+	# The host app (TanStack Start — needs its node process).
+	handle /practice-urls.json {
+		root * /srv
+		file_server
+	}
+
+	handle /lab/* {
+		redir /lab/ / 308
+	}
+	handle {
+		reverse_proxy dau:8090
+	}
+
+	# Static labs, one path each.
+	handle_path /chudbox/* {
+		root * /srv/labs/chudbox
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /movement-bench/* {
+		root * /srv/labs/movement-bench
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /fab-lab/* {
+		root * /srv/labs/fab-lab
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /pipeline-playground/* {
+		root * /srv/labs/pipeline-playground
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /compiler-workbench/* {
+		root * /srv/labs/compiler-workbench
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /packet-lab/* {
+		root * /srv/labs/packet-lab
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /os-lab/* {
+		root * /srv/labs/os-lab
+		try_files {path} /index.html
+		file_server
+	}
+	handle_path /ml-lab/* {
+		root * /srv/labs/ml-lab
+		try_files {path} /index.html
+		file_server
+	}
+}

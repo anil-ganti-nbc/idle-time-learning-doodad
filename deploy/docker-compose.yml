@@ -1,0 +1,109 @@
+services:
+  dau:
+    build: ../idle-time-learning-doodad
+    container_name: dau-host
+    restart: unless-stopped
+    volumes:
+      - ./repos:/workspace
+    working_dir: /workspace/idle-time-learning-doodad
+    environment:
+      - NODE_ENV=development
+    # Sibling repos must sit at /workspace/<repo> for the relative imports.
+    networks: [dau]
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: dau-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./practice-urls.json:/srv/practice-urls.json:ro
+      - lab_static:/srv/labs
+    depends_on: [dau, chudbox, movement-bench, fab-lab, pipeline-playground, compiler-workbench, packet-lab, os-lab, ml-lab]
+    networks: [dau]
+
+  # Each lab builds once into a shared static volume; Caddy serves them all.
+  chudbox:
+    build: ../chudbox
+    container_name: dau-chudbox
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "cp -r /usr/share/nginx/html/* /out/chudbox/ 2>/dev/null || (mkdir -p /out/chudbox && cp -r /usr/share/nginx/html/* /out/chudbox/) && sleep infinity"]
+    networks: [dau]
+
+  movement-bench:
+    build: ../movement-bench
+    container_name: dau-movement-bench
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/movement-bench && cp -r /usr/share/nginx/html/* /out/movement-bench/ && sleep infinity"]
+    networks: [dau]
+
+  fab-lab:
+    build: ../fab-lab
+    container_name: dau-fab-lab
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/fab-lab && cp -r /usr/share/nginx/html/* /out/fab-lab/ && sleep infinity"]
+    networks: [dau]
+
+  pipeline-playground:
+    build: ../pipeline-playground
+    container_name: dau-pipeline-playground
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/pipeline-playground && cp -r /usr/share/nginx/html/* /out/pipeline-playground/ && sleep infinity"]
+    networks: [dau]
+
+  compiler-workbench:
+    build: ../compiler-workbench
+    container_name: dau-compiler-workbench
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/compiler-workbench && cp -r /usr/share/nginx/html/* /out/compiler-workbench/ && sleep infinity"]
+    networks: [dau]
+
+  packet-lab:
+    build: ../packet-lab
+    container_name: dau-packet-lab
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/packet-lab && cp -r /usr/share/nginx/html/* /out/packet-lab/ && sleep infinity"]
+    networks: [dau]
+
+  os-lab:
+    build: ../os-lab
+    container_name: dau-os-lab
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/os-lab && cp -r /usr/share/nginx/html/* /out/os-lab/ && sleep infinity"]
+    networks: [dau]
+
+  ml-lab:
+    build: ../ml-lab
+    container_name: dau-ml-lab
+    restart: unless-stopped
+    volumes:
+      - lab_static:/out
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /out/ml-lab && cp -r /usr/share/nginx/html/* /out/ml-lab/ && sleep infinity"]
+    networks: [dau]
+
+volumes:
+  caddy_data:
+  caddy_config:
+  lab_static:
+
+networks:
+  dau:

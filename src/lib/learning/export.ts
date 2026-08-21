@@ -3,7 +3,7 @@ import { ROLLBACK_STORAGE_KEY } from "./persistence";
 import { persistStorage, memoryStorage, type KeyValueStorage } from "./storage";
 import { normalizeProgressRow } from "./srs";
 import { EXPORT_SCHEMA_VERSION } from "./types";
-import type { AiSecrets, AssessmentHistory, ConceptProgress, Lesson, ProgressState, SessionRecord } from "./types";
+import type { AiSecrets, AssessmentHistory, ConceptProgress, Lesson, ProgressState, SessionRecord, PracticeTakeRecord } from "./types";
 import { emptyAssessmentHistory } from "@/lib/quiz/history";
 
 export { secretExportGuard };
@@ -33,6 +33,7 @@ export interface ExportBundleV2 {
   secrets?: AiSecrets;
   progress: {
     concepts: Record<string, ConceptProgress>;
+    practiceTakes?: PracticeTakeRecord[];
     sessions: SessionRecord[];
     recentCategoryIds: string[];
     courses?: ProgressState["courses"];
@@ -71,6 +72,7 @@ export function buildExport(
     ...(includeSecrets && secrets ? { secrets } : {}),
     progress: {
       concepts: state.concepts,
+      practiceTakes: state.practiceTakes,
       sessions: state.sessions,
       recentCategoryIds: state.recentCategoryIds,
       courses: state.courses,
@@ -150,6 +152,7 @@ export function importExport(
           settings: { ...current.settings, ...data.preferences },
           ai: data.ai,
           concepts,
+          practiceTakes: data.progress.practiceTakes ?? [],
           sessions: data.progress.sessions,
           recentCategoryIds: data.progress.recentCategoryIds,
           customCategories: data.catalog.categories,
@@ -216,6 +219,7 @@ function mergeStates(current: ProgressState, data: ExportBundleV2, warnings: str
     settings: { ...current.settings, ...data.preferences },
     ai: { ...current.ai, ...data.ai },
     concepts,
+        practiceTakes: data.progress.practiceTakes ?? current.practiceTakes,
     sessions: mergeSessions(current.sessions, data.progress.sessions ?? []),
     recentCategoryIds: unique([...(data.progress.recentCategoryIds ?? []), ...current.recentCategoryIds]),
     customCategories: mergeDefinitions(

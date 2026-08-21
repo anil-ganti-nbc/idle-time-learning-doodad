@@ -8,6 +8,7 @@ import { persistStorage } from "./storage";
 import { emptyProgress, normalizeProgressRow, quizRatio, reviewQuality, scheduleReviewFull } from "./srs";
 import type {
   AiSettings,
+  PracticeTakeRecord,
   AssessmentItemRecord,
   Category,
   CategoryId,
@@ -59,6 +60,7 @@ interface ProgressStore extends ProgressState {
     positions?: number[];
   }) => SessionRecord;
   noteDifficulty: (sessionId: string, note: DifficultyNote) => void;
+  recordPracticeTake: (take: PracticeTakeRecord) => void;
   upsertCategory: (category: Category) => void;
   removeCategory: (id: string) => void;
   upsertConcept: (concept: Concept) => void;
@@ -110,6 +112,7 @@ function migratePersisted(persisted: unknown): ProgressState {
     courses: p.courses ?? {},
     customCourses: p.customCourses ?? [],
     assessmentHistory: (p as ProgressState).assessmentHistory ?? emptyAssessmentHistory(),
+    practiceTakes: (p as ProgressState).practiceTakes ?? [],
   };
 }
 
@@ -122,6 +125,25 @@ export const useProgress = create<ProgressStore>()(
       updateProfile: (partial) => set((s) => ({ profile: { ...s.profile, ...partial } })),
       updateSettings: (partial) => set((s) => ({ settings: { ...s.settings, ...partial } })),
       updateAi: (partial) => set((s) => ({ ai: { ...s.ai, ...partial } })),
+      recordPracticeTake: (take) => {
+        set((s) => {
+          const prev = normalizeProgressRow(
+            get().concepts[take.conceptId] ?? emptyProgress(take.conceptId),
+          );
+          const now = take.at;
+          const next: ConceptProgress = {
+            ...prev,
+            encountered: true,
+            lastStudiedAt: now,
+            timesStudied: prev.timesStudied + 1,
+            updatedAt: now,
+          };
+          return {
+            concepts: { ...s.concepts, [take.conceptId]: next },
+            practiceTakes: [take, ...s.practiceTakes].slice(0, 200),
+          };
+        });
+      },
       recordSession: (input) => {
         const prev = normalizeProgressRow(get().concepts[input.conceptId] ?? emptyProgress(input.conceptId));
         const quality = reviewQuality(input.understanding, input.quizCorrect, input.quizTotal);
@@ -369,6 +391,7 @@ export const useProgress = create<ProgressStore>()(
         courses: s.courses,
         customCourses: s.customCourses,
         assessmentHistory: s.assessmentHistory,
+        practiceTakes: s.practiceTakes,
       }),
     },
   ),
@@ -407,6 +430,7 @@ function snapshot(s: ProgressState): ProgressState {
     courses: s.courses,
     customCourses: s.customCourses,
     assessmentHistory: s.assessmentHistory,
+    practiceTakes: s.practiceTakes,
   };
 }
 

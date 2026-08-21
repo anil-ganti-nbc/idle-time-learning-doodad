@@ -342,6 +342,15 @@ export interface ReviewEvent {
   ease: number;
 }
 
+export interface PracticeTakeRecord {
+  at: string;
+  labId: string;
+  conceptId: string;
+  lessonId: string;
+  completed: boolean;
+  selfRating?: number;
+}
+
 export interface ConceptProgress {
   conceptId: string;
   encountered: boolean;
@@ -485,6 +494,7 @@ export interface ProgressState {
   ai: AiSettings;
   concepts: Record<string, ConceptProgress>;
   sessions: SessionRecord[];
+  practiceTakes: PracticeTakeRecord[];
   recentCategoryIds: CategoryId[];
   customCategories: Category[];
   customConcepts: Concept[];
