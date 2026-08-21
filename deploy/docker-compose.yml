@@ -1,6 +1,6 @@
 services:
   dau:
-    build: ../idle-time-learning-doodad
+    build: ../repos/idle-time-learning-doodad
     container_name: dau-host
     restart: unless-stopped
     volumes:
@@ -16,8 +16,7 @@ services:
     container_name: dau-caddy
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "8088:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -29,7 +28,7 @@ services:
 
   # Each lab builds once into a shared static volume; Caddy serves them all.
   chudbox:
-    build: ../chudbox
+    build: ../repos/chudbox
     container_name: dau-chudbox
     restart: unless-stopped
     volumes:
@@ -38,7 +37,7 @@ services:
     networks: [dau]
 
   movement-bench:
-    build: ../movement-bench
+    build: ../repos/movement-bench
     container_name: dau-movement-bench
     restart: unless-stopped
     volumes:
@@ -47,7 +46,7 @@ services:
     networks: [dau]
 
   fab-lab:
-    build: ../fab-lab
+    build: ../repos/fab-lab
     container_name: dau-fab-lab
     restart: unless-stopped
     volumes:
@@ -56,7 +55,7 @@ services:
     networks: [dau]
 
   pipeline-playground:
-    build: ../pipeline-playground
+    build: ../repos/pipeline-playground
     container_name: dau-pipeline-playground
     restart: unless-stopped
     volumes:
@@ -65,7 +64,7 @@ services:
     networks: [dau]
 
   compiler-workbench:
-    build: ../compiler-workbench
+    build: ../repos/compiler-workbench
     container_name: dau-compiler-workbench
     restart: unless-stopped
     volumes:
@@ -74,7 +73,7 @@ services:
     networks: [dau]
 
   packet-lab:
-    build: ../packet-lab
+    build: ../repos/packet-lab
     container_name: dau-packet-lab
     restart: unless-stopped
     volumes:
@@ -83,7 +82,7 @@ services:
     networks: [dau]
 
   os-lab:
-    build: ../os-lab
+    build: ../repos/os-lab
     container_name: dau-os-lab
     restart: unless-stopped
     volumes:
@@ -92,7 +91,7 @@ services:
     networks: [dau]
 
   ml-lab:
-    build: ../ml-lab
+    build: ../repos/ml-lab
     container_name: dau-ml-lab
     restart: unless-stopped
     volumes:
