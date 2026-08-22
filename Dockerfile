@@ -1,7 +1,8 @@
-FROM node:22-alpine
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+FROM node:22-bookworm-slim
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --no-audit --no-fund
+RUN (npm ci --no-audit --no-fund || npm install --no-audit --no-fund)
 COPY . .
 # Sibling contract + labs are mounted at build time via compose volumes;
 # the practice integration imports them by relative path.
